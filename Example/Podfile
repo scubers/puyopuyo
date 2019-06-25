@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'Puyopuyo_Example' do
+  pod 'Puyopuyo', :path => '../'
+
+  target 'Puyopuyo_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

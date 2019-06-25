@@ -1,0 +1,16 @@
+PODS:
+  - Puyopuyo (0.1.0)
+
+DEPENDENCIES:
+  - Puyopuyo (from `../`)
+
+EXTERNAL SOURCES:
+  Puyopuyo:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Puyopuyo: 1814077cd7450f0dd21452fabcf1c2f320e021f4
+
+PODFILE CHECKSUM: 154f143c18a1723bd87a2dd426df99c0ccc07136
+
+COCOAPODS: 1.6.2
