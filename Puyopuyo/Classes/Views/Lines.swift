@@ -17,11 +17,13 @@ public enum Visiblity {
 public enum VAligment {
     case top
     case bottom
+    case center
 }
 
 public enum HAligment {
     case left
     case right
+    case center
 }
 
 open class LayoutView: UIView {
@@ -35,15 +37,15 @@ open class Line: LayoutView {
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        
         let parentMeasure = superview?.py_measure ?? Measure()
         
         // 如果原本就固定尺寸
-        if layout.size.isFixed() {
+        if layout.unit.size.isFixed() {
             // 此时可以设置自己的尺寸
 //            let originFixedSize = PuyoUtil.cgSize(from: layout.size, by: layout.direction)
-            let originFixedSize = PuyoUtil.cgSize(from: layout.size, parentDirection: parentMeasure.direction)
-            bounds.size = originFixedSize
+//            let originFixedSize = PuyoUtil.cgSize(from: layout.size, parentDirection: parentMeasure.direction)
+//            bounds.size = originFixedSize
+            bounds.size = CGSize(width: layout.unit.size.width.value, height: layout.unit.size.height.value)
         }
         
         // 旧尺寸
@@ -55,8 +57,9 @@ open class Line: LayoutView {
             // 父视图为布局视图
             // 通过计算如果已经确定了尺寸，也可以直接设置
             if sizeAfterCaculate.isFixed() {
-                let newSize = PuyoUtil.cgSize(from: sizeAfterCaculate, parentDirection: parentMeasure.direction)
-                bounds.size = newSize
+//                let newSize = PuyoUtil.cgSize(from: sizeAfterCaculate, parentDirection: parentMeasure.direction)
+//                bounds.size = newSize
+                bounds.size = CGSize(width: sizeAfterCaculate.width.value, height: sizeAfterCaculate.height.value)
                 
             }
             if oldSize != bounds.size {
@@ -67,19 +70,20 @@ open class Line: LayoutView {
             // 父视图为非布局视图
             let parentCGSize = superview?.bounds ?? .zero
             
-            var mainSize = sizeAfterCaculate.main
-            if case .ratio(let ratio) = mainSize {
-                let fixedValue = parentMeasure.direction == .y ? parentCGSize.height : parentCGSize.width
-                mainSize = .fixed(fixedValue * ratio)
+            var widthSize = sizeAfterCaculate.width
+            if case .ratio(let ratio) = widthSize {
+//                let fixedValue = parentMeasure.direction == .y ? parentCGSize.height : parentCGSize.width
+                widthSize = .fixed(parentCGSize.width * ratio)
             }
             
-            var crossSize = sizeAfterCaculate.cross
-            if case .ratio(let ratio) = crossSize {
-                let fixedValue = parentMeasure.direction == .y ? parentCGSize.width : parentCGSize.height
-                crossSize = .fixed(fixedValue * ratio)
+            var heightSize = sizeAfterCaculate.height
+            if case .ratio(let ratio) = heightSize {
+//                let fixedValue = parentMeasure.direction == .y ? parentCGSize.width : parentCGSize.height
+                heightSize = .fixed(parentCGSize.height * ratio)
             }
             
-            let newSize = PuyoUtil.cgSize(from: Size(main: mainSize, cross: crossSize), parentDirection: parentMeasure.direction)
+//            let newSize = PuyoUtil.cgSize(from: Size(main: widthSize, cross: heightSize), parentDirection: parentMeasure.direction)
+            let newSize = CGSize(width: widthSize.value, height: heightSize.value)
             
             bounds.size = newSize
             
@@ -89,6 +93,7 @@ open class Line: LayoutView {
             
             center = CGPoint(x: bounds.midX, y: bounds.midY)
         }
+        
         /*
         let oldSize = bounds.size
         

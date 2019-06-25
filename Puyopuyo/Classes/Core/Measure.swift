@@ -39,12 +39,12 @@ public class Measure: Measurable {
     
     public var aligment: Aligment = .none
     
-    public var size = Size()
+    public var unit = Unit()
     
-    public var ignore = false
+    public var activated = true
     
-    public func caculate(from parent: Measure) -> Size {
-        return MeasureCaculator.caculate(measure: self, from: parent)
+    public func caculate(byParent parent: Measure) -> Size {
+        return MeasureCaculator.caculate(measure: self, byParent: parent)
     }
     
 }
@@ -62,8 +62,6 @@ public class PlaceHolderMeasure: Measure, MeasureTagetable {
     
     public var py_children: [Measure] = []
     
-    public var py_wrapSize: CGSize = .zero
-    
     public func py_sizeThatFits(_ size: CGSize) -> CGSize {
         return size
     }
@@ -80,9 +78,10 @@ public class BaseLayout: Measure {
 }
 
 public enum Formation {
-    case line
+    case leading
     case center
     case sides
+    case trailing
 }
 
 public class LineLayout: BaseLayout {
@@ -91,11 +90,13 @@ public class LineLayout: BaseLayout {
     
     public var space: CGFloat = 0
     
-    public var formation: Formation = .line
+    public var formation: Formation = .leading
     
     public var reverse = false
     
-    public override func caculate(from parent: Measure) -> Size {
+    public var auto = false
+    
+    public override func caculate(byParent parent: Measure) -> Size {
         return LineCaculator.caculateLine(self, from: parent)
     }
 }

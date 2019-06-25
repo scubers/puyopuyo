@@ -13,7 +13,7 @@ public class PuyoLink<T: UIView> {
     public init(_ view: T, wrap: Bool = true) {
         self.view = view
         if wrap {
-            view.py_measure.size = Size(main: .wrap, cross: .wrap)
+            view.py_measure.unit.size = Size(width: .wrap, height: .wrap)
         }
     }
 }
@@ -48,8 +48,8 @@ extension PuyoLink where T: UIView {
         return self
     }
     
-    public func size(main: SizeType? = nil, cross: SizeType? = nil) -> Self {
-        PuyoLinkHelper.size(for: view, main: main, cross: cross)
+    public func size(width: SizeType? = nil, height: SizeType? = nil) -> Self {
+        PuyoLinkHelper.size(for: view, width: width, height: height)
         return self
     }
     /*

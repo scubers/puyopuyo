@@ -8,8 +8,11 @@
 import Foundation
 
 public enum SizeType {
+    // 固有尺寸
     case fixed(CGFloat)
-    case ratio(CGFloat) // main cross 将有两种计算方式
+    // 依赖父视图
+    case ratio(CGFloat)
+    // 依赖子视图
     case wrap
     
     public var value: CGFloat {
@@ -99,36 +102,46 @@ public struct Offset {
 }
 
 public struct Size {
-    public var main: SizeType
-    public var cross: SizeType
     
-    public var center = Offset()
+    public var width: SizeType
+    public var height: SizeType
     
-    public init(main: SizeType = .fixed(0), cross: SizeType = .fixed(0), center: Offset = Offset()) {
-        self.main = main
-        self.cross = cross
+    public var center: Offset
+    
+    public init(width: SizeType = .fixed(0), height: SizeType = .fixed(0), center: Offset = Offset()) {
+        self.width = width
+        self.height = height
         self.center = center
     }
     
     public func isFixed() -> Bool {
-        return main.isFixed && cross.isFixed
+        return width.isFixed && height.isFixed
+    }
+    
+    public func isWrap() -> Bool {
+        return width.isWrap && height.isWrap
+    }
+    
+    public func getMain(parent direction: Direction) -> SizeType {
+        if case .x = direction {
+            return width
+        }
+        return height
+    }
+    
+    public func getCross(parent direction: Direction) -> SizeType {
+        if case .x = direction {
+            return height
+        }
+        return width
     }
 }
 
-public struct FixedSize {
-    public var main: CGFloat = 0
-    public var cross: CGFloat = 0
-    
-    public var center = Offset()
-    
-    public init(main: CGFloat = 0, cross: CGFloat = 0, center: Offset = Offset()) {
-        self.main = main
-        self.cross = cross
+public struct Unit {
+    public var size: Size
+    public var center: Offset
+    public init(size: Size = Size(), center: Offset = Offset()) {
+        self.size = size
         self.center = center
     }
-    
-    public func getSize() -> Size {
-        return Size(main: .fixed(main), cross: .fixed(cross), center: center)
-    }
 }
-

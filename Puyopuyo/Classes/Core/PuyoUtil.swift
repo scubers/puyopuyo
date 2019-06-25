@@ -9,6 +9,23 @@ import Foundation
 
 class PuyoUtil {
     
+    static func point(from offset: Offset, fixedSize: CalFixedSize, by direction: Direction, reverse: Bool = false) -> CGPoint {
+        
+        var finalOffset = offset
+        if reverse {
+            finalOffset = Offset(main: offset.main * -1 + fixedSize.main, cross: offset.cross * -1 + fixedSize.cross)
+        }
+        
+        var point: CGPoint
+        if case .y = direction {
+            point = CGPoint(x: finalOffset.cross, y: finalOffset.main)
+        } else {
+            point = CGPoint(x: finalOffset.main, y: fixedSize.cross - finalOffset.cross)
+        }
+        return point
+    }
+    
+    /*
     static func fixedSize(from cgSize: CGSize?, parentDirection direction: Direction) -> FixedSize {
         let size = cgSize ?? .zero
         if case .x = direction {
@@ -67,7 +84,7 @@ class PuyoUtil {
         }
         return point
     }
-    /*
+    
     static func fixedPosition(from cgSize: CGSize?, by direction: Direction) -> FixedSize {
         let myCGSize = cgSize ?? .zero
         if case .x = direction {
