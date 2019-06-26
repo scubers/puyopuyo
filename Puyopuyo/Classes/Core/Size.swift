@@ -44,74 +44,15 @@ public enum SizeType {
         return false
     }
 }
-//
-//public protocol Sizable {
-//    var sizeType: SizeType { get }
-//}
-//
-//public struct WrapSize: Sizable {
-//    public init() {
-//
-//    }
-//    public var sizeType: SizeType {
-//        return .wrap
-//    }
-//}
-//
-//public struct Ratio: Sizable {
-//    var ratio: CGFloat = 0
-//    public init(_ ratio: CGFloat) {
-//        self.ratio = ratio
-//    }
-//    public var sizeType: SizeType {
-//        return .ratio(ratio)
-//    }
-//}
-//
-//extension CGFloat: Sizable {
-//    public var sizeType: SizeType {
-//        return .fixed(self)
-//    }
-//}
-//
-//extension Int: Sizable {
-//    public var sizeType: SizeType {
-//        return .fixed(CGFloat(self))
-//    }
-//}
-//
-//extension Double: Sizable {
-//    public var sizeType: SizeType {
-//        return .fixed(CGFloat(self))
-//    }
-//}
-//
-//extension Float: Sizable {
-//    public var sizeType: SizeType {
-//        return .fixed(CGFloat(self))
-//    }
-//}
-
-public struct Offset {
-    public var main: CGFloat = 0
-    public var cross: CGFloat = 0
-    public init(main: CGFloat = 0, cross: CGFloat = 0) {
-        self.main = main
-        self.cross = cross
-    }
-}
 
 public struct Size {
     
     public var width: SizeType
     public var height: SizeType
     
-    public var center: Offset
-    
-    public init(width: SizeType = .fixed(0), height: SizeType = .fixed(0), center: Offset = Offset()) {
+    public init(width: SizeType = .fixed(0), height: SizeType = .fixed(0)) {
         self.width = width
         self.height = height
-        self.center = center
     }
     
     public func isFixed() -> Bool {
@@ -134,14 +75,5 @@ public struct Size {
             return height
         }
         return width
-    }
-}
-
-public struct Unit {
-    public var size: Size
-    public var center: Offset
-    public init(size: Size = Size(), center: Offset = Offset()) {
-        self.size = size
-        self.center = center
     }
 }

@@ -10,37 +10,18 @@ import Foundation
 open class PuyoLinkHelper {
     
     open class func size(for view: UIView, width: SizeType?, height: SizeType?) {
-        if let width = width { view.py_measure.unit.size.width = width }
-        if let height = height { view.py_measure.unit.size.height = height }
+        if let width = width { view.py_measure.size.width = width }
+        if let height = height { view.py_measure.size.height = height }
     }
-    /*
     
-    open class func size(for view: UIView, width: Sizable?, height: Sizable?, direction: Direction) {
-        if direction == .x {
-            if let width = width { view.py_measure.size.main = width }
-            if let height = height { view.py_measure.size.cross = height }
-        } else {
-            if let height = height { view.py_measure.size.main = height }
-            if let width = width { view.py_measure.size.cross = width }
-        }
-    }
-    */
-    
-    open class func margin(for view: UIView, all: CGFloat? = nil, top: CGFloat? = nil, left: CGFloat? = nil, bottom: CGFloat? = nil, right: CGFloat? = nil, direction: Direction) {
+    open class func margin(for view: UIView, all: CGFloat? = nil, top: CGFloat? = nil, left: CGFloat? = nil, bottom: CGFloat? = nil, right: CGFloat? = nil) {
         if let all = all {
-            view.py_measure.margin = Edges(start: all, end: all, forward: all, backward: all)
+            view.py_measure.margin = UIEdgeInsets(top: all, left: all, bottom: all, right: all)
         }
-        if direction == .x {
-            if let top = top { view.py_measure.margin.backward = top }
-            if let left = left { view.py_measure.margin.start = (left) }
-            if let bottom = bottom { view.py_measure.margin.forward = (bottom) }
-            if let right = right { view.py_measure.margin.end = (right) }
-        } else {
-            if let top = top { view.py_measure.margin.start = top }
-            if let left = left { view.py_measure.margin.forward = (left) }
-            if let bottom = bottom { view.py_measure.margin.end = (bottom) }
-            if let right = right { view.py_measure.margin.backward = (right) }
-        }
+        if let top = top { view.py_measure.margin.top = top }
+        if let left = left { view.py_measure.margin.left = left }
+        if let bottom = bottom { view.py_measure.margin.bottom = bottom }
+        if let right = right { view.py_measure.margin.right = right }
     }
     
     open class func visibility(for view: UIView, visibility: Visiblity) {
@@ -57,19 +38,7 @@ open class PuyoLinkHelper {
         }
     }
     
-    open class func vAligment(for view: UIView, aligment: VAligment) {
-        if case .center = aligment {
-            view.py_measure.aligment = .center
-        } else {
-            view.py_measure.aligment = aligment == .top ? .backward : .forward
-        }
-    }
-    
-    open class func hAligment(for view: UIView, aligment: HAligment) {
-        if case .center = aligment {
-            view.py_measure.aligment = .center
-        } else {
-            view.py_measure.aligment = aligment == .right ? .backward : .forward
-        }
+    open class func aligment(for view: UIView, aligment: Aligment) {
+        view.py_measure.aligment = aligment
     }
 }

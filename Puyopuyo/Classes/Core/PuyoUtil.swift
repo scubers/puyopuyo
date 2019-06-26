@@ -9,12 +9,12 @@ import Foundation
 
 class PuyoUtil {
     
-    static func point(from offset: Offset, fixedSize: CalFixedSize, by direction: Direction, reverse: Bool = false) -> CGPoint {
+    static func point(from offset: CalCenter, fixedSize: CalFixedSize, by direction: Direction, reverse: Bool = false) -> CGPoint {
         
         var finalOffset = offset
-        if reverse {
-            finalOffset = Offset(main: offset.main * -1 + fixedSize.main, cross: offset.cross * -1 + fixedSize.cross)
-        }
+//        if reverse {
+//            finalOffset = CalCenter(main: offset.main * -1 + fixedSize.main, cross: offset.cross * -1 + fixedSize.cross)
+//        }
         
         var point: CGPoint
         if case .y = direction {

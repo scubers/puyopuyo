@@ -13,7 +13,7 @@ public class PuyoLink<T: UIView> {
     public init(_ view: T, wrap: Bool = true) {
         self.view = view
         if wrap {
-            view.py_measure.unit.size = Size(width: .wrap, height: .wrap)
+            view.py_measure.size = Size(width: .wrap, height: .wrap)
         }
     }
 }
@@ -65,26 +65,16 @@ extension PuyoLink where T: UIView {
     }
     */
     
-    public func xMargin(all: CGFloat? = nil, top: CGFloat? = nil, left: CGFloat? = nil, bottom: CGFloat? = nil, right: CGFloat? = nil) -> Self {
-        PuyoLinkHelper.margin(for: view, all: all, top: top, left: left, bottom: bottom, right: right, direction: .x)
+    public func margin(all: CGFloat? = nil, top: CGFloat? = nil, left: CGFloat? = nil, bottom: CGFloat? = nil, right: CGFloat? = nil) -> Self {
+        PuyoLinkHelper.margin(for: view, all: all, top: top, left: left, bottom: bottom, right: right)
         return self
     }
+
     
-    public func yMargin(all: CGFloat? = nil, top: CGFloat? = nil, left: CGFloat? = nil, bottom: CGFloat? = nil, right: CGFloat? = nil) -> Self {
-        PuyoLinkHelper.margin(for: view, all: all, top: top, left: left, bottom: bottom, right: right, direction: .y)
+    public func aligment(_ aligment: Aligment) -> Self {
+        PuyoLinkHelper.aligment(for: view, aligment: aligment)
         return self
-    }
-    
-    public func vAligment(_ aligment: VAligment) -> Self {
-        PuyoLinkHelper.vAligment(for: view, aligment: aligment)
-        return self
-    }
-    
-    public func hAligment(_ aligment: HAligment) -> Self {
-        PuyoLinkHelper.hAligment(for: view, aligment: aligment)
-        return self
-    }
-    
+    }    
 }
 
 extension PuyoLink where T: Line {
@@ -108,14 +98,14 @@ extension PuyoLink where T: Line {
         return self
     }
     
-    public func padding(all: CGFloat? = nil, start: CGFloat? = nil, end: CGFloat? = nil, forward: CGFloat? = nil, backward: CGFloat? = nil) -> Self {
+    public func padding(all: CGFloat? = nil, top: CGFloat? = nil, left: CGFloat? = nil, bottom: CGFloat? = nil, right: CGFloat? = nil) -> Self {
         if let all = all {
-            view.layout.padding = Edges(start: all, end: all, forward: all, backward: all)
+            view.layout.padding = UIEdgeInsets(top: all, left: all, bottom: all, right: all)
         }
-        if let start = start { view.layout.padding.start = start }
-        if let end = end { view.layout.padding.end = end }
-        if let forward = forward { view.layout.padding.forward = forward }
-        if let backward = backward { view.layout.padding.backward = backward }
+        if let top = top { view.layout.padding.top = top }
+        if let left = left { view.layout.padding.left = left }
+        if let bottom = bottom { view.layout.padding.bottom = bottom }
+        if let right = right { view.layout.padding.right = right }
         return self
     }
     

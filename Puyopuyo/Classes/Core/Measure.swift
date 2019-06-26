@@ -7,11 +7,38 @@
 
 import UIKit
 
-public enum Aligment {
-    case none
-    case forward
-    case center
-    case backward
+public struct Aligment: OptionSet {
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    public typealias RawValue = Int
+    public let rawValue: Int
+    
+    public static let top = Aligment(rawValue: 1)
+    public static let bottom = Aligment(rawValue: 2)
+    public static let left = Aligment(rawValue: 4)
+    public static let right = Aligment(rawValue: 8)
+    public static let center = Aligment(rawValue: 16)
+    
+    public static let none = Aligment(rawValue: 32)
+    
+    public func isCenter() -> Bool {
+        return contains(.center)
+    }
+    
+    public func isForward(for direction: Direction) -> Bool {
+        if case .x = direction {
+            return contains(.bottom)
+        }
+        return contains(.left)
+    }
+    
+    public func isBackward(for direction: Direction) -> Bool {
+        if case .x = direction {
+            return contains(.top)
+        }
+        return contains(.right)
+    }
 }
 
 
@@ -35,11 +62,11 @@ public class Measure: Measurable {
         }
     }
 
-    public var margin = Edges()
+    public var margin = UIEdgeInsets.zero
     
     public var aligment: Aligment = .none
     
-    public var unit = Unit()
+    public var size = Size()
     
     public var activated = true
     
@@ -70,10 +97,14 @@ public class PlaceHolderMeasure: Measure, MeasureTagetable {
 /// 描述一个布局具备控制子节点的属性
 public class BaseLayout: Measure {
     
-    public var padding = Edges()
+    public var padding = UIEdgeInsets.zero
     
     public var children: [Measure] {
         return target?.py_children ?? []
+    }
+    
+    public func getCalPadding() -> CalEdges {
+        return CalEdges(insets: padding, direction: direction)
     }
 }
 
@@ -86,7 +117,7 @@ public enum Formation {
 
 public class LineLayout: BaseLayout {
     
-    public var crossAxis: Aligment = .none
+    public var crossAxis: Aligment = [.top, .left]
     
     public var space: CGFloat = 0
     

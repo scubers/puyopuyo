@@ -26,7 +26,7 @@ extension UIView: MeasureTagetable {
             return bounds.size
         }
         set {
-            bounds.size = newValue
+            bounds.size = CGSize(width: max(newValue.width, 0), height: max(newValue.height, 0))
         }
     }
     
