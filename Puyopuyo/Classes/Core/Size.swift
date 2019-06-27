@@ -7,6 +7,18 @@
 
 import Foundation
 
+public struct SizeDescription {
+    
+    public var fixedValue: CGFloat = 0
+    public var ratio: CGFloat = 0
+    public var min: CGFloat = 0
+    public var max: CGFloat = 0
+    
+//    public static func fixed(_ value: CGFloat) -> SizeDescription {
+//        
+//    }
+}
+
 public enum SizeType {
     // 固有尺寸
     case fixed(CGFloat)

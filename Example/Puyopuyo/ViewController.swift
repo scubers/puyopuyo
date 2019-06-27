@@ -21,6 +21,19 @@ class ViewController: UIViewController {
         randomViewColor(view: view)
     }
     
+    func testSizeThatFits() -> Line {
+        return
+            VLine().attach() {
+                self.getLabel("111").attach($0)
+                self.getLabel("222").attach($0)
+                self.getLabel("333").attach($0)
+            }
+            .space(10)
+            .padding(all: 10)
+            .size(width: .ratio(1))
+            .view
+    }
+    
     func testLink() {
 //        let link =
         var label: UIView?
@@ -38,17 +51,24 @@ class ViewController: UIViewController {
             
             
             HLine().attach($0, wrap: false) {
+                label =
                 self.getLabel("1111").attach($0)
-                    .margin(left: 5)
+                    .view
+//                    .margin(left: 5, right: 20)
                 self.getLabel("2222").attach($0)
-                    .margin(right: 10)
+                    .aligment([.bottom])
+//                    .margin(left: 30, right: 10)
+                self.getLabel("扥扥零担疯了").attach($0)
+//                    .margin(left: 30, right: 10)
             }
 //            .size(width: .ratio(1), height: .fixed(100))
-            .size(width: .wrap, height: .fixed(100))
+            .size(width: .ratio(1), height: .wrap)
             .space(10)
-//            .padding(left: 30, right: 50)
-            .formation(.trailing)
             .reverse(true)
+            .formation(.leading)
+//            .padding(left: 30, right: 50)
+//            .formation(.trailing)
+//            .reverse(true)
             
             /*
             VLine().attach($0) {
@@ -99,6 +119,18 @@ class ViewController: UIViewController {
 //        .size(width: .ratio(1), height: .fixed(100))
 //        .reverse(true)
 //        .size(main: .ratio(1), cross: .ratio(1))
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            label?
+                .attach()
+                .margin(all: 10)
+                .size(width: .fixed(300), height: .fixed(100))
+            UIView.animate(withDuration: 0.5, animations: {
+                self.view.layoutIfNeeded()
+            })
+//            label?.superview?.setNeedsLayout()
+//            label?.superview?.layoutIfNeeded()
+        }
     }
     
     func getView() -> UIView {

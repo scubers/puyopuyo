@@ -20,7 +20,8 @@
 		A81B723022BF440F001C919E /* MeasureBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81B722F22BF440F001C919E /* MeasureBox.swift */; };
 		A81B723222BFB9AA001C919E /* PuyoLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81B723122BFB9AA001C919E /* PuyoLink.swift */; };
 		A81B723422BFBAEB001C919E /* PuyoLinkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81B723322BFBAEB001C919E /* PuyoLinkHelper.swift */; };
-		A8231D5322C10CB300A72409 /* Lines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8231D5222C10CB300A72409 /* Lines.swift */; };
+		A826C8A622C513D100790276 /* Visibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = A826C8A522C513D100790276 /* Visibility.swift */; };
+		A8DACD8022C4EF3A00C9F61E /* Lines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DACD7F22C4EF3A00C9F61E /* Lines.swift */; };
 		A8E2948A22C3ABEB00DD5AF1 /* Caculations.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E2948922C3ABEB00DD5AF1 /* Caculations.swift */; };
 		A8E8835D22BE6C5100D0E62C /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E8835C22BE6C5100D0E62C /* Size.swift */; };
 		A8E8835F22BE6F3000D0E62C /* PuyoUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E8835E22BE6F3000D0E62C /* PuyoUtil.swift */; };
@@ -72,7 +73,8 @@
 		A81B722F22BF440F001C919E /* MeasureBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureBox.swift; sourceTree = "<group>"; };
 		A81B723122BFB9AA001C919E /* PuyoLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuyoLink.swift; sourceTree = "<group>"; };
 		A81B723322BFBAEB001C919E /* PuyoLinkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuyoLinkHelper.swift; sourceTree = "<group>"; };
-		A8231D5222C10CB300A72409 /* Lines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lines.swift; sourceTree = "<group>"; };
+		A826C8A522C513D100790276 /* Visibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Visibility.swift; sourceTree = "<group>"; };
+		A8DACD7F22C4EF3A00C9F61E /* Lines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lines.swift; sourceTree = "<group>"; };
 		A8E2948922C3ABEB00DD5AF1 /* Caculations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Caculations.swift; sourceTree = "<group>"; };
 		A8E8835C22BE6C5100D0E62C /* Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Size.swift; sourceTree = "<group>"; };
 		A8E8835E22BE6F3000D0E62C /* PuyoUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuyoUtil.swift; sourceTree = "<group>"; };
@@ -218,11 +220,12 @@
 		B25A36B1DFCA44D5E9741AB5F4F1F900 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				A8231D5222C10CB300A72409 /* Lines.swift */,
+				A8DACD7F22C4EF3A00C9F61E /* Lines.swift */,
 				A81B722F22BF440F001C919E /* MeasureBox.swift */,
 				A81B722D22BF3E33001C919E /* View+Extension.swift */,
 				A81B723122BFB9AA001C919E /* PuyoLink.swift */,
 				A81B723322BFBAEB001C919E /* PuyoLinkHelper.swift */,
+				A826C8A522C513D100790276 /* Visibility.swift */,
 			);
 			name = Views;
 			path = Puyopuyo/Classes/Views;
@@ -434,11 +437,12 @@
 				A81B723422BFBAEB001C919E /* PuyoLinkHelper.swift in Sources */,
 				EE3493CB4F8565CE0019F7A28F913792 /* Measurable.swift in Sources */,
 				A8E8835F22BE6F3000D0E62C /* PuyoUtil.swift in Sources */,
-				A8231D5322C10CB300A72409 /* Lines.swift in Sources */,
+				A8DACD8022C4EF3A00C9F61E /* Lines.swift in Sources */,
 				A672C47EA53EB638FAF9A0D92D8108B8 /* Measure.swift in Sources */,
 				A8E8835D22BE6C5100D0E62C /* Size.swift in Sources */,
 				A81B722E22BF3E33001C919E /* View+Extension.swift in Sources */,
 				A81B723022BF440F001C919E /* MeasureBox.swift in Sources */,
+				A826C8A622C513D100790276 /* Visibility.swift in Sources */,
 				7C10A0248C6178F84D23665EBD3C3686 /* Puyopuyo-dummy.m in Sources */,
 				A81B723222BFB9AA001C919E /* PuyoLink.swift in Sources */,
 			);

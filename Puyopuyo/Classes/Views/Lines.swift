@@ -8,24 +8,6 @@
 
 import Foundation
 
-public enum Visiblity {
-    case visible
-    case invisible
-    case gone
-}
-
-public enum VAligment {
-    case top
-    case bottom
-    case center
-}
-
-public enum HAligment {
-    case left
-    case right
-    case center
-}
-
 open class LayoutView: UIView {
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -33,6 +15,15 @@ open class LayoutView: UIView {
     }
     public required init?(coder aDecoder: NSCoder) {
         fatalError()
+    }
+    
+    open override func setNeedsLayout() {
+        super.setNeedsLayout()
+        // 如果自己是固定尺寸，则不需要通知上层进行布局
+        let measure = py_measure
+        if let superview = superview as? LayoutView, (measure.size.width.isWrap || measure.size.height.isWrap) {
+            superview.setNeedsLayout()
+        }
     }
 }
 
@@ -62,7 +53,6 @@ open class Line: LayoutView {
             // 通过计算如果已经确定了尺寸，也可以直接设置
             if sizeAfterCaculate.isFixed() {
                 bounds.size = CGSize(width: sizeAfterCaculate.width.value, height: sizeAfterCaculate.height.value)
-                
             }
             if oldSize != bounds.size {
                 _ = LineCaculator.caculateLine(layout, from: parentMeasure)
@@ -93,32 +83,22 @@ open class Line: LayoutView {
             center = CGPoint(x: bounds.midX, y: bounds.midY)
         }
         
-        /*
-        let oldSize = bounds.size
-        
-        var mainSize = size.main
-        if mainSize.isRatio {
-            mainSize = .fixed(0)
+    }
+    
+    open override func sizeThatFits(_ size: CGSize) -> CGSize {
+        let temp = PlaceHolderMeasure()
+        temp.py_size = size
+        let sizeAfterCalulated = LineCaculator.caculateLine(layout, from: PlaceHolderMeasure())
+        var widthSize = sizeAfterCalulated.width
+        if case .ratio(let ratio) = widthSize {
+            widthSize = .fixed(size.width * ratio)
         }
         
-        var crossSize = size.cross
-        if crossSize.isRatio {
-            crossSize = .fixed(0)
+        var heightSize = sizeAfterCalulated.height
+        if case .ratio(let ratio) = heightSize {
+            heightSize = .fixed(size.height * ratio)
         }
-        
-        let newSize = PuyoUtil.cgSize(from: Size(main: mainSize, cross: crossSize), by: layout.direction)
-        
-        bounds.size = newSize
-        
-        if oldSize != newSize {
-            _ = LineCaculator.caculateLine(layout)
-        }
-        
-        if !(superview is LayoutView) {
-            // 父视图为非布局视图时，需要根据margin设定自己的center
-            center = CGPoint(x: bounds.midX, y: bounds.midY)
-        }
-        */
+        return CGSize(width: widthSize.value, height: heightSize.value)
     }
     
     open override func didMoveToSuperview() {
