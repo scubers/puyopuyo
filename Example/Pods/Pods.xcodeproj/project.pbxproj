@@ -15,16 +15,15 @@
 		80E90AFD2AF43E6F007847194136D8DB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
 		8C6F2987EE3C20CDF57CF0123918EFD2 /* Pods-Puyopuyo_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 050C2A30B648BC939140B19A19FFE78F /* Pods-Puyopuyo_Tests-dummy.m */; };
 		A672C47EA53EB638FAF9A0D92D8108B8 /* Measure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7893960A898CEA622EFF00135331CC /* Measure.swift */; };
+		A816500222C539AD00BA7C1A /* PuyoLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = A816500122C539AC00BA7C1A /* PuyoLink.swift */; };
 		A81B722C22BE7533001C919E /* Caculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81B722B22BE7533001C919E /* Caculator.swift */; };
 		A81B722E22BF3E33001C919E /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81B722D22BF3E33001C919E /* View+Extension.swift */; };
 		A81B723022BF440F001C919E /* MeasureBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81B722F22BF440F001C919E /* MeasureBox.swift */; };
-		A81B723222BFB9AA001C919E /* PuyoLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81B723122BFB9AA001C919E /* PuyoLink.swift */; };
 		A81B723422BFBAEB001C919E /* PuyoLinkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81B723322BFBAEB001C919E /* PuyoLinkHelper.swift */; };
 		A826C8A622C513D100790276 /* Visibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = A826C8A522C513D100790276 /* Visibility.swift */; };
 		A8DACD8022C4EF3A00C9F61E /* Lines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DACD7F22C4EF3A00C9F61E /* Lines.swift */; };
 		A8E2948A22C3ABEB00DD5AF1 /* Caculations.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E2948922C3ABEB00DD5AF1 /* Caculations.swift */; };
 		A8E8835D22BE6C5100D0E62C /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E8835C22BE6C5100D0E62C /* Size.swift */; };
-		A8E8835F22BE6F3000D0E62C /* PuyoUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E8835E22BE6F3000D0E62C /* PuyoUtil.swift */; };
 		AECC3FDDBD769C27BAD2EC6E5BF0699E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
 		E8092472C1E42723BA46CDCB33FBC22E /* Pods-Puyopuyo_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = BEA97967ECB1CB4CAF52C5B393392106 /* Pods-Puyopuyo_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EE3493CB4F8565CE0019F7A28F913792 /* Measurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7B27BA14B164EAB1A36412110343BBC /* Measurable.swift */; };
@@ -68,16 +67,15 @@
 		9B979641EDF6CC423EF74DD6DF94A538 /* Puyopuyo-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Puyopuyo-Info.plist"; sourceTree = "<group>"; };
 		9CC06E46D2F7D85084AD4861044A8293 /* Pods-Puyopuyo_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Puyopuyo_Example.release.xcconfig"; sourceTree = "<group>"; };
 		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		A816500122C539AC00BA7C1A /* PuyoLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PuyoLink.swift; sourceTree = "<group>"; };
 		A81B722B22BE7533001C919E /* Caculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Caculator.swift; sourceTree = "<group>"; };
 		A81B722D22BF3E33001C919E /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
 		A81B722F22BF440F001C919E /* MeasureBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureBox.swift; sourceTree = "<group>"; };
-		A81B723122BFB9AA001C919E /* PuyoLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuyoLink.swift; sourceTree = "<group>"; };
 		A81B723322BFBAEB001C919E /* PuyoLinkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuyoLinkHelper.swift; sourceTree = "<group>"; };
 		A826C8A522C513D100790276 /* Visibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Visibility.swift; sourceTree = "<group>"; };
 		A8DACD7F22C4EF3A00C9F61E /* Lines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lines.swift; sourceTree = "<group>"; };
 		A8E2948922C3ABEB00DD5AF1 /* Caculations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Caculations.swift; sourceTree = "<group>"; };
 		A8E8835C22BE6C5100D0E62C /* Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Size.swift; sourceTree = "<group>"; };
-		A8E8835E22BE6F3000D0E62C /* PuyoUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuyoUtil.swift; sourceTree = "<group>"; };
 		B2ABA3C2863EBC298F53FFFB0164378F /* Pods-Puyopuyo_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Puyopuyo_Example-dummy.m"; sourceTree = "<group>"; };
 		B4748A42EFA013AD56E85D71E4B4CB1A /* Puyopuyo.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = Puyopuyo.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		BEA97967ECB1CB4CAF52C5B393392106 /* Pods-Puyopuyo_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Puyopuyo_Example-umbrella.h"; sourceTree = "<group>"; };
@@ -127,7 +125,6 @@
 				C7B27BA14B164EAB1A36412110343BBC /* Measurable.swift */,
 				6D7893960A898CEA622EFF00135331CC /* Measure.swift */,
 				A8E8835C22BE6C5100D0E62C /* Size.swift */,
-				A8E8835E22BE6F3000D0E62C /* PuyoUtil.swift */,
 			);
 			name = Core;
 			path = Puyopuyo/Classes/Core;
@@ -220,10 +217,10 @@
 		B25A36B1DFCA44D5E9741AB5F4F1F900 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A816500122C539AC00BA7C1A /* PuyoLink.swift */,
 				A8DACD7F22C4EF3A00C9F61E /* Lines.swift */,
 				A81B722F22BF440F001C919E /* MeasureBox.swift */,
 				A81B722D22BF3E33001C919E /* View+Extension.swift */,
-				A81B723122BFB9AA001C919E /* PuyoLink.swift */,
 				A81B723322BFBAEB001C919E /* PuyoLinkHelper.swift */,
 				A826C8A522C513D100790276 /* Visibility.swift */,
 			);
@@ -434,9 +431,9 @@
 			files = (
 				A81B722C22BE7533001C919E /* Caculator.swift in Sources */,
 				A8E2948A22C3ABEB00DD5AF1 /* Caculations.swift in Sources */,
+				A816500222C539AD00BA7C1A /* PuyoLink.swift in Sources */,
 				A81B723422BFBAEB001C919E /* PuyoLinkHelper.swift in Sources */,
 				EE3493CB4F8565CE0019F7A28F913792 /* Measurable.swift in Sources */,
-				A8E8835F22BE6F3000D0E62C /* PuyoUtil.swift in Sources */,
 				A8DACD8022C4EF3A00C9F61E /* Lines.swift in Sources */,
 				A672C47EA53EB638FAF9A0D92D8108B8 /* Measure.swift in Sources */,
 				A8E8835D22BE6C5100D0E62C /* Size.swift in Sources */,
@@ -444,7 +441,6 @@
 				A81B723022BF440F001C919E /* MeasureBox.swift in Sources */,
 				A826C8A622C513D100790276 /* Visibility.swift in Sources */,
 				7C10A0248C6178F84D23665EBD3C3686 /* Puyopuyo-dummy.m in Sources */,
-				A81B723222BFB9AA001C919E /* PuyoLink.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

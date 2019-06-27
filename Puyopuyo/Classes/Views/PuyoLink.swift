@@ -16,6 +16,13 @@ public class PuyoLink<T: UIView> {
             view.py_measure.size = Size(width: .wrap, height: .wrap)
         }
     }
+    
+    func setNeedsLayout() {
+        view.setNeedsLayout()
+        if let superview = view.superview as? LayoutView {
+            superview.setNeedsLayout()
+        }
+    }
 }
 
 public typealias PuyoLinkBlock = (UIView) -> Void
@@ -49,10 +56,53 @@ extension PuyoLink where T: UIView {
         return self
     }
     @discardableResult
-    public func size(width: SizeType? = nil, height: SizeType? = nil) -> Self {
+    public func size(_ width: SizeDescription?, _ height: SizeDescription?) -> Self {
         PuyoLinkHelper.size(for: view, width: width, height: height)
         return self
     }
+    
+    @discardableResult
+    public func size(_ width: SizeDescriptible?, _ height: SizeDescriptible?) -> Self {
+        PuyoLinkHelper.size(for: view, width: width?.sizeDescription, height: height?.sizeDescription)
+        return self
+    }
+    
+    @discardableResult
+    public func size(_ width: SizeDescription?, _ height: SizeDescriptible?) -> Self {
+        PuyoLinkHelper.size(for: view, width: width, height: height?.sizeDescription)
+        return self
+    }
+    
+    @discardableResult
+    public func size(_ width: SizeDescriptible?, _ height: SizeDescription?) -> Self {
+        PuyoLinkHelper.size(for: view, width: width?.sizeDescription, height: height)
+        return self
+    }
+    
+    @discardableResult
+    public func width(_ width: SizeDescriptible?) -> Self {
+        PuyoLinkHelper.size(for: view, width: width?.sizeDescription, height: nil)
+        return self
+    }
+    
+    @discardableResult
+    public func width(_ width: SizeDescription?) -> Self {
+        PuyoLinkHelper.size(for: view, width: width, height: nil)
+        return self
+    }
+    
+    @discardableResult
+    public func height(_ height: SizeDescriptible?) -> Self {
+        PuyoLinkHelper.size(for: view, width: nil, height: height?.sizeDescription)
+        return self
+    }
+    
+    @discardableResult
+    public func height(_ height: SizeDescription?) -> Self {
+        PuyoLinkHelper.size(for: view, width: nil, height: height)
+        return self
+    }
+    
     @discardableResult
     public func margin(all: CGFloat? = nil, top: CGFloat? = nil, left: CGFloat? = nil, bottom: CGFloat? = nil, right: CGFloat? = nil) -> Self {
         PuyoLinkHelper.margin(for: view, all: all, top: top, left: left, bottom: bottom, right: right)

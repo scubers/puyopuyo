@@ -40,7 +40,7 @@ open class Line: LayoutView {
         // 如果原本就固定尺寸
         if layout.size.isFixed() {
             // 此时可以设置自己的尺寸
-            bounds.size = CGSize(width: layout.size.width.value, height: layout.size.height.value)
+            bounds.size = CGSize(width: layout.size.width.fixedValue, height: layout.size.height.fixedValue)
         }
         
         // 旧尺寸
@@ -52,7 +52,7 @@ open class Line: LayoutView {
             // 父视图为布局视图
             // 通过计算如果已经确定了尺寸，也可以直接设置
             if sizeAfterCaculate.isFixed() {
-                bounds.size = CGSize(width: sizeAfterCaculate.width.value, height: sizeAfterCaculate.height.value)
+                bounds.size = CGSize(width: sizeAfterCaculate.width.fixedValue, height: sizeAfterCaculate.height.fixedValue)
             }
             if oldSize != bounds.size {
                 _ = LineCaculator.caculateLine(layout, from: parentMeasure)
@@ -63,16 +63,16 @@ open class Line: LayoutView {
             let parentCGSize = superview?.bounds ?? .zero
             
             var widthSize = sizeAfterCaculate.width
-            if case .ratio(let ratio) = widthSize {
-                widthSize = .fixed(parentCGSize.width * ratio)
+            if widthSize.isRatio {
+                widthSize = .fixed(parentCGSize.width * widthSize.ratio)
             }
             
             var heightSize = sizeAfterCaculate.height
-            if case .ratio(let ratio) = heightSize {
-                heightSize = .fixed(parentCGSize.height * ratio)
+            if heightSize.isRatio {
+                heightSize = .fixed(parentCGSize.height * heightSize.ratio)
             }
             
-            let newSize = CGSize(width: widthSize.value, height: heightSize.value)
+            let newSize = CGSize(width: widthSize.fixedValue, height: heightSize.fixedValue)
             
             bounds.size = newSize
             
@@ -90,15 +90,15 @@ open class Line: LayoutView {
         temp.py_size = size
         let sizeAfterCalulated = LineCaculator.caculateLine(layout, from: PlaceHolderMeasure())
         var widthSize = sizeAfterCalulated.width
-        if case .ratio(let ratio) = widthSize {
-            widthSize = .fixed(size.width * ratio)
+        if widthSize.isRatio {
+            widthSize = .fixed(size.width * widthSize.ratio)
         }
         
         var heightSize = sizeAfterCalulated.height
-        if case .ratio(let ratio) = heightSize {
-            heightSize = .fixed(size.height * ratio)
+        if heightSize.isRatio {
+            heightSize = .fixed(size.height * heightSize.ratio)
         }
-        return CGSize(width: widthSize.value, height: heightSize.value)
+        return CGSize(width: widthSize.fixedValue, height: heightSize.fixedValue)
     }
     
     open override func didMoveToSuperview() {

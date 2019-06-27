@@ -84,9 +84,9 @@ public struct CalCenter {
 public struct CalSize {
     public private(set) var direction: Direction = .x
     
-    public var main: SizeType
-    public var cross: SizeType
-    public init(main: SizeType, cross: SizeType, direction: Direction) {
+    public var main: SizeDescription
+    public var cross: SizeDescription
+    public init(main: SizeDescription, cross: SizeDescription, direction: Direction) {
         self.main = main
         self.cross = cross
         self.direction = direction

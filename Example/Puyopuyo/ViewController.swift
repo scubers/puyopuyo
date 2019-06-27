@@ -30,7 +30,7 @@ class ViewController: UIViewController {
             }
             .space(10)
             .padding(all: 10)
-            .size(width: .ratio(1))
+            .size(.ratio(1), .wrap)
             .view
     }
     
@@ -62,7 +62,7 @@ class ViewController: UIViewController {
 //                    .margin(left: 30, right: 10)
             }
 //            .size(width: .ratio(1), height: .fixed(100))
-            .size(width: .ratio(1), height: .wrap)
+            .size(.fill, .wrap)
             .space(10)
             .reverse(true)
             .formation(.leading)
@@ -114,7 +114,7 @@ class ViewController: UIViewController {
         .crossAxis([.left, .top])
         .padding(top: 50)
         .space(10)
-        .size(width: .ratio(1), height: .ratio(1))
+        .size(.ratio(1), .ratio(1))
 //        .reverse(true)
 //        .size(width: .ratio(1), height: .fixed(100))
 //        .reverse(true)
@@ -124,7 +124,8 @@ class ViewController: UIViewController {
             label?
                 .attach()
                 .margin(all: 10)
-                .size(width: .fixed(300), height: .fixed(100))
+                .size(50, 100)
+                .visible(.invisible)
             UIView.animate(withDuration: 0.5, animations: {
                 self.view.layoutIfNeeded()
             })

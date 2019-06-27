@@ -15,38 +15,19 @@ class MeasureCaculator {
         
         switch parent {
         case is LineLayout:
-//            let parentLayout = parent as! LineLayout
             let parentCGSize = parent.target?.py_size ?? .zero
             
             var widthSize = measure.size.width
             var heightSize = measure.size.height
             
-            if case .wrap = widthSize {
-                
-//                var wrappedSize: CGSize?
-//                if case .y = parentLayout.direction {
-//                    wrappedSize = measure.target?.py_sizeThatFits(CGSize(width: parentCGSize.width, height: 0))
-//                } else {
-//                    wrappedSize = measure.target?.py_sizeThatFits(CGSize(width: 0, height: parentCGSize.height))
-//                }
-                
-                //                mainSize = PuyoUtil.fixedSize(by: parentLayout.direction, cgSize: wrappedSize).main
-//                widthSize = PuyoUtil.size(from: wrappedSize, parentDirection: parentLayout.direction).main
+            if widthSize.isWrap {
                 let wrappedCGSize = measure.target?.py_sizeThatFits(CGSize(width: 0, height: parentCGSize.height))
-                widthSize = .fixed(wrappedCGSize?.width ?? 0)
+                widthSize = .fixed(widthSize.getWrapSize(by: wrappedCGSize?.width ?? 0))
             }
             
-            if case .wrap = heightSize {
-//                var wrappedSize: CGSize?
-//                if case .y = parentLayout.direction {
-//                    wrappedSize = measure.target?.py_sizeThatFits(CGSize(width: 0, height: parentCGSize.height))
-//                } else {
-//                    wrappedSize = measure.target?.py_sizeThatFits(CGSize(width: parentCGSize.width, height: 0))
-//                }
-//                //                crossSize = PuyoUtil.fixedSize(by: parentLayout.direction, cgSize: wrappedSize).cross
-//                heightSize = PuyoUtil.size(from: wrappedSize, parentDirection: parentLayout.direction).cross
+            if heightSize.isWrap {
                 let wrappedCGSize = measure.target?.py_sizeThatFits(CGSize(width: 0, height: parentCGSize.height))
-                heightSize = .fixed(wrappedCGSize?.height ?? 0)
+                heightSize = .fixed(heightSize.getWrapSize(by: wrappedCGSize?.height ?? 0))
             }
             
             return Size(width: widthSize, height: heightSize)
@@ -57,49 +38,7 @@ class MeasureCaculator {
         }
         
         return Size()
-        /*
-        if measure.ignore {
-            return Size()
-        }
-        
-        switch parent {
-        case is LineLayout:
-            
-            let parentLayout = parent as! LineLayout
-            let parentCGSize = parent.target?.py_size ?? .zero
-            
-            var mainSize = measure.size.main
-            if case .wrap = mainSize {
-                var wrappedSize: CGSize?
-                if case .y = parentLayout.direction {
-                    wrappedSize = measure.target?.py_sizeThatFits(CGSize(width: parentCGSize.width, height: 0))
-                } else {
-                    wrappedSize = measure.target?.py_sizeThatFits(CGSize(width: 0, height: parentCGSize.height))
-                }
-                
-//                mainSize = PuyoUtil.fixedSize(by: parentLayout.direction, cgSize: wrappedSize).main
-                mainSize = PuyoUtil.size(from: wrappedSize, parentDirection: parentLayout.direction).main
-            }
-            
-            var crossSize = measure.size.cross
-            if case .wrap = crossSize {
-                var wrappedSize: CGSize?
-                if case .y = parentLayout.direction {
-                    wrappedSize = measure.target?.py_sizeThatFits(CGSize(width: 0, height: parentCGSize.height))
-                } else {
-                    wrappedSize = measure.target?.py_sizeThatFits(CGSize(width: parentCGSize.width, height: 0))
-                }
-//                crossSize = PuyoUtil.fixedSize(by: parentLayout.direction, cgSize: wrappedSize).cross
-                crossSize = PuyoUtil.size(from: wrappedSize, parentDirection: parentLayout.direction).cross
-            }
-            
-            return Size(main: mainSize, cross: crossSize)
-            
-        case is ZLayout: return Size()
-            
-        default: fatalError()
-        }
-        */
+       
     }
 }
 
@@ -158,23 +97,26 @@ class LineCaculator {
             
             // main
             let subCalSize = CalSize(size: subSize, direction: layout.direction)
-            if case .ratio(let ratio) = subCalSize.main {
+//            if case .ratio(let ratio) = subCalSize.main {
+            if subCalSize.main.isRatio {
                 // 需要保存起来，最后计算
                 ratioMeasures.append(measure)
-                totalMainRatio += ratio
+                totalMainRatio += subCalSize.main.ratio
                 let calMargin = CalEdges(insets: measure.margin, direction: layout.direction)
                 totalFixedMain += (calMargin.start + calMargin.end)
             } else {
                 // cross
                 var subCrossSize = subCalSize.cross
-                if case .ratio(let ratio) = subCalSize.cross {
+//                if case .ratio(let ratio) = subCalSize.cross {
+                if subCalSize.cross.isRatio {
+                    let ratio = subCalSize.cross.ratio
                     subCrossSize = .fixed((layoutSize.cross - (layoutPadding.forward + layoutPadding.backward + calMargin.forward + calMargin.backward)) * ratio)
                 }
                 // 设置具体size
-                measure.target?.py_size = CalFixedSize(main: subCalSize.main.value, cross: subCrossSize.value, direction: layout.direction).getSize()
+                measure.target?.py_size = CalFixedSize(main: subCalSize.main.fixedValue, cross: subCrossSize.fixedValue, direction: layout.direction).getSize()
                 // 记录最大cross
-                maxCross = max(subCrossSize.value + calMargin.forward + calMargin.backward, maxCross)
-                totalFixedMain += (subCalSize.main.value + calMargin.start + calMargin.end)
+                maxCross = max(subCrossSize.fixedValue + calMargin.forward + calMargin.backward, maxCross)
+                totalFixedMain += (subCalSize.main.fixedValue + calMargin.start + calMargin.end)
             }
         }
         
@@ -185,13 +127,15 @@ class LineCaculator {
             let calMargin = CalEdges(insets: measure.margin, direction: layout.direction)
             // cross
             var subCrossSize = calSize.cross
-            if case .ratio(let ratio) = subCrossSize {
+//            if case .ratio(let ratio) = subCrossSize {
+            if subCrossSize.isRatio {
+                let ratio = subCrossSize.ratio
                 subCrossSize = .fixed((layoutSize.cross - (layoutPadding.forward + layoutPadding.backward + calMargin.forward + calMargin.backward)) * ratio)
             }
             // main
-            let subMainSize = SizeType.fixed((calSize.main.value / totalMainRatio) * (layoutSize.main - totalFixedMain - totalMainSpace))
-            measure.target?.py_size = CalFixedSize(main: subMainSize.value, cross: subCrossSize.value, direction: layout.direction).getSize()
-            maxCross = max(subCrossSize.value + calMargin.forward + calMargin.backward, maxCross)
+            let subMainSize = SizeDescription.fixed((calSize.main.fixedValue / totalMainRatio) * (layoutSize.main - totalFixedMain - totalMainSpace))
+            measure.target?.py_size = CalFixedSize(main: subMainSize.fixedValue, cross: subCrossSize.fixedValue, direction: layout.direction).getSize()
+            maxCross = max(subCrossSize.fixedValue + calMargin.forward + calMargin.backward, maxCross)
         }
         
         // 计算center
@@ -201,17 +145,17 @@ class LineCaculator {
         var main = layout.size.getMain(parent: parent.direction)
         if main.isWrap {
             if parent.direction == layout.direction {
-                main = .fixed(lastEnd + layoutPadding.end)
+                main = .fixed(main.getWrapSize(by: lastEnd + layoutPadding.end))
             } else {
-                main = .fixed(maxCross + layoutPadding.forward + layoutPadding.backward)
+                main = .fixed(main.getWrapSize(by: maxCross + layoutPadding.forward + layoutPadding.backward))
             }
         }
         var cross = layout.size.getCross(parent: parent.direction)
         if cross.isWrap {
             if parent.direction == layout.direction {
-                cross = .fixed(maxCross + layoutPadding.forward + layoutPadding.backward)
+                cross = .fixed(cross.getWrapSize(by: maxCross + layoutPadding.forward + layoutPadding.backward))
             } else {
-                cross = .fixed(lastEnd + layoutPadding.end)
+                cross = .fixed(cross.getWrapSize(by: lastEnd + layoutPadding.end))
             }
         }
 
@@ -219,12 +163,10 @@ class LineCaculator {
         
     }
     
-    private static func check(parent: SizeType, child: SizeType) {
+    private static func check(parent: SizeDescription, child: SizeDescription) {
         // 当父依赖子时，子不能依赖父
-        switch (parent, child) {
-        case (.wrap, .ratio(_)):
+        if parent.isWrap && child.isRatio {
             fatalError("parent and child in a dependency cycle!!!!")
-        default: break
         }
     }
     
