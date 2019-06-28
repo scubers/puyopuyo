@@ -21,6 +21,12 @@ class ViewController: UIViewController {
         randomViewColor(view: view)
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let vc = StyleTestViewController()
+        let nav = UINavigationController(rootViewController: vc)
+        present(nav, animated: true, completion: nil)
+    }
+    
     func testSizeThatFits() -> Line {
         return
             VLine().attach() {

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		09883C4A22C5E5FB006CE05A /* StyleTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09883C4922C5E5FB006CE05A /* StyleTestViewController.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
@@ -29,6 +30,7 @@
 
 /* Begin PBXFileReference section */
 		029D039CF2FB7AD03311F02E /* Pods-Puyopuyo_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Puyopuyo_Tests.debug.xcconfig"; path = "Target Support Files/Pods-Puyopuyo_Tests/Pods-Puyopuyo_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		09883C4922C5E5FB006CE05A /* StyleTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleTestViewController.swift; sourceTree = "<group>"; };
 		3324E3ECDF4649B3EFDB8B1A /* Puyopuyo.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Puyopuyo.podspec; path = ../Puyopuyo.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		607FACD01AFB9204008FA782 /* Puyopuyo_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Puyopuyo_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
+				09883C4922C5E5FB006CE05A /* StyleTestViewController.swift */,
 			);
 			name = "Example for Puyopuyo";
 			path = Puyopuyo;
@@ -335,6 +338,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				09883C4A22C5E5FB006CE05A /* StyleTestViewController.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 			);
