@@ -8,6 +8,7 @@
 
 import UIKit
 import Puyopuyo
+import TangramKit
 
 class ViewController: UIViewController {
     override func viewDidLoad() {
@@ -43,7 +44,7 @@ class ViewController: UIViewController {
     func testLink() {
 //        let link =
         var label: UIView?
-        VLine().attach(view, wrap: false) {
+        VLine().attach(view) {
             
 //            $0.backgroundColor = self.randomColor()
             
@@ -56,22 +57,59 @@ class ViewController: UIViewController {
 //                .attach($0)
             
             
-            HLine().attach($0, wrap: false) {
+            HLine.attach($0) {
                 label =
                 self.getLabel("1111").attach($0)
+                    .height(.ratio(1))
                     .view
 //                    .margin(left: 5, right: 20)
                 self.getLabel("2222").attach($0)
                     .aligment([.bottom])
 //                    .margin(left: 30, right: 10)
+                label =
                 self.getLabel("扥扥零担疯了").attach($0)
+                    .height(50)
+                    .view
 //                    .margin(left: 30, right: 10)
             }
 //            .size(width: .ratio(1), height: .fixed(100))
-            .size(.fill, .wrap)
+            .size(.wrap, .wrap)
             .space(10)
             .reverse(true)
+            .padding(top: 10, left: 20, bottom: 20, right: 5)
             .formation(.leading)
+            .aligment([.right])
+            
+            func getView() -> UIView {
+                let v = TGLinearLayout(.horz)
+                var label = self.getLabel("1111")
+                label.tg_size(width: .wrap, height: 100%)
+                v.addSubview(label)
+                
+                label = self.getLabel("2222")
+                label.tg_size(width: .wrap, height: .wrap)
+                label.tg_alignment = TGGravity.vert.bottom
+                v.addSubview(label)
+                
+                label = self.getLabel("扥扥零担疯了")
+                label.tg_size(width: .wrap, height: 50)
+                v.addSubview(label)
+                
+                v.tg_reverseLayout = true
+                v.tg_padding = UIEdgeInsets(top: 10, left: 20, bottom: 20, right: 5)
+                v.tg_space = 10
+                v.tg_size(width: .wrap, height: .wrap)
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                    label.tg_size(width: .wrap, height: 100)
+                })
+                
+                return v
+            }
+            
+            getView().attach($0)
+                .size(.wrap, .wrap)
+                .aligment([.right])
 //            .padding(left: 30, right: 50)
 //            .formation(.trailing)
 //            .reverse(true)
@@ -127,11 +165,10 @@ class ViewController: UIViewController {
 //        .size(main: .ratio(1), cross: .ratio(1))
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//            return;
             label?
                 .attach()
-                .margin(all: 10)
-                .size(50, 100)
-                .visible(.invisible)
+                .size(.wrap, 100)
             UIView.animate(withDuration: 0.5, animations: {
                 self.view.layoutIfNeeded()
             })

@@ -10,7 +10,11 @@ import UIKit
 import Puyopuyo
 
 
-class StyleTestViewController: UIViewController {
+class StyleTestViewController: UIViewController, UIScrollViewDelegate {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print(scrollView.contentSize)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,10 +27,11 @@ class StyleTestViewController: UIViewController {
     func setupViews() {
         let scroll = UIScrollView()
         scroll.frame = view.bounds
-        scroll.contentSize = CGSize(width: 0, height: view.bounds.height * 10)
+        scroll.delegate = self
+//        scroll.contentSize = CGSize(width: 0, height: view.bounds.height * 10)
         view.addSubview(scroll)
         
-        VLine().attach(scroll, wrap: false) {
+        VLine().attach(scroll) {
             
             VLine().attach($0) {
                 self.getDescriptionLabel(text: "字体(Font size)").attach($0)
@@ -110,12 +115,13 @@ class StyleTestViewController: UIViewController {
             }
             .space(5)
             
-            self.getMeiyeColors().attach($0)
+//            self.getMeiyeColors().attach($0)
         }
         .padding(top: 10, left: 20, right: 20)
         .space(20)
+        .width(.ratio(1))
 //        .reverse(true)
-        .size(.ratio(1), .ratio(1))
+//        .size(.wrap, .wrap)
     }
     
     func getMeiyeColors() -> UIView {

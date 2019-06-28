@@ -1,8 +1,14 @@
 PODS:
   - Puyopuyo (0.1.0)
+  - TangramKit (1.4.0)
 
 DEPENDENCIES:
   - Puyopuyo (from `../`)
+  - TangramKit
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - TangramKit
 
 EXTERNAL SOURCES:
   Puyopuyo:
@@ -10,7 +16,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Puyopuyo: 1814077cd7450f0dd21452fabcf1c2f320e021f4
+  TangramKit: 15ccb6480f0e32c284f0a076542a607226e158dd
 
-PODFILE CHECKSUM: 154f143c18a1723bd87a2dd426df99c0ccc07136
+PODFILE CHECKSUM: 1f173931c2fd7d5a005a39ff64d4f9ac83fa46da
 
 COCOAPODS: 1.6.2

@@ -120,29 +120,25 @@ extension PuyoLink where T: Line {
     @discardableResult
     public func crossAxis(_ aligment: Aligment) -> Self {
         view.layout.crossAxis = aligment
-        view.setNeedsLayout()
-        view.superview?.setNeedsLayout()
+        setNeedsLayout()
         return self
     }
     @discardableResult
     public func space(_ space: CGFloat) -> Self {
         view.layout.space = space
-        view.setNeedsLayout()
-        view.superview?.setNeedsLayout()
+        setNeedsLayout()
         return self
     }
     @discardableResult
     public func formation(_ formation: Formation) -> Self {
         view.layout.formation = formation
-        view.setNeedsLayout()
-        view.superview?.setNeedsLayout()
+        setNeedsLayout()
         return self
     }
     @discardableResult
     public func direction(_ direction: Direction) -> Self {
         view.layout.direction = direction
-        view.setNeedsLayout()
-        view.superview?.setNeedsLayout()
+        setNeedsLayout()
         return self
     }
     @discardableResult
@@ -154,15 +150,13 @@ extension PuyoLink where T: Line {
         if let left = left { view.layout.padding.left = left }
         if let bottom = bottom { view.layout.padding.bottom = bottom }
         if let right = right { view.layout.padding.right = right }
-        view.setNeedsLayout()
-        view.superview?.setNeedsLayout()
+        setNeedsLayout()
         return self
     }
     @discardableResult
     public func reverse(_ reverse: Bool) -> Self {
         view.layout.reverse = reverse
-        view.setNeedsLayout()
-        view.superview?.setNeedsLayout()
+        setNeedsLayout()
         return self
     }
 }

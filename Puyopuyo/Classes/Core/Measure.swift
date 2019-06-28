@@ -125,7 +125,7 @@ public class LineLayout: BaseLayout {
     
     public var reverse = false
     
-    public var auto = false
+    public var autoJudgeScroll = true
     
     public override func caculate(byParent parent: Measure) -> Size {
         return LineCaculator.caculateLine(self, from: parent)

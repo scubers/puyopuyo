@@ -8,103 +8,154 @@
 
 /* Begin PBXBuildFile section */
 		07C4829B63026E8CB0C89D2F5F601E60 /* Pods-Puyopuyo_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 946BAD53C050A28B29E560B3BFBC1F26 /* Pods-Puyopuyo_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		18F1B9D2E2BB7878D0E0A4AADF0ECC9E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
+		19AF4AC5C8BBAE0B48078CF0795DB286 /* TGRelativeLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734E4925F9892CED1F043CFA411CA8A4 /* TGRelativeLayout.swift */; };
+		248CC2BEEDB3CB168882FBBF71419E3E /* TGLayoutSizeClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288B5DF1FF296D82244F1D47210EC862 /* TGLayoutSizeClass.swift */; };
+		254012A749CCC87EFB2448541332D4A9 /* Puyopuyo-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = FB06A356EBD4B9834978A2B39102902F /* Puyopuyo-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		316D7E14F1BA4DB40CF1C239EE205512 /* TGFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = D283967569BD5B46279EE0186880A706 /* TGFlowLayout.swift */; };
+		32D9A733430B51A0FE45012CD5351DEA /* Visibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759F9957ABEE64D948E79EBACD89B8EE /* Visibility.swift */; };
+		33AD6758352B65427CBF01B4496065EA /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D3C1B8E827925960F7B5339243D21A /* Size.swift */; };
 		38D43744F7C44D935DB14FE5A9BC0C0F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
-		53F387E4AA5115A5FD7B2C5B0DDC458C /* Puyopuyo-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 3916A0BA1EB1211A6A231CD0EA591047 /* Puyopuyo-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		72CA677F16F07CFAC90BD6A2AB2E9381 /* Pods-Puyopuyo_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ABA3C2863EBC298F53FFFB0164378F /* Pods-Puyopuyo_Example-dummy.m */; };
-		7C10A0248C6178F84D23665EBD3C3686 /* Puyopuyo-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = ECA246D58C6816710B9B85B1B36A48D1 /* Puyopuyo-dummy.m */; };
-		80E90AFD2AF43E6F007847194136D8DB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
+		3E97057C2A71920346BE5E166E04F789 /* Caculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 192AAEAE3FD759801B511A1FC2188EDB /* Caculator.swift */; };
+		4066E257149C5677191FA904BF9FC358 /* TGFrameLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32BD8C7486D57C440BCBB579F485055 /* TGFrameLayout.swift */; };
+		4A15E1010E93C0F8E4D77592017D3474 /* MeasureBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EB9319DBF710E86E6B65A2C4B6A306 /* MeasureBox.swift */; };
+		6CD862C04B1A8CA0AC75D13F997566EB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
+		73186730F5DB484D64D5B9769AFFA5B6 /* TGLayoutPos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B52B17CEF585BC87C9C60D31E54B7C8 /* TGLayoutPos.swift */; };
+		7378D7E4E9B20EA6B3CBB6D5A5CC9ACD /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B729447413D74934F36767A2584C3516 /* View+Extension.swift */; };
+		744D2E2343CCE82A9019AA5B3044CF46 /* TangramKit-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 4683BD53C69BB76CE3885C53ABF6D16C /* TangramKit-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		79B9570DA3AB890974847E4721002AD9 /* TGPathLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501213F0D3CC869F6DB579DE594426DE /* TGPathLayout.swift */; };
+		8645A6528F262F13332CFF4E962353ED /* TangramKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFD77E50B0F7E0B6B50702086113 /* TangramKit-dummy.m */; };
+		88F6C2F29B004D966DA98C2B9E8B295D /* Pods-Puyopuyo_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = BEA97967ECB1CB4CAF52C5B393392106 /* Pods-Puyopuyo_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8C6F2987EE3C20CDF57CF0123918EFD2 /* Pods-Puyopuyo_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 050C2A30B648BC939140B19A19FFE78F /* Pods-Puyopuyo_Tests-dummy.m */; };
-		A672C47EA53EB638FAF9A0D92D8108B8 /* Measure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7893960A898CEA622EFF00135331CC /* Measure.swift */; };
-		A816500222C539AD00BA7C1A /* PuyoLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = A816500122C539AC00BA7C1A /* PuyoLink.swift */; };
-		A81B722C22BE7533001C919E /* Caculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81B722B22BE7533001C919E /* Caculator.swift */; };
-		A81B722E22BF3E33001C919E /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81B722D22BF3E33001C919E /* View+Extension.swift */; };
-		A81B723022BF440F001C919E /* MeasureBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81B722F22BF440F001C919E /* MeasureBox.swift */; };
-		A81B723422BFBAEB001C919E /* PuyoLinkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81B723322BFBAEB001C919E /* PuyoLinkHelper.swift */; };
-		A826C8A622C513D100790276 /* Visibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = A826C8A522C513D100790276 /* Visibility.swift */; };
-		A8DACD8022C4EF3A00C9F61E /* Lines.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8DACD7F22C4EF3A00C9F61E /* Lines.swift */; };
-		A8E2948A22C3ABEB00DD5AF1 /* Caculations.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E2948922C3ABEB00DD5AF1 /* Caculations.swift */; };
-		A8E8835D22BE6C5100D0E62C /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E8835C22BE6C5100D0E62C /* Size.swift */; };
-		AECC3FDDBD769C27BAD2EC6E5BF0699E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
-		E8092472C1E42723BA46CDCB33FBC22E /* Pods-Puyopuyo_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = BEA97967ECB1CB4CAF52C5B393392106 /* Pods-Puyopuyo_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EE3493CB4F8565CE0019F7A28F913792 /* Measurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7B27BA14B164EAB1A36412110343BBC /* Measurable.swift */; };
+		93A447261CF57152EC926A4FFC0D0C16 /* TGTableLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A6EB8FEE9A4F28309086FFA6CE5261 /* TGTableLayout.swift */; };
+		A95C951849D460C4F3F7B35B1CFA2099 /* Caculations.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD4994107E6F3DD3415998B35246C06 /* Caculations.swift */; };
+		ABB01820E5E50BF68CACED3F8FA4FED3 /* TGDimeAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5171A2ED8FB4DF972049F6FCA5CF95 /* TGDimeAdapter.swift */; };
+		B7942A565A0B45907E311AE499F93354 /* TGLayoutSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47EBEF02FB70CF93FFB1F08677531A0C /* TGLayoutSize.swift */; };
+		B8559F2C6124FC2B80AD4E6DBC93CF9D /* PuyoLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 291133C49C8C75643E35E5EE3BCD8601 /* PuyoLink.swift */; };
+		BA330FF21CB34C1A7A6784E51134F445 /* TangramKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB578C3A69D3F3D962D0AFAFC14E6B7C /* TangramKit.swift */; };
+		C4AC48AE1C4877EE0B17B6CBD3515464 /* TGLinearLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224975C393D38F2BDA54ED71253B3B5 /* TGLinearLayout.swift */; };
+		C96050C07AC7842C1EA973F6596989C7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
+		CA17F1D5184D0C08DA8F7D078C66CBC9 /* Puyopuyo-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 305AADA758BFA15C543B24633C8CE59D /* Puyopuyo-dummy.m */; };
+		D3755DD32262ACD9B6C5B7A9ABB1B680 /* Measurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C596A3529413684C30F1A93E54798D59 /* Measurable.swift */; };
+		D40CF5054748B9E55D9CF376C863907C /* Pods-Puyopuyo_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ABA3C2863EBC298F53FFFB0164378F /* Pods-Puyopuyo_Example-dummy.m */; };
+		DB4DADBE373F1B0BEE0ED47EBC5F16FB /* PuyoLinkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3FDEF3FC2EF80E7777DB35812FA49FD /* PuyoLinkHelper.swift */; };
+		DB9A8EC2F0DF4275BF17D3A1C97A9BF9 /* Measure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90F6985EA9499B8C92243CECB93E7BE5 /* Measure.swift */; };
+		E8B8D85C88A6632815DE9A7CB1211672 /* TGFloatLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C43EE1E2155949EF9D5007A7BF3A4CE3 /* TGFloatLayout.swift */; };
+		F1824FB33B270C891304BF69095BFAD4 /* TGBaseLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1986310E30FDFD1BCBF5EB60D816A3 /* TGBaseLayout.swift */; };
+		F231EA449C9DE5BEE087C822962C7505 /* Lines.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5858A18B58B142DB5157EE9FF4A0BA8E /* Lines.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		67A12FE14AA603D5A36A227F531A3CDB /* PBXContainerItemProxy */ = {
+		32235A9AC0882F202213A1491562D9D3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 5F7C744C95F5C4FFA6E0AA41FC9A754C;
+			remoteGlobalIDString = 2E6E62D113AA217A491D149E61D65D8D;
 			remoteInfo = Puyopuyo;
 		};
 		AA0659DD08EDFD1835CE8E20C149B1C5 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = EF25DA5D672E789002949F73D9953BCE;
+			remoteGlobalIDString = 74D243D1C26ED9E43CC93520546F950F;
 			remoteInfo = "Pods-Puyopuyo_Example";
+		};
+		DA21835BE2FCB946F930D4367622D7CD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 474EDF6AB387EF36A4F641B8EC0FAECA;
+			remoteInfo = TangramKit;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		01C35A3C01D94A0FE658DB96FA1B2A82 /* Pods_Puyopuyo_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Puyopuyo_Example.framework; path = "Pods-Puyopuyo_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		045722027BB4DF19AB95EF07C8B26805 /* Pods-Puyopuyo_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Puyopuyo_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		050C2A30B648BC939140B19A19FFE78F /* Pods-Puyopuyo_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Puyopuyo_Tests-dummy.m"; sourceTree = "<group>"; };
-		0B8F4E6104168509CCE5A6F771AC2E67 /* Puyopuyo-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Puyopuyo-prefix.pch"; sourceTree = "<group>"; };
+		0FFC4C8C3602613DD38580C2E91854DA /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		192AAEAE3FD759801B511A1FC2188EDB /* Caculator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Caculator.swift; sourceTree = "<group>"; };
+		2224975C393D38F2BDA54ED71253B3B5 /* TGLinearLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGLinearLayout.swift; path = TangramKit/TGLinearLayout.swift; sourceTree = "<group>"; };
+		23EB9319DBF710E86E6B65A2C4B6A306 /* MeasureBox.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MeasureBox.swift; sourceTree = "<group>"; };
+		2740DFD77E50B0F7E0B6B50702086113 /* TangramKit-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "TangramKit-dummy.m"; sourceTree = "<group>"; };
+		288B5DF1FF296D82244F1D47210EC862 /* TGLayoutSizeClass.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGLayoutSizeClass.swift; path = TangramKit/TGLayoutSizeClass.swift; sourceTree = "<group>"; };
+		291133C49C8C75643E35E5EE3BCD8601 /* PuyoLink.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PuyoLink.swift; sourceTree = "<group>"; };
+		303FA63CE16F40449C24C1CBDE59372B /* TangramKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = TangramKit.framework; path = TangramKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		305AADA758BFA15C543B24633C8CE59D /* Puyopuyo-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Puyopuyo-dummy.m"; sourceTree = "<group>"; };
 		3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		36EB1850F2FC76F977A410AB1018D5F6 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		387F6326E5E54CCDF340B249BD9E9A29 /* Pods-Puyopuyo_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Puyopuyo_Example-frameworks.sh"; sourceTree = "<group>"; };
-		3916A0BA1EB1211A6A231CD0EA591047 /* Puyopuyo-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Puyopuyo-umbrella.h"; sourceTree = "<group>"; };
-		5286B1DFEF505E5F9565E3897259CB31 /* Puyopuyo.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Puyopuyo.xcconfig; sourceTree = "<group>"; };
-		6D7893960A898CEA622EFF00135331CC /* Measure.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Measure.swift; sourceTree = "<group>"; };
-		758F7DCB20C277395C33E7D1EF52459B /* Puyopuyo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Puyopuyo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B52B17CEF585BC87C9C60D31E54B7C8 /* TGLayoutPos.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGLayoutPos.swift; path = TangramKit/TGLayoutPos.swift; sourceTree = "<group>"; };
+		4043D24B48F47BE8B5B1373A47C16A49 /* TangramKit-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "TangramKit-prefix.pch"; sourceTree = "<group>"; };
+		446E67D2E56A6768ADAE17445A6E835A /* Pods_Puyopuyo_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Puyopuyo_Tests.framework; path = "Pods-Puyopuyo_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4683BD53C69BB76CE3885C53ABF6D16C /* TangramKit-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "TangramKit-umbrella.h"; sourceTree = "<group>"; };
+		47D3C1B8E827925960F7B5339243D21A /* Size.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Size.swift; sourceTree = "<group>"; };
+		47EBEF02FB70CF93FFB1F08677531A0C /* TGLayoutSize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGLayoutSize.swift; path = TangramKit/TGLayoutSize.swift; sourceTree = "<group>"; };
+		501213F0D3CC869F6DB579DE594426DE /* TGPathLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGPathLayout.swift; path = TangramKit/TGPathLayout.swift; sourceTree = "<group>"; };
+		55A8C6341F789E991F480DE77C550A7A /* Puyopuyo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Puyopuyo.framework; path = Puyopuyo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5858A18B58B142DB5157EE9FF4A0BA8E /* Lines.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Lines.swift; sourceTree = "<group>"; };
+		63A4F69D47DCA1430F95B224EC9D982A /* Puyopuyo.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Puyopuyo.xcconfig; sourceTree = "<group>"; };
+		7325542AC4726F0D86B768165B709130 /* Puyopuyo.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = Puyopuyo.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		734E4925F9892CED1F043CFA411CA8A4 /* TGRelativeLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGRelativeLayout.swift; path = TangramKit/TGRelativeLayout.swift; sourceTree = "<group>"; };
+		759F9957ABEE64D948E79EBACD89B8EE /* Visibility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Visibility.swift; sourceTree = "<group>"; };
 		75E6E9E4EB5A601F39122BA55A2BCCDF /* Pods-Puyopuyo_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Puyopuyo_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
 		76F5B77E7BA6164C31FAD262A7E3FF0C /* Pods-Puyopuyo_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Puyopuyo_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		7CC536EDFD60EA202AECA0230478D064 /* Pods-Puyopuyo_Tests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Puyopuyo_Tests-Info.plist"; sourceTree = "<group>"; };
-		819DE94E9215A6CB153B7FE950604104 /* Puyopuyo.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Puyopuyo.modulemap; sourceTree = "<group>"; };
 		82A8CE6D539FFB0F3FEA004E62112885 /* Pods-Puyopuyo_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Puyopuyo_Tests.modulemap"; sourceTree = "<group>"; };
+		890F5DE73D77640FF68561A79A62580C /* Puyopuyo-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Puyopuyo-prefix.pch"; sourceTree = "<group>"; };
+		8A42F9E826E6F2BD27F19E1C9AB76C14 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
+		90F6985EA9499B8C92243CECB93E7BE5 /* Measure.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Measure.swift; sourceTree = "<group>"; };
 		936B3F65F533D1407DB89DDCC104494B /* Pods-Puyopuyo_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Puyopuyo_Example-acknowledgements.plist"; sourceTree = "<group>"; };
 		946BAD53C050A28B29E560B3BFBC1F26 /* Pods-Puyopuyo_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Puyopuyo_Tests-umbrella.h"; sourceTree = "<group>"; };
-		9B979641EDF6CC423EF74DD6DF94A538 /* Puyopuyo-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Puyopuyo-Info.plist"; sourceTree = "<group>"; };
 		9CC06E46D2F7D85084AD4861044A8293 /* Pods-Puyopuyo_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Puyopuyo_Example.release.xcconfig"; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		A816500122C539AC00BA7C1A /* PuyoLink.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PuyoLink.swift; sourceTree = "<group>"; };
-		A81B722B22BE7533001C919E /* Caculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Caculator.swift; sourceTree = "<group>"; };
-		A81B722D22BF3E33001C919E /* View+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
-		A81B722F22BF440F001C919E /* MeasureBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureBox.swift; sourceTree = "<group>"; };
-		A81B723322BFBAEB001C919E /* PuyoLinkHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PuyoLinkHelper.swift; sourceTree = "<group>"; };
-		A826C8A522C513D100790276 /* Visibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Visibility.swift; sourceTree = "<group>"; };
-		A8DACD7F22C4EF3A00C9F61E /* Lines.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lines.swift; sourceTree = "<group>"; };
-		A8E2948922C3ABEB00DD5AF1 /* Caculations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Caculations.swift; sourceTree = "<group>"; };
-		A8E8835C22BE6C5100D0E62C /* Size.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Size.swift; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		AB578C3A69D3F3D962D0AFAFC14E6B7C /* TangramKit.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TangramKit.swift; path = TangramKit/TangramKit.swift; sourceTree = "<group>"; };
+		ABD4994107E6F3DD3415998B35246C06 /* Caculations.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Caculations.swift; sourceTree = "<group>"; };
 		B2ABA3C2863EBC298F53FFFB0164378F /* Pods-Puyopuyo_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Puyopuyo_Example-dummy.m"; sourceTree = "<group>"; };
-		B4748A42EFA013AD56E85D71E4B4CB1A /* Puyopuyo.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = Puyopuyo.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		B32BD8C7486D57C440BCBB579F485055 /* TGFrameLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGFrameLayout.swift; path = TangramKit/TGFrameLayout.swift; sourceTree = "<group>"; };
+		B52ACCBE73179F21BDC3C47205DF1243 /* TangramKit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = TangramKit.xcconfig; sourceTree = "<group>"; };
+		B729447413D74934F36767A2584C3516 /* View+Extension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
+		B9A6EB8FEE9A4F28309086FFA6CE5261 /* TGTableLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGTableLayout.swift; path = TangramKit/TGTableLayout.swift; sourceTree = "<group>"; };
 		BEA97967ECB1CB4CAF52C5B393392106 /* Pods-Puyopuyo_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Puyopuyo_Example-umbrella.h"; sourceTree = "<group>"; };
-		C7B27BA14B164EAB1A36412110343BBC /* Measurable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Measurable.swift; sourceTree = "<group>"; };
+		C3FDEF3FC2EF80E7777DB35812FA49FD /* PuyoLinkHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PuyoLinkHelper.swift; sourceTree = "<group>"; };
+		C43EE1E2155949EF9D5007A7BF3A4CE3 /* TGFloatLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGFloatLayout.swift; path = TangramKit/TGFloatLayout.swift; sourceTree = "<group>"; };
+		C596A3529413684C30F1A93E54798D59 /* Measurable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Measurable.swift; sourceTree = "<group>"; };
 		CC94DF659D9E5D55D9543BF71FF0BB0A /* Pods-Puyopuyo_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Puyopuyo_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		D3790F13D9668C9655C850B8C64BCDD2 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		CE1986310E30FDFD1BCBF5EB60D816A3 /* TGBaseLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGBaseLayout.swift; path = TangramKit/TGBaseLayout.swift; sourceTree = "<group>"; };
+		D283967569BD5B46279EE0186880A706 /* TGFlowLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGFlowLayout.swift; path = TangramKit/TGFlowLayout.swift; sourceTree = "<group>"; };
 		D406BB4F172E147524BD0D34306C3E3C /* Pods-Puyopuyo_Example-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Puyopuyo_Example-Info.plist"; sourceTree = "<group>"; };
-		DD2C97E26D4E455C647584D297607060 /* Pods_Puyopuyo_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Puyopuyo_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		ECA246D58C6816710B9B85B1B36A48D1 /* Puyopuyo-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Puyopuyo-dummy.m"; sourceTree = "<group>"; };
-		EE5DD414AD1513438287AF4FE0042222 /* Pods_Puyopuyo_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Puyopuyo_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB5171A2ED8FB4DF972049F6FCA5CF95 /* TGDimeAdapter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGDimeAdapter.swift; path = TangramKit/TGDimeAdapter.swift; sourceTree = "<group>"; };
+		F30F3032E0E9616F59E949B95C2A327C /* Puyopuyo-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Puyopuyo-Info.plist"; sourceTree = "<group>"; };
+		F41DAEE74F989A829C88C77BFEAED596 /* TangramKit.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = TangramKit.modulemap; sourceTree = "<group>"; };
+		F4A8C5991171B7333535367B0A69B7E1 /* Puyopuyo.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Puyopuyo.modulemap; sourceTree = "<group>"; };
 		F63EA10989F3111747CB8D30AF317A50 /* Pods-Puyopuyo_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Puyopuyo_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		FABD12BF6D6C192FFD94BEDB71CB468F /* Pods-Puyopuyo_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Puyopuyo_Example.modulemap"; sourceTree = "<group>"; };
+		FAED2160B5B5BC507EA6D2B7EB88A259 /* TangramKit-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "TangramKit-Info.plist"; sourceTree = "<group>"; };
+		FB06A356EBD4B9834978A2B39102902F /* Puyopuyo-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Puyopuyo-umbrella.h"; sourceTree = "<group>"; };
 		FC86032504C679A5467C62A83D6D99B6 /* Pods-Puyopuyo_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Puyopuyo_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		70843101D6036183DFFF569C63ADB918 /* Frameworks */ = {
+		4736347A714987BDA2844B754E8F558A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				80E90AFD2AF43E6F007847194136D8DB /* Foundation.framework in Frameworks */,
+				6CD862C04B1A8CA0AC75D13F997566EB /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8ACFD9B93949BF40020ACB67C0536DC4 /* Frameworks */ = {
+		51C8150979205EFE74A7892612BB041F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AECC3FDDBD769C27BAD2EC6E5BF0699E /* Foundation.framework in Frameworks */,
+				C96050C07AC7842C1EA973F6596989C7 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5289DE4DB31FBECEA66BD92F2D0D8930 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18F1B9D2E2BB7878D0E0A4AADF0ECC9E /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,15 +170,48 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		13A91C160F4DC9C46067BED901BEAB55 /* Core */ = {
+		032DA3EAA7124BD71C0D6A810DE7D4BA /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				C7B27BA14B164EAB1A36412110343BBC /* Measurable.swift */,
-				6D7893960A898CEA622EFF00135331CC /* Measure.swift */,
-				A8E8835C22BE6C5100D0E62C /* Size.swift */,
+				E5E4328B6C0AF75C678CD0A8EC5DE01C /* TangramKit */,
 			);
-			name = Core;
-			path = Puyopuyo/Classes/Core;
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		089ECAC8C18CEB92DB92F646CE4B1A4A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5858A18B58B142DB5157EE9FF4A0BA8E /* Lines.swift */,
+				23EB9319DBF710E86E6B65A2C4B6A306 /* MeasureBox.swift */,
+				291133C49C8C75643E35E5EE3BCD8601 /* PuyoLink.swift */,
+				C3FDEF3FC2EF80E7777DB35812FA49FD /* PuyoLinkHelper.swift */,
+				B729447413D74934F36767A2584C3516 /* View+Extension.swift */,
+				759F9957ABEE64D948E79EBACD89B8EE /* Visibility.swift */,
+			);
+			name = Views;
+			path = Puyopuyo/Classes/Views;
+			sourceTree = "<group>";
+		};
+		10D981AC152E6657167A6ED071FBE198 /* Development Pods */ = {
+			isa = PBXGroup;
+			children = (
+				ED2FA6804E1B95BD5EE80F93D7D46D5F /* Puyopuyo */,
+			);
+			name = "Development Pods";
+			sourceTree = "<group>";
+		};
+		1BE1949B8E51521EB0696B180C75D2CB /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				F4A8C5991171B7333535367B0A69B7E1 /* Puyopuyo.modulemap */,
+				63A4F69D47DCA1430F95B224EC9D982A /* Puyopuyo.xcconfig */,
+				305AADA758BFA15C543B24633C8CE59D /* Puyopuyo-dummy.m */,
+				F30F3032E0E9616F59E949B95C2A327C /* Puyopuyo-Info.plist */,
+				890F5DE73D77640FF68561A79A62580C /* Puyopuyo-prefix.pch */,
+				FB06A356EBD4B9834978A2B39102902F /* Puyopuyo-umbrella.h */,
+			);
+			name = "Support Files";
+			path = "Example/Pods/Target Support Files/Puyopuyo";
 			sourceTree = "<group>";
 		};
 		29450A115136EE3F333366F973F51B25 /* Pods-Puyopuyo_Tests */ = {
@@ -146,45 +230,49 @@
 			path = "Target Support Files/Pods-Puyopuyo_Tests";
 			sourceTree = "<group>";
 		};
-		4169E7250F9FD42BE9D2E813EC64F9A3 /* Development Pods */ = {
+		4DFDF980A77CEDCF44C2735B503576FB /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				5AFB228FE8DE65DC653CCBD1B0CD8F07 /* Puyopuyo */,
+				F41DAEE74F989A829C88C77BFEAED596 /* TangramKit.modulemap */,
+				B52ACCBE73179F21BDC3C47205DF1243 /* TangramKit.xcconfig */,
+				2740DFD77E50B0F7E0B6B50702086113 /* TangramKit-dummy.m */,
+				FAED2160B5B5BC507EA6D2B7EB88A259 /* TangramKit-Info.plist */,
+				4043D24B48F47BE8B5B1373A47C16A49 /* TangramKit-prefix.pch */,
+				4683BD53C69BB76CE3885C53ABF6D16C /* TangramKit-umbrella.h */,
 			);
-			name = "Development Pods";
+			name = "Support Files";
+			path = "../Target Support Files/TangramKit";
 			sourceTree = "<group>";
 		};
-		55FA7A69B3D5002E6B0DA606C82B02A6 /* Products */ = {
+		502E52AFC1C1C056B60D20720F68CD6F /* Caculator */ = {
 			isa = PBXGroup;
 			children = (
-				EE5DD414AD1513438287AF4FE0042222 /* Pods_Puyopuyo_Example.framework */,
-				DD2C97E26D4E455C647584D297607060 /* Pods_Puyopuyo_Tests.framework */,
-				758F7DCB20C277395C33E7D1EF52459B /* Puyopuyo.framework */,
+				ABD4994107E6F3DD3415998B35246C06 /* Caculations.swift */,
+				192AAEAE3FD759801B511A1FC2188EDB /* Caculator.swift */,
 			);
-			name = Products;
+			name = Caculator;
+			path = Puyopuyo/Classes/Caculator;
 			sourceTree = "<group>";
 		};
-		5AFB228FE8DE65DC653CCBD1B0CD8F07 /* Puyopuyo */ = {
+		58EBFE34121375302A77A37E7F551028 /* Pod */ = {
 			isa = PBXGroup;
 			children = (
-				A8E2948822C3ABD400DD5AF1 /* Caculator */,
-				13A91C160F4DC9C46067BED901BEAB55 /* Core */,
-				5E07B067B4B6FD0A246B6DDC704F04E4 /* Pod */,
-				DE4541920EE21CD64F2223A49C01FD4B /* Support Files */,
-				B25A36B1DFCA44D5E9741AB5F4F1F900 /* Views */,
-			);
-			name = Puyopuyo;
-			path = ../..;
-			sourceTree = "<group>";
-		};
-		5E07B067B4B6FD0A246B6DDC704F04E4 /* Pod */ = {
-			isa = PBXGroup;
-			children = (
-				D3790F13D9668C9655C850B8C64BCDD2 /* LICENSE */,
-				B4748A42EFA013AD56E85D71E4B4CB1A /* Puyopuyo.podspec */,
-				36EB1850F2FC76F977A410AB1018D5F6 /* README.md */,
+				0FFC4C8C3602613DD38580C2E91854DA /* LICENSE */,
+				7325542AC4726F0D86B768165B709130 /* Puyopuyo.podspec */,
+				8A42F9E826E6F2BD27F19E1C9AB76C14 /* README.md */,
 			);
 			name = Pod;
+			sourceTree = "<group>";
+		};
+		5B6664397CC959EE8AD2D077595CE954 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				01C35A3C01D94A0FE658DB96FA1B2A82 /* Pods_Puyopuyo_Example.framework */,
+				446E67D2E56A6768ADAE17445A6E835A /* Pods_Puyopuyo_Tests.framework */,
+				55A8C6341F789E991F480DE77C550A7A /* Puyopuyo.framework */,
+				303FA63CE16F40449C24C1CBDE59372B /* TangramKit.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		71C31C3E6C3A5A89060364B3428A1272 /* Pods-Puyopuyo_Example */ = {
@@ -204,30 +292,6 @@
 			path = "Target Support Files/Pods-Puyopuyo_Example";
 			sourceTree = "<group>";
 		};
-		A8E2948822C3ABD400DD5AF1 /* Caculator */ = {
-			isa = PBXGroup;
-			children = (
-				A81B722B22BE7533001C919E /* Caculator.swift */,
-				A8E2948922C3ABEB00DD5AF1 /* Caculations.swift */,
-			);
-			name = Caculator;
-			path = Puyopuyo/Classes/Caculator;
-			sourceTree = "<group>";
-		};
-		B25A36B1DFCA44D5E9741AB5F4F1F900 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				A816500122C539AC00BA7C1A /* PuyoLink.swift */,
-				A8DACD7F22C4EF3A00C9F61E /* Lines.swift */,
-				A81B722F22BF440F001C919E /* MeasureBox.swift */,
-				A81B722D22BF3E33001C919E /* View+Extension.swift */,
-				A81B723322BFBAEB001C919E /* PuyoLinkHelper.swift */,
-				A826C8A522C513D100790276 /* Visibility.swift */,
-			);
-			name = Views;
-			path = Puyopuyo/Classes/Views;
-			sourceTree = "<group>";
-		};
 		C0834CEBB1379A84116EF29F93051C60 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -240,9 +304,10 @@
 			isa = PBXGroup;
 			children = (
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
-				4169E7250F9FD42BE9D2E813EC64F9A3 /* Development Pods */,
+				10D981AC152E6657167A6ED071FBE198 /* Development Pods */,
 				D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */,
-				55FA7A69B3D5002E6B0DA606C82B02A6 /* Products */,
+				032DA3EAA7124BD71C0D6A810DE7D4BA /* Pods */,
+				5B6664397CC959EE8AD2D077595CE954 /* Products */,
 				F0DB1BA50E8DEB3450C6E90913E87B75 /* Targets Support Files */,
 			);
 			sourceTree = "<group>";
@@ -255,18 +320,50 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		DE4541920EE21CD64F2223A49C01FD4B /* Support Files */ = {
+		E5E4328B6C0AF75C678CD0A8EC5DE01C /* TangramKit */ = {
 			isa = PBXGroup;
 			children = (
-				819DE94E9215A6CB153B7FE950604104 /* Puyopuyo.modulemap */,
-				5286B1DFEF505E5F9565E3897259CB31 /* Puyopuyo.xcconfig */,
-				ECA246D58C6816710B9B85B1B36A48D1 /* Puyopuyo-dummy.m */,
-				9B979641EDF6CC423EF74DD6DF94A538 /* Puyopuyo-Info.plist */,
-				0B8F4E6104168509CCE5A6F771AC2E67 /* Puyopuyo-prefix.pch */,
-				3916A0BA1EB1211A6A231CD0EA591047 /* Puyopuyo-umbrella.h */,
+				AB578C3A69D3F3D962D0AFAFC14E6B7C /* TangramKit.swift */,
+				CE1986310E30FDFD1BCBF5EB60D816A3 /* TGBaseLayout.swift */,
+				DB5171A2ED8FB4DF972049F6FCA5CF95 /* TGDimeAdapter.swift */,
+				C43EE1E2155949EF9D5007A7BF3A4CE3 /* TGFloatLayout.swift */,
+				D283967569BD5B46279EE0186880A706 /* TGFlowLayout.swift */,
+				B32BD8C7486D57C440BCBB579F485055 /* TGFrameLayout.swift */,
+				3B52B17CEF585BC87C9C60D31E54B7C8 /* TGLayoutPos.swift */,
+				47EBEF02FB70CF93FFB1F08677531A0C /* TGLayoutSize.swift */,
+				288B5DF1FF296D82244F1D47210EC862 /* TGLayoutSizeClass.swift */,
+				2224975C393D38F2BDA54ED71253B3B5 /* TGLinearLayout.swift */,
+				501213F0D3CC869F6DB579DE594426DE /* TGPathLayout.swift */,
+				734E4925F9892CED1F043CFA411CA8A4 /* TGRelativeLayout.swift */,
+				B9A6EB8FEE9A4F28309086FFA6CE5261 /* TGTableLayout.swift */,
+				4DFDF980A77CEDCF44C2735B503576FB /* Support Files */,
 			);
-			name = "Support Files";
-			path = "Example/Pods/Target Support Files/Puyopuyo";
+			name = TangramKit;
+			path = TangramKit;
+			sourceTree = "<group>";
+		};
+		EA78B85290C4B1CA026B6F5ADAB4FDAE /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				C596A3529413684C30F1A93E54798D59 /* Measurable.swift */,
+				90F6985EA9499B8C92243CECB93E7BE5 /* Measure.swift */,
+				47D3C1B8E827925960F7B5339243D21A /* Size.swift */,
+			);
+			name = Core;
+			path = Puyopuyo/Classes/Core;
+			sourceTree = "<group>";
+		};
+		ED2FA6804E1B95BD5EE80F93D7D46D5F /* Puyopuyo */ = {
+			isa = PBXGroup;
+			children = (
+				502E52AFC1C1C056B60D20720F68CD6F /* Caculator */,
+				EA78B85290C4B1CA026B6F5ADAB4FDAE /* Core */,
+				58EBFE34121375302A77A37E7F551028 /* Pod */,
+				1BE1949B8E51521EB0696B180C75D2CB /* Support Files */,
+				089ECAC8C18CEB92DB92F646CE4B1A4A /* Views */,
+			);
+			name = Puyopuyo;
+			path = ../..;
 			sourceTree = "<group>";
 		};
 		F0DB1BA50E8DEB3450C6E90913E87B75 /* Targets Support Files */ = {
@@ -281,11 +378,27 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		9261FD1C5705A17BAA8EA7570298E28D /* Headers */ = {
+		56E07E48623C45B0A541CA1CB29E2873 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53F387E4AA5115A5FD7B2C5B0DDC458C /* Puyopuyo-umbrella.h in Headers */,
+				88F6C2F29B004D966DA98C2B9E8B295D /* Pods-Puyopuyo_Example-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5AE52CBF43A5D91CFA3D4953A5EE5B48 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				254012A749CCC87EFB2448541332D4A9 /* Puyopuyo-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		64B8F37F896A6AA625B693B6F945BA7E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				744D2E2343CCE82A9019AA5B3044CF46 /* TangramKit-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,17 +410,27 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		EBB06B8B47658E1A23BE23B93D7A433B /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E8092472C1E42723BA46CDCB33FBC22E /* Pods-Puyopuyo_Example-umbrella.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		2E6E62D113AA217A491D149E61D65D8D /* Puyopuyo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4F270DA6E36C5C6E7ADE6E7505AE1642 /* Build configuration list for PBXNativeTarget "Puyopuyo" */;
+			buildPhases = (
+				5AE52CBF43A5D91CFA3D4953A5EE5B48 /* Headers */,
+				9E210C53238F51C0BEE6A663A982A3E5 /* Sources */,
+				4736347A714987BDA2844B754E8F558A /* Frameworks */,
+				CFDE320D3ED4A3B2CC4B51306B765F23 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Puyopuyo;
+			productName = Puyopuyo;
+			productReference = 55A8C6341F789E991F480DE77C550A7A /* Puyopuyo.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		3A01C65B161B3FC72BB2D9865CE63157 /* Pods-Puyopuyo_Tests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1F9C24BD42B5FD3FA25A5FB383A5BCBB /* Build configuration list for PBXNativeTarget "Pods-Puyopuyo_Tests" */;
@@ -324,44 +447,45 @@
 			);
 			name = "Pods-Puyopuyo_Tests";
 			productName = "Pods-Puyopuyo_Tests";
-			productReference = DD2C97E26D4E455C647584D297607060 /* Pods_Puyopuyo_Tests.framework */;
+			productReference = 446E67D2E56A6768ADAE17445A6E835A /* Pods_Puyopuyo_Tests.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		5F7C744C95F5C4FFA6E0AA41FC9A754C /* Puyopuyo */ = {
+		474EDF6AB387EF36A4F641B8EC0FAECA /* TangramKit */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D7C01B06D0002ABCA5F5547AB450E79C /* Build configuration list for PBXNativeTarget "Puyopuyo" */;
+			buildConfigurationList = 982C5A65ED313D63E5EFD7437709D9D3 /* Build configuration list for PBXNativeTarget "TangramKit" */;
 			buildPhases = (
-				9261FD1C5705A17BAA8EA7570298E28D /* Headers */,
-				92605C0B283EF3EBB0A056C8B6D8D8D2 /* Sources */,
-				8ACFD9B93949BF40020ACB67C0536DC4 /* Frameworks */,
-				8B33A71C306CDD06E942BB706DA2BF60 /* Resources */,
+				64B8F37F896A6AA625B693B6F945BA7E /* Headers */,
+				6E88BC0F65A10F262867B84EB105A237 /* Sources */,
+				5289DE4DB31FBECEA66BD92F2D0D8930 /* Frameworks */,
+				C39C7A5733E45FFBCBBAD82277B85261 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = Puyopuyo;
-			productName = Puyopuyo;
-			productReference = 758F7DCB20C277395C33E7D1EF52459B /* Puyopuyo.framework */;
+			name = TangramKit;
+			productName = TangramKit;
+			productReference = 303FA63CE16F40449C24C1CBDE59372B /* TangramKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		EF25DA5D672E789002949F73D9953BCE /* Pods-Puyopuyo_Example */ = {
+		74D243D1C26ED9E43CC93520546F950F /* Pods-Puyopuyo_Example */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5CB0EDD4801B7F805288F9BED813082B /* Build configuration list for PBXNativeTarget "Pods-Puyopuyo_Example" */;
+			buildConfigurationList = 2024D3BDD25892EDF0619B2A52ADDA79 /* Build configuration list for PBXNativeTarget "Pods-Puyopuyo_Example" */;
 			buildPhases = (
-				EBB06B8B47658E1A23BE23B93D7A433B /* Headers */,
-				2CBB5DADB0D846FA4362B959ADED1C2F /* Sources */,
-				70843101D6036183DFFF569C63ADB918 /* Frameworks */,
-				1A1035AC6F3EC52E5E70223137A5B0C3 /* Resources */,
+				56E07E48623C45B0A541CA1CB29E2873 /* Headers */,
+				15E7FF734ADCF1302DA1B6DEF1159963 /* Sources */,
+				51C8150979205EFE74A7892612BB041F /* Frameworks */,
+				CEB7660A2DB1CF6415A399CBC04B82DB /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				DF97689FE971BE86712130A112F9E799 /* PBXTargetDependency */,
+				34B8D049BD2CFCC6E09A0656B8D2DCD7 /* PBXTargetDependency */,
+				8A9FC1F84CC3FEBB74467EB17F6F533F /* PBXTargetDependency */,
 			);
 			name = "Pods-Puyopuyo_Example";
 			productName = "Pods-Puyopuyo_Example";
-			productReference = EE5DD414AD1513438287AF4FE0042222 /* Pods_Puyopuyo_Example.framework */;
+			productReference = 01C35A3C01D94A0FE658DB96FA1B2A82 /* Pods_Puyopuyo_Example.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -381,25 +505,19 @@
 				en,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
-			productRefGroup = 55FA7A69B3D5002E6B0DA606C82B02A6 /* Products */;
+			productRefGroup = 5B6664397CC959EE8AD2D077595CE954 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				EF25DA5D672E789002949F73D9953BCE /* Pods-Puyopuyo_Example */,
+				74D243D1C26ED9E43CC93520546F950F /* Pods-Puyopuyo_Example */,
 				3A01C65B161B3FC72BB2D9865CE63157 /* Pods-Puyopuyo_Tests */,
-				5F7C744C95F5C4FFA6E0AA41FC9A754C /* Puyopuyo */,
+				2E6E62D113AA217A491D149E61D65D8D /* Puyopuyo */,
+				474EDF6AB387EF36A4F641B8EC0FAECA /* TangramKit */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		1A1035AC6F3EC52E5E70223137A5B0C3 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		74FF16D1672B48416D7DBA9478A753B9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -407,7 +525,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8B33A71C306CDD06E942BB706DA2BF60 /* Resources */ = {
+		C39C7A5733E45FFBCBBAD82277B85261 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CEB7660A2DB1CF6415A399CBC04B82DB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CFDE320D3ED4A3B2CC4B51306B765F23 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -417,30 +549,51 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		2CBB5DADB0D846FA4362B959ADED1C2F /* Sources */ = {
+		15E7FF734ADCF1302DA1B6DEF1159963 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				72CA677F16F07CFAC90BD6A2AB2E9381 /* Pods-Puyopuyo_Example-dummy.m in Sources */,
+				D40CF5054748B9E55D9CF376C863907C /* Pods-Puyopuyo_Example-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		92605C0B283EF3EBB0A056C8B6D8D8D2 /* Sources */ = {
+		6E88BC0F65A10F262867B84EB105A237 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A81B722C22BE7533001C919E /* Caculator.swift in Sources */,
-				A8E2948A22C3ABEB00DD5AF1 /* Caculations.swift in Sources */,
-				A816500222C539AD00BA7C1A /* PuyoLink.swift in Sources */,
-				A81B723422BFBAEB001C919E /* PuyoLinkHelper.swift in Sources */,
-				EE3493CB4F8565CE0019F7A28F913792 /* Measurable.swift in Sources */,
-				A8DACD8022C4EF3A00C9F61E /* Lines.swift in Sources */,
-				A672C47EA53EB638FAF9A0D92D8108B8 /* Measure.swift in Sources */,
-				A8E8835D22BE6C5100D0E62C /* Size.swift in Sources */,
-				A81B722E22BF3E33001C919E /* View+Extension.swift in Sources */,
-				A81B723022BF440F001C919E /* MeasureBox.swift in Sources */,
-				A826C8A622C513D100790276 /* Visibility.swift in Sources */,
-				7C10A0248C6178F84D23665EBD3C3686 /* Puyopuyo-dummy.m in Sources */,
+				8645A6528F262F13332CFF4E962353ED /* TangramKit-dummy.m in Sources */,
+				BA330FF21CB34C1A7A6784E51134F445 /* TangramKit.swift in Sources */,
+				F1824FB33B270C891304BF69095BFAD4 /* TGBaseLayout.swift in Sources */,
+				ABB01820E5E50BF68CACED3F8FA4FED3 /* TGDimeAdapter.swift in Sources */,
+				E8B8D85C88A6632815DE9A7CB1211672 /* TGFloatLayout.swift in Sources */,
+				316D7E14F1BA4DB40CF1C239EE205512 /* TGFlowLayout.swift in Sources */,
+				4066E257149C5677191FA904BF9FC358 /* TGFrameLayout.swift in Sources */,
+				73186730F5DB484D64D5B9769AFFA5B6 /* TGLayoutPos.swift in Sources */,
+				B7942A565A0B45907E311AE499F93354 /* TGLayoutSize.swift in Sources */,
+				248CC2BEEDB3CB168882FBBF71419E3E /* TGLayoutSizeClass.swift in Sources */,
+				C4AC48AE1C4877EE0B17B6CBD3515464 /* TGLinearLayout.swift in Sources */,
+				79B9570DA3AB890974847E4721002AD9 /* TGPathLayout.swift in Sources */,
+				19AF4AC5C8BBAE0B48078CF0795DB286 /* TGRelativeLayout.swift in Sources */,
+				93A447261CF57152EC926A4FFC0D0C16 /* TGTableLayout.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9E210C53238F51C0BEE6A663A982A3E5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A95C951849D460C4F3F7B35B1CFA2099 /* Caculations.swift in Sources */,
+				3E97057C2A71920346BE5E166E04F789 /* Caculator.swift in Sources */,
+				F231EA449C9DE5BEE087C822962C7505 /* Lines.swift in Sources */,
+				D3755DD32262ACD9B6C5B7A9ABB1B680 /* Measurable.swift in Sources */,
+				DB9A8EC2F0DF4275BF17D3A1C97A9BF9 /* Measure.swift in Sources */,
+				4A15E1010E93C0F8E4D77592017D3474 /* MeasureBox.swift in Sources */,
+				B8559F2C6124FC2B80AD4E6DBC93CF9D /* PuyoLink.swift in Sources */,
+				DB4DADBE373F1B0BEE0ED47EBC5F16FB /* PuyoLinkHelper.swift in Sources */,
+				CA17F1D5184D0C08DA8F7D078C66CBC9 /* Puyopuyo-dummy.m in Sources */,
+				33AD6758352B65427CBF01B4496065EA /* Size.swift in Sources */,
+				7378D7E4E9B20EA6B3CBB6D5A5CC9ACD /* View+Extension.swift in Sources */,
+				32D9A733430B51A0FE45012CD5351DEA /* Visibility.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -455,24 +608,30 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		34B8D049BD2CFCC6E09A0656B8D2DCD7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Puyopuyo;
+			target = 2E6E62D113AA217A491D149E61D65D8D /* Puyopuyo */;
+			targetProxy = 32235A9AC0882F202213A1491562D9D3 /* PBXContainerItemProxy */;
+		};
+		8A9FC1F84CC3FEBB74467EB17F6F533F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TangramKit;
+			target = 474EDF6AB387EF36A4F641B8EC0FAECA /* TangramKit */;
+			targetProxy = DA21835BE2FCB946F930D4367622D7CD /* PBXContainerItemProxy */;
+		};
 		AF1C23F11A4AD89A9E22A511A60159A7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "Pods-Puyopuyo_Example";
-			target = EF25DA5D672E789002949F73D9953BCE /* Pods-Puyopuyo_Example */;
+			target = 74D243D1C26ED9E43CC93520546F950F /* Pods-Puyopuyo_Example */;
 			targetProxy = AA0659DD08EDFD1835CE8E20C149B1C5 /* PBXContainerItemProxy */;
-		};
-		DF97689FE971BE86712130A112F9E799 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Puyopuyo;
-			target = 5F7C744C95F5C4FFA6E0AA41FC9A754C /* Puyopuyo */;
-			targetProxy = 67A12FE14AA603D5A36A227F531A3CDB /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		23F15D85EB68B405A399304DFF3C2AF2 /* Release */ = {
+		51B7D507E2A071C596DCA66FF595F57D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5286B1DFEF505E5F9565E3897259CB31 /* Puyopuyo.xcconfig */;
+			baseConfigurationReference = B52ACCBE73179F21BDC3C47205DF1243 /* TangramKit.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -483,46 +642,14 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/Puyopuyo/Puyopuyo-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/Puyopuyo/Puyopuyo-Info.plist";
+				GCC_PREFIX_HEADER = "Target Support Files/TangramKit/TangramKit-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/TangramKit/TangramKit-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/Puyopuyo/Puyopuyo.modulemap";
-				PRODUCT_MODULE_NAME = Puyopuyo;
-				PRODUCT_NAME = Puyopuyo;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		48FAE0B50474A9FB76BCB4889E78782C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5286B1DFEF505E5F9565E3897259CB31 /* Puyopuyo.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/Puyopuyo/Puyopuyo-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/Puyopuyo/Puyopuyo-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/Puyopuyo/Puyopuyo.modulemap";
-				PRODUCT_MODULE_NAME = Puyopuyo;
-				PRODUCT_NAME = Puyopuyo;
+				MODULEMAP_FILE = "Target Support Files/TangramKit/TangramKit.modulemap";
+				PRODUCT_MODULE_NAME = TangramKit;
+				PRODUCT_NAME = TangramKit;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
@@ -533,7 +660,7 @@
 			};
 			name = Debug;
 		};
-		9CBD45E2A02D80B79569424C4060F537 /* Release */ = {
+		66DEC8F4792F28A3D9CE173FCFB0363C /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9CC06E46D2F7D85084AD4861044A8293 /* Pods-Puyopuyo_Example.release.xcconfig */;
 			buildSettings = {
@@ -566,6 +693,37 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
+		};
+		7370C975E5860828CCA658357EE996AB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 63A4F69D47DCA1430F95B224EC9D982A /* Puyopuyo.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/Puyopuyo/Puyopuyo-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Puyopuyo/Puyopuyo-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/Puyopuyo/Puyopuyo.modulemap";
+				PRODUCT_MODULE_NAME = Puyopuyo;
+				PRODUCT_NAME = Puyopuyo;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
 		};
 		9D591C24DD19288459BD698C2EA28329 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -601,11 +759,10 @@
 			};
 			name = Release;
 		};
-		A5979865DB8770A3BA6FC5A89859D327 /* Debug */ = {
+		A34A52CFD779CF641232803F8DC3A00F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F63EA10989F3111747CB8D30AF317A50 /* Pods-Puyopuyo_Example.debug.xcconfig */;
+			baseConfigurationReference = 63A4F69D47DCA1430F95B224EC9D982A /* Puyopuyo.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -615,24 +772,24 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "Target Support Files/Pods-Puyopuyo_Example/Pods-Puyopuyo_Example-Info.plist";
+				GCC_PREFIX_HEADER = "Target Support Files/Puyopuyo/Puyopuyo-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Puyopuyo/Puyopuyo-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MACH_O_TYPE = staticlib;
-				MODULEMAP_FILE = "Target Support Files/Pods-Puyopuyo_Example/Pods-Puyopuyo_Example.modulemap";
-				OTHER_LDFLAGS = "";
-				OTHER_LIBTOOLFLAGS = "";
-				PODS_ROOT = "$(SRCROOT)";
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				MODULEMAP_FILE = "Target Support Files/Puyopuyo/Puyopuyo.modulemap";
+				PRODUCT_MODULE_NAME = Puyopuyo;
+				PRODUCT_NAME = Puyopuyo;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
-			name = Debug;
+			name = Release;
 		};
 		B0087CB4594321EF41619F3181FE120E /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -687,7 +844,8 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				SYMROOT = "${SRCROOT}/../build";
 			};
@@ -757,6 +915,71 @@
 			};
 			name = Debug;
 		};
+		DD0EEFCDC46053AA26F202CB2787D58B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B52ACCBE73179F21BDC3C47205DF1243 /* TangramKit.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/TangramKit/TangramKit-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/TangramKit/TangramKit-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/TangramKit/TangramKit.modulemap";
+				PRODUCT_MODULE_NAME = TangramKit;
+				PRODUCT_NAME = TangramKit;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		FB4A98C6987FB4C893A7CF33A430EF84 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F63EA10989F3111747CB8D30AF317A50 /* Pods-Puyopuyo_Example.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-Puyopuyo_Example/Pods-Puyopuyo_Example-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-Puyopuyo_Example/Pods-Puyopuyo_Example.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
 		FC5064E7F6F216D45A7BE1D3F24127C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 045722027BB4DF19AB95EF07C8B26805 /* Pods-Puyopuyo_Tests.debug.xcconfig */;
@@ -802,6 +1025,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		2024D3BDD25892EDF0619B2A52ADDA79 /* Build configuration list for PBXNativeTarget "Pods-Puyopuyo_Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FB4A98C6987FB4C893A7CF33A430EF84 /* Debug */,
+				66DEC8F4792F28A3D9CE173FCFB0363C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -811,20 +1043,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5CB0EDD4801B7F805288F9BED813082B /* Build configuration list for PBXNativeTarget "Pods-Puyopuyo_Example" */ = {
+		4F270DA6E36C5C6E7ADE6E7505AE1642 /* Build configuration list for PBXNativeTarget "Puyopuyo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				A5979865DB8770A3BA6FC5A89859D327 /* Debug */,
-				9CBD45E2A02D80B79569424C4060F537 /* Release */,
+				7370C975E5860828CCA658357EE996AB /* Debug */,
+				A34A52CFD779CF641232803F8DC3A00F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D7C01B06D0002ABCA5F5547AB450E79C /* Build configuration list for PBXNativeTarget "Puyopuyo" */ = {
+		982C5A65ED313D63E5EFD7437709D9D3 /* Build configuration list for PBXNativeTarget "TangramKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				48FAE0B50474A9FB76BCB4889E78782C /* Debug */,
-				23F15D85EB68B405A399304DFF3C2AF2 /* Release */,
+				51B7D507E2A071C596DCA66FF595F57D /* Debug */,
+				DD0EEFCDC46053AA26F202CB2787D58B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

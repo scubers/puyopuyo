@@ -42,6 +42,43 @@ class MeasureCaculator {
     }
 }
 
+class Caculator {
+    
+    /// 计算非wrap的size
+    static func caculate(size: Size, by cgSize: CGSize) -> Size {
+        guard !size.width.isWrap && !size.height.isWrap else {
+            fatalError("不能计算包裹size")
+        }
+        var width = size.width
+        if width.isRatio {
+            width = .fixed(width.ratio * cgSize.width)
+        }
+        
+        var height = size.height
+        if height.isRatio {
+            height = .fixed(height.ratio * cgSize.height)
+        }
+        return Size(width: width, height: height)
+    }
+    
+    static func caculate(calSize: CalSize, by fixedSize: CalFixedSize) -> CalSize {
+        guard !calSize.main.isWrap && !calSize.cross.isWrap else {
+            fatalError("不能计算包裹size")
+        }
+        
+        var main = calSize.main
+        if main.isRatio {
+            main = .fixed(main.ratio * fixedSize.main)
+        }
+        
+        var cross = calSize.cross
+        if cross.isRatio {
+            cross = .fixed(cross.ratio * fixedSize.cross)
+        }
+        return CalSize(main: main, cross: cross, direction: calSize.direction)
+    }
+}
+
 class LineCaculator {
     
     /// 计算本身布局属性，可能返回的size 为 .fixed, .ratio, 不可能返回wrap
@@ -49,7 +86,7 @@ class LineCaculator {
         // 在此需要假定layout的尺寸已经计算好了
         // 计算全部换算成为main cross
         
-        let layoutSize = CalFixedSize(cgSize: layout.target?.py_size ?? .zero, direction: layout.direction)
+        let layoutFixedSize = CalFixedSize(cgSize: layout.target?.py_size ?? .zero, direction: layout.direction)
         let layoutPadding = CalEdges(insets: layout.padding, direction: layout.direction)
         
         var totalFixedMain = layoutPadding.start + layoutPadding.end
@@ -72,7 +109,7 @@ class LineCaculator {
             // center formation
             func getPlaceHolder() -> PlaceHolderMeasure {
                 let p = PlaceHolderMeasure()
-                p.size = CalSize(main: .ratio(1), cross: .fixed(0), direction: layout.direction).getSize()
+                p.size = CalSize(main: .ratio(1), cross: .fixed(1), direction: layout.direction).getSize()
                 return p
             }
             caculateChildren = [getPlaceHolder()] + caculateChildren + [getPlaceHolder()]
@@ -81,19 +118,15 @@ class LineCaculator {
         let totalMainSpace = max(CGFloat(caculateChildren.count - 1) * layout.space, 0)
         
         for measure in caculateChildren {
+            
             // 计算size的具体值
             let subSize = measure.caculate(byParent: layout)
             if subSize.width.isWrap || subSize.height.isWrap {
                 fatalError("计算后的尺寸不能是包裹")
             }
             
-            // 校验父子size冲突
-            check(parent: layout.size.width, child: measure.size.width)
-            check(parent: layout.size.height, child: measure.size.height)
-            
-            
             /// 子margin
-            let calMargin = CalEdges(insets: measure.margin, direction: layout.direction)
+            let subCalMargin = CalEdges(insets: measure.margin, direction: layout.direction)
             
             // main
             let subCalSize = CalSize(size: subSize, direction: layout.direction)
@@ -102,21 +135,20 @@ class LineCaculator {
                 // 需要保存起来，最后计算
                 ratioMeasures.append(measure)
                 totalMainRatio += subCalSize.main.ratio
-                let calMargin = CalEdges(insets: measure.margin, direction: layout.direction)
-                totalFixedMain += (calMargin.start + calMargin.end)
+                totalFixedMain += (subCalMargin.start + subCalMargin.end)
             } else {
                 // cross
                 var subCrossSize = subCalSize.cross
 //                if case .ratio(let ratio) = subCalSize.cross {
                 if subCalSize.cross.isRatio {
                     let ratio = subCalSize.cross.ratio
-                    subCrossSize = .fixed((layoutSize.cross - (layoutPadding.forward + layoutPadding.backward + calMargin.forward + calMargin.backward)) * ratio)
+                    subCrossSize = .fixed((layoutFixedSize.cross - (layoutPadding.forward + layoutPadding.backward + subCalMargin.forward + subCalMargin.backward)) * ratio)
                 }
                 // 设置具体size
                 measure.target?.py_size = CalFixedSize(main: subCalSize.main.fixedValue, cross: subCrossSize.fixedValue, direction: layout.direction).getSize()
                 // 记录最大cross
-                maxCross = max(subCrossSize.fixedValue + calMargin.forward + calMargin.backward, maxCross)
-                totalFixedMain += (subCalSize.main.fixedValue + calMargin.start + calMargin.end)
+                maxCross = max(subCrossSize.fixedValue + subCalMargin.forward + subCalMargin.backward, maxCross)
+                totalFixedMain += (subCalSize.main.fixedValue + subCalMargin.start + subCalMargin.end)
             }
         }
         
@@ -130,10 +162,10 @@ class LineCaculator {
 //            if case .ratio(let ratio) = subCrossSize {
             if subCrossSize.isRatio {
                 let ratio = subCrossSize.ratio
-                subCrossSize = .fixed((layoutSize.cross - (layoutPadding.forward + layoutPadding.backward + calMargin.forward + calMargin.backward)) * ratio)
+                subCrossSize = .fixed((layoutFixedSize.cross - (layoutPadding.forward + layoutPadding.backward + calMargin.forward + calMargin.backward)) * ratio)
             }
             // main
-            let subMainSize = SizeDescription.fixed((calSize.main.fixedValue / totalMainRatio) * (layoutSize.main - totalFixedMain - totalMainSpace))
+            let subMainSize = SizeDescription.fixed((calSize.main.ratio / totalMainRatio) * (layoutFixedSize.main - totalFixedMain - totalMainSpace))
             measure.target?.py_size = CalFixedSize(main: subMainSize.fixedValue, cross: subCrossSize.fixedValue, direction: layout.direction).getSize()
             maxCross = max(subCrossSize.fixedValue + calMargin.forward + calMargin.backward, maxCross)
         }
@@ -250,5 +282,5 @@ class LineCaculator {
         }
         return point
     }
-
+    
 }

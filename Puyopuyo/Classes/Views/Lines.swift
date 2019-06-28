@@ -61,18 +61,9 @@ open class Line: LayoutView {
         } else {
             // 父视图为非布局视图
             let parentCGSize = superview?.bounds ?? .zero
-            
-            var widthSize = sizeAfterCaculate.width
-            if widthSize.isRatio {
-                widthSize = .fixed(parentCGSize.width * widthSize.ratio)
-            }
-            
-            var heightSize = sizeAfterCaculate.height
-            if heightSize.isRatio {
-                heightSize = .fixed(parentCGSize.height * heightSize.ratio)
-            }
-            
-            let newSize = CGSize(width: widthSize.fixedValue, height: heightSize.fixedValue)
+
+            let fixedSize = Caculator.caculate(size: sizeAfterCaculate, by: parentCGSize.size)
+            let newSize = CGSize(width: fixedSize.width.fixedValue, height: fixedSize.height.fixedValue)
             
             bounds.size = newSize
             
@@ -81,6 +72,16 @@ open class Line: LayoutView {
             }
             
             center = CGPoint(x: bounds.midX, y: bounds.midY)
+            
+            if let scrollView = superview as? UIScrollView, layout.autoJudgeScroll {
+                let contentSize = scrollView.contentSize
+                if layout.size.width.isWrap {
+                    scrollView.contentSize.width = max(contentSize.width, newSize.width + layout.padding.left + layout.padding.right + frame.origin.x)
+                }
+                if layout.size.height.isWrap {
+                    scrollView.contentSize.height = max(contentSize.height, newSize.height + layout.padding.bottom + layout.padding.top + frame.origin.y)
+                }
+            }
         }
         
     }
@@ -88,28 +89,29 @@ open class Line: LayoutView {
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
         let temp = PlaceHolderMeasure()
         temp.py_size = size
-        let sizeAfterCalulated = LineCaculator.caculateLine(layout, from: PlaceHolderMeasure())
-        var widthSize = sizeAfterCalulated.width
-        if widthSize.isRatio {
-            widthSize = .fixed(size.width * widthSize.ratio)
-        }
-        
-        var heightSize = sizeAfterCalulated.height
-        if heightSize.isRatio {
-            heightSize = .fixed(size.height * heightSize.ratio)
-        }
-        return CGSize(width: widthSize.fixedValue, height: heightSize.fixedValue)
+        let sizeAfterCalulate = LineCaculator.caculateLine(layout, from: PlaceHolderMeasure())
+        let fixedSize = Caculator.caculate(size: sizeAfterCalulate, by: size)
+        return CGSize(width: fixedSize.width.fixedValue, height: fixedSize.height.fixedValue)
     }
     
-    open override func didMoveToSuperview() {
-        super.didMoveToSuperview()
-    }
 }
 
 open class HLine: Line {
+    public static func attach(_ parent: UIView? = nil, wrap: Bool = true, _ block: PuyoLinkBlock? = nil) -> PuyoLink<HLine> {
+        return HLine().attach(parent, wrap: wrap, block)
+    }
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        print("lines layout")
+    }
 }
 
 open class VLine: Line {
+    
+    public static func attach(_ parent: UIView? = nil, wrap: Bool = true, _ block: PuyoLinkBlock? = nil) -> PuyoLink<VLine> {
+        return VLine().attach(parent, wrap: wrap, block)
+    }
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         layout.direction = .y
