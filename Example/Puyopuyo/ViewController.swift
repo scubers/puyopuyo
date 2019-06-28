@@ -28,9 +28,9 @@ class ViewController: UIViewController {
         present(nav, animated: true, completion: nil)
     }
     
-    func testSizeThatFits() -> Line {
+    func testSizeThatFits() -> FlatBox {
         return
-            VLine().attach() {
+            VBox().attach() {
                 self.getLabel("111").attach($0)
                 self.getLabel("222").attach($0)
                 self.getLabel("333").attach($0)
@@ -44,7 +44,7 @@ class ViewController: UIViewController {
     func testLink() {
 //        let link =
         var label: UIView?
-        VLine().attach(view) {
+        VBox().attach(view) {
             
 //            $0.backgroundColor = self.randomColor()
             
@@ -57,7 +57,7 @@ class ViewController: UIViewController {
 //                .attach($0)
             
             
-            HLine.attach($0) {
+            HBox.attach($0) {
                 label =
                 self.getLabel("1111").attach($0)
                     .height(.ratio(1))
@@ -110,6 +110,19 @@ class ViewController: UIViewController {
             getView().attach($0)
                 .size(.wrap, .wrap)
                 .aligment([.right])
+
+            let z =
+            ZBox().attach($0) {
+                self.getView().attach($0).size(100, 100).margin(all: 10)
+                self.getView().attach($0).size(90, 90)
+                self.getView().attach($0).size(80, 80)
+            }
+            .padding(all: 5)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                z.aligment(.center)
+                    .size(.fill, .fill)
+            })
 //            .padding(left: 30, right: 50)
 //            .formation(.trailing)
 //            .reverse(true)

@@ -48,7 +48,7 @@ open class PuyoLinkHelper {
     
     public class func setNeedsLayout(_ view: UIView) {
         view.setNeedsLayout()
-        if let superview = view.superview as? LayoutView {
+        if let superview = view.superview as? BoxView {
             superview.setNeedsLayout()
         }
     }

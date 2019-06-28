@@ -7,6 +7,10 @@
 
 import UIKit
 
+public enum Direction {
+    case x, y
+}
+
 public struct Aligment: OptionSet {
     public init(rawValue: Int) {
         self.rawValue = rawValue
@@ -39,11 +43,6 @@ public struct Aligment: OptionSet {
         }
         return contains(.right)
     }
-}
-
-
-public enum Direction {
-    case x, y
 }
 
 /// 描述一个节点相对于父节点的属性
@@ -92,46 +91,4 @@ public class PlaceHolderMeasure: Measure, MeasureTagetable {
     public func py_sizeThatFits(_ size: CGSize) -> CGSize {
         return size
     }
-}
-
-/// 描述一个布局具备控制子节点的属性
-public class BaseLayout: Measure {
-    
-    public var padding = UIEdgeInsets.zero
-    
-    public var children: [Measure] {
-        return target?.py_children ?? []
-    }
-    
-    public func getCalPadding() -> CalEdges {
-        return CalEdges(insets: padding, direction: direction)
-    }
-}
-
-public enum Formation {
-    case leading
-    case center
-    case sides
-    case trailing
-}
-
-public class LineLayout: BaseLayout {
-    
-    public var crossAxis: Aligment = [.top, .left]
-    
-    public var space: CGFloat = 0
-    
-    public var formation: Formation = .leading
-    
-    public var reverse = false
-    
-    public var autoJudgeScroll = true
-    
-    public override func caculate(byParent parent: Measure) -> Size {
-        return LineCaculator.caculateLine(self, from: parent)
-    }
-}
-
-public class ZLayout: BaseLayout {
-    
 }

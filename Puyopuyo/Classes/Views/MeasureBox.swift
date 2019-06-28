@@ -14,8 +14,10 @@ class MeasureBox {
     static func getMeasure(from: UIView) -> Measure {
         var measure = objc_getAssociatedObject(from, &MeasureBox.measureHoldingKey) as? Measure
         if measure == nil {
-            if from is Line {
-                measure = LineLayout(target: from)
+            if from is FlatBox {
+                measure = FlatLayout(target: from)
+            } else if from is ZBox {
+                measure = ZLayout(target: from)
             } else {
                 measure = Measure(target: from)
             }

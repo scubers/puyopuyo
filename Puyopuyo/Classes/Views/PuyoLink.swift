@@ -19,7 +19,7 @@ public class PuyoLink<T: UIView> {
     
     func setNeedsLayout() {
         view.setNeedsLayout()
-        if let superview = view.superview as? LayoutView {
+        if let superview = view.superview as? BoxView {
             superview.setNeedsLayout()
         }
     }
@@ -116,13 +116,30 @@ extension PuyoLink where T: UIView {
     }    
 }
 
-extension PuyoLink where T: Line {
+extension PuyoLink where T: BoxView {
+    @discardableResult
+    public func padding(all: CGFloat? = nil, top: CGFloat? = nil, left: CGFloat? = nil, bottom: CGFloat? = nil, right: CGFloat? = nil) -> Self {
+        if let all = all {
+            view.layout.padding = UIEdgeInsets(top: all, left: all, bottom: all, right: all)
+        }
+        if let top = top { view.layout.padding.top = top }
+        if let left = left { view.layout.padding.left = left }
+        if let bottom = bottom { view.layout.padding.bottom = bottom }
+        if let right = right { view.layout.padding.right = right }
+        setNeedsLayout()
+        return self
+    }
+    
     @discardableResult
     public func crossAxis(_ aligment: Aligment) -> Self {
         view.layout.crossAxis = aligment
         setNeedsLayout()
         return self
     }
+}
+
+extension PuyoLink where T: FlatBox {
+    
     @discardableResult
     public func space(_ space: CGFloat) -> Self {
         view.layout.space = space
@@ -141,18 +158,7 @@ extension PuyoLink where T: Line {
         setNeedsLayout()
         return self
     }
-    @discardableResult
-    public func padding(all: CGFloat? = nil, top: CGFloat? = nil, left: CGFloat? = nil, bottom: CGFloat? = nil, right: CGFloat? = nil) -> Self {
-        if let all = all {
-            view.layout.padding = UIEdgeInsets(top: all, left: all, bottom: all, right: all)
-        }
-        if let top = top { view.layout.padding.top = top }
-        if let left = left { view.layout.padding.left = left }
-        if let bottom = bottom { view.layout.padding.bottom = bottom }
-        if let right = right { view.layout.padding.right = right }
-        setNeedsLayout()
-        return self
-    }
+
     @discardableResult
     public func reverse(_ reverse: Bool) -> Self {
         view.layout.reverse = reverse

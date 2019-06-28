@@ -8,34 +8,14 @@
 
 import Foundation
 
-open class LayoutView: UIView {
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        autoresizingMask = .init(rawValue: 0)
-    }
-    public required init?(coder aDecoder: NSCoder) {
-        fatalError()
-    }
+open class FlatBox: BoxView {
     
-    open override func setNeedsLayout() {
-        super.setNeedsLayout()
-        // 如果自己是固定尺寸，则不需要通知上层进行布局
-        let measure = py_measure
-        if let superview = superview as? LayoutView, (measure.size.width.isWrap || measure.size.height.isWrap) {
-            superview.setNeedsLayout()
-        }
-    }
-}
-
-open class Line: LayoutView {
-    
-    public var layout: LineLayout {
-        return py_measure as! LineLayout
+    public override var layout: FlatLayout {
+        return py_measure as! FlatLayout
     }
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        let parentMeasure = superview?.py_measure ?? Measure()
         
         // 如果原本就固定尺寸
         if layout.size.isFixed() {
@@ -43,19 +23,20 @@ open class Line: LayoutView {
             bounds.size = CGSize(width: layout.size.width.fixedValue, height: layout.size.height.fixedValue)
         }
         
+        let parentMeasure = superview?.py_measure ?? Measure()
         // 旧尺寸
         let oldSize = bounds.size
         
-        let sizeAfterCaculate = LineCaculator.caculateLine(layout, from: parentMeasure)
+        let sizeAfterCaculate = FlatCaculator.caculateLine(layout, from: parentMeasure)
         
-        if (superview?.py_measure is LineLayout) {
+        if (superview is BoxView) {
             // 父视图为布局视图
             // 通过计算如果已经确定了尺寸，也可以直接设置
             if sizeAfterCaculate.isFixed() {
                 bounds.size = CGSize(width: sizeAfterCaculate.width.fixedValue, height: sizeAfterCaculate.height.fixedValue)
             }
             if oldSize != bounds.size {
-                _ = LineCaculator.caculateLine(layout, from: parentMeasure)
+                _ = FlatCaculator.caculateLine(layout, from: parentMeasure)
             }
             
         } else {
@@ -68,7 +49,7 @@ open class Line: LayoutView {
             bounds.size = newSize
             
             if oldSize != newSize {
-                _ = LineCaculator.caculateLine(layout, from: parentMeasure)
+                _ = FlatCaculator.caculateLine(layout, from: parentMeasure)
             }
             
             center = CGPoint(x: bounds.midX, y: bounds.midY)
@@ -89,16 +70,16 @@ open class Line: LayoutView {
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
         let temp = PlaceHolderMeasure()
         temp.py_size = size
-        let sizeAfterCalulate = LineCaculator.caculateLine(layout, from: PlaceHolderMeasure())
+        let sizeAfterCalulate = FlatCaculator.caculateLine(layout, from: PlaceHolderMeasure())
         let fixedSize = Caculator.caculate(size: sizeAfterCalulate, by: size)
         return CGSize(width: fixedSize.width.fixedValue, height: fixedSize.height.fixedValue)
     }
     
 }
 
-open class HLine: Line {
-    public static func attach(_ parent: UIView? = nil, wrap: Bool = true, _ block: PuyoLinkBlock? = nil) -> PuyoLink<HLine> {
-        return HLine().attach(parent, wrap: wrap, block)
+open class HBox: FlatBox {
+    public static func attach(_ parent: UIView? = nil, wrap: Bool = true, _ block: PuyoLinkBlock? = nil) -> PuyoLink<HBox> {
+        return HBox().attach(parent, wrap: wrap, block)
     }
     open override func layoutSubviews() {
         super.layoutSubviews()
@@ -106,10 +87,10 @@ open class HLine: Line {
     }
 }
 
-open class VLine: Line {
+open class VBox: FlatBox {
     
-    public static func attach(_ parent: UIView? = nil, wrap: Bool = true, _ block: PuyoLinkBlock? = nil) -> PuyoLink<VLine> {
-        return VLine().attach(parent, wrap: wrap, block)
+    public static func attach(_ parent: UIView? = nil, wrap: Bool = true, _ block: PuyoLinkBlock? = nil) -> PuyoLink<VBox> {
+        return VBox().attach(parent, wrap: wrap, block)
     }
     
     public override init(frame: CGRect) {

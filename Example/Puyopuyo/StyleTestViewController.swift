@@ -31,9 +31,9 @@ class StyleTestViewController: UIViewController, UIScrollViewDelegate {
 //        scroll.contentSize = CGSize(width: 0, height: view.bounds.height * 10)
         view.addSubview(scroll)
         
-        VLine().attach(scroll) {
+        VBox().attach(scroll) {
             
-            VLine().attach($0) {
+            VBox().attach($0) {
                 self.getDescriptionLabel(text: "字体(Font size)").attach($0)
                 self.getDescriptionLabel(text: "Large Title: 32", fontSize: 32).attach($0)
                 self.getDescriptionLabel(text: "Head line: 18", fontSize: 18).attach($0)
@@ -45,33 +45,33 @@ class StyleTestViewController: UIViewController, UIScrollViewDelegate {
             }
             .space(5)
             
-            VLine().attach($0) {
+            VBox().attach($0) {
                 
-                HLine().attach($0) {
+                HBox().attach($0) {
                     self.getDescriptionLabel(text: "背景色(Background color)").attach($0).size(200, 30)
                     self.getDescriptionLabel(text: "字体色(Text color)").attach($0).size(.wrap, 30)
                 }
                 .space(20)
                 
-                HLine().attach($0) {
+                HBox().attach($0) {
                     self.getColorView(colorString: "#ffffff").attach($0).size(200, 50)
                     self.getDescriptionLabel(text: "Primary", color: "#333333").attach($0)
                 }
                 .space(20)
                 
-                HLine().attach($0) {
+                HBox().attach($0) {
                     self.getColorView(colorString: "#dddddd").attach($0).size(200, 50)
                     self.getDescriptionLabel(text: "Secondary", color: "#555555").attach($0)
                 }
                 .space(20)
                 
-                HLine().attach($0) {
+                HBox().attach($0) {
                     self.getColorView(colorString: "#bbbbbb").attach($0).size(200, 50)
                     self.getDescriptionLabel(text: "Tertiary", color: "#666666").attach($0)
                 }
                 .space(20)
                 
-                HLine().attach($0) {
+                HBox().attach($0) {
                     self.getColorView(colorString: "#999999").attach($0).size(200, 50)
                     self.getDescriptionLabel(text: "Quaternary", color: "#777777").attach($0)
                 }
@@ -79,34 +79,34 @@ class StyleTestViewController: UIViewController, UIScrollViewDelegate {
             }
             .space(5)
             
-            VLine().attach($0) {
+            VBox().attach($0) {
                 self.getDescriptionLabel(text: "主题色(Theme)").attach($0)
                 
-                HLine().attach($0) {
+                HBox().attach($0) {
                     self.getColorView(colorString: "#D03B5C").attach($0).size(200, 50)
                     self.getDescriptionLabel(text: "主题色").attach($0)
                 }
                 .space(20)
                 
-                HLine().attach($0) {
+                HBox().attach($0) {
                     self.getColorView(colorString: "#EE8800").attach($0).size(200, 50)
                     self.getDescriptionLabel(text: "主题描边色").attach($0)
                 }
                 .space(20)
                 
-                HLine().attach($0) {
+                HBox().attach($0) {
                     self.getColorView(colorString: "#FF4444").attach($0).size(200, 50)
                     self.getDescriptionLabel(text: "辅助填充色").attach($0)
                 }
                 .space(20)
                 
-                HLine().attach($0) {
+                HBox().attach($0) {
                     self.getColorView(colorString: "#C9C9C9").attach($0).size(200, 50)
                     self.getDescriptionLabel(text: "边框颜色").attach($0)
                 }
                 .space(20)
                 
-                HLine().attach($0) {
+                HBox().attach($0) {
                     self.getColorView(colorString: "#666B77").attach($0).size(200, 50)
                     self.getDescriptionLabel(text: "导航栏颜色").attach($0)
                 }
@@ -126,12 +126,12 @@ class StyleTestViewController: UIViewController, UIScrollViewDelegate {
     
     func getMeiyeColors() -> UIView {
         return
-            VLine().attach() { x in
+            VBox().attach() { x in
                 
                 self.getDescriptionLabel(text: "iOS美业的颜色").attach(x)
                 
                 self.colors.enumerated().forEach { (idx, color) in
-                    HLine().attach(x) {
+                    HBox().attach(x) {
                         self.getColorView(colorString: color).attach($0).size(100, 30)
                         self.getDescriptionLabel(text: color).attach($0)
                         self.getDescriptionLabel(text: "\(idx)").attach($0)
