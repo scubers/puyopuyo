@@ -168,7 +168,7 @@ class ViewController: UIViewController {
             .size(width: .ratio(1), height: .fixed(150))
             */
         }
-        .crossAxis([.left, .top])
+        .justifyContent([.left, .top])
         .padding(top: 50)
         .space(10)
         .size(.ratio(1), .ratio(1))

@@ -9,6 +9,11 @@ import Foundation
 
 public class FlatLayout: BaseLayout {
     
+    public override init(target: MeasureTagetable? = nil) {
+        super.init(target: target)
+        justifyContent = [.left, .top]
+    }
+    
     public var space: CGFloat = 0
     
     public var formation: Formation = .leading

@@ -181,7 +181,7 @@ class FlatCaculator {
         
         // cross
         let cross: CGFloat
-        let aligment = measure.aligment.contains(.none) ? layout.crossAxis : measure.aligment
+        let aligment = measure.aligment.contains(.none) ? layout.justifyContent : measure.aligment
         if aligment.isCenter() {
             cross = layoutSize.cross / 2
             

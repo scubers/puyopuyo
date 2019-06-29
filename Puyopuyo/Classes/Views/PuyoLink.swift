@@ -131,8 +131,8 @@ extension PuyoLink where T: BoxView {
     }
     
     @discardableResult
-    public func crossAxis(_ aligment: Aligment) -> Self {
-        view.layout.crossAxis = aligment
+    public func justifyContent(_ aligment: Aligment) -> Self {
+        view.layout.justifyContent = aligment
         setNeedsLayout()
         return self
     }
@@ -146,12 +146,14 @@ extension PuyoLink where T: FlatBox {
         setNeedsLayout()
         return self
     }
+    
     @discardableResult
     public func formation(_ formation: Formation) -> Self {
         view.layout.formation = formation
         setNeedsLayout()
         return self
     }
+    
     @discardableResult
     public func direction(_ direction: Direction) -> Self {
         view.layout.direction = direction
@@ -162,6 +164,13 @@ extension PuyoLink where T: FlatBox {
     @discardableResult
     public func reverse(_ reverse: Bool) -> Self {
         view.layout.reverse = reverse
+        setNeedsLayout()
+        return self
+    }
+    
+    @discardableResult
+    public func autoJudgeScroll(_ judge: Bool) -> Self {
+        view.layout.autoJudgeScroll = judge
         setNeedsLayout()
         return self
     }

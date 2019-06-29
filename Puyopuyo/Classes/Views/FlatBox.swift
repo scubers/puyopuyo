@@ -81,10 +81,6 @@ open class HBox: FlatBox {
     public static func attach(_ parent: UIView? = nil, wrap: Bool = true, _ block: PuyoLinkBlock? = nil) -> PuyoLink<HBox> {
         return HBox().attach(parent, wrap: wrap, block)
     }
-    open override func layoutSubviews() {
-        super.layoutSubviews()
-        print("lines layout")
-    }
 }
 
 open class VBox: FlatBox {

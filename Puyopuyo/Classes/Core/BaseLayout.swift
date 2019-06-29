@@ -17,7 +17,7 @@ public enum Formation {
 /// 描述一个布局具备控制子节点的属性
 public class BaseLayout: Measure {
     
-    public var crossAxis: Aligment = .center
+    public var justifyContent: Aligment = .center
     
     public var padding = UIEdgeInsets.zero
     

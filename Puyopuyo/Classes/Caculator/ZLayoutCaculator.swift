@@ -33,7 +33,7 @@ class ZLayoutCaculator {
             
             // 计算中心
             var center = CGPoint(x: layoutFixedSize.width / 2, y: layoutFixedSize.height / 2)
-            let aligment = measure.aligment.contains(.none) ? layout.crossAxis : measure.aligment
+            let aligment = measure.aligment.contains(.none) ? layout.justifyContent : measure.aligment
             checkAligmentAvailable(aligment)
             
             if aligment.contains(.left) {
