@@ -86,7 +86,9 @@ public class PlaceHolderMeasure: Measure, MeasureTagetable {
     
     public var py_center: CGPoint = .zero
     
-    public var py_children: [Measure] = []
+    public func py_enumerateChild(_ block: (Int, Measure) -> Void) {
+        
+    }
     
     public func py_sizeThatFits(_ size: CGSize) -> CGSize {
         return size

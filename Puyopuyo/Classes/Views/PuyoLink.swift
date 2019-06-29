@@ -44,6 +44,16 @@ extension PuyoLinkAttacher where Self: UIView {
     
 }
 
+extension PuyoLink: PuyoLinkAttacher where T: UIView {
+    public typealias Holder = T
+    public func attach(_ parent: UIView? = nil, wrap: Bool = false, _ block: PuyoLinkBlock? = nil) -> PuyoLink<T> {
+        parent?.addSubview(view)
+        block?(view)
+        return self
+    }
+    
+}
+
 extension UIView: PuyoLinkAttacher {
     
 }

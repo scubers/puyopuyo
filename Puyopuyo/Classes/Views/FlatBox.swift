@@ -17,26 +17,29 @@ open class FlatBox: BoxView {
     open override func layoutSubviews() {
         super.layoutSubviews()
         
+        let parentMeasure = superview?.py_measure ?? Measure()
         // 如果原本就固定尺寸
-        if layout.size.isFixed() {
+        if layout.size.bothNotWrap() {
             // 此时可以设置自己的尺寸
-            bounds.size = CGSize(width: layout.size.width.fixedValue, height: layout.size.height.fixedValue)
+            let size = Caculator.caculate(size: layout.size, by: superview?.bounds.size ?? .zero)
+            bounds.size = CGSize(width: size.width.fixedValue, height: size.height.fixedValue)
         }
         
-        let parentMeasure = superview?.py_measure ?? Measure()
         // 旧尺寸
         let oldSize = bounds.size
         
-        let sizeAfterCaculate = FlatCaculator.caculateLine(layout, from: parentMeasure)
+        let sizeAfterCaculate = layout.caculate(byParent: parentMeasure)
         
         if (superview is BoxView) {
             // 父视图为布局视图
             // 通过计算如果已经确定了尺寸，也可以直接设置
-            if sizeAfterCaculate.isFixed() {
-                bounds.size = CGSize(width: sizeAfterCaculate.width.fixedValue, height: sizeAfterCaculate.height.fixedValue)
+            if sizeAfterCaculate.bothNotWrap() {
+                let size = Caculator.caculate(size: sizeAfterCaculate, by: superview?.bounds.size ?? .zero)
+                bounds.size = CGSize(width: size.width.fixedValue, height: size.height.fixedValue)
             }
             if oldSize != bounds.size {
-                _ = FlatCaculator.caculateLine(layout, from: parentMeasure)
+                _ = layout.caculate(byParent: parentMeasure)
+//                _ = FlatCaculator.caculateLine(layout, from: parentMeasure)
             }
             
         } else {
@@ -49,7 +52,7 @@ open class FlatBox: BoxView {
             bounds.size = newSize
             
             if oldSize != newSize {
-                _ = FlatCaculator.caculateLine(layout, from: parentMeasure)
+                _ = layout.caculate(byParent: parentMeasure)
             }
             
             center = CGPoint(x: bounds.midX, y: bounds.midY)
@@ -70,7 +73,7 @@ open class FlatBox: BoxView {
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
         let temp = PlaceHolderMeasure()
         temp.py_size = size
-        let sizeAfterCalulate = FlatCaculator.caculateLine(layout, from: PlaceHolderMeasure())
+        let sizeAfterCalulate = layout.caculate(byParent: temp)
         let fixedSize = Caculator.caculate(size: sizeAfterCalulate, by: size)
         return CGSize(width: fixedSize.width.fixedValue, height: fixedSize.height.fixedValue)
     }

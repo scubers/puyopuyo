@@ -16,6 +16,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        let p = Person()
+        p.name = "jack"
+        p.age = 1
+        let d = Delegate(p)
+        let name: String = d.name
+        let age: Int = d.age
+        
+        let call = Call()
+        print(call(1, 2))
+        
+        print(name)
+        print(age)
+        print(Call().dynamicallyCall(withArguments: [1, 3]))
         return true
     }
 

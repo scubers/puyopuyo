@@ -27,7 +27,7 @@ open class BoxView: UIView {
         super.setNeedsLayout()
         // 如果自己是固定尺寸，则不需要通知上层进行布局
         let measure = py_measure
-        if let superview = superview as? BoxView, (measure.size.width.isWrap || measure.size.height.isWrap) {
+        if let superview = superview as? BoxView, measure.size.maybeWrap() {
             superview.setNeedsLayout()
         }
     }

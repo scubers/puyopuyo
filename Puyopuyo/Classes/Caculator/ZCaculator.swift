@@ -7,12 +7,30 @@
 
 import Foundation
 
-class ZLayoutCaculator {
-    static func caculate(layout: ZLayout, parent: Measure) -> Size {
+class ZCaculator {
+    
+    let layout: ZLayout
+    let parent: Measure
+    init(_ layout: ZLayout, parent: Measure) {
+        self.layout = layout
+        self.parent = parent
+    }
+    
+    lazy var layoutCalPadding = CalEdges(insets: layout.padding, direction: layout.direction)
+    lazy var layoutCalFixedSize = CalFixedSize(cgSize: layout.target?.py_size ?? .zero, direction: layout.direction)
+    lazy var layoutCalSize = CalSize(size: layout.size, direction: layout.direction)
+    lazy var totalFixedMain: CGFloat = self.layoutCalPadding.start + self.layoutCalPadding.end
+    
+    func caculate() -> Size {
         
         let layoutFixedSize = layout.target?.py_size ?? .zero
         
-        let children = layout.children.filter({ $0.activated })
+        var children = [Measure]()
+        layout.enumerateChild { (_, m) in
+            if m.activated {
+                children.append(m)
+            }
+        }
         
         var maxSizeWithMargin = CGSize.zero
         
@@ -65,7 +83,7 @@ class ZLayoutCaculator {
         return Size(width: width, height: height)
     }
     
-    private static func checkAligmentAvailable(_ aligment: Aligment) {
+    private func checkAligmentAvailable(_ aligment: Aligment) {
         if aligment.contains([.left, .right]) {
             fatalError("不能同时设置左右")
         }

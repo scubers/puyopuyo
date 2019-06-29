@@ -7,50 +7,52 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0504DC4485DABD8C2E57CCB77590E52B /* Puyopuyo-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = D2DA2744877A10B8FD38AB915909E875 /* Puyopuyo-dummy.m */; };
+		0325C2732074777957F9894D099B67BE /* Caculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6438D251E6F3DCE51924BF02E42F7BC2 /* Caculator.swift */; };
+		04A4E9B55188BED27DC150088BA768FC /* FlatBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E3DEEAB9918D80FEEEF0937AFFAE30 /* FlatBox.swift */; };
+		06C3987AC36C069856165CE0596FC146 /* FlowCaculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6200A3849A5F3786F1AC1514365D4B /* FlowCaculator.swift */; };
 		07C4829B63026E8CB0C89D2F5F601E60 /* Pods-Puyopuyo_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 946BAD53C050A28B29E560B3BFBC1F26 /* Pods-Puyopuyo_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		15A3E701D4287C5D30E416099C4E2456 /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B48FDA2B234C47B1D35D1CDE21B41D5 /* Size.swift */; };
 		18F1B9D2E2BB7878D0E0A4AADF0ECC9E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
 		19AF4AC5C8BBAE0B48078CF0795DB286 /* TGRelativeLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734E4925F9892CED1F043CFA411CA8A4 /* TGRelativeLayout.swift */; };
-		23C7A6DC2A60EE21C823B710CCA41B5C /* Caculations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44CC42F9525355B147A230B20FF4EF1D /* Caculations.swift */; };
+		1D358A249558D579E3B178EB0286E4D7 /* MeasureBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = E36B59468119868E38F3301FF48CC332 /* MeasureBox.swift */; };
+		1E41ADBF4B8196D33C5CE19EE4549A74 /* BoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AAED6935381AFA100556BA37FBBA109 /* BoxView.swift */; };
 		248CC2BEEDB3CB168882FBBF71419E3E /* TGLayoutSizeClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288B5DF1FF296D82244F1D47210EC862 /* TGLayoutSizeClass.swift */; };
-		254012A749CCC87EFB2448541332D4A9 /* Puyopuyo-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = EF09AF19C38B724F8321E05CFB999447 /* Puyopuyo-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		267AE589732F5E77F9C630B192C4C2B8 /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EC7D0C91C13B1DB842A356E95A3BE7E /* Size.swift */; };
-		2C5317804D97F794CC44C67E083F70B0 /* Visibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2AA953F7C05405C834674B68DCC0300 /* Visibility.swift */; };
-		306970C246E52230D50B6142FFA521B5 /* Measure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A2559402BA09C226521F2EF93AEF0E /* Measure.swift */; };
+		254012A749CCC87EFB2448541332D4A9 /* Puyopuyo-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 5C4B5229D0E6DE4D3733A6517143F57A /* Puyopuyo-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		27794670102FFE7FCA39310D3D915724 /* Puyopuyo-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D33293A0069D33141B50AD46C2532A /* Puyopuyo-dummy.m */; };
+		2EBEB559480CCC00FCDAEAFD0D6B5AD7 /* ZBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59830E14DA13CE44A1FFB3F51A7F2E31 /* ZBox.swift */; };
 		316D7E14F1BA4DB40CF1C239EE205512 /* TGFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = D283967569BD5B46279EE0186880A706 /* TGFlowLayout.swift */; };
+		37643CDCFAA5BDDF643833428BAB5C4B /* Visibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3677136FCC4D40642307BFF34674573 /* Visibility.swift */; };
 		38D43744F7C44D935DB14FE5A9BC0C0F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
-		3B580CB25B09D390FE616A0DBBF1D63A /* Measurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = B34B66081E578ABE0214E47038CFEA47 /* Measurable.swift */; };
 		4066E257149C5677191FA904BF9FC358 /* TGFrameLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B32BD8C7486D57C440BCBB579F485055 /* TGFrameLayout.swift */; };
-		433EF77217CC52396769402140226F44 /* Caculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C73FBE725889B8DD7D49F267293BD8 /* Caculator.swift */; };
-		5822B235F89212D1018BB75AEF06173B /* MeasureBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8CE929B8109ACB5C41A4C0468662A23 /* MeasureBox.swift */; };
+		4B0949EA8F80DC4E2F0812F6608CDA27 /* FlatLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6089D0252CAC6ABABB10FD7DC424FA43 /* FlatLayout.swift */; };
+		55216B5FFCF065F60955E4F46F911B3E /* FlatCaculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10623C5BDC6EDC0343EB8EC9E2BBE96 /* FlatCaculator.swift */; };
+		558B7691B5E4045D9D48D782CF0F19B5 /* ZCaculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3DBCC444401292110A7266DD88DF69 /* ZCaculator.swift */; };
 		6CD862C04B1A8CA0AC75D13F997566EB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
+		6FB3DA0A8E9333D5C9C9C1309B22D19B /* MeasureCaculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A57E90BEFF7F2BDEE93447EEC365582 /* MeasureCaculator.swift */; };
 		73186730F5DB484D64D5B9769AFFA5B6 /* TGLayoutPos.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B52B17CEF585BC87C9C60D31E54B7C8 /* TGLayoutPos.swift */; };
 		744D2E2343CCE82A9019AA5B3044CF46 /* TangramKit-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 4683BD53C69BB76CE3885C53ABF6D16C /* TangramKit-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7838433A73D0B9E38F4917D91AB0073D /* BaseLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A51A6ABF4522885A36E05D4F315524 /* BaseLayout.swift */; };
 		79B9570DA3AB890974847E4721002AD9 /* TGPathLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501213F0D3CC869F6DB579DE594426DE /* TGPathLayout.swift */; };
+		79CEB66102B05E9F1171C183455F8726 /* PuyoLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF086E2FC711AC6FB1045D2DB9DE35E9 /* PuyoLink.swift */; };
 		8645A6528F262F13332CFF4E962353ED /* TangramKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 2740DFD77E50B0F7E0B6B50702086113 /* TangramKit-dummy.m */; };
 		88F6C2F29B004D966DA98C2B9E8B295D /* Pods-Puyopuyo_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = BEA97967ECB1CB4CAF52C5B393392106 /* Pods-Puyopuyo_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		8A7E882E71AED04A072B9599C89A2D9A /* ZLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64E90E8DE077BC0163DAE9C90F96FB46 /* ZLayout.swift */; };
 		8C6F2987EE3C20CDF57CF0123918EFD2 /* Pods-Puyopuyo_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 050C2A30B648BC939140B19A19FFE78F /* Pods-Puyopuyo_Tests-dummy.m */; };
 		93A447261CF57152EC926A4FFC0D0C16 /* TGTableLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A6EB8FEE9A4F28309086FFA6CE5261 /* TGTableLayout.swift */; };
-		A54845F8D6CDA46992DD0838B2EA863C /* PuyoLinkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50B598B746D30E2FF08DD02E4D920133 /* PuyoLinkHelper.swift */; };
-		A6342AFE2137A37A5F7DE0F03A325780 /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93375604417C3B1E387C78A443709CB6 /* View+Extension.swift */; };
-		A828277522C6863300D73AD4 /* BoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A828277422C6863300D73AD4 /* BoxView.swift */; };
-		A828277722C6868400D73AD4 /* ZBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A828277622C6868400D73AD4 /* ZBox.swift */; };
-		A8CD0A4622C683FA0020BC01 /* FlatCaculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8CD0A4522C683FA0020BC01 /* FlatCaculator.swift */; };
-		A8CD0A4822C684160020BC01 /* MeasureCaculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8CD0A4722C684160020BC01 /* MeasureCaculator.swift */; };
-		A8CD0A4A22C684300020BC01 /* ZLayoutCaculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8CD0A4922C684300020BC01 /* ZLayoutCaculator.swift */; };
+		A808EE78C6653AC9FF90332ED65B3073 /* Measure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7930A1AA487B98D0A738911D909B9A6C /* Measure.swift */; };
 		ABB01820E5E50BF68CACED3F8FA4FED3 /* TGDimeAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5171A2ED8FB4DF972049F6FCA5CF95 /* TGDimeAdapter.swift */; };
+		AD5637EA008FAAAFE0F2B0A9B2C13EEA /* PuyoLinkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B31AA0BB98BD5F44710F4E5D78CB2EC8 /* PuyoLinkHelper.swift */; };
 		B7942A565A0B45907E311AE499F93354 /* TGLayoutSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47EBEF02FB70CF93FFB1F08677531A0C /* TGLayoutSize.swift */; };
 		BA330FF21CB34C1A7A6784E51134F445 /* TangramKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB578C3A69D3F3D962D0AFAFC14E6B7C /* TangramKit.swift */; };
-		BA7066379C9190D28A79DB2AAC6FB1C1 /* PuyoLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DB7A74D4A60B3BEBE209E6B159E832 /* PuyoLink.swift */; };
-		C2498477E9662AF54787D8AA60BC7711 /* FlatBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = B770753F35D7D93F78EF49B98EF961E5 /* FlatBox.swift */; };
 		C4AC48AE1C4877EE0B17B6CBD3515464 /* TGLinearLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2224975C393D38F2BDA54ED71253B3B5 /* TGLinearLayout.swift */; };
 		C96050C07AC7842C1EA973F6596989C7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
 		D40CF5054748B9E55D9CF376C863907C /* Pods-Puyopuyo_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B2ABA3C2863EBC298F53FFFB0164378F /* Pods-Puyopuyo_Example-dummy.m */; };
-		D6F3452E31C6A1DEBFAF4F249B4A6095 /* ZLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6A5A56437808FE84CC2C843AF33F927 /* ZLayout.swift */; };
-		E53437BC6658AFA7D16CD41B8260F2BA /* FlatLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15F398B18D7BB384728CDEB7BF777F3B /* FlatLayout.swift */; };
+		DC4C48738378B81CA8C58A90F0F138D1 /* Measurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73044D197715C68531C94E9AEDF6AC5F /* Measurable.swift */; };
+		E2503EFE0FBA0E69E2B2B375B10DD608 /* View+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5657FC8512ACC97441FD5A66CB24892 /* View+Extension.swift */; };
 		E8B8D85C88A6632815DE9A7CB1211672 /* TGFloatLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C43EE1E2155949EF9D5007A7BF3A4CE3 /* TGFloatLayout.swift */; };
+		EA88ED44E1BBEDB37E24FCA6D62770BF /* Caculations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84292D3ADF4BB05292D525B93F248008 /* Caculations.swift */; };
 		F1824FB33B270C891304BF69095BFAD4 /* TGBaseLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1986310E30FDFD1BCBF5EB60D816A3 /* TGBaseLayout.swift */; };
+		FA4750F4CF35EE45CEF146E8E2995DDC /* BaseLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 480174240CA886E977C75B40770DB544 /* BaseLayout.swift */; };
+		FC175144D83AAF8EB4B811017BCE9771 /* FlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17107C19BAEBEC1832D2DC4C4FB75262 /* FlowLayout.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,76 +80,78 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		005C66BC3BC321A151362C5B4C1991E0 /* Puyopuyo-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Puyopuyo-Info.plist"; sourceTree = "<group>"; };
-		01C35A3C01D94A0FE658DB96FA1B2A82 /* Pods_Puyopuyo_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Puyopuyo_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		01C35A3C01D94A0FE658DB96FA1B2A82 /* Pods_Puyopuyo_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Puyopuyo_Example.framework; path = "Pods-Puyopuyo_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		01F700B502BC978677759F4B0B3E1767 /* Puyopuyo.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Puyopuyo.xcconfig; sourceTree = "<group>"; };
 		045722027BB4DF19AB95EF07C8B26805 /* Pods-Puyopuyo_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Puyopuyo_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		050C2A30B648BC939140B19A19FFE78F /* Pods-Puyopuyo_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Puyopuyo_Tests-dummy.m"; sourceTree = "<group>"; };
-		15F398B18D7BB384728CDEB7BF777F3B /* FlatLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FlatLayout.swift; sourceTree = "<group>"; };
+		0B3DBCC444401292110A7266DD88DF69 /* ZCaculator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ZCaculator.swift; sourceTree = "<group>"; };
+		17107C19BAEBEC1832D2DC4C4FB75262 /* FlowLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FlowLayout.swift; sourceTree = "<group>"; };
 		2224975C393D38F2BDA54ED71253B3B5 /* TGLinearLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGLinearLayout.swift; path = TangramKit/TGLinearLayout.swift; sourceTree = "<group>"; };
-		25A731EBECB8F7F557F4B1A5F37414AC /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		26C67B92B7047648C7C69918F7051CB5 /* Puyopuyo-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Puyopuyo-prefix.pch"; sourceTree = "<group>"; };
 		2740DFD77E50B0F7E0B6B50702086113 /* TangramKit-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "TangramKit-dummy.m"; sourceTree = "<group>"; };
 		288B5DF1FF296D82244F1D47210EC862 /* TGLayoutSizeClass.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGLayoutSizeClass.swift; path = TangramKit/TGLayoutSizeClass.swift; sourceTree = "<group>"; };
-		303FA63CE16F40449C24C1CBDE59372B /* TangramKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TangramKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		303FA63CE16F40449C24C1CBDE59372B /* TangramKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = TangramKit.framework; path = TangramKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		387F6326E5E54CCDF340B249BD9E9A29 /* Pods-Puyopuyo_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Puyopuyo_Example-frameworks.sh"; sourceTree = "<group>"; };
 		3B52B17CEF585BC87C9C60D31E54B7C8 /* TGLayoutPos.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGLayoutPos.swift; path = TangramKit/TGLayoutPos.swift; sourceTree = "<group>"; };
 		4043D24B48F47BE8B5B1373A47C16A49 /* TangramKit-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "TangramKit-prefix.pch"; sourceTree = "<group>"; };
-		446E67D2E56A6768ADAE17445A6E835A /* Pods_Puyopuyo_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Puyopuyo_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		44CC42F9525355B147A230B20FF4EF1D /* Caculations.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Caculations.swift; sourceTree = "<group>"; };
+		446E67D2E56A6768ADAE17445A6E835A /* Pods_Puyopuyo_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Puyopuyo_Tests.framework; path = "Pods-Puyopuyo_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4683BD53C69BB76CE3885C53ABF6D16C /* TangramKit-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "TangramKit-umbrella.h"; sourceTree = "<group>"; };
 		47EBEF02FB70CF93FFB1F08677531A0C /* TGLayoutSize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGLayoutSize.swift; path = TangramKit/TGLayoutSize.swift; sourceTree = "<group>"; };
+		480174240CA886E977C75B40770DB544 /* BaseLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BaseLayout.swift; sourceTree = "<group>"; };
+		4A57E90BEFF7F2BDEE93447EEC365582 /* MeasureCaculator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MeasureCaculator.swift; sourceTree = "<group>"; };
 		501213F0D3CC869F6DB579DE594426DE /* TGPathLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGPathLayout.swift; path = TangramKit/TGPathLayout.swift; sourceTree = "<group>"; };
-		50B598B746D30E2FF08DD02E4D920133 /* PuyoLinkHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PuyoLinkHelper.swift; sourceTree = "<group>"; };
-		55A8C6341F789E991F480DE77C550A7A /* Puyopuyo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Puyopuyo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5678426BA8FAD9905BE8A2AAD63280E5 /* Puyopuyo.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Puyopuyo.xcconfig; sourceTree = "<group>"; };
-		62C73FBE725889B8DD7D49F267293BD8 /* Caculator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Caculator.swift; sourceTree = "<group>"; };
+		54F2FE6E3853C2EEF7A0184842422957 /* Puyopuyo.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = Puyopuyo.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		55A8C6341F789E991F480DE77C550A7A /* Puyopuyo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Puyopuyo.framework; path = Puyopuyo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		58D33293A0069D33141B50AD46C2532A /* Puyopuyo-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Puyopuyo-dummy.m"; sourceTree = "<group>"; };
+		59830E14DA13CE44A1FFB3F51A7F2E31 /* ZBox.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ZBox.swift; sourceTree = "<group>"; };
+		5C4B5229D0E6DE4D3733A6517143F57A /* Puyopuyo-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Puyopuyo-umbrella.h"; sourceTree = "<group>"; };
+		6089D0252CAC6ABABB10FD7DC424FA43 /* FlatLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FlatLayout.swift; sourceTree = "<group>"; };
+		6438D251E6F3DCE51924BF02E42F7BC2 /* Caculator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Caculator.swift; sourceTree = "<group>"; };
+		64E90E8DE077BC0163DAE9C90F96FB46 /* ZLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ZLayout.swift; sourceTree = "<group>"; };
+		73044D197715C68531C94E9AEDF6AC5F /* Measurable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Measurable.swift; sourceTree = "<group>"; };
 		734E4925F9892CED1F043CFA411CA8A4 /* TGRelativeLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGRelativeLayout.swift; path = TangramKit/TGRelativeLayout.swift; sourceTree = "<group>"; };
-		74DB7A74D4A60B3BEBE209E6B159E832 /* PuyoLink.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PuyoLink.swift; sourceTree = "<group>"; };
-		75CC07A629EE76D34CE55583BA981E3F /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		75E6E9E4EB5A601F39122BA55A2BCCDF /* Pods-Puyopuyo_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Puyopuyo_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
+		76CB7B3DE5720F298D2585ECEAC35590 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
 		76F5B77E7BA6164C31FAD262A7E3FF0C /* Pods-Puyopuyo_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Puyopuyo_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		7930A1AA487B98D0A738911D909B9A6C /* Measure.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Measure.swift; sourceTree = "<group>"; };
+		7B48FDA2B234C47B1D35D1CDE21B41D5 /* Size.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Size.swift; sourceTree = "<group>"; };
 		7CC536EDFD60EA202AECA0230478D064 /* Pods-Puyopuyo_Tests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Puyopuyo_Tests-Info.plist"; sourceTree = "<group>"; };
+		7E6200A3849A5F3786F1AC1514365D4B /* FlowCaculator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FlowCaculator.swift; sourceTree = "<group>"; };
+		8189FF0650B8E26CFC34C36A21445172 /* Puyopuyo.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Puyopuyo.modulemap; sourceTree = "<group>"; };
 		82A8CE6D539FFB0F3FEA004E62112885 /* Pods-Puyopuyo_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Puyopuyo_Tests.modulemap"; sourceTree = "<group>"; };
-		8EC7D0C91C13B1DB842A356E95A3BE7E /* Size.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Size.swift; sourceTree = "<group>"; };
-		90A51A6ABF4522885A36E05D4F315524 /* BaseLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BaseLayout.swift; sourceTree = "<group>"; };
-		92A2559402BA09C226521F2EF93AEF0E /* Measure.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Measure.swift; sourceTree = "<group>"; };
-		93375604417C3B1E387C78A443709CB6 /* View+Extension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
+		84292D3ADF4BB05292D525B93F248008 /* Caculations.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Caculations.swift; sourceTree = "<group>"; };
 		936B3F65F533D1407DB89DDCC104494B /* Pods-Puyopuyo_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Puyopuyo_Example-acknowledgements.plist"; sourceTree = "<group>"; };
+		93AA6BA31E0939B430BF7872D1CBCB64 /* Puyopuyo-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Puyopuyo-Info.plist"; sourceTree = "<group>"; };
 		946BAD53C050A28B29E560B3BFBC1F26 /* Pods-Puyopuyo_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Puyopuyo_Tests-umbrella.h"; sourceTree = "<group>"; };
+		9AAED6935381AFA100556BA37FBBA109 /* BoxView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BoxView.swift; sourceTree = "<group>"; };
 		9CC06E46D2F7D85084AD4861044A8293 /* Pods-Puyopuyo_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Puyopuyo_Example.release.xcconfig"; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		A14FEA83ACFC6389B57BE6853CEDC830 /* Puyopuyo-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Puyopuyo-prefix.pch"; sourceTree = "<group>"; };
-		A828277422C6863300D73AD4 /* BoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxView.swift; sourceTree = "<group>"; };
-		A828277622C6868400D73AD4 /* ZBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZBox.swift; sourceTree = "<group>"; };
-		A8CD0A4522C683FA0020BC01 /* FlatCaculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlatCaculator.swift; sourceTree = "<group>"; };
-		A8CD0A4722C684160020BC01 /* MeasureCaculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureCaculator.swift; sourceTree = "<group>"; };
-		A8CD0A4922C684300020BC01 /* ZLayoutCaculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZLayoutCaculator.swift; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		A5E3DEEAB9918D80FEEEF0937AFFAE30 /* FlatBox.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FlatBox.swift; sourceTree = "<group>"; };
 		AB578C3A69D3F3D962D0AFAFC14E6B7C /* TangramKit.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TangramKit.swift; path = TangramKit/TangramKit.swift; sourceTree = "<group>"; };
-		B2AA953F7C05405C834674B68DCC0300 /* Visibility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Visibility.swift; sourceTree = "<group>"; };
 		B2ABA3C2863EBC298F53FFFB0164378F /* Pods-Puyopuyo_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Puyopuyo_Example-dummy.m"; sourceTree = "<group>"; };
+		B31AA0BB98BD5F44710F4E5D78CB2EC8 /* PuyoLinkHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PuyoLinkHelper.swift; sourceTree = "<group>"; };
 		B32BD8C7486D57C440BCBB579F485055 /* TGFrameLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGFrameLayout.swift; path = TangramKit/TGFrameLayout.swift; sourceTree = "<group>"; };
-		B34B66081E578ABE0214E47038CFEA47 /* Measurable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Measurable.swift; sourceTree = "<group>"; };
 		B52ACCBE73179F21BDC3C47205DF1243 /* TangramKit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = TangramKit.xcconfig; sourceTree = "<group>"; };
-		B770753F35D7D93F78EF49B98EF961E5 /* FlatBox.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FlatBox.swift; sourceTree = "<group>"; };
 		B9A6EB8FEE9A4F28309086FFA6CE5261 /* TGTableLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGTableLayout.swift; path = TangramKit/TGTableLayout.swift; sourceTree = "<group>"; };
 		BEA97967ECB1CB4CAF52C5B393392106 /* Pods-Puyopuyo_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Puyopuyo_Example-umbrella.h"; sourceTree = "<group>"; };
+		C10623C5BDC6EDC0343EB8EC9E2BBE96 /* FlatCaculator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FlatCaculator.swift; sourceTree = "<group>"; };
 		C43EE1E2155949EF9D5007A7BF3A4CE3 /* TGFloatLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGFloatLayout.swift; path = TangramKit/TGFloatLayout.swift; sourceTree = "<group>"; };
-		C6A5A56437808FE84CC2C843AF33F927 /* ZLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ZLayout.swift; sourceTree = "<group>"; };
 		CC94DF659D9E5D55D9543BF71FF0BB0A /* Pods-Puyopuyo_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Puyopuyo_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		CE1986310E30FDFD1BCBF5EB60D816A3 /* TGBaseLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGBaseLayout.swift; path = TangramKit/TGBaseLayout.swift; sourceTree = "<group>"; };
+		CF086E2FC711AC6FB1045D2DB9DE35E9 /* PuyoLink.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PuyoLink.swift; sourceTree = "<group>"; };
 		D283967569BD5B46279EE0186880A706 /* TGFlowLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGFlowLayout.swift; path = TangramKit/TGFlowLayout.swift; sourceTree = "<group>"; };
-		D2DA2744877A10B8FD38AB915909E875 /* Puyopuyo-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Puyopuyo-dummy.m"; sourceTree = "<group>"; };
 		D406BB4F172E147524BD0D34306C3E3C /* Pods-Puyopuyo_Example-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Puyopuyo_Example-Info.plist"; sourceTree = "<group>"; };
-		D8CE929B8109ACB5C41A4C0468662A23 /* MeasureBox.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MeasureBox.swift; sourceTree = "<group>"; };
+		D5657FC8512ACC97441FD5A66CB24892 /* View+Extension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "View+Extension.swift"; sourceTree = "<group>"; };
 		DB5171A2ED8FB4DF972049F6FCA5CF95 /* TGDimeAdapter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TGDimeAdapter.swift; path = TangramKit/TGDimeAdapter.swift; sourceTree = "<group>"; };
-		EF09AF19C38B724F8321E05CFB999447 /* Puyopuyo-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Puyopuyo-umbrella.h"; sourceTree = "<group>"; };
+		DC37553E7F2C0E005B220B1B22F9CBC7 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		E36B59468119868E38F3301FF48CC332 /* MeasureBox.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MeasureBox.swift; sourceTree = "<group>"; };
+		F3677136FCC4D40642307BFF34674573 /* Visibility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Visibility.swift; sourceTree = "<group>"; };
 		F41DAEE74F989A829C88C77BFEAED596 /* TangramKit.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = TangramKit.modulemap; sourceTree = "<group>"; };
-		F4391324AA63C336A1D812551703E224 /* Puyopuyo.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = Puyopuyo.modulemap; sourceTree = "<group>"; };
 		F63EA10989F3111747CB8D30AF317A50 /* Pods-Puyopuyo_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Puyopuyo_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		FABD12BF6D6C192FFD94BEDB71CB468F /* Pods-Puyopuyo_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-Puyopuyo_Example.modulemap"; sourceTree = "<group>"; };
 		FAED2160B5B5BC507EA6D2B7EB88A259 /* TangramKit-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "TangramKit-Info.plist"; sourceTree = "<group>"; };
 		FC86032504C679A5467C62A83D6D99B6 /* Pods-Puyopuyo_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Puyopuyo_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
-		FE1DA456B469E8F2B1817BB5C9BB986E /* Puyopuyo.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = Puyopuyo.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -194,25 +198,26 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		085BA570C5F9B5095E88C611AB9AEA22 /* Caculator */ = {
+			isa = PBXGroup;
+			children = (
+				84292D3ADF4BB05292D525B93F248008 /* Caculations.swift */,
+				6438D251E6F3DCE51924BF02E42F7BC2 /* Caculator.swift */,
+				C10623C5BDC6EDC0343EB8EC9E2BBE96 /* FlatCaculator.swift */,
+				7E6200A3849A5F3786F1AC1514365D4B /* FlowCaculator.swift */,
+				4A57E90BEFF7F2BDEE93447EEC365582 /* MeasureCaculator.swift */,
+				0B3DBCC444401292110A7266DD88DF69 /* ZCaculator.swift */,
+			);
+			name = Caculator;
+			path = Puyopuyo/Classes/Caculator;
+			sourceTree = "<group>";
+		};
 		10D981AC152E6657167A6ED071FBE198 /* Development Pods */ = {
 			isa = PBXGroup;
 			children = (
-				130800B25491EE5DC38DCD8E319FF25E /* Puyopuyo */,
+				7AC26D491DF5BCE56BE5B7FB3B5B72E3 /* Puyopuyo */,
 			);
 			name = "Development Pods";
-			sourceTree = "<group>";
-		};
-		130800B25491EE5DC38DCD8E319FF25E /* Puyopuyo */ = {
-			isa = PBXGroup;
-			children = (
-				6417783406DDC5986DDE9DEAF7D6A9F1 /* Caculator */,
-				62A480CD4A8D0A55494AAAE95AE3ED0E /* Core */,
-				64654E368A27D31C6025A937920730A8 /* Pod */,
-				31FB2CB19D6A643DD48215D6199101E5 /* Support Files */,
-				DD5A7BFEE11EAC961827F60F5883FD2A /* Views */,
-			);
-			name = Puyopuyo;
-			path = ../..;
 			sourceTree = "<group>";
 		};
 		29450A115136EE3F333366F973F51B25 /* Pods-Puyopuyo_Tests */ = {
@@ -231,15 +236,15 @@
 			path = "Target Support Files/Pods-Puyopuyo_Tests";
 			sourceTree = "<group>";
 		};
-		31FB2CB19D6A643DD48215D6199101E5 /* Support Files */ = {
+		297B077CF7E6D5222C379EF222E318AB /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				F4391324AA63C336A1D812551703E224 /* Puyopuyo.modulemap */,
-				5678426BA8FAD9905BE8A2AAD63280E5 /* Puyopuyo.xcconfig */,
-				D2DA2744877A10B8FD38AB915909E875 /* Puyopuyo-dummy.m */,
-				005C66BC3BC321A151362C5B4C1991E0 /* Puyopuyo-Info.plist */,
-				A14FEA83ACFC6389B57BE6853CEDC830 /* Puyopuyo-prefix.pch */,
-				EF09AF19C38B724F8321E05CFB999447 /* Puyopuyo-umbrella.h */,
+				8189FF0650B8E26CFC34C36A21445172 /* Puyopuyo.modulemap */,
+				01F700B502BC978677759F4B0B3E1767 /* Puyopuyo.xcconfig */,
+				58D33293A0069D33141B50AD46C2532A /* Puyopuyo-dummy.m */,
+				93AA6BA31E0939B430BF7872D1CBCB64 /* Puyopuyo-Info.plist */,
+				26C67B92B7047648C7C69918F7051CB5 /* Puyopuyo-prefix.pch */,
+				5C4B5229D0E6DE4D3733A6517143F57A /* Puyopuyo-umbrella.h */,
 			);
 			name = "Support Files";
 			path = "Example/Pods/Target Support Files/Puyopuyo";
@@ -270,39 +275,12 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		62A480CD4A8D0A55494AAAE95AE3ED0E /* Core */ = {
+		5EA1D76ED995D233DD729461E9FE5AFD /* Pod */ = {
 			isa = PBXGroup;
 			children = (
-				90A51A6ABF4522885A36E05D4F315524 /* BaseLayout.swift */,
-				15F398B18D7BB384728CDEB7BF777F3B /* FlatLayout.swift */,
-				B34B66081E578ABE0214E47038CFEA47 /* Measurable.swift */,
-				92A2559402BA09C226521F2EF93AEF0E /* Measure.swift */,
-				8EC7D0C91C13B1DB842A356E95A3BE7E /* Size.swift */,
-				C6A5A56437808FE84CC2C843AF33F927 /* ZLayout.swift */,
-			);
-			name = Core;
-			path = Puyopuyo/Classes/Core;
-			sourceTree = "<group>";
-		};
-		6417783406DDC5986DDE9DEAF7D6A9F1 /* Caculator */ = {
-			isa = PBXGroup;
-			children = (
-				44CC42F9525355B147A230B20FF4EF1D /* Caculations.swift */,
-				62C73FBE725889B8DD7D49F267293BD8 /* Caculator.swift */,
-				A8CD0A4522C683FA0020BC01 /* FlatCaculator.swift */,
-				A8CD0A4722C684160020BC01 /* MeasureCaculator.swift */,
-				A8CD0A4922C684300020BC01 /* ZLayoutCaculator.swift */,
-			);
-			name = Caculator;
-			path = Puyopuyo/Classes/Caculator;
-			sourceTree = "<group>";
-		};
-		64654E368A27D31C6025A937920730A8 /* Pod */ = {
-			isa = PBXGroup;
-			children = (
-				25A731EBECB8F7F557F4B1A5F37414AC /* LICENSE */,
-				FE1DA456B469E8F2B1817BB5C9BB986E /* Puyopuyo.podspec */,
-				75CC07A629EE76D34CE55583BA981E3F /* README.md */,
+				DC37553E7F2C0E005B220B1B22F9CBC7 /* LICENSE */,
+				54F2FE6E3853C2EEF7A0184842422957 /* Puyopuyo.podspec */,
+				76CB7B3DE5720F298D2585ECEAC35590 /* README.md */,
 			);
 			name = Pod;
 			sourceTree = "<group>";
@@ -322,6 +300,34 @@
 			);
 			name = "Pods-Puyopuyo_Example";
 			path = "Target Support Files/Pods-Puyopuyo_Example";
+			sourceTree = "<group>";
+		};
+		7A2BB1E2EF0E05BDD6D8ABDD869CE807 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				480174240CA886E977C75B40770DB544 /* BaseLayout.swift */,
+				6089D0252CAC6ABABB10FD7DC424FA43 /* FlatLayout.swift */,
+				17107C19BAEBEC1832D2DC4C4FB75262 /* FlowLayout.swift */,
+				73044D197715C68531C94E9AEDF6AC5F /* Measurable.swift */,
+				7930A1AA487B98D0A738911D909B9A6C /* Measure.swift */,
+				7B48FDA2B234C47B1D35D1CDE21B41D5 /* Size.swift */,
+				64E90E8DE077BC0163DAE9C90F96FB46 /* ZLayout.swift */,
+			);
+			name = Core;
+			path = Puyopuyo/Classes/Core;
+			sourceTree = "<group>";
+		};
+		7AC26D491DF5BCE56BE5B7FB3B5B72E3 /* Puyopuyo */ = {
+			isa = PBXGroup;
+			children = (
+				085BA570C5F9B5095E88C611AB9AEA22 /* Caculator */,
+				7A2BB1E2EF0E05BDD6D8ABDD869CE807 /* Core */,
+				5EA1D76ED995D233DD729461E9FE5AFD /* Pod */,
+				297B077CF7E6D5222C379EF222E318AB /* Support Files */,
+				ECA41B9AAA7DB39DC17E263E3D8779F5 /* Views */,
+			);
+			name = Puyopuyo;
+			path = ../..;
 			sourceTree = "<group>";
 		};
 		C0834CEBB1379A84116EF29F93051C60 /* iOS */ = {
@@ -352,22 +358,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		DD5A7BFEE11EAC961827F60F5883FD2A /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				B770753F35D7D93F78EF49B98EF961E5 /* FlatBox.swift */,
-				D8CE929B8109ACB5C41A4C0468662A23 /* MeasureBox.swift */,
-				74DB7A74D4A60B3BEBE209E6B159E832 /* PuyoLink.swift */,
-				50B598B746D30E2FF08DD02E4D920133 /* PuyoLinkHelper.swift */,
-				93375604417C3B1E387C78A443709CB6 /* View+Extension.swift */,
-				B2AA953F7C05405C834674B68DCC0300 /* Visibility.swift */,
-				A828277422C6863300D73AD4 /* BoxView.swift */,
-				A828277622C6868400D73AD4 /* ZBox.swift */,
-			);
-			name = Views;
-			path = Puyopuyo/Classes/Views;
-			sourceTree = "<group>";
-		};
 		E5E4328B6C0AF75C678CD0A8EC5DE01C /* TangramKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -386,7 +376,24 @@
 				B9A6EB8FEE9A4F28309086FFA6CE5261 /* TGTableLayout.swift */,
 				4DFDF980A77CEDCF44C2735B503576FB /* Support Files */,
 			);
+			name = TangramKit;
 			path = TangramKit;
+			sourceTree = "<group>";
+		};
+		ECA41B9AAA7DB39DC17E263E3D8779F5 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				9AAED6935381AFA100556BA37FBBA109 /* BoxView.swift */,
+				A5E3DEEAB9918D80FEEEF0937AFFAE30 /* FlatBox.swift */,
+				E36B59468119868E38F3301FF48CC332 /* MeasureBox.swift */,
+				CF086E2FC711AC6FB1045D2DB9DE35E9 /* PuyoLink.swift */,
+				B31AA0BB98BD5F44710F4E5D78CB2EC8 /* PuyoLinkHelper.swift */,
+				D5657FC8512ACC97441FD5A66CB24892 /* View+Extension.swift */,
+				F3677136FCC4D40642307BFF34674573 /* Visibility.swift */,
+				59830E14DA13CE44A1FFB3F51A7F2E31 /* ZBox.swift */,
+			);
+			name = Views;
+			path = Puyopuyo/Classes/Views;
 			sourceTree = "<group>";
 		};
 		F0DB1BA50E8DEB3450C6E90913E87B75 /* Targets Support Files */ = {
@@ -441,7 +448,7 @@
 			buildConfigurationList = 4F270DA6E36C5C6E7ADE6E7505AE1642 /* Build configuration list for PBXNativeTarget "Puyopuyo" */;
 			buildPhases = (
 				5AE52CBF43A5D91CFA3D4953A5EE5B48 /* Headers */,
-				914630D3D7FB2AB21A60AD7C3783E0C6 /* Sources */,
+				77A12BA3A4B8FD04016E3C4CDFB85BD7 /* Sources */,
 				4736347A714987BDA2844B754E8F558A /* Frameworks */,
 				CFDE320D3ED4A3B2CC4B51306B765F23 /* Resources */,
 			);
@@ -601,30 +608,32 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		914630D3D7FB2AB21A60AD7C3783E0C6 /* Sources */ = {
+		77A12BA3A4B8FD04016E3C4CDFB85BD7 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7838433A73D0B9E38F4917D91AB0073D /* BaseLayout.swift in Sources */,
-				A8CD0A4A22C684300020BC01 /* ZLayoutCaculator.swift in Sources */,
-				23C7A6DC2A60EE21C823B710CCA41B5C /* Caculations.swift in Sources */,
-				433EF77217CC52396769402140226F44 /* Caculator.swift in Sources */,
-				E53437BC6658AFA7D16CD41B8260F2BA /* FlatLayout.swift in Sources */,
-				A8CD0A4622C683FA0020BC01 /* FlatCaculator.swift in Sources */,
-				C2498477E9662AF54787D8AA60BC7711 /* FlatBox.swift in Sources */,
-				3B580CB25B09D390FE616A0DBBF1D63A /* Measurable.swift in Sources */,
-				A828277722C6868400D73AD4 /* ZBox.swift in Sources */,
-				306970C246E52230D50B6142FFA521B5 /* Measure.swift in Sources */,
-				5822B235F89212D1018BB75AEF06173B /* MeasureBox.swift in Sources */,
-				BA7066379C9190D28A79DB2AAC6FB1C1 /* PuyoLink.swift in Sources */,
-				A54845F8D6CDA46992DD0838B2EA863C /* PuyoLinkHelper.swift in Sources */,
-				0504DC4485DABD8C2E57CCB77590E52B /* Puyopuyo-dummy.m in Sources */,
-				267AE589732F5E77F9C630B192C4C2B8 /* Size.swift in Sources */,
-				A6342AFE2137A37A5F7DE0F03A325780 /* View+Extension.swift in Sources */,
-				2C5317804D97F794CC44C67E083F70B0 /* Visibility.swift in Sources */,
-				A828277522C6863300D73AD4 /* BoxView.swift in Sources */,
-				A8CD0A4822C684160020BC01 /* MeasureCaculator.swift in Sources */,
-				D6F3452E31C6A1DEBFAF4F249B4A6095 /* ZLayout.swift in Sources */,
+				FA4750F4CF35EE45CEF146E8E2995DDC /* BaseLayout.swift in Sources */,
+				1E41ADBF4B8196D33C5CE19EE4549A74 /* BoxView.swift in Sources */,
+				EA88ED44E1BBEDB37E24FCA6D62770BF /* Caculations.swift in Sources */,
+				0325C2732074777957F9894D099B67BE /* Caculator.swift in Sources */,
+				04A4E9B55188BED27DC150088BA768FC /* FlatBox.swift in Sources */,
+				55216B5FFCF065F60955E4F46F911B3E /* FlatCaculator.swift in Sources */,
+				4B0949EA8F80DC4E2F0812F6608CDA27 /* FlatLayout.swift in Sources */,
+				06C3987AC36C069856165CE0596FC146 /* FlowCaculator.swift in Sources */,
+				FC175144D83AAF8EB4B811017BCE9771 /* FlowLayout.swift in Sources */,
+				DC4C48738378B81CA8C58A90F0F138D1 /* Measurable.swift in Sources */,
+				A808EE78C6653AC9FF90332ED65B3073 /* Measure.swift in Sources */,
+				1D358A249558D579E3B178EB0286E4D7 /* MeasureBox.swift in Sources */,
+				6FB3DA0A8E9333D5C9C9C1309B22D19B /* MeasureCaculator.swift in Sources */,
+				79CEB66102B05E9F1171C183455F8726 /* PuyoLink.swift in Sources */,
+				AD5637EA008FAAAFE0F2B0A9B2C13EEA /* PuyoLinkHelper.swift in Sources */,
+				27794670102FFE7FCA39310D3D915724 /* Puyopuyo-dummy.m in Sources */,
+				15A3E701D4287C5D30E416099C4E2456 /* Size.swift in Sources */,
+				E2503EFE0FBA0E69E2B2B375B10DD608 /* View+Extension.swift in Sources */,
+				37643CDCFAA5BDDF643833428BAB5C4B /* Visibility.swift in Sources */,
+				2EBEB559480CCC00FCDAEAFD0D6B5AD7 /* ZBox.swift in Sources */,
+				558B7691B5E4045D9D48D782CF0F19B5 /* ZCaculator.swift in Sources */,
+				8A7E882E71AED04A072B9599C89A2D9A /* ZLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -727,7 +736,7 @@
 		};
 		7370C975E5860828CCA658357EE996AB /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5678426BA8FAD9905BE8A2AAD63280E5 /* Puyopuyo.xcconfig */;
+			baseConfigurationReference = 01F700B502BC978677759F4B0B3E1767 /* Puyopuyo.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -792,7 +801,7 @@
 		};
 		A34A52CFD779CF641232803F8DC3A00F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5678426BA8FAD9905BE8A2AAD63280E5 /* Puyopuyo.xcconfig */;
+			baseConfigurationReference = 01F700B502BC978677759F4B0B3E1767 /* Puyopuyo.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -875,7 +884,8 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				SYMROOT = "${SRCROOT}/../build";
 			};

@@ -126,4 +126,13 @@ public struct Size {
         }
         return width
     }
+    
+    public func bothNotWrap() -> Bool {
+        return !(width.isWrap || height.isWrap)
+    }
+    
+    public func maybeWrap() -> Bool {
+        return width.isWrap || height.isWrap
+    }
+    
 }

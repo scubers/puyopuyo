@@ -24,7 +24,7 @@ open class ZBox: BoxView {
         
         let parentMeasure = superview?.py_measure ?? Measure()
         
-        let sizeAfterCaculate = ZLayoutCaculator.caculate(layout: layout, parent: parentMeasure)
+        let sizeAfterCaculate = layout.caculate(byParent: parentMeasure)
         
         if superview is BoxView  {
             // 父视图为布局视图
@@ -33,7 +33,7 @@ open class ZBox: BoxView {
                 bounds.size = CGSize(width: sizeAfterCaculate.width.fixedValue, height: sizeAfterCaculate.height.fixedValue)
             }
             if oldSize != bounds.size {
-                _ = ZLayoutCaculator.caculate(layout: layout, parent: parentMeasure)
+                _ = layout.caculate(byParent: parentMeasure)
             }
 
         } else {
@@ -46,7 +46,7 @@ open class ZBox: BoxView {
             bounds.size = newSize
             
             if oldSize != newSize {
-                _ = ZLayoutCaculator.caculate(layout: layout, parent: parentMeasure)
+                _ = layout.caculate(byParent: parentMeasure)
             }
             
             center = CGPoint(x: bounds.midX, y: bounds.midY)

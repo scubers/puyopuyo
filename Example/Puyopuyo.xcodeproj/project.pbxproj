@@ -14,6 +14,7 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		A828277922C71D0500D73AD4 /* Loopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = A828277822C71D0500D73AD4 /* Loopup.swift */; };
 		C150611D669A05C63EDB581C /* Pods_Puyopuyo_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 708BE9EC9E96CAC97AC908DF /* Pods_Puyopuyo_Example.framework */; };
 		D95B3BBB16328A11FC800CD7 /* Pods_Puyopuyo_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A30EBF753A01FE778D9D9547 /* Pods_Puyopuyo_Tests.framework */; };
 /* End PBXBuildFile section */
@@ -45,6 +46,7 @@
 		708BE9EC9E96CAC97AC908DF /* Pods_Puyopuyo_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Puyopuyo_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		77FB953E25BC3D91DC89F5C7 /* Pods-Puyopuyo_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Puyopuyo_Example.release.xcconfig"; path = "Target Support Files/Pods-Puyopuyo_Example/Pods-Puyopuyo_Example.release.xcconfig"; sourceTree = "<group>"; };
 		A30EBF753A01FE778D9D9547 /* Pods_Puyopuyo_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Puyopuyo_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A828277822C71D0500D73AD4 /* Loopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loopup.swift; sourceTree = "<group>"; };
 		B80C4BDF60E8E994E6351B56 /* Pods-Puyopuyo_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Puyopuyo_Example.debug.xcconfig"; path = "Target Support Files/Pods-Puyopuyo_Example/Pods-Puyopuyo_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		D5B8DC7A986335349E2B90E7 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		D8C53925C3060B52FD197F06 /* Pods-Puyopuyo_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Puyopuyo_Tests.release.xcconfig"; path = "Target Support Files/Pods-Puyopuyo_Tests/Pods-Puyopuyo_Tests.release.xcconfig"; sourceTree = "<group>"; };
@@ -113,6 +115,7 @@
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
 				09883C4922C5E5FB006CE05A /* StyleTestViewController.swift */,
+				A828277822C71D0500D73AD4 /* Loopup.swift */,
 			);
 			name = "Example for Puyopuyo";
 			path = Puyopuyo;
@@ -342,6 +345,7 @@
 			files = (
 				09883C4A22C5E5FB006CE05A /* StyleTestViewController.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
+				A828277922C71D0500D73AD4 /* Loopup.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

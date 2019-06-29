@@ -9,38 +9,65 @@ import Foundation
 
 class FlatCaculator {
     
+    let layout: FlatLayout
+    let parent: Measure
+    init(_ layout: FlatLayout, parent: Measure) {
+        self.layout = layout
+        self.parent = parent
+    }
+    
+    lazy var layoutFixedSize = CalFixedSize(cgSize: self.layout.target?.py_size ?? .zero, direction: layout.direction)
+    lazy var layoutCalPadding = CalEdges(insets: layout.padding, direction: layout.direction)
+    lazy var layoutCalSize = CalSize(size: layout.size, direction: layout.direction)
+    var totalMainRatio: CGFloat = 0
+    lazy var totalFixedMain = layoutCalPadding.start + layoutCalPadding.end
+    var maxCross: CGFloat = 0
+    
+    
     /// 计算本身布局属性，可能返回的size 为 .fixed, .ratio, 不可能返回wrap
-    static func caculateLine(_ layout: FlatLayout, from parent: Measure) -> Size {
+    func caculate() -> Size {
         // 在此需要假定layout的尺寸已经计算好了
         // 计算全部换算成为main cross
-        
-        let layoutFixedSize = CalFixedSize(cgSize: layout.target?.py_size ?? .zero, direction: layout.direction)
-        let layoutPadding = CalEdges(insets: layout.padding, direction: layout.direction)
-        
-        var totalFixedMain = layoutPadding.start + layoutPadding.end
-        var maxCross: CGFloat = 0
-        var totalMainRatio: CGFloat = 0
         var ratioMeasures = [Measure]()
         
-        var caculateChildren = layout.children.filter({ $0.activated })
+        // 标记主轴是否存在比例项目，若有，则排斥使用formation
+        var mainHasRatio = false
+        var caculateChildren = [Measure]()
+        layout.enumerateChild { (_, m) in
+//            return $0.activated
+            if m.activated {
+                if m.size.getCalSize(by: layout.direction).main.isRatio {
+                    mainHasRatio = true
+                }
+                caculateChildren.append(m)
+            }
+        }
         
         if case .sides = layout.formation, caculateChildren.count > 1 {
-            // sides formation
-            let placeHolder = (0..<caculateChildren.count).map({ _ -> Measure in
-                let measure = PlaceHolderMeasure()
-                measure.size = CalSize(main: .ratio(1), cross: .fixed(0), direction: layout.direction).getSize()
-                return measure
-            })
-            caculateChildren = zip(caculateChildren, placeHolder).flatMap({[$0, $1]}).dropLast()
+            if mainHasRatio {
+                print("Constraint error!!! 主轴上有比例设置，不能与Formation.sides同时存在，Formation忽略")
+            } else {
+                // sides formation
+                let placeHolder = (0..<caculateChildren.count).map({ _ -> Measure in
+                    let measure = PlaceHolderMeasure()
+                    measure.size = CalSize(main: .ratio(1), cross: .fixed(0), direction: layout.direction).getSize()
+                    return measure
+                })
+                caculateChildren = zip(caculateChildren, placeHolder).flatMap({[$0, $1]}).dropLast()
+            }
             
         } else if case .center = layout.formation, caculateChildren.count > 0 {
-            // center formation
-            func getPlaceHolder() -> PlaceHolderMeasure {
-                let p = PlaceHolderMeasure()
-                p.size = CalSize(main: .ratio(1), cross: .fixed(1), direction: layout.direction).getSize()
-                return p
+            if mainHasRatio {
+                print("Constraint error!!! 主轴上有比例设置，不能与Formation.center同时存在，Formation忽略")
+            } else {
+                // center formation
+                func getPlaceHolder() -> PlaceHolderMeasure {
+                    let p = PlaceHolderMeasure()
+                    p.size = CalSize(main: .ratio(1), cross: .fixed(1), direction: layout.direction).getSize()
+                    return p
+                }
+                caculateChildren = [getPlaceHolder()] + caculateChildren + [getPlaceHolder()]
             }
-            caculateChildren = [getPlaceHolder()] + caculateChildren + [getPlaceHolder()]
         }
         
         let totalMainSpace = max(CGFloat(caculateChildren.count - 1) * layout.space, 0)
@@ -70,7 +97,7 @@ class FlatCaculator {
                 //                if case .ratio(let ratio) = subCalSize.cross {
                 if subCalSize.cross.isRatio {
                     let ratio = subCalSize.cross.ratio
-                    subCrossSize = .fixed((layoutFixedSize.cross - (layoutPadding.forward + layoutPadding.backward + subCalMargin.forward + subCalMargin.backward)) * ratio)
+                    subCrossSize = .fixed((layoutFixedSize.cross - (layoutCalPadding.forward + layoutCalPadding.backward + subCalMargin.forward + subCalMargin.backward)) * ratio)
                 }
                 // 设置具体size
                 measure.target?.py_size = CalFixedSize(main: subCalSize.main.fixedValue, cross: subCrossSize.fixedValue, direction: layout.direction).getSize()
@@ -90,7 +117,7 @@ class FlatCaculator {
             //            if case .ratio(let ratio) = subCrossSize {
             if subCrossSize.isRatio {
                 let ratio = subCrossSize.ratio
-                subCrossSize = .fixed((layoutFixedSize.cross - (layoutPadding.forward + layoutPadding.backward + calMargin.forward + calMargin.backward)) * ratio)
+                subCrossSize = .fixed((layoutFixedSize.cross - (layoutCalPadding.forward + layoutCalPadding.backward + calMargin.forward + calMargin.backward)) * ratio)
             }
             // main
             let subMainSize = SizeDescription.fixed((calSize.main.ratio / totalMainRatio) * (layoutFixedSize.main - totalFixedMain - totalMainSpace))
@@ -99,23 +126,23 @@ class FlatCaculator {
         }
         
         // 计算center
-        let lastEnd = caculate(caculateChildren, parent: layout)
+        let lastEnd = caculateCenter(measures: caculateChildren)
         
         // 计算自身大小
         var main = layout.size.getMain(parent: parent.direction)
         if main.isWrap {
             if parent.direction == layout.direction {
-                main = .fixed(main.getWrapSize(by: lastEnd + layoutPadding.end))
+                main = .fixed(main.getWrapSize(by: lastEnd + layoutCalPadding.end))
             } else {
-                main = .fixed(main.getWrapSize(by: maxCross + layoutPadding.forward + layoutPadding.backward))
+                main = .fixed(main.getWrapSize(by: maxCross + layoutCalPadding.forward + layoutCalPadding.backward))
             }
         }
         var cross = layout.size.getCross(parent: parent.direction)
         if cross.isWrap {
             if parent.direction == layout.direction {
-                cross = .fixed(cross.getWrapSize(by: maxCross + layoutPadding.forward + layoutPadding.backward))
+                cross = .fixed(cross.getWrapSize(by: maxCross + layoutCalPadding.forward + layoutCalPadding.backward))
             } else {
-                cross = .fixed(cross.getWrapSize(by: lastEnd + layoutPadding.end))
+                cross = .fixed(cross.getWrapSize(by: lastEnd + layoutCalPadding.end))
             }
         }
         
@@ -136,25 +163,25 @@ class FlatCaculator {
     ///   - measures: 已经计算好大小的节点
     ///   - parent: 处于的父layout
     /// - Returns: 返回最后节点的end(包括最后一个节点的margin.end)
-    private static func caculate(_ measures: [Measure], parent: FlatLayout) -> CGFloat {
-        let layoutSize = CalFixedSize(cgSize: parent.target?.py_size ?? .zero, direction: parent.direction)
-        let calPadding = CalEdges(insets: parent.padding, direction: parent.direction)
+    private func caculateCenter(measures: [Measure]) -> CGFloat {
+//        let layoutSize = CalFixedSize(cgSize: parent.target?.py_size ?? .zero, direction: parent.direction)
+//        let calPadding = CalEdges(insets: parent.padding, direction: parent.direction)
         
-        var lastEnd: CGFloat = calPadding.start
+        var lastEnd: CGFloat = layoutCalPadding.start
         
         var children = measures
-        if parent.reverse {
+        if layout.reverse {
             children.reverse()
         }
         
         for (idx, measure) in children.enumerated() {
-            lastEnd = _caculateCenter(measure: measure, in: parent, layoutSize: layoutSize, at: idx, from: lastEnd)
+            lastEnd = _caculateCenter(measure: measure, at: idx, from: lastEnd)
         }
         
-        if parent.formation == .trailing {
+        if layout.formation == .trailing {
             // 如果格式化为靠后，则需要最后重排一遍
             // 计算最后一个需要移动的距离
-            let delta = layoutSize.main - calPadding.end - lastEnd
+            let delta = layoutFixedSize.main - layoutCalPadding.end - lastEnd
             if parent.direction == .x {
                 children.forEach({ $0.target?.py_center.x += delta })
             } else {
@@ -165,13 +192,8 @@ class FlatCaculator {
         return lastEnd
     }
     
-    private static func _caculateCenter(measure: Measure,
-                                        in layout: FlatLayout,
-                                        layoutSize: CalFixedSize,
-                                        at index: Int,
-                                        from end: CGFloat) -> CGFloat {
+    private func _caculateCenter(measure: Measure, at index: Int, from end: CGFloat) -> CGFloat {
         
-        let layoutPadding = CalEdges(insets: layout.padding, direction: layout.direction)
         let calMargin = CalEdges(insets: measure.margin, direction: layout.direction)
         let calSize = CalFixedSize(cgSize: measure.target?.py_size ?? .zero, direction: layout.direction)
         let space = (index == 0) ? 0 : layout.space
@@ -183,30 +205,30 @@ class FlatCaculator {
         let cross: CGFloat
         let aligment = measure.aligment.contains(.none) ? layout.justifyContent : measure.aligment
         if aligment.isCenter() {
-            cross = layoutSize.cross / 2
+            cross = layoutFixedSize.cross / 2
             
         } else if aligment.isForward(for: layout.direction) {
-            cross = calSize.cross / 2 + layoutPadding.forward + calMargin.forward
+            cross = calSize.cross / 2 + layoutCalPadding.forward + calMargin.forward
             
         } else if aligment.isBackward(for: layout.direction) {
-            cross = layoutSize.cross - (layoutPadding.backward + calMargin.backward + calSize.cross / 2)
+            cross = layoutFixedSize.cross - (layoutCalPadding.backward + calMargin.backward + calSize.cross / 2)
             
         } else {
             fatalError("")
         }
         
-        let center = point(from: CalCenter(main: main, cross: cross), layoutSize: layoutSize, by: layout)
+        let center = point(from: CalCenter(main: main, cross: cross))
         measure.target?.py_center = center
         
         return main + calSize.main / 2 + calMargin.end
     }
     
-    private static func point(from center: CalCenter, layoutSize: CalFixedSize, by layout: FlatLayout) -> CGPoint {
+    private func point(from center: CalCenter) -> CGPoint {
         var point: CGPoint
         if case .y = layout.direction {
             point = CGPoint(x: center.cross, y: center.main)
         } else {
-            point = CGPoint(x: center.main, y: layoutSize.cross - center.cross)
+            point = CGPoint(x: center.main, y: layoutFixedSize.cross - center.cross)
         }
         return point
     }

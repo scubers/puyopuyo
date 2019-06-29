@@ -10,6 +10,6 @@ import Foundation
 public class ZLayout: BaseLayout {
     
     public override func caculate(byParent parent: Measure) -> Size {
-        return ZLayoutCaculator.caculate(layout: self, parent: parent)
+        return ZCaculator(self, parent: parent).caculate()
     }
 }
