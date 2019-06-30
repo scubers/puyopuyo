@@ -10,7 +10,7 @@ import UIKit
 import Puyopuyo
 import TangramKit
 
-class ViewController: UIViewController {
+class ViewController: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
 //        testVLine()
@@ -48,7 +48,7 @@ class ViewController: UIViewController {
     func testLink() {
 //        let link =
         var label: UIView?
-        VBox().attach(view) {
+        ZBox().attach(view) {
             
             HBox.attach($0) {
                 label =
@@ -72,12 +72,12 @@ class ViewController: UIViewController {
             
 
         }
-        .justifyContent([.left, .top])
+//        .justifyContent([.left, .top])
+        .justifyContent([.center])
         .padding(top: 50)
-        .space(10)
         .size(.ratio(1), .ratio(1))
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             label?
                 .attach(wrap: false)
                 .height(.wrap(add: 30))
@@ -87,39 +87,7 @@ class ViewController: UIViewController {
         }
     }
     
-    func getView() -> UIView {
-        let v = UIView()
-        v.backgroundColor = randomColor()
-        return v
-    }
-    
-    func getLabel(_ text: String = "") -> UILabel {
-        let v = UILabel()
-        v.text = text
-        v.textColor = randomColor()
-        v.backgroundColor = randomColor()
-        return v
-    }
-    
-    func randomColor() -> UIColor {
-        let red = CGFloat(arc4random()%256)/255.0
-        let green = CGFloat(arc4random()%256)/255.0
-        let blue = CGFloat(arc4random()%256)/255.0
-        let c = UIColor(red: red, green: green, blue: blue, alpha: 0.7)
-        return c
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    func randomViewColor(view: UIView) {
-        view.subviews.forEach { (v) in
-            v.backgroundColor = self.randomColor()
-            self.randomViewColor(view: v)
-        }
-    }
+ 
 
 }
 

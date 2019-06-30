@@ -45,7 +45,8 @@ class FlatCaculator {
         
         if case .sides = layout.formation, caculateChildren.count > 1 {
             if mainHasRatio {
-                print("Constraint error!!! 主轴上有比例设置，不能与Formation.sides同时存在，Formation忽略")
+                print("Constraint error!!! 主轴上有比例设置，不能与Formation.sides同时存在，Formation重置成leading")
+                layout.formation = .leading
             } else {
                 // sides formation
                 let placeHolder = (0..<caculateChildren.count).map({ _ -> Measure in
@@ -58,7 +59,8 @@ class FlatCaculator {
             
         } else if case .center = layout.formation, caculateChildren.count > 0 {
             if mainHasRatio {
-                print("Constraint error!!! 主轴上有比例设置，不能与Formation.center同时存在，Formation忽略")
+                print("Constraint error!!! 主轴上有比例设置，不能与Formation.center同时存在，Formation重置成leading")
+                layout.formation = .leading
             } else {
                 // center formation
                 func getPlaceHolder() -> PlaceHolderMeasure {
@@ -164,8 +166,6 @@ class FlatCaculator {
     ///   - parent: 处于的父layout
     /// - Returns: 返回最后节点的end(包括最后一个节点的margin.end)
     private func caculateCenter(measures: [Measure]) -> CGFloat {
-//        let layoutSize = CalFixedSize(cgSize: parent.target?.py_size ?? .zero, direction: parent.direction)
-//        let calPadding = CalEdges(insets: parent.padding, direction: parent.direction)
         
         var lastEnd: CGFloat = layoutCalPadding.start
         

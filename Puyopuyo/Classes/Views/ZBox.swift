@@ -9,6 +9,11 @@ import Foundation
 
 open class ZBox: BoxView {
     
+    @discardableResult
+    public static func attach(_ parent: UIView? = nil, wrap: Bool = true, _ block: PuyoLinkBlock? = nil) -> PuyoLink<ZBox> {
+        return ZBox().attach(parent, wrap: wrap, block)
+    }
+    
     public override var layout: ZLayout {
         return py_measure as! ZLayout
     }

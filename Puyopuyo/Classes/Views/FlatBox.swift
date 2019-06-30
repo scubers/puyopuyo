@@ -38,7 +38,7 @@ open class FlatBox: BoxView {
                 bounds.size = CGSize(width: size.width.fixedValue, height: size.height.fixedValue)
             }
             if oldSize != bounds.size {
-                _ = layout.caculate(byParent: parentMeasure)
+//                _ = layout.caculate(byParent: parentMeasure)
 //                _ = FlatCaculator.caculateLine(layout, from: parentMeasure)
             }
             
@@ -52,7 +52,7 @@ open class FlatBox: BoxView {
             bounds.size = newSize
             
             if oldSize != newSize {
-                _ = layout.caculate(byParent: parentMeasure)
+//                _ = layout.caculate(byParent: parentMeasure)
             }
             
             center = CGPoint(x: bounds.midX, y: bounds.midY)
@@ -81,6 +81,7 @@ open class FlatBox: BoxView {
 }
 
 open class HBox: FlatBox {
+    @discardableResult
     public static func attach(_ parent: UIView? = nil, wrap: Bool = true, _ block: PuyoLinkBlock? = nil) -> PuyoLink<HBox> {
         return HBox().attach(parent, wrap: wrap, block)
     }
