@@ -12,7 +12,6 @@ public protocol MeasureHolder {
     var py_measure: Measure { get }
 }
 
-
 extension UIView: MeasureHolder {
 
     public var py_measure: Measure {

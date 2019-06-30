@@ -38,6 +38,7 @@
 		8C6F2987EE3C20CDF57CF0123918EFD2 /* Pods-Puyopuyo_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 050C2A30B648BC939140B19A19FFE78F /* Pods-Puyopuyo_Tests-dummy.m */; };
 		93A447261CF57152EC926A4FFC0D0C16 /* TGTableLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9A6EB8FEE9A4F28309086FFA6CE5261 /* TGTableLayout.swift */; };
 		A808EE78C6653AC9FF90332ED65B3073 /* Measure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7930A1AA487B98D0A738911D909B9A6C /* Measure.swift */; };
+		A8E53FB922C8F231000B2B6D /* Stateful.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E53FB822C8F231000B2B6D /* Stateful.swift */; };
 		ABB01820E5E50BF68CACED3F8FA4FED3 /* TGDimeAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5171A2ED8FB4DF972049F6FCA5CF95 /* TGDimeAdapter.swift */; };
 		AD5637EA008FAAAFE0F2B0A9B2C13EEA /* PuyoLinkHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B31AA0BB98BD5F44710F4E5D78CB2EC8 /* PuyoLinkHelper.swift */; };
 		B7942A565A0B45907E311AE499F93354 /* TGLayoutSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47EBEF02FB70CF93FFB1F08677531A0C /* TGLayoutSize.swift */; };
@@ -124,6 +125,7 @@
 		9CC06E46D2F7D85084AD4861044A8293 /* Pods-Puyopuyo_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Puyopuyo_Example.release.xcconfig"; sourceTree = "<group>"; };
 		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		A5E3DEEAB9918D80FEEEF0937AFFAE30 /* FlatBox.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FlatBox.swift; sourceTree = "<group>"; };
+		A8E53FB822C8F231000B2B6D /* Stateful.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stateful.swift; sourceTree = "<group>"; };
 		AB578C3A69D3F3D962D0AFAFC14E6B7C /* TangramKit.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TangramKit.swift; path = TangramKit/TangramKit.swift; sourceTree = "<group>"; };
 		B2ABA3C2863EBC298F53FFFB0164378F /* Pods-Puyopuyo_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Puyopuyo_Example-dummy.m"; sourceTree = "<group>"; };
 		B31AA0BB98BD5F44710F4E5D78CB2EC8 /* PuyoLinkHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PuyoLinkHelper.swift; sourceTree = "<group>"; };
@@ -306,6 +308,7 @@
 				7930A1AA487B98D0A738911D909B9A6C /* Measure.swift */,
 				7B48FDA2B234C47B1D35D1CDE21B41D5 /* Size.swift */,
 				64E90E8DE077BC0163DAE9C90F96FB46 /* ZLayout.swift */,
+				A8E53FB822C8F231000B2B6D /* Stateful.swift */,
 			);
 			name = Core;
 			path = Puyopuyo/Classes/Core;
@@ -606,6 +609,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA4750F4CF35EE45CEF146E8E2995DDC /* BaseLayout.swift in Sources */,
+				A8E53FB922C8F231000B2B6D /* Stateful.swift in Sources */,
 				1E41ADBF4B8196D33C5CE19EE4549A74 /* BoxView.swift in Sources */,
 				EA88ED44E1BBEDB37E24FCA6D62770BF /* Caculations.swift in Sources */,
 				0325C2732074777957F9894D099B67BE /* Caculator.swift in Sources */,

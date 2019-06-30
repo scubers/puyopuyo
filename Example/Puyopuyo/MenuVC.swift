@@ -24,7 +24,7 @@ class MenuVC: BaseVC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(tableView)
+        tableView.attach(vRoot).size(.ratio(1), .ratio(1))
     }
 
 }

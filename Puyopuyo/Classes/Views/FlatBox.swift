@@ -18,6 +18,7 @@ open class FlatBox: BoxView {
         super.layoutSubviews()
         
         let parentMeasure = superview?.py_measure ?? Measure()
+        let parentCGSize = superview?.bounds.size ?? .zero
         // 如果原本就固定尺寸
         if layout.size.bothNotWrap() {
             // 此时可以设置自己的尺寸
@@ -34,7 +35,10 @@ open class FlatBox: BoxView {
             // 父视图为布局视图
             // 通过计算如果已经确定了尺寸，也可以直接设置
             if sizeAfterCaculate.bothNotWrap() {
-                let size = Caculator.caculate(size: sizeAfterCaculate, by: superview?.bounds.size ?? .zero)
+                var inputSize = parentCGSize
+                inputSize.width -= (layout.margin.left + layout.margin.right)
+                inputSize.height -= (layout.margin.top + layout.margin.bottom)
+                let size = Caculator.caculate(size: sizeAfterCaculate, by: inputSize)
                 bounds.size = CGSize(width: size.width.fixedValue, height: size.height.fixedValue)
             }
             if oldSize != bounds.size {

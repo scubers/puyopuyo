@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Puyopuyo
 
 class BaseVC: UIViewController {
 
@@ -15,7 +16,10 @@ class BaseVC: UIViewController {
         navigationController?.navigationBar.isTranslucent = false
         view.backgroundColor = .white
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "back", style: .plain, target: self, action: #selector(BaseVC.back))
+        vRoot.attach(view).size(.ratio(1), .ratio(1))
     }
+    
+    var vRoot: VBox = VBox()
     
     @objc func back() {
         navigationController?.popViewController(animated: true)
