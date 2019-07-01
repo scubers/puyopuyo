@@ -11,12 +11,12 @@ import Puyopuyo
 
 class Flat1VC: BaseVC {
     
-    var visible = State(value: Visiblity.visible)
-    var margin = State(value: UIEdgeInsets.zero)
-    var aligment = State(value: Aligment.center)
-    var direction = State(value: Direction.x)
-    var subMargin = State(value: UIEdgeInsets.zero)
-    var width = State(value: SizeDescription.fixed(10))
+    var visible = State<Visiblity>(value: .visible)
+    var margin = State<UIEdgeInsets>(value: .zero)
+    var aligment = State<Aligment>(value: .center)
+    var direction = State<Direction>(value: .x)
+    var subMargin = State<UIEdgeInsets>(value: .zero)
+    var width = State<SizeDescription>(value: .fixed(10))
     var space = State<CGFloat>(value: 5)
     
     override func viewDidLoad() {
@@ -31,7 +31,6 @@ class Flat1VC: BaseVC {
                     .aligment(self.aligment)
             }
         }
-//        .space(5)
         .space(space)
         .size(.ratio(1), .wrap)
         .padding(all: 10)
