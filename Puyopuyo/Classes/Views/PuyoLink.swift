@@ -63,15 +63,6 @@ extension UIView: PuyoLinkAttacher {
     }
 }
 
-extension State {
-    func safeBindView<View: UIView>(_ view: View, _ action: @escaping (View, T) -> Void) -> Unbinder {
-        return py_bind(stateChange: { [weak view] (value) in
-            guard let view = view else { return }
-            action(view, value)
-        })
-    }
-}
-
 extension PuyoLink where T: UIView {
     
     @discardableResult
@@ -81,8 +72,8 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func visible(_ visibility: State<Visiblity>) -> Self {
-        let unbinder = visibility.safeBindView(view) { (v, visibility) in
+    public func visible<S: Stateful>(_ visibility: S) -> Self where S.StateType == Visiblity {
+        let unbinder = visibility.safeBind(view) { (v, visibility) in
             PuyoLinkHelper.visibility(for: v, visibility: visibility)
         }
         view.py_setUnbinder(unbinder, for: #function)
@@ -96,14 +87,14 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func size(_ width: State<SizeDescription>?, _ height: State<SizeDescription>?) -> Self {
+    public func size<S: Stateful>(_ width: S?, _ height: S?) -> Self where S.StateType == SizeDescription {
         if let width = width {
-            view.py_setUnbinder(width.safeBindView(view, { (v, w) in
+            view.py_setUnbinder(width.safeBind(view, { (v, w) in
                 PuyoLinkHelper.size(for: v, width: w, height: nil)
             }), for: "\(#function)_width")
         }
         if let height = height {
-            view.py_setUnbinder(height.safeBindView(view, { (v, h) in
+            view.py_setUnbinder(height.safeBind(view, { (v, h) in
                 PuyoLinkHelper.size(for: v, width: nil, height: h)
             }), for: "\(#function)_height")
         }
@@ -141,7 +132,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func width(_ width: State<SizeDescription>) -> Self {
+    public func width<S: Stateful>(_ width: S) -> Self where S.StateType == SizeDescription {
         return size(width, nil)
     }
     
@@ -158,7 +149,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func height(_ height: State<SizeDescription>) -> Self {
+    public func height<S: Stateful>(_ height: S) -> Self where S.StateType == SizeDescription {
         return size(nil, height)
     }
     
@@ -169,8 +160,8 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func margin(_ margin: State<UIEdgeInsets>) -> Self {
-        let unbinder = margin.safeBindView(view) { (v, m) in
+    public func margin<S: Stateful>(_ margin: S) -> Self where S.StateType == UIEdgeInsets {
+        let unbinder = margin.safeBind(view) { (v, m) in
             PuyoLinkHelper.margin(for: v, all: nil, top: m.top, left: m.left, bottom: m.bottom, right: m.right)
         }
         view.py_setUnbinder(unbinder, for: #function)
@@ -184,8 +175,8 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func aligment(_ aligment: State<Aligment>) -> Self {
-        view.py_setUnbinder(aligment.safeBindView(view, { (v, a) in
+    public func aligment<S: Stateful>(_ aligment: S) -> Self where S.StateType == Aligment {
+        view.py_setUnbinder(aligment.safeBind(view, { (v, a) in
             PuyoLinkHelper.aligment(for: v, aligment: a)
         }), for: #function)
         return self
@@ -207,8 +198,8 @@ extension PuyoLink where T: BoxView {
     }
     
     @discardableResult
-    public func padding(_ padding: State<UIEdgeInsets>) -> Self {
-        view.py_setUnbinder(padding.safeBindView(view, { (v, i) in
+    public func padding<S: Stateful>(_ padding: S) -> Self where S.StateType == UIEdgeInsets {
+        view.py_setUnbinder(padding.safeBind(view, { (v, i) in
             v.layout.padding = i
             v.py_setNeedsLayout()
         }), for: #function)
@@ -223,8 +214,8 @@ extension PuyoLink where T: BoxView {
     }
     
     @discardableResult
-    public func justifyContent(_ aligment: State<Aligment>) -> Self {
-        view.py_setUnbinder(aligment.safeBindView(view, { (v, a) in
+    public func justifyContent<S: Stateful>(_ aligment: S) -> Self where S.StateType == Aligment {
+        view.py_setUnbinder(aligment.safeBind(view, { (v, a) in
             v.layout.justifyContent = a
             v.py_setNeedsLayout()
         }), for: #function)
@@ -242,8 +233,8 @@ extension PuyoLink where T: FlatBox {
     }
     
     @discardableResult
-    public func space(_ space: State<CGFloat>) -> Self {
-        view.py_setUnbinder(space.safeBindView(view, { (v, s) in
+    public func space<S: Stateful>(_ space: S) -> Self where S.StateType == CGFloat {
+        view.py_setUnbinder(space.safeBind(view, { (v, s) in
             v.layout.space = s
             v.py_setNeedsLayout()
         }), for: #function)
@@ -258,8 +249,8 @@ extension PuyoLink where T: FlatBox {
     }
     
     @discardableResult
-    public func formation(_ formation: State<Formation>) -> Self {
-        view.py_setUnbinder(formation.safeBindView(view, { (v, f) in
+    public func formation<S: Stateful>(_ formation: S) -> Self where S.StateType == Formation {
+        view.py_setUnbinder(formation.safeBind(view, { (v, f) in
             v.layout.formation = f
             v.py_setNeedsLayout()
         }), for: #function)
@@ -274,8 +265,8 @@ extension PuyoLink where T: FlatBox {
     }
     
     @discardableResult
-    public func direction(_ direction: State<Direction>) -> Self {
-        view.py_setUnbinder(direction.safeBindView(view, { (v, d) in
+    public func direction<S: Stateful>(_ direction: S) -> Self where S.StateType == Direction {
+        view.py_setUnbinder(direction.safeBind(view, { (v, d) in
             v.layout.direction = d
             v.py_setNeedsLayout()
         }), for: #function)
@@ -290,8 +281,8 @@ extension PuyoLink where T: FlatBox {
     }
     
     @discardableResult
-    public func reverse(_ reverse: State<Bool>) -> Self {
-        view.py_setUnbinder(reverse.safeBindView(view, { (v, r) in
+    public func reverse<S: Stateful>(_ reverse: S) -> Self where S.StateType == Bool {
+        view.py_setUnbinder(reverse.safeBind(view, { (v, r) in
             v.layout.reverse = r
             v.py_setNeedsLayout()
         }), for: #function)

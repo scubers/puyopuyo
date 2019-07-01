@@ -38,20 +38,9 @@ extension UIView: MeasureTagetable {
         }
     }
     
-    public var py_children: [Measure] {
-        return subviews.map({ $0.py_measure })
-    }
-
     public func py_enumerateChild(_ block: (Int, Measure) -> Void) {
         subviews.enumerated().forEach {
             block($0, $1.py_measure)
-        }
-    }
-    
-    public var py_wrapSize: CGSize {
-        get {
-            sizeToFit()
-            return bounds.size
         }
     }
     

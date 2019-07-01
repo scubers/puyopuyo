@@ -8,6 +8,7 @@
 
 import UIKit
 import Puyopuyo
+import RxSwift
 
 class Flat1VC: BaseVC {
     
@@ -17,10 +18,17 @@ class Flat1VC: BaseVC {
     var direction = State<Direction>(value: .x)
     var subMargin = State<UIEdgeInsets>(value: .zero)
     var width = State<SizeDescription>(value: .fixed(10))
-    var space = State<CGFloat>(value: 5)
+    var space = BehaviorSubject<CGFloat>(value: 5)
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        getLabel("text").attach(vRoot)
+            .text(State(value: "slkdjf"))
+            .width(.wrap(add: 10))
+            .textAligment(State(value: NSTextAlignment.center))
+            .aligment(.center)
+            .textColor(State(value: UIColor.black))
         
         HBox.attach(vRoot) {
             for idx in 0..<15 {
@@ -38,6 +46,7 @@ class Flat1VC: BaseVC {
         .margin(margin)
         .direction(direction)
         .visible(visible)
+        .cornerRadius(State(value: 10))
         
         randomViewColor(view: vRoot)
         
@@ -46,7 +55,11 @@ class Flat1VC: BaseVC {
             self.aligment.value = .bottom
             self.subMargin.value = UIEdgeInsets(top: 10, left: 0, bottom: 0, right: 0)
             self.width.value = .fill
-            self.space.value = 0
+            self.space.onNext(0)
+            self.vRoot.attach()
+                .formation(.center)
+            
+
             UIView.animate(withDuration: 0.5, animations: {
                 self.vRoot.layoutIfNeeded()
             })

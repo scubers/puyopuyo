@@ -11,7 +11,8 @@ public protocol Unbinder {
     func py_unbind()
 }
 
-public extension Unbinder {
+public class Unbinders {
+    private init() {}
     public static func create(_ block: @escaping () -> Void) -> Unbinder {
         return UnbinderImpl(block)
     }
@@ -20,6 +21,17 @@ public extension Unbinder {
 public protocol Stateful {
     associatedtype StateType
     func py_bind(stateChange block: @escaping (StateType) -> Void) -> Unbinder
+    func py_change(_ state: StateType)
+}
+
+extension Stateful {
+    public func safeBind<Object: AnyObject>(_ object: Object, _ action: @escaping (Object, StateType) -> Void) -> Unbinder {
+        return py_bind(stateChange: { [weak object] (s) in
+            if let object = object {
+                action(object, s)
+            }
+        })
+    }
 }
 
 public class State<T>: Stateful {
@@ -38,11 +50,7 @@ public class State<T>: Stateful {
         self.value = value
     }
     
-    
-    
-    private init() {
-        
-    }
+    private init() {}
     
     deinit {
         onDestroy()
@@ -54,6 +62,10 @@ public class State<T>: Stateful {
         callees.forEach { (x) in
             x.block(value)
         }
+    }
+    
+    public func py_change(_ state: T) {
+        value = state
     }
     
     private class Callee<T> {
@@ -100,7 +112,7 @@ private class UnbinderImpl: NSObject, Unbinder {
 }
 
 extension NSObject {
-    func py_setUnbinder(_ unbinder: Unbinder, for key: String) {
+    public func py_setUnbinder(_ unbinder: Unbinder, for key: String) {
         let container = py_unbinderContainer
         let old = container.object(forKey: key as NSString)
         if let old = old as? UnbinderImpl {

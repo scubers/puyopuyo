@@ -3,6 +3,7 @@ use_frameworks!
 target 'Puyopuyo_Example' do
   pod 'Puyopuyo', :path => '../'
   pod 'TangramKit'
+  pod 'RxSwift'
 
   target 'Puyopuyo_Tests' do
     inherit! :search_paths

@@ -1,13 +1,16 @@
 PODS:
   - Puyopuyo (0.1.0)
+  - RxSwift (5.0.0)
   - TangramKit (1.4.0)
 
 DEPENDENCIES:
   - Puyopuyo (from `../`)
+  - RxSwift
   - TangramKit
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - RxSwift
     - TangramKit
 
 EXTERNAL SOURCES:
@@ -16,8 +19,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Puyopuyo: 1814077cd7450f0dd21452fabcf1c2f320e021f4
+  RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
   TangramKit: 15ccb6480f0e32c284f0a076542a607226e158dd
 
-PODFILE CHECKSUM: 1f173931c2fd7d5a005a39ff64d4f9ac83fa46da
+PODFILE CHECKSUM: 60def9acf8ab2fa4eec7e6bca8b030bf8b30d5de
 
 COCOAPODS: 1.6.2
