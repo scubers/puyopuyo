@@ -96,6 +96,21 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
+    public func size(_ width: State<SizeDescription>?, _ height: State<SizeDescription>?) -> Self {
+        if let width = width {
+            view.py_setUnbinder(width.safeBindView(view, { (v, w) in
+                PuyoLinkHelper.size(for: v, width: w, height: nil)
+            }), for: "\(#function)_width")
+        }
+        if let height = height {
+            view.py_setUnbinder(height.safeBindView(view, { (v, h) in
+                PuyoLinkHelper.size(for: v, width: nil, height: h)
+            }), for: "\(#function)_height")
+        }
+        return self
+    }
+    
+    @discardableResult
     public func size(_ width: SizeDescriptible?, _ height: SizeDescriptible?) -> Self {
         PuyoLinkHelper.size(for: view, width: width?.sizeDescription, height: height?.sizeDescription)
         return self
@@ -126,6 +141,11 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
+    public func width(_ width: State<SizeDescription>) -> Self {
+        return size(width, nil)
+    }
+    
+    @discardableResult
     public func height(_ height: SizeDescriptible?) -> Self {
         PuyoLinkHelper.size(for: view, width: nil, height: height?.sizeDescription)
         return self
@@ -135,6 +155,11 @@ extension PuyoLink where T: UIView {
     public func height(_ height: SizeDescription?) -> Self {
         PuyoLinkHelper.size(for: view, width: nil, height: height)
         return self
+    }
+    
+    @discardableResult
+    public func height(_ height: State<SizeDescription>) -> Self {
+        return size(nil, height)
     }
     
     @discardableResult
