@@ -15,6 +15,7 @@
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		A828277922C71D0500D73AD4 /* Loopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = A828277822C71D0500D73AD4 /* Loopup.swift */; };
+		A87550D822CA700F00648242 /* ListBoxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87550D722CA700F00648242 /* ListBoxVC.swift */; };
 		A8E53FB322C8E679000B2B6D /* BaseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E53FB222C8E679000B2B6D /* BaseVC.swift */; };
 		A8E53FB522C8E6BB000B2B6D /* MenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E53FB422C8E6BB000B2B6D /* MenuVC.swift */; };
 		A8E53FB722C8E98F000B2B6D /* Flat1VC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E53FB622C8E98F000B2B6D /* Flat1VC.swift */; };
@@ -50,6 +51,7 @@
 		77FB953E25BC3D91DC89F5C7 /* Pods-Puyopuyo_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Puyopuyo_Example.release.xcconfig"; path = "Target Support Files/Pods-Puyopuyo_Example/Pods-Puyopuyo_Example.release.xcconfig"; sourceTree = "<group>"; };
 		A30EBF753A01FE778D9D9547 /* Pods_Puyopuyo_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Puyopuyo_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A828277822C71D0500D73AD4 /* Loopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loopup.swift; sourceTree = "<group>"; };
+		A87550D722CA700F00648242 /* ListBoxVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListBoxVC.swift; sourceTree = "<group>"; };
 		A8E53FB222C8E679000B2B6D /* BaseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseVC.swift; sourceTree = "<group>"; };
 		A8E53FB422C8E6BB000B2B6D /* MenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuVC.swift; sourceTree = "<group>"; };
 		A8E53FB622C8E98F000B2B6D /* Flat1VC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Flat1VC.swift; sourceTree = "<group>"; };
@@ -125,6 +127,7 @@
 				A8E53FB222C8E679000B2B6D /* BaseVC.swift */,
 				A8E53FB422C8E6BB000B2B6D /* MenuVC.swift */,
 				A8E53FB622C8E98F000B2B6D /* Flat1VC.swift */,
+				A87550D722CA700F00648242 /* ListBoxVC.swift */,
 			);
 			name = "Example for Puyopuyo";
 			path = Puyopuyo;
@@ -354,6 +357,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A87550D822CA700F00648242 /* ListBoxVC.swift in Sources */,
 				A8E53FB722C8E98F000B2B6D /* Flat1VC.swift in Sources */,
 				09883C4A22C5E5FB006CE05A /* StyleTestViewController.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,

@@ -10,7 +10,7 @@ import UIKit
 import Puyopuyo
 
 
-class StyleTestViewController: UIViewController, UIScrollViewDelegate {
+class StyleTestViewController: BaseVC, UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         print(scrollView.contentSize)
@@ -18,111 +18,101 @@ class StyleTestViewController: UIViewController, UIScrollViewDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "back", style: .plain, target: self, action: #selector(StyleTestViewController.back))
-        navigationController?.navigationBar.isTranslucent = false
-        view.backgroundColor = .white
         setupViews()
     }
     
     func setupViews() {
         
-        VBox().attach(view) {
-            
-            UIScrollView().attach($0) {
+        UIScrollView().attach(vRoot) {
+            VBox().attach($0) {
+                VBox().attach($0) {
+                    self.getDescriptionLabel(text: "字体(Font size)").attach($0)
+                    self.getDescriptionLabel(text: "Large Title: 32", fontSize: 32).attach($0)
+                    self.getDescriptionLabel(text: "Head line: 18", fontSize: 18).attach($0)
+                    self.getDescriptionLabel(text: "Sub Head line: 16", fontSize: 16).attach($0)
+                    self.getDescriptionLabel(text: "Primary: 14", fontSize: 14).attach($0)
+                    self.getDescriptionLabel(text: "Secondary: 12", fontSize: 12).attach($0)
+                    self.getDescriptionLabel(text: "Tertiary: 10", fontSize: 10).attach($0)
+                    self.getDescriptionLabel(text: "Quaternary: 8", fontSize: 8).attach($0)
+                    }
+                    .space(5)
                 
                 VBox().attach($0) {
-                    VBox().attach($0) {
-                        self.getDescriptionLabel(text: "字体(Font size)").attach($0)
-                        self.getDescriptionLabel(text: "Large Title: 32", fontSize: 32).attach($0)
-                        self.getDescriptionLabel(text: "Head line: 18", fontSize: 18).attach($0)
-                        self.getDescriptionLabel(text: "Sub Head line: 16", fontSize: 16).attach($0)
-                        self.getDescriptionLabel(text: "Primary: 14", fontSize: 14).attach($0)
-                        self.getDescriptionLabel(text: "Secondary: 12", fontSize: 12).attach($0)
-                        self.getDescriptionLabel(text: "Tertiary: 10", fontSize: 10).attach($0)
-                        self.getDescriptionLabel(text: "Quaternary: 8", fontSize: 8).attach($0)
-                        }
-                        .space(5)
                     
-                    VBox().attach($0) {
-                        
-                        HBox().attach($0) {
-                            self.getDescriptionLabel(text: "背景色(Background color)").attach($0).size(200, 30)
-                            self.getDescriptionLabel(text: "字体色(Text color)").attach($0).size(.wrap, 30)
-                            }
-                            .space(20)
-                        
-                        HBox().attach($0) {
-                            self.getColorView(colorString: "#ffffff").attach($0).size(200, 50)
-                            self.getDescriptionLabel(text: "Primary", color: "#333333").attach($0)
-                            }
-                            .space(20)
-                        
-                        HBox().attach($0) {
-                            self.getColorView(colorString: "#dddddd").attach($0).size(200, 50)
-                            self.getDescriptionLabel(text: "Secondary", color: "#555555").attach($0)
-                            }
-                            .space(20)
-                        
-                        HBox().attach($0) {
-                            self.getColorView(colorString: "#bbbbbb").attach($0).size(200, 50)
-                            self.getDescriptionLabel(text: "Tertiary", color: "#666666").attach($0)
-                            }
-                            .space(20)
-                        
-                        HBox().attach($0) {
-                            self.getColorView(colorString: "#999999").attach($0).size(200, 50)
-                            self.getDescriptionLabel(text: "Quaternary", color: "#777777").attach($0)
-                            }
-                            .space(20)
+                    HBox().attach($0) {
+                        self.getDescriptionLabel(text: "背景色(Background color)").attach($0).size(100, 30)
+                        self.getDescriptionLabel(text: "字体色(Text color)").attach($0).size(.wrap, 30)
                         }
-                        .space(5)
+                        .space(20)
                     
-                    VBox().attach($0) {
-                        self.getDescriptionLabel(text: "主题色(Theme)").attach($0)
-                        
-                        HBox().attach($0) {
-                            self.getColorView(colorString: "#D03B5C").attach($0).size(200, 50)
-                            self.getDescriptionLabel(text: "主题色").attach($0)
-                            }
-                            .space(20)
-                        
-                        HBox().attach($0) {
-                            self.getColorView(colorString: "#EE8800").attach($0).size(200, 50)
-                            self.getDescriptionLabel(text: "主题描边色").attach($0)
-                            }
-                            .space(20)
-                        
-                        HBox().attach($0) {
-                            self.getColorView(colorString: "#FF4444").attach($0).size(200, 50)
-                            self.getDescriptionLabel(text: "辅助填充色").attach($0)
-                            }
-                            .space(20)
-                        
-                        HBox().attach($0) {
-                            self.getColorView(colorString: "#C9C9C9").attach($0).size(200, 50)
-                            self.getDescriptionLabel(text: "边框颜色").attach($0)
-                            }
-                            .space(20)
-                        
-                        HBox().attach($0) {
-                            self.getColorView(colorString: "#666B77").attach($0).size(200, 50)
-                            self.getDescriptionLabel(text: "导航栏颜色").attach($0)
-                            }
-                            .space(20)
-                        
+                    HBox().attach($0) {
+                        self.getColorView(colorString: "#ffffff").attach($0).size(100, 50)
+                        self.getDescriptionLabel(text: "Primary", color: "#333333").attach($0)
                         }
-                        .space(5)
+                        .space(20)
+                    
+                    HBox().attach($0) {
+                        self.getColorView(colorString: "#dddddd").attach($0).size(100, 50)
+                        self.getDescriptionLabel(text: "Secondary", color: "#555555").attach($0)
+                        }
+                        .space(20)
+                    
+                    HBox().attach($0) {
+                        self.getColorView(colorString: "#bbbbbb").attach($0).size(100, 50)
+                        self.getDescriptionLabel(text: "Tertiary", color: "#666666").attach($0)
+                        }
+                        .space(20)
+                    
+                    HBox().attach($0) {
+                        self.getColorView(colorString: "#999999").attach($0).size(100, 50)
+                        self.getDescriptionLabel(text: "Quaternary", color: "#777777").attach($0)
+                        }
+                        .space(20)
                     }
-                    .padding(top: 10, left: 20, right: 20)
-                    .space(20)
-                    .width(.ratio(1))
-                    .justifyContent(.left)
-            }
-            .size(.ratio(1), .ratio(1))
+                    .space(5)
+                
+                VBox().attach($0) {
+                    self.getDescriptionLabel(text: "主题色(Theme)").attach($0)
+                    
+                    HBox().attach($0) {
+                        self.getColorView(colorString: "#D03B5C").attach($0).size(100, 50)
+                        self.getDescriptionLabel(text: "主题色").attach($0)
+                        }
+                        .space(20)
+                    
+                    HBox().attach($0) {
+                        self.getColorView(colorString: "#EE8800").attach($0).size(100, 50)
+                        self.getDescriptionLabel(text: "主题描边色").attach($0)
+                        }
+                        .space(20)
+                    
+                    HBox().attach($0) {
+                        self.getColorView(colorString: "#FF4444").attach($0).size(100, 50)
+                        self.getDescriptionLabel(text: "辅助填充色").attach($0)
+                        }
+                        .space(20)
+                    
+                    HBox().attach($0) {
+                        self.getColorView(colorString: "#C9C9C9").attach($0).size(100, 50)
+                        self.getDescriptionLabel(text: "边框颜色").attach($0)
+                        }
+                        .space(20)
+                    
+                    HBox().attach($0) {
+                        self.getColorView(colorString: "#666B77").attach($0).size(100, 50)
+                        self.getDescriptionLabel(text: "导航栏颜色").attach($0)
+                        }
+                        .space(20)
+                    
+                    }
+                    .space(5)
+                }
+                .padding(top: 10, left: 20, right: 20)
+                .space(20)
+                .width(.ratio(1))
+                .justifyContent(.left)
         }
         .size(.ratio(1), .ratio(1))
-//        .reverse(true)
-//        .size(.wrap, .wrap)
     }
     
     func getMeiyeColors() -> UIView {
@@ -159,11 +149,6 @@ class StyleTestViewController: UIViewController, UIScrollViewDelegate {
         v.font = UIFont.systemFont(ofSize: fontSize)
         return v
     }
-    
-    @objc func back() {
-        dismiss(animated: true, completion: nil)
-    }
-    
     
     var colors = [
         "0xD03B5C",

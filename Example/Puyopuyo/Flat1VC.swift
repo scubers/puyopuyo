@@ -31,7 +31,7 @@ class Flat1VC: BaseVC {
             .textColor(State(value: UIColor.black))
         
         HBox.attach(vRoot) {
-            for idx in 0..<15 {
+            for idx in 0..<30 {
                 self.getView().attach($0)
                     .width(self.width)
                     .height(10 * (idx + 1))

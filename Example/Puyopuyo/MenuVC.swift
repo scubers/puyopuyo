@@ -12,6 +12,8 @@ class MenuVC: BaseVC {
     
     var data: [(String, UIViewController.Type)] = [
         ("Flat1", Flat1VC.self),
+        ("Colors", StyleTestViewController.self),
+        ("ListBox", ListBoxVC.self),
     ]
     
     lazy var tableView: UITableView = {

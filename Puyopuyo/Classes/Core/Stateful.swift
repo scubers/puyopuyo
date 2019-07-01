@@ -102,36 +102,46 @@ public class State<T>: Stateful {
 
 private class UnbinderImpl: NSObject, Unbinder {
     
-    private let block: () -> Void
+    private var block: () -> Void
     init(_ block: @escaping () -> Void) {
         self.block = block
     }
     func py_unbind() {
         block()
+        block = {}
     }
 }
 
 extension NSObject {
     public func py_setUnbinder(_ unbinder: Unbinder, for key: String) {
-        let container = py_unbinderContainer
-        let old = container.object(forKey: key as NSString)
-        if let old = old as? UnbinderImpl {
-            old.py_unbind()
-        }
-        let rac = UnbinderImpl {
-            unbinder.py_unbind()
-        }
-        container.setObject(rac, forKey: key as NSString)
+        py_unbinderContainer.setUnbinder(unbinder, for: key)
     }
     
-    private static var puyopuyo_unbinderContainerKey = "puyopuyo_disposerContainerKey"
-    private var py_unbinderContainer: NSMutableDictionary {
-        var dict = objc_getAssociatedObject(self, &NSObject.puyopuyo_unbinderContainerKey)
-        if dict == nil {
-            dict = NSMutableDictionary()
-            objc_setAssociatedObject(self, &NSObject.puyopuyo_unbinderContainerKey, dict, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+    private static var puyopuyo_unbinderContainerKey = "puyopuyo_unbinderContainerKey"
+    private var py_unbinderContainer: UnbinderContainer {
+        var container = objc_getAssociatedObject(self, &NSObject.puyopuyo_unbinderContainerKey)
+        if container == nil {
+            container = UnbinderContainer()
+            objc_setAssociatedObject(self, &NSObject.puyopuyo_unbinderContainerKey, container, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
-        return dict as! NSMutableDictionary
+        return container as! UnbinderContainer
     }
-}
+    
+    private class UnbinderContainer: NSObject {
+        private var unbinders = [String: Unbinder]()
+        
+        func setUnbinder(_ unbinder: Unbinder, for key: String) {
+            let old = unbinders[key]
+            old?.py_unbind()
+            unbinders[key] = unbinder
+        }
+        
+        deinit {
+            unbinders.forEach { (_, unbinder) in
+                unbinder.py_unbind()
+            }
+        }
+    }
 
+    
+}

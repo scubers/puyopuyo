@@ -146,6 +146,8 @@
 		A87550D022CA4F2D00648242 /* PuyoLink+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87550CF22CA4F2D00648242 /* PuyoLink+UIView.swift */; };
 		A87550D222CA517F00648242 /* PuyoLink+UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87550D122CA517F00648242 /* PuyoLink+UIButton.swift */; };
 		A87550D422CA52CE00648242 /* PuyoLink+UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87550D322CA52CE00648242 /* PuyoLink+UIImage.swift */; };
+		A87550D622CA6B4F00648242 /* ListBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87550D522CA6B4F00648242 /* ListBox.swift */; };
+		A87550DA22CA73B400648242 /* PuyoLink+ListBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87550D922CA73B400648242 /* PuyoLink+ListBox.swift */; };
 		A885B4757B5A7A503399B893688B71DF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
 		AB255FFA0B8E865843C8E4A789836EC5 /* RxMutableBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E8E56F85197AE662632F2AB946CE114 /* RxMutableBox.swift */; };
 		AC12A2B6A937C9D2321A99D5A3554184 /* RxSwift-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D8D484F09A10EA3DC6DFC431642AFF5 /* RxSwift-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -396,6 +398,8 @@
 		A87550CF22CA4F2D00648242 /* PuyoLink+UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PuyoLink+UIView.swift"; sourceTree = "<group>"; };
 		A87550D122CA517F00648242 /* PuyoLink+UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PuyoLink+UIButton.swift"; sourceTree = "<group>"; };
 		A87550D322CA52CE00648242 /* PuyoLink+UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PuyoLink+UIImage.swift"; sourceTree = "<group>"; };
+		A87550D522CA6B4F00648242 /* ListBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListBox.swift; sourceTree = "<group>"; };
+		A87550D922CA73B400648242 /* PuyoLink+ListBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PuyoLink+ListBox.swift"; sourceTree = "<group>"; };
 		AA2F85098C08DB2751FF562506E1DFB9 /* Bag+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Bag+Rx.swift"; path = "RxSwift/Extensions/Bag+Rx.swift"; sourceTree = "<group>"; };
 		AA45C82BD066FE9374E4160102E4380C /* Producer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Producer.swift; path = RxSwift/Observables/Producer.swift; sourceTree = "<group>"; };
 		ABC6B26F65038DAA7D777E80A54B2CFB /* Deprecated.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Deprecated.swift; path = RxSwift/Deprecated.swift; sourceTree = "<group>"; };
@@ -827,6 +831,8 @@
 				A87550CF22CA4F2D00648242 /* PuyoLink+UIView.swift */,
 				A87550D122CA517F00648242 /* PuyoLink+UIButton.swift */,
 				A87550D322CA52CE00648242 /* PuyoLink+UIImage.swift */,
+				A87550D522CA6B4F00648242 /* ListBox.swift */,
+				A87550D922CA73B400648242 /* PuyoLink+ListBox.swift */,
 			);
 			name = Views;
 			path = Puyopuyo/Classes/Views;
@@ -1162,6 +1168,7 @@
 				A87550D222CA517F00648242 /* PuyoLink+UIButton.swift in Sources */,
 				EA83536A68BC88D7E3F22A672793FD7D /* Caculations.swift in Sources */,
 				F6146DD5B9E895C100E5E31EBE74D3FB /* Caculator.swift in Sources */,
+				A87550DA22CA73B400648242 /* PuyoLink+ListBox.swift in Sources */,
 				E24111081DE5A6AB31DA3B40BB412370 /* FlatBox.swift in Sources */,
 				A87550CE22CA455200648242 /* PuyoLink+UILabel.swift in Sources */,
 				0FF2A9627880AA702126F98FA4D6BCAA /* FlatCaculator.swift in Sources */,
@@ -1170,6 +1177,7 @@
 				DEF7395D2B0E50E81FF46A2B28A2B51D /* Measure.swift in Sources */,
 				A87550D022CA4F2D00648242 /* PuyoLink+UIView.swift in Sources */,
 				F49B50D2E3704CEFBEE005E3D1ADD91D /* MeasureBox.swift in Sources */,
+				A87550D622CA6B4F00648242 /* ListBox.swift in Sources */,
 				ED0966B44651CF397AC7AC4EB1761E94 /* MeasureCaculator.swift in Sources */,
 				3A273611DB42F7291DAF645D25D79B29 /* PuyoLink.swift in Sources */,
 				CA38E9CDC41611FAEE813FCA6875A4B2 /* PuyoLinkHelper.swift in Sources */,
