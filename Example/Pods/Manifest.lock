@@ -1,5 +1,11 @@
 PODS:
-  - Puyopuyo (0.1.0)
+  - Puyopuyo (0.1.0):
+    - Puyopuyo/Core (= 0.1.0)
+    - Puyopuyo/TangramKit (= 0.1.0)
+  - Puyopuyo/Core (0.1.0)
+  - Puyopuyo/TangramKit (0.1.0):
+    - Puyopuyo/Core
+    - TangramKit
   - RxSwift (5.0.0)
   - TangramKit (1.4.0)
 
@@ -18,7 +24,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Puyopuyo: 1814077cd7450f0dd21452fabcf1c2f320e021f4
+  Puyopuyo: c6165ab5519055ceea2c7a7acbc68d02ed64de84
   RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
   TangramKit: 15ccb6480f0e32c284f0a076542a607226e158dd
 

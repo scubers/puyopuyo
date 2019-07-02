@@ -18,5 +18,22 @@
   "platforms": {
     "ios": "8.0"
   },
-  "source_files": "Puyopuyo/Classes/**/*"
+  "subspecs": [
+    {
+      "name": "Core",
+      "source_files": "Puyopuyo/Classes/Core/**/*"
+    },
+    {
+      "name": "TangramKit",
+      "source_files": "Puyopuyo/Classes/TangramKit/**/*",
+      "dependencies": {
+        "Puyopuyo/Core": [
+
+        ],
+        "TangramKit": [
+
+        ]
+      }
+    }
+  ]
 }

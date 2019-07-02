@@ -30,7 +30,17 @@ TODO: Add long description of the pod here.
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'Puyopuyo/Classes/**/*'
+  
+  
+  s.subspec 'Core' do |c|
+    c.source_files = 'Puyopuyo/Classes/Core/**/*'
+  end
+  
+  s.subspec 'TangramKit' do |c|
+      c.source_files = 'Puyopuyo/Classes/TangramKit/**/*'
+      c.dependency 'Puyopuyo/Core'
+      c.dependency 'TangramKit'
+  end
   
   # s.resource_bundles = {
   #   'Puyopuyo' => ['Puyopuyo/Assets/*.png']
@@ -40,4 +50,5 @@ TODO: Add long description of the pod here.
   # s.frameworks = 'UIKit', 'MapKit'
   # s.dependency 'AFNetworking', '~> 2.3'
 #  s.dependency 'YogaKit', '~> 1.14.0'
+
 end
