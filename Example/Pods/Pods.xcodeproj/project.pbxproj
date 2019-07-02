@@ -142,6 +142,9 @@
 		A44AA8151C74D00F90C30862BC550504 /* VirtualTimeScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F726D9D660D0457D47A761AE596FC03 /* VirtualTimeScheduler.swift */; };
 		A6578FB25E9D757BE72519DC952C0FFE /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73A8DCABCC6E8AA9EA65F53AAF470E59 /* Size.swift */; };
 		A80A277338613E53D177627087B2FF0D /* AnyObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B572C656A2BA793884553EAB1CCF160 /* AnyObserver.swift */; };
+		A839ACB222CBBAA9006E7E1F /* PuyoLink+UIControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = A839ACB122CBBAA9006E7E1F /* PuyoLink+UIControl.swift */; };
+		A839ACB422CBBBE6006E7E1F /* PuyoLink+UITextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A839ACB322CBBBE6006E7E1F /* PuyoLink+UITextField.swift */; };
+		A839ACB622CBBEEC006E7E1F /* PuyoLink+UISwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = A839ACB522CBBEEC006E7E1F /* PuyoLink+UISwitch.swift */; };
 		A87550CE22CA455200648242 /* PuyoLink+UILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87550CD22CA455200648242 /* PuyoLink+UILabel.swift */; };
 		A87550D022CA4F2D00648242 /* PuyoLink+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87550CF22CA4F2D00648242 /* PuyoLink+UIView.swift */; };
 		A87550D222CA517F00648242 /* PuyoLink+UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87550D122CA517F00648242 /* PuyoLink+UIButton.swift */; };
@@ -394,6 +397,9 @@
 		A5B905A3617C90F19C84663539266B7D /* TangramKit-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "TangramKit-Info.plist"; sourceTree = "<group>"; };
 		A7B2054AAD42DAA76F343E9CB282E489 /* BinaryDisposable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BinaryDisposable.swift; path = RxSwift/Disposables/BinaryDisposable.swift; sourceTree = "<group>"; };
 		A81C147852FD1A21D99E6AEAC26D8C3B /* RecursiveScheduler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RecursiveScheduler.swift; path = RxSwift/Schedulers/RecursiveScheduler.swift; sourceTree = "<group>"; };
+		A839ACB122CBBAA9006E7E1F /* PuyoLink+UIControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PuyoLink+UIControl.swift"; sourceTree = "<group>"; };
+		A839ACB322CBBBE6006E7E1F /* PuyoLink+UITextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PuyoLink+UITextField.swift"; sourceTree = "<group>"; };
+		A839ACB522CBBEEC006E7E1F /* PuyoLink+UISwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PuyoLink+UISwitch.swift"; sourceTree = "<group>"; };
 		A87550CD22CA455200648242 /* PuyoLink+UILabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PuyoLink+UILabel.swift"; sourceTree = "<group>"; };
 		A87550CF22CA4F2D00648242 /* PuyoLink+UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PuyoLink+UIView.swift"; sourceTree = "<group>"; };
 		A87550D122CA517F00648242 /* PuyoLink+UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PuyoLink+UIButton.swift"; sourceTree = "<group>"; };
@@ -833,6 +839,9 @@
 				A87550D322CA52CE00648242 /* PuyoLink+UIImage.swift */,
 				A87550D522CA6B4F00648242 /* ListBox.swift */,
 				A87550D922CA73B400648242 /* PuyoLink+ListBox.swift */,
+				A839ACB122CBBAA9006E7E1F /* PuyoLink+UIControl.swift */,
+				A839ACB322CBBBE6006E7E1F /* PuyoLink+UITextField.swift */,
+				A839ACB522CBBEEC006E7E1F /* PuyoLink+UISwitch.swift */,
 			);
 			name = Views;
 			path = Puyopuyo/Classes/Views;
@@ -1163,6 +1172,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A839ACB222CBBAA9006E7E1F /* PuyoLink+UIControl.swift in Sources */,
 				BE631727FF2DB71BAFE2E90FCF79063C /* BaseLayout.swift in Sources */,
 				816559020374BB33ECD1EA200854BAE9 /* BoxView.swift in Sources */,
 				A87550D222CA517F00648242 /* PuyoLink+UIButton.swift in Sources */,
@@ -1172,9 +1182,11 @@
 				E24111081DE5A6AB31DA3B40BB412370 /* FlatBox.swift in Sources */,
 				A87550CE22CA455200648242 /* PuyoLink+UILabel.swift in Sources */,
 				0FF2A9627880AA702126F98FA4D6BCAA /* FlatCaculator.swift in Sources */,
+				A839ACB622CBBEEC006E7E1F /* PuyoLink+UISwitch.swift in Sources */,
 				76A57F32814596E3E411BBC0143BAABF /* FlatLayout.swift in Sources */,
 				DEEDA49A8E3F2BBC3725118917462453 /* Measurable.swift in Sources */,
 				DEF7395D2B0E50E81FF46A2B28A2B51D /* Measure.swift in Sources */,
+				A839ACB422CBBBE6006E7E1F /* PuyoLink+UITextField.swift in Sources */,
 				A87550D022CA4F2D00648242 /* PuyoLink+UIView.swift in Sources */,
 				F49B50D2E3704CEFBEE005E3D1ADD91D /* MeasureBox.swift in Sources */,
 				A87550D622CA6B4F00648242 /* ListBox.swift in Sources */,

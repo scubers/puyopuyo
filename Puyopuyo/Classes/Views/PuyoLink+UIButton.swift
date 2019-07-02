@@ -32,9 +32,4 @@ extension PuyoLink where T: UIButton {
         return self
     }
     
-    @discardableResult
-    public func action(_ action: @escaping () -> Void, event: UIControl.Event) -> Self {
-        
-        return self
-    }
 }

@@ -20,8 +20,21 @@ class Flat1VC: BaseVC {
     var width = State<SizeDescription>(value: .fixed(10))
     var space = BehaviorSubject<CGFloat>(value: 5)
     
+    var text = BehaviorSubject<String>(value: "")
+    var switchChange = BehaviorSubject<Bool>(value: false)
+    
+    let bag = DisposeBag()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        text.subscribe(onNext: { s in
+            print(s)
+        }).disposed(by: bag)
+        
+        switchChange.subscribe(onNext: {
+            print($0)
+        }).disposed(by: bag)
         
         getLabel("text").attach(vRoot)
             .text(State(value: "slkdjf"))
@@ -30,7 +43,30 @@ class Flat1VC: BaseVC {
             .aligment(.center)
             .textColor(State(value: UIColor.black))
         
+        UIButton(type: .contactAdd).attach(vRoot)
+            .action(for: .touchUpInside, { (btn) in
+                print(btn)
+            })
+        
+        UISwitch().attach(vRoot)
+            .onValueChange({
+                print($0)
+            })
+            .onValueChange(switchChange)
+        
+        UITextField().attach(vRoot)
+            .size(.ratio(1), 30)
+            .onTextChange(text)
+            .onBeginEditing({
+                print($0)
+            })
+            .onEndEditing({
+                print($0)
+            })
+        
         HBox.attach(vRoot) {
+
+            
             for idx in 0..<30 {
                 self.getView().attach($0)
                     .width(self.width)
