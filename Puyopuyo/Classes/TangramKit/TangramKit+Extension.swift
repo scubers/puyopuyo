@@ -1,8 +1,8 @@
 
 import TangramKit
 
+// MARK: - tg_属性只能在TangramKit布局内使用
 extension PuyoLink where T: UIView {
-    
     
     @discardableResult
     public func tg_size(_ width: TGLayoutSizeType, _ height: TGLayoutSizeType) -> Self {
