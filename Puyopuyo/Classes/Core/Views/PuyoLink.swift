@@ -23,6 +23,12 @@ public class PuyoLink<T: UIView> {
             superview.setNeedsLayout()
         }
     }
+    
+    public func attach(_ parent: UIView? = nil, _ block: ((T) -> Void)? = nil) -> PuyoLink<T> {
+        block?(view)
+        parent?.addSubview(view)
+        return self
+    }
 }
 
 public typealias PuyoLinkBlock = (UIView) -> Void
@@ -40,16 +46,6 @@ extension PuyoLinkAttacher where Self: UIView {
         block?(self)
         parent?.addSubview(self)
         return link
-    }
-    
-}
-
-extension PuyoLink: PuyoLinkAttacher where T: UIView {
-    public typealias Holder = T
-    public func attach(_ parent: UIView? = nil, wrap: Bool = false, _ block: PuyoLinkBlock? = nil) -> PuyoLink<T> {
-        parent?.addSubview(view)
-        block?(view)
-        return self
     }
     
 }

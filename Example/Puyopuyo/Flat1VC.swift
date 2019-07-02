@@ -9,6 +9,7 @@
 import UIKit
 import Puyopuyo
 import RxSwift
+import TangramKit
 
 class Flat1VC: BaseVC {
     
@@ -83,6 +84,16 @@ class Flat1VC: BaseVC {
         .direction(direction)
         .visible(visible)
         .cornerRadius(State(value: 10))
+        
+        ZBox.attach(vRoot) {
+            TGLinearLayout(.vert).attach($0) {
+                self.getLabel("1111").tg_attach($0)
+                self.getLabel("222").tg_attach($0)
+                }
+                .size(.fill, .fill)
+                .tg_gravity(.center)
+        }
+        .size(.fill, .fill)
         
         randomViewColor(view: vRoot)
         

@@ -1,6 +1,20 @@
 
 import TangramKit
 
+extension PuyoLinkAttacher where Self: UIView {
+    
+    @discardableResult
+    public func tg_attach(_ parent: UIView? = nil, wrap: Bool = true, _ block: PuyoLinkBlock? = nil) -> PuyoLink<Self> {
+        let link = PuyoLink(self, wrap: wrap)
+        if wrap {
+            link.tg_size(.wrap, .wrap)
+        }
+        block?(self)
+        parent?.addSubview(self)
+        return link
+    }
+    
+}
 // MARK: - tg_属性只能在TangramKit布局内使用
 extension PuyoLink where T: UIView {
     
