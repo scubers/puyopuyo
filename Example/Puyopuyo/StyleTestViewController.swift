@@ -106,6 +106,8 @@ class StyleTestViewController: BaseVC, UIScrollViewDelegate {
                     
                     }
                     .space(5)
+                
+                    self.getMeiyeColors().attach($0)
                 }
                 .padding(top: 10, left: 20, right: 20)
                 .space(20)

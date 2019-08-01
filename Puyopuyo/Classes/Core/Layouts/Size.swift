@@ -16,7 +16,6 @@ extension CGFloat: SizeDescriptible {
 }
 extension Double: SizeDescriptible { public var sizeDescription: SizeDescription { return .fixed(CGFloat(self)) } }
 extension Float: SizeDescriptible { public var sizeDescription: SizeDescription { return .fixed(CGFloat(self)) } }
-extension Float80: SizeDescriptible { public var sizeDescription: SizeDescription { return .fixed(CGFloat(self)) } }
 extension Int: SizeDescriptible { public var sizeDescription: SizeDescription { return .fixed(CGFloat(self)) } }
 extension UInt: SizeDescriptible { public var sizeDescription: SizeDescription { return .fixed(CGFloat(self)) } }
 extension Int32: SizeDescriptible { public var sizeDescription: SizeDescription { return .fixed(CGFloat(self)) } }
