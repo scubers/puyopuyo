@@ -42,7 +42,8 @@ class Flat1VC: BaseVC {
             .width(.wrap(add: 10))
             .textAligment(State(value: NSTextAlignment.center))
             .aligment(.center)
-            .textColor(State(value: UIColor.black))
+            .textColor(State(value: Optional.some(.white)))
+            .visible(switchChange.map({ $0 ? .visible : .gone}))
         
         UIButton(type: .contactAdd).attach(vRoot)
             .action(for: .touchUpInside, { (btn) in
@@ -58,6 +59,7 @@ class Flat1VC: BaseVC {
         UITextField().attach(vRoot)
             .size(.ratio(1), 30)
             .onTextChange(text)
+            .visible(switchChange.map({ $0 ? .visible : .gone}))
             .onBeginEditing({
                 print($0)
             })

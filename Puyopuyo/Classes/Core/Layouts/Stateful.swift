@@ -18,25 +18,44 @@ public class Unbinders {
     }
 }
 
-public protocol Stateful {
-    associatedtype StateType
-    func py_bind(stateChange block: @escaping (StateType) -> Void) -> Unbinder
-    func py_change(_ state: StateType)
+public protocol Valuable {
+    associatedtype ValueType
+    func receiveValue(_ block: @escaping (ValueType) -> Void) -> Unbinder
 }
 
-extension Stateful {
-    public func safeBind<Object: AnyObject>(_ object: Object, _ action: @escaping (Object, StateType) -> Void) -> Unbinder {
-        return py_bind(stateChange: { [weak object] (s) in
+public protocol Outputable {
+    associatedtype OutputType
+    func postValue(_ value: OutputType)
+}
+
+public typealias Stafule = (Valuable & Outputable)
+//public protocol Stateful: Valuable, Outputable {
+//}
+
+extension Valuable {
+    public func safeBind<Object: AnyObject>(_ object: Object, _ action: @escaping (Object, ValueType) -> Void) -> Unbinder {
+        return receiveValue { [weak object] (s) in
             if let object = object {
                 action(object, s)
             }
-        })
+        }
     }
 }
 
-public class State<T>: Stateful {
-
-    public typealias StateType = T
+public class State<T>: Valuable, Outputable {
+    
+    public func postValue(_ value: State<T>.OutputType) {
+        self.value = value
+    }
+    
+    public func receiveValue(_ block: @escaping (State<T>.ValueType) -> Void) -> Unbinder {
+        return self.py_bind(stateChange: block)
+    }
+    
+    
+    public typealias ValueType = T
+    
+    public typealias OutputType = T
     
     public var value: T! {
         didSet {
@@ -88,7 +107,7 @@ public class State<T>: Stateful {
         }
     }
     
-    public func map<S: Stateful, R>(_ block: @escaping (T) -> R) -> S where S.StateType == R {
+    public func map<S: Outputable, R>(_ block: @escaping (T) -> R) -> S where S.OutputType == R {
         let newState = State<R>()
         let unbinder = py_bind { (value) in
             newState.post(value: block(value))

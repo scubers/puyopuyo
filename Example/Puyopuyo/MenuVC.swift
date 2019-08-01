@@ -12,6 +12,7 @@ class MenuVC: BaseVC {
     
     var data: [(String, UIViewController.Type)] = [
         ("Flat1", Flat1VC.self),
+        ("Visible", VisibleViewController.self),
         ("Colors", StyleTestViewController.self),
         ("ListBox", ListBoxVC.self),
     ]

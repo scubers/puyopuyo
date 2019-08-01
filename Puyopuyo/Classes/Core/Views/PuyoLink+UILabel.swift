@@ -9,7 +9,13 @@ import Foundation
 
 extension PuyoLink where T: UILabel {
     @discardableResult
-    public func text<S: Stateful>(_ text: S) -> Self where S.StateType == Optional<String> {
+    public func text(_ text: String?) -> Self  {
+        view.text = text
+        return self
+    }
+    
+    @discardableResult
+    public func text<S: Valuable>(_ text: S) -> Self where S.ValueType == String? {
         view.py_setUnbinder(text.safeBind(view, { (v, a) in
             v.text = a
         }), for: #function)
@@ -17,7 +23,7 @@ extension PuyoLink where T: UILabel {
     }
     
     @discardableResult
-    public func textColor<S: Stateful>(_ color: S) -> Self where S.StateType == UIColor {
+    public func textColor<S: Valuable>(_ color: S) -> Self where S.ValueType == UIColor? {
         view.py_setUnbinder(color.safeBind(view, { (v, a) in
             v.textColor = a
         }), for: #function)
@@ -25,7 +31,7 @@ extension PuyoLink where T: UILabel {
     }
     
     @discardableResult
-    public func font<S: Stateful>(_ font: S) -> Self where S.StateType == UIFont {
+    public func font<S: Valuable>(_ font: S) -> Self where S.ValueType == UIFont {
         view.py_setUnbinder(font.safeBind(view, { (v, a) in
             v.font = a
         }), for: #function)
@@ -33,7 +39,13 @@ extension PuyoLink where T: UILabel {
     }
     
     @discardableResult
-    public func textAligment<S: Stateful>(_ aligment: S) -> Self where S.StateType == NSTextAlignment {
+    public func font(_ font: UIFont) -> Self {
+        view.font = font
+        return self
+    }
+    
+    @discardableResult
+    public func textAligment<S: Valuable>(_ aligment: S) -> Self where S.ValueType == NSTextAlignment {
         view.py_setUnbinder(aligment.safeBind(view, { (v, a) in
             v.textAlignment = a
         }), for: #function)
@@ -41,7 +53,7 @@ extension PuyoLink where T: UILabel {
     }
     
     @discardableResult
-    public func numberOfLines<S: Stateful>(_ lines: S) -> Self where S.StateType == Int {
+    public func numberOfLines<S: Valuable>(_ lines: S) -> Self where S.ValueType == Int {
         view.py_setUnbinder(lines.safeBind(view, { (v, a) in
             v.numberOfLines = a
         }), for: #function)

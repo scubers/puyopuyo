@@ -49,3 +49,39 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+import Foundation
+import Puyopuyo
+import RxSwift
+
+extension Observable: Valuable {
+    public typealias ValueType = Element
+    
+    public func receiveValue(_ block: @escaping (Element) -> Void) -> Unbinder {
+        let d = subscribe(onNext: { value in
+            block(value)
+        })
+        return Unbinders.create {
+            d.dispose()
+        }
+    }
+}
+
+extension PublishSubject: Outputable, Valuable {
+    
+    public typealias OutputType = Element
+    
+    public func postValue(_ value: OutputType) {
+        onNext(value)
+    }
+    
+}
+
+extension BehaviorSubject: Outputable, Valuable {
+    public typealias ValueType = Element
+    
+    public typealias OutputType = Element
+    
+    public func postValue(_ value: Element) {
+        onNext(value)
+    }
+}

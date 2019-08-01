@@ -68,7 +68,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func visible<S: Stateful>(_ visibility: S) -> Self where S.StateType == Visiblity {
+    public func visible<S: Valuable>(_ visibility: S) -> Self where S.ValueType == Visiblity {
         let unbinder = visibility.safeBind(view) { (v, visibility) in
             PuyoLinkHelper.visibility(for: v, visibility: visibility)
         }
@@ -83,7 +83,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func size<S: Stateful>(_ width: S?, _ height: S?) -> Self where S.StateType == SizeDescription {
+    public func size<S: Valuable>(_ width: S?, _ height: S?) -> Self where S.ValueType == SizeDescription {
         if let width = width {
             view.py_setUnbinder(width.safeBind(view, { (v, w) in
                 PuyoLinkHelper.size(for: v, width: w, height: nil)
@@ -128,7 +128,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func width<S: Stateful>(_ width: S) -> Self where S.StateType == SizeDescription {
+    public func width<S: Valuable>(_ width: S) -> Self where S.ValueType == SizeDescription {
         return size(width, nil)
     }
     
@@ -145,7 +145,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func height<S: Stateful>(_ height: S) -> Self where S.StateType == SizeDescription {
+    public func height<S: Valuable>(_ height: S) -> Self where S.ValueType == SizeDescription {
         return size(nil, height)
     }
     
@@ -156,7 +156,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func margin<S: Stateful>(_ margin: S) -> Self where S.StateType == UIEdgeInsets {
+    public func margin<S: Valuable>(_ margin: S) -> Self where S.ValueType == UIEdgeInsets {
         let unbinder = margin.safeBind(view) { (v, m) in
             PuyoLinkHelper.margin(for: v, all: nil, top: m.top, left: m.left, bottom: m.bottom, right: m.right)
         }
@@ -171,7 +171,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func aligment<S: Stateful>(_ aligment: S) -> Self where S.StateType == Aligment {
+    public func aligment<S: Valuable>(_ aligment: S) -> Self where S.ValueType == Aligment {
         view.py_setUnbinder(aligment.safeBind(view, { (v, a) in
             PuyoLinkHelper.aligment(for: v, aligment: a)
         }), for: #function)
@@ -194,7 +194,7 @@ extension PuyoLink where T: BoxView {
     }
     
     @discardableResult
-    public func padding<S: Stateful>(_ padding: S) -> Self where S.StateType == UIEdgeInsets {
+    public func padding<S: Valuable>(_ padding: S) -> Self where S.ValueType == UIEdgeInsets {
         view.py_setUnbinder(padding.safeBind(view, { (v, i) in
             v.layout.padding = i
             v.py_setNeedsLayout()
@@ -210,7 +210,7 @@ extension PuyoLink where T: BoxView {
     }
     
     @discardableResult
-    public func justifyContent<S: Stateful>(_ aligment: S) -> Self where S.StateType == Aligment {
+    public func justifyContent<S: Valuable>(_ aligment: S) -> Self where S.ValueType == Aligment {
         view.py_setUnbinder(aligment.safeBind(view, { (v, a) in
             v.layout.justifyContent = a
             v.py_setNeedsLayout()
@@ -229,7 +229,7 @@ extension PuyoLink where T: FlatBox {
     }
     
     @discardableResult
-    public func space<S: Stateful>(_ space: S) -> Self where S.StateType == CGFloat {
+    public func space<S: Valuable>(_ space: S) -> Self where S.ValueType == CGFloat {
         view.py_setUnbinder(space.safeBind(view, { (v, s) in
             v.layout.space = s
             v.py_setNeedsLayout()
@@ -245,7 +245,7 @@ extension PuyoLink where T: FlatBox {
     }
     
     @discardableResult
-    public func formation<S: Stateful>(_ formation: S) -> Self where S.StateType == Formation {
+    public func formation<S: Valuable>(_ formation: S) -> Self where S.ValueType == Formation {
         view.py_setUnbinder(formation.safeBind(view, { (v, f) in
             v.layout.formation = f
             v.py_setNeedsLayout()
@@ -261,7 +261,7 @@ extension PuyoLink where T: FlatBox {
     }
     
     @discardableResult
-    public func direction<S: Stateful>(_ direction: S) -> Self where S.StateType == Direction {
+    public func direction<S: Valuable>(_ direction: S) -> Self where S.ValueType == Direction {
         view.py_setUnbinder(direction.safeBind(view, { (v, d) in
             v.layout.direction = d
             v.py_setNeedsLayout()
@@ -277,7 +277,7 @@ extension PuyoLink where T: FlatBox {
     }
     
     @discardableResult
-    public func reverse<S: Stateful>(_ reverse: S) -> Self where S.StateType == Bool {
+    public func reverse<S: Valuable>(_ reverse: S) -> Self where S.ValueType == Bool {
         view.py_setUnbinder(reverse.safeBind(view, { (v, r) in
             v.layout.reverse = r
             v.py_setNeedsLayout()

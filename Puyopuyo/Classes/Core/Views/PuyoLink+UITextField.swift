@@ -18,10 +18,10 @@ extension PuyoLink where T: UITextField {
     }
     
     @discardableResult
-    public func onTextChange<S: Stateful>(_ action: S) -> Self where S.StateType == String {
+    public func onTextChange<S: Valuable & Outputable>(_ action: S) -> Self where S.ValueType == String, S.OutputType == String {
         _ = view.py_action(for: .editingChanged) { (control) in
             let string = (control as! UITextField).text ?? ""
-            action.py_change(string)
+            action.postValue(string)
         }
         return self
     }
