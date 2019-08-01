@@ -16,7 +16,7 @@ public class ListBox<View: BoxView, Data>: UIView, UITableViewDelegate, UITableV
     public var cellBlock: (UITableView, View, IndexPath, Data) -> Void = { _, _, _, _ in }
     public var didSelect: (UITableView, IndexPath, Data) -> Void = { _, _, _ in }
     
-    public init(style: UITableViewStyle = .plain, data: State<[[Data]]>) {
+    public init(style: UITableView.Style = .plain, data: State<[[Data]]>) {
         tableView = UITableView(frame: .zero, style: style)
         self.data = data
         super.init(frame: .zero)

@@ -17,7 +17,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func contentMode<S: Stateful>(_ mode: S) -> Self where S.StateType == UIViewContentMode {
+    public func contentMode<S: Stateful>(_ mode: S) -> Self where S.StateType == UIView.ContentMode {
         view.py_setUnbinder(mode.safeBind(view, { (v, a) in
             v.contentMode = a
         }), for: #function)
