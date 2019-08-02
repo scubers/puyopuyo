@@ -8,9 +8,12 @@
 
 import UIKit
 import Puyopuyo
+import RxSwift
 
 
 class StyleTestViewController: BaseVC, UIScrollViewDelegate {
+    
+    let text = BehaviorSubject(value: "")
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         print(scrollView.contentSize)
@@ -21,10 +24,53 @@ class StyleTestViewController: BaseVC, UIScrollViewDelegate {
         setupViews()
     }
     
+    func color(hex hexString: String) -> UIColor? {
+        guard hexString.count == 6 else {
+            return nil
+        }
+        let hexString = hexString.trimmingCharacters(in: .whitespacesAndNewlines)
+        let scanner = Scanner(string: hexString)
+        
+        if hexString.hasPrefix("#") {
+            scanner.scanLocation = 1
+        }
+        
+        var color: UInt32 = 0
+        scanner.scanHexInt32(&color)
+        
+        let mask = 0x000000FF
+        let r = Int(color >> 16) & mask
+        let g = Int(color >> 8) & mask
+        let b = Int(color) & mask
+        
+        let red   = CGFloat(r) / 255.0
+        let green = CGFloat(g) / 255.0
+        let blue  = CGFloat(b) / 255.0
+        
+        return UIColor(red: red, green: green, blue: blue, alpha: 1)
+    }
+    
     func setupViews() {
         
         UIScrollView().attach(vRoot) {
             VBox().attach($0) {
+                
+                VBox().attach($0) {
+                    UITextField().attach($0)
+                        .onTextChange({ [weak self] (string) in
+                            self?.text.onNext(string ?? "")
+                        })
+                        .backgroundColor(.lightGray)
+                        .size(100, 40)
+                    
+                    UIView().attach($0)
+                        .backgroundColor(self.text.map({ [weak self] in self!.color(hex: $0)}))
+                        .borderWidth(State(value: 1))
+                        .borderColor(State(value: Optional.some(UIColor.blue)))
+                        .size(100, 40)
+                }
+                .size(.fill, .wrap)
+                
                 VBox().attach($0) {
                     self.getDescriptionLabel(text: "字体(Font size)").attach($0)
                     self.getDescriptionLabel(text: "Large Title: 32", fontSize: 32).attach($0)
