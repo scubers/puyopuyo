@@ -60,13 +60,13 @@ class StyleTestViewController: BaseVC, UIScrollViewDelegate {
                         .onTextChange({ [weak self] (string) in
                             self?.text.onNext(string ?? "")
                         })
-                        .backgroundColor(.lightGray)
+                        .backgroundColor(State(.lightGray).optional())
                         .size(100, 40)
                     
                     UIView().attach($0)
-                        .backgroundColor(self.text.map({ [weak self] in self!.color(hex: $0)}))
-                        .borderWidth(State(value: 1))
-                        .borderColor(State(value: Optional.some(UIColor.blue)))
+                        .backgroundColor(self.text.map({ [weak self] in self?.color(hex: $0)}))
+                        .borderWidth(State(1))
+                        .borderColor(State(Optional.some(UIColor.blue)))
                         .size(100, 40)
                 }
                 .size(.fill, .wrap)

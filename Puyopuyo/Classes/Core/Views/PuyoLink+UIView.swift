@@ -8,14 +8,9 @@
 import Foundation
 
 extension PuyoLink where T: UIView {
-    @discardableResult
-    public func backgroundColor(_ color: UIColor?) -> Self {
-        view.backgroundColor = color
-        return self
-    }
     
     @discardableResult
-    public func backgroundColor<S: Valuable>(_ color: S) -> Self where S.ValueType == Optional<UIColor> {
+    public func backgroundColor<S: Valuable>(_ color: S) -> Self where S.ValueType == UIColor? {
         view.py_setUnbinder(color.safeBind(view, { (v, a) in
             v.backgroundColor = a
         }), for: #function)

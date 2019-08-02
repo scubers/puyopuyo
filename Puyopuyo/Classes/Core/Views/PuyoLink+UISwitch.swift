@@ -14,6 +14,7 @@ extension PuyoLink where T: UISwitch {
         view.py_setUnbinder(state.safeBind(view, { (v, a) in
             v.isOn = a
         }), for: #function)
+        onValueChange { state.postValue($0) }
         return self
     }
     

@@ -63,7 +63,7 @@ public class State<T>: Valuable, Outputable {
         }
     }
     
-    public init(value: T) {
+    public init(_ value: T) {
         self.value = value
     }
     
@@ -73,16 +73,12 @@ public class State<T>: Valuable, Outputable {
         onDestroy()
     }
     
-    private var onDestroy: () -> Void = {}
+    var onDestroy: () -> Void = {}
 
     private func post(value: T) {
         callees.forEach { (x) in
             x.block(value)
         }
-    }
-    
-    public func py_change(_ state: T) {
-        value = state
     }
     
     private class Callee<T> {
@@ -104,6 +100,18 @@ public class State<T>: Valuable, Outputable {
             self.callees.removeAll(where: { $0 === callee})
         }
     }
+    
+    public func optional() -> State<ValueType?> {
+        let new = State<ValueType?>(nil)
+        let unbinder = receiveValue { (value) in
+            new.postValue(value)
+        }
+        new.onDestroy = {
+            unbinder.py_unbind()
+        }
+        return new
+    }
+
     
     public func map<S: Outputable, R>(_ block: @escaping (T) -> R) -> S where S.OutputType == R {
         let newState = State<R>()

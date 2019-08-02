@@ -13,12 +13,12 @@ import TangramKit
 
 class Flat1VC: BaseVC {
     
-    var visible = State<Visiblity>(value: .visible)
-    var margin = State<UIEdgeInsets>(value: .zero)
-    var aligment = State<Aligment>(value: .center)
-    var direction = State<Direction>(value: .x)
-    var subMargin = State<UIEdgeInsets>(value: .zero)
-    var width = State<SizeDescription>(value: .fixed(10))
+    var visible = State<Visiblity>(.visible)
+    var margin = State<UIEdgeInsets>(.zero)
+    var aligment = State<Aligment>(.center)
+    var direction = State<Direction>(.x)
+    var subMargin = State<UIEdgeInsets>(.zero)
+    var width = State<SizeDescription>(.fixed(10))
     var space = BehaviorSubject<CGFloat>(value: 5)
     
     var text = BehaviorSubject<String>(value: "")
@@ -38,11 +38,11 @@ class Flat1VC: BaseVC {
         }).disposed(by: bag)
         
         getLabel("text").attach(vRoot)
-            .text(State(value: "slkdjf"))
+            .text(text.map({ x -> String? in x}))
             .width(.wrap(add: 10))
-            .textAligment(State(value: NSTextAlignment.center))
+            .textAligment(State(.center))
             .aligment(.center)
-            .textColor(State(value: Optional.some(.white)))
+            .textColor(State(.white).optional())
             .visible(switchChange.map({ $0 ? .visible : .gone}))
         
         UIButton(type: .contactAdd).attach(vRoot)
@@ -51,14 +51,12 @@ class Flat1VC: BaseVC {
             })
         
         UISwitch().attach(vRoot)
-            .onValueChange({
-                print($0)
-            })
-            .onValueChange(switchChange)
+            .isOn(switchChange)
         
         UITextField().attach(vRoot)
             .size(.ratio(1), 30)
-            .onTextChange(text)
+//            .onTextChange(text)
+            .textState(text)
             .visible(switchChange.map({ $0 ? .visible : .gone}))
             .onBeginEditing({
                 print($0)
@@ -85,7 +83,7 @@ class Flat1VC: BaseVC {
         .margin(margin)
         .direction(direction)
         .visible(visible)
-        .cornerRadius(State(value: 10))
+        .cornerRadius(State(10))
         
         ZBox.attach(vRoot) {
             TGLinearLayout(.vert).attach($0) {
@@ -107,7 +105,9 @@ class Flat1VC: BaseVC {
             self.space.onNext(0)
             self.vRoot.attach()
                 .formation(.center)
+            self.switchChange.onNext(true)
             
+            self.text.onNext("100")
 
             UIView.animate(withDuration: 0.5, animations: {
                 self.vRoot.layoutIfNeeded()

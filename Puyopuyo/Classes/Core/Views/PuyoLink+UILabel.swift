@@ -8,9 +8,17 @@
 import Foundation
 
 extension PuyoLink where T: UILabel {
+    
+    
     @discardableResult
     public func text(_ text: String?) -> Self  {
         view.text = text
+        return self
+    }
+    
+    @discardableResult
+    public func font(_ font: UIFont) -> Self {
+        view.font = font
         return self
     }
     
@@ -35,12 +43,6 @@ extension PuyoLink where T: UILabel {
         view.py_setUnbinder(font.safeBind(view, { (v, a) in
             v.font = a
         }), for: #function)
-        return self
-    }
-    
-    @discardableResult
-    public func font(_ font: UIFont) -> Self {
-        view.font = font
         return self
     }
     

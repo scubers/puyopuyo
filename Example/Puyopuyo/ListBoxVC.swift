@@ -11,11 +11,11 @@ import Puyopuyo
 
 class ListBoxVC: BaseVC {
     
-    var state = State(value: [["String"]])
+    var state = State([["String"]])
     
     class MyView: FlatBox {
         
-        var text = State<String?>(value: "empty")
+        var text = State<String?>("empty")
         
         override init(frame: CGRect) {
             super.init(frame: frame)

@@ -17,7 +17,7 @@ import Puyopuyo
     
     @objc public var refreshBlock: ((Bool) -> Void)?
     
-    private let isOn = State(value: false)
+    private let isOn = State(false)
     
     var visible: State<Visiblity> {
         return isOn.map({ (value) -> Visiblity in
@@ -57,19 +57,21 @@ private extension VisibleViewController {
                     UILabel().attach($0)
                         .text("收款时合计金额抹除角分金额")
                         .font(UIFont.systemFont(ofSize: 16))
+                        .textColor(State(.black))
                         .size(.fill, .fill)
                     
                     UISwitch().attach($0)
-                        .onValueChange({ [weak self] (value) in
-                            //                        self?.refreshBlock?(value)
-                            self?.changeState(value)
-                            self?.isOn.value = (value)
-                        })
+                        .isOn(self.isOn)
+//                        .onValueChange({ [weak self] (value) in
+//                            //                        self?.refreshBlock?(value)
+//                            self?.changeState(value)
+//                            self?.isOn.value = (value)
+//                        })
                     //                    .isOn(self.isOn)
                     //                    .size(.wrap, .wrap)
                     }
                     .padding(all: 8)
-                    .backgroundColor(.white)
+                    .backgroundColor(State(.white).optional())
                     .justifyContent(.center)
                     .size(.fill, height)
                 
@@ -130,7 +132,7 @@ private extension VisibleViewController {
                 .justifyContent(.center)
                 .formation(.sides)
                 .padding(all: 8)
-                .backgroundColor(UIColor.white)
+                .backgroundColor(State(.white).optional())
                 .view
     }
     
