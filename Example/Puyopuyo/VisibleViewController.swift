@@ -11,7 +11,7 @@ import RxSwift
 import Puyopuyo
 
 /// 忽略找零
-@objc public class VisibleViewController: UIViewController {
+@objc class VisibleViewController: BaseVC {
     
     // MARK: - Accessor
     
@@ -47,22 +47,65 @@ private extension VisibleViewController {
         }
         view.backgroundColor = .lightGray
         let height: CGFloat = 44
-        
-        VBox().attach(view) {
-            
-            HBox().attach($0)
-                .size(.fill, height)
-            
+        let scroll = UIScrollView()
+        scroll.alwaysBounceVertical = true
+        scroll.attach(vRoot) {
             VBox().attach($0) {
-                UILabel().attach($0)
-                    .text("123")
-                    .visible(self.visible)
+                
+                HBox().attach($0) {
+                    
+                    UILabel().attach($0)
+                        .text("收款时合计金额抹除角分金额")
+                        .font(UIFont.systemFont(ofSize: 16))
+                        .size(.fill, .fill)
+                    
+                    UISwitch().attach($0)
+                        .onValueChange({ [weak self] (value) in
+                            //                        self?.refreshBlock?(value)
+                            self?.changeState(value)
+                            self?.isOn.value = (value)
+                        })
+                    //                    .isOn(self.isOn)
+                    //                    .size(.wrap, .wrap)
+                    }
+                    .padding(all: 8)
+                    .backgroundColor(.white)
+                    .justifyContent(.center)
+                    .size(.fill, height)
+                
+                self.getSectionLabel("开启后，如收款合计金额有角分金额，将自动抹零。").attach($0)
+                
+                UIView().attach($0)
+                    .size(.fill, 30)
+                
+                self.getSectionLabel("示例预览").attach($0)
+                
+                VBox().attach($0) {
+                    
+                    self.getTemplateView(title: "合计", value: "￥ 179.42").attach($0)
+                        .size(.fill, height)
+                    
+                    self.getTemplateView(title: "抹零", value: "￥ 0.42").attach($0)
+                        .visible(self.visible)
+                        .size(.fill, height)
+                    
+                    self.getTemplateView(title: "应收金额", value: "￥ 179.42").attach($0)
+                        .visible(self.visible)
+                        .size(.fill, height)
+                    
+                    self.getTemplateView(title: "应收金额", value: "￥ 179.00").attach($0)
+                        .visible(self.visible)
+                        .size(.fill, height)
+                    }
+                    .size(.fill, .wrap)
+                
                 }
-                .size(.fill, .wrap)
-            }
-            .space(8)
-            .padding(all: nil, top: 20, left: 8, bottom: 8, right: 8)
+                .space(8)
+                .padding(all: nil, top: 20, left: 8, bottom: 8, right: 8)
+                .size(.fill, .fill)
+        }
             .size(.fill, .fill)
+        
     }
     
     func getSectionLabel(_ title: String?) -> UILabel {

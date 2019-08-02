@@ -28,9 +28,7 @@ public protocol Outputable {
     func postValue(_ value: OutputType)
 }
 
-public typealias Stafule = (Valuable & Outputable)
-//public protocol Stateful: Valuable, Outputable {
-//}
+public typealias Statefule = (Valuable & Outputable)
 
 extension Valuable {
     public func safeBind<Object: AnyObject>(_ object: Object, _ action: @escaping (Object, ValueType) -> Void) -> Unbinder {

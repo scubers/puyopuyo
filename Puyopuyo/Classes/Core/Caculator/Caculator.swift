@@ -11,19 +11,35 @@ class Caculator {
     
     /// 计算非wrap的size
     static func caculate(size: Size, by cgSize: CGSize) -> Size {
-        guard !size.width.isWrap && !size.height.isWrap else {
-            fatalError("不能计算包裹size")
-        }
-        var width = size.width
-        if width.isRatio {
-            width = .fixed(width.ratio * cgSize.width)
-        }
-        
-        var height = size.height
-        if height.isRatio {
-            height = .fixed(height.ratio * cgSize.height)
-        }
+        let width = caculateFix(width: size.width, by: cgSize.width)
+        let height = caculateFix(height: size.height, by: cgSize.height)
         return Size(width: width, height: height)
+    }
+    
+    static func caculateFix(height: SizeDescription, by relayHeight: CGFloat) -> SizeDescription {
+        guard !height.isWrap else {
+            fatalError("不能计算包裹尺寸")
+        }
+        if height.isFixed {
+            return height
+        }
+        if height.isRatio {
+            return .fixed(height.ratio * relayHeight)
+        }
+        fatalError()
+    }
+    
+    static func caculateFix(width: SizeDescription, by relayWidth: CGFloat) -> SizeDescription {
+        guard !width.isWrap else {
+            fatalError("不能计算包裹尺寸")
+        }
+        if width.isFixed {
+            return width
+        }
+        if width.isRatio {
+            return .fixed(width.ratio * relayWidth)
+        }
+        fatalError()
     }
     
     static func caculate(calSize: CalSize, by fixedSize: CalFixedSize) -> CalSize {
