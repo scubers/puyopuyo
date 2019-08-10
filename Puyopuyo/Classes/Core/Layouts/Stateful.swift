@@ -47,7 +47,20 @@ public class State<T>: Valuable, Outputable {
     }
     
     public func receiveValue(_ block: @escaping (State<T>.ValueType) -> Void) -> Unbinder {
-        return self.py_bind(stateChange: block)
+        if let value = value {
+            block(value)
+        }
+        
+        let callee = Callee(block)
+        callees.append(callee)
+        let pointer = Unmanaged.passUnretained(callee).toOpaque()
+        return UnbinderImpl { [weak self] in
+            self?.callees.removeAll(where: { Unmanaged.passUnretained($0).toOpaque() == pointer })
+//            self?.callees.removeAll(where: { x in
+//                let aPointer = Unmanaged.passUnretained(x).toOpaque()
+//                return pointer == aPointer
+//            })
+        }
     }
     
     
@@ -90,17 +103,6 @@ public class State<T>: Valuable, Outputable {
     
     private var callees = [Callee<T>]()
 
-    public func py_bind(stateChange block: @escaping (T) -> Void) -> Unbinder {
-        if let value = value {
-            block(value)
-        }
-        let callee = Callee(block)
-        callees.append(callee)
-        return UnbinderImpl {
-            self.callees.removeAll(where: { $0 === callee})
-        }
-    }
-    
     public func optional() -> State<ValueType?> {
         let new = State<ValueType?>(nil)
         let unbinder = receiveValue { (value) in
@@ -112,10 +114,9 @@ public class State<T>: Valuable, Outputable {
         return new
     }
 
-    
     public func map<S: Outputable, R>(_ block: @escaping (T) -> R) -> S where S.OutputType == R {
         let newState = State<R>()
-        let unbinder = py_bind { (value) in
+        let unbinder = receiveValue { (value) in
             newState.post(value: block(value))
         }
         newState.onDestroy = {

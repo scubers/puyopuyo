@@ -24,6 +24,7 @@ public class PuyoLink<T: UIView> {
         }
     }
     
+    @discardableResult
     public func attach(_ parent: UIView? = nil, _ block: ((T) -> Void)? = nil) -> PuyoLink<T> {
         block?(view)
         parent?.addSubview(view)
