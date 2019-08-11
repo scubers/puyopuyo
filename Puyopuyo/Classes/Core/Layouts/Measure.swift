@@ -22,12 +22,32 @@ public struct Aligment: OptionSet {
     public static let bottom = Aligment(rawValue: 2)
     public static let left = Aligment(rawValue: 4)
     public static let right = Aligment(rawValue: 8)
-    public static let center = Aligment(rawValue: 16)
+    public static let horzCenter = Aligment(rawValue: 16)
+    public static let vertCenter = Aligment(rawValue: 32)
     
-    public static let none = Aligment(rawValue: 32)
+    public static let center = Aligment.vertCenter.union(.horzCenter)
     
-    public func isCenter() -> Bool {
-        return contains(.center)
+    public static let none = Aligment(rawValue: 64)
+    
+    public func hasHorzAligment() -> Bool {
+        return
+            contains(.left)
+            || contains(.right)
+            || contains(.horzCenter)
+    }
+    
+    public func hasVertAligment() -> Bool {
+        return
+            contains(.top)
+                || contains(.bottom)
+                || contains(.vertCenter)
+    }
+    
+    public func isCenter(for direction: Direction) -> Bool {
+        if case .x = direction {
+            return contains(.vertCenter)
+        }
+        return contains(.horzCenter)
     }
     
     public func isForward(for direction: Direction) -> Bool {

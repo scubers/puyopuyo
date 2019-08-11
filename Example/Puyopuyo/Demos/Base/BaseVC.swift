@@ -25,6 +25,10 @@ class BaseVC: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
+    func configVRoot(_ block: (VBox) -> Void) {
+        block(vRoot)
+    }
+    
     func getView(_ color: UIColor? = nil) -> UIView {
         let v = UIView()
         if let color = color {
@@ -49,6 +53,11 @@ class BaseVC: UIViewController {
         let blue = CGFloat(arc4random()%256)/255.0
         let c = UIColor(red: red, green: green, blue: blue, alpha: 0.7)
         return c
+    }
+    
+    func random<T>(array: [T]) -> T {
+        let index = arc4random_uniform(UInt32(array.count))
+        return array[Int(index)]
     }
     
     override func didReceiveMemoryWarning() {

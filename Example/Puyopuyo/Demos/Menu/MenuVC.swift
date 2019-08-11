@@ -10,12 +10,15 @@ import UIKit
 
 class MenuVC: BaseVC {
     
-    var data: [(String, UIViewController.Type)] = [
-        ("Flat1", Flat1VC.self),
-        ("Visible", VisibleViewController.self),
-        ("Colors", StyleTestViewController.self),
-        ("ListBox", ListBoxVC.self),
-    ]
+    lazy var data: [(String, UIViewController.Type)] = self.getData()
+    
+    func getData() -> [(String, UIViewController.Type)] {
+        return [
+            ("FlatBox", FlatBoxMenu.self),
+            ("ZBox", ZBoxMenu.self),
+            ("Stateful", StatefulVC.self),
+        ]
+    }
     
     lazy var tableView: UITableView = {
         let v = UITableView(frame: view.bounds, style: .plain)

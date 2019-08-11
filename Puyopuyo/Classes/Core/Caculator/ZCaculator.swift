@@ -16,10 +16,12 @@ class ZCaculator {
         self.parent = parent
     }
     
-    lazy var layoutCalPadding = CalEdges(insets: layout.padding, direction: layout.direction)
-    lazy var layoutCalFixedSize = CalFixedSize(cgSize: layout.target?.py_size ?? .zero, direction: layout.direction)
-    lazy var layoutCalSize = CalSize(size: layout.size, direction: layout.direction)
-    lazy var totalFixedMain: CGFloat = self.layoutCalPadding.start + self.layoutCalPadding.end
+    lazy var layoutFixedWidth: CGFloat = self.layout.padding.left + self.layout.padding.right
+    lazy var layoutFixedHeight: CGFloat = self.layout.padding.top + self.layout.padding.bottom
+//    lazy var layoutCalPadding = CalEdges(insets: layout.padding, direction: layout.direction)
+//    lazy var layoutCalFixedSize = CalFixedSize(cgSize: layout.target?.py_size ?? .zero, direction: layout.direction)
+//    lazy var layoutCalSize = CalSize(size: layout.size, direction: layout.direction)
+//    lazy var totalFixedMain: CGFloat = self.layoutCalPadding.start + self.layoutCalPadding.end
     
     func caculate() -> Size {
         
@@ -42,27 +44,33 @@ class ZCaculator {
             if subSize.width.isWrap || subSize.height.isWrap {
                 fatalError()
             }
-            
+            let zContainerSize = CGSize(width: max(layoutFixedSize.width - layoutFixedWidth - (subMargin.left + subMargin.right), 0),
+                                        height: max(layoutFixedSize.height - layoutFixedHeight - (subMargin.top + subMargin.bottom), 0))
             // 计算大小
-            let sizeAfterCaculate = Caculator.caculate(size: subSize, by: layoutFixedSize)
+            let sizeAfterCaculate = Caculator.caculate(size: subSize, by: zContainerSize)
             measure.target?.py_size = CGSize(width: sizeAfterCaculate.width.fixedValue, height: sizeAfterCaculate.height.fixedValue)
             maxSizeWithMargin.width = max(maxSizeWithMargin.width, sizeAfterCaculate.width.fixedValue + subMargin.left + subMargin.right)
             maxSizeWithMargin.height = max(maxSizeWithMargin.height, sizeAfterCaculate.height.fixedValue + subMargin.top + subMargin.bottom)
             
             // 计算中心
             var center = CGPoint(x: layoutFixedSize.width / 2, y: layoutFixedSize.height / 2)
-            let aligment = measure.aligment.contains(.none) ? layout.justifyContent : measure.aligment
-            checkAligmentAvailable(aligment)
+            let aligment = measure.aligment
+            let justifyContent = layout.justifyContent
+
+            // 水平方向
+            let horzAligment: Aligment = aligment.hasHorzAligment() ? aligment : justifyContent
+            // 垂直方向
+            let vertAligment: Aligment = aligment.hasVertAligment() ? aligment : justifyContent
             
-            if aligment.contains(.left) {
+            if horzAligment.contains(.left) {
                 center.x = layout.padding.left + subMargin.left + sizeAfterCaculate.width.fixedValue / 2
-            } else if aligment.contains(.right) {
+            } else if horzAligment.contains(.right) {
                 center.x = layoutFixedSize.width - (layout.padding.right + subMargin.right + sizeAfterCaculate.width.fixedValue / 2)
             }
             
-            if aligment.contains(.top) {
+            if vertAligment.contains(.top) {
                 center.y = layout.padding.top + subMargin.top + sizeAfterCaculate.height.fixedValue / 2
-            } else if aligment.contains(.bottom) {
+            } else if vertAligment.contains(.bottom) {
                 center.y = layoutFixedSize.height - (layout.padding.bottom + subMargin.bottom + sizeAfterCaculate.height.fixedValue / 2)
             }
             

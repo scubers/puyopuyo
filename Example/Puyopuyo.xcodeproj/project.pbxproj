@@ -16,6 +16,13 @@
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		A8655E9D22F33C3D00679D7C /* VisibleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8655E9C22F33C3D00679D7C /* VisibleViewController.swift */; };
 		A87550D822CA700F00648242 /* ListBoxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87550D722CA700F00648242 /* ListBoxVC.swift */; };
+		A8D9430722FF3640002E487F /* VBoxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9430622FF3640002E487F /* VBoxVC.swift */; };
+		A8D9430922FF3694002E487F /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9430822FF3694002E487F /* Label.swift */; };
+		A8D9430C22FF3937002E487F /* ZBoxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9430B22FF3937002E487F /* ZBoxVC.swift */; };
+		A8D9430E22FFEB00002E487F /* ZBoxMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9430D22FFEB00002E487F /* ZBoxMenu.swift */; };
+		A8D9431022FFEBE7002E487F /* FlatBoxMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9430F22FFEBE7002E487F /* FlatBoxMenu.swift */; };
+		A8D9431222FFEC45002E487F /* ZBoxSizeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9431122FFEC45002E487F /* ZBoxSizeVC.swift */; };
+		A8D9431622FFF102002E487F /* StatefulVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9431522FFF102002E487F /* StatefulVC.swift */; };
 		A8E53FB322C8E679000B2B6D /* BaseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E53FB222C8E679000B2B6D /* BaseVC.swift */; };
 		A8E53FB522C8E6BB000B2B6D /* MenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E53FB422C8E6BB000B2B6D /* MenuVC.swift */; };
 		A8E53FB722C8E98F000B2B6D /* Flat1VC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E53FB622C8E98F000B2B6D /* Flat1VC.swift */; };
@@ -52,6 +59,13 @@
 		A30EBF753A01FE778D9D9547 /* Pods_Puyopuyo_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Puyopuyo_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A8655E9C22F33C3D00679D7C /* VisibleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisibleViewController.swift; sourceTree = "<group>"; };
 		A87550D722CA700F00648242 /* ListBoxVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListBoxVC.swift; sourceTree = "<group>"; };
+		A8D9430622FF3640002E487F /* VBoxVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VBoxVC.swift; sourceTree = "<group>"; };
+		A8D9430822FF3694002E487F /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
+		A8D9430B22FF3937002E487F /* ZBoxVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZBoxVC.swift; sourceTree = "<group>"; };
+		A8D9430D22FFEB00002E487F /* ZBoxMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZBoxMenu.swift; sourceTree = "<group>"; };
+		A8D9430F22FFEBE7002E487F /* FlatBoxMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlatBoxMenu.swift; sourceTree = "<group>"; };
+		A8D9431122FFEC45002E487F /* ZBoxSizeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZBoxSizeVC.swift; sourceTree = "<group>"; };
+		A8D9431522FFF102002E487F /* StatefulVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatefulVC.swift; sourceTree = "<group>"; };
 		A8E53FB222C8E679000B2B6D /* BaseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseVC.swift; sourceTree = "<group>"; };
 		A8E53FB422C8E6BB000B2B6D /* MenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuVC.swift; sourceTree = "<group>"; };
 		A8E53FB622C8E98F000B2B6D /* Flat1VC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Flat1VC.swift; sourceTree = "<group>"; };
@@ -116,6 +130,7 @@
 		607FACD21AFB9204008FA782 /* Example for Puyopuyo */ = {
 			isa = PBXGroup;
 			children = (
+				A8D9430222FF360B002E487F /* Demos */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				607FACD71AFB9204008FA782 /* ViewController.swift */,
 				607FACD91AFB9204008FA782 /* Main.storyboard */,
@@ -123,8 +138,6 @@
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
 				09883C4922C5E5FB006CE05A /* StyleTestViewController.swift */,
-				A8E53FB222C8E679000B2B6D /* BaseVC.swift */,
-				A8E53FB422C8E6BB000B2B6D /* MenuVC.swift */,
 				A8E53FB622C8E98F000B2B6D /* Flat1VC.swift */,
 				A87550D722CA700F00648242 /* ListBoxVC.swift */,
 				A8655E9C22F33C3D00679D7C /* VisibleViewController.swift */,
@@ -166,6 +179,62 @@
 				D5B8DC7A986335349E2B90E7 /* LICENSE */,
 			);
 			name = "Podspec Metadata";
+			sourceTree = "<group>";
+		};
+		A8D9430222FF360B002E487F /* Demos */ = {
+			isa = PBXGroup;
+			children = (
+				A8D9431322FFF0EB002E487F /* Stateful */,
+				A8D9430A22FF391C002E487F /* ZBox */,
+				A8D9430522FF362B002E487F /* FlatBox */,
+				A8D9430422FF3623002E487F /* Base */,
+				A8D9430322FF3614002E487F /* Menu */,
+			);
+			path = Demos;
+			sourceTree = "<group>";
+		};
+		A8D9430322FF3614002E487F /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				A8E53FB422C8E6BB000B2B6D /* MenuVC.swift */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		A8D9430422FF3623002E487F /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				A8E53FB222C8E679000B2B6D /* BaseVC.swift */,
+				A8D9430822FF3694002E487F /* Label.swift */,
+			);
+			path = Base;
+			sourceTree = "<group>";
+		};
+		A8D9430522FF362B002E487F /* FlatBox */ = {
+			isa = PBXGroup;
+			children = (
+				A8D9430622FF3640002E487F /* VBoxVC.swift */,
+				A8D9430F22FFEBE7002E487F /* FlatBoxMenu.swift */,
+			);
+			path = FlatBox;
+			sourceTree = "<group>";
+		};
+		A8D9430A22FF391C002E487F /* ZBox */ = {
+			isa = PBXGroup;
+			children = (
+				A8D9430B22FF3937002E487F /* ZBoxVC.swift */,
+				A8D9430D22FFEB00002E487F /* ZBoxMenu.swift */,
+				A8D9431122FFEC45002E487F /* ZBoxSizeVC.swift */,
+			);
+			path = ZBox;
+			sourceTree = "<group>";
+		};
+		A8D9431322FFF0EB002E487F /* Stateful */ = {
+			isa = PBXGroup;
+			children = (
+				A8D9431522FFF102002E487F /* StatefulVC.swift */,
+			);
+			path = Stateful;
 			sourceTree = "<group>";
 		};
 		CF1B3A46E0BA451826B245F4 /* Frameworks */ = {
@@ -357,6 +426,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A8D9431222FFEC45002E487F /* ZBoxSizeVC.swift in Sources */,
+				A8D9430C22FF3937002E487F /* ZBoxVC.swift in Sources */,
+				A8D9430722FF3640002E487F /* VBoxVC.swift in Sources */,
+				A8D9431022FFEBE7002E487F /* FlatBoxMenu.swift in Sources */,
 				A87550D822CA700F00648242 /* ListBoxVC.swift in Sources */,
 				A8E53FB722C8E98F000B2B6D /* Flat1VC.swift in Sources */,
 				09883C4A22C5E5FB006CE05A /* StyleTestViewController.swift in Sources */,
@@ -364,6 +437,9 @@
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				A8E53FB322C8E679000B2B6D /* BaseVC.swift in Sources */,
 				A8E53FB522C8E6BB000B2B6D /* MenuVC.swift in Sources */,
+				A8D9430E22FFEB00002E487F /* ZBoxMenu.swift in Sources */,
+				A8D9431622FFF102002E487F /* StatefulVC.swift in Sources */,
+				A8D9430922FF3694002E487F /* Label.swift in Sources */,
 				A8655E9D22F33C3D00679D7C /* VisibleViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
