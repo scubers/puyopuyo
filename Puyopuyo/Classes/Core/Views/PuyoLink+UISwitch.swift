@@ -14,25 +14,11 @@ extension PuyoLink where T: UISwitch {
         view.py_setUnbinder(state.safeBind(view, { (v, a) in
             v.isOn = a
         }), for: #function)
-        onValueChange { state.postValue($0) }
-        return self
-    }
-    
-    @discardableResult
-    public func onValueChange(_ action: @escaping (Bool) -> Void) -> Self {
-        _ = view.py_action(for: .valueChanged) { (control) in
-            action((control as! T).isOn)
+        
+        addWeakAction(to: view, for: .valueChanged) { (_, v) in
+            state.postValue(v.isOn)
         }
+        
         return self
     }
-    
-    @discardableResult
-    public func onValueChange<S: Outputable>(_ action: S) -> Self where S.OutputType == Bool {
-        _ = view.py_action(for: .valueChanged) { (control) in
-            let isOn = (control as! T).isOn
-            action.postValue(isOn)
-        }
-        return self
-    }
-    
 }

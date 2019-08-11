@@ -57,8 +57,8 @@ class StyleTestViewController: BaseVC, UIScrollViewDelegate {
                 
                 VBox().attach($0) {
                     UITextField().attach($0)
-                        .onTextChange({ [weak self] (string) in
-                            self?.text.onNext(string ?? "")
+                        .addWeakAction(to: self, for: .editingChanged, { (self, v) in
+                            self.text.onNext(v.text ?? "")
                         })
                         .backgroundColor(State(.lightGray).optional())
                         .size(100, 40)

@@ -46,7 +46,7 @@ class Flat1VC: BaseVC {
             .visible(switchChange.map({ $0 ? .visible : .gone}))
         
         UIButton(type: .contactAdd).attach(vRoot)
-            .action(for: .touchUpInside, { (btn) in
+            .addAction(for: .touchUpInside, { (btn) in
                 print(btn)
             })
         
@@ -55,13 +55,9 @@ class Flat1VC: BaseVC {
         
         UITextField().attach(vRoot)
             .size(.ratio(1), 30)
-//            .onTextChange(text)
-            .textState(text)
+            .onText(text)
             .visible(switchChange.map({ $0 ? .visible : .gone}))
-            .onBeginEditing({
-                print($0)
-            })
-            .onEndEditing({
+            .addAction(for: [.editingDidBegin, .editingDidEnd], {
                 print($0)
             })
         

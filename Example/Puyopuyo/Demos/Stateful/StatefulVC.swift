@@ -26,14 +26,17 @@ class StatefulVC: BaseVC {
             VBox().attach($0) {
                 
                 UISwitch().attach($0)
-                    .onValueChange({ [weak self] (value) in
-                        self?.change(value: value)
-                    })
+                    .addWeakBind(to: self, for: .valueChanged, { (self) in return self.valueChanged(_:) })
+                
+                UIButton(type: .contactAdd).attach($0)
+                    .addWeakAction(to: self, for: .touchUpInside, { (self, _) in self.valueChanged(UISwitch())})
                 
                 Label("").attach($0)
                     .text(self.text.optional())
                     .textColor(self.textColor.optional())
                     .size(self.width, self.height)
+                
+                Spacer().attach($0)
                 
                 Label("").attach($0)
                     .text(self.text.optional())
@@ -48,6 +51,10 @@ class StatefulVC: BaseVC {
         .size(.fill, .fill)
         
         randomViewColor(view: view)
+    }
+    
+    private func valueChanged(_ view: UISwitch) -> Void {
+        change(value: view.isOn)
     }
     
     private func change(value: Bool) {

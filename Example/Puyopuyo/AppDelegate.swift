@@ -66,7 +66,7 @@ extension Observable: Valuable {
     }
 }
 
-extension PublishSubject: Outputable, Valuable {
+extension PublishSubject: Outputable {
     
     public typealias OutputType = Element
     
@@ -76,7 +76,7 @@ extension PublishSubject: Outputable, Valuable {
     
 }
 
-extension BehaviorSubject: Outputable, Valuable {
+extension BehaviorSubject: Outputable {
     public typealias ValueType = Element
     
     public typealias OutputType = Element

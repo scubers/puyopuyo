@@ -10,6 +10,13 @@ import Foundation
 extension PuyoLink where T: UITextField {
     
     // MARK: - value
+    @discardableResult
+    public func textDelegate<S: Valuable>(_ delegate: S) -> Self where S.ValueType == UITextFieldDelegate? {
+        view.py_setUnbinder(delegate.safeBind(view, { (v, s) in
+            v.delegate = s
+        }), for: #function)
+        return self
+    }
     
     // MARK: - state
     
@@ -21,44 +28,15 @@ extension PuyoLink where T: UITextField {
         return self
     }
     @discardableResult
-    public func textState<S: Valuable & Outputable>(_ text: S) -> Self where S.ValueType == String, S.OutputType == String {
-        onTextChange(text)
+    public func onText<S: Valuable & Outputable>(_ text: S) -> Self where S.ValueType == String, S.OutputType == String {
         view.py_setUnbinder(text.safeBind(view, { (v, a) in
             v.text = a
         }), for: #function)
-        return self
-    }
-    
-    @discardableResult
-    public func onTextChange(_ action: @escaping (String?) -> Void) -> Self {
-        _ = view.py_action(for: .editingChanged) { (control) in
-            action((control as! UITextField).text)
+        
+        addWeakAction(to: view, for: .editingChanged) { (_, v) in
+            text.postValue(v.text ?? "")
         }
         return self
     }
-    
-    @discardableResult
-    public func onTextChange<S: Outputable>(_ action: S) -> Self where S.OutputType == String {
-        _ = view.py_action(for: .editingChanged) { (control) in
-            let string = (control as! UITextField).text ?? ""
-            action.postValue(string)
-        }
-        return self
-    }
-    
-    @discardableResult
-    public func onBeginEditing(_ action: @escaping (T) -> Void) -> Self {
-        _ = view.py_action(for: .editingDidBegin) { (control) in
-            action((control as! T))
-        }
-        return self
-    }
-    
-    @discardableResult
-    public func onEndEditing(_ action: @escaping (T) -> Void) -> Self {
-        _ = view.py_action(for: [.editingDidEnd, .editingDidEndOnExit]) { (control) in
-            action((control as! T))
-        }
-        return self
-    }
+
 }

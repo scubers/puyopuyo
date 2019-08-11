@@ -142,3 +142,32 @@ extension PuyoLink where T: TGBaseLayout {
         return self
     }
 }
+
+open class HLine: TGLinearLayout {
+    required public init() {
+        super.init(frame: .zero, orientation: .horz)
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+open class VLine: TGLinearLayout {
+    required public init() {
+        super.init(frame: .zero, orientation: .vert)
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+open class ZLine: TGFrameLayout {
+    required public init() {
+        super.init(frame: .zero)
+    }
+    public required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+}

@@ -8,9 +8,28 @@
 import Foundation
 
 extension PuyoLink where T: UIControl {
+    
     @discardableResult
-    public func action(for event: UIControl.Event, _ action: @escaping (T) -> Void) -> Self {
-        _ = view.py_action(for: event) { (control) in
+    public func addWeakBind<Object: AnyObject>(to object: Object, for event: UIControl.Event, _ binding: @escaping (Object) -> (T) -> Void) -> Self {
+        return self.addAction(for: event, { [weak object] (control) in
+            if let object = object {
+                binding(object)(control)
+            }
+        })
+    }
+    
+    @discardableResult
+    public func addWeakAction<Object: AnyObject>(to object: Object, for event: UIControl.Event, _ action: @escaping (Object, T) -> Void) -> Self {
+        return self.addAction(for: event, { [weak object] (control) in
+            if let object = object {
+                action(object, control)
+            }
+        })
+    }
+    
+    @discardableResult
+    public func addAction(for event: UIControl.Event, _ action: @escaping (T) -> Void) -> Self {
+        _ = view.py_addAction(for: event) { (control) in
             action(control as! T)
         }
         return self
@@ -35,7 +54,7 @@ class _PuyoTarget: NSObject, Unbinder {
 }
 
 extension UIControl {
-    public func py_action(for event: UIControl.Event, _ block: @escaping (UIControl) -> Void) -> Unbinder {
+    public func py_addAction(for event: UIControl.Event, _ block: @escaping (UIControl) -> Void) -> Unbinder {
         let target = _PuyoTarget(block)
         addTarget(target, action: #selector(_PuyoTarget.targetAction(_:)), for: event)
         let unbinder = Unbinders.create {
