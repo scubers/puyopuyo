@@ -30,6 +30,7 @@ class StatefulVC: BaseVC {
                 
                 UIButton(type: .contactAdd).attach($0)
                     .addWeakAction(to: self, for: .touchUpInside, { (self, _) in self.valueChanged(UISwitch())})
+                    .addWeakAction(to: self, for: .touchUpOutside, { (self, _) in self.valueChanged(UISwitch())})
                 
                 Label("").attach($0)
                     .text(self.text.optional())

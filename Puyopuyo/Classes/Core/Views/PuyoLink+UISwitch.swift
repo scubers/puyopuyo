@@ -15,9 +15,9 @@ extension PuyoLink where T: UISwitch {
             v.isOn = a
         }), for: #function)
         
-        addWeakAction(to: view, for: .valueChanged) { (_, v) in
+        addWeakAction(to: view, for: .valueChanged, { (_, v) in
             state.postValue(v.isOn)
-        }
+        })
         
         return self
     }

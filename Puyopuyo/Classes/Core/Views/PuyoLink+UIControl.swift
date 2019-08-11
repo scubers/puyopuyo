@@ -10,27 +10,30 @@ import Foundation
 extension PuyoLink where T: UIControl {
     
     @discardableResult
-    public func addWeakBind<Object: AnyObject>(to object: Object, for event: UIControl.Event, _ binding: @escaping (Object) -> (T) -> Void) -> Self {
+    public func addWeakBind<Object: AnyObject>(to object: Object, for event: UIControl.Event, _ binding: @escaping (Object) -> (T) -> Void, unique: Bool = false) -> Self {
         return self.addAction(for: event, { [weak object] (control) in
             if let object = object {
                 binding(object)(control)
             }
-        })
+        }, unique: unique)
     }
     
     @discardableResult
-    public func addWeakAction<Object: AnyObject>(to object: Object, for event: UIControl.Event, _ action: @escaping (Object, T) -> Void) -> Self {
+    public func addWeakAction<Object: AnyObject>(to object: Object, for event: UIControl.Event, _ action: @escaping (Object, T) -> Void, unique: Bool = false) -> Self {
         return self.addAction(for: event, { [weak object] (control) in
             if let object = object {
                 action(object, control)
             }
-        })
+        }, unique: unique)
     }
     
     @discardableResult
-    public func addAction(for event: UIControl.Event, _ action: @escaping (T) -> Void) -> Self {
-        _ = view.py_addAction(for: event) { (control) in
+    public func addAction(for event: UIControl.Event, _ action: @escaping (T) -> Void, unique: Bool = false) -> Self {
+        let unbinder = view.py_addAction(for: event) { (control) in
             action(control as! T)
+        }
+        if unique {
+            view.py_setUnbinder(unbinder, for: "py_unique_action_\(event)")
         }
         return self
     }

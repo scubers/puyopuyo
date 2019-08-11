@@ -33,9 +33,9 @@ extension PuyoLink where T: UITextField {
             v.text = a
         }), for: #function)
         
-        addWeakAction(to: view, for: .editingChanged) { (_, v) in
+        addWeakAction(to: view, for: .editingChanged, { (_, v) in
             text.postValue(v.text ?? "")
-        }
+        }, unique: false)
         return self
     }
 
