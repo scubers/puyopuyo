@@ -23,6 +23,7 @@
 		A8D9431022FFEBE7002E487F /* FlatBoxMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9430F22FFEBE7002E487F /* FlatBoxMenu.swift */; };
 		A8D9431222FFEC45002E487F /* ZBoxSizeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9431122FFEC45002E487F /* ZBoxSizeVC.swift */; };
 		A8D9431622FFF102002E487F /* StatefulVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9431522FFF102002E487F /* StatefulVC.swift */; };
+		A8D9431A23001F6F002E487F /* VBoxAutoSquareVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9431923001F6F002E487F /* VBoxAutoSquareVC.swift */; };
 		A8E53FB322C8E679000B2B6D /* BaseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E53FB222C8E679000B2B6D /* BaseVC.swift */; };
 		A8E53FB522C8E6BB000B2B6D /* MenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E53FB422C8E6BB000B2B6D /* MenuVC.swift */; };
 		A8E53FB722C8E98F000B2B6D /* Flat1VC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E53FB622C8E98F000B2B6D /* Flat1VC.swift */; };
@@ -66,6 +67,7 @@
 		A8D9430F22FFEBE7002E487F /* FlatBoxMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlatBoxMenu.swift; sourceTree = "<group>"; };
 		A8D9431122FFEC45002E487F /* ZBoxSizeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZBoxSizeVC.swift; sourceTree = "<group>"; };
 		A8D9431522FFF102002E487F /* StatefulVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatefulVC.swift; sourceTree = "<group>"; };
+		A8D9431923001F6F002E487F /* VBoxAutoSquareVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VBoxAutoSquareVC.swift; sourceTree = "<group>"; };
 		A8E53FB222C8E679000B2B6D /* BaseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseVC.swift; sourceTree = "<group>"; };
 		A8E53FB422C8E6BB000B2B6D /* MenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuVC.swift; sourceTree = "<group>"; };
 		A8E53FB622C8E98F000B2B6D /* Flat1VC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Flat1VC.swift; sourceTree = "<group>"; };
@@ -215,6 +217,7 @@
 			children = (
 				A8D9430622FF3640002E487F /* VBoxVC.swift */,
 				A8D9430F22FFEBE7002E487F /* FlatBoxMenu.swift */,
+				A8D9431923001F6F002E487F /* VBoxAutoSquareVC.swift */,
 			);
 			path = FlatBox;
 			sourceTree = "<group>";
@@ -299,10 +302,12 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = FJ535WN7FW;
 						LastSwiftMigration = 0900;
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = FJ535WN7FW;
 						LastSwiftMigration = 0900;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
@@ -429,6 +434,7 @@
 				A8D9431222FFEC45002E487F /* ZBoxSizeVC.swift in Sources */,
 				A8D9430C22FF3937002E487F /* ZBoxVC.swift in Sources */,
 				A8D9430722FF3640002E487F /* VBoxVC.swift in Sources */,
+				A8D9431A23001F6F002E487F /* VBoxAutoSquareVC.swift in Sources */,
 				A8D9431022FFEBE7002E487F /* FlatBoxMenu.swift in Sources */,
 				A87550D822CA700F00648242 /* ListBoxVC.swift in Sources */,
 				A8E53FB722C8E98F000B2B6D /* Flat1VC.swift in Sources */,
@@ -586,6 +592,7 @@
 			baseConfigurationReference = B80C4BDF60E8E994E6351B56 /* Pods-Puyopuyo_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = FJ535WN7FW;
 				INFOPLIST_FILE = Puyopuyo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
@@ -601,6 +608,7 @@
 			baseConfigurationReference = 77FB953E25BC3D91DC89F5C7 /* Pods-Puyopuyo_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = FJ535WN7FW;
 				INFOPLIST_FILE = Puyopuyo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
@@ -615,6 +623,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 029D039CF2FB7AD03311F02E /* Pods-Puyopuyo_Tests.debug.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = FJ535WN7FW;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -637,6 +646,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D8C53925C3060B52FD197F06 /* Pods-Puyopuyo_Tests.release.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = FJ535WN7FW;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",

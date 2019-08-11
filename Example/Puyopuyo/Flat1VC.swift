@@ -53,14 +53,14 @@ class Flat1VC: BaseVC {
         UISwitch().attach(vRoot)
             .isOn(switchChange)
         
-        UITextField().attach(vRoot)
-            .size(.ratio(1), 30)
-            .onText(text)
-            .visible(switchChange.map({ $0 ? .visible : .gone}))
-            .addAction(for: [.editingDidBegin, .editingDidEnd], {
-                print($0)
-            })
-        
+//        UITextField().attach(vRoot)
+//            .size(.ratio(1), 30)
+//            .onText(text)
+//            .visible(switchChange.map({ $0 ? .visible : .gone}))
+//            .addAction(for: [.editingDidBegin, .editingDidEnd], {
+//                print($0)
+//            })
+//        
         HBox.attach(vRoot) {
 
             

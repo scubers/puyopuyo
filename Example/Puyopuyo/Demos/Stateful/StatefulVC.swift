@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import Puyopuyo
 
-class StatefulVC: BaseVC {
+class StatefulVC: BaseVC, UITextFieldDelegate {
     
     var text = State("text")
     var textColor = State<UIColor>(.black)
@@ -26,11 +26,14 @@ class StatefulVC: BaseVC {
             VBox().attach($0) {
                 
                 UISwitch().attach($0)
-                    .addWeakBind(to: self, for: .valueChanged, { (self) in return self.valueChanged(_:) })
+                    .addWeakBind(to: self, for: .valueChanged, { StatefulVC.valueChanged($0) })
                 
                 UIButton(type: .contactAdd).attach($0)
-                    .addWeakAction(to: self, for: .touchUpInside, { (self, _) in self.valueChanged(UISwitch())})
-                    .addWeakAction(to: self, for: .touchUpOutside, { (self, _) in self.valueChanged(UISwitch())})
+                    .addWeakAction(to: self, for: [.touchDragInside], { (self, _) in self.valueChanged(UISwitch())})
+                
+                UITextField().attach($0)
+                    .size(.fill, 50)
+                    .onText(self.text.optional())
                 
                 Label("").attach($0)
                     .text(self.text.optional())
@@ -71,5 +74,10 @@ class StatefulVC: BaseVC {
     
     private func randomSize() -> SizeDescription {
         return random(array: [.fill, .wrap, .fixed(100)])
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        print(string)
+        return true
     }
 }
