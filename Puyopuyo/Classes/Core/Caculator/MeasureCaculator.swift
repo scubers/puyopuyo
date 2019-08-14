@@ -21,14 +21,22 @@ class MeasureCaculator {
             var widthSize = measure.size.width
             var heightSize = measure.size.height
             
-            if widthSize.isWrap {
-                let wrappedCGSize = measure.target?.py_sizeThatFits(CGSize(width: 0, height: parentCGSize.height))
+            if measure.size.isWrap() {
+                
+                let wrappedSize = measure.target?.py_sizeThatFits(CGSize(width: widthSize.max, height: heightSize.max))
+                widthSize = .fixed(max(min(widthSize.max, wrappedSize?.width ?? 0), widthSize.min))
+                heightSize = .fixed(max(min(heightSize.max, wrappedSize?.height ?? 0), heightSize.min))
+                
+            } else if widthSize.isWrap {
+                
+                let wrappedCGSize = measure.target?.py_sizeThatFits(CGSize(width: widthSize.max, height: parentCGSize.height))
                 widthSize = .fixed(widthSize.getWrapSize(by: wrappedCGSize?.width ?? 0))
-            }
-            
-            if heightSize.isWrap {
-                let wrappedCGSize = measure.target?.py_sizeThatFits(CGSize(width: 0, height: parentCGSize.height))
+                
+            } else if heightSize.isWrap {
+                
+                let wrappedCGSize = measure.target?.py_sizeThatFits(CGSize(width: parentCGSize.width, height: heightSize.max))
                 heightSize = .fixed(heightSize.getWrapSize(by: wrappedCGSize?.height ?? 0))
+                
             }
             
             return Size(width: widthSize, height: heightSize)
