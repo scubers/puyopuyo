@@ -1,6 +1,0 @@
-framework module Pods_Puyopuyo_Tests {
-  umbrella header "Pods-Puyopuyo_Tests-umbrella.h"
-
-  export *
-  module * { export * }
-}

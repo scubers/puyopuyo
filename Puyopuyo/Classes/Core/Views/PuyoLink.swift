@@ -18,10 +18,7 @@ public class PuyoLink<T: UIView> {
     }
     
     func setNeedsLayout() {
-        view.setNeedsLayout()
-        if let superview = view.superview as? BoxView {
-            superview.setNeedsLayout()
-        }
+        view.py_setNeedsLayout()
     }
     
     @discardableResult

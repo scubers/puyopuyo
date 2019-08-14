@@ -13,12 +13,14 @@ extension PuyoLink where T: UILabel {
     @discardableResult
     public func text(_ text: String?) -> Self  {
         view.text = text
+        view.py_setNeedsLayout()
         return self
     }
     
     @discardableResult
     public func font(_ font: UIFont) -> Self {
         view.font = font
+        view.py_setNeedsLayout()
         return self
     }
     
@@ -26,6 +28,7 @@ extension PuyoLink where T: UILabel {
     public func text<S: Valuable>(_ text: S) -> Self where S.ValueType == String? {
         view.py_setUnbinder(text.safeBind(view, { (v, a) in
             v.text = a
+            v.py_setNeedsLayout()
         }), for: #function)
         return self
     }
@@ -42,6 +45,7 @@ extension PuyoLink where T: UILabel {
     public func font<S: Valuable>(_ font: S) -> Self where S.ValueType == UIFont {
         view.py_setUnbinder(font.safeBind(view, { (v, a) in
             v.font = a
+            v.py_setNeedsLayout()
         }), for: #function)
         return self
     }
@@ -50,6 +54,7 @@ extension PuyoLink where T: UILabel {
     public func textAligment<S: Valuable>(_ aligment: S) -> Self where S.ValueType == NSTextAlignment {
         view.py_setUnbinder(aligment.safeBind(view, { (v, a) in
             v.textAlignment = a
+            v.py_setNeedsLayout()
         }), for: #function)
         return self
     }
@@ -58,6 +63,7 @@ extension PuyoLink where T: UILabel {
     public func numberOfLines<S: Valuable>(_ lines: S) -> Self where S.ValueType == Int {
         view.py_setUnbinder(lines.safeBind(view, { (v, a) in
             v.numberOfLines = a
+            v.py_setNeedsLayout()
         }), for: #function)
         return self
     }

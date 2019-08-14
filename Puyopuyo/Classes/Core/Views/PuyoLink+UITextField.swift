@@ -24,6 +24,7 @@ extension PuyoLink where T: UITextField {
     public func text<S: Valuable>(_ text: S) -> Self where S.ValueType == String? {
         view.py_setUnbinder(text.safeBind(view, { (v, a) in
             v.text = a
+            v.py_setNeedsLayout()
         }), for: #function)
         return self
     }
@@ -32,6 +33,7 @@ extension PuyoLink where T: UITextField {
     public func onText<S: Valuable & Outputable>(_ text: S) -> Self where S.ValueType == String?, S.OutputType == String? {
         view.py_setUnbinder(text.safeBind(view, { (v, a) in
             v.text = a
+            v.py_setNeedsLayout()
         }), for: #function)
         addWeakAction(to: view, for: .editingChanged, { (_, v) in
             text.postValue(v.text)

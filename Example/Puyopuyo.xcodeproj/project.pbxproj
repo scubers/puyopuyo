@@ -381,8 +381,6 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
-			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Puyopuyo_Example/Pods-Puyopuyo_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Puyopuyo/Puyopuyo.framework",
@@ -390,8 +388,6 @@
 				"${BUILT_PRODUCTS_DIR}/TangramKit/TangramKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Puyopuyo.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
