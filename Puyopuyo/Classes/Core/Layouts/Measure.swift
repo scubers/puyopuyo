@@ -68,9 +68,9 @@ public struct Aligment: OptionSet {
 /// 描述一个节点相对于父节点的属性
 public class Measure: Measurable {
     
-    weak var target: MeasureTagetable?
+    weak var target: MeasureTargetable?
     
-    public init(target: MeasureTagetable? = nil) {
+    public init(target: MeasureTargetable? = nil) {
         self.target = target
     }
     
@@ -95,7 +95,7 @@ public class Measure: Measurable {
     
 }
 
-public class PlaceHolderMeasure: Measure, MeasureTagetable {
+public class PlaceHolderMeasure: Measure, MeasureTargetable {
     
     public init() {
         super.init()

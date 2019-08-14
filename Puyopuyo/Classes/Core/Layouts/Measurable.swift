@@ -18,7 +18,7 @@ public protocol Measurable {
     func caculate(byParent parent: Measure) -> Size
 }
 
-public protocol MeasureTagetable: class {
+public protocol MeasureTargetable: class {
     
     var py_size: CGSize { get set }
     

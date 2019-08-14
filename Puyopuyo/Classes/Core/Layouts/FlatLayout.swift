@@ -9,7 +9,7 @@ import Foundation
 
 public class FlatLayout: BaseLayout {
     
-    public override init(target: MeasureTagetable? = nil) {
+    public override init(target: MeasureTargetable? = nil) {
         super.init(target: target)
         justifyContent = [.left, .top]
     }

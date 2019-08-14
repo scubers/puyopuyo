@@ -19,7 +19,7 @@ extension UIView: MeasureHolder {
     }
 }
 
-extension UIView: MeasureTagetable {
+extension UIView: MeasureTargetable {
     public var py_size: CGSize {
         get {
             return bounds.size
