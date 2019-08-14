@@ -32,7 +32,9 @@ class StatefulVC: BaseVC, UITextFieldDelegate {
                     .addWeakAction(to: self, for: [.touchDragInside], { (self, _) in self.valueChanged(UISwitch())})
                 
                 UITextField().attach($0)
-                    .size(.fill, 50)
+                    .placeholder(State("this is a textfiled"))
+                    .width(.wrap(min: 100, max: 200))
+                    .height(50)
                     .onText(self.text)
                 
                 Label("").attach($0)

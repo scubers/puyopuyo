@@ -24,8 +24,8 @@ class MeasureCaculator {
             if measure.size.isWrap() {
                 
                 let wrappedSize = measure.target?.py_sizeThatFits(CGSize(width: widthSize.max, height: heightSize.max))
-                widthSize = .fixed(max(min(widthSize.max, wrappedSize?.width ?? 0), widthSize.min))
-                heightSize = .fixed(max(min(heightSize.max, wrappedSize?.height ?? 0), heightSize.min))
+                widthSize = .fixed(widthSize.getWrapSize(by: wrappedSize?.width ?? 0))
+                heightSize = .fixed(heightSize.getWrapSize(by: wrappedSize?.height ?? 0))
                 
             } else if widthSize.isWrap {
                 
