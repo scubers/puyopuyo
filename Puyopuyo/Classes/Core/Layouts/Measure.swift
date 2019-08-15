@@ -110,6 +110,10 @@ public class PlaceHolderMeasure: Measure, MeasureTargetable {
         
     }
     
+    public func py_measureChanged<V>() -> V where V : Valuable, V.ValueType == CGRect {
+        return State<CGRect>(.zero) as! V
+    }
+    
     public func py_sizeThatFits(_ size: CGSize) -> CGSize {
         return size
     }

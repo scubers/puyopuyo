@@ -19,6 +19,8 @@ extension UIView: MeasureHolder {
     }
 }
 
+private var py_measureChangedKey = "py_measureChangedKey"
+
 extension UIView: MeasureTargetable {
     public var py_size: CGSize {
         get {
@@ -46,6 +48,15 @@ extension UIView: MeasureTargetable {
     
     public func py_sizeThatFits(_ size: CGSize) -> CGSize {
         return sizeThatFits(size)
+    }
+    
+    public func py_measureChanged<V>() -> V where V : Valuable, V.ValueType == CGRect {
+        if let s = objc_getAssociatedObject(self, &py_measureChangedKey) as? State<CGRect> {
+            return s as! V
+        }
+        let s = State<CGRect>(frame)
+        objc_setAssociatedObject(self, &py_measureChangedKey, s, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        return s as! V
     }
     
 }
