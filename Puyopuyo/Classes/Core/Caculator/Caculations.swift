@@ -61,6 +61,14 @@ public struct CalEdges {
         }
         return UIEdgeInsets(top: start, left: forward, bottom: end, right: backward)
     }
+    
+    public var mainFixed: CGFloat {
+        return start + end
+    }
+    
+    public var crossFixed: CGFloat {
+        return forward + backward
+    }
 }
 
 extension UIEdgeInsets {

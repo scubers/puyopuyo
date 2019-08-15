@@ -11,7 +11,8 @@ import UIKit
 class FlatBoxMenu: MenuVC {
     override func getData() -> [(String, UIViewController.Type)] {
         return [
-            ("VBox Base", VBoxVC.self)
+            ("VBox Base", VBoxVC.self),
+            ("FlatBoxWrapVC", FlatBoxWrapVC.self),
         ]
     }
 }

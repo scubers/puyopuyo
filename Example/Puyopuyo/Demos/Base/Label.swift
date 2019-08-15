@@ -9,7 +9,7 @@
 import UIKit
 
 class Label: UILabel {
-    convenience init(_ title: String?) {
+    convenience init(_ title: String? = nil) {
         self.init(frame: .zero)
         self.text = title
         numberOfLines = 0
