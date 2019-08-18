@@ -72,15 +72,15 @@ open class FlatBox: BoxView {
 
 open class HBox: FlatBox {
     @discardableResult
-    public static func attach(_ parent: UIView? = nil, wrap: Bool = true, _ block: PuyoLinkBlock? = nil) -> PuyoLink<HBox> {
-        return HBox().attach(parent, wrap: wrap, block)
+    public static func attach(_ parent: UIView? = nil, _ block: PuyoLinkBlock? = nil) -> PuyoLink<HBox> {
+        return HBox().attach(parent, block)
     }
 }
 
 open class VBox: FlatBox {
     
-    public static func attach(_ parent: UIView? = nil, wrap: Bool = true, _ block: PuyoLinkBlock? = nil) -> PuyoLink<VBox> {
-        return VBox().attach(parent, wrap: wrap, block)
+    public static func attach(_ parent: UIView? = nil, _ block: PuyoLinkBlock? = nil) -> PuyoLink<VBox> {
+        return VBox().attach(parent, block)
     }
     
     public override init(frame: CGRect) {

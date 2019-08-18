@@ -14,6 +14,7 @@ class MenuVC: BaseVC {
     
     func getData() -> [(String, UIViewController.Type)] {
         return [
+            ("Test", TestVC.self),
             ("FlatBox", FlatBoxMenu.self),
             ("ZBox", ZBoxMenu.self),
             ("Stateful", StatefulVC.self),

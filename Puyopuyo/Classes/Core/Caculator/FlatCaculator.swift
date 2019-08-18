@@ -182,7 +182,7 @@ class FlatCaculator {
             // 如果格式化为靠后，则需要最后重排一遍
             // 计算最后一个需要移动的距离
             let delta = layoutFixedSize.main - layoutCalPadding.end - lastEnd
-            if parent.direction == .x {
+            if layout.direction == .x {
                 children.forEach({ $0.target?.py_center.x += delta })
             } else {
                 children.forEach({ $0.target?.py_center.y += delta })

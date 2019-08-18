@@ -13,7 +13,7 @@ class ZBoxVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        vRoot.attach(nil, wrap: false) {
+        vRoot.attach() {
             
             ZBox().attach($0) {
                 Label("left, top").attach($0)

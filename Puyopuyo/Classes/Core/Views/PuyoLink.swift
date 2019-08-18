@@ -12,9 +12,9 @@ public class PuyoLink<T: UIView> {
     public var view: T
     public init(_ view: T, wrap: Bool = true) {
         self.view = view
-        if wrap {
-            view.py_measure.size = Size(width: .wrap, height: .wrap)
-        }
+//        if wrap {
+//            view.py_measure.size = Size(width: .wrap, height: .wrap)
+//        }
     }
     
     func setNeedsLayout() {
@@ -33,14 +33,14 @@ public typealias PuyoLinkBlock = (UIView) -> Void
 
 public protocol PuyoLinkAttacher {
     associatedtype Holder: UIView
-    func attach(_ parent: UIView?, wrap: Bool, _ block: PuyoLinkBlock?) -> PuyoLink<Holder>
+    func attach(_ parent: UIView?, _ block: PuyoLinkBlock?) -> PuyoLink<Holder>
 }
 
 extension PuyoLinkAttacher where Self: UIView {
     
     @discardableResult
-    public func attach(_ parent: UIView? = nil, wrap: Bool = true, _ block: PuyoLinkBlock? = nil) -> PuyoLink<Self> {
-        let link = PuyoLink(self, wrap: wrap)
+    public func attach(_ parent: UIView? = nil, _ block: PuyoLinkBlock? = nil) -> PuyoLink<Self> {
+        let link = PuyoLink(self)
         block?(self)
         parent?.addSubview(self)
         return link
@@ -136,6 +136,11 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
+    public func widthOnSelf(_ block: @escaping (CGRect) -> SizeDescription) -> Self {
+        return widthOn(view, block)
+    }
+    
+    @discardableResult
     public func height(_ height: SizeDescriptible?) -> Self {
         PuyoLinkHelper.size(for: view, width: nil, height: height?.sizeDescription)
         return self
@@ -155,6 +160,11 @@ extension PuyoLink where T: UIView {
     @discardableResult
     public func heightOn(_ view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
         return height(SizeDescription.follow(on: view, block))
+    }
+    
+    @discardableResult
+    public func heightOnSelf(_ view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
+        return heightOn(view, block)
     }
     
     @discardableResult

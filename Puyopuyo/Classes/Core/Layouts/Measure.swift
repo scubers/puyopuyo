@@ -11,7 +11,25 @@ public enum Direction {
     case x, y
 }
 
-public struct Aligment: OptionSet {
+public struct Aligment: OptionSet, CustomStringConvertible {
+    
+    public var description: String {
+        let all = [Aligment.top, .left, .bottom, .right, .horzCenter, .vertCenter]
+        let contain = all.filter({ self.contains($0) })
+        return
+            contain.map { x -> String in
+                switch x {
+                case .top: return "top"
+                case .left: return "left"
+                case .bottom: return "bottom"
+                case .right: return "right"
+                case .vertCenter: return "vertCenter"
+                case .horzCenter: return "horzCenter"
+                default: return ""
+                }
+                }.joined(separator: ",")
+    }
+    
     public init(rawValue: Int) {
         self.rawValue = rawValue
     }
@@ -85,7 +103,7 @@ public class Measure: Measurable {
     
     public var aligment: Aligment = .none
     
-    public var size = Size()
+    public var size = Size(width: .wrap, height: .wrap)
     
     public var activated = true
     

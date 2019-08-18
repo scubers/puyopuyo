@@ -13,7 +13,7 @@ class ZBoxSizeVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        vRoot.attach(nil, wrap: false) {
+        vRoot.attach() {
             UIScrollView().attach($0) {
                 VBox().attach($0) {
                     

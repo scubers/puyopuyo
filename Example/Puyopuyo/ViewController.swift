@@ -79,7 +79,7 @@ class ViewController: BaseVC {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             label?
-                .attach(wrap: false)
+                .attach()
                 .height(.wrap(add: 30))
             UIView.animate(withDuration: 0.5, animations: {
                 self.view.layoutIfNeeded()
