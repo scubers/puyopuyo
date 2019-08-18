@@ -131,6 +131,11 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
+    public func widthOn(_ view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
+        return width(SizeDescription.follow(on: view, block))
+    }
+    
+    @discardableResult
     public func height(_ height: SizeDescriptible?) -> Self {
         PuyoLinkHelper.size(for: view, width: nil, height: height?.sizeDescription)
         return self
@@ -145,6 +150,11 @@ extension PuyoLink where T: UIView {
     @discardableResult
     public func height<S: Valuable>(_ height: S) -> Self where S.ValueType == SizeDescription {
         return size(nil, height)
+    }
+    
+    @discardableResult
+    public func heightOn(_ view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
+        return height(SizeDescription.follow(on: view, block))
     }
     
     @discardableResult
