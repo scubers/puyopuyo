@@ -174,7 +174,19 @@ extension PuyoLink where T: UIView {
             PuyoLinkHelper.aligment(for: v, aligment: a)
         }), for: #function)
         return self
-    }    
+    }
+}
+
+extension SizeDescription {
+    public static func follow(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> State<SizeDescription> {
+        let s = State<SizeDescription>(.zero)
+        let id = "\(Date().timeIntervalSince1970)\(arc4random())"
+        view?.py_addObserver(for: #keyPath(UIView.bounds), id: id, block: { (rect: CGRect?) in
+            let size = block(rect ?? .zero)
+            s.postValue(size)
+        })
+        return s
+    }
 }
 
 extension PuyoLink where T: BoxView {
@@ -211,6 +223,15 @@ extension PuyoLink where T: BoxView {
     public func justifyContent<S: Valuable>(_ aligment: S) -> Self where S.ValueType == Aligment {
         view.py_setUnbinder(aligment.safeBind(view, { (v, a) in
             v.layout.justifyContent = a
+            v.py_setNeedsLayout()
+        }), for: #function)
+        return self
+    }
+    
+    @discardableResult
+    public func activated<S: Valuable>(_ activated: S) -> Self  where S.ValueType == Bool {
+        view.py_setUnbinder(activated.safeBind(view, { (v, a) in
+            v.py_measure.activated = a
             v.py_setNeedsLayout()
         }), for: #function)
         return self

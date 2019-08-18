@@ -14,4 +14,8 @@ class Label: UILabel {
         self.text = title
         numberOfLines = 0
     }
+    
+    deinit {
+        print("label deinit..(\(self.text ?? ""))")
+    }
 }

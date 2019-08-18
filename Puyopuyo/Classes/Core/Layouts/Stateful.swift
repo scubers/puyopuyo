@@ -56,10 +56,6 @@ public class State<T>: Valuable, Outputable {
         let pointer = Unmanaged.passUnretained(callee).toOpaque()
         return UnbinderImpl { [weak self] in
             self?.callees.removeAll(where: { Unmanaged.passUnretained($0).toOpaque() == pointer })
-//            self?.callees.removeAll(where: { x in
-//                let aPointer = Unmanaged.passUnretained(x).toOpaque()
-//                return pointer == aPointer
-//            })
         }
     }
     

@@ -68,24 +68,15 @@ public struct SizeDescription {
     }
     
     public var isWrap: Bool {
-        if case .wrap = sizeType {
-            return true
-        }
-        return false
+        return sizeType == .wrap
     }
     
     public var isFixed: Bool {
-        if case .fixed = sizeType {
-            return true
-        }
-        return false
+        return sizeType == .fixed
     }
     
     public var isRatio: Bool {
-        if case .ratio = sizeType {
-            return true
-        }
-        return false
+        return sizeType == .ratio
     }
     
     public func getWrapSize(by wrappedValue: CGFloat) -> CGFloat {

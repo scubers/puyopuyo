@@ -75,8 +75,41 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
+    public func frame<S: Valuable>(_ frame: S) -> Self where S.ValueType == CGRect {
+        view.py_setUnbinder(frame.safeBind(view, { (v, a) in
+            v.frame = a
+        }), for: #function)
+        return self
+    }
+    
+    @discardableResult
+    public func bounds<S: Valuable>(_ frame: S) -> Self where S.ValueType == CGRect {
+        view.py_setUnbinder(frame.safeBind(view, { (v, a) in
+            v.bounds = a
+        }), for: #function)
+        return self
+    }
+    
+    @discardableResult
+    public func center<S: Valuable>(_ frame: S) -> Self where S.ValueType == CGPoint {
+        view.py_setUnbinder(frame.safeBind(view, { (v, a) in
+            v.center = a
+        }), for: #function)
+        return self
+    }
+    
+    @discardableResult
+    public func onBoundsChanged<O: Outputable>(_ frame: O) -> Self where O.OutputType == CGRect {
+        view.py_addObserver(for: #keyPath(UIView.bounds), id: #function) { (rect: CGRect?) in
+            frame.postValue(rect ?? .zero)
+        }
+        return self
+    }
+    
+    @discardableResult
     public func tag(_ tag: Int) -> Self {
         view.tag = tag
         return self
     }
+    
 }
