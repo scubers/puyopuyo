@@ -50,7 +50,7 @@ extension UIView: MeasureTargetable {
         return sizeThatFits(size)
     }
     
-    public func py_measureChanged<V>() -> V where V : Valuable, V.ValueType == CGRect {
+    public func py_measureChanged<V: Valuable & Outputable>() -> V where V.ValueType == CGRect, V.OutputType == CGRect {
         if let s = objc_getAssociatedObject(self, &py_measureChangedKey) as? State<CGRect> {
             return s as! V
         }

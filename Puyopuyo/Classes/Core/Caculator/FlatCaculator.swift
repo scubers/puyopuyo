@@ -70,6 +70,24 @@ class FlatCaculator {
                 }
                 caculateChildren = [getPlaceHolder()] + caculateChildren + [getPlaceHolder()]
             }
+        } else if layout.formation == .round && caculateChildren.count > 0 {
+            if mainHasRatio {
+                print("Constraint error!!! 主轴上有比例设置，不能与Formation.round同时存在，Formation重置成leading")
+                layout.formation = .leading
+            } else {
+                // center formation
+                func getPlaceHolder() -> PlaceHolderMeasure {
+                    let p = PlaceHolderMeasure()
+                    p.size = CalSize(main: .ratio(1), cross: .fixed(1), direction: layout.direction).getSize()
+                    return p
+                }
+                let placeHolder = (0..<caculateChildren.count).map({ _ -> Measure in
+                    let measure = PlaceHolderMeasure()
+                    measure.size = CalSize(main: .ratio(1), cross: .fixed(0), direction: layout.direction).getSize()
+                    return measure
+                })
+                caculateChildren = [getPlaceHolder()] + zip(caculateChildren, placeHolder).flatMap({[$0, $1]})
+            }
         }
         
         let totalMainSpace = max(CGFloat(caculateChildren.count - 1) * layout.space, 0)

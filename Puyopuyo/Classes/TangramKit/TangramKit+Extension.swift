@@ -5,7 +5,7 @@ extension PuyoLinkAttacher where Self: UIView {
     
     @discardableResult
     public func tg_attach(_ parent: UIView? = nil, wrap: Bool = true, _ block: PuyoLinkBlock? = nil) -> PuyoLink<Self> {
-        let link = PuyoLink(self, wrap: wrap)
+        let link = PuyoLink(self)
         if wrap {
             link.tg_size(.wrap, .wrap)
         }

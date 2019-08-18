@@ -33,7 +33,7 @@ class _Observer<Value>: NSObject {
 }
 
 extension NSObject {
-    func py_addObserver<Value: Equatable>(for keyPath: String, id: String, block: @escaping (Value?) -> Void) {
+    public func py_addObserver<Value: Equatable>(for keyPath: String, id: String, block: @escaping (Value?) -> Void) {
         var lastValue: Value?
         let observer = _Observer<Value>(key: keyPath) { (rect) in
             guard rect != lastValue else { return }
@@ -41,6 +41,9 @@ extension NSObject {
             block(lastValue)
         }
         let unbinder = Unbinders.create { [weak self] in
+            #if DEBUG
+            print("unbind keypath: \(keyPath)")
+            #endif
             self?.removeObserver(observer, forKeyPath: keyPath)
         }
         addObserver(observer, forKeyPath: keyPath, options: [.new, .initial], context: nil)

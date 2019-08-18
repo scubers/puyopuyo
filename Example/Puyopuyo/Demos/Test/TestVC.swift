@@ -38,6 +38,10 @@ class TestVC: BaseVC {
             .size(.fill, 100)
             .margin(all: 10)
             .padding(all: 10)
+            
+            UIView().attach($0)
+                .width(.fill)
+                .height(on: self.view, { .fixed($0.height * 0.3 )})
         }
     }
 }

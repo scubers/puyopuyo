@@ -10,7 +10,7 @@ import Foundation
 public class PuyoLink<T: UIView> {
     
     public var view: T
-    public init(_ view: T, wrap: Bool = true) {
+    public init(_ view: T) {
         self.view = view
 //        if wrap {
 //            view.py_measure.size = Size(width: .wrap, height: .wrap)
@@ -131,13 +131,13 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func widthOn(_ view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
+    public func width(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
         return width(SizeDescription.follow(on: view, block))
     }
     
     @discardableResult
     public func widthOnSelf(_ block: @escaping (CGRect) -> SizeDescription) -> Self {
-        return widthOn(view, block)
+        return width(on: view, block)
     }
     
     @discardableResult
@@ -158,18 +158,47 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func heightOn(_ view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
+    public func height(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
         return height(SizeDescription.follow(on: view, block))
     }
     
     @discardableResult
     public func heightOnSelf(_ view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
-        return heightOn(view, block)
+        return height(on: view, block)
     }
     
     @discardableResult
     public func margin(all: CGFloat? = nil, top: CGFloat? = nil, left: CGFloat? = nil, bottom: CGFloat? = nil, right: CGFloat? = nil) -> Self {
         PuyoLinkHelper.margin(for: view, all: all, top: top, left: left, bottom: bottom, right: right)
+        return self
+    }
+    
+    @discardableResult
+    public func margin<S: Valuable>(top: S?, left: S?, bottom: S?, right: S?) -> Self where S.ValueType == CGFloat {
+        if let s = top {
+            view.py_setUnbinder(s.safeBind(view, { (v, a) in
+                v.py_measure.margin.top = a
+                v.py_setNeedsLayout()
+            }), for: "\(#function)_top")
+        }
+        if let s = left {
+            view.py_setUnbinder(s.safeBind(view, { (v, a) in
+                v.py_measure.margin.left = a
+                v.py_setNeedsLayout()
+            }), for: "\(#function)_left")
+        }
+        if let s = bottom {
+            view.py_setUnbinder(s.safeBind(view, { (v, a) in
+                v.py_measure.margin.bottom = a
+                v.py_setNeedsLayout()
+            }), for: "\(#function)_bottom")
+        }
+        if let s = right {
+            view.py_setUnbinder(s.safeBind(view, { (v, a) in
+                v.py_measure.margin.right = a
+                v.py_setNeedsLayout()
+            }), for: "\(#function)_right")
+        }
         return self
     }
     
@@ -181,7 +210,7 @@ extension PuyoLink where T: UIView {
         view.py_setUnbinder(unbinder, for: #function)
         return self
     }
-
+    
     @discardableResult
     public func aligment(_ aligment: Aligment) -> Self {
         PuyoLinkHelper.aligment(for: view, aligment: aligment)
@@ -192,6 +221,15 @@ extension PuyoLink where T: UIView {
     public func aligment<S: Valuable>(_ aligment: S) -> Self where S.ValueType == Aligment {
         view.py_setUnbinder(aligment.safeBind(view, { (v, a) in
             PuyoLinkHelper.aligment(for: v, aligment: a)
+        }), for: #function)
+        return self
+    }
+    
+    @discardableResult
+    public func activated<S: Valuable>(_ activated: S) -> Self  where S.ValueType == Bool {
+        view.py_setUnbinder(activated.safeBind(view, { (v, a) in
+            v.py_measure.activated = a
+            v.py_setNeedsLayout()
         }), for: #function)
         return self
     }
@@ -248,14 +286,6 @@ extension PuyoLink where T: BoxView {
         return self
     }
     
-    @discardableResult
-    public func activated<S: Valuable>(_ activated: S) -> Self  where S.ValueType == Bool {
-        view.py_setUnbinder(activated.safeBind(view, { (v, a) in
-            v.py_measure.activated = a
-            v.py_setNeedsLayout()
-        }), for: #function)
-        return self
-    }
 }
 
 extension PuyoLink where T: FlatBox {

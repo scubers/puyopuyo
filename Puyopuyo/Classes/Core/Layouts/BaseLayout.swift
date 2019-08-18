@@ -11,6 +11,7 @@ public enum Formation {
     case leading
     case center
     case sides
+    case round
     case trailing
 }
 
