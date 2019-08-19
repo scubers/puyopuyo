@@ -46,10 +46,12 @@ open class PuyoLinkHelper {
         setNeedsLayout(view)
     }
     
+    open class func activated(for view: UIView, activated: Bool) {
+        view.py_measure.activated = activated
+        setNeedsLayout(view)
+    }
+    
     public class func setNeedsLayout(_ view: UIView) {
-        view.setNeedsLayout()
-        if let superview = view.superview as? BoxView {
-            superview.setNeedsLayout()
-        }
+        view.py_setNeedsLayout()
     }
 }

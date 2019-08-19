@@ -50,3 +50,15 @@ extension NSObject {
         py_setUnbinder(unbinder, for: id)
     }
 }
+
+extension UIView {
+    public func py_observeBounds<T>(_ block: @escaping (CGRect) -> T) -> State<T> {
+        let s = State<T>(block(.zero))
+        let id = "\(Date().timeIntervalSince1970)\(arc4random())"
+        py_addObserver(for: #keyPath(UIView.bounds), id: id, block: { (rect: CGRect?) in
+            let value = block(rect ?? .zero)
+            s.postValue(value)
+        })
+        return s
+    }
+}

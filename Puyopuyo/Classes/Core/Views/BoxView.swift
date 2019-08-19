@@ -47,4 +47,11 @@ open class BoxView: UIView {
             superview.setNeedsLayout()
         }
     }
+    
+    public func animate(_ interval: TimeInterval, block: () -> Void) {
+        block()
+        UIView.animate(withDuration: interval, animations: {
+            self.layoutIfNeeded()
+        })
+    }
 }

@@ -39,9 +39,29 @@ class TestVC: BaseVC {
             .margin(all: 10)
             .padding(all: 10)
             
-            UIView().attach($0)
-                .width(.fill)
-                .height(on: self.view, { .fixed($0.height * 0.3 )})
+            let v = ZBox().attach($0) {
+                
+                let total = 10
+                for idx in 0..<total {
+                    UIView().attach($0)
+                        .width(on: $0, { .fixed($0.width * (1 - CGFloat(idx) / CGFloat(total))) })
+                        .height(on: $0, { .fixed($0.height * (1 - CGFloat(idx) / CGFloat(total))) })
+                }
+                
+                
+            }
+            .width(.fill)
+            .heightOnSelf({ .fixed($0.width * 0.5) })
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                v.view.animate(0.25, block: {
+                    v.heightOnSelf({ .fixed($0.width) })
+                })
+            })
+            
+            
+            
         }
+        .space(10)
     }
 }

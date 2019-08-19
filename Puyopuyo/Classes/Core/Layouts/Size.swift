@@ -23,7 +23,12 @@ extension UInt32: SizeDescriptible { public var sizeDescription: SizeDescription
 extension Int64: SizeDescriptible { public var sizeDescription: SizeDescription { return .fixed(CGFloat(self)) } }
 extension UInt64: SizeDescriptible { public var sizeDescription: SizeDescription { return .fixed(CGFloat(self)) } }
 
-public struct SizeDescription {
+public struct SizeDescription: SizeDescriptible {
+    
+    public var sizeDescription: SizeDescription {
+        return self
+    }
+    
     
     public enum SizeType {
         // 固有尺寸
