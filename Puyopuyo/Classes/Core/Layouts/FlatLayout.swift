@@ -20,7 +20,7 @@ public class FlatLayout: BaseLayout {
     
     public var reverse = false
     
-    public var autoJudgeScroll = false
+    public var autoJudgeScroll = true
     
     public override func caculate(byParent parent: Measure) -> Size {
         return FlatCaculator(self, parent: parent).caculate()
