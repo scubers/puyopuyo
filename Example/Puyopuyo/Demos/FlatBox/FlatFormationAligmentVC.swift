@@ -11,13 +11,13 @@ import Puyopuyo
 
 class FlatFormationAligmentVC: BaseVC {
     
-    let formation = State<Formation>(.leading)
-    let aligment = State<Aligment>(.center)
-    let text = State<String?>(nil)
-    let reversed = State<Bool>(false)
+    let formation = _S<Formation>(.leading)
+    let aligment = _S<Aligment>(.center)
+    let text = _S<String?>(nil)
+    let reversed = _S<Bool>(false)
     
-    let frame = State<CGRect>(.zero)
-    let center = State<CGPoint>(.zero)
+    let frame = _S<CGRect>(.zero)
+    let center = _S<CGPoint>(.zero)
 
     
     override func viewDidLoad() {
@@ -100,9 +100,9 @@ class FlatFormationAligmentVC: BaseVC {
     
     private func refreshTitle() {
         text.value = """
-        formation: \(formation.value!)
-        aligment: \(aligment.value!)
-        reversed: (\(reversed.value!))
+        formation: \(formation.value)
+        aligment: \(aligment.value)
+        reversed: (\(reversed.value))
         """
     }
 }

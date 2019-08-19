@@ -40,17 +40,18 @@ extension Valuable {
     }
 }
 
+public typealias _S = State
+
 public class State<T>: Valuable, Outputable {
     
     public func postValue(_ value: State<T>.OutputType) {
-        self.value = value
+        self._value = value
     }
     
     public func receiveValue(_ block: @escaping (State<T>.ValueType) -> Void) -> Unbinder {
-        if let value = value {
+        if let value = _value {
             block(value)
         }
-        
         let callee = Callee(block)
         callees.append(callee)
         let pointer = Unmanaged.passUnretained(callee).toOpaque()
@@ -64,16 +65,25 @@ public class State<T>: Valuable, Outputable {
     
     public typealias OutputType = T
     
-    public var value: T! {
+    public var value: T {
+        set {
+            _value = newValue
+        }
+        get {
+            return _value
+        }
+    }
+    
+    private var _value: T! {
         didSet {
             self.callees.forEach {
-                $0.block(value)
+                $0.block(_value)
             }
         }
     }
     
     public init(_ value: T) {
-        self.value = value
+        self._value = value
     }
     
     private init() {}
@@ -84,12 +94,6 @@ public class State<T>: Valuable, Outputable {
     
     var onDestroy: () -> Void = {}
 
-    private func post(value: T) {
-        callees.forEach { (x) in
-            x.block(value)
-        }
-    }
-    
     private class Callee<T> {
         var block: (T) -> Void
         init(_ block: @escaping (T) -> Void) {
@@ -113,7 +117,7 @@ public class State<T>: Valuable, Outputable {
     public func map<S: Outputable, R>(_ block: @escaping (T) -> R) -> S where S.OutputType == R {
         let newState = State<R>()
         let unbinder = receiveValue { (value) in
-            newState.post(value: block(value))
+            newState.postValue(block(value))
         }
         newState.onDestroy = {
             unbinder.py_unbind()
@@ -139,7 +143,7 @@ extension NSObject {
         py_unbinderContainer.setUnbinder(unbinder, for: key)
     }
     
-    private static var puyopuyo_unbinderContainerKey = "puyopuyo_unbinderContainerKey"
+    private static var puyopuyo_unbinderContainerKey = "puyoUnbinder"
     private var py_unbinderContainer: UnbinderContainer {
         var container = objc_getAssociatedObject(self, &NSObject.puyopuyo_unbinderContainerKey)
         if container == nil {
