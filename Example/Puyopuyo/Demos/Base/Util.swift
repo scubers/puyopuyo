@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Puyopuyo
 
 struct Util {
     static func randomColor() -> UIColor {
@@ -29,5 +30,58 @@ struct Util {
     static func random<T>(array: [T]) -> T {
         let index = arc4random_uniform(UInt32(array.count))
         return array[Int(index)]
+    }
+    
+}
+
+class FPSView: ZBox {
+    
+    let text = State<String?>(nil)
+
+    var times = 0
+
+    var link: CADisplayLink? {
+        willSet {
+            link?.invalidate()
+        }
+    }
+    var timestamp: CFTimeInterval = 0
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        UILabel().attach(self).text(self.text)
+        backgroundColor = .white
+    }
+    
+    deinit {
+        link?.invalidate()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+    
+    override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        link = CADisplayLink(target: self, selector: #selector(ticks(link:)))
+        link?.add(to: RunLoop.main, forMode: .common)
+    }
+    
+    @objc func ticks(link: CADisplayLink) {
+        guard superview != nil else {
+            link.invalidate()
+            self.link = nil
+            return
+        }
+        times += 1
+        if timestamp == 0 {
+            timestamp = link.timestamp
+        }
+        let passed = link.timestamp - timestamp
+        if passed >= 1 {
+            let fps = Double(times) / passed
+            text.value = String(format: "%.1f", fps)
+            timestamp = link.timestamp
+            times = 0
+        }
     }
 }

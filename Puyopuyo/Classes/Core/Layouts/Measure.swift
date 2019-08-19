@@ -36,6 +36,7 @@ public struct Aligment: OptionSet, CustomStringConvertible {
     public typealias RawValue = Int
     public let rawValue: Int
     
+    public static let none = Aligment(rawValue: 0)
     public static let top = Aligment(rawValue: 1)
     public static let bottom = Aligment(rawValue: 2)
     public static let left = Aligment(rawValue: 4)
@@ -45,7 +46,6 @@ public struct Aligment: OptionSet, CustomStringConvertible {
     
     public static let center = Aligment.vertCenter.union(.horzCenter)
     
-    public static let none = Aligment(rawValue: 64)
     
     public func hasHorzAligment() -> Bool {
         return

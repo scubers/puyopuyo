@@ -52,8 +52,15 @@ class ListVC: BaseVC {
         }
         
         vRoot.attach() {
-            self.table.attach($0)
-                .size(.fill, .fill)
+            ZBox().attach($0) {
+                self.table.attach($0)
+                    .size(.fill, .fill)
+                
+                FPSView().attach($0)
+                    .size(100, 25)
+                    .aligment([.left, .top])
+            }
+            .size(.fill, .fill)
         }
     }
 }
