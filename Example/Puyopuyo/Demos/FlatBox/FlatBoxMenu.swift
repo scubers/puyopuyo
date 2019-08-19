@@ -13,6 +13,7 @@ class FlatBoxMenu: MenuVC {
         return [
             ("VBox Base", VBoxVC.self),
             ("FlatFormationAligmentVC", FlatFormationAligmentVC.self),
+            ("ListView", ListVC.self),
         ]
     }
 }

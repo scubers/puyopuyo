@@ -41,7 +41,7 @@ open class BoxView: UIView {
     
     open override func setNeedsLayout() {
         super.setNeedsLayout()
-        // 如果自己是固定尺寸，则不需要通知上层进行布局
+        // 若自身可能为包裹，则需要通知上层重新布局
         let measure = py_measure
         if let superview = superview as? BoxView, measure.size.maybeWrap() {
             superview.setNeedsLayout()

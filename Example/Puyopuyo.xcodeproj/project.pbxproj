@@ -18,6 +18,8 @@
 		A84626542309574C003A282C /* TestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84626532309574C003A282C /* TestVC.swift */; };
 		A8655E9D22F33C3D00679D7C /* VisibleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8655E9C22F33C3D00679D7C /* VisibleViewController.swift */; };
 		A87550D822CA700F00648242 /* ListBoxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87550D722CA700F00648242 /* ListBoxVC.swift */; };
+		A897FCDC230AF7630061029E /* ListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A897FCDB230AF7630061029E /* ListVC.swift */; };
+		A897FCDE230AFBD80061029E /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = A897FCDD230AFBD80061029E /* Util.swift */; };
 		A8D9430722FF3640002E487F /* VBoxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9430622FF3640002E487F /* VBoxVC.swift */; };
 		A8D9430922FF3694002E487F /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9430822FF3694002E487F /* Label.swift */; };
 		A8D9430C22FF3937002E487F /* ZBoxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9430B22FF3937002E487F /* ZBoxVC.swift */; };
@@ -63,6 +65,8 @@
 		A84626532309574C003A282C /* TestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVC.swift; sourceTree = "<group>"; };
 		A8655E9C22F33C3D00679D7C /* VisibleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisibleViewController.swift; sourceTree = "<group>"; };
 		A87550D722CA700F00648242 /* ListBoxVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListBoxVC.swift; sourceTree = "<group>"; };
+		A897FCDB230AF7630061029E /* ListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListVC.swift; sourceTree = "<group>"; };
+		A897FCDD230AFBD80061029E /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		A8D9430622FF3640002E487F /* VBoxVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VBoxVC.swift; sourceTree = "<group>"; };
 		A8D9430822FF3694002E487F /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
 		A8D9430B22FF3937002E487F /* ZBoxVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZBoxVC.swift; sourceTree = "<group>"; };
@@ -219,6 +223,7 @@
 			children = (
 				A8E53FB222C8E679000B2B6D /* BaseVC.swift */,
 				A8D9430822FF3694002E487F /* Label.swift */,
+				A897FCDD230AFBD80061029E /* Util.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -229,6 +234,7 @@
 				A8D9430622FF3640002E487F /* VBoxVC.swift */,
 				A8D9430F22FFEBE7002E487F /* FlatBoxMenu.swift */,
 				A846265023093E4E003A282C /* FlatFormationAligmentVC.swift */,
+				A897FCDB230AF7630061029E /* ListVC.swift */,
 			);
 			path = FlatBox;
 			sourceTree = "<group>";
@@ -396,12 +402,14 @@
 				"${PODS_ROOT}/Target Support Files/Pods-Puyopuyo_Example/Pods-Puyopuyo_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Puyopuyo/Puyopuyo.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 				"${BUILT_PRODUCTS_DIR}/TangramKit/TangramKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Puyopuyo.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TangramKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -450,6 +458,8 @@
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				A8E53FB322C8E679000B2B6D /* BaseVC.swift in Sources */,
 				A8E53FB522C8E6BB000B2B6D /* MenuVC.swift in Sources */,
+				A897FCDE230AFBD80061029E /* Util.swift in Sources */,
+				A897FCDC230AF7630061029E /* ListVC.swift in Sources */,
 				A8D9430E22FFEB00002E487F /* ZBoxMenu.swift in Sources */,
 				A8D9431622FFF102002E487F /* StatefulVC.swift in Sources */,
 				A8D9430922FF3694002E487F /* Label.swift in Sources */,

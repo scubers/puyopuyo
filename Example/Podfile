@@ -1,4 +1,4 @@
-source 'https://cdn.cocoapods.org/'
+
 
 use_frameworks!
 
@@ -6,6 +6,7 @@ target 'Puyopuyo_Example' do
   pod 'Puyopuyo', :path => '../'
   pod 'TangramKit'
   pod 'RxSwift'
+  pod 'SnapKit'
 
   target 'Puyopuyo_Tests' do
     inherit! :search_paths
