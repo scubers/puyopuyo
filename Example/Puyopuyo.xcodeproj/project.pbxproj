@@ -17,7 +17,6 @@
 		A846265123093E4E003A282C /* FlatFormationAligmentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A846265023093E4E003A282C /* FlatFormationAligmentVC.swift */; };
 		A84626542309574C003A282C /* TestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84626532309574C003A282C /* TestVC.swift */; };
 		A8655E9D22F33C3D00679D7C /* VisibleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8655E9C22F33C3D00679D7C /* VisibleViewController.swift */; };
-		A87550D822CA700F00648242 /* ListBoxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A87550D722CA700F00648242 /* ListBoxVC.swift */; };
 		A897FCDC230AF7630061029E /* ListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A897FCDB230AF7630061029E /* ListVC.swift */; };
 		A897FCDE230AFBD80061029E /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = A897FCDD230AFBD80061029E /* Util.swift */; };
 		A8D9430722FF3640002E487F /* VBoxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9430622FF3640002E487F /* VBoxVC.swift */; };
@@ -64,7 +63,6 @@
 		A846265023093E4E003A282C /* FlatFormationAligmentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlatFormationAligmentVC.swift; sourceTree = "<group>"; };
 		A84626532309574C003A282C /* TestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVC.swift; sourceTree = "<group>"; };
 		A8655E9C22F33C3D00679D7C /* VisibleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisibleViewController.swift; sourceTree = "<group>"; };
-		A87550D722CA700F00648242 /* ListBoxVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListBoxVC.swift; sourceTree = "<group>"; };
 		A897FCDB230AF7630061029E /* ListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListVC.swift; sourceTree = "<group>"; };
 		A897FCDD230AFBD80061029E /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		A8D9430622FF3640002E487F /* VBoxVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VBoxVC.swift; sourceTree = "<group>"; };
@@ -147,7 +145,6 @@
 				607FACD31AFB9204008FA782 /* Supporting Files */,
 				09883C4922C5E5FB006CE05A /* StyleTestViewController.swift */,
 				A8E53FB622C8E98F000B2B6D /* Flat1VC.swift */,
-				A87550D722CA700F00648242 /* ListBoxVC.swift */,
 				A8655E9C22F33C3D00679D7C /* VisibleViewController.swift */,
 			);
 			name = "Example for Puyopuyo";
@@ -451,7 +448,6 @@
 				A8D9430C22FF3937002E487F /* ZBoxVC.swift in Sources */,
 				A8D9430722FF3640002E487F /* VBoxVC.swift in Sources */,
 				A8D9431022FFEBE7002E487F /* FlatBoxMenu.swift in Sources */,
-				A87550D822CA700F00648242 /* ListBoxVC.swift in Sources */,
 				A8E53FB722C8E98F000B2B6D /* Flat1VC.swift in Sources */,
 				09883C4A22C5E5FB006CE05A /* StyleTestViewController.swift in Sources */,
 				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
