@@ -26,11 +26,11 @@ class Tests: XCTestCase {
         self.measure() {
             for _ in 0..<100 {
 //                let cell = ListCell(style: .value1, reuseIdentifier: "1")
-                let cell = ListCell2(style: .value1, reuseIdentifier: "1")
-//                let cell = ListCell3(style: .value1, reuseIdentifier: "1")
+//                let cell = ListCell2(style: .value1, reuseIdentifier: "1")
+                let cell = ListCell3(style: .value1, reuseIdentifier: "1")
                 cell.state.value = ListData(name: "slkdjflksdjflkjsdf", text: "来看房来看房龙看房龙蛋飞龙扽静", time: "lskdj")
-                _ = cell.sizeThatFits(CGSize(width: 320, height: 0))
-//                _ = cell.systemLayoutSizeFitting(CGSize(width: 320, height: 0))
+//                _ = cell.sizeThatFits(CGSize(width: 320, height: 0))
+                _ = cell.systemLayoutSizeFitting(CGSize(width: 320, height: 0))
             }
         }
     }
@@ -112,6 +112,18 @@ class ListCell: BaseCell {
                         .size(.wrap, 25)
                     
                     Spacer(20).attach($0)
+                        .width(on: $0, { .fixed($0.width * 0.5) })
+                    
+                    HBox().attach($0) {
+                        UILabel().attach($0)
+                            .text(self.time)
+                        UILabel().attach($0)
+                            .text(self.time)
+                        UILabel().attach($0)
+                            .text(self.time)
+                        }
+                        .formation(.sides)
+                        .size(.fill, 30)
                     
                     HBox().attach($0) {
                         UILabel().attach($0)
@@ -174,8 +186,26 @@ class ListCell2: BaseCell {
                         .tg_size(.wrap, 25)
                     
                     //                Spacer(20).attach($0)
+                    let v = $0
                     UIView().attach($0)
                         .tg_size(20, 20)
+                        .attach() {
+                            $0.tg_width.equal(v).multiply(0.5)
+                    }
+                    
+                    HLine().attach($0) {
+                        UILabel().attach($0)
+                            .tg_size(.wrap, .wrap)
+                            .text(self.time)
+                        UILabel().attach($0)
+                            .tg_size(.wrap, .wrap)
+                            .text(self.time)
+                        UILabel().attach($0)
+                            .tg_size(.wrap, .wrap)
+                            .text(self.time)
+                        }
+                        .tg_size(.fill, 30)
+                        .tg_gravity(TGGravity.horz.between)
                     
                     HLine().attach($0) {
                         UILabel().attach($0)
@@ -257,9 +287,45 @@ class ListCell3: BaseCell {
         let space = UILabel()
         container.addSubview(space)
         space.snp.makeConstraints { (m) in
-            m.width.height.equalTo(20)
+            m.height.equalTo(20)
+            m.width.equalToSuperview().multipliedBy(0.5)
             m.top.equalTo(download.snp.bottom)
         }
+        
+        let spread = UIView()
+        container.addSubview(spread)
+        spread.snp.makeConstraints { (m) in
+            m.left.right.equalToSuperview()
+            m.height.equalTo(30)
+            m.top.equalTo(space.snp.bottom)
+        }
+        
+        let v1 = UILabel()
+        let v2 = UILabel()
+        let v3 = UILabel()
+        v1.attach().text(self.textData)
+        v2.attach().text(self.textData)
+        v3.attach().text(self.textData)
+        spread.addSubview(v1)
+        spread.addSubview(v2)
+        spread.addSubview(v3)
+        
+        v1.snp.makeConstraints { (m) in
+            m.top.bottom.equalToSuperview()
+            m.left.equalToSuperview()
+            m.width.equalToSuperview().multipliedBy(0.3)
+        }
+        v2.snp.makeConstraints { (m) in
+            m.top.bottom.equalToSuperview()
+            m.center.equalToSuperview()
+            m.width.equalToSuperview().multipliedBy(0.3)
+        }
+        v3.snp.makeConstraints { (m) in
+            m.top.bottom.equalToSuperview()
+            m.right.equalToSuperview()
+            m.width.equalToSuperview().multipliedBy(0.3)
+        }
+        
         let time = UILabel()
         container.addSubview(time)
         time.attach().text(self.time)
@@ -267,7 +333,7 @@ class ListCell3: BaseCell {
             m.left.equalToSuperview()
             m.bottom.equalToSuperview().inset(20)
             m.height.equalTo(25)
-            m.top.equalTo(space.snp.bottom)
+            m.top.equalTo(spread.snp.bottom)
         }
         
         let more = UIButton()
