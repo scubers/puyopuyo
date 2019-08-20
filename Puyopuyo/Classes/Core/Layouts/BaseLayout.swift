@@ -22,12 +22,11 @@ public class BaseLayout: Measure {
     
     public var padding = UIEdgeInsets.zero
     
+    public var autoJudgeScroll = false
+    
     public func enumerateChild(_ block: (Int, Measure) -> Void) {
         target?.py_enumerateChild(block)
     }
-//    public var children: [Measure] {
-//        return target?.py_children ?? []
-//    }
     
     public func getCalPadding() -> CalEdges {
         return CalEdges(insets: padding, direction: direction)

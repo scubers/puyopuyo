@@ -36,13 +36,13 @@ public struct Aligment: OptionSet, CustomStringConvertible {
     public typealias RawValue = Int
     public let rawValue: Int
     
-    public static let none = Aligment(rawValue: 0)
-    public static let top = Aligment(rawValue: 1)
-    public static let bottom = Aligment(rawValue: 2)
-    public static let left = Aligment(rawValue: 4)
-    public static let right = Aligment(rawValue: 8)
-    public static let horzCenter = Aligment(rawValue: 16)
-    public static let vertCenter = Aligment(rawValue: 32)
+    public static let none = Aligment(rawValue: 1)
+    public static let top = Aligment(rawValue: 2)
+    public static let bottom = Aligment(rawValue: 4)
+    public static let left = Aligment(rawValue: 8)
+    public static let right = Aligment(rawValue: 16)
+    public static let horzCenter = Aligment(rawValue: 32)
+    public static let vertCenter = Aligment(rawValue: 64)
     
     public static let center = Aligment.vertCenter.union(.horzCenter)
     

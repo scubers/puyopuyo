@@ -61,7 +61,7 @@ class Flat1VC: BaseVC {
 //                print($0)
 //            })
 //        
-        HBox.attach(vRoot) {
+        HBox().attach(vRoot) {
 
             
             for idx in 0..<30 {
@@ -81,7 +81,7 @@ class Flat1VC: BaseVC {
         .visible(visible)
         .cornerRadius(State(10))
         
-        ZBox.attach(vRoot) {
+        ZBox().attach(vRoot) {
             TGLinearLayout(.vert).attach($0) {
                 self.getLabel("1111").tg_attach($0)
                 self.getLabel("222").tg_attach($0)

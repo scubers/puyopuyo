@@ -50,7 +50,7 @@ class ViewController: BaseVC {
         var label: UIView?
         ZBox().attach(view) {
             
-            HBox.attach($0) {
+            HBox().attach($0) {
                 label =
                 self.getLabel("1111").attach($0)
 //                    .height(.ratio(1))

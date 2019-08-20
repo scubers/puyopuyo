@@ -15,7 +15,7 @@ class VBoxVC: BaseVC {
         
         navigationItem.title = "VBox,space=10,padding=10"
         
-        VBox.attach(vRoot) {
+        VBox().attach(vRoot) {
             Label("""
                     aligment = left
                     width = .wrap add 20
