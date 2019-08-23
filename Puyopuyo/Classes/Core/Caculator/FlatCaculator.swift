@@ -246,7 +246,8 @@ class FlatCaculator {
         if case .y = layout.direction {
             point = CGPoint(x: center.cross, y: center.main)
         } else {
-            point = CGPoint(x: center.main, y: layoutFixedSize.cross - center.cross)
+//            point = CGPoint(x: center.main, y: layoutFixedSize.cross - center.cross)
+            point = CGPoint(x: center.main, y: center.cross)
         }
         return point
     }

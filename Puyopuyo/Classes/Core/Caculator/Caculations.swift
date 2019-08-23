@@ -8,9 +8,23 @@
 import Foundation
 
 /**
- 逆时针计算一个四周
+ ------------------------
+ direction = x
+      forward
+ start        end
+      backward
+ 
+ ------------------------
+ direction = y
+        start
+ forward     backward
+         end
+ ------------------------
+ 
  布局开始方向 = start，相反 = end
- 从start逆时针到end的边为forwarding，相反 = backwarding
+ 从start -> end 方向为forward
+ 从end -> start 方向为backward
+ 
  */
 
 public struct CalAligment: OptionSet {
@@ -44,9 +58,9 @@ public struct CalEdges {
         self.direction = direction
         if case .x = direction {
             start = insets.left
-            forward = insets.bottom
+            forward = insets.top
             end = insets.right
-            backward = insets.top
+            backward = insets.bottom
         } else {
             start = insets.top
             forward = insets.left
@@ -57,7 +71,7 @@ public struct CalEdges {
     
     public func getInsets() -> UIEdgeInsets {
         if case .x = direction {
-            return UIEdgeInsets(top: backward, left: start, bottom: forward, right: end)
+            return UIEdgeInsets(top: forward, left: start, bottom: backward, right: end)
         }
         return UIEdgeInsets(top: start, left: forward, bottom: end, right: backward)
     }

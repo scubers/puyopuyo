@@ -70,14 +70,14 @@ public struct Aligment: OptionSet, CustomStringConvertible {
     
     public func isForward(for direction: Direction) -> Bool {
         if case .x = direction {
-            return contains(.bottom)
+            return contains(.top)
         }
         return contains(.left)
     }
     
     public func isBackward(for direction: Direction) -> Bool {
         if case .x = direction {
-            return contains(.top)
+            return contains(.bottom)
         }
         return contains(.right)
     }

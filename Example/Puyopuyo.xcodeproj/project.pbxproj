@@ -14,6 +14,7 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		A81CE13C2310509B00E19E6B /* HBoxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81CE13B2310509B00E19E6B /* HBoxVC.swift */; };
 		A846265123093E4E003A282C /* FlatFormationAligmentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A846265023093E4E003A282C /* FlatFormationAligmentVC.swift */; };
 		A84626542309574C003A282C /* TestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84626532309574C003A282C /* TestVC.swift */; };
 		A8655E9D22F33C3D00679D7C /* VisibleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8655E9C22F33C3D00679D7C /* VisibleViewController.swift */; };
@@ -60,6 +61,7 @@
 		708BE9EC9E96CAC97AC908DF /* Pods_Puyopuyo_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Puyopuyo_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		77FB953E25BC3D91DC89F5C7 /* Pods-Puyopuyo_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Puyopuyo_Example.release.xcconfig"; path = "Target Support Files/Pods-Puyopuyo_Example/Pods-Puyopuyo_Example.release.xcconfig"; sourceTree = "<group>"; };
 		A30EBF753A01FE778D9D9547 /* Pods_Puyopuyo_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Puyopuyo_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A81CE13B2310509B00E19E6B /* HBoxVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HBoxVC.swift; sourceTree = "<group>"; };
 		A846265023093E4E003A282C /* FlatFormationAligmentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlatFormationAligmentVC.swift; sourceTree = "<group>"; };
 		A84626532309574C003A282C /* TestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVC.swift; sourceTree = "<group>"; };
 		A8655E9C22F33C3D00679D7C /* VisibleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisibleViewController.swift; sourceTree = "<group>"; };
@@ -232,6 +234,7 @@
 				A8D9430F22FFEBE7002E487F /* FlatBoxMenu.swift */,
 				A846265023093E4E003A282C /* FlatFormationAligmentVC.swift */,
 				A897FCDB230AF7630061029E /* ListVC.swift */,
+				A81CE13B2310509B00E19E6B /* HBoxVC.swift */,
 			);
 			path = FlatBox;
 			sourceTree = "<group>";
@@ -461,6 +464,7 @@
 				A8D9430922FF3694002E487F /* Label.swift in Sources */,
 				A84626542309574C003A282C /* TestVC.swift in Sources */,
 				A8655E9D22F33C3D00679D7C /* VisibleViewController.swift in Sources */,
+				A81CE13C2310509B00E19E6B /* HBoxVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

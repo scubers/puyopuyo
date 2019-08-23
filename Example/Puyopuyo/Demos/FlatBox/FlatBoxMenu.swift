@@ -12,6 +12,7 @@ class FlatBoxMenu: MenuVC {
     override func getData() -> [(String, UIViewController.Type)] {
         return [
             ("VBox Base", VBoxVC.self),
+            ("HBox Base", HBoxVC.self),
             ("FlatFormationAligmentVC", FlatFormationAligmentVC.self),
             ("ListView", ListVC.self),
         ]
