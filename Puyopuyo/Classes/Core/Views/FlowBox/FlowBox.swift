@@ -8,9 +8,8 @@
 import Foundation
 
 open class FlowBox: BoxView {
-    
-    open override func layoutSubviews() {
-        super.layoutSubviews()
-        
+    public override var layout: FlowLayout {
+        return py_measure as! FlowLayout
     }
+    
 }

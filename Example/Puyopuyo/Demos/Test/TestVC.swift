@@ -8,36 +8,43 @@
 
 import UIKit
 import Puyopuyo
+import TangramKit
 
 class TestVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         test1()
-        
+//        tk_flowTest()
         randomViewColor(view: view)
     }
     
     private func test1() {
-        vRoot.attach() {
-            HBox().attach($0) {
+        vRoot.attach()
+            .space(10)
+            .attach() {
+                
+            HBox().attach($0)
+                .size(.fill, 100)
+                .margin(all: 10)
+                .padding(all: 10)
+                .attach() {
+                    
                 Label("正").attach($0)
                     .height(.fill)
                     .widthOnSelf({ .fixed($0.height) })
+                    .widthOnSelf({ .fixed($0.height * 0.5) })
                 
                 Label("fill").attach($0)
                     .size(.fill, .fill)
                 
                 let v = $0
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-                    v.attach().height(200)
-                    UIView.animate(withDuration: 0.2, animations: {
-                        self.vRoot.layoutIfNeeded()
+                    self.vRoot.animate(0.2, block: {
+                        v.attach().height(200)
                     })
                 })
             }
-            .size(.fill, 100)
-            .margin(all: 10)
-            .padding(all: 10)
+            
             
             let v = ZBox().attach($0) {
                 
@@ -62,6 +69,33 @@ class TestVC: BaseVC {
             
             
         }
-        .space(10)
+    }
+    
+    private func tk_flowTest() {
+//        TGFlowLayout(.vert, arrangedCount: 3).attach() { x in
+        TGFloatLayout().attach() { x in
+        
+            let labels = Array(repeating: 1, count: 10).map({ (idx) in
+                return Label("\(idx)")
+            })
+            
+            for (idx, label) in labels.enumerated() {
+                label.attach(x)
+                    .text("\(idx)")
+                    .tg_size(50 + idx * 3, 50 + idx * 3 + 1)
+                
+//                if idx % 3 == 2 && idx != 2 {
+                if idx == 2 {
+                    label.tg_reverseFloat = true
+//                    label.attach().tg_size(.fill, 50)
+                }
+            }
+            
+            }
+            .size(.fill, .fill)
+            .tg_gravity(TGGravity.horz.right)
+            .tg_size(.fill, .fill)
+            .activated(_S(false))
+            .attach(vRoot)
     }
 }

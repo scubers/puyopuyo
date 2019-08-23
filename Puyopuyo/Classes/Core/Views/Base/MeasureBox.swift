@@ -18,6 +18,8 @@ class MeasureBox {
                 measure = FlatLayout(target: from)
             } else if from is ZBox {
                 measure = ZLayout(target: from)
+            } else if from is FlowBox {
+                measure = FlowLayout(target: from)
             } else {
                 measure = Measure(target: from)
             }
