@@ -235,21 +235,10 @@ class FlatCaculator {
             fatalError("")
         }
         
-        let center = point(from: CalCenter(main: main, cross: cross))
+        let center = CalCenter(main: main, cross: cross, direction: layout.direction).getPoint()
         measure.target?.py_center = center
         
         return main + calSize.main / 2 + calMargin.end
-    }
-    
-    private func point(from center: CalCenter) -> CGPoint {
-        var point: CGPoint
-        if case .y = layout.direction {
-            point = CGPoint(x: center.cross, y: center.main)
-        } else {
-//            point = CGPoint(x: center.main, y: layoutFixedSize.cross - center.cross)
-            point = CGPoint(x: center.main, y: center.cross)
-        }
-        return point
     }
     
 }

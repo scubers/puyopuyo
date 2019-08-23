@@ -93,12 +93,21 @@ extension UIEdgeInsets {
 
 public struct CalCenter {
     
+    public var direction: Direction
     public var main: CGFloat = 0
     public var cross: CGFloat = 0
     
-    public init(main: CGFloat = 0, cross: CGFloat = 0) {
+    public init(main: CGFloat = 0, cross: CGFloat = 0, direction: Direction) {
         self.main = main
         self.cross = cross
+        self.direction = direction
+    }
+    
+    public func getPoint() -> CGPoint {
+        if direction == .x {
+            return CGPoint(x: main, y: cross)
+        }
+        return CGPoint(x: cross, y: main)
     }
     
 }
