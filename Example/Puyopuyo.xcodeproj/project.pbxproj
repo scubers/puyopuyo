@@ -188,6 +188,13 @@
 			name = "Podspec Metadata";
 			sourceTree = "<group>";
 		};
+		A81CE13D231063E200E19E6B /* FlowBox */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = FlowBox;
+			sourceTree = "<group>";
+		};
 		A846265223095743003A282C /* Test */ = {
 			isa = PBXGroup;
 			children = (
@@ -199,6 +206,7 @@
 		A8D9430222FF360B002E487F /* Demos */ = {
 			isa = PBXGroup;
 			children = (
+				A81CE13D231063E200E19E6B /* FlowBox */,
 				A846265223095743003A282C /* Test */,
 				A8D9431322FFF0EB002E487F /* Stateful */,
 				A8D9430A22FF391C002E487F /* ZBox */,

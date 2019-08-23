@@ -112,7 +112,7 @@ class ListCell: BaseCell {
                         .size(.wrap, 25)
                     
                     Spacer(20).attach($0)
-                        .width(on: $0, { .fixed($0.width * 0.5) })
+                        .width(on: $0, { .fix($0.width * 0.5) })
                     
                     HBox().attach($0) {
                         UILabel().attach($0)

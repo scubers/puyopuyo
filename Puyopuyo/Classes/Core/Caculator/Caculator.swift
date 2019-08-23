@@ -24,7 +24,7 @@ class Caculator {
             return height
         }
         if height.isRatio {
-            return .fixed(height.ratio * relayHeight)
+            return .fix(height.ratio * relayHeight)
         }
         fatalError()
     }
@@ -37,7 +37,7 @@ class Caculator {
             return width
         }
         if width.isRatio {
-            return .fixed(width.ratio * relayWidth)
+            return .fix(width.ratio * relayWidth)
         }
         fatalError()
     }
@@ -49,12 +49,12 @@ class Caculator {
         
         var main = calSize.main
         if main.isRatio {
-            main = .fixed(main.ratio * fixedSize.main)
+            main = .fix(main.ratio * fixedSize.main)
         }
         
         var cross = calSize.cross
         if cross.isRatio {
-            cross = .fixed(cross.ratio * fixedSize.cross)
+            cross = .fix(cross.ratio * fixedSize.cross)
         }
         return CalSize(main: main, cross: cross, direction: calSize.direction)
     }

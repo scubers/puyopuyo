@@ -80,12 +80,12 @@ class ZCaculator {
         // 计算布局自身大小
         var width = layout.size.width
         if width.isWrap {
-            width = .fixed(maxSizeWithMargin.width + layout.padding.left + layout.padding.right)
+            width = .fix(maxSizeWithMargin.width + layout.padding.left + layout.padding.right)
         }
         
         var height = layout.size.height
         if height.isWrap {
-            height = .fixed(maxSizeWithMargin.height + layout.padding.top + layout.padding.bottom)
+            height = .fix(maxSizeWithMargin.height + layout.padding.top + layout.padding.bottom)
         }
         
         return Size(width: width, height: height)

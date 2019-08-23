@@ -12,4 +12,21 @@ open class FlowBox: BoxView {
         return py_measure as! FlowLayout
     }
     
+    public convenience init(count: Int) {
+        self.init()
+        layout.arrange = count
+    }
+}
+
+open class HFlow: FlowBox {
+    
+}
+open class VFlow: FlowBox {
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        layout.direction = .y
+    }
+    public required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
 }

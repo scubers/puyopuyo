@@ -18,7 +18,7 @@ class Flat1VC: BaseVC {
     var aligment = State<Aligment>(.center)
     var direction = State<Direction>(.x)
     var subMargin = State<UIEdgeInsets>(.zero)
-    var width = State<SizeDescription>(.fixed(10))
+    var width = State<SizeDescription>(.fix(10))
     var space = BehaviorSubject<CGFloat>(value: 5)
     
     var text = BehaviorSubject<String>(value: "")

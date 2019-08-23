@@ -113,26 +113,30 @@ public class Measure: Measurable {
     
 }
 
-public class PlaceHolderMeasure: Measure, MeasureTargetable {
+class _FakeTarget: MeasureTargetable {
     
+    var py_size: CGSize = .zero
+    
+    var py_center: CGPoint = .zero
+    
+    func py_enumerateChild(_ block: (Int, Measure) -> Void) {
+        children.enumerated().forEach {
+            block($0, $1)
+        }
+    }
+    
+    func py_sizeThatFits(_ size: CGSize) -> CGSize {
+        return size
+    }
+    
+    var children = [Measure]()
+}
+
+public class PlaceHolderMeasure: Measure {
+    
+    private var fakeTarget = _FakeTarget()
     public init() {
         super.init()
-        target = self
-    }
-    
-    public var py_size: CGSize = .zero
-    
-    public var py_center: CGPoint = .zero
-    
-    public func py_enumerateChild(_ block: (Int, Measure) -> Void) {
-        
-    }
-    
-    public func py_measureChanged<V>() -> V where V : Valuable, V.ValueType == CGRect {
-        return State<CGRect>(.zero) as! V
-    }
-    
-    public func py_sizeThatFits(_ size: CGSize) -> CGSize {
-        return size
+        target = fakeTarget
     }
 }

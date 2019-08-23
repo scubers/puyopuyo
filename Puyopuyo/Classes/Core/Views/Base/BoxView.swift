@@ -61,7 +61,7 @@ open class BoxView: UIView {
     
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
         let temp = PlaceHolderMeasure()
-        temp.py_size = size
+        temp.target?.py_size = size
         let sizeAfterCalulate = layout.caculate(byParent: temp)
         let fixedSize = Caculator.caculate(size: sizeAfterCalulate, by: size)
         return CGSize(width: fixedSize.width.fixedValue, height: fixedSize.height.fixedValue)

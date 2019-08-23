@@ -13,9 +13,31 @@ import TangramKit
 class TestVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
-        test1()
+//        test1()
 //        tk_flowTest()
+        py_flow()
         randomViewColor(view: view)
+    }
+    
+    private func py_flow() {
+        vRoot.attach() {
+            VFlow(count: 3).attach($0) {
+                for idx in 0..<10 {
+                    Label("\(idx + 1)").attach($0)
+                        .width(60)
+                        .heightOnSelf({ .fix($0.width) })
+                }
+                
+                }
+                .size(.fill, .fill)
+                .margin(all: 10)
+                .attach() {
+                    $0.layout.hSpace = 10
+                    $0.layout.vSpace = 20
+//                    $0.layout.vFormation = .sides
+                    $0.layout.padding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+                }
+        }
     }
     
     private func test1() {
@@ -31,8 +53,8 @@ class TestVC: BaseVC {
                     
                 Label("正").attach($0)
                     .height(.fill)
-                    .widthOnSelf({ .fixed($0.height) })
-                    .widthOnSelf({ .fixed($0.height * 0.5) })
+                    .widthOnSelf({ .fix($0.height) })
+                    .widthOnSelf({ .fix($0.height * 0.5) })
                 
                 Label("fill").attach($0)
                     .size(.fill, .fill)
@@ -51,18 +73,18 @@ class TestVC: BaseVC {
                 let total = 10
                 for idx in 0..<total {
                     UIView().attach($0)
-                        .width(on: $0, { .fixed($0.width * (1 - CGFloat(idx) / CGFloat(total))) })
-                        .height(on: $0, { .fixed($0.height * (1 - CGFloat(idx) / CGFloat(total))) })
+                        .width(on: $0, { .fix($0.width * (1 - CGFloat(idx) / CGFloat(total))) })
+                        .height(on: $0, { .fix($0.height * (1 - CGFloat(idx) / CGFloat(total))) })
                 }
                 
                 
             }
             .width(.fill)
-            .heightOnSelf({ .fixed($0.width * 0.5) })
+            .heightOnSelf({ .fix($0.width * 0.5) })
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
                 v.view.animate(0.25, block: {
-                    v.heightOnSelf({ .fixed($0.width) })
+                    v.heightOnSelf({ .fix($0.width) })
                 })
             })
             

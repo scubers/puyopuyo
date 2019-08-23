@@ -24,8 +24,6 @@ public protocol MeasureTargetable: class {
     
     var py_center: CGPoint { get set }
     
-    func py_measureChanged<V: Valuable & Outputable>() -> V where V.ValueType == CGRect, V.OutputType == CGRect
-    
     func py_enumerateChild(_ block: (Int, Measure) -> Void)
     
     func py_sizeThatFits(_ size: CGSize) -> CGSize

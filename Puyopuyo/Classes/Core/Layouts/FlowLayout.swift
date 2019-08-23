@@ -11,6 +11,26 @@ public class FlowLayout: FlatLayout {
     
     public var arrange: Int = 1
     
+    public var vSpace: CGFloat = 0
+    public var hSpace: CGFloat = 0
+    
+    public override var space: CGFloat {
+        didSet {
+            vSpace = space
+            hSpace = space
+        }
+    }
+    
+    public var vFormation: Formation = .leading
+    public var hFormation: Formation = .leading
+    
+    public override var formation: Formation {
+        didSet {
+            vFormation = formation
+            hFormation = formation
+        }
+    }
+    
     public override func caculate(byParent parent: Measure) -> Size {
         return FlowCaculator(self, parent: parent).caculate()
     }

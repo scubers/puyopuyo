@@ -15,8 +15,8 @@ class StatefulVC: BaseVC, UITextFieldDelegate {
     var text = State("text").optional()
     var textColor = State<UIColor>(.black)
     lazy var backgroundColor = State<UIColor>(self.randomColor())
-    var width = State<SizeDescription>(.fixed(100))
-    var height = State<SizeDescription>(.fixed(100))
+    var width = State<SizeDescription>(.fix(100))
+    var height = State<SizeDescription>(.fix(100))
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,7 +79,7 @@ class StatefulVC: BaseVC, UITextFieldDelegate {
     }
     
     private func randomSize() -> SizeDescription {
-        return random(array: [.fill, .wrap, .fixed(100)])
+        return random(array: [.fill, .wrap, .fix(100)])
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

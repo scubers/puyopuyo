@@ -12,16 +12,16 @@ public protocol SizeDescriptible {
 }
 
 extension CGFloat: SizeDescriptible {
-    public var sizeDescription: SizeDescription { return .fixed(self) }
+    public var sizeDescription: SizeDescription { return .fix(self) }
 }
-extension Double: SizeDescriptible { public var sizeDescription: SizeDescription { return .fixed(CGFloat(self)) } }
-extension Float: SizeDescriptible { public var sizeDescription: SizeDescription { return .fixed(CGFloat(self)) } }
-extension Int: SizeDescriptible { public var sizeDescription: SizeDescription { return .fixed(CGFloat(self)) } }
-extension UInt: SizeDescriptible { public var sizeDescription: SizeDescription { return .fixed(CGFloat(self)) } }
-extension Int32: SizeDescriptible { public var sizeDescription: SizeDescription { return .fixed(CGFloat(self)) } }
-extension UInt32: SizeDescriptible { public var sizeDescription: SizeDescription { return .fixed(CGFloat(self)) } }
-extension Int64: SizeDescriptible { public var sizeDescription: SizeDescription { return .fixed(CGFloat(self)) } }
-extension UInt64: SizeDescriptible { public var sizeDescription: SizeDescription { return .fixed(CGFloat(self)) } }
+extension Double: SizeDescriptible { public var sizeDescription: SizeDescription { return .fix(CGFloat(self)) } }
+extension Float: SizeDescriptible { public var sizeDescription: SizeDescription { return .fix(CGFloat(self)) } }
+extension Int: SizeDescriptible { public var sizeDescription: SizeDescription { return .fix(CGFloat(self)) } }
+extension UInt: SizeDescriptible { public var sizeDescription: SizeDescription { return .fix(CGFloat(self)) } }
+extension Int32: SizeDescriptible { public var sizeDescription: SizeDescription { return .fix(CGFloat(self)) } }
+extension UInt32: SizeDescriptible { public var sizeDescription: SizeDescription { return .fix(CGFloat(self)) } }
+extension Int64: SizeDescriptible { public var sizeDescription: SizeDescription { return .fix(CGFloat(self)) } }
+extension UInt64: SizeDescriptible { public var sizeDescription: SizeDescription { return .fix(CGFloat(self)) } }
 
 public struct SizeDescription: SizeDescriptible {
     
@@ -48,7 +48,7 @@ public struct SizeDescription: SizeDescriptible {
     public let min: CGFloat
     public let max: CGFloat
     
-    public static func fixed(_ value: CGFloat) -> SizeDescription {
+    public static func fix(_ value: CGFloat) -> SizeDescription {
         return SizeDescription(sizeType: .fixed, fixedValue: value, ratio: 0, add: 0, min: 0, max: 0)
     }
     
@@ -65,7 +65,7 @@ public struct SizeDescription: SizeDescriptible {
     }
     
     public static var zero: SizeDescription {
-        return .fixed(0)
+        return .fix(0)
     }
     
     public static var fill: SizeDescription {

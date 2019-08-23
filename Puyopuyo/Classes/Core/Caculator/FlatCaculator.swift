@@ -51,7 +51,7 @@ class FlatCaculator {
                 // sides formation
                 let placeHolder = (0..<caculateChildren.count).map({ _ -> Measure in
                     let measure = PlaceHolderMeasure()
-                    measure.size = CalSize(main: .ratio(1), cross: .fixed(0), direction: layout.direction).getSize()
+                    measure.size = CalSize(main: .ratio(1), cross: .fix(0), direction: layout.direction).getSize()
                     return measure
                 })
                 caculateChildren = zip(caculateChildren, placeHolder).flatMap({[$0, $1]}).dropLast()
@@ -65,7 +65,7 @@ class FlatCaculator {
                 // center formation
                 func getPlaceHolder() -> PlaceHolderMeasure {
                     let p = PlaceHolderMeasure()
-                    p.size = CalSize(main: .ratio(1), cross: .fixed(1), direction: layout.direction).getSize()
+                    p.size = CalSize(main: .ratio(1), cross: .fix(1), direction: layout.direction).getSize()
                     return p
                 }
                 caculateChildren = [getPlaceHolder()] + caculateChildren + [getPlaceHolder()]
@@ -78,12 +78,12 @@ class FlatCaculator {
                 // center formation
                 func getPlaceHolder() -> PlaceHolderMeasure {
                     let p = PlaceHolderMeasure()
-                    p.size = CalSize(main: .ratio(1), cross: .fixed(1), direction: layout.direction).getSize()
+                    p.size = CalSize(main: .ratio(1), cross: .fix(1), direction: layout.direction).getSize()
                     return p
                 }
                 let placeHolder = (0..<caculateChildren.count).map({ _ -> Measure in
                     let measure = PlaceHolderMeasure()
-                    measure.size = CalSize(main: .ratio(1), cross: .fixed(0), direction: layout.direction).getSize()
+                    measure.size = CalSize(main: .ratio(1), cross: .fix(0), direction: layout.direction).getSize()
                     return measure
                 })
                 caculateChildren = [getPlaceHolder()] + zip(caculateChildren, placeHolder).flatMap({[$0, $1]})
@@ -117,7 +117,7 @@ class FlatCaculator {
                 //                if case .ratio(let ratio) = subCalSize.cross {
                 if subCalSize.cross.isRatio {
                     let ratio = subCalSize.cross.ratio
-                    subCrossSize = .fixed((layoutFixedSize.cross - (layoutCalPadding.forward + layoutCalPadding.backward + subCalMargin.forward + subCalMargin.backward)) * ratio)
+                    subCrossSize = .fix((layoutFixedSize.cross - (layoutCalPadding.forward + layoutCalPadding.backward + subCalMargin.forward + subCalMargin.backward)) * ratio)
                 }
                 // 设置具体size
                 measure.target?.py_size = CalFixedSize(main: subCalSize.main.fixedValue, cross: subCrossSize.fixedValue, direction: layout.direction).getSize()
@@ -137,10 +137,10 @@ class FlatCaculator {
             //            if case .ratio(let ratio) = subCrossSize {
             if subCrossSize.isRatio {
                 let ratio = subCrossSize.ratio
-                subCrossSize = .fixed((layoutFixedSize.cross - (layoutCalPadding.forward + layoutCalPadding.backward + calMargin.forward + calMargin.backward)) * ratio)
+                subCrossSize = .fix((layoutFixedSize.cross - (layoutCalPadding.forward + layoutCalPadding.backward + calMargin.forward + calMargin.backward)) * ratio)
             }
             // main
-            let subMainSize = SizeDescription.fixed((calSize.main.ratio / totalMainRatio) * (layoutFixedSize.main - totalFixedMain - totalMainSpace))
+            let subMainSize = SizeDescription.fix((calSize.main.ratio / totalMainRatio) * (layoutFixedSize.main - totalFixedMain - totalMainSpace))
             measure.target?.py_size = CalFixedSize(main: subMainSize.fixedValue, cross: subCrossSize.fixedValue, direction: layout.direction).getSize()
             maxCross = max(subCrossSize.fixedValue + calMargin.forward + calMargin.backward, maxCross)
         }
@@ -152,17 +152,17 @@ class FlatCaculator {
         var main = layout.size.getMain(parent: parent.direction)
         if main.isWrap {
             if parent.direction == layout.direction {
-                main = .fixed(main.getWrapSize(by: lastEnd + layoutCalPadding.end))
+                main = .fix(main.getWrapSize(by: lastEnd + layoutCalPadding.end))
             } else {
-                main = .fixed(main.getWrapSize(by: maxCross + layoutCalPadding.forward + layoutCalPadding.backward))
+                main = .fix(main.getWrapSize(by: maxCross + layoutCalPadding.forward + layoutCalPadding.backward))
             }
         }
         var cross = layout.size.getCross(parent: parent.direction)
         if cross.isWrap {
             if parent.direction == layout.direction {
-                cross = .fixed(cross.getWrapSize(by: maxCross + layoutCalPadding.forward + layoutCalPadding.backward))
+                cross = .fix(cross.getWrapSize(by: maxCross + layoutCalPadding.forward + layoutCalPadding.backward))
             } else {
-                cross = .fixed(cross.getWrapSize(by: lastEnd + layoutCalPadding.end))
+                cross = .fix(cross.getWrapSize(by: lastEnd + layoutCalPadding.end))
             }
         }
         
