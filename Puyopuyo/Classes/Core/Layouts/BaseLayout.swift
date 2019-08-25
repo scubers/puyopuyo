@@ -25,7 +25,7 @@ public class BaseLayout: Measure {
     public var autoJudgeScroll = false
     
     public func enumerateChild(_ block: (Int, Measure) -> Void) {
-        target?.py_enumerateChild(block)
+        py_enumerateChild(block)
     }
     
     public func getCalPadding() -> CalEdges {

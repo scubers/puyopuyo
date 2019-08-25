@@ -18,11 +18,8 @@ class FlatFormationAligmentVC: BaseVC {
     
     let frame = _S<CGRect>(.zero)
     let center = _S<CGPoint>(.zero)
-
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
+    override func configView() {
         _ = formation.receiveValue { [weak self] (f) in
             self?.refreshTitle()
         }
@@ -56,7 +53,7 @@ class FlatFormationAligmentVC: BaseVC {
                     $0.py_addObserver(for: #keyPath(UIView.frame), id: "slkdjflkdsjf", block: { (value: CGRect?) in
                         print(value ?? .zero)
                     })
-                }
+            }
             
             Label("4").attach($0)
                 .activated(State(false))
@@ -65,7 +62,7 @@ class FlatFormationAligmentVC: BaseVC {
                     $0.py_addObserver(for: #keyPath(UIView.frame), id: "slkdjflkdsjf", block: { (value: CGRect?) in
                         print(value ?? .zero)
                     })
-                }
+            }
             
             Label("5").attach($0)
                 .activated(State(false))
@@ -75,25 +72,23 @@ class FlatFormationAligmentVC: BaseVC {
                     $0.py_addObserver(for: #keyPath(UIView.layer.position), id: "slkdjflkdsjf", block: { (value: CGRect?) in
                         print(value ?? .zero)
                     })
-                }
+            }
             
-        }
-        .size(.fill, .fill)
-        .formation(self.formation)
-        .space(10)
-        .justifyContent(self.aligment)
-        .reverse(self.reversed)
-        
-        randomViewColor(view: view)
+            }
+            .size(.fill, .fill)
+            .formation(self.formation)
+            .space(10)
+            .justifyContent(self.aligment)
+            .reverse(self.reversed)
     }
     
     @objc private func change() {
-        formation.value = random(array: [Formation.leading, .center, .sides, .round, .trailing])
-        aligment.value = random(array: [Aligment.left, .right, .center])
-        reversed.value = random(array: [false, true])
+        formation.value = Util.random(array: [Formation.leading, .center, .sides, .round, .trailing])
+        aligment.value = Util.random(array: [Aligment.left, .right, .center])
+        reversed.value = Util.random(array: [false, true])
         UIView.animate(withDuration: 0.25, animations: {
-            self.frame.value = self.random(array: [CGRect(x: 0, y: 0, width: 100, height: 100), CGRect(x: 100, y: 100, width: 50, height: 50)])
-            self.center.value = self.random(array: [CGPoint(x: 0, y: 0), CGPoint(x: 200, y: 100)])
+            self.frame.value = Util.random(array: [CGRect(x: 0, y: 0, width: 100, height: 100), CGRect(x: 100, y: 100, width: 50, height: 50)])
+            self.center.value = Util.random(array: [CGPoint(x: 0, y: 0), CGPoint(x: 200, y: 100)])
             self.vRoot.layoutIfNeeded()
         })
     }

@@ -9,8 +9,8 @@ import Foundation
 
 public class FlatLayout: BaseLayout {
     
-    public override init(target: MeasureTargetable? = nil) {
-        super.init(target: target)
+    public override init(target: MeasureTargetable? = nil, children: [Measure] = []) {
+        super.init(target: target, children: children)
         justifyContent = [.left, .top]
     }
     

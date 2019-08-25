@@ -12,7 +12,6 @@ public enum Direction {
 }
 
 public struct Aligment: OptionSet, CustomStringConvertible {
-    
     public var description: String {
         let all = [Aligment.top, .left, .bottom, .right, .horzCenter, .vertCenter]
         let contain = all.filter({ self.contains($0) })
@@ -84,12 +83,15 @@ public struct Aligment: OptionSet, CustomStringConvertible {
 }
 
 /// 描述一个节点相对于父节点的属性
-public class Measure: Measurable {
+public class Measure: Measurable, MeasureTargetable {
     
-    weak var target: MeasureTargetable?
+    var fakeTarget = _FakeTarget()
     
-    public init(target: MeasureTargetable? = nil) {
+    private weak var target: MeasureTargetable?
+    
+    public init(target: MeasureTargetable? = nil, children: [Measure] = []) {
         self.target = target
+        self.fakeTarget.children = children
     }
     
     public var direction: Direction = .x {
@@ -111,6 +113,42 @@ public class Measure: Measurable {
         return MeasureCaculator.caculate(measure: self, byParent: parent)
     }
     
+    public var py_size: CGSize {
+        set {
+            getRealTarget().py_size = newValue
+        }
+        get {
+            return getRealTarget().py_size
+        }
+    }
+    
+    public var py_center: CGPoint {
+        set {
+            getRealTarget().py_center = newValue
+        }
+        get {
+            return getRealTarget().py_center
+        }
+    }
+    
+    public func py_enumerateChild(_ block: (Int, Measure) -> Void) {
+        getRealTarget().py_enumerateChild { (idx, m) in
+            block(idx, m)
+        }
+    }
+    
+    public func py_sizeThatFits(_ size: CGSize) -> CGSize {
+        return getRealTarget().py_sizeThatFits(size)
+    }
+    
+    func getRealTarget() -> MeasureTargetable {
+        if let target = target {
+            return target
+        }
+        return fakeTarget
+    }
+    
+    
 }
 
 class _FakeTarget: MeasureTargetable {
@@ -130,13 +168,4 @@ class _FakeTarget: MeasureTargetable {
     }
     
     var children = [Measure]()
-}
-
-public class PlaceHolderMeasure: Measure {
-    
-    private var fakeTarget = _FakeTarget()
-    public init() {
-        super.init()
-        target = fakeTarget
-    }
 }

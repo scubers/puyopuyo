@@ -25,7 +25,7 @@ class ZCaculator {
     
     func caculate() -> Size {
         
-        let layoutFixedSize = layout.target?.py_size ?? .zero
+        let layoutFixedSize = layout.py_size
         
         var children = [Measure]()
         layout.enumerateChild { (_, m) in
@@ -48,7 +48,7 @@ class ZCaculator {
                                         height: max(layoutFixedSize.height - layoutFixedHeight - (subMargin.top + subMargin.bottom), 0))
             // 计算大小
             let sizeAfterCaculate = Caculator.caculate(size: subSize, by: zContainerSize)
-            measure.target?.py_size = CGSize(width: sizeAfterCaculate.width.fixedValue, height: sizeAfterCaculate.height.fixedValue)
+            measure.py_size = CGSize(width: sizeAfterCaculate.width.fixedValue, height: sizeAfterCaculate.height.fixedValue)
             maxSizeWithMargin.width = max(maxSizeWithMargin.width, sizeAfterCaculate.width.fixedValue + subMargin.left + subMargin.right)
             maxSizeWithMargin.height = max(maxSizeWithMargin.height, sizeAfterCaculate.height.fixedValue + subMargin.top + subMargin.bottom)
             
@@ -74,7 +74,7 @@ class ZCaculator {
                 center.y = layoutFixedSize.height - (layout.padding.bottom + subMargin.bottom + sizeAfterCaculate.height.fixedValue / 2)
             }
             
-            measure.target?.py_center = center
+            measure.py_center = center
         }
         
         // 计算布局自身大小

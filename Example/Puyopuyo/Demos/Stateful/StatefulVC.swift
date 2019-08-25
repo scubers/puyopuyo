@@ -14,12 +14,11 @@ class StatefulVC: BaseVC, UITextFieldDelegate {
     
     var text = State("text").optional()
     var textColor = State<UIColor>(.black)
-    lazy var backgroundColor = State<UIColor>(self.randomColor())
+    lazy var backgroundColor = State<UIColor>(Util.randomColor())
     var width = State<SizeDescription>(.fix(100))
     var height = State<SizeDescription>(.fix(100))
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func configView() {
         
         UIScrollView().attach(vRoot) {
             
@@ -52,15 +51,13 @@ class StatefulVC: BaseVC, UITextFieldDelegate {
                     .text(self.text)
                     .backgroundColor(self.backgroundColor.optional())
                     .size(self.width, self.height)
+                }
+                .space(10)
+                .size(.fill, .wrap)
+                .padding(all: 10)
+                .justifyContent(.center)
             }
-            .space(10)
-            .size(.fill, .wrap)
-            .padding(all: 10)
-            .justifyContent(.center)
-        }
-        .size(.fill, .fill)
-        
-        randomViewColor(view: view)
+            .size(.fill, .fill)
     }
     
     private func valueChanged(_ view: UISwitch) -> Void {
@@ -72,14 +69,14 @@ class StatefulVC: BaseVC, UITextFieldDelegate {
             self.text.value = "A random string: \(arc4random_uniform(10))"
             self.width.value = self.randomSize()
             self.height.value = self.randomSize()
-            self.textColor.value = self.randomColor()
-            self.backgroundColor.value = self.randomColor()
+            self.textColor.value = Util.randomColor()
+            self.backgroundColor.value = Util.randomColor()
             self.vRoot.layoutIfNeeded()
         }
     }
     
     private func randomSize() -> SizeDescription {
-        return random(array: [.fill, .wrap, .fix(100)])
+        return Util.random(array: [.fill, .wrap, .fix(100)])
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {

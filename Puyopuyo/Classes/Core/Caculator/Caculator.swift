@@ -45,4 +45,12 @@ class Caculator {
         }
         return CalSize(main: main, cross: cross, direction: calSize.direction)
     }
+    
+    static func sizeThatFit(size: CGSize, to measure: Measure) -> CGSize {
+        let temp = Measure()
+        temp.py_size = size
+        let sizeAfterCalulate = measure.caculate(byParent: temp)
+        let fixedSize = Caculator.caculate(size: sizeAfterCalulate, by: size)
+        return CGSize(width: fixedSize.width.fixedValue, height: fixedSize.height.fixedValue)
+    }
 }

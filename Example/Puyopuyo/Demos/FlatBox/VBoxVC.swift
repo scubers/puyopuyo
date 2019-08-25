@@ -10,8 +10,7 @@ import UIKit
 import Puyopuyo
 
 class VBoxVC: BaseVC {
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func configView() {
         
         navigationItem.title = "VBox,space=10,padding=10"
         
@@ -38,12 +37,9 @@ class VBoxVC: BaseVC {
                     """).attach($0)
                 .aligment(.center)
                 .size(.wrap(add: 80), .wrap)
-        }
-        .space(10)
-        .size(.fill, .fill)
-        .padding(all: 10)
-        
-        randomViewColor(view: view)
-        
+            }
+            .space(10)
+            .size(.fill, .fill)
+            .padding(all: 10)
     }
 }

@@ -21,15 +21,7 @@ public class FlowLayout: FlatLayout {
         }
     }
     
-    public var vFormation: Formation = .leading
-    public var hFormation: Formation = .leading
-    
-    public override var formation: Formation {
-        didSet {
-            vFormation = formation
-            hFormation = formation
-        }
-    }
+    public var subFormation: Formation = .leading
     
     public override func caculate(byParent parent: Measure) -> Size {
         return FlowCaculator(self, parent: parent).caculate()

@@ -9,48 +9,24 @@
 import UIKit
 import Puyopuyo
 import TangramKit
+import RxSwift
 
 class TestVC: BaseVC {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        py_flow()
-        randomViewColor(view: view)
+    
+    var subVC: UIViewController? = FlowBoxBaseVC()
+    
+    override func configView() {
+        vRoot.attach() {
+            self.subView().attach($0)
+                .size(.fill, .fill)
+        }
     }
     
-    private func py_flow() {
-        
-        let reverse = _S<Bool>(false)
-        
-        vRoot.attach() {
-            
-            UIButton().attach($0)
-                .title(_S("change"), state: .normal)
-                .addWeakAction(to: self, for: .touchUpInside, { (self, _) in
-                    self.vRoot.animate(0.2, block: {
-                        reverse.value = !reverse.value
-                    })
-                })
-                .size(100, 20)
-            
-            VFlow(count: 3).attach($0) {
-                for idx in 0..<7 {
-                    Label("\(idx + 1)").attach($0)
-                        .size(60, 30)
-//                        .width(60)
-//                        .heightOnSelf({ .fix($0.width) })
-                }
-                
-                }
-                .size(.fill, .fill)
-                .reverse(reverse)
-                .attach() {
-                    $0.layout.hSpace = 10
-                    $0.layout.vSpace = 20
-                    $0.layout.vFormation = .center
-                    $0.layout.hFormation = .trailing
-                }
+    func subView() -> UIView {
+        if let type = subVC {
+            return type.view
         }
-        .space(20)
+        return UIView()
     }
     
     private func test1() {

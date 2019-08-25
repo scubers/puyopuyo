@@ -10,8 +10,7 @@ import UIKit
 import Puyopuyo
 
 class ZBoxVC: BaseVC {
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func configView() {
         
         vRoot.attach() {
             
@@ -49,8 +48,5 @@ class ZBoxVC: BaseVC {
             .size(300, 300)
         }
         .formation(.center)
-        
-        
-        randomViewColor(view: view)
     }
 }

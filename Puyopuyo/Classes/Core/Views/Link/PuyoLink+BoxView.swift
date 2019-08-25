@@ -123,3 +123,58 @@ extension PuyoLink where T: FlatBox {
         return self
     }
 }
+
+// MARK: - FlowBox
+extension PuyoLink where T: FlowBox {
+    
+    @discardableResult
+    public func arrangeCount(_ count: Int) -> Self {
+        view.layout.arrange = count
+        setNeedsLayout()
+        return self
+    }
+    
+    @discardableResult
+    public func arrangeCount<S: Valuable>(_ count: S) -> Self where S.ValueType == Int {
+        view.py_setUnbinder(count.safeBind(view, { (v, c) in
+            v.layout.arrange = c
+            v.py_setNeedsLayout()
+        }), for: #function)
+        return self
+    }
+    
+    @discardableResult
+    public func hSpace<S: Valuable>(_ space: S) -> Self where S.ValueType == CGFloat {
+        view.py_setUnbinder(space.safeBind(view, { (v, s) in
+            v.layout.hSpace = s
+            v.py_setNeedsLayout()
+        }), for: #function)
+        return self
+    }
+    
+    @discardableResult
+    public func vSpace<S: Valuable>(_ space: S) -> Self where S.ValueType == CGFloat {
+        view.py_setUnbinder(space.safeBind(view, { (v, s) in
+            v.layout.vSpace = s
+            v.py_setNeedsLayout()
+        }), for: #function)
+        return self
+    }
+    
+    @discardableResult
+    public func subFormation(_ formation: Formation) -> Self {
+        view.layout.subFormation = formation
+        setNeedsLayout()
+        return self
+    }
+    
+    @discardableResult
+    public func subFormation<S: Valuable>(_ formation: S) -> Self where S.ValueType == Formation {
+        view.py_setUnbinder(formation.safeBind(view, { (v, f) in
+            v.layout.subFormation = f
+            v.py_setNeedsLayout()
+        }), for: #function)
+        return self
+    }
+
+}

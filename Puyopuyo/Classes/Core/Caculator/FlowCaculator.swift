@@ -7,53 +7,35 @@
 
 import Foundation
 
-private class _FakeFlatLayout: FlatLayout, MeasureTargetable {
+private class _FakeFlatLayout: FlatLayout {
     
-    private var isPrint = false
+    private var lastDelta: CGPoint = .zero
     
-    var py_size: CGSize = .zero
-    
-    var py_center: CGPoint = .zero {
+    override var py_center: CGPoint {
         didSet {
-            #if DEBUG
-            if isPrint {
-                print("----------------------")
-                print("size: \(py_size)")
-                print("center: \(py_center)")
-            }
-            #endif
-            children.forEach { (m) in
-                if let target = m.target {
-                    var center = target.py_center
-                    center.x += py_center.x - py_size.width / 2
-                    center.y += py_center.y - py_size.height / 2
-                    target.py_center = center
-                }
+            let outCenter = py_center
+            let size = py_size
+
+            // 计算虚拟位置的偏移量
+            let oldDelta = lastDelta
+            lastDelta = CGPoint(x: outCenter.x - size.width / 2, y: outCenter.y - size.height / 2)
+            
+            fakeTarget.children.forEach { (m) in
+                let target = m.getRealTarget()
+                var center = target.py_center
+                center.x += lastDelta.x - oldDelta.x
+                center.y += lastDelta.y - oldDelta.y
+                target.py_center = center
             }
         }
     }
     
-    func py_enumerateChild(_ block: (Int, Measure) -> Void) {
-        children.enumerated().forEach {
-            block($0, $1)
-        }
+    override func caculate(byParent parent: Measure) -> Size {
+        // 每次自身布局，都需要清空虚拟位置的偏移量
+        lastDelta = .zero
+        return super.caculate(byParent: parent)
     }
     
-    func py_sizeThatFits(_ size: CGSize) -> CGSize {
-        let temp = PlaceHolderMeasure()
-        temp.target?.py_size = size
-        let sizeAfterCalulate = caculate(byParent: temp)
-        let fixedSize = Caculator.caculate(size: sizeAfterCalulate, by: size)
-        return CGSize(width: fixedSize.width.fixedValue, height: fixedSize.height.fixedValue)
-    }
-    
-    var children = [Measure]()
-    required init(children: [Measure], print: Bool = false) {
-        super.init(target: nil)
-        target = self
-        self.children = children
-        self.isPrint = print
-    }
 }
 
 class FlowCaculator {
@@ -72,7 +54,7 @@ class FlowCaculator {
         return layout.direction
     }
     
-    lazy var layoutFixedSize = CalFixedSize(cgSize: self.layout.target?.py_size ?? .zero, direction: layout.direction)
+    lazy var layoutFixedSize = CalFixedSize(cgSize: self.layout.py_size, direction: layout.direction)
     lazy var layoutCalPadding = CalEdges(insets: layout.padding, direction: layout.direction)
     lazy var layoutCalSize = CalSize(size: layout.size, direction: layout.direction)
     
@@ -91,40 +73,25 @@ class FlowCaculator {
             fakeLines.append(constructFakeLine(children: Array(lineChildren)))
         }
         
-        return constructFakeOutside(children: fakeLines).caculate(byParent: parent)
+        let size = constructFakeOutside(children: fakeLines).caculate(byParent: parent)
+        return size
     }
 }
 
 private extension FlowCaculator {
     
     func constructFakeOutside(children: [Measure]) -> _FakeFlatLayout {
-        let outside = _FakeFlatLayout(children: children, print: true)
+        let outside = _FakeFlatLayout(target: nil, children: children)
         outside.justifyContent = layout.justifyContent
         outside.direction = layoutDirection
         outside.space = getNormalSpace()
-        outside.formation = getNormalFormation()
+        outside.formation = layout.formation
+        outside.margin = layout.margin
         outside.padding = layout.padding
         outside.reverse = layout.reverse
         outside.size = layout.size
-        
-        let parentCGSize = parent.target?.py_size ?? .zero
-        let size = layout.size
-        // 本身固有尺寸
-        if size.isFixed() || size.isRatio() {
-            let size = Caculator.caculate(size: size, by: parentCGSize)
-            outside.target?.py_size = CGSize(width: size.width.fixedValue, height: size.height.fixedValue)
-        } else {
-            if !size.width.isWrap {
-                let width = Caculator.caculateFix(size.width, by: parentCGSize.width)
-                outside.target?.py_size.width = width.fixedValue
-            }
-            if !size.height.isWrap {
-                let height = Caculator.caculateFix(size.height, by: parentCGSize.height)
-                outside.target?.py_size.height = height.fixedValue
-            }
-        }
+        outside.py_size = layout.py_size
         return outside
-
     }
     
     func constructFakeLine(children: [Measure]) -> _FakeFlatLayout {
@@ -132,7 +99,7 @@ private extension FlowCaculator {
         line.justifyContent = layout.justifyContent
         line.direction = getOppsiteDirection()
         line.space = getOppsiteSpace()
-        line.formation = getOppsiteFormation()
+        line.formation = layout.subFormation
         line.reverse = layout.reverse
         line.size = Size(width: .wrap, height: .wrap)
         
@@ -143,7 +110,7 @@ private extension FlowCaculator {
             line.size = calSize.getSize()
         }
         let size = line.caculate(byParent: layout)
-        line.target?.py_size = CGSize(width: size.width.fixedValue, height: size.height.fixedValue)
+        line.py_size = CGSize(width: size.width.fixedValue, height: size.height.fixedValue)
         return line
     }
     
@@ -151,20 +118,6 @@ private extension FlowCaculator {
         let base = children.count / layout.arrange
         let more = children.count % layout.arrange
         return base + (more > 0 ? 1 : 0)
-    }
-    
-    func getNormalFormation() -> Formation {
-        if layoutDirection == .x {
-            return layout.hFormation
-        }
-        return layout.vFormation
-    }
-    
-    func getOppsiteFormation() -> Formation {
-        if layoutDirection == .x {
-            return layout.vFormation
-        }
-        return layout.hFormation
     }
     
     func getNormalSpace() -> CGFloat {

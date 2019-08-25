@@ -10,8 +10,7 @@ import UIKit
 import Puyopuyo
 
 class ZBoxSizeVC: BaseVC {
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func configView() {
         
         vRoot.attach() {
             UIScrollView().attach($0) {
@@ -22,8 +21,8 @@ class ZBoxSizeVC: BaseVC {
                             .size(.fill, .fill)
                             .aligment(.center)
                             .margin(top: -20, left: -20)
-                    }
-                    .size(100, 100)
+                        }
+                        .size(100, 100)
                     
                     HBox().attach($0) {
                         ZBox().attach($0) {
@@ -31,29 +30,27 @@ class ZBoxSizeVC: BaseVC {
                                 .size(.fill, .fill)
                                 .aligment(.center)
                                 .margin(top: 20, left: 20)
-                        }
-                        .size(100, 100)
+                            }
+                            .size(100, 100)
                         
                         ZBox().attach($0) {
                             Label("20 point smaller").attach($0)
                                 .size(.fill, .fill)
                                 .aligment(.center)
+                            }
+                            .padding(top: 20, left: 20)
+                            .size(100, 100)
                         }
-                        .padding(top: 20, left: 20)
-                        .size(100, 100)
-                    }
-                    .space(10)
+                        .space(10)
                     
+                    }
+                    .space(20)
+                    .size(.fill, .wrap)
+                    .padding(all: 10)
+                    .justifyContent(.center)
                 }
-                .space(20)
-                .size(.fill, .wrap)
-                .padding(all: 10)
-                .justifyContent(.center)
-            }
-            .alwaysVertBounds(true)
-            .size(.fill, .fill)
+                .alwaysVertBounds(true)
+                .size(.fill, .fill)
         }
-        
-        randomViewColor(view: view)
     }
 }

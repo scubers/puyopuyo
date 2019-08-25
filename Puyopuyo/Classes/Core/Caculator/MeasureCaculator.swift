@@ -16,26 +16,26 @@ class MeasureCaculator {
         switch parent {
         case is FlatLayout: fallthrough
         case is ZLayout:
-            let parentCGSize = parent.target?.py_size ?? .zero
+            let parentCGSize = parent.py_size
             
             var widthSize = measure.size.width
             var heightSize = measure.size.height
             
             if measure.size.isWrap() {
                 
-                let wrappedSize = measure.target?.py_sizeThatFits(CGSize(width: widthSize.max, height: heightSize.max))
-                widthSize = .fix(widthSize.getWrapSize(by: wrappedSize?.width ?? 0))
-                heightSize = .fix(heightSize.getWrapSize(by: wrappedSize?.height ?? 0))
+                let wrappedSize = measure.py_sizeThatFits(CGSize(width: widthSize.max, height: heightSize.max))
+                widthSize = .fix(widthSize.getWrapSize(by: wrappedSize.width))
+                heightSize = .fix(heightSize.getWrapSize(by: wrappedSize.height))
                 
             } else if widthSize.isWrap {
                 
-                let wrappedCGSize = measure.target?.py_sizeThatFits(CGSize(width: widthSize.max, height: parentCGSize.height))
-                widthSize = .fix(widthSize.getWrapSize(by: wrappedCGSize?.width ?? 0))
+                let wrappedCGSize = measure.py_sizeThatFits(CGSize(width: widthSize.max, height: parentCGSize.height))
+                widthSize = .fix(widthSize.getWrapSize(by: wrappedCGSize.width))
                 
             } else if heightSize.isWrap {
                 
-                let wrappedCGSize = measure.target?.py_sizeThatFits(CGSize(width: parentCGSize.width, height: heightSize.max))
-                heightSize = .fix(heightSize.getWrapSize(by: wrappedCGSize?.height ?? 0))
+                let wrappedCGSize = measure.py_sizeThatFits(CGSize(width: parentCGSize.width, height: heightSize.max))
+                heightSize = .fix(heightSize.getWrapSize(by: wrappedCGSize.height))
                 
             }
             
