@@ -42,7 +42,7 @@ extension NSObject {
         }
         let unbinder = Unbinders.create { [weak self] in
             #if DEBUG
-            print("unbind keypath: \(keyPath)")
+//            print("unbind keypath: \(keyPath)")
             #endif
             self?.removeObserver(observer, forKeyPath: keyPath)
         }

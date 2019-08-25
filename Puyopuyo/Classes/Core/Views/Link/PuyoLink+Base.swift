@@ -76,6 +76,11 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
+    public func width(_ modifiable: SizeModifiable) -> Self {
+        return width(modifiable.modifySize())
+    }
+    
+    @discardableResult
     public func widthOnSelf(_ block: @escaping (CGRect) -> SizeDescription) -> Self {
         return width(on: view, block)
     }
@@ -103,6 +108,11 @@ extension PuyoLink where T: UIView {
             height(s)
         }
         return self
+    }
+    
+    @discardableResult
+    public func height(_ modifiable: SizeModifiable) -> Self {
+        return height(modifiable.modifySize())
     }
     
     @discardableResult

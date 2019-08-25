@@ -35,9 +35,7 @@ class FlowBoxBaseVC: BaseVC {
                         arrange.value = Util.random(array: Array(1...total))
                         direction.value = Util.random(array: [.x, .y])
                         
-                        let horzContent = [Aligment.left, .right, .horzCenter]
-                        let vertContent = [Aligment.top, .bottom, .vertCenter]
-                        justifyContent.value = Util.random(array: direction.value == .x ? horzContent : vertContent)
+                        justifyContent.value = Util.random(array: direction.value == .x ? Aligment.horzAligments() : Aligment.vertAligments())
                         text.value = """
                         arrange: \(arrange.value)
                         direction: \(direction.value)
@@ -50,15 +48,27 @@ class FlowBoxBaseVC: BaseVC {
                 })
                 .size(100, 20)
             
-            Label().attach($0)
-                .text(text)
-                .numberOfLines(_S(0))
+            VBox().attach($0) {
+                let height: CGFloat = 20
+                OptionView(vc: self, prefix: "arrange", receiver: arrange, options: Array(1...total)).attach($0).size(.fill, height)
+                OptionView(vc: self, prefix: "direction", receiver: direction, options: Direction.allCases).attach($0).size(.fill, height)
+                OptionView(vc: self, prefix: "reverse", receiver: reverse, options: [true, false]).attach($0).size(.fill, height)
+                OptionView(vc: self, prefix: "formation", receiver: formation, options: Formation.allCases).attach($0).size(.fill, height)
+                OptionView(vc: self, prefix: "subFormation", receiver: subFormation, options: Formation.allCases).attach($0).size(.fill, height)
+                }
+                .padding(left: 10, right: 10)
                 .size(.fill, .wrap)
+            
+//            Label().attach($0)
+//                .text(text)
+//                .numberOfLines(_S(0))
+//                .size(.fill, .wrap)
             
             VFlow(count: 3).attach($0) {
                 for idx in 0..<total {
                     Label("\(idx + 1)").attach($0)
                         .width(30 + idx * 3)
+//                        .width(Simulate($0).width.multiply(0.2))
                         .heightOnSelf({ .fix($0.width) })
                     
                     if idx == 2 {

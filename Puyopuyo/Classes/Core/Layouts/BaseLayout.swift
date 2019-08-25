@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum Formation {
+public enum Formation: CaseIterable {
     case leading
     case center
     case sides

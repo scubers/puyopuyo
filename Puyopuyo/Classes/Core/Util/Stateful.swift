@@ -38,6 +38,13 @@ extension Valuable {
             }
         }
     }
+    
+    public func py_bind<O: Outputable>(to output: O) -> Unbinder where O.OutputType == ValueType {
+        return receiveValue { (v) in
+            output.postValue(v)
+        }
+    }
+    
 }
 
 public typealias _S = State
@@ -103,6 +110,9 @@ public class State<T>: Valuable, Outputable {
     
     private var callees = [Callee<T>]()
 
+}
+
+extension State {
     public func optional() -> State<ValueType?> {
         let new = State<ValueType?>(nil)
         let unbinder = receiveValue { (value) in
@@ -113,7 +123,7 @@ public class State<T>: Valuable, Outputable {
         }
         return new
     }
-
+    
     public func map<S: Outputable, R>(_ block: @escaping (T) -> R) -> S where S.OutputType == R {
         let newState = State<R>()
         let unbinder = receiveValue { (value) in
@@ -124,6 +134,7 @@ public class State<T>: Valuable, Outputable {
         }
         return newState as! S
     }
+    
 }
 
 private class UnbinderImpl: NSObject, Unbinder {

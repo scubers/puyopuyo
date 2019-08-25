@@ -47,6 +47,14 @@ extension PuyoLink where T: BoxView {
         return self
     }
     
+    @discardableResult
+    public func autoJudgeScroll(_ judge: Bool) -> Self {
+        view.layout.autoJudgeScroll = judge
+        setNeedsLayout()
+        return self
+    }
+
+    
 }
 
 // MARK: - FlatBox
@@ -116,12 +124,6 @@ extension PuyoLink where T: FlatBox {
         return self
     }
     
-    @discardableResult
-    public func autoJudgeScroll(_ judge: Bool) -> Self {
-        view.layout.autoJudgeScroll = judge
-        setNeedsLayout()
-        return self
-    }
 }
 
 // MARK: - FlowBox

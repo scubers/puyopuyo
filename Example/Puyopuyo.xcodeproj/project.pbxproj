@@ -16,6 +16,7 @@
 		A81CE13C2310509B00E19E6B /* HBoxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81CE13B2310509B00E19E6B /* HBoxVC.swift */; };
 		A81CE143231280EE00E19E6B /* FlowBoxMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81CE142231280EE00E19E6B /* FlowBoxMenu.swift */; };
 		A81CE1452312811400E19E6B /* FlowBoxBaseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81CE1442312811400E19E6B /* FlowBoxBaseVC.swift */; };
+		A81CE1492312EE6900E19E6B /* OptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81CE1482312EE6900E19E6B /* OptionView.swift */; };
 		A846265123093E4E003A282C /* FlatFormationAligmentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A846265023093E4E003A282C /* FlatFormationAligmentVC.swift */; };
 		A84626542309574C003A282C /* TestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84626532309574C003A282C /* TestVC.swift */; };
 		A8655E9D22F33C3D00679D7C /* VisibleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8655E9C22F33C3D00679D7C /* VisibleViewController.swift */; };
@@ -63,6 +64,7 @@
 		A81CE13B2310509B00E19E6B /* HBoxVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HBoxVC.swift; sourceTree = "<group>"; };
 		A81CE142231280EE00E19E6B /* FlowBoxMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowBoxMenu.swift; sourceTree = "<group>"; };
 		A81CE1442312811400E19E6B /* FlowBoxBaseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowBoxBaseVC.swift; sourceTree = "<group>"; };
+		A81CE1482312EE6900E19E6B /* OptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionView.swift; sourceTree = "<group>"; };
 		A846265023093E4E003A282C /* FlatFormationAligmentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlatFormationAligmentVC.swift; sourceTree = "<group>"; };
 		A84626532309574C003A282C /* TestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVC.swift; sourceTree = "<group>"; };
 		A8655E9C22F33C3D00679D7C /* VisibleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisibleViewController.swift; sourceTree = "<group>"; };
@@ -231,6 +233,7 @@
 				A8E53FB222C8E679000B2B6D /* BaseVC.swift */,
 				A8D9430822FF3694002E487F /* Label.swift */,
 				A897FCDD230AFBD80061029E /* Util.swift */,
+				A81CE1482312EE6900E19E6B /* OptionView.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -457,6 +460,7 @@
 				A8D9431222FFEC45002E487F /* ZBoxSizeVC.swift in Sources */,
 				A846265123093E4E003A282C /* FlatFormationAligmentVC.swift in Sources */,
 				A8D9430C22FF3937002E487F /* ZBoxVC.swift in Sources */,
+				A81CE1492312EE6900E19E6B /* OptionView.swift in Sources */,
 				A8D9430722FF3640002E487F /* VBoxVC.swift in Sources */,
 				A8D9431022FFEBE7002E487F /* FlatBoxMenu.swift in Sources */,
 				09883C4A22C5E5FB006CE05A /* StyleTestViewController.swift in Sources */,

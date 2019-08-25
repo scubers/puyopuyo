@@ -7,7 +7,7 @@
 
 import UIKit
 
-public enum Direction {
+public enum Direction: CaseIterable {
     case x, y
 }
 
@@ -45,6 +45,13 @@ public struct Aligment: OptionSet, CustomStringConvertible {
     
     public static let center = Aligment.vertCenter.union(.horzCenter)
     
+    public static func horzAligments() -> [Aligment] {
+        return [.left, .right, .horzCenter]
+    }
+    
+    public static func vertAligments() -> [Aligment] {
+        return [.top, .bottom, .vertCenter]
+    }
     
     public func hasHorzAligment() -> Bool {
         return
