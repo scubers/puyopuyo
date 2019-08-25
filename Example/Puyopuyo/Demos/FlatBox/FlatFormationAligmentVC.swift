@@ -55,42 +55,21 @@ class FlatFormationAligmentVC: BaseVC {
                     })
             }
             
-            Label("4").attach($0)
-                .activated(State(false))
-                .frame(self.frame)
-                .attach() {
-                    $0.py_addObserver(for: #keyPath(UIView.frame), id: "slkdjflkdsjf", block: { (value: CGRect?) in
-                        print(value ?? .zero)
-                    })
-            }
-            
-            Label("5").attach($0)
-                .activated(State(false))
-                .frame(State(CGRect(x: 200, y: 200, width: 60, height: 60)))
-                .center(self.center)
-                .attach() {
-                    $0.py_addObserver(for: #keyPath(UIView.layer.position), id: "slkdjflkdsjf", block: { (value: CGRect?) in
-                        print(value ?? .zero)
-                    })
-            }
-            
             }
             .size(.fill, .fill)
             .formation(self.formation)
             .space(10)
+            .padding(all: 10)
             .justifyContent(self.aligment)
             .reverse(self.reversed)
     }
     
     @objc private func change() {
-        formation.value = Util.random(array: [Formation.leading, .center, .sides, .round, .trailing])
-        aligment.value = Util.random(array: [Aligment.left, .right, .center])
-        reversed.value = Util.random(array: [false, true])
-        UIView.animate(withDuration: 0.25, animations: {
-            self.frame.value = Util.random(array: [CGRect(x: 0, y: 0, width: 100, height: 100), CGRect(x: 100, y: 100, width: 50, height: 50)])
-            self.center.value = Util.random(array: [CGPoint(x: 0, y: 0), CGPoint(x: 200, y: 100)])
-            self.vRoot.layoutIfNeeded()
-        })
+        vRoot.animate(0.2) {
+            self.formation.value = Util.random(array: [Formation.leading, .center, .sides, .round, .trailing])
+            self.aligment.value = Util.random(array: [Aligment.left, .right, .center])
+            self.reversed.value = Util.random(array: [false, true])
+        }
     }
     
     private func refreshTitle() {

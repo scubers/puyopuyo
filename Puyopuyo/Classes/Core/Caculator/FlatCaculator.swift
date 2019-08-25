@@ -182,7 +182,6 @@ class FlatCaculator {
     ///
     /// - Parameters:
     ///   - measures: 已经计算好大小的节点
-    ///   - parent: 处于的父layout
     /// - Returns: 返回最后节点的end(包括最后一个节点的margin.end)
     private func caculateCenter(measures: [Measure]) -> CGFloat {
         
@@ -228,11 +227,9 @@ class FlatCaculator {
             
         } else if aligment.isBackward(for: layout.direction) {
             cross = layoutFixedSize.cross - (layoutCalPadding.backward + calMargin.backward + calSize.cross / 2)
-//        } else if aligment.isForward(for: layout.direction) {
         } else {
             // 若无设置，则默认forward
             cross = calSize.cross / 2 + layoutCalPadding.forward + calMargin.forward
-//            fatalError("")
         }
         
         let center = CalCenter(main: main, cross: cross, direction: layout.direction).getPoint()
