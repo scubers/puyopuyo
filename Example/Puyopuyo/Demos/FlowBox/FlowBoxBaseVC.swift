@@ -55,6 +55,7 @@ class FlowBoxBaseVC: BaseVC {
                 OptionView(vc: self, prefix: "reverse", receiver: reverse, options: [true, false]).attach($0).size(.fill, height)
                 OptionView(vc: self, prefix: "formation", receiver: formation, options: Formation.allCases).attach($0).size(.fill, height)
                 OptionView(vc: self, prefix: "subFormation", receiver: subFormation, options: Formation.allCases).attach($0).size(.fill, height)
+                OptionView(vc: self, prefix: "content", receiver: justifyContent, options: Aligment.vertAligments() + Aligment.horzAligments()).attach($0).size(.fill, height)
                 }
                 .padding(left: 10, right: 10)
                 .size(.fill, .wrap)
