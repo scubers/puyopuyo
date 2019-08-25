@@ -9,7 +9,11 @@ import Foundation
 
 public class FlowLayout: FlatLayout {
     
-    public var arrange: Int = 1
+    public var arrange: Int = 1 {
+        willSet {
+            assert(newValue > 0, "flow layout should not set count below 1!!")
+        }
+    }
     
     public var vSpace: CGFloat = 0
     public var hSpace: CGFloat = 0

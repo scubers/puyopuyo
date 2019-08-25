@@ -226,14 +226,13 @@ class FlatCaculator {
         if aligment.isCenter(for: layout.direction) {
             cross = layoutFixedSize.cross / 2
             
-        } else if aligment.isForward(for: layout.direction) {
-            cross = calSize.cross / 2 + layoutCalPadding.forward + calMargin.forward
-            
         } else if aligment.isBackward(for: layout.direction) {
             cross = layoutFixedSize.cross - (layoutCalPadding.backward + calMargin.backward + calSize.cross / 2)
-            
+//        } else if aligment.isForward(for: layout.direction) {
         } else {
-            fatalError("")
+            // 若无设置，则默认forward
+            cross = calSize.cross / 2 + layoutCalPadding.forward + calMargin.forward
+//            fatalError("")
         }
         
         let center = CalCenter(main: main, cross: cross, direction: layout.direction).getPoint()

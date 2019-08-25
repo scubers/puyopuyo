@@ -11,8 +11,7 @@ import Puyopuyo
 import RxSwift
 
 class FlowBoxBaseVC: BaseVC {
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func configView() {
         
         let reverse = _S<Bool>(false)
         let formation = _S<Formation>(.trailing)
@@ -20,7 +19,9 @@ class FlowBoxBaseVC: BaseVC {
         let text = _S<String?>(nil)
         let arrange = _S<Int>(3)
         let direction = _S<Direction>(.y)
+        let justifyContent = _S<Aligment>(.center)
         
+        let total = 10
         
         vRoot.attach() {
             
@@ -29,16 +30,21 @@ class FlowBoxBaseVC: BaseVC {
                 .addWeakAction(to: self, for: .touchUpInside, { (self, _) in
                     self.vRoot.animate(0.2, block: {
                         reverse.value = !reverse.value
-                        subFormation.value = Util.random(array: [.leading, .center, .round, .trailing, .sides])
-                        formation.value = Util.random(array: [.leading, .center, .round, .trailing, .sides])
-                        arrange.value = Util.random(array: [1, 2, 3, 4, 5, 6, 7, 8])
+                        subFormation.value = Util.random(array: [.leading, .trailing, .center, .round, .sides])
+                        formation.value = Util.random(array: [.leading, .trailing, .center, .round, .sides])
+                        arrange.value = Util.random(array: Array(1...total))
                         direction.value = Util.random(array: [.x, .y])
+                        
+                        let horzContent = [Aligment.left, .right, .horzCenter]
+                        let vertContent = [Aligment.top, .bottom, .vertCenter]
+                        justifyContent.value = Util.random(array: direction.value == .x ? horzContent : vertContent)
                         text.value = """
                         arrange: \(arrange.value)
                         direction: \(direction.value)
                         reverse: \(reverse.value)
                         formation: \(formation.value)
                         subFormation: \(subFormation.value)
+                        content: \(justifyContent.value)
                         """
                     })
                 })
@@ -50,20 +56,23 @@ class FlowBoxBaseVC: BaseVC {
                 .size(.fill, .wrap)
             
             VFlow(count: 3).attach($0) {
-                for idx in 0..<13 {
-                    let x = Label("\(idx + 1)").attach($0)
-                        .width(30)
+                for idx in 0..<total {
+                    Label("\(idx + 1)").attach($0)
+                        .width(30 + idx * 3)
                         .heightOnSelf({ .fix($0.width) })
                     
                     if idx == 2 {
+//                        x.height(.fill)
                     }
                 }
                 
                 }
                 .size(.fill, .fill)
+//                .size(.wrap, .wrap)
                 .padding(all: 10)
                 .margin(all: 10)
                 .space(10)
+                .justifyContent(justifyContent)
                 .direction(direction)
                 .arrangeCount(arrange)
                 .reverse(reverse)
@@ -72,7 +81,5 @@ class FlowBoxBaseVC: BaseVC {
             }
             .justifyContent(.center)
             .space(10)
-        
-        Util.randomViewColor(view: view)
     }
 }

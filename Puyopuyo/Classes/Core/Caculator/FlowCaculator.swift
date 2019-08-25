@@ -59,6 +59,7 @@ class FlowCaculator {
     lazy var layoutCalSize = CalSize(size: layout.size, direction: layout.direction)
     
     func caculate() -> Size {
+        
         var caculateChildren = [Measure]()
         layout.enumerateChild { (_, m) in
             if m.activated {
@@ -82,7 +83,7 @@ private extension FlowCaculator {
     
     func constructFakeOutside(children: [Measure]) -> _FakeFlatLayout {
         let outside = _FakeFlatLayout(target: nil, children: children)
-        outside.justifyContent = layout.justifyContent
+//        outside.justifyContent = layout.justifyContent
         outside.direction = layoutDirection
         outside.space = getNormalSpace()
         outside.formation = layout.formation
