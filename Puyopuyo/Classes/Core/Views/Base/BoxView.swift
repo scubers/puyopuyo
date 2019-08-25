@@ -26,15 +26,18 @@ open class BoxView: UIView {
     func _selfSizeAdapting(size: Size) {
         let parentCGSize = superview?.bounds.size ?? .zero
         // 本身固有尺寸
-        if size.isFixed() {
+        if size.isFixed() || size.isRatio() {
             let size = Caculator.caculate(size: size, by: parentCGSize)
             bounds.size = CGSize(width: size.width.fixedValue, height: size.height.fixedValue)
-        } else if size.width.isFixed {
-            let width = Caculator.caculateFix(width: size.width, by: parentCGSize.width)
-            bounds.size.width = width.fixedValue
-        } else if size.height.isFixed {
-            let height = Caculator.caculateFix(width: size.height, by: parentCGSize.height)
-            bounds.size.height = height.fixedValue
+        } else {
+            if !size.width.isWrap {
+                let width = Caculator.caculateFix(size.width, by: parentCGSize.width)
+                bounds.size.width = width.fixedValue
+            }
+            if !size.height.isWrap {
+                let height = Caculator.caculateFix(size.height, by: parentCGSize.height)
+                bounds.size.height = height.fixedValue
+            }
         }
     }
     

@@ -13,6 +13,7 @@ class Label: UILabel {
         self.init(frame: .zero)
         self.text = title
         numberOfLines = 0
+        textAlignment = .center
     }
     
     deinit {

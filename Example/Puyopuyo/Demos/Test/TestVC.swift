@@ -13,31 +13,44 @@ import TangramKit
 class TestVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
-//        test1()
-//        tk_flowTest()
         py_flow()
         randomViewColor(view: view)
     }
     
     private func py_flow() {
+        
+        let reverse = _S<Bool>(false)
+        
         vRoot.attach() {
+            
+            UIButton().attach($0)
+                .title(_S("change"), state: .normal)
+                .addWeakAction(to: self, for: .touchUpInside, { (self, _) in
+                    self.vRoot.animate(0.2, block: {
+                        reverse.value = !reverse.value
+                    })
+                })
+                .size(100, 20)
+            
             VFlow(count: 3).attach($0) {
-                for idx in 0..<10 {
+                for idx in 0..<7 {
                     Label("\(idx + 1)").attach($0)
-                        .width(60)
-                        .heightOnSelf({ .fix($0.width) })
+                        .size(60, 30)
+//                        .width(60)
+//                        .heightOnSelf({ .fix($0.width) })
                 }
                 
                 }
                 .size(.fill, .fill)
-                .margin(all: 10)
+                .reverse(reverse)
                 .attach() {
                     $0.layout.hSpace = 10
                     $0.layout.vSpace = 20
-//                    $0.layout.vFormation = .sides
-                    $0.layout.padding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+                    $0.layout.vFormation = .center
+                    $0.layout.hFormation = .trailing
                 }
         }
+        .space(20)
     }
     
     private func test1() {

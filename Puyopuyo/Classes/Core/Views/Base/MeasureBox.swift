@@ -14,12 +14,12 @@ class MeasureBox {
     static func getMeasure(from: UIView) -> Measure {
         var measure = objc_getAssociatedObject(from, &MeasureBox.measureHoldingKey) as? Measure
         if measure == nil {
-            if from is FlatBox {
-                measure = FlatLayout(target: from)
+            if from is FlowBox {
+                measure = FlowLayout(target: from)
             } else if from is ZBox {
                 measure = ZLayout(target: from)
-            } else if from is FlowBox {
-                measure = FlowLayout(target: from)
+            } else if from is FlatBox {
+                measure = FlatLayout(target: from)
             } else {
                 measure = Measure(target: from)
             }

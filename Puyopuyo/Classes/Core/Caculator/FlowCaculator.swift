@@ -9,10 +9,19 @@ import Foundation
 
 private class _FakeFlatLayout: FlatLayout, MeasureTargetable {
     
+    private var isPrint = false
+    
     var py_size: CGSize = .zero
     
     var py_center: CGPoint = .zero {
         didSet {
+            #if DEBUG
+            if isPrint {
+                print("----------------------")
+                print("size: \(py_size)")
+                print("center: \(py_center)")
+            }
+            #endif
             children.forEach { (m) in
                 if let target = m.target {
                     var center = target.py_center
@@ -39,14 +48,21 @@ private class _FakeFlatLayout: FlatLayout, MeasureTargetable {
     }
     
     var children = [Measure]()
-    required init(children: [Measure]) {
+    required init(children: [Measure], print: Bool = false) {
         super.init(target: nil)
         target = self
         self.children = children
+        self.isPrint = print
     }
 }
 
 class FlowCaculator {
+    
+    init(_ layout: FlowLayout, parent: Measure) {
+        self.layout = layout
+        self.parent = parent
+    }
+    
     let layout: FlowLayout
     let parent: Measure
     var arrange: Int {
@@ -55,10 +71,10 @@ class FlowCaculator {
     var layoutDirection: Direction {
         return layout.direction
     }
-    init(_ layout: FlowLayout, parent: Measure) {
-        self.layout = layout
-        self.parent = parent
-    }
+    
+    lazy var layoutFixedSize = CalFixedSize(cgSize: self.layout.target?.py_size ?? .zero, direction: layout.direction)
+    lazy var layoutCalPadding = CalEdges(insets: layout.padding, direction: layout.direction)
+    lazy var layoutCalSize = CalSize(size: layout.size, direction: layout.direction)
     
     func caculate() -> Size {
         var caculateChildren = [Measure]()
@@ -72,32 +88,65 @@ class FlowCaculator {
         var fakeLines = [_FakeFlatLayout]()
         for idx in 0..<line {
             let lineChildren = caculateChildren[idx * arrange..<min(idx * arrange + arrange, caculateChildren.count)]
-            let fakeLine = _FakeFlatLayout(children: Array(lineChildren))
-            fakeLines.append(fakeLine)
-            
-            fakeLine.justifyContent = layout.justifyContent
-            fakeLine.direction = getOppsiteDirection()
-            fakeLine.space = getOppsiteSpace()
-            fakeLine.formation = getOppsiteFormation()
-            fakeLine.size = Size(width: .wrap, height: .wrap)
-            
-            let size = fakeLine.caculate(byParent: layout)
-            fakeLine.target?.py_size = CGSize(width: size.width.fixedValue, height: size.height.fixedValue)
+            fakeLines.append(constructFakeLine(children: Array(lineChildren)))
         }
         
-        let outside = _FakeFlatLayout(children: fakeLines)
+        return constructFakeOutside(children: fakeLines).caculate(byParent: parent)
+    }
+}
+
+private extension FlowCaculator {
+    
+    func constructFakeOutside(children: [Measure]) -> _FakeFlatLayout {
+        let outside = _FakeFlatLayout(children: children, print: true)
         outside.justifyContent = layout.justifyContent
         outside.direction = layoutDirection
         outside.space = getNormalSpace()
         outside.formation = getNormalFormation()
         outside.padding = layout.padding
+        outside.reverse = layout.reverse
         outside.size = layout.size
         
-        return outside.caculate(byParent: parent)
-    }
-}
+        let parentCGSize = parent.target?.py_size ?? .zero
+        let size = layout.size
+        // 本身固有尺寸
+        if size.isFixed() || size.isRatio() {
+            let size = Caculator.caculate(size: size, by: parentCGSize)
+            outside.target?.py_size = CGSize(width: size.width.fixedValue, height: size.height.fixedValue)
+        } else {
+            if !size.width.isWrap {
+                let width = Caculator.caculateFix(size.width, by: parentCGSize.width)
+                outside.target?.py_size.width = width.fixedValue
+            }
+            if !size.height.isWrap {
+                let height = Caculator.caculateFix(size.height, by: parentCGSize.height)
+                outside.target?.py_size.height = height.fixedValue
+            }
+        }
+        return outside
 
-private extension FlowCaculator {
+    }
+    
+    func constructFakeLine(children: [Measure]) -> _FakeFlatLayout {
+        let line = _FakeFlatLayout(children: children)
+        line.justifyContent = layout.justifyContent
+        line.direction = getOppsiteDirection()
+        line.space = getOppsiteSpace()
+        line.formation = getOppsiteFormation()
+        line.reverse = layout.reverse
+        line.size = Size(width: .wrap, height: .wrap)
+        
+        if line.formation != .leading {
+            // 需要外界给定cross
+            var calSize = line.size.getCalSize(by: layoutDirection)
+            calSize.cross = .fix(layoutFixedSize.cross - layout.getCalPadding().crossFixed)
+            line.size = calSize.getSize()
+        }
+        let size = line.caculate(byParent: layout)
+        line.target?.py_size = CGSize(width: size.width.fixedValue, height: size.height.fixedValue)
+        return line
+    }
+    
     func getLine(from children: [Measure]) -> Int {
         let base = children.count / layout.arrange
         let more = children.count % layout.arrange

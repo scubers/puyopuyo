@@ -53,10 +53,10 @@ public struct SizeDescription: SizeDescriptible {
     }
     
     public static func ratio(_ value: CGFloat) -> SizeDescription {
-        return SizeDescription(sizeType: .ratio, fixedValue: 0, ratio: value, add: 0, min: 0, max: .infinity)
+        return SizeDescription(sizeType: .ratio, fixedValue: 0, ratio: value, add: 0, min: 0, max: .greatestFiniteMagnitude)
     }
     
-    public static func wrap(add: CGFloat = 0, min: CGFloat = 0, max: CGFloat = .infinity) -> SizeDescription {
+    public static func wrap(add: CGFloat = 0, min: CGFloat = 0, max: CGFloat = .greatestFiniteMagnitude) -> SizeDescription {
         return SizeDescription(sizeType: .wrap, fixedValue: 0, ratio: 0, add: add, min: min, max: max)
     }
     
@@ -102,6 +102,10 @@ public struct Size {
     
     public func isFixed() -> Bool {
         return width.isFixed && height.isFixed
+    }
+    
+    public func isRatio() -> Bool {
+        return width.isRatio && height.isRatio
     }
     
     public func isWrap() -> Bool {

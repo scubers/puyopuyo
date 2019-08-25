@@ -7,7 +7,7 @@
 
 import Foundation
 
-open class FlowBox: BoxView {
+open class FlowBox: FlatBox {
     public override var layout: FlowLayout {
         return py_measure as! FlowLayout
     }
