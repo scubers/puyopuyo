@@ -11,12 +11,10 @@ import Puyopuyo
 
 class OptionView<T>: ZBox {
 
-    weak var vc: UIViewController?
     var receiver: State<T>?
     var options: [T] = []
-    init(vc: UIViewController?, prefix: String, receiver: State<T>, options: [T]) {
+    init(prefix: String, receiver: State<T>, options: [T]) {
         super.init(frame: .zero)
-        self.vc = vc
         self.receiver = receiver
         self.options = options
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.tap))
@@ -38,6 +36,7 @@ class OptionView<T>: ZBox {
             }))
         }
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        let vc = Util.getViewController(from: self)
         vc?.present(alert, animated: true, completion: nil)
     }
     

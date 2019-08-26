@@ -107,9 +107,48 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
+    public func onTap<Object: AnyObject>(to object: Object, _ action: @escaping (Object, UITapGestureRecognizer) -> Void) -> Self {
+        _ = view.py_setTap { [weak object] (tap) in
+            if let o = object {
+                action(o, tap)
+            }
+        }
+        return self
+    }
+    
+    @discardableResult
     public func tag(_ tag: Int) -> Self {
         view.tag = tag
         return self
     }
     
+}
+
+class _PuyoTapTarget<Tap>: NSObject, Unbinder {
+    
+    var action: (Tap) -> Void
+    init(_ action: @escaping (Tap) -> Void) {
+        self.action = action
+    }
+    
+    @objc func targetAction(_ btn: Any) {
+        action(btn as! Tap)
+    }
+    
+    func py_unbind() {
+        
+    }
+}
+
+extension UIView {
+    public func py_setTap(action: @escaping (UITapGestureRecognizer) -> Void) -> Unbinder {
+        let target = _PuyoTapTarget<UITapGestureRecognizer>(action)
+        let tap = UITapGestureRecognizer(target: target, action: #selector(_PuyoTapTarget<UITapGestureRecognizer>.targetAction(_:)))
+        addGestureRecognizer(tap)
+        let unbinder = Unbinders.create { [weak self] in
+            self?.removeGestureRecognizer(tap)
+        }
+        py_setUnbinder(target, for: #function)
+        return unbinder
+    }
 }

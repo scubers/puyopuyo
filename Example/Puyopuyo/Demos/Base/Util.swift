@@ -19,7 +19,6 @@ struct Util {
         return c
     }
     
-    
     static func randomViewColor(view: UIView) {
         view.subviews.forEach { (v) in
             v.backgroundColor = self.randomColor()
@@ -30,6 +29,17 @@ struct Util {
     static func random<T>(array: [T]) -> T {
         let index = arc4random_uniform(UInt32(array.count))
         return array[Int(index)]
+    }
+    
+    static func getViewController(from view: UIView) -> UIViewController? {
+        var responder = view.next
+        while responder != nil {
+            if let vc = responder as? UIViewController {
+                return vc
+            }
+            responder = responder?.next
+        }
+        return nil
     }
     
 }

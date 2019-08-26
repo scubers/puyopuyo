@@ -14,6 +14,7 @@ class Label: UILabel {
         self.text = title
         numberOfLines = 0
         textAlignment = .center
+        isUserInteractionEnabled = true
     }
     
     deinit {
