@@ -49,11 +49,9 @@ class FlatFormationAligmentVC: BaseVC {
             Label("3").attach($0)
                 .textAligment(State(.center))
                 .size(50, 50)
-                .attach() {
-                    $0.py_addObserver(for: #keyPath(UIView.frame), id: "slkdjflkdsjf", block: { (value: CGRect?) in
-                        print(value ?? .zero)
-                    })
-            }
+                .onFrameChanged(SimpleOutput {
+                    print($0)
+                })
             
             }
             .size(.fill, .fill)

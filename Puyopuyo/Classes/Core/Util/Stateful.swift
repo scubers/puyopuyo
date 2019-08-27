@@ -67,7 +67,6 @@ public class State<T>: Valuable, Outputable {
         }
     }
     
-    
     public typealias ValueType = T
     
     public typealias OutputType = T
@@ -179,6 +178,16 @@ extension NSObject {
             }
         }
     }
-
     
+}
+
+public struct SimpleOutput<T>: Outputable {
+    public typealias OutputType = T
+    public func postValue(_ value: SimpleOutput<T>.OutputType) {
+        action(value)
+    }
+    private var action: (T) -> Void
+    public init(_ output: @escaping (T) -> Void) {
+        self.action = output
+    }
 }

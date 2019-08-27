@@ -99,10 +99,63 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func onBoundsChanged<O: Outputable>(_ frame: O) -> Self where O.OutputType == CGRect {
-        view.py_addObserver(for: #keyPath(UIView.bounds), id: #function) { (rect: CGRect?) in
-            frame.postValue(rect ?? .zero)
-        }
+    public func onBoundsChanged<O: Outputable>(_ bounds: O) -> Self where O.OutputType == CGRect {
+        _ = view.py_observeBounds({ $0 }).py_bind(to: bounds)
+        return self
+    }
+    
+    @discardableResult
+    public func onCenterChanged<O: Outputable>(_ center: O) -> Self where O.OutputType == CGPoint {
+        _ = view.py_observeCenter({ $0 }).py_bind(to: center)
+        return self
+    }
+    
+    @discardableResult
+    public func onFrameChanged<O: Outputable>(_ frame: O) -> Self where O.OutputType == CGRect {
+        _ = view.py_observeFrameByBoundsCenter({ $0 }).py_bind(to: frame)
+        return self
+    }
+    
+    @discardableResult
+    public func top(_ x: PositionModifiable) -> Self {
+        view.py_setUnbinder(x.modifyPosition().safeBind(view, { (v, a) in
+            var f = v.frame
+            f.size.height = max(0, v.frame.maxY - a)
+            f.origin.y = min(f.maxY, a)
+            v.frame = f
+        }), for: #function)
+        return self
+    }
+    
+    @discardableResult
+    public func left(_ x: PositionModifiable) -> Self {
+        view.py_setUnbinder(x.modifyPosition().safeBind(view, { (v, a) in
+            var f = v.frame
+            f.size.width = max(0, v.frame.maxX - a)
+            f.origin.x = min(f.maxX, a)
+            v.frame = f
+        }), for: #function)
+        return self
+    }
+    
+    @discardableResult
+//    public func bottom<S: Valuable>(_ x: S) -> Self where S.ValueType == CGFloat {
+    public func bottom(_ x: PositionModifiable) -> Self {
+        view.py_setUnbinder(x.modifyPosition().safeBind(view, { (v, a) in
+            var f = v.frame
+            f.size.height = max(0, a - v.frame.origin.y)
+            v.frame = f
+        }), for: #function)
+        return self
+    }
+    
+    @discardableResult
+    public func right(_ x: PositionModifiable) -> Self {
+        view.py_setUnbinder(x.modifyPosition().safeBind(view, { (v, a) in
+            var f = v.frame
+            f.size.width = max(0, a - v.frame.origin.x)
+            v.frame = f
+        }), for: #function)
         return self
     }
     

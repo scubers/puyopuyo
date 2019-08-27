@@ -89,17 +89,28 @@ class FlowBoxBaseVC: BaseVC {
                 .size(.fill, .wrap)
             
             VFlow(count: 3).attach($0) {
+                
                 for idx in 0..<total {
+                    let x =
                     Label("\(idx + 1)").attach($0)
-//                        .width(30 + idx * 3)
                         .width(40)
+                        .height(40)
 //                        .width(Simulate($0).width.multiply(0.2))
-                        .heightOnSelf({ .fix($0.width) })
+//                        .heightOnSelf({ .fix($0.width) })
                     
-                    if idx == 2 {
-//                        x.height(.fill)
+                    if idx == 4 {
+                        Label("-1").attach($0)
+                            .activated(_S(false))
+                            .frame(State(CGRect(x: 100, y: 100, width: 20, height: 20)))
+                            .top(Simulate(x.view).top)
+//                            .left(Simulate(x.view).left)
+//                            .bottom(Simulate(x.view).bottom)
+//                            .right(Simulate(x.view).right)
                     }
+                    
                 }
+                
+                
                 
                 let flow = $0
                 _ = adding.receiveValue({ (v) in

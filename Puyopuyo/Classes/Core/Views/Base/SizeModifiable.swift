@@ -11,7 +11,11 @@ public protocol SizeModifiable {
     func modifySize() -> State<SizeDescription>
 }
 
-public struct Simulate: SizeModifiable {
+public protocol PositionModifiable {
+    func modifyPosition() -> State<CGFloat>
+}
+
+public struct Simulate {
     
     var view: UIView
     
@@ -21,24 +25,6 @@ public struct Simulate: SizeModifiable {
     
     public init(_ view: UIView) {
         self.view = view
-    }
-    
-    public func modifySize() -> State<SizeDescription> {
-        return view.py_observeBounds({ (rect) -> SizeDescription in
-            return .fix(self.transform(rect) * self.multiply + self.add)
-        })
-    }
-    
-    public var height: Simulate {
-        var s = self
-        s.transform = { $0.height }
-        return s
-    }
-    
-    public var width: Simulate {
-        var s = self
-        s.transform = { $0.width }
-        return s
     }
     
     public func add(_ add: CGFloat) -> Simulate {
@@ -53,4 +39,56 @@ public struct Simulate: SizeModifiable {
         return s
     }
     
+}
+
+extension Simulate: SizeModifiable {
+    public var height: Simulate {
+        var s = self
+        s.transform = { $0.height }
+        return s
+    }
+    
+    public var width: Simulate {
+        var s = self
+        s.transform = { $0.width }
+        return s
+    }
+    public func modifySize() -> State<SizeDescription> {
+        return view.py_observeBounds({ (rect) -> SizeDescription in
+            return .fix(self.transform(rect) * self.multiply + self.add)
+        })
+    }
+}
+
+extension Simulate: PositionModifiable {
+    
+    public var top: Simulate {
+        var s = self
+        s.transform = { $0.origin.y }
+        return s
+    }
+    
+    public var left: Simulate {
+        var s = self
+        s.transform = { $0.origin.x }
+        return s
+    }
+    
+    public var bottom: Simulate {
+        var s = self
+        s.transform = { $0.maxY }
+        return s
+    }
+    
+    public var right: Simulate {
+        var s = self
+        s.transform = { $0.maxX }
+        return s
+    }
+    
+    public func modifyPosition() -> State<CGFloat> {
+        return view.py_observeFrameByBoundsCenter({ (rect) -> CGFloat in
+            return self.transform(rect) * self.multiply + self.add
+        })
+    }
 }

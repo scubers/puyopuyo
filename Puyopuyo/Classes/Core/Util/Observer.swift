@@ -61,4 +61,39 @@ extension UIView {
         })
         return s
     }
+    
+    public func py_observeCenter<T>(_ block: @escaping (CGPoint) -> T) -> State<T> {
+        let s = State<T>(block(.zero))
+        let id = "\(Date().timeIntervalSince1970)\(arc4random())"
+        py_addObserver(for: #keyPath(UIView.center), id: id, block: { (point: CGPoint?) in
+            let value = block(point ?? .zero)
+            s.postValue(value)
+        })
+        return s
+
+    }
+    
+    public func py_observeFrameByBoundsCenter<T>(_ block: @escaping (CGRect) -> T) -> State<T> {
+        let s = State<T>(block(.zero))
+        let id = "\(Date().timeIntervalSince1970)\(arc4random())"
+        py_addObserver(for: #keyPath(UIView.bounds), id: "\(id)_bounds", block: { [weak self] (_: CGRect?) in
+            if let self = self {
+                let value = block(self.frame)
+                s.postValue(value)
+            } else {
+                let value = block(.zero)
+                s.postValue(value)
+            }
+        })
+        py_addObserver(for: #keyPath(UIView.center), id: "\(id)_center", block: { [weak self] (_: CGPoint?) in
+            if let self = self {
+                let value = block(self.frame)
+                s.postValue(value)
+            } else {
+                let value = block(.zero)
+                s.postValue(value)
+            }
+        })
+        return s
+    }
 }

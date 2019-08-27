@@ -37,6 +37,7 @@ extension UIView: MeasureTargetable {
         }
         set {
             center = newValue
+            didChangeValue(forKey: #keyPath(UIView.center))
         }
     }
     
