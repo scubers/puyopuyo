@@ -239,11 +239,17 @@ extension PuyoLink where T: UIView {
     
     // MARK: - Activated
     @discardableResult
-    public func activated<S: Valuable>(_ activated: S) -> Self  where S.ValueType == Bool {
+    public func activated<S: Valuable>(_ activated: S) -> Self where S.ValueType == Bool {
         view.py_setUnbinder(activated.safeBind(view, { (v, a) in
             v.py_measure.activated = a
             v.py_setNeedsLayout()
         }), for: #function)
+        return self
+    }
+    
+    @discardableResult
+    public func activated(_ activated: Bool) -> Self {
+        view.py_measure.activated = activated
         return self
     }
 }
