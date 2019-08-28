@@ -1,5 +1,5 @@
 //
-//  PuyoLink+UIScrollView.swift
+//  Puyo+UIScrollView.swift
 //  Puyopuyo
 //
 //  Created by Junren Wong on 2019/8/2.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension PuyoLink where T: UIScrollView {
+extension Puyo where T: UIScrollView {
     @discardableResult
     public func vertBounds(_ value: Bool) -> Self {
         view.bounces = value

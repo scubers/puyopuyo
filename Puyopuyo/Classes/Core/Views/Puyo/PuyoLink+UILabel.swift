@@ -1,5 +1,5 @@
 //
-//  PuyoLink+UILabel.swift
+//  Puyo+UILabel.swift
 //  Puyopuyo
 //
 //  Created by Jrwong on 2019/7/1.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension PuyoLink where T: UILabel {
+extension Puyo where T: UILabel {
     
     
     @discardableResult
@@ -25,7 +25,7 @@ extension PuyoLink where T: UILabel {
     }
     
     @discardableResult
-    public func text<S: ValueOutputing>(_ text: S) -> Self where S.OutputType == String? {
+    public func text<S: Outputing>(_ text: S) -> Self where S.OutputType == String? {
         view.py_setUnbinder(text.safeBind(view, { (v, a) in
             v.text = a
             v.py_setNeedsLayout()
@@ -34,7 +34,7 @@ extension PuyoLink where T: UILabel {
     }
     
     @discardableResult
-    public func textColor<S: ValueOutputing>(_ color: S) -> Self where S.OutputType == UIColor? {
+    public func textColor<S: Outputing>(_ color: S) -> Self where S.OutputType == UIColor? {
         view.py_setUnbinder(color.safeBind(view, { (v, a) in
             v.textColor = a
         }), for: #function)
@@ -42,7 +42,7 @@ extension PuyoLink where T: UILabel {
     }
     
     @discardableResult
-    public func font<S: ValueOutputing>(_ font: S) -> Self where S.OutputType == UIFont {
+    public func font<S: Outputing>(_ font: S) -> Self where S.OutputType == UIFont {
         view.py_setUnbinder(font.safeBind(view, { (v, a) in
             v.font = a
             v.py_setNeedsLayout()
@@ -51,7 +51,7 @@ extension PuyoLink where T: UILabel {
     }
     
     @discardableResult
-    public func textAligment<S: ValueOutputing>(_ aligment: S) -> Self where S.OutputType == NSTextAlignment {
+    public func textAligment<S: Outputing>(_ aligment: S) -> Self where S.OutputType == NSTextAlignment {
         view.py_setUnbinder(aligment.safeBind(view, { (v, a) in
             v.textAlignment = a
             v.py_setNeedsLayout()
@@ -60,7 +60,7 @@ extension PuyoLink where T: UILabel {
     }
     
     @discardableResult
-    public func numberOfLines<S: ValueOutputing>(_ lines: S) -> Self where S.OutputType == Int {
+    public func numberOfLines<S: Outputing>(_ lines: S) -> Self where S.OutputType == Int {
         view.py_setUnbinder(lines.safeBind(view, { (v, a) in
             v.numberOfLines = a
             v.py_setNeedsLayout()

@@ -1,11 +1,11 @@
 
 import TangramKit
 
-extension PuyoLinkAttacher where Self: UIView {
+extension PuyoAttacher where Self: UIView {
     
     @discardableResult
-    public func tg_attach(_ parent: UIView? = nil, wrap: Bool = true, _ block: PuyoLinkBlock? = nil) -> PuyoLink<Self> {
-        let link = PuyoLink(self)
+    public func tg_attach(_ parent: UIView? = nil, wrap: Bool = true, _ block: PuyoBlock? = nil) -> Puyo<Self> {
+        let link = Puyo(self)
         if wrap {
             link.tg_size(.wrap, .wrap)
         }
@@ -16,7 +16,7 @@ extension PuyoLinkAttacher where Self: UIView {
     
 }
 // MARK: - tg_属性只能在TangramKit布局内使用
-extension PuyoLink where T: UIView {
+extension Puyo where T: UIView {
     
     @discardableResult
     public func tg_size(_ width: TGLayoutSizeType, _ height: TGLayoutSizeType) -> Self {
@@ -91,7 +91,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func tg_visibility<S: ValueOutputing>(_ visibility: S) -> Self where S.OutputType == TGVisibility {
+    public func tg_visibility<S: Outputing>(_ visibility: S) -> Self where S.OutputType == TGVisibility {
         view.py_setUnbinder(visibility.safeBind(view, { (v, a) in
             v.tg_visibility = a
         }), for: #function)
@@ -99,7 +99,7 @@ extension PuyoLink where T: UIView {
     }
 }
 
-extension PuyoLink where T: TGBaseLayout {
+extension Puyo where T: TGBaseLayout {
     @discardableResult
     public func tg_gravity(_ gravity: TGGravity) -> Self {
         view.tg_gravity = gravity

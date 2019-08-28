@@ -1,5 +1,5 @@
 //
-//  PuyoLink+UIControl.swift
+//  Puyo+UIControl.swift
 //  Puyopuyo
 //
 //  Created by Jrwong on 2019/7/3.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension PuyoLink where T: UIControl {
+extension Puyo where T: UIControl {
     
     @discardableResult
     public func addWeakBind<Object: AnyObject>(to object: Object, for event: UIControl.Event, _ binding: @escaping (Object) -> (T) -> Void, unique: Bool = false) -> Self {

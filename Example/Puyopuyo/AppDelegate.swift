@@ -53,7 +53,7 @@ import Foundation
 import Puyopuyo
 import RxSwift
 
-extension Observable: ValueOutputing {
+extension Observable: Outputing {
     public typealias OutputType = Element
     
     public func receiveOutput(_ block: @escaping (Element) -> Void) -> Unbinder {
@@ -66,7 +66,7 @@ extension Observable: ValueOutputing {
     }
 }
 
-extension PublishSubject: ValueInputing {
+extension PublishSubject: Inputing {
     
     public typealias InputType = Element
     
@@ -76,7 +76,7 @@ extension PublishSubject: ValueInputing {
     
 }
 
-extension BehaviorSubject: ValueInputing {
+extension BehaviorSubject: Inputing {
     public typealias ValueType = Element
     
     public typealias InputType = Element

@@ -1,5 +1,5 @@
 //
-//  PuyoLink+UIImage.swift
+//  Puyo+UIImage.swift
 //  Puyopuyo
 //
 //  Created by Jrwong on 2019/7/1.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-extension PuyoLink where T: UIImageView {
+extension Puyo where T: UIImageView {
     @discardableResult
-    public func image<S: ValueOutputing>(_ image: S) -> Self where S.OutputType == UIImage? {
+    public func image<S: Outputing>(_ image: S) -> Self where S.OutputType == UIImage? {
         view.py_setUnbinder(image.safeBind(view, { (v, a) in
             v.image = a
         }), for: #function)

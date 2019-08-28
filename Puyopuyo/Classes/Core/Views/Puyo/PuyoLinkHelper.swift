@@ -1,5 +1,5 @@
 //
-//  PuyoLinkHelper.swift
+//  PuyoHelper.swift
 //  Puyopuyo
 //
 //  Created by Jrwong on 2019/6/23.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-open class PuyoLinkHelper {
+open class PuyoHelper {
     
     open class func size(for view: UIView, width: SizeDescription?, height: SizeDescription?) {
         if let width = width { view.py_measure.size.width = width }

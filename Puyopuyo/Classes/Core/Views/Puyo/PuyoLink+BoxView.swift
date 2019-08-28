@@ -1,5 +1,5 @@
 //
-//  PuyoLink+ListBox.swift
+//  Puyo+ListBox.swift
 //  Puyopuyo
 //
 //  Created by Jrwong on 2019/7/2.
@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - BoxView
-extension PuyoLink where T: BoxView {
+extension Puyo where T: BoxView {
     @discardableResult
     public func padding(all: CGFloat? = nil, top: CGFloat? = nil, left: CGFloat? = nil, bottom: CGFloat? = nil, right: CGFloat? = nil) -> Self {
         if let all = all {
@@ -23,7 +23,7 @@ extension PuyoLink where T: BoxView {
     }
     
     @discardableResult
-    public func padding<S: ValueOutputing>(_ padding: S) -> Self where S.OutputType == UIEdgeInsets {
+    public func padding<O: Outputing>(_ padding: O) -> Self where O.OutputType == UIEdgeInsets {
         view.py_setUnbinder(padding.safeBind(view, { (v, i) in
             v.regulator.padding = i
             v.py_setNeedsLayout()
@@ -39,7 +39,7 @@ extension PuyoLink where T: BoxView {
     }
     
     @discardableResult
-    public func justifyContent<S: ValueOutputing>(_ aligment: S) -> Self where S.OutputType == Aligment {
+    public func justifyContent<O: Outputing>(_ aligment: O) -> Self where O.OutputType == Aligment {
         view.py_setUnbinder(aligment.safeBind(view, { (v, a) in
             v.regulator.justifyContent = a
             v.py_setNeedsLayout()
@@ -58,7 +58,7 @@ extension PuyoLink where T: BoxView {
 }
 
 // MARK: - FlatBox
-extension PuyoLink where T: FlatBox {
+extension Puyo where T: FlatBox {
     
     @discardableResult
     public func space(_ space: CGFloat) -> Self {
@@ -68,7 +68,7 @@ extension PuyoLink where T: FlatBox {
     }
     
     @discardableResult
-    public func space<S: ValueOutputing>(_ space: S) -> Self where S.OutputType == CGFloat {
+    public func space<O: Outputing>(_ space: O) -> Self where O.OutputType == CGFloat {
         view.py_setUnbinder(space.safeBind(view, { (v, s) in
             v.regulator.space = s
             v.py_setNeedsLayout()
@@ -84,7 +84,7 @@ extension PuyoLink where T: FlatBox {
     }
     
     @discardableResult
-    public func format<S: ValueOutputing>(_ formation: S) -> Self where S.OutputType == Format {
+    public func format<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
         view.py_setUnbinder(formation.safeBind(view, { (v, f) in
             v.regulator.format = f
             v.py_setNeedsLayout()
@@ -100,7 +100,7 @@ extension PuyoLink where T: FlatBox {
     }
     
     @discardableResult
-    public func direction<S: ValueOutputing>(_ direction: S) -> Self where S.OutputType == Direction {
+    public func direction<O: Outputing>(_ direction: O) -> Self where O.OutputType == Direction {
         view.py_setUnbinder(direction.safeBind(view, { (v, d) in
             v.regulator.direction = d
             v.py_setNeedsLayout()
@@ -116,7 +116,7 @@ extension PuyoLink where T: FlatBox {
     }
     
     @discardableResult
-    public func reverse<S: ValueOutputing>(_ reverse: S) -> Self where S.OutputType == Bool {
+    public func reverse<O: Outputing>(_ reverse: O) -> Self where O.OutputType == Bool {
         view.py_setUnbinder(reverse.safeBind(view, { (v, r) in
             v.regulator.reverse = r
             v.py_setNeedsLayout()
@@ -127,7 +127,7 @@ extension PuyoLink where T: FlatBox {
 }
 
 // MARK: - FlowBox
-extension PuyoLink where T: FlowBox {
+extension Puyo where T: FlowBox {
     
     @discardableResult
     public func arrangeCount(_ count: Int) -> Self {
@@ -137,7 +137,7 @@ extension PuyoLink where T: FlowBox {
     }
     
     @discardableResult
-    public func arrangeCount<S: ValueOutputing>(_ count: S) -> Self where S.OutputType == Int {
+    public func arrangeCount<O: Outputing>(_ count: O) -> Self where O.OutputType == Int {
         view.py_setUnbinder(count.safeBind(view, { (v, c) in
             v.regulator.arrange = c
             v.py_setNeedsLayout()
@@ -146,7 +146,7 @@ extension PuyoLink where T: FlowBox {
     }
     
     @discardableResult
-    public func hSpace<S: ValueOutputing>(_ space: S) -> Self where S.OutputType == CGFloat {
+    public func hSpace<O: Outputing>(_ space: O) -> Self where O.OutputType == CGFloat {
         view.py_setUnbinder(space.safeBind(view, { (v, s) in
             v.regulator.hSpace = s
             v.py_setNeedsLayout()
@@ -155,7 +155,7 @@ extension PuyoLink where T: FlowBox {
     }
     
     @discardableResult
-    public func vSpace<S: ValueOutputing>(_ space: S) -> Self where S.OutputType == CGFloat {
+    public func vSpace<O: Outputing>(_ space: O) -> Self where O.OutputType == CGFloat {
         view.py_setUnbinder(space.safeBind(view, { (v, s) in
             v.regulator.vSpace = s
             v.py_setNeedsLayout()
@@ -171,7 +171,7 @@ extension PuyoLink where T: FlowBox {
     }
     
     @discardableResult
-    public func subFormat<S: ValueOutputing>(_ formation: S) -> Self where S.OutputType == Format {
+    public func subFormat<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
         view.py_setUnbinder(formation.safeBind(view, { (v, f) in
             v.regulator.subFormat = f
             v.py_setNeedsLayout()

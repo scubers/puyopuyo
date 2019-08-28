@@ -279,7 +279,7 @@ class ListCell3: BaseCell {
         
         let name = UILabel()
         container.addSubview(name)
-        PuyoLink(name).text(self.name)
+        Puyo(name).text(self.name)
         name.snp.makeConstraints { (m) in
             m.left.equalToSuperview()
             m.top.equalToSuperview().inset(20)

@@ -18,19 +18,17 @@ public class Unbinders {
     }
 }
 
-public protocol ValueOutputing {
+public protocol Outputing {
     associatedtype OutputType
     func receiveOutput(_ block: @escaping (OutputType) -> Void) -> Unbinder
 }
 
-public protocol ValueInputing {
+public protocol Inputing {
     associatedtype InputType
     func input(value: InputType)
 }
 
-public typealias Statefule = (ValueOutputing & ValueInputing)
-
-extension ValueOutputing {
+extension Outputing {
     public func safeBind<Object: AnyObject>(_ object: Object, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
         return receiveOutput { [weak object] (s) in
             if let object = object {
@@ -39,23 +37,23 @@ extension ValueOutputing {
         }
     }
     
-    public func py_bind<Input: ValueInputing>(to output: Input) -> Unbinder where Input.InputType == OutputType {
+    public func send<Input: Inputing>(to input: Input) -> Unbinder where Input.InputType == OutputType {
         return receiveOutput { (v) in
-            output.input(value: v)
+            input.input(value: v)
         }
     }
     
 }
 
-public typealias _S = State
+public typealias _St = State
 
-public class State<T>: ValueOutputing, ValueInputing {
+public class State<Value>: Outputing, Inputing {
     
-    public func input(value: State<T>.InputType) {
+    public func input(value: State<Value>.InputType) {
         self._value = value
     }
     
-    public func receiveOutput(_ block: @escaping (State<T>.OutputType) -> Void) -> Unbinder {
+    public func receiveOutput(_ block: @escaping (State<Value>.OutputType) -> Void) -> Unbinder {
         if let value = _value {
             block(value)
         }
@@ -67,11 +65,11 @@ public class State<T>: ValueOutputing, ValueInputing {
         }
     }
     
-    public typealias OutputType = T
+    public typealias OutputType = Value
     
-    public typealias InputType = T
+    public typealias InputType = Value
     
-    public var value: T {
+    public var value: Value {
         set {
             _value = newValue
         }
@@ -80,7 +78,7 @@ public class State<T>: ValueOutputing, ValueInputing {
         }
     }
     
-    private var _value: T! {
+    private var _value: Value! {
         didSet {
             self.callees.forEach {
                 $0.block(_value)
@@ -88,7 +86,7 @@ public class State<T>: ValueOutputing, ValueInputing {
         }
     }
     
-    public init(_ value: T) {
+    public init(_ value: Value) {
         self._value = value
     }
     
@@ -107,7 +105,7 @@ public class State<T>: ValueOutputing, ValueInputing {
         }
     }
     
-    private var callees = [Callee<T>]()
+    private var callees = [Callee<Value>]()
 
 }
 
@@ -123,7 +121,7 @@ extension State {
         return new
     }
     
-    public func map<S: ValueInputing, R>(_ block: @escaping (T) -> R) -> S where S.InputType == R {
+    public func map<S: Inputing, R>(_ block: @escaping (Value) -> R) -> S where S.InputType == R {
         let newState = State<R>()
         let unbinder = receiveOutput { (value) in
             newState.input(value: block(value))
@@ -181,7 +179,7 @@ extension NSObject {
     
 }
 
-public struct SimpleInput<T>: ValueInputing {
+public struct SimpleInput<T>: Inputing {
     public typealias InputType = T
     public func input(value: SimpleInput<T>.InputType) {
         action(value)

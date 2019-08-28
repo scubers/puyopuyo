@@ -11,16 +11,16 @@ import Puyopuyo
 
 class HBoxVC: BaseVC {
     
-    let one = _S<Aligment>(.top)
-    let two = _S<Aligment>(.center)
-    let three = _S<Aligment>(.bottom)
+    let one = _St<Aligment>(.top)
+    let two = _St<Aligment>(.center)
+    let three = _St<Aligment>(.bottom)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let text1: _S<String?> = one.map({ $0.description })
-        let text2: _S<String?> = two.map({ $0.description })
-        let text3: _S<String?> = three.map({ $0.description })
+        let text1: _St<String?> = one.map({ $0.description })
+        let text2: _St<String?> = two.map({ $0.description })
+        let text3: _St<String?> = three.map({ $0.description })
         
         HBox().attach(vRoot) {
             Label("1").attach($0)

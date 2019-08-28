@@ -1,5 +1,5 @@
 //
-//  PuyoLink.swift
+//  Puyo.swift
 //  Puyopuyo
 //
 //  Created by Jrwong on 2019/6/23.
@@ -7,8 +7,9 @@
 
 import Foundation
 
-public class PuyoLink<T: UIView> {
-    
+//public class Puyo<T: UIView> {
+public class Puyo<T: UIView> {
+
     public private(set) var view: T
     
     public init(_ view: T) {
@@ -20,25 +21,25 @@ public class PuyoLink<T: UIView> {
     }
     
     @discardableResult
-    public func attach(_ parent: UIView? = nil, _ block: ((T) -> Void)? = nil) -> PuyoLink<T> {
+    public func attach(_ parent: UIView? = nil, _ block: ((T) -> Void)? = nil) -> Puyo<T> {
         block?(view)
         parent?.addSubview(view)
         return self
     }
 }
 
-public typealias PuyoLinkBlock = (UIView) -> Void
+public typealias PuyoBlock = (UIView) -> Void
 
-public protocol PuyoLinkAttacher {
+public protocol PuyoAttacher {
     associatedtype Holder: UIView
-    func attach(_ parent: UIView?, _ block: PuyoLinkBlock?) -> PuyoLink<Holder>
+    func attach(_ parent: UIView?, _ block: PuyoBlock?) -> Puyo<Holder>
 }
 
-extension PuyoLinkAttacher where Self: UIView {
+extension PuyoAttacher where Self: UIView {
     
     @discardableResult
-    public func attach(_ parent: UIView? = nil, _ block: PuyoLinkBlock? = nil) -> PuyoLink<Self> {
-        let link = PuyoLink(self)
+    public func attach(_ parent: UIView? = nil, _ block: PuyoBlock? = nil) -> Puyo<Self> {
+        let link = Puyo(self)
         block?(self)
         parent?.addSubview(self)
         return link
@@ -46,7 +47,7 @@ extension PuyoLinkAttacher where Self: UIView {
     
 }
 
-extension UIView: PuyoLinkAttacher {
+extension UIView: PuyoAttacher {
     func py_setNeedsLayout() {
         setNeedsLayout()
         if let superview = superview as? BoxView {
