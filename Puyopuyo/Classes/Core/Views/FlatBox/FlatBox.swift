@@ -10,8 +10,8 @@ import Foundation
 
 open class FlatBox: BoxView {
     
-    public override var layout: FlatLayout {
-        return py_measure as! FlatLayout
+    public override var regulator: FlatRegulator {
+        return py_measure as! FlatRegulator
     }
     
 }
@@ -22,7 +22,7 @@ open class HBox: FlatBox {
 open class VBox: FlatBox {
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        layout.direction = .y
+        regulator.direction = .y
     }
     public required init?(coder aDecoder: NSCoder) {
         fatalError()

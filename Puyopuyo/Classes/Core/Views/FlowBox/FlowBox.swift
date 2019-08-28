@@ -8,13 +8,13 @@
 import Foundation
 
 open class FlowBox: FlatBox {
-    public override var layout: FlowLayout {
-        return py_measure as! FlowLayout
+    public override var regulator: FlowRegulator {
+        return py_measure as! FlowRegulator
     }
     
     public convenience init(count: Int) {
         self.init()
-        layout.arrange = count
+        regulator.arrange = count
     }
 }
 
@@ -24,7 +24,7 @@ open class HFlow: FlowBox {
 open class VFlow: FlowBox {
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        layout.direction = .y
+        regulator.direction = .y
     }
     public required init?(coder aDecoder: NSCoder) {
         fatalError()

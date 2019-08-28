@@ -47,6 +47,6 @@ class ZBoxVC: BaseVC {
             .aligment(.center)
             .size(300, 300)
         }
-        .formation(.center)
+        .format(.center)
     }
 }

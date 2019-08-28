@@ -25,7 +25,7 @@ extension PuyoLink where T: UILabel {
     }
     
     @discardableResult
-    public func text<S: Valuable>(_ text: S) -> Self where S.ValueType == String? {
+    public func text<S: ValueOutputing>(_ text: S) -> Self where S.OutputType == String? {
         view.py_setUnbinder(text.safeBind(view, { (v, a) in
             v.text = a
             v.py_setNeedsLayout()
@@ -34,7 +34,7 @@ extension PuyoLink where T: UILabel {
     }
     
     @discardableResult
-    public func textColor<S: Valuable>(_ color: S) -> Self where S.ValueType == UIColor? {
+    public func textColor<S: ValueOutputing>(_ color: S) -> Self where S.OutputType == UIColor? {
         view.py_setUnbinder(color.safeBind(view, { (v, a) in
             v.textColor = a
         }), for: #function)
@@ -42,7 +42,7 @@ extension PuyoLink where T: UILabel {
     }
     
     @discardableResult
-    public func font<S: Valuable>(_ font: S) -> Self where S.ValueType == UIFont {
+    public func font<S: ValueOutputing>(_ font: S) -> Self where S.OutputType == UIFont {
         view.py_setUnbinder(font.safeBind(view, { (v, a) in
             v.font = a
             v.py_setNeedsLayout()
@@ -51,7 +51,7 @@ extension PuyoLink where T: UILabel {
     }
     
     @discardableResult
-    public func textAligment<S: Valuable>(_ aligment: S) -> Self where S.ValueType == NSTextAlignment {
+    public func textAligment<S: ValueOutputing>(_ aligment: S) -> Self where S.OutputType == NSTextAlignment {
         view.py_setUnbinder(aligment.safeBind(view, { (v, a) in
             v.textAlignment = a
             v.py_setNeedsLayout()
@@ -60,7 +60,7 @@ extension PuyoLink where T: UILabel {
     }
     
     @discardableResult
-    public func numberOfLines<S: Valuable>(_ lines: S) -> Self where S.ValueType == Int {
+    public func numberOfLines<S: ValueOutputing>(_ lines: S) -> Self where S.OutputType == Int {
         view.py_setUnbinder(lines.safeBind(view, { (v, a) in
             v.numberOfLines = a
             v.py_setNeedsLayout()

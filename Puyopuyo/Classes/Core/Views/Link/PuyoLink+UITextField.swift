@@ -11,7 +11,7 @@ extension PuyoLink where T: UITextField {
     
     // MARK: - value
     @discardableResult
-    public func textDelegate<S: Valuable>(_ delegate: S) -> Self where S.ValueType == UITextFieldDelegate? {
+    public func textDelegate<S: ValueOutputing>(_ delegate: S) -> Self where S.OutputType == UITextFieldDelegate? {
         view.py_setUnbinder(delegate.safeBind(view, { (v, s) in
             v.delegate = s
         }), for: #function)
@@ -21,7 +21,7 @@ extension PuyoLink where T: UITextField {
     // MARK: - state
     
     @discardableResult
-    public func text<S: Valuable>(_ text: S) -> Self where S.ValueType == String? {
+    public func text<S: ValueOutputing>(_ text: S) -> Self where S.OutputType == String? {
         view.py_setUnbinder(text.safeBind(view, { (v, a) in
             v.text = a
             v.py_setNeedsLayout()
@@ -30,19 +30,19 @@ extension PuyoLink where T: UITextField {
     }
     
     @discardableResult
-    public func onText<S: Valuable & Outputable>(_ text: S) -> Self where S.ValueType == String?, S.OutputType == String? {
+    public func onText<S: ValueOutputing & ValueInputing>(_ text: S) -> Self where S.OutputType == String?, S.InputType == String? {
         view.py_setUnbinder(text.safeBind(view, { (v, a) in
             v.text = a
             v.py_setNeedsLayout()
         }), for: #function)
         addWeakAction(to: view, for: .editingChanged, { (_, v) in
-            text.postValue(v.text)
+            text.input(value: v.text)
         })
         return self
     }
     
     @discardableResult
-    public func placeholder<S: Valuable>(_ text: S) -> Self where S.ValueType == String? {
+    public func placeholder<S: ValueOutputing>(_ text: S) -> Self where S.OutputType == String? {
         view.py_setUnbinder(text.safeBind(view, { (v, a) in
             v.placeholder = a
         }), for: #function)

@@ -18,8 +18,8 @@ open class BoxView: UIView {
         fatalError()
     }
     
-    public var layout: BaseLayout {
-        return py_measure as! BaseLayout
+    public var regulator: Regulator {
+        return py_measure as! Regulator
     }
     
     /// 只应用固有尺寸
@@ -28,7 +28,7 @@ open class BoxView: UIView {
             return
         }
         let parentCGSize = superview?.bounds.size ?? .zero
-        let margin = layout.margin
+        let margin = regulator.margin
         
         let wrappedSize = CGSize(width: max(0, parentCGSize.width - margin.left - margin.right),
                                  height: max(0, parentCGSize.height - margin.top - margin.bottom))
@@ -71,7 +71,7 @@ open class BoxView: UIView {
     }
     
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
-        return Caculator.sizeThatFit(size: size, to: layout)
+        return Caculator.sizeThatFit(size: size, to: regulator)
     }
 }
 
@@ -85,11 +85,11 @@ private extension BoxView {
         
         _unResizingSubviews {
             // 本身固有尺寸
-            _selfSizeAdapting(size: layout.size)
+            _selfSizeAdapting(size: regulator.size)
             // 旧尺寸
             let oldSize = bounds.size
             // 计算后尺寸不可能为包裹
-            let sizeAfterCaculate = layout.caculate(byParent: parentMeasure)
+            let sizeAfterCaculate = regulator.caculate(byParent: parentMeasure)
             // 应用计算后的固有尺寸
             _selfSizeAdapting(size: sizeAfterCaculate)
             
@@ -103,13 +103,13 @@ private extension BoxView {
                 center = CGPoint(x: bounds.midX, y: bounds.midY)
                 
                 // 控制父视图的scroll
-                if let scrollView = superview as? UIScrollView, layout.autoJudgeScroll {
+                if let scrollView = superview as? UIScrollView, regulator.autoJudgeScroll {
                     let contentSize = scrollView.contentSize
-                    if layout.size.width.isWrap {
-                        scrollView.contentSize.width = max(contentSize.width, newSize.width + layout.padding.left + layout.padding.right + frame.origin.x)
+                    if regulator.size.width.isWrap {
+                        scrollView.contentSize.width = max(contentSize.width, newSize.width + regulator.padding.left + regulator.padding.right + frame.origin.x)
                     }
-                    if layout.size.height.isWrap {
-                        scrollView.contentSize.height = max(contentSize.height, newSize.height + layout.padding.bottom + layout.padding.top + frame.origin.y)
+                    if regulator.size.height.isWrap {
+                        scrollView.contentSize.height = max(contentSize.height, newSize.height + regulator.padding.bottom + regulator.padding.top + frame.origin.y)
                     }
                 }
             }
@@ -118,7 +118,7 @@ private extension BoxView {
         }
         
         if needResizing {
-            _ = layout.caculate(byParent: parentMeasure)
+            _ = regulator.caculate(byParent: parentMeasure)
         }
         
     }

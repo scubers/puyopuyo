@@ -8,7 +8,7 @@
 import Foundation
 
 open class ZBox: BoxView {
-    public override var layout: ZLayout {
-        return py_measure as! ZLayout
+    public override var regulator: ZRegulator {
+        return py_measure as! ZRegulator
     }
 }

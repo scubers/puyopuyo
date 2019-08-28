@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class FlatLayout: BaseLayout {
+public class FlatRegulator: Regulator {
     
     public override init(target: MeasureTargetable? = nil, children: [Measure] = []) {
         super.init(target: target, children: children)
@@ -16,7 +16,7 @@ public class FlatLayout: BaseLayout {
     
     public var space: CGFloat = 0
     
-    public var formation: Formation = .leading
+    public var format: Format = .leading
     
     public var reverse = false
     

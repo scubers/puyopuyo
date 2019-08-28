@@ -14,8 +14,8 @@ class MeasureCaculator {
         }
         
         switch parent {
-        case is FlatLayout: fallthrough
-        case is ZLayout:
+        case is FlatRegulator: fallthrough
+        case is ZRegulator:
             let parentCGSize = parent.py_size
             
             var widthSize = measure.size.width

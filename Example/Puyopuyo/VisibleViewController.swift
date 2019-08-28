@@ -130,7 +130,7 @@ private extension VisibleViewController {
                     .text(value)
                 }
                 .justifyContent(.center)
-                .formation(.sides)
+                .format(.sides)
                 .padding(all: 8)
                 .backgroundColor(State(.white).optional())
                 .view

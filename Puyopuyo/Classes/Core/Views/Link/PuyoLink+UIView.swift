@@ -10,7 +10,7 @@ import Foundation
 extension PuyoLink where T: UIView {
     
     @discardableResult
-    public func backgroundColor<S: Valuable>(_ color: S) -> Self where S.ValueType == UIColor? {
+    public func backgroundColor<S: ValueOutputing>(_ color: S) -> Self where S.OutputType == UIColor? {
         view.py_setUnbinder(color.safeBind(view, { (v, a) in
             v.backgroundColor = a
         }), for: #function)
@@ -18,7 +18,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func contentMode<S: Valuable>(_ mode: S) -> Self where S.ValueType == UIView.ContentMode {
+    public func contentMode<S: ValueOutputing>(_ mode: S) -> Self where S.OutputType == UIView.ContentMode {
         view.py_setUnbinder(mode.safeBind(view, { (v, a) in
             v.contentMode = a
         }), for: #function)
@@ -26,7 +26,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func clipToBounds<S: Valuable>(_ clip: S) -> Self where S.ValueType == Bool {
+    public func clipToBounds<S: ValueOutputing>(_ clip: S) -> Self where S.OutputType == Bool {
         view.py_setUnbinder(clip.safeBind(view, { (v, a) in
             v.clipsToBounds = a
         }), for: #function)
@@ -34,7 +34,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func cornerRadius<S: Valuable>(_ radius: S) -> Self where S.ValueType == CGFloat {
+    public func cornerRadius<S: ValueOutputing>(_ radius: S) -> Self where S.OutputType == CGFloat {
         view.py_setUnbinder(radius.safeBind(view, { (v, a) in
             v.layer.cornerRadius = a
             v.clipsToBounds = true
@@ -43,7 +43,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func borderWidth<S: Valuable>(_ width: S) -> Self where S.ValueType == CGFloat {
+    public func borderWidth<S: ValueOutputing>(_ width: S) -> Self where S.OutputType == CGFloat {
         view.py_setUnbinder(width.safeBind(view, { (v, a) in
             v.layer.borderWidth = a
         }), for: #function)
@@ -51,7 +51,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func borderColor<S: Valuable>(_ color: S) -> Self where S.ValueType == UIColor? {
+    public func borderColor<S: ValueOutputing>(_ color: S) -> Self where S.OutputType == UIColor? {
         view.py_setUnbinder(color.safeBind(view, { (v, a) in
             v.layer.borderColor = a?.cgColor
         }), for: #function)
@@ -59,7 +59,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func alpha<S: Valuable>(_ alpha: S) -> Self where S.ValueType == CGFloat {
+    public func alpha<S: ValueOutputing>(_ alpha: S) -> Self where S.OutputType == CGFloat {
         view.py_setUnbinder(alpha.safeBind(view, { (v, a) in
             v.alpha = a
         }), for: #function)
@@ -67,7 +67,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func userInteractionEnabled<S: Valuable>(_ enabled: S) -> Self where S.ValueType == Bool {
+    public func userInteractionEnabled<S: ValueOutputing>(_ enabled: S) -> Self where S.OutputType == Bool {
         view.py_setUnbinder(enabled.safeBind(view, { (v, a) in
             v.isUserInteractionEnabled = a
         }), for: #function)
@@ -75,7 +75,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func frame<S: Valuable>(_ frame: S) -> Self where S.ValueType == CGRect {
+    public func frame<S: ValueOutputing>(_ frame: S) -> Self where S.OutputType == CGRect {
         view.py_setUnbinder(frame.safeBind(view, { (v, a) in
             v.frame = a
         }), for: #function)
@@ -83,7 +83,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func bounds<S: Valuable>(_ frame: S) -> Self where S.ValueType == CGRect {
+    public func bounds<S: ValueOutputing>(_ frame: S) -> Self where S.OutputType == CGRect {
         view.py_setUnbinder(frame.safeBind(view, { (v, a) in
             v.bounds = a
         }), for: #function)
@@ -91,7 +91,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func center<S: Valuable>(_ frame: S) -> Self where S.ValueType == CGPoint {
+    public func center<S: ValueOutputing>(_ frame: S) -> Self where S.OutputType == CGPoint {
         view.py_setUnbinder(frame.safeBind(view, { (v, a) in
             v.center = a
         }), for: #function)
@@ -99,19 +99,19 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func onBoundsChanged<O: Outputable>(_ bounds: O) -> Self where O.OutputType == CGRect {
+    public func onBoundsChanged<O: ValueInputing>(_ bounds: O) -> Self where O.InputType == CGRect {
         _ = view.py_observeBounds({ $0 }).py_bind(to: bounds)
         return self
     }
     
     @discardableResult
-    public func onCenterChanged<O: Outputable>(_ center: O) -> Self where O.OutputType == CGPoint {
+    public func onCenterChanged<O: ValueInputing>(_ center: O) -> Self where O.InputType == CGPoint {
         _ = view.py_observeCenter({ $0 }).py_bind(to: center)
         return self
     }
     
     @discardableResult
-    public func onFrameChanged<O: Outputable>(_ frame: O) -> Self where O.OutputType == CGRect {
+    public func onFrameChanged<O: ValueInputing>(_ frame: O) -> Self where O.InputType == CGRect {
         _ = view.py_observeFrameByBoundsCenter({ $0 }).py_bind(to: frame)
         return self
     }

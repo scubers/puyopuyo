@@ -18,7 +18,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func size<S: Valuable>(_ width: S?, _ height: S?) -> Self where S.ValueType == SizeDescription {
+    public func size<S: ValueOutputing>(_ width: S?, _ height: S?) -> Self where S.OutputType == SizeDescription {
         if let width = width {
             view.py_setUnbinder(width.safeBind(view, { (v, w) in
                 PuyoLinkHelper.size(for: v, width: w, height: nil)
@@ -63,7 +63,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func width<S: Valuable>(_ width: S) -> Self where S.ValueType == SizeDescription {
+    public func width<S: ValueOutputing>(_ width: S) -> Self where S.OutputType == SizeDescription {
         return size(width, nil)
     }
     
@@ -98,7 +98,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func height<S: Valuable>(_ height: S) -> Self where S.ValueType == SizeDescription {
+    public func height<S: ValueOutputing>(_ height: S) -> Self where S.OutputType == SizeDescription {
         return size(nil, height)
     }
     
@@ -128,7 +128,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func margin<S: Valuable>(all: S? = nil, top: S? = nil, left: S? = nil, bottom: S? = nil, right: S? = nil) -> Self where S.ValueType == CGFloat {
+    public func margin<S: ValueOutputing>(all: S? = nil, top: S? = nil, left: S? = nil, bottom: S? = nil, right: S? = nil) -> Self where S.OutputType == CGFloat {
         if let s = all {
             view.py_setUnbinder(s.safeBind(view, { (v, a) in
                 PuyoLinkHelper.margin(for: v, all: a)
@@ -158,7 +158,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func margin<S: Valuable>(_ margin: S) -> Self where S.ValueType == UIEdgeInsets {
+    public func margin<S: ValueOutputing>(_ margin: S) -> Self where S.OutputType == UIEdgeInsets {
         let unbinder = margin.safeBind(view) { (v, m) in
             PuyoLinkHelper.margin(for: v, all: nil, top: m.top, left: m.left, bottom: m.bottom, right: m.right)
         }
@@ -215,7 +215,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func aligment<S: Valuable>(_ aligment: S) -> Self where S.ValueType == Aligment {
+    public func aligment<S: ValueOutputing>(_ aligment: S) -> Self where S.OutputType == Aligment {
         view.py_setUnbinder(aligment.safeBind(view, { (v, a) in
             PuyoLinkHelper.aligment(for: v, aligment: a)
         }), for: #function)
@@ -230,7 +230,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func visible<S: Valuable>(_ visibility: S) -> Self where S.ValueType == Visiblity {
+    public func visible<S: ValueOutputing>(_ visibility: S) -> Self where S.OutputType == Visiblity {
         view.py_setUnbinder(visibility.safeBind(view, { (v, a) in
             PuyoLinkHelper.visibility(for: v, visibility: a)
         }), for: #function)
@@ -239,7 +239,7 @@ extension PuyoLink where T: UIView {
     
     // MARK: - Activated
     @discardableResult
-    public func activated<S: Valuable>(_ activated: S) -> Self where S.ValueType == Bool {
+    public func activated<S: ValueOutputing>(_ activated: S) -> Self where S.OutputType == Bool {
         view.py_setUnbinder(activated.safeBind(view, { (v, a) in
             v.py_measure.activated = a
             v.py_setNeedsLayout()

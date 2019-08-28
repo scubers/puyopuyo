@@ -7,16 +7,16 @@
 
 import Foundation
 
-public enum Formation: CaseIterable {
+public enum Format: CaseIterable {
     case leading
     case center
     case sides
-    case round
+    case avg
     case trailing
 }
 
 /// 描述一个布局具备控制子节点的属性
-public class BaseLayout: Measure {
+public class Regulator: Measure {
     
     public var justifyContent: Aligment = .center
     

@@ -7,7 +7,7 @@
 
 import Foundation
 
-private class _FakeFlatLayout: FlatLayout {
+private class _FakeFlatLayout: FlatRegulator {
     
     private var lastDelta: CGPoint = .zero
     
@@ -40,12 +40,12 @@ private class _FakeFlatLayout: FlatLayout {
 
 class FlowCaculator {
     
-    init(_ layout: FlowLayout, parent: Measure) {
+    init(_ layout: FlowRegulator, parent: Measure) {
         self.layout = layout
         self.parent = parent
     }
     
-    let layout: FlowLayout
+    let layout: FlowRegulator
     let parent: Measure
     var arrange: Int {
         return layout.arrange
@@ -86,7 +86,7 @@ private extension FlowCaculator {
 //        outside.justifyContent = layout.justifyContent
         outside.direction = layoutDirection
         outside.space = getNormalSpace()
-        outside.formation = layout.formation
+        outside.format = layout.format
         outside.margin = layout.margin
         outside.padding = layout.padding
         outside.reverse = layout.reverse
@@ -100,11 +100,11 @@ private extension FlowCaculator {
         line.justifyContent = layout.justifyContent
         line.direction = getOppsiteDirection()
         line.space = getOppsiteSpace()
-        line.formation = layout.subFormation
+        line.format = layout.subFormat
         line.reverse = layout.reverse
         line.size = Size(width: .wrap, height: .wrap)
         
-        if line.formation != .leading {
+        if line.format != .leading {
             // 需要外界给定cross
             var calSize = line.size.getCalSize(by: layoutDirection)
             calSize.cross = .fix(layoutFixedSize.cross - layout.getCalPadding().crossFixed)

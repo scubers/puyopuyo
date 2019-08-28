@@ -15,7 +15,7 @@ public protocol MeasureHolder {
 extension UIView: MeasureHolder {
 
     public var py_measure: Measure {
-        return MeasureBox.getMeasure(from: self)
+        return MeasureFactory.getMeasure(from: self)
     }
 }
 
@@ -51,7 +51,7 @@ extension UIView: MeasureTargetable {
         return sizeThatFits(size)
     }
     
-    public func py_measureChanged<V: Valuable & Outputable>() -> V where V.ValueType == CGRect, V.OutputType == CGRect {
+    public func py_measureChanged<V: ValueOutputing & ValueInputing>() -> V where V.OutputType == CGRect, V.InputType == CGRect {
         if let s = objc_getAssociatedObject(self, &py_measureChangedKey) as? State<CGRect> {
             return s as! V
         }

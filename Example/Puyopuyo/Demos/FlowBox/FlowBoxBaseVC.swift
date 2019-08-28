@@ -14,8 +14,8 @@ class FlowBoxBaseVC: BaseVC {
     override func configView() {
         
         let reverse = _S<Bool>(false)
-        let formation = _S<Formation>(.trailing)
-        let subFormation = _S<Formation>(.leading)
+        let formation = _S<Format>(.trailing)
+        let subFormation = _S<Format>(.leading)
         let text = _S<String?>(nil)
         let arrange = _S<Int>(3)
         let direction = _S<Direction>(.y)
@@ -32,8 +32,8 @@ class FlowBoxBaseVC: BaseVC {
                     .addWeakAction(to: self, for: .touchUpInside, { (self, _) in
                         self.vRoot.animate(0.2, block: {
                             reverse.value = !reverse.value
-                            subFormation.value = Util.random(array: [.leading, .trailing, .center, .round, .sides])
-                            formation.value = Util.random(array: [.leading, .trailing, .center, .round, .sides])
+                            subFormation.value = Util.random(array: [.leading, .trailing, .center, .avg, .sides])
+                            formation.value = Util.random(array: [.leading, .trailing, .center, .avg, .sides])
                             arrange.value = Util.random(array: Array(1...total))
                             direction.value = Util.random(array: [.x, .y])
                             
@@ -67,7 +67,7 @@ class FlowBoxBaseVC: BaseVC {
                                     })
                                     .view
                             
-                            adding.postValue(v)
+                            adding.input(value: v)
                         })
                     })
                     .size(50, .fill)
@@ -81,8 +81,8 @@ class FlowBoxBaseVC: BaseVC {
                 OptionView(prefix: "arrange", receiver: arrange, options: Array(1...total)).attach($0).size(.fill, height)
                 OptionView(prefix: "direction", receiver: direction, options: Direction.allCases).attach($0).size(.fill, height)
                 OptionView(prefix: "reverse", receiver: reverse, options: [true, false]).attach($0).size(.fill, height)
-                OptionView(prefix: "formation", receiver: formation, options: Formation.allCases).attach($0).size(.fill, height)
-                OptionView(prefix: "subFormation", receiver: subFormation, options: Formation.allCases).attach($0).size(.fill, height)
+                OptionView(prefix: "formation", receiver: formation, options: Format.allCases).attach($0).size(.fill, height)
+                OptionView(prefix: "subFormation", receiver: subFormation, options: Format.allCases).attach($0).size(.fill, height)
                 OptionView(prefix: "content", receiver: justifyContent, options: Aligment.vertAligments() + Aligment.horzAligments()).attach($0).size(.fill, height)
                 }
                 .padding(left: 10, right: 10)
@@ -123,7 +123,7 @@ class FlowBoxBaseVC: BaseVC {
                 
                 
                 let flow = $0
-                _ = adding.receiveValue({ (v) in
+                _ = adding.receiveOutput({ (v) in
                     guard let v = v else { return }
                     v.attach(flow)
                 })
@@ -138,8 +138,8 @@ class FlowBoxBaseVC: BaseVC {
                 .direction(direction)
                 .arrangeCount(arrange)
                 .reverse(reverse)
-                .formation(formation)
-                .subFormation(subFormation)
+                .format(formation)
+                .subFormat(subFormation)
             }
             .justifyContent(.center)
             .space(10)

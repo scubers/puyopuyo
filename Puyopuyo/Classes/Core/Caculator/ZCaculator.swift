@@ -9,9 +9,9 @@ import Foundation
 
 class ZCaculator {
     
-    let layout: ZLayout
+    let layout: ZRegulator
     let parent: Measure
-    init(_ layout: ZLayout, parent: Measure) {
+    init(_ layout: ZRegulator, parent: Measure) {
         self.layout = layout
         self.parent = parent
     }

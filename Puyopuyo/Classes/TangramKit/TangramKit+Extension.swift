@@ -91,7 +91,7 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func tg_visibility<S: Valuable>(_ visibility: S) -> Self where S.ValueType == TGVisibility {
+    public func tg_visibility<S: ValueOutputing>(_ visibility: S) -> Self where S.OutputType == TGVisibility {
         view.py_setUnbinder(visibility.safeBind(view, { (v, a) in
             v.tg_visibility = a
         }), for: #function)

@@ -11,7 +11,7 @@ import Puyopuyo
 
 class FlatFormationAligmentVC: BaseVC {
     
-    let formation = _S<Formation>(.leading)
+    let formation = _S<Format>(.leading)
     let aligment = _S<Aligment>(.center)
     let text = _S<String?>(nil)
     let reversed = _S<Bool>(false)
@@ -20,13 +20,13 @@ class FlatFormationAligmentVC: BaseVC {
     let center = _S<CGPoint>(.zero)
     
     override func configView() {
-        _ = formation.receiveValue { [weak self] (f) in
+        _ = formation.receiveOutput { [weak self] (f) in
             self?.refreshTitle()
         }
-        _ = aligment.receiveValue { [weak self] (f) in
+        _ = aligment.receiveOutput { [weak self] (f) in
             self?.refreshTitle()
         }
-        _ = reversed.receiveValue { [weak self] (f) in
+        _ = reversed.receiveOutput { [weak self] (f) in
             self?.refreshTitle()
         }
         
@@ -49,13 +49,13 @@ class FlatFormationAligmentVC: BaseVC {
             Label("3").attach($0)
                 .textAligment(State(.center))
                 .size(50, 50)
-                .onFrameChanged(SimpleOutput {
+                .onFrameChanged(SimpleInput {
                     print($0)
                 })
             
             }
             .size(.fill, .fill)
-            .formation(self.formation)
+            .format(self.formation)
             .space(10)
             .padding(all: 10)
             .justifyContent(self.aligment)
@@ -64,7 +64,7 @@ class FlatFormationAligmentVC: BaseVC {
     
     @objc private func change() {
         vRoot.animate(0.2) {
-            self.formation.value = Util.random(array: [Formation.leading, .center, .sides, .round, .trailing])
+            self.formation.value = Util.random(array: [Format.leading, .center, .sides, .avg, .trailing])
             self.aligment.value = Util.random(array: [Aligment.left, .right, .center])
             self.reversed.value = Util.random(array: [false, true])
         }

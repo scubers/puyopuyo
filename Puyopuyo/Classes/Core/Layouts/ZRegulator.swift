@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class ZLayout: BaseLayout {
+public class ZRegulator: Regulator {
     
     public override func caculate(byParent parent: Measure) -> Size {
         return ZCaculator(self, parent: parent).caculate()

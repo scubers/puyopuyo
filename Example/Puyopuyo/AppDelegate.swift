@@ -53,10 +53,10 @@ import Foundation
 import Puyopuyo
 import RxSwift
 
-extension Observable: Valuable {
-    public typealias ValueType = Element
+extension Observable: ValueOutputing {
+    public typealias OutputType = Element
     
-    public func receiveValue(_ block: @escaping (Element) -> Void) -> Unbinder {
+    public func receiveOutput(_ block: @escaping (Element) -> Void) -> Unbinder {
         let d = subscribe(onNext: { value in
             block(value)
         })
@@ -66,22 +66,22 @@ extension Observable: Valuable {
     }
 }
 
-extension PublishSubject: Outputable {
+extension PublishSubject: ValueInputing {
     
-    public typealias OutputType = Element
+    public typealias InputType = Element
     
-    public func postValue(_ value: OutputType) {
+    public func input(value: Element) {
         onNext(value)
     }
     
 }
 
-extension BehaviorSubject: Outputable {
+extension BehaviorSubject: ValueInputing {
     public typealias ValueType = Element
     
-    public typealias OutputType = Element
+    public typealias InputType = Element
     
-    public func postValue(_ value: Element) {
+    public func input(value: Element) {
         onNext(value)
     }
 }

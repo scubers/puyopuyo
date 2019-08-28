@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class FlowLayout: FlatLayout {
+public class FlowRegulator: FlatRegulator {
     
     public var arrange: Int = 1 {
         willSet {
@@ -25,7 +25,7 @@ public class FlowLayout: FlatLayout {
         }
     }
     
-    public var subFormation: Formation = .leading
+    public var subFormat: Format = .leading
     
     public override func caculate(byParent parent: Measure) -> Size {
         return FlowCaculator(self, parent: parent).caculate()

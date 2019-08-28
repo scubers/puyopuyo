@@ -57,7 +57,7 @@ extension UIView {
         let id = "\(Date().timeIntervalSince1970)\(arc4random())"
         py_addObserver(for: #keyPath(UIView.bounds), id: id, block: { (rect: CGRect?) in
             let value = block(rect ?? .zero)
-            s.postValue(value)
+            s.input(value: value)
         })
         return s
     }
@@ -67,7 +67,7 @@ extension UIView {
         let id = "\(Date().timeIntervalSince1970)\(arc4random())"
         py_addObserver(for: #keyPath(UIView.center), id: id, block: { (point: CGPoint?) in
             let value = block(point ?? .zero)
-            s.postValue(value)
+            s.input(value: value)
         })
         return s
 
@@ -79,19 +79,19 @@ extension UIView {
         py_addObserver(for: #keyPath(UIView.bounds), id: "\(id)_bounds", block: { [weak self] (_: CGRect?) in
             if let self = self {
                 let value = block(self.frame)
-                s.postValue(value)
+                s.input(value: value)
             } else {
                 let value = block(.zero)
-                s.postValue(value)
+                s.input(value: value)
             }
         })
         py_addObserver(for: #keyPath(UIView.center), id: "\(id)_center", block: { [weak self] (_: CGPoint?) in
             if let self = self {
                 let value = block(self.frame)
-                s.postValue(value)
+                s.input(value: value)
             } else {
                 let value = block(.zero)
-                s.postValue(value)
+                s.input(value: value)
             }
         })
         return s

@@ -18,30 +18,30 @@ public class Unbinders {
     }
 }
 
-public protocol Valuable {
-    associatedtype ValueType
-    func receiveValue(_ block: @escaping (ValueType) -> Void) -> Unbinder
-}
-
-public protocol Outputable {
+public protocol ValueOutputing {
     associatedtype OutputType
-    func postValue(_ value: OutputType)
+    func receiveOutput(_ block: @escaping (OutputType) -> Void) -> Unbinder
 }
 
-public typealias Statefule = (Valuable & Outputable)
+public protocol ValueInputing {
+    associatedtype InputType
+    func input(value: InputType)
+}
 
-extension Valuable {
-    public func safeBind<Object: AnyObject>(_ object: Object, _ action: @escaping (Object, ValueType) -> Void) -> Unbinder {
-        return receiveValue { [weak object] (s) in
+public typealias Statefule = (ValueOutputing & ValueInputing)
+
+extension ValueOutputing {
+    public func safeBind<Object: AnyObject>(_ object: Object, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
+        return receiveOutput { [weak object] (s) in
             if let object = object {
                 action(object, s)
             }
         }
     }
     
-    public func py_bind<O: Outputable>(to output: O) -> Unbinder where O.OutputType == ValueType {
-        return receiveValue { (v) in
-            output.postValue(v)
+    public func py_bind<Input: ValueInputing>(to output: Input) -> Unbinder where Input.InputType == OutputType {
+        return receiveOutput { (v) in
+            output.input(value: v)
         }
     }
     
@@ -49,13 +49,13 @@ extension Valuable {
 
 public typealias _S = State
 
-public class State<T>: Valuable, Outputable {
+public class State<T>: ValueOutputing, ValueInputing {
     
-    public func postValue(_ value: State<T>.OutputType) {
+    public func input(value: State<T>.InputType) {
         self._value = value
     }
     
-    public func receiveValue(_ block: @escaping (State<T>.ValueType) -> Void) -> Unbinder {
+    public func receiveOutput(_ block: @escaping (State<T>.OutputType) -> Void) -> Unbinder {
         if let value = _value {
             block(value)
         }
@@ -67,9 +67,9 @@ public class State<T>: Valuable, Outputable {
         }
     }
     
-    public typealias ValueType = T
-    
     public typealias OutputType = T
+    
+    public typealias InputType = T
     
     public var value: T {
         set {
@@ -112,10 +112,10 @@ public class State<T>: Valuable, Outputable {
 }
 
 extension State {
-    public func optional() -> State<ValueType?> {
-        let new = State<ValueType?>(nil)
-        let unbinder = receiveValue { (value) in
-            new.postValue(value)
+    public func optional() -> State<OutputType?> {
+        let new = State<OutputType?>(nil)
+        let unbinder = receiveOutput { (value) in
+            new.input(value: value)
         }
         new.onDestroy = {
             unbinder.py_unbind()
@@ -123,10 +123,10 @@ extension State {
         return new
     }
     
-    public func map<S: Outputable, R>(_ block: @escaping (T) -> R) -> S where S.OutputType == R {
+    public func map<S: ValueInputing, R>(_ block: @escaping (T) -> R) -> S where S.InputType == R {
         let newState = State<R>()
-        let unbinder = receiveValue { (value) in
-            newState.postValue(block(value))
+        let unbinder = receiveOutput { (value) in
+            newState.input(value: block(value))
         }
         newState.onDestroy = {
             unbinder.py_unbind()
@@ -181,9 +181,9 @@ extension NSObject {
     
 }
 
-public struct SimpleOutput<T>: Outputable {
-    public typealias OutputType = T
-    public func postValue(_ value: SimpleOutput<T>.OutputType) {
+public struct SimpleInput<T>: ValueInputing {
+    public typealias InputType = T
+    public func input(value: SimpleInput<T>.InputType) {
         action(value)
     }
     private var action: (T) -> Void
