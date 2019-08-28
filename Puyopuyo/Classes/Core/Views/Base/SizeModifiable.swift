@@ -11,8 +11,8 @@ public protocol SizeModifiable {
     func modifySize() -> State<SizeDescription>
 }
 
-public protocol PositionModifiable {
-    func modifyPosition() -> State<CGFloat>
+public protocol ValueModifiable {
+    func modifyValue() -> State<CGFloat>
 }
 
 public struct Simulate {
@@ -60,7 +60,7 @@ extension Simulate: SizeModifiable {
     }
 }
 
-extension Simulate: PositionModifiable {
+extension Simulate: ValueModifiable {
     
     public var top: Simulate {
         var s = self
@@ -86,7 +86,7 @@ extension Simulate: PositionModifiable {
         return s
     }
     
-    public func modifyPosition() -> State<CGFloat> {
+    public func modifyValue() -> State<CGFloat> {
         return view.py_observeFrameByBoundsCenter({ (rect) -> CGFloat in
             return self.transform(rect) * self.multiply + self.add
         })

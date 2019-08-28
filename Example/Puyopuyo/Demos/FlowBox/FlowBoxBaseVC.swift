@@ -90,6 +90,11 @@ class FlowBoxBaseVC: BaseVC {
             
             VFlow(count: 3).attach($0) {
                 
+                var top: ValueModifiable!
+                var left: ValueModifiable!
+                var bottom: ValueModifiable!
+                var right: ValueModifiable!
+                
                 for idx in 0..<total {
                     let x =
                     Label("\(idx + 1)").attach($0)
@@ -98,17 +103,22 @@ class FlowBoxBaseVC: BaseVC {
 //                        .width(Simulate($0).width.multiply(0.2))
 //                        .heightOnSelf({ .fix($0.width) })
                     
-                    if idx == 4 {
-                        Label("-1").attach($0)
-                            .activated(_S(false))
-                            .frame(State(CGRect(x: 100, y: 100, width: 20, height: 20)))
-                            .top(Simulate(x.view).top)
-//                            .left(Simulate(x.view).left)
-//                            .bottom(Simulate(x.view).bottom)
-//                            .right(Simulate(x.view).right)
+                    if idx == 0 {
+                        top = Simulate(x.view).top
+                        left = Simulate(x.view).left
+                    }
+                    if idx == 1 {
+                        bottom = Simulate(x.view).bottom
+                        right = Simulate(x.view).right
                     }
                     
                 }
+                Label("-1").attach($0)
+                    .activated(_S(false))
+                    .top(top)
+                    .left(left)
+                    .bottom(bottom)
+                    .right(right)
                 
                 
                 
