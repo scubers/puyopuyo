@@ -22,6 +22,8 @@ open class BoxView: UIView {
         return py_measure as! Regulator
     }
     
+    private var isLayoutingSubview = false
+    
     /// 只应用固有尺寸
     func _selfSizeAdapting(size: Size) {
         if superview is BoxView {
@@ -78,6 +80,13 @@ open class BoxView: UIView {
 private extension BoxView {
 
     func _layoutSubviews() {
+        
+        guard !isLayoutingSubview else {
+            return
+        }
+        
+        isLayoutingSubview = true
+        
         let parentMeasure = superview?.py_measure ?? Measure()
         let parentCGSize = superview?.bounds.size ?? .zero
 
@@ -104,12 +113,11 @@ private extension BoxView {
                 
                 // 控制父视图的scroll
                 if let scrollView = superview as? UIScrollView, regulator.autoJudgeScroll {
-                    let contentSize = scrollView.contentSize
                     if regulator.size.width.isWrap {
-                        scrollView.contentSize.width = max(contentSize.width, newSize.width + regulator.padding.left + regulator.padding.right + frame.origin.x)
+                        scrollView.contentSize.width = newSize.width + regulator.padding.left + regulator.padding.right + frame.origin.x
                     }
                     if regulator.size.height.isWrap {
-                        scrollView.contentSize.height = max(contentSize.height, newSize.height + regulator.padding.bottom + regulator.padding.top + frame.origin.y)
+                        scrollView.contentSize.height = newSize.height + regulator.padding.bottom + regulator.padding.top + frame.origin.y
                     }
                 }
             }
@@ -120,6 +128,8 @@ private extension BoxView {
         if needResizing {
             _ = regulator.caculate(byParent: parentMeasure)
         }
+        
+        isLayoutingSubview = false
         
     }
     

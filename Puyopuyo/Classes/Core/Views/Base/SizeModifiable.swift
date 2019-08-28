@@ -23,8 +23,19 @@ public struct Simulate {
     var add: CGFloat = 0
     var multiply: CGFloat = 1
     
+    var selfSimulating = false
+    
     public init(_ view: UIView) {
         self.view = view
+    }
+    
+    private init() {
+        self.view = UIView()
+        selfSimulating = true
+    }
+    
+    public static var ego: Simulate {
+        return Simulate()
     }
     
     public func add(_ add: CGFloat) -> Simulate {
@@ -39,6 +50,17 @@ public struct Simulate {
         return s
     }
     
+    public func simulate(_ view: UIView) -> Simulate {
+        var s = self
+        s.view = view
+        return s
+    }
+    
+    public func simulateSelf() -> Simulate {
+        var s = self
+        s.selfSimulating = true
+        return s
+    }
 }
 
 extension Simulate: SizeModifiable {
@@ -54,8 +76,11 @@ extension Simulate: SizeModifiable {
         return s
     }
     public func modifySize() -> State<SizeDescription> {
+        let transform = self.transform
+        let multiply = self.multiply
+        let add = self.add
         return view.py_observeBounds({ (rect) -> SizeDescription in
-            return .fix(self.transform(rect) * self.multiply + self.add)
+            return .fix(transform(rect) * multiply + add)
         })
     }
 }
@@ -87,8 +112,29 @@ extension Simulate: ValueModifiable {
     }
     
     public func modifyValue() -> State<CGFloat> {
+        let transform = self.transform
+        let multiply = self.multiply
+        let add = self.add
         return view.py_observeFrameByBoundsCenter({ (rect) -> CGFloat in
-            return self.transform(rect) * self.multiply + self.add
+            return transform(rect) * multiply + add
         })
+    }
+}
+
+extension SizeModifiable {
+    public func checkSelfSimulate(_ view: UIView) -> SizeModifiable {
+        if let m = self as? Simulate, m.selfSimulating {
+            return m.simulate(view)
+        }
+        return self
+    }
+}
+
+extension ValueModifiable {
+    public func checkSelfSimulate(_ view: UIView) -> ValueModifiable {
+        if let m = self as? Simulate, m.selfSimulating {
+            return m.simulate(view)
+        }
+        return self
     }
 }

@@ -14,3 +14,34 @@ target 'Puyopuyo_Example' do
     
   end
 end
+
+
+# 安装脚本后，对pod工程进行配置
+post_install do |installer|
+  
+  # print "SQLCipher: link Pods/Headers/sqlite3.h"
+  # system "mkdir -p Pods/Headers/Private && ln -s ../../SQLCipher/sqlite3.h Pods/Headers/Private"
+  
+  installer.pods_project.targets.each do | target |
+    # @build_type = ::Pod::Target::BuildType.new(linkage: linkage, packaging: packaging)
+    # 给每个target添加 编译宏
+    target.build_configurations.each do |config|
+      
+      # 忽略文档警告
+      config.build_settings['CLANG_WARN_DOCUMENTATION_COMMENTS'] = 'NO'
+      # 禁用编译索引
+      config.build_settings['COMPILER_INDEX_STORE_ENABLE'] = 'NO'
+      # 禁用strict prototypes
+      config.build_settings['CLANG_WARN_STRICT_PROTOTYPES'] = 'NO'
+      # 禁用隐式self警告
+      config.build_settings['CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF'] = 'NO'
+      # 关闭bitcode
+      config.build_settings['ENABLE_BITCODE'] = 'NO'
+      
+      if config.name == 'Debug'
+        config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= ['$(inherited)', 'DEBUG=1', 'DEV=1']
+      end
+    end
+  end
+  
+end

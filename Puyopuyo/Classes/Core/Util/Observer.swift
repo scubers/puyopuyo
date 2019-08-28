@@ -25,7 +25,7 @@ class _Observer<Value>: NSObject {
             }
         }
     }
-    #if DEBUG
+    #if DEV
     deinit {
         print("observer deinit")
     }
@@ -41,9 +41,6 @@ extension NSObject {
             block(lastValue)
         }
         let unbinder = Unbinders.create { [weak self] in
-            #if DEBUG
-//            print("unbind keypath: \(keyPath)")
-            #endif
             self?.removeObserver(observer, forKeyPath: keyPath)
         }
         addObserver(observer, forKeyPath: keyPath, options: [.new, .initial], context: nil)

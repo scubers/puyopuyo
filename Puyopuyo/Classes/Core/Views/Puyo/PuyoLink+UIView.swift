@@ -118,7 +118,7 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func xPos(_ x: ValueModifiable) -> Self {
-        view.py_setUnbinder(x.modifyValue().safeBind(view, { (v, a) in
+        view.py_setUnbinder(x.checkSelfSimulate(view).modifyValue().safeBind(view, { (v, a) in
             v.frame.origin.x = a
         }), for: #function)
         return self
@@ -126,7 +126,7 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func yPos(_ y: ValueModifiable) -> Self {
-        view.py_setUnbinder(y.modifyValue().safeBind(view, { (v, a) in
+        view.py_setUnbinder(y.checkSelfSimulate(view).modifyValue().safeBind(view, { (v, a) in
             v.frame.origin.y = a
         }), for: #function)
         return self
@@ -134,7 +134,7 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func frameWidth(_ width: ValueModifiable) -> Self {
-        view.py_setUnbinder(width.modifyValue().safeBind(view, { (v, a) in
+        view.py_setUnbinder(width.checkSelfSimulate(view).modifyValue().safeBind(view, { (v, a) in
             v.frame.size.width = max(0, a)
         }), for: #function)
         return self
@@ -142,7 +142,7 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func frameHeight(_ width: ValueModifiable) -> Self {
-        view.py_setUnbinder(width.modifyValue().safeBind(view, { (v, a) in
+        view.py_setUnbinder(width.checkSelfSimulate(view).modifyValue().safeBind(view, { (v, a) in
             v.frame.size.height = max(0, a)
         }), for: #function)
         return self

@@ -88,58 +88,47 @@ class FlowBoxBaseVC: BaseVC {
                 .padding(left: 10, right: 10)
                 .size(.fill, .wrap)
             
-            VFlow(count: 3).attach($0) {
-                
-                var top: ValueModifiable!
-                var left: ValueModifiable!
-                var bottom: ValueModifiable!
-                var right: ValueModifiable!
-                
-                for idx in 0..<total {
-                    let x =
-                    Label("\(idx + 1)").attach($0)
-                        .width(40)
-                        .height(40)
-//                        .width(Simulate($0).width.multiply(0.2))
-//                        .heightOnSelf({ .fix($0.width) })
+            UIScrollView().attach($0) {
+                VFlow(count: 3).attach($0) {
                     
-                    if idx == 0 {
-                        top = Simulate(x.view).top
-                        left = Simulate(x.view).left
-                    }
-                    if idx == 1 {
-                        bottom = Simulate(x.view).bottom
-                        right = Simulate(x.view).right
+                    for idx in 0..<total {
+                        let x =
+                            Label("\(idx + 1)").attach($0)
+                                .width(40)
+                                .height(Simulate.ego.width)
+                                //                        .height(on: $0, { .fix($0.width * 0.2)})
+//                                .height(Simulate($0).width.multiply(0.2))
+                        //                        .height(Simulate().simulateSelf().width)
+                        //                        .height(40)
+                        
+                        //                        .width(Simulate($0).width.multiply(0.2))
+                        //                        .heightOnSelf({ .fix($0.width) })
+                        
                     }
                     
-                }
-                Label("-1").attach($0)
-                    .activated(_St(false))
-                    .top(top)
-                    .left(left)
-                    .bottom(bottom)
-                    .right(right)
-                
-                
-                
-                let flow = $0
-                _ = adding.receiveOutput({ (v) in
-                    guard let v = v else { return }
-                    v.attach(flow)
-                })
-                
+                    let flow = $0
+                    _ = adding.receiveOutput({ (v) in
+                        guard let v = v else { return }
+                        v.attach(flow)
+                    })
+                    
+                    }
+                    //                .size(.fill, .fill)
+                    .size(.wrap, .wrap)
+                    .padding(all: 10)
+                    .margin(all: 10)
+                    .space(10)
+                    .justifyContent(justifyContent)
+                    .direction(direction)
+                    .arrangeCount(arrange)
+                    .reverse(reverse)
+                    .format(formation)
+                    .autoJudgeScroll(true)
+                    .subFormat(subFormation)
                 }
                 .size(.fill, .fill)
-//                .size(.wrap, .wrap)
-                .padding(all: 10)
                 .margin(all: 10)
-                .space(10)
-                .justifyContent(justifyContent)
-                .direction(direction)
-                .arrangeCount(arrange)
-                .reverse(reverse)
-                .format(formation)
-                .subFormat(subFormation)
+            
             }
             .justifyContent(.center)
             .space(10)

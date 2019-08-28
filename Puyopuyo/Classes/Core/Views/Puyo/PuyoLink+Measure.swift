@@ -77,7 +77,7 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func width(_ modifiable: SizeModifiable) -> Self {
-        return width(modifiable.modifySize())
+        return width(modifiable.checkSelfSimulate(view).modifySize())
     }
     
     @discardableResult
@@ -112,7 +112,7 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func height(_ modifiable: SizeModifiable) -> Self {
-        return height(modifiable.modifySize())
+        return height(modifiable.checkSelfSimulate(view).modifySize())
     }
     
     @discardableResult

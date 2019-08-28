@@ -155,7 +155,7 @@ extension NSObject {
     private var py_unbinderContainer: UnbinderContainer {
         var container = objc_getAssociatedObject(self, &NSObject.puyopuyo_unbinderContainerKey)
         if container == nil {
-            container = UnbinderContainer()
+            container = UnbinderContainer(name: NSStringFromClass(type(of: self)), address: "")
             objc_setAssociatedObject(self, &NSObject.puyopuyo_unbinderContainerKey, container, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         return container as! UnbinderContainer
@@ -163,6 +163,13 @@ extension NSObject {
     
     private class UnbinderContainer: NSObject {
         private var unbinders = [String: Unbinder]()
+        private var name: String = ""
+        private var address: String = ""
+        convenience init(name: String, address: String) {
+            self.init()
+            self.name = name
+            self.address = address
+        }
         
         func setUnbinder(_ unbinder: Unbinder, for key: String) {
             let old = unbinders[key]
@@ -171,6 +178,9 @@ extension NSObject {
         }
         
         deinit {
+            #if DEV
+            print("container for \(name) deallcating!!")
+            #endif
             unbinders.forEach { (_, unbinder) in
                 unbinder.py_unbind()
             }
