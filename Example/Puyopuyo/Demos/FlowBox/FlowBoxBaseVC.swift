@@ -113,8 +113,8 @@ class FlowBoxBaseVC: BaseVC {
                     })
                     
                     }
-                    //                .size(.fill, .fill)
                     .size(.wrap, .wrap)
+                    .size(.fill, .fill)
                     .padding(all: 10)
                     .margin(all: 10)
                     .space(10)
@@ -123,7 +123,7 @@ class FlowBoxBaseVC: BaseVC {
                     .arrangeCount(arrange)
                     .reverse(reverse)
                     .format(formation)
-                    .autoJudgeScroll(true)
+                    .autoJudgeScroll(false)
                     .subFormat(subFormation)
                 }
                 .size(.fill, .fill)
