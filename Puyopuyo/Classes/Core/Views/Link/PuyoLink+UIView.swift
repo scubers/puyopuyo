@@ -155,7 +155,6 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-//    public func bottom<S: Valuable>(_ x: S) -> Self where S.ValueType == CGFloat {
     public func bottom(_ bottom: PositionModifiable) -> Self {
         view.py_setUnbinder(bottom.modifyPosition().safeBind(view, { (v, a) in
             var f = v.frame
