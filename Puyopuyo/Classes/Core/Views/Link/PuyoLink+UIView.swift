@@ -117,8 +117,24 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func top(_ x: PositionModifiable) -> Self {
+    public func xPos(_ x: PositionModifiable) -> Self {
         view.py_setUnbinder(x.modifyPosition().safeBind(view, { (v, a) in
+            v.frame.origin.x = a
+        }), for: #function)
+        return self
+    }
+    
+    @discardableResult
+    public func yPos(_ y: PositionModifiable) -> Self {
+        view.py_setUnbinder(y.modifyPosition().safeBind(view, { (v, a) in
+            v.frame.origin.y = a
+        }), for: #function)
+        return self
+    }
+    
+    @discardableResult
+    public func top(_ top: PositionModifiable) -> Self {
+        view.py_setUnbinder(top.modifyPosition().safeBind(view, { (v, a) in
             var f = v.frame
             f.size.height = max(0, v.frame.maxY - a)
             f.origin.y = min(f.maxY, a)
@@ -128,8 +144,8 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func left(_ x: PositionModifiable) -> Self {
-        view.py_setUnbinder(x.modifyPosition().safeBind(view, { (v, a) in
+    public func left(_ left: PositionModifiable) -> Self {
+        view.py_setUnbinder(left.modifyPosition().safeBind(view, { (v, a) in
             var f = v.frame
             f.size.width = max(0, v.frame.maxX - a)
             f.origin.x = min(f.maxX, a)
@@ -140,8 +156,8 @@ extension PuyoLink where T: UIView {
     
     @discardableResult
 //    public func bottom<S: Valuable>(_ x: S) -> Self where S.ValueType == CGFloat {
-    public func bottom(_ x: PositionModifiable) -> Self {
-        view.py_setUnbinder(x.modifyPosition().safeBind(view, { (v, a) in
+    public func bottom(_ bottom: PositionModifiable) -> Self {
+        view.py_setUnbinder(bottom.modifyPosition().safeBind(view, { (v, a) in
             var f = v.frame
             f.size.height = max(0, a - v.frame.origin.y)
             v.frame = f
@@ -150,8 +166,8 @@ extension PuyoLink where T: UIView {
     }
     
     @discardableResult
-    public func right(_ x: PositionModifiable) -> Self {
-        view.py_setUnbinder(x.modifyPosition().safeBind(view, { (v, a) in
+    public func right(_ right: PositionModifiable) -> Self {
+        view.py_setUnbinder(right.modifyPosition().safeBind(view, { (v, a) in
             var f = v.frame
             f.size.width = max(0, a - v.frame.origin.x)
             v.frame = f
