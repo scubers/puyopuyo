@@ -14,15 +14,18 @@ class FlowBoxBaseVC: BaseVC {
     override func configView() {
         
         let reverse = _St<Bool>(false)
-        let formation = _St<Format>(.trailing)
-        let subFormation = _St<Format>(.leading)
-        let text = _St<String?>(nil)
+        let hFormat = _St<Format>(.trailing)
+        let vFormat = _St<Format>(.leading)
         let arrange = _St<Int>(3)
         let direction = _St<Direction>(.y)
         let justifyContent = _St<Aligment>(.center)
         let adding = _St<UIView?>(nil)
+        let hSpace = _St<CGFloat>(10)
+        let vSpace = _St<CGFloat>(10)
         
         var total = 10
+        
+        let spaceRange: [CGFloat] = [10, 20, 30, 40]
         
         vRoot.attach() {
             
@@ -32,20 +35,15 @@ class FlowBoxBaseVC: BaseVC {
                     .addWeakAction(to: self, for: .touchUpInside, { (self, _) in
                         self.vRoot.animate(0.2, block: {
                             reverse.value = !reverse.value
-                            subFormation.value = Util.random(array: [.leading, .trailing, .center, .avg, .sides])
-                            formation.value = Util.random(array: [.leading, .trailing, .center, .avg, .sides])
+                            vFormat.value = Util.random(array: [.leading, .trailing, .center, .avg, .sides])
+                            hFormat.value = Util.random(array: [.leading, .trailing, .center, .avg, .sides])
                             arrange.value = Util.random(array: Array(1...total))
                             direction.value = Util.random(array: [.x, .y])
                             
                             justifyContent.value = Util.random(array: direction.value == .x ? Aligment.horzAligments() : Aligment.vertAligments())
-                            text.value = """
-                            arrange: \(arrange.value)
-                            direction: \(direction.value)
-                            reverse: \(reverse.value)
-                            formation: \(formation.value)
-                            subFormation: \(subFormation.value)
-                            content: \(justifyContent.value)
-                            """
+                            
+                            hSpace.value = Util.random(array: spaceRange)
+                            vSpace.value = Util.random(array: spaceRange)
                         })
                     })
                     .size(100, 20)
@@ -81,8 +79,10 @@ class FlowBoxBaseVC: BaseVC {
                 OptionView(prefix: "arrange", receiver: arrange, options: Array(1...total)).attach($0).size(.fill, height)
                 OptionView(prefix: "direction", receiver: direction, options: Direction.allCases).attach($0).size(.fill, height)
                 OptionView(prefix: "reverse", receiver: reverse, options: [true, false]).attach($0).size(.fill, height)
-                OptionView(prefix: "formation", receiver: formation, options: Format.allCases).attach($0).size(.fill, height)
-                OptionView(prefix: "subFormation", receiver: subFormation, options: Format.allCases).attach($0).size(.fill, height)
+                OptionView(prefix: "hFormat", receiver: hFormat, options: Format.allCases).attach($0).size(.fill, height)
+                OptionView(prefix: "vFormat", receiver: vFormat, options: Format.allCases).attach($0).size(.fill, height)
+                OptionView(prefix: "hSpace", receiver: hSpace, options: spaceRange).attach($0).size(.fill, height)
+                OptionView(prefix: "vSpace", receiver: vSpace, options: spaceRange).attach($0).size(.fill, height)
                 OptionView(prefix: "content", receiver: justifyContent, options: Aligment.vertAligments() + Aligment.horzAligments()).attach($0).size(.fill, height)
                 }
                 .padding(left: 10, right: 10)
@@ -117,14 +117,15 @@ class FlowBoxBaseVC: BaseVC {
                     .size(.fill, .fill)
                     .padding(all: 10)
                     .margin(all: 10)
-                    .space(10)
+                    .hSpace(hSpace)
+                    .vSpace(vSpace)
                     .justifyContent(justifyContent)
                     .direction(direction)
                     .arrangeCount(arrange)
                     .reverse(reverse)
-                    .format(formation)
+                    .hFormat(hFormat)
+                    .vFormat(vFormat)
                     .autoJudgeScroll(false)
-                    .subFormat(subFormation)
                 }
                 .size(.fill, .fill)
                 .margin(all: 10)

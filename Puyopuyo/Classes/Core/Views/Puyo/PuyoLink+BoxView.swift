@@ -164,16 +164,18 @@ extension Puyo where T: FlowBox {
     }
     
     @discardableResult
-    public func subFormat(_ formation: Format) -> Self {
-        view.regulator.subFormat = formation
-        setNeedsLayout()
+    public func hFormat<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
+        view.py_setUnbinder(formation.safeBind(view, { (v, f) in
+            v.regulator.hFormat = f
+            v.py_setNeedsLayout()
+        }), for: #function)
         return self
     }
     
     @discardableResult
-    public func subFormat<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
+    public func vFormat<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
         view.py_setUnbinder(formation.safeBind(view, { (v, f) in
-            v.regulator.subFormat = f
+            v.regulator.vFormat = f
             v.py_setNeedsLayout()
         }), for: #function)
         return self

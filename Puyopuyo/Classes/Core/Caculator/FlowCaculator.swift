@@ -86,7 +86,7 @@ private extension FlowCaculator {
 //        outside.justifyContent = layout.justifyContent
         outside.direction = layoutDirection
         outside.space = getNormalSpace()
-        outside.format = layout.format
+        outside.format = getNormalFormat()
         outside.margin = layout.margin
         outside.padding = layout.padding
         outside.reverse = layout.reverse
@@ -100,7 +100,7 @@ private extension FlowCaculator {
         line.justifyContent = layout.justifyContent
         line.direction = getOppsiteDirection()
         line.space = getOppsiteSpace()
-        line.format = layout.subFormat
+        line.format = getOppsiteFormat()
         line.reverse = layout.reverse
         line.size = Size(width: .wrap, height: .wrap)
         
@@ -126,6 +126,20 @@ private extension FlowCaculator {
             return layout.hSpace
         }
         return layout.vSpace
+    }
+    
+    func getNormalFormat() -> Format {
+        if layoutDirection == .x {
+            return layout.hFormat
+        }
+        return layout.vFormat
+    }
+    
+    func getOppsiteFormat() -> Format {
+        if layoutDirection == .x {
+            return layout.vFormat
+        }
+        return layout.hFormat
     }
     
     func getOppsiteSpace() -> CGFloat {

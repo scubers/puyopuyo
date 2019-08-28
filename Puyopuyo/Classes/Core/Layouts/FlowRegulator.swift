@@ -25,7 +25,15 @@ public class FlowRegulator: FlatRegulator {
         }
     }
     
-    public var subFormat: Format = .leading
+    public var vFormat: Format = .leading
+    public var hFormat: Format = .leading
+    
+    public override var format: Format {
+        didSet {
+            vFormat = format
+            hFormat = format
+        }
+    }
     
     public override func caculate(byParent parent: Measure) -> Size {
         return FlowCaculator(self, parent: parent).caculate()
