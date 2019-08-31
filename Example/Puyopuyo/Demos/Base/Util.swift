@@ -95,3 +95,19 @@ class FPSView: ZBox {
         }
     }
 }
+
+class Iterator<T> {
+    var arr: [T]
+    init(_ arr: [T]) {
+        assert(arr.count > 0)
+        self.arr = arr
+    }
+    private var index: Int = -1
+    func next() -> T {
+        index += 1
+        if index >= arr.count {
+            index = 0
+        }
+        return arr[index]
+    }
+}

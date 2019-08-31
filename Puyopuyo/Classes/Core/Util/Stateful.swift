@@ -121,7 +121,7 @@ extension State {
         return new
     }
     
-    public func map<S: Inputing, R>(_ block: @escaping (Value) -> R) -> S where S.InputType == R {
+    public func map<R>(_ block: @escaping (Value) -> R) -> State<R> {
         let newState = State<R>()
         let unbinder = receiveOutput { (value) in
             newState.input(value: block(value))
@@ -129,7 +129,7 @@ extension State {
         newState.onDestroy = {
             unbinder.py_unbind()
         }
-        return newState as! S
+        return newState
     }
     
 }

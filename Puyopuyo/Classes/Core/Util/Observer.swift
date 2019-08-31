@@ -93,4 +93,19 @@ extension UIView {
         })
         return s
     }
+    
+    public func py_observeFrameBySetter<T>(_ block: @escaping (CGRect) -> T) -> State<T> {
+        let s = State<T>(block(.zero))
+        let id = "\(Date().timeIntervalSince1970)\(arc4random())"
+        py_addObserver(for: #keyPath(UIView.frame), id: "\(id)_frame", block: { [weak self] (_: CGRect?) in
+            if let self = self {
+                let value = block(self.frame)
+                s.input(value: value)
+            } else {
+                let value = block(.zero)
+                s.input(value: value)
+            }
+        })
+        return s
+    }
 }

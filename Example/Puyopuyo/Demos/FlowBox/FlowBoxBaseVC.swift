@@ -27,6 +27,9 @@ class FlowBoxBaseVC: BaseVC {
         
         let spaceRange: [CGFloat] = [10, 20, 30, 40]
         
+        let formatI = Iterator<Format>([.leading, .trailing, .center, .avg, .sides])
+        let directionI = Iterator<Direction>([.x, .y])
+        
         vRoot.attach() {
             
             HBox().attach($0) {
@@ -35,10 +38,10 @@ class FlowBoxBaseVC: BaseVC {
                     .addWeakAction(to: self, for: .touchUpInside, { (self, _) in
                         self.vRoot.animate(0.2, block: {
                             reverse.value = !reverse.value
-                            vFormat.value = Util.random(array: [.leading, .trailing, .center, .avg, .sides])
-                            hFormat.value = Util.random(array: [.leading, .trailing, .center, .avg, .sides])
+                            vFormat.value = formatI.next()
+                            hFormat.value = formatI.next()
                             arrange.value = Util.random(array: Array(1...total))
-                            direction.value = Util.random(array: [.x, .y])
+                            direction.value = directionI.next()
                             
                             justifyContent.value = Util.random(array: direction.value == .x ? Aligment.horzAligments() : Aligment.vertAligments())
                             
@@ -91,11 +94,12 @@ class FlowBoxBaseVC: BaseVC {
             UIScrollView().attach($0) {
                 VFlow(count: 3).attach($0) {
                     
+                    let fix = Label("fix").attach($0).activated(false)
                     for idx in 0..<total {
                         let x =
                             Label("\(idx + 1)").attach($0)
                                 .width(40)
-                                .height(Simulate.ego.width)
+                                .height(on: Simulate.ego.width)
                                 //                        .height(on: $0, { .fix($0.width * 0.2)})
 //                                .height(Simulate($0).width.multiply(0.2))
                         //                        .height(Simulate().simulateSelf().width)
@@ -104,7 +108,21 @@ class FlowBoxBaseVC: BaseVC {
                         //                        .width(Simulate($0).width.multiply(0.2))
                         //                        .heightOnSelf({ .fix($0.width) })
                         
+                        if idx == 0 {
+                            fix
+                                .top(Simulate(x.view).top.add(-10))
+                                .left(Simulate(x.view).left.add(-10))
+                        }
+                        if idx == 9 {
+                            fix
+                                .bottom(Simulate(x.view).bottom.add(10))
+                                .right(Simulate(x.view).right.add(10))
+                        }
+                        
                     }
+                    
+                    
+
                     
                     let flow = $0
                     _ = adding.receiveOutput({ (v) in

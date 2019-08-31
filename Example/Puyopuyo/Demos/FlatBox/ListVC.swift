@@ -14,7 +14,7 @@ import SnapKit
 
 class ListVC: BaseVC {
     
-    enum CellType: String {
+    enum CellType: String, CaseIterable {
         case puyo
         case tangramKit
         case snapKit
@@ -40,8 +40,10 @@ class ListVC: BaseVC {
         }
     }
     
+    let types = Iterator(CellType.allCases)
+    
     @objc func changeType() {
-        cellType = Util.random(array: [CellType.puyo, .tangramKit, .snapKit])
+        cellType = types.next()
     }
     
     override func viewDidLoad() {

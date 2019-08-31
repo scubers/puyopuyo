@@ -83,6 +83,16 @@ extension Puyo where T: UIView {
     }
     
     @discardableResult
+    public func frame(x: CGFloat? = nil, y: CGFloat? = nil, w: CGFloat? = nil, h: CGFloat? = nil) -> Self {
+        if let v = x { view.frame.origin.x = v }
+        if let v = y { view.frame.origin.y = v }
+        if let v = w { view.frame.size.width = v }
+        if let v = h { view.frame.size.height = v }
+        return self
+    }
+
+    
+    @discardableResult
     public func bounds<S: Outputing>(_ frame: S) -> Self where S.OutputType == CGRect {
         view.py_setUnbinder(frame.safeBind(view, { (v, a) in
             v.bounds = a
@@ -113,11 +123,12 @@ extension Puyo where T: UIView {
     @discardableResult
     public func onFrameChanged<O: Inputing>(_ frame: O) -> Self where O.InputType == CGRect {
         _ = view.py_observeFrameByBoundsCenter({ $0 }).send(to: frame)
+        _ = view.py_observeFrameBySetter({ $0 }).send(to: frame)
         return self
     }
     
     @discardableResult
-    public func xPos(_ x: ValueModifiable) -> Self {
+    public func frameX(_ x: ValueModifiable) -> Self {
         view.py_setUnbinder(x.checkSelfSimulate(view).modifyValue().safeBind(view, { (v, a) in
             v.frame.origin.x = a
         }), for: #function)
@@ -125,7 +136,7 @@ extension Puyo where T: UIView {
     }
     
     @discardableResult
-    public func yPos(_ y: ValueModifiable) -> Self {
+    public func frameY(_ y: ValueModifiable) -> Self {
         view.py_setUnbinder(y.checkSelfSimulate(view).modifyValue().safeBind(view, { (v, a) in
             v.frame.origin.y = a
         }), for: #function)
@@ -147,24 +158,25 @@ extension Puyo where T: UIView {
         }), for: #function)
         return self
     }
-    /*
+    
     @discardableResult
     public func top(_ top: ValueModifiable) -> Self {
         view.py_setUnbinder(top.modifyValue().safeBind(view, { (v, a) in
             var f = v.frame
+            f.origin.y = a
             f.size.height = max(0, v.frame.maxY - a)
-            f.origin.y = min(v.frame.maxY, a)
             v.frame = f
         }), for: #function)
         return self
     }
     
+    
     @discardableResult
     public func left(_ left: ValueModifiable) -> Self {
         view.py_setUnbinder(left.modifyValue().safeBind(view, { (v, a) in
             var f = v.frame
+            f.origin.x = a
             f.size.width = max(0, v.frame.maxX - a)
-            f.origin.x = min(v.frame.maxX, a)
             v.frame = f
         }), for: #function)
         return self
@@ -189,6 +201,7 @@ extension Puyo where T: UIView {
         }), for: #function)
         return self
     }
+    /*
     */
     
     @discardableResult

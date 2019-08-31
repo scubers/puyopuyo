@@ -7,10 +7,6 @@
 
 import Foundation
 
-public protocol SizeModifiable {
-    func modifySize() -> State<SizeDescription>
-}
-
 public protocol ValueModifiable {
     func modifyValue() -> State<CGFloat>
 }
@@ -63,7 +59,8 @@ public struct Simulate {
     }
 }
 
-extension Simulate: SizeModifiable {
+extension Simulate: ValueModifiable {
+    
     public var height: Simulate {
         var s = self
         s.transform = { $0.height }
@@ -75,17 +72,6 @@ extension Simulate: SizeModifiable {
         s.transform = { $0.width }
         return s
     }
-    public func modifySize() -> State<SizeDescription> {
-        let transform = self.transform
-        let multiply = self.multiply
-        let add = self.add
-        return view.py_observeBounds({ (rect) -> SizeDescription in
-            return .fix(transform(rect) * multiply + add)
-        })
-    }
-}
-
-extension Simulate: ValueModifiable {
     
     public var top: Simulate {
         var s = self
@@ -121,8 +107,8 @@ extension Simulate: ValueModifiable {
     }
 }
 
-extension SizeModifiable {
-    public func checkSelfSimulate(_ view: UIView) -> SizeModifiable {
+extension ValueModifiable {
+    public func checkSelfSimulate(_ view: UIView) -> ValueModifiable {
         if let m = self as? Simulate, m.selfSimulating {
             return m.simulate(view)
         }
@@ -130,11 +116,8 @@ extension SizeModifiable {
     }
 }
 
-extension ValueModifiable {
-    public func checkSelfSimulate(_ view: UIView) -> ValueModifiable {
-        if let m = self as? Simulate, m.selfSimulating {
-            return m.simulate(view)
-        }
+extension State: ValueModifiable where Value == CGFloat {
+    public func modifyValue() -> State<CGFloat> {
         return self
     }
 }

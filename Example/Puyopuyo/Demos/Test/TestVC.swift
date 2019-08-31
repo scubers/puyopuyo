@@ -13,9 +13,11 @@ import RxSwift
 
 class TestVC: BaseVC {
     
-    var subVC: UIViewController? =  FlowBoxBaseVC()
+    var subVC: UIViewController? = FlowBoxBaseVC()
     
     func configTestView() {
+        vRoot.attach { x in
+        }
     }
     
     private func test1() {
