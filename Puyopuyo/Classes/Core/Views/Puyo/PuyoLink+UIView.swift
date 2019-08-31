@@ -161,6 +161,7 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func top(_ top: ValueModifiable) -> Self {
+        ensureInactivate("top can only apply when view is inactiveted!!!")
         view.py_setUnbinder(top.modifyValue().safeBind(view, { (v, a) in
             var f = v.frame
             f.origin.y = a
@@ -173,6 +174,7 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func left(_ left: ValueModifiable) -> Self {
+        ensureInactivate("top can only apply when view is inactiveted!!!")
         view.py_setUnbinder(left.modifyValue().safeBind(view, { (v, a) in
             var f = v.frame
             f.origin.x = a
@@ -184,6 +186,7 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func bottom(_ bottom: ValueModifiable) -> Self {
+        ensureInactivate("top can only apply when view is inactiveted!!!")
         view.py_setUnbinder(bottom.modifyValue().safeBind(view, { (v, a) in
             var f = v.frame
             f.size.height = max(0, a - v.frame.origin.y)
@@ -194,6 +197,7 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func right(_ right: ValueModifiable) -> Self {
+        ensureInactivate("top can only apply when view is inactiveted!!!")
         view.py_setUnbinder(right.modifyValue().safeBind(view, { (v, a) in
             var f = v.frame
             f.size.width = max(0, a - v.frame.origin.x)

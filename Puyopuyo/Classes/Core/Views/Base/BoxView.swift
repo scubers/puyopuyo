@@ -64,7 +64,7 @@ open class BoxView: UIView {
         super.layoutSubviews()
         _layoutSubviews()
     }
-    
+
     public func animate(_ interval: TimeInterval, block: () -> Void) {
         block()
         UIView.animate(withDuration: interval, animations: {
@@ -74,6 +74,17 @@ open class BoxView: UIView {
     
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
         return Caculator.sizeThatFit(size: size, to: regulator)
+    }
+    
+    
+    // MARK: - 边界相关
+    var borders: Borders = Borders()
+    
+    func _updatingBorders() {
+        borders.updateTop(to: layer)
+        borders.updateLeft(to: layer)
+        borders.updateBottom(to: layer)
+        borders.updateRight(to: layer)
     }
 }
 
@@ -130,6 +141,8 @@ private extension BoxView {
         }
         
         isLayoutingSubview = false
+        // 更新边线
+        _updatingBorders()
         
     }
     

@@ -39,6 +39,8 @@ class HBoxVC: BaseVC {
             .padding(top: 50, left: 30, bottom: 10)
             .space(10)
             .size(.fill, 400)
+            .borders([.thick(1), .color(.purple), .dash(5, 5)])
+            .margin(all: 30)
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "change", style: .plain, target: self, action: #selector(change))
         Util.randomViewColor(view: view)

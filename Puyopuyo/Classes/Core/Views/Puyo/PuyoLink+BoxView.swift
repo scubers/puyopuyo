@@ -54,6 +54,33 @@ extension Puyo where T: BoxView {
         return self
     }
 
+    @discardableResult
+    public func borders(_ options: [BorderOptions]) -> Self {
+        view.borders = Borders.all(Border(options: options))
+        return self
+    }
+    
+    @discardableResult
+    public func topBorder(_ options: [BorderOptions]) -> Self {
+        view.borders.top = Border(options: options)
+        return self
+    }
+    
+    @discardableResult
+    public func leftBorder(_ options: [BorderOptions]) -> Self {
+        view.borders.left = Border(options: options)
+        return self
+    }
+    @discardableResult
+    public func bottomBorder(_ options: [BorderOptions]) -> Self {
+        view.borders.bottom = Border(options: options)
+        return self
+    }
+    @discardableResult
+    public func rightBorder(_ options: [BorderOptions]) -> Self {
+        view.borders.right = Border(options: options)
+        return self
+    }
     
 }
 

@@ -26,6 +26,10 @@ public class Puyo<T: UIView> {
         parent?.addSubview(view)
         return self
     }
+    
+    func ensureInactivate(_ msg: String = "") {
+        assert(!view.py_measure.activated, msg)
+    }
 }
 
 public typealias PuyoBlock = (UIView) -> Void
