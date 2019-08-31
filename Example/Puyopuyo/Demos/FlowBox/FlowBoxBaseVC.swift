@@ -109,16 +109,16 @@ class FlowBoxBaseVC: BaseVC {
                         //                        .width(Simulate($0).width.multiply(0.2))
                         //                        .heightOnSelf({ .fix($0.width) })
                         
-                        if idx == 0 {
-                            fix
-                                .top(Simulate(x.view).top.add(-10))
-                                .left(Simulate(x.view).left.add(-10))
-                        }
-                        if idx == 9 {
-                            fix
-                                .bottom(Simulate(x.view).bottom.add(10))
-                                .right(Simulate(x.view).right.add(10))
-                        }
+//                        if idx == 0 {
+//                            fix
+//                                .top(Simulate(x.view).top.add(-10))
+//                                .left(Simulate(x.view).left.add(-10))
+//                        }
+//                        if idx == 9 {
+//                            fix
+//                                .bottom(Simulate(x.view).bottom.add(10))
+//                                .right(Simulate(x.view).right.add(10))
+//                        }
                         
                     }
                     
@@ -132,8 +132,8 @@ class FlowBoxBaseVC: BaseVC {
                     })
                     
                     }
-                    .size(.wrap, .wrap)
                     .size(.fill, .fill)
+                    .size(.wrap, .wrap)
                     .padding(all: 10)
                     .margin(all: 10)
                     .hSpace(hSpace)
@@ -144,7 +144,7 @@ class FlowBoxBaseVC: BaseVC {
                     .reverse(reverse)
                     .hFormat(hFormat)
                     .vFormat(vFormat)
-                    .autoJudgeScroll(false)
+                    .autoJudgeScroll(true)
                 }
                 .size(.fill, .fill)
                 .margin(all: 10)

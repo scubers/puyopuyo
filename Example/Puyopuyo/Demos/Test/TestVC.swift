@@ -13,11 +13,21 @@ import RxSwift
 
 class TestVC: BaseVC {
     
-    var subVC: UIViewController? = FlowBoxBaseVC()
+    var subVC: UIViewController? = nil//FlowBoxBaseVC()
     
     func configTestView() {
-//        vRoot.attach { x in
-//        }
+        vRoot.attach {
+            UIView().attach($0)
+            
+            UIView().attach($0) {
+                ZBox().attach($0)
+                    .size(40, 40)
+                    .margin(all: 5)
+                }
+                .margin(all: 10)
+                .size(50, 50)
+            
+        }
     }
     
     private func test1() {

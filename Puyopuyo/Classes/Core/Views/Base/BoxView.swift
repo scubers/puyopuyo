@@ -99,7 +99,6 @@ private extension BoxView {
         isLayoutingSubview = true
         
         let parentMeasure = superview?.py_measure ?? Measure()
-        let parentCGSize = superview?.bounds.size ?? .zero
 
         var needResizing = false
         
@@ -117,10 +116,8 @@ private extension BoxView {
                 // 父视图为布局
             } else {
                 // 父视图为普通视图
-                let fixedSize = Caculator.caculate(size: sizeAfterCaculate, by: parentCGSize)
-                let newSize = CGSize(width: fixedSize.width.fixedValue, height: fixedSize.height.fixedValue)
-                bounds.size = newSize
-                center = CGPoint(x: bounds.midX, y: bounds.midY)
+                let newSize = bounds.size
+                center = CGPoint(x: bounds.midX + regulator.margin.left, y: bounds.midY + regulator.margin.top)
                 
                 // 控制父视图的scroll
                 if let scrollView = superview as? UIScrollView, regulator.autoJudgeScroll {
