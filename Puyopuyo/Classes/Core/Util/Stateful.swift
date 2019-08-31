@@ -20,7 +20,7 @@ public class Unbinders {
 
 public protocol Outputing {
     associatedtype OutputType
-    func receiveOutput(_ block: @escaping (OutputType) -> Void) -> Unbinder
+    func outputing(_ block: @escaping (OutputType) -> Void) -> Unbinder
 }
 
 public protocol Inputing {
@@ -30,7 +30,7 @@ public protocol Inputing {
 
 extension Outputing {
     public func safeBind<Object: AnyObject>(_ object: Object, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
-        return receiveOutput { [weak object] (s) in
+        return outputing { [weak object] (s) in
             if let object = object {
                 action(object, s)
             }
@@ -38,7 +38,7 @@ extension Outputing {
     }
     
     public func send<Input: Inputing>(to input: Input) -> Unbinder where Input.InputType == OutputType {
-        return receiveOutput { (v) in
+        return outputing { (v) in
             input.input(value: v)
         }
     }
@@ -53,7 +53,7 @@ public class State<Value>: Outputing, Inputing {
         self._value = value
     }
     
-    public func receiveOutput(_ block: @escaping (State<Value>.OutputType) -> Void) -> Unbinder {
+    public func outputing(_ block: @escaping (State<Value>.OutputType) -> Void) -> Unbinder {
         if let value = _value {
             block(value)
         }
@@ -112,7 +112,7 @@ public class State<Value>: Outputing, Inputing {
 extension State {
     public func optional() -> State<OutputType?> {
         let new = State<OutputType?>(nil)
-        let unbinder = receiveOutput { (value) in
+        let unbinder = outputing { (value) in
             new.input(value: value)
         }
         new.onDestroy = {
@@ -123,7 +123,7 @@ extension State {
     
     public func map<R>(_ block: @escaping (Value) -> R) -> State<R> {
         let newState = State<R>()
-        let unbinder = receiveOutput { (value) in
+        let unbinder = outputing { (value) in
             newState.input(value: block(value))
         }
         newState.onDestroy = {

@@ -125,7 +125,7 @@ class FlowBoxBaseVC: BaseVC {
 
                     
                     let flow = $0
-                    _ = adding.receiveOutput({ (v) in
+                    _ = adding.outputing({ (v) in
                         guard let v = v else { return }
                         v.attach(flow)
                     })

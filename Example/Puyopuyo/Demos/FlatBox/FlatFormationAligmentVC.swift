@@ -20,13 +20,13 @@ class FlatFormationAligmentVC: BaseVC {
     let center = _St<CGPoint>(.zero)
     
     override func configView() {
-        _ = formation.receiveOutput { [weak self] (f) in
+        _ = formation.outputing { [weak self] (f) in
             self?.refreshTitle()
         }
-        _ = aligment.receiveOutput { [weak self] (f) in
+        _ = aligment.outputing { [weak self] (f) in
             self?.refreshTitle()
         }
-        _ = reversed.receiveOutput { [weak self] (f) in
+        _ = reversed.outputing { [weak self] (f) in
             self?.refreshTitle()
         }
         
