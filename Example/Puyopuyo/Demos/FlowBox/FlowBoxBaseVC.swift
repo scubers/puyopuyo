@@ -99,6 +99,7 @@ class FlowBoxBaseVC: BaseVC {
                         let x =
                             Label("\(idx + 1)").attach($0)
                                 .width(40)
+//                                .height(40)
                                 .height(on: Simulate.ego.width)
                                 //                        .height(on: $0, { .fix($0.width * 0.2)})
 //                                .height(Simulate($0).width.multiply(0.2))

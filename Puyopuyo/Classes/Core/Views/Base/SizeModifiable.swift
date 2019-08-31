@@ -101,9 +101,11 @@ extension Simulate: ValueModifiable {
         let transform = self.transform
         let multiply = self.multiply
         let add = self.add
-        return view.py_observeFrameByBoundsCenter({ (rect) -> CGFloat in
-            return transform(rect) * multiply + add
-        })
+        return
+            view
+                .py_frameStateByBoundsCenter()
+                .map({ transform($0) * multiply + add })
+                .distinct()
     }
 }
 

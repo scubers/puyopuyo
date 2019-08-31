@@ -110,8 +110,8 @@ public class State<Value>: Outputing, Inputing {
 }
 
 extension State {
-    public func optional() -> State<OutputType?> {
-        let new = State<OutputType?>(nil)
+    public func optional() -> State<Value?> {
+        let new = State<Value?>(nil)
         let unbinder = outputing { (value) in
             new.input(value: value)
         }
@@ -132,6 +132,45 @@ extension State {
         return newState
     }
     
+    public func filter(_ filter: @escaping (Value) -> Bool) -> State<Value> {
+        let new = State<Value>()
+        let unbinder = self.outputing { (v) in
+            if filter(v) {
+                new.input(value: v)
+            }
+        }
+        new.onDestroy = {
+            unbinder.py_unbind()
+        }
+        return new
+    }
+    
+    public func ignore(_ condition: @escaping (Value, Value) -> Bool) -> State<Value> {
+        let new = State<Value>()
+        var last: Value!
+        let unbinder = self.outputing { (v) in
+            guard last != nil else {
+                last = v
+                return
+            }
+            let ignore = condition(last, v)
+            last = v
+            if !ignore {
+                new.input(value: v)
+            }
+        }
+        new.onDestroy = {
+            unbinder.py_unbind()
+        }
+        return new
+    }
+    
+}
+
+extension State where Value: Equatable {
+    public func distinct() -> State<Value> {
+        return ignore({ $0 == $1 })
+    }
 }
 
 private class UnbinderImpl: NSObject, Unbinder {

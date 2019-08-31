@@ -110,20 +110,20 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func onBoundsChanged<O: Inputing>(_ bounds: O) -> Self where O.InputType == CGRect {
-        _ = view.py_observeBounds({ $0 }).send(to: bounds)
+        _ = view.py_boundsState().send(to: bounds)
         return self
     }
     
     @discardableResult
     public func onCenterChanged<O: Inputing>(_ center: O) -> Self where O.InputType == CGPoint {
-        _ = view.py_observeCenter({ $0 }).send(to: center)
+        _ = view.py_centerState().send(to: center)
         return self
     }
     
     @discardableResult
     public func onFrameChanged<O: Inputing>(_ frame: O) -> Self where O.InputType == CGRect {
-        _ = view.py_observeFrameByBoundsCenter({ $0 }).send(to: frame)
-        _ = view.py_observeFrameBySetter({ $0 }).send(to: frame)
+        _ = view.py_frameStateByBoundsCenter().send(to: frame)
+        _ = view.py_frameStateByKVO().send(to: frame)
         return self
     }
     

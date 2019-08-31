@@ -46,66 +46,54 @@ extension NSObject {
         addObserver(observer, forKeyPath: keyPath, options: [.new, .initial], context: nil)
         py_setUnbinder(unbinder, for: id)
     }
+    
 }
 
 extension UIView {
-    public func py_observeBounds<T>(_ block: @escaping (CGRect) -> T) -> State<T> {
-        let s = State<T>(block(.zero))
+    
+    public func py_boundsState() -> State<CGRect> {
+        let s = State<CGRect>(.zero)
         let id = "\(Date().timeIntervalSince1970)\(arc4random())"
         py_addObserver(for: #keyPath(UIView.bounds), id: id, block: { (rect: CGRect?) in
-            let value = block(rect ?? .zero)
-            s.input(value: value)
+            s.input(value: rect ?? .zero)
         })
-        return s
+        return s.distinct()
     }
     
-    public func py_observeCenter<T>(_ block: @escaping (CGPoint) -> T) -> State<T> {
-        let s = State<T>(block(.zero))
+    public func py_centerState() -> State<CGPoint> {
+        let s = State<CGPoint>(.zero)
         let id = "\(Date().timeIntervalSince1970)\(arc4random())"
         py_addObserver(for: #keyPath(UIView.center), id: id, block: { (point: CGPoint?) in
-            let value = block(point ?? .zero)
-            s.input(value: value)
+            s.input(value: point ?? .zero)
         })
-        return s
-
+        return s.distinct()
     }
     
-    public func py_observeFrameByBoundsCenter<T>(_ block: @escaping (CGRect) -> T) -> State<T> {
-        let s = State<T>(block(.zero))
+    public func py_frameStateByBoundsCenter() -> State<CGRect> {
+        let s = State(CGRect.zero)
         let id = "\(Date().timeIntervalSince1970)\(arc4random())"
         py_addObserver(for: #keyPath(UIView.bounds), id: "\(id)_bounds", block: { [weak self] (_: CGRect?) in
             if let self = self {
-                let value = block(self.frame)
-                s.input(value: value)
-            } else {
-                let value = block(.zero)
-                s.input(value: value)
+                s.input(value: self.frame)
             }
         })
         py_addObserver(for: #keyPath(UIView.center), id: "\(id)_center", block: { [weak self] (_: CGPoint?) in
             if let self = self {
-                let value = block(self.frame)
-                s.input(value: value)
-            } else {
-                let value = block(.zero)
-                s.input(value: value)
+                s.input(value: self.frame)
             }
         })
-        return s
+        // 因为这里是合并，不知道为何不能去重
+        return s //.distinct()
     }
     
-    public func py_observeFrameBySetter<T>(_ block: @escaping (CGRect) -> T) -> State<T> {
-        let s = State<T>(block(.zero))
+    public func py_frameStateByKVO() -> State<CGRect> {
+        let s = State<CGRect>(.zero)
         let id = "\(Date().timeIntervalSince1970)\(arc4random())"
-        py_addObserver(for: #keyPath(UIView.frame), id: "\(id)_frame", block: { [weak self] (_: CGRect?) in
-            if let self = self {
-                let value = block(self.frame)
-                s.input(value: value)
-            } else {
-                let value = block(.zero)
+        py_addObserver(for: #keyPath(UIView.frame), id: "\(id)_frame", block: { (rect: CGRect?) in
+            if let value = rect {
                 s.input(value: value)
             }
         })
-        return s
+        return s.distinct()
     }
 }

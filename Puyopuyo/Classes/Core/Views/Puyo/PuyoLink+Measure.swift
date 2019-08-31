@@ -69,8 +69,8 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func width(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
-        if let s = view?.py_observeBounds(block) {
-            return width(s)
+        if let s = view?.py_boundsState() {
+            return width(s.map(block))
         }
         return self
     }
@@ -104,8 +104,8 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func height(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
-        if let s = view?.py_observeBounds(block) {
-            height(s)
+        if let s = view?.py_boundsState() {
+            height(s.map(block))
         }
         return self
     }
@@ -168,40 +168,40 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func marginTop(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
-        if let s = view?.py_observeBounds(block) {
-            margin(top: s)
+        if let s = view?.py_boundsState() {
+            margin(top: s.map(block))
         }
         return self
     }
     
     @discardableResult
     public func marginLeft(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
-        if let s = view?.py_observeBounds(block) {
-            margin(left: s)
+        if let s = view?.py_boundsState() {
+            margin(left: s.map(block))
         }
         return self
     }
     
     @discardableResult
     public func marginBottom(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
-        if let s = view?.py_observeBounds(block) {
-            margin(bottom: s)
+        if let s = view?.py_boundsState() {
+            margin(bottom: s.map(block))
         }
         return self
     }
     
     @discardableResult
     public func marginAll(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
-        if let s = view?.py_observeBounds(block) {
-            margin(all: s)
+        if let s = view?.py_boundsState() {
+            margin(all: s.map(block))
         }
         return self
     }
     
     @discardableResult
     public func marginRight(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
-        if let s = view?.py_observeBounds(block) {
-            margin(right: s)
+        if let s = view?.py_boundsState() {
+            margin(right: s.map(block))
         }
         return self
     }

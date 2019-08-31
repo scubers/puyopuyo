@@ -16,8 +16,8 @@ class TestVC: BaseVC {
     var subVC: UIViewController? = FlowBoxBaseVC()
     
     func configTestView() {
-        vRoot.attach { x in
-        }
+//        vRoot.attach { x in
+//        }
     }
     
     private func test1() {
