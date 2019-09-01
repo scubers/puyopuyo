@@ -95,6 +95,7 @@ extension Puyo where T: UIView {
     @discardableResult
     public func bounds<S: Outputing>(_ frame: S) -> Self where S.OutputType == CGRect {
         view.py_setUnbinder(frame.safeBind(view, { (v, a) in
+            Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             v.bounds = a
         }), for: #function)
         return self
@@ -130,6 +131,7 @@ extension Puyo where T: UIView {
     @discardableResult
     public func frameX(_ x: ValueModifiable) -> Self {
         view.py_setUnbinder(x.checkSelfSimulate(view).modifyValue().safeBind(view, { (v, a) in
+            Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             v.frame.origin.x = a
         }), for: #function)
         return self
@@ -138,6 +140,7 @@ extension Puyo where T: UIView {
     @discardableResult
     public func frameY(_ y: ValueModifiable) -> Self {
         view.py_setUnbinder(y.checkSelfSimulate(view).modifyValue().safeBind(view, { (v, a) in
+            Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             v.frame.origin.y = a
         }), for: #function)
         return self
@@ -146,6 +149,7 @@ extension Puyo where T: UIView {
     @discardableResult
     public func frameWidth(_ width: ValueModifiable) -> Self {
         view.py_setUnbinder(width.checkSelfSimulate(view).modifyValue().safeBind(view, { (v, a) in
+            Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             v.frame.size.width = max(0, a)
         }), for: #function)
         return self
@@ -154,6 +158,7 @@ extension Puyo where T: UIView {
     @discardableResult
     public func frameHeight(_ width: ValueModifiable) -> Self {
         view.py_setUnbinder(width.checkSelfSimulate(view).modifyValue().safeBind(view, { (v, a) in
+            Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             v.frame.size.height = max(0, a)
         }), for: #function)
         return self
@@ -161,8 +166,8 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func top(_ top: ValueModifiable) -> Self {
-        ensureInactivate("top can only apply when view is inactiveted!!!")
         view.py_setUnbinder(top.modifyValue().safeBind(view, { (v, a) in
+            Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
             f.origin.y = a
             f.size.height = max(0, v.frame.maxY - a)
@@ -174,8 +179,8 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func left(_ left: ValueModifiable) -> Self {
-        ensureInactivate("top can only apply when view is inactiveted!!!")
         view.py_setUnbinder(left.modifyValue().safeBind(view, { (v, a) in
+            Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
             f.origin.x = a
             f.size.width = max(0, v.frame.maxX - a)
@@ -186,8 +191,8 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func bottom(_ bottom: ValueModifiable) -> Self {
-        ensureInactivate("top can only apply when view is inactiveted!!!")
         view.py_setUnbinder(bottom.modifyValue().safeBind(view, { (v, a) in
+            Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
             f.size.height = max(0, a - v.frame.origin.y)
             v.frame = f
@@ -197,8 +202,8 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func right(_ right: ValueModifiable) -> Self {
-        ensureInactivate("top can only apply when view is inactiveted!!!")
         view.py_setUnbinder(right.modifyValue().safeBind(view, { (v, a) in
+            Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
             f.size.width = max(0, a - v.frame.origin.x)
             v.frame = f

@@ -27,7 +27,7 @@ public class Puyo<T: UIView> {
         return self
     }
     
-    func ensureInactivate(_ msg: String = "") {
+    static func ensureInactivate(_ view: UIView, _ msg: String = "") {
         assert(!view.py_measure.activated, msg)
     }
 }
