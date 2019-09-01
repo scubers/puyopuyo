@@ -77,7 +77,7 @@ class FlowBoxBaseVC: BaseVC {
             
             
             
-            VBox().attach($0) {
+            VFlow(count: 2).attach($0) {
                 let height: CGFloat = 20
                 OptionView(prefix: "arrange", receiver: arrange, options: Array(1...total)).attach($0).size(.fill, height)
                 OptionView(prefix: "direction", receiver: direction, options: Direction.allCases).attach($0).size(.fill, height)
@@ -133,8 +133,9 @@ class FlowBoxBaseVC: BaseVC {
                     })
                     
                     }
-                    .size(.wrap, .wrap)
+//                    .aligment(.right)
                     .size(.fill, .fill)
+                    .size(.wrap, .wrap)
                     .padding(all: 10)
                     .margin(all: 10)
                     .hSpace(hSpace)
