@@ -18,10 +18,23 @@ class TestVC: BaseVC {
 //    var subVC: UIViewController? = VBoxVC()
 //    var subVC: UIViewController? = FlatFormationAligmentVC()
     
+    let state = State<String?>(nil)
     func configTestView() {
         
         vRoot.attach {
             UIView().attach($0)
+            
+            UITextField().attach($0)
+                .onText(self.state)
+                .size(.fill, 50)
+            
+            
+            Label("1").attach($0)
+                .receive(self.state, { (v, r) in
+                    v.text = r
+                })
+                .numberOfLines(State(0))
+                .size(.fill, .wrap)
             
             
         }

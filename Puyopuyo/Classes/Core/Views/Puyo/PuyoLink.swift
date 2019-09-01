@@ -30,6 +30,14 @@ public class Puyo<T: UIView> {
     static func ensureInactivate(_ view: UIView, _ msg: String = "") {
         assert(!view.py_measure.activated, msg)
     }
+    
+    @discardableResult
+    public func receive<O: Outputing, R>(_ state: O, _ block: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
+        _ = state.safeBind(view, { (v, r) in
+            block(v, r)
+        })
+        return self
+    }
 }
 
 public typealias PuyoBlock = (UIView) -> Void
