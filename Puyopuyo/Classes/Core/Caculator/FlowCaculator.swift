@@ -83,7 +83,8 @@ private extension FlowCaculator {
     
     func constructFakeOutside(children: [Measure]) -> _FakeFlatLayout {
         let outside = _FakeFlatLayout(target: nil, children: children)
-//        outside.justifyContent = layout.justifyContent
+        outside.justifyContent = layout.justifyContent
+        outside.aligment = layout.aligment
         outside.direction = layoutDirection
         outside.space = getNormalSpace()
         outside.format = getNormalFormat()
@@ -102,6 +103,7 @@ private extension FlowCaculator {
         line.space = getOppsiteSpace()
         line.format = getOppsiteFormat()
         line.reverse = layout.reverse
+        line.aligment = layout.aligment
         line.size = Size(width: .wrap, height: .wrap)
         
         if line.format != .leading && !layoutCalSize.cross.isWrap {

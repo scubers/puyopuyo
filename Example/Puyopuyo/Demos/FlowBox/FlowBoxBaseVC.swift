@@ -98,7 +98,7 @@ class FlowBoxBaseVC: BaseVC {
                     for idx in 0..<total {
                         let x =
                             Label("\(idx + 1)").attach($0)
-                                .width(40 + CGFloat(idx) * 4)
+                                .width(40 + CGFloat(idx) * 3)
                                 .height(on: Simulate.ego.width)
                                 //                        .height(on: $0, { .fix($0.width * 0.2)})
 //                                .height(Simulate($0).width.multiply(0.2))
@@ -128,13 +128,13 @@ class FlowBoxBaseVC: BaseVC {
                     _ = adding.outputing({ (v) in
                         guard let v = v else { return }
                         v.attach(flow)
-                            .width(40 + CGFloat(total) * 4)
+                            .width(40 + CGFloat(total) * 3)
                             .height(on: Simulate.ego.width)
                     })
                     
                     }
-                    .size(.fill, .fill)
                     .size(.wrap, .wrap)
+                    .size(.fill, .fill)
                     .padding(all: 10)
                     .margin(all: 10)
                     .hSpace(hSpace)
