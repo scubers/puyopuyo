@@ -23,6 +23,7 @@ extension Puyo where T: UITextField {
     @discardableResult
     public func text<S: Outputing>(_ text: S) -> Self where S.OutputType == String? {
         view.py_setUnbinder(text.safeBind(view, { (v, a) in
+            guard a != v.text else { return }
             v.text = a
             v.py_setNeedsLayout()
         }), for: #function)
@@ -32,6 +33,7 @@ extension Puyo where T: UITextField {
     @discardableResult
     public func onText<S: Outputing & Inputing>(_ text: S) -> Self where S.OutputType == String?, S.InputType == String? {
         view.py_setUnbinder(text.safeBind(view, { (v, a) in
+            guard a != v.text else { return }
             v.text = a
             v.py_setNeedsLayout()
         }), for: #function)

@@ -28,9 +28,8 @@ class TestVC: BaseVC {
                 .onText(self.state)
                 .size(.fill, 50)
             
-            
             Label("1").attach($0)
-                .receive(self.state, { (v, r) in
+                .viewUpdateOn(self.state, { (v, r) in
                     v.text = r
                 })
                 .numberOfLines(State(0))

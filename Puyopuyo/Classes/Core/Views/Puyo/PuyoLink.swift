@@ -32,11 +32,19 @@ public class Puyo<T: UIView> {
     }
     
     @discardableResult
-    public func receive<O: Outputing, R>(_ state: O, _ block: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
+    public func on<O: Outputing, R>(_ state: O, _ action: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
         view.py_setUnbinder(state.safeBind(view, { (v, r) in
-            block(v, r)
+            action(v, r)
         }), for: "\(#function)_\(Date().timeIntervalSince1970)")
         return self
+    }
+    
+    @discardableResult
+    public func viewUpdateOn<O: Outputing, R>(_ state: O, _ action: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
+        return on(state, { (v, r) in
+            action(v, r)
+            v.py_setNeedsLayout()
+        })
     }
 }
 
