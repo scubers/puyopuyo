@@ -42,6 +42,10 @@ struct Util {
         return nil
     }
     
+    static func when(_ flag: Bool, _ block: () -> Void) {
+        if flag { block() }
+    }
+    
 }
 
 class FPSView: ZBox {
