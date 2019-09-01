@@ -22,5 +22,6 @@ public class FlatRegulator: Regulator {
     
     public override func caculate(byParent parent: Measure) -> Size {
         return FlatCaculator(self, parent: parent).caculate()
+//        return FlatCaculator2(self, parent: parent).caculate()
     }
 }

@@ -15,6 +15,7 @@ class TestVC: BaseVC {
     
     var subVC: UIViewController? = FlowBoxBaseVC()
 //    var subVC: UIViewController? = VBoxVC()
+//    var subVC: UIViewController? = FlatFormationAligmentVC()
     
     func configTestView() {
         vRoot.attach {
@@ -120,6 +121,7 @@ class TestVC: BaseVC {
     override func configView() {
         vRoot.attach() {
             if let v = self.subView() {
+                self.addChild(self.subVC!)
                 v.attach($0)
                     .size(.fill, .fill)
             } else {

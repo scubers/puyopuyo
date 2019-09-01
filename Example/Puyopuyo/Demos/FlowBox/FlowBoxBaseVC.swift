@@ -134,8 +134,8 @@ class FlowBoxBaseVC: BaseVC {
                     
                     }
 //                    .aligment(.right)
-                    .size(.fill, .fill)
                     .size(.wrap, .wrap)
+                    .size(.fill, .fill)
                     .padding(all: 10)
                     .margin(all: 10)
                     .hSpace(hSpace)

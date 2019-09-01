@@ -24,13 +24,13 @@ class Tests: XCTestCase {
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measure() {
-            for _ in 0..<100 {
-//                let cell = ListCell(style: .value1, reuseIdentifier: "1")
+            for _ in 0..<200 {
+                let cell = ListCell(style: .value1, reuseIdentifier: "1")
 //                let cell = ListCell2(style: .value1, reuseIdentifier: "1")
-                let cell = ListCell3(style: .value1, reuseIdentifier: "1")
+//                let cell = ListCell3(style: .value1, reuseIdentifier: "1")
                 cell.state.value = ListData(name: "slkdjflksdjflkjsdf", text: "来看房来看房龙看房龙蛋飞龙扽静", time: "lskdj")
-//                _ = cell.sizeThatFits(CGSize(width: 320, height: 0))
-                _ = cell.systemLayoutSizeFitting(CGSize(width: 320, height: 0))
+                _ = cell.sizeThatFits(CGSize(width: 320, height: 0))
+//                _ = cell.systemLayoutSizeFitting(CGSize(width: 320, height: 0))
             }
         }
     }

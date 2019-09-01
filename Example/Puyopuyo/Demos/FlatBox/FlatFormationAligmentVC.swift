@@ -11,7 +11,7 @@ import Puyopuyo
 
 class FlatFormationAligmentVC: BaseVC {
     
-    let formation = _St<Format>(.leading)
+    let formation = _St<Format>(.sides)
     let aligment = _St<Aligment>(.center)
     let text = _St<String?>(nil)
     let reversed = _St<Bool>(false)
@@ -49,10 +49,15 @@ class FlatFormationAligmentVC: BaseVC {
             Label("3").attach($0)
                 .textAligment(State(.center))
                 .size(50, 50)
-                .onFrameChanged(SimpleInput {
-                    print($0)
-                })
             
+            UIButton().attach($0)
+                .activated(false)
+                .title(State("change"), state: .normal)
+                .addWeakAction(to: self, for: .touchUpInside, { (self, _) in
+                    self.change()
+                })
+                .frameY(Simulate($0).height.add(-20))
+                .frame(w: 100, h: 20)
             }
             .size(.fill, .fill)
             .format(self.formation)
