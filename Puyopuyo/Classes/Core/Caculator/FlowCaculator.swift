@@ -69,6 +69,7 @@ class FlowCaculator {
         let line = getLine(from: caculateChildren)
         
         var fakeLines = [_FakeFlatLayout]()
+        fakeLines.reserveCapacity(line)
         for idx in 0..<line {
             let lineChildren = caculateChildren[idx * arrange..<min(idx * arrange + arrange, caculateChildren.count)]
             fakeLines.append(constructFakeLine(children: Array(lineChildren)))
