@@ -19,19 +19,19 @@ class TestVC: BaseVC {
 //    var subVC: UIViewController? = FlatFormationAligmentVC()
     
     func configTestView() {
+        
         vRoot.attach {
             UIView().attach($0)
-            VFlow(count: 2).attach($0) {
-                Label("3").attach($0)
-                    .size(50, 50)
-                Label("3").attach($0)
-                    .size(50, 50)
-                
-                
+            VBox().attach($0) {
+                Label("1").attach($0)
+                    .width(on: Simulate($0).width.add(100).multiply(0.5).multiply(3))
+                    .height(on: Simulate.ego.width.multiply(0.5).add(40))
+                    .onFrameChanged(SimpleInput {
+                        print($0)
+                    })
                 }
-                .space(10)
+                .size(100, 100)
                 .padding(all: 10)
-//                .width(.fill)
 
         }
     }

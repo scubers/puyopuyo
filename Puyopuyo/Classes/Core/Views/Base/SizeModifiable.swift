@@ -16,8 +16,7 @@ public struct Simulate {
     var view: UIView
     
     var transform: (CGRect) -> CGFloat = { _ in 0}
-    var add: CGFloat = 0
-    var multiply: CGFloat = 1
+    var actions = [(CGFloat) -> CGFloat]()
     
     var selfSimulating = false
     
@@ -36,13 +35,13 @@ public struct Simulate {
     
     public func add(_ add: CGFloat) -> Simulate {
         var s = self
-        s.add = add
+        s.actions.append { $0 + add }
         return s
     }
     
     public func multiply(_ multiply: CGFloat) -> Simulate {
         var s = self
-        s.multiply = multiply
+        s.actions.append { $0 * multiply }
         return s
     }
     
@@ -99,12 +98,11 @@ extension Simulate: ValueModifiable {
     
     public func modifyValue() -> State<CGFloat> {
         let transform = self.transform
-        let multiply = self.multiply
-        let add = self.add
+        let actions = self.actions
         return
             view
                 .py_frameStateByBoundsCenter()
-                .map({ transform($0) * multiply + add })
+                .map({ actions.reduce(transform($0)) { $1($0) } })
                 .distinct()
     }
 }
