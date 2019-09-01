@@ -13,8 +13,8 @@ import RxSwift
 
 class TestVC: BaseVC {
     
-    var subVC: UIViewController? = nil
-//    var subVC: UIViewController? = FlowBoxBaseVC()
+//    var subVC: UIViewController? = nil
+    var subVC: UIViewController? = FlowBoxBaseVC()
 //    var subVC: UIViewController? = VBoxVC()
 //    var subVC: UIViewController? = FlatFormationAligmentVC()
     
@@ -22,15 +22,11 @@ class TestVC: BaseVC {
         vRoot.attach {
             UIView().attach($0)
             VFlow(count: 2).attach($0) {
-                Label("1").attach($0)
-                    .width(.fill)
-                    .height(on: Simulate.ego.width)
-                Label("2").attach($0)
-                    .width(.fill)
-                    .height(on: Simulate.ego.width)
-
                 Label("3").attach($0)
                     .size(50, 50)
+                Label("3").attach($0)
+                    .size(50, 50)
+                
                 
                 }
                 .space(10)

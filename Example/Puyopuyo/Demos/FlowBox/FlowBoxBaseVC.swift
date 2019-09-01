@@ -101,11 +101,6 @@ class FlowBoxBaseVC: BaseVC {
                                 .width(40 + CGFloat(idx) * 3)
                                 .height(on: Simulate.ego.width)
                         
-                        let v = $0
-                        Util.when(idx == 1, {
-                            x.width(on: Simulate(v).width.multiply(0.2))
-                        })
-                        
                                 //                        .height(on: $0, { .fix($0.width * 0.2)})
 //                                .height(Simulate($0).width.multiply(0.2))
                         //                        .height(Simulate().simulateSelf().width)
@@ -140,8 +135,8 @@ class FlowBoxBaseVC: BaseVC {
                     
                     }
 //                    .aligment(.right)
-                    .size(.wrap, .wrap)
                     .size(.fill, .fill)
+                    .size(.wrap, .wrap)
                     .padding(all: 10)
                     .margin(all: 10)
                     .hSpace(hSpace)

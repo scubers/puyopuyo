@@ -47,7 +47,7 @@ class FlatCaculator {
                 && (m.size.getCalSize(by: layout.direction).main.isRatio || layoutCalSize.main.isWrap) {
                 formattable = false
                 if layout.format != .leading {
-                    print("Constraint error!!! Format.\(layout.format) 重置成 .leading")
+                    print("Constraint error!!! Regulator's Format.\(layout.format) reset to .leading")
                     layout.format = .leading
                 }
             }
