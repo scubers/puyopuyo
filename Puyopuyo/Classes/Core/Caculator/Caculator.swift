@@ -53,4 +53,27 @@ class Caculator {
         let fixedSize = Caculator.caculate(size: sizeAfterCalulate, by: size)
         return CGSize(width: fixedSize.width.fixedValue, height: fixedSize.height.fixedValue)
     }
+    
+    static func adapting(size: Size, to measure: Measure, in parent: Measure) {
+        let parentCGSize = parent.py_size
+        let margin = measure.margin
+        
+        let wrappedSize = CGSize(width: max(0, parentCGSize.width - margin.left - margin.right),
+                                 height: max(0, parentCGSize.height - margin.top - margin.bottom))
+        
+        // 本身固有尺寸
+        if size.isFixed() || size.isRatio() {
+            let size = Caculator.caculate(size: size, by: wrappedSize)
+            measure.py_size = CGSize(width: size.width.fixedValue, height: size.height.fixedValue)
+        } else {
+            if !size.width.isWrap {
+                let width = Caculator.caculateFix(size.width, by: wrappedSize.width)
+                measure.py_size.width = width.fixedValue
+            }
+            if !size.height.isWrap {
+                let height = Caculator.caculateFix(size.height, by: wrappedSize.height)
+                measure.py_size.height = height.fixedValue
+            }
+        }
+    }
 }

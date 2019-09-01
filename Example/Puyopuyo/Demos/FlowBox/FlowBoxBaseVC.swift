@@ -14,7 +14,7 @@ class FlowBoxBaseVC: BaseVC {
     override func configView() {
         
         let reverse = _St<Bool>(false)
-        let hFormat = _St<Format>(.trailing)
+        let hFormat = _St<Format>(.leading)
         let vFormat = _St<Format>(.leading)
         let arrange = _St<Int>(3)
         let direction = _St<Direction>(.y)
@@ -100,6 +100,12 @@ class FlowBoxBaseVC: BaseVC {
                             Label("\(idx + 1)").attach($0)
                                 .width(40 + CGFloat(idx) * 3)
                                 .height(on: Simulate.ego.width)
+                        
+                        let v = $0
+                        Util.when(idx == 1, {
+                            x.width(on: Simulate(v).width.multiply(0.2))
+                        })
+                        
                                 //                        .height(on: $0, { .fix($0.width * 0.2)})
 //                                .height(Simulate($0).width.multiply(0.2))
                         //                        .height(Simulate().simulateSelf().width)

@@ -33,6 +33,8 @@ private class _FakeFlatLayout: FlatRegulator {
     override func caculate(byParent parent: Measure) -> Size {
         // 每次自身布局，都需要清空虚拟位置的偏移量
         lastDelta = .zero
+        // 虚拟布局，计算前，需要应用一下当前自身设置
+        Caculator.adapting(size: size, to: self, in: parent)
         return super.caculate(byParent: parent)
     }
     
@@ -109,7 +111,7 @@ private extension FlowCaculator {
         var lineCalSize = CalSize(main: .wrap, cross: .wrap, direction: layoutDirection)
         if !layoutCalSize.cross.isWrap {
             // 当流式布局为包裹的时候，内部计算布局需要给定一个尺寸
-            lineCalSize.cross = .fix(layoutFixedSize.cross - layout.getCalPadding().crossFixed)
+            lineCalSize.cross = .fix(max(0, layoutFixedSize.cross - layout.getCalPadding().crossFixed))
         }
         line.size = lineCalSize.getSize()
         let size = line.caculate(byParent: layout)

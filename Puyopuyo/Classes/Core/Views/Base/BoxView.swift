@@ -29,26 +29,7 @@ open class BoxView: UIView {
         if superview is BoxView {
             return
         }
-        let parentCGSize = superview?.bounds.size ?? .zero
-        let margin = regulator.margin
-        
-        let wrappedSize = CGSize(width: max(0, parentCGSize.width - margin.left - margin.right),
-                                 height: max(0, parentCGSize.height - margin.top - margin.bottom))
-        
-        // 本身固有尺寸
-        if size.isFixed() || size.isRatio() {
-            let size = Caculator.caculate(size: size, by: wrappedSize)
-            bounds.size = CGSize(width: size.width.fixedValue, height: size.height.fixedValue)
-        } else {
-            if !size.width.isWrap {
-                let width = Caculator.caculateFix(size.width, by: wrappedSize.width)
-                bounds.size.width = width.fixedValue
-            }
-            if !size.height.isWrap {
-                let height = Caculator.caculateFix(size.height, by: wrappedSize.height)
-                bounds.size.height = height.fixedValue
-            }
-        }
+        Caculator.adapting(size: size, to: regulator, in: superview?.py_measure ?? Measure())
     }
     
     open override func setNeedsLayout() {

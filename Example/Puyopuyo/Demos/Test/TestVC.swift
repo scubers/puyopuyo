@@ -13,27 +13,30 @@ import RxSwift
 
 class TestVC: BaseVC {
     
-    var subVC: UIViewController? = FlowBoxBaseVC()
+    var subVC: UIViewController? = nil
+//    var subVC: UIViewController? = FlowBoxBaseVC()
 //    var subVC: UIViewController? = VBoxVC()
 //    var subVC: UIViewController? = FlatFormationAligmentVC()
     
     func configTestView() {
         vRoot.attach {
             UIView().attach($0)
-            
+            VFlow(count: 2).attach($0) {
+                Label("1").attach($0)
+                    .width(.fill)
+                    .height(on: Simulate.ego.width)
+                Label("2").attach($0)
+                    .width(.fill)
+                    .height(on: Simulate.ego.width)
 
-            UIScrollView().attach($0) {
-                VFlow(count: 2).attach($0) {
-                    Label("1").attach($0)
-                        .size(.fill, 40)
-                    Label("2").attach($0)
-                        .size(.fill, 40)
-                    }
-                    .size(.fill, .wrap)
-                    .autoJudgeScroll(true)
+                Label("3").attach($0)
+                    .size(50, 50)
+                
                 }
-                .size(.fill, 200)
-                .margin(all: 10)
+                .space(10)
+                .padding(all: 10)
+//                .width(.fill)
+
         }
     }
     

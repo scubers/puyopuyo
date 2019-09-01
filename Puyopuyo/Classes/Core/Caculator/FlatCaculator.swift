@@ -103,10 +103,10 @@ class FlatCaculator {
             
             if subCrossSize.isRatio {
                 let ratio = subCrossSize.ratio
-                subCrossSize = .fix((layoutFixedSize.cross - (layoutCalPadding.crossFixed + calMargin.crossFixed)) * ratio)
+                subCrossSize = .fix(max(0, (layoutFixedSize.cross - (layoutCalPadding.crossFixed + calMargin.crossFixed)) * ratio))
             }
             // main
-            let subMainSize = SizeDescription.fix((calSize.main.ratio / totalMainRatio) * (layoutFixedSize.main - totalFixedMain))
+            let subMainSize = SizeDescription.fix(max(0, (calSize.main.ratio / totalMainRatio) * (layoutFixedSize.main - totalFixedMain)))
             measure.py_size = CalFixedSize(main: subMainSize.fixedValue, cross: subCrossSize.fixedValue, direction: layout.direction).getSize()
             maxCross = max(subCrossSize.fixedValue + calMargin.crossFixed, maxCross)
         }
