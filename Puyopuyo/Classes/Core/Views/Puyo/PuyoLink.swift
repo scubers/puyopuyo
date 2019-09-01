@@ -33,9 +33,9 @@ public class Puyo<T: UIView> {
     
     @discardableResult
     public func receive<O: Outputing, R>(_ state: O, _ block: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
-        _ = state.safeBind(view, { (v, r) in
+        view.py_setUnbinder(state.safeBind(view, { (v, r) in
             block(v, r)
-        })
+        }), for: "\(#function)_\(Date().timeIntervalSince1970)")
         return self
     }
 }
