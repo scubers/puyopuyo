@@ -104,7 +104,7 @@ private extension FlowCaculator {
         line.reverse = layout.reverse
         line.size = Size(width: .wrap, height: .wrap)
         
-        if line.format != .leading {
+        if line.format != .leading && !layoutCalSize.cross.isWrap {
             // 需要外界给定cross
             var calSize = line.size.getCalSize(by: layoutDirection)
             calSize.cross = .fix(layoutFixedSize.cross - layout.getCalPadding().crossFixed)

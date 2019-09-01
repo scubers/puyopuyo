@@ -32,22 +32,29 @@ class FlatCaculator {
         var ratioMeasures = [Measure]()
         
         // 标记主轴是否存在比例项目，若有，则排斥使用formation
-        var mainHasRatio = false
+        var formatable = true
         var caculateChildren = [Measure]()
         layout.enumerateChild { (_, m) in
 //            return $0.activated
             if m.activated {
-                if m.size.getCalSize(by: layout.direction).main.isRatio {
-                    mainHasRatio = true
+                if m.size.getCalSize(by: layout.direction).main.isRatio
+                    || layoutCalSize.main.isWrap
+                {
+                    formatable = false
                 }
                 caculateChildren.append(m)
             }
         }
         
+        if !formatable && layout.format != .leading {
+            print("Constraint error!!! 主轴上有比例设置，不能与Format.\(layout.format)同时存在，Format重置成leading")
+            layout.format = .leading
+        }
+        
         if case .sides = layout.format, caculateChildren.count > 1 {
-            if mainHasRatio {
-                print("Constraint error!!! 主轴上有比例设置，不能与Formation.sides同时存在，Formation重置成leading")
-                layout.format = .leading
+            if !formatable {
+//                print("Constraint error!!! 主轴上有比例设置，不能与Formation.sides同时存在，Formation重置成leading")
+//                layout.format = .leading
             } else {
                 // sides formation
                 let placeHolder = (0..<caculateChildren.count).map({ _ -> Measure in
@@ -59,9 +66,9 @@ class FlatCaculator {
             }
             
         } else if case .center = layout.format, caculateChildren.count > 0 {
-            if mainHasRatio {
-                print("Constraint error!!! 主轴上有比例设置，不能与Formation.center同时存在，Formation重置成leading")
-                layout.format = .leading
+            if !formatable {
+//                print("Constraint error!!! 主轴上有比例设置，不能与Formation.center同时存在，Formation重置成leading")
+//                layout.format = .leading
             } else {
                 // center formation
                 func getPlaceHolder() -> Measure {
@@ -72,9 +79,9 @@ class FlatCaculator {
                 caculateChildren = [getPlaceHolder()] + caculateChildren + [getPlaceHolder()]
             }
         } else if layout.format == .avg && caculateChildren.count > 0 {
-            if mainHasRatio {
-                print("Constraint error!!! 主轴上有比例设置，不能与Formation.avg同时存在，Formation重置成leading")
-                layout.format = .leading
+            if !formatable {
+//                print("Constraint error!!! 主轴上有比例设置，不能与Formation.avg同时存在，Formation重置成leading")
+//                layout.format = .leading
             } else {
                 // center formation
                 func getPlaceHolder() -> Measure {
@@ -196,7 +203,7 @@ class FlatCaculator {
             lastEnd = _caculateCenter(measure: measure, at: idx, from: lastEnd)
         }
         
-        if layout.format == .trailing {
+        if layout.format == .trailing && !layoutCalSize.main.isWrap {
             // 如果格式化为靠后，则需要最后重排一遍
             // 计算最后一个需要移动的距离
             let delta = layoutFixedSize.main - layoutCalPadding.end - lastEnd
