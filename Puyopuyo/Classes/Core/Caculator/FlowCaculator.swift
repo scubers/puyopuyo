@@ -104,14 +104,13 @@ private extension FlowCaculator {
         line.format = getOppsiteFormat()
         line.reverse = layout.reverse
         line.aligment = layout.aligment
-        line.size = Size(width: .wrap, height: .wrap)
-        
-        if line.format != .leading && !layoutCalSize.cross.isWrap {
-            // 需要外界给定cross
-            var calSize = line.size.getCalSize(by: layoutDirection)
-            calSize.cross = .fix(layoutFixedSize.cross - layout.getCalPadding().crossFixed)
-            line.size = calSize.getSize()
+
+        var lineCalSize = CalSize(main: .wrap, cross: .wrap, direction: layoutDirection)
+        if !layoutCalSize.cross.isWrap {
+            // 当流式布局为包裹的时候，内部计算布局需要给定一个尺寸
+            lineCalSize.cross = .fix(layoutFixedSize.cross - layout.getCalPadding().crossFixed)
         }
+        line.size = lineCalSize.getSize()
         let size = line.caculate(byParent: layout)
         line.py_size = CGSize(width: size.width.fixedValue, height: size.height.fixedValue)
         return line

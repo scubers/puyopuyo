@@ -13,20 +13,25 @@ import RxSwift
 
 class TestVC: BaseVC {
     
-    var subVC: UIViewController? = FlowBoxBaseVC()
+    var subVC: UIViewController? = nil// FlowBoxBaseVC()
     
     func configTestView() {
         vRoot.attach {
             UIView().attach($0)
             
-            UIView().attach($0) {
-                ZBox().attach($0)
-                    .size(40, 40)
-                    .margin(all: 5)
+
+            UIScrollView().attach($0) {
+                VFlow(count: 2).attach($0) {
+                    Label("1").attach($0)
+                        .size(.fill, 40)
+                    Label("2").attach($0)
+                        .size(.fill, 40)
+                    }
+                    .size(.fill, .wrap)
+                    .autoJudgeScroll(true)
                 }
+                .size(.fill, 200)
                 .margin(all: 10)
-                .size(50, 50)
-            
         }
     }
     
