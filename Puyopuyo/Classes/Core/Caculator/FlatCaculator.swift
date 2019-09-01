@@ -35,7 +35,6 @@ class FlatCaculator {
         var formatable = true
         var caculateChildren = [Measure]()
         layout.enumerateChild { (_, m) in
-//            return $0.activated
             if m.activated {
                 if m.size.getCalSize(by: layout.direction).main.isRatio
                     || layoutCalSize.main.isWrap
@@ -51,51 +50,34 @@ class FlatCaculator {
             layout.format = .leading
         }
         
-        if case .sides = layout.format, caculateChildren.count > 1 {
-            if !formatable {
-//                print("Constraint error!!! 主轴上有比例设置，不能与Formation.sides同时存在，Formation重置成leading")
-//                layout.format = .leading
-            } else {
-                // sides formation
-                let placeHolder = (0..<caculateChildren.count).map({ _ -> Measure in
-                    let measure = Measure()
-                    measure.size = CalSize(main: .ratio(1), cross: .fix(0), direction: layout.direction).getSize()
-                    return measure
-                })
-                caculateChildren = zip(caculateChildren, placeHolder).flatMap({[$0, $1]}).dropLast()
+        if case .sides = layout.format, caculateChildren.count > 1, formatable {
+            // sides formation
+            let placeHolder = (0..<caculateChildren.count).map({ _ -> Measure in
+                let measure = Measure()
+                measure.size = CalSize(main: .ratio(1), cross: .fix(0), direction: layout.direction).getSize()
+                return measure
+            })
+            caculateChildren = zip(caculateChildren, placeHolder).flatMap({[$0, $1]}).dropLast()
+        } else if case .center = layout.format, caculateChildren.count > 0, formatable {
+            // center formation
+            func getPlaceHolder() -> Measure {
+                let p = Measure()
+                p.size = CalSize(main: .ratio(1), cross: .fix(1), direction: layout.direction).getSize()
+                return p
             }
-            
-        } else if case .center = layout.format, caculateChildren.count > 0 {
-            if !formatable {
-//                print("Constraint error!!! 主轴上有比例设置，不能与Formation.center同时存在，Formation重置成leading")
-//                layout.format = .leading
-            } else {
-                // center formation
-                func getPlaceHolder() -> Measure {
-                    let p = Measure()
-                    p.size = CalSize(main: .ratio(1), cross: .fix(1), direction: layout.direction).getSize()
-                    return p
-                }
-                caculateChildren = [getPlaceHolder()] + caculateChildren + [getPlaceHolder()]
+            caculateChildren = [getPlaceHolder()] + caculateChildren + [getPlaceHolder()]
+        } else if layout.format == .avg && caculateChildren.count > 0, formatable {
+            func getPlaceHolder() -> Measure {
+                let p = Measure()
+                p.size = CalSize(main: .ratio(1), cross: .fix(1), direction: layout.direction).getSize()
+                return p
             }
-        } else if layout.format == .avg && caculateChildren.count > 0 {
-            if !formatable {
-//                print("Constraint error!!! 主轴上有比例设置，不能与Formation.avg同时存在，Formation重置成leading")
-//                layout.format = .leading
-            } else {
-                // center formation
-                func getPlaceHolder() -> Measure {
-                    let p = Measure()
-                    p.size = CalSize(main: .ratio(1), cross: .fix(1), direction: layout.direction).getSize()
-                    return p
-                }
-                let placeHolder = (0..<caculateChildren.count).map({ _ -> Measure in
-                    let measure = Measure()
-                    measure.size = CalSize(main: .ratio(1), cross: .fix(0), direction: layout.direction).getSize()
-                    return measure
-                })
-                caculateChildren = [getPlaceHolder()] + zip(caculateChildren, placeHolder).flatMap({[$0, $1]})
-            }
+            let placeHolder = (0..<caculateChildren.count).map({ _ -> Measure in
+                let measure = Measure()
+                measure.size = CalSize(main: .ratio(1), cross: .fix(0), direction: layout.direction).getSize()
+                return measure
+            })
+            caculateChildren = [getPlaceHolder()] + zip(caculateChildren, placeHolder).flatMap({[$0, $1]})
         }
         
         let totalMainSpace = max(CGFloat(caculateChildren.count - 1) * layout.space, 0)
