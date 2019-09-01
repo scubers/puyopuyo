@@ -178,13 +178,6 @@ class FlatCaculator {
         
     }
     
-    private static func check(parent: SizeDescription, child: SizeDescription) {
-        // 当父依赖子时，子不能依赖父
-        if parent.isWrap && child.isRatio {
-            fatalError("parent and child in a dependency cycle!!!!")
-        }
-    }
-    
     /// 这里为measures的大小都计算好，需要计算每个节点的center
     ///
     /// - Parameters:

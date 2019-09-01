@@ -14,6 +14,7 @@ import RxSwift
 class TestVC: BaseVC {
     
     var subVC: UIViewController? = FlowBoxBaseVC()
+//    var subVC: UIViewController? = VBoxVC()
     
     func configTestView() {
         vRoot.attach {
