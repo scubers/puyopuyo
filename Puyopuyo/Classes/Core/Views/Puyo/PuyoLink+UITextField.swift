@@ -49,4 +49,37 @@ extension Puyo where T: UITextField {
         return self
     }
     
+    @discardableResult
+    public func font(_ font: UIFont) -> Self {
+        view.font = font
+        view.py_setNeedsLayout()
+        return self
+    }
+    
+    @discardableResult
+    public func textColor<S: Outputing>(_ color: S) -> Self where S.OutputType == UIColor? {
+        view.py_setUnbinder(color.safeBind(view, { (v, a) in
+            v.textColor = a
+        }), for: #function)
+        return self
+    }
+    
+    @discardableResult
+    public func font<S: Outputing>(_ font: S) -> Self where S.OutputType == UIFont {
+        view.py_setUnbinder(font.safeBind(view, { (v, a) in
+            v.font = a
+            v.py_setNeedsLayout()
+        }), for: #function)
+        return self
+    }
+    
+    @discardableResult
+    public func textAligment<S: Outputing>(_ aligment: S) -> Self where S.OutputType == NSTextAlignment {
+        view.py_setUnbinder(aligment.safeBind(view, { (v, a) in
+            v.textAlignment = a
+            v.py_setNeedsLayout()
+        }), for: #function)
+        return self
+    }
+    
 }
