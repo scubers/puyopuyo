@@ -11,6 +11,13 @@ import Puyopuyo
 import TangramKit
 import RxSwift
 
+class Instance: NSObject {
+    static var share = Instance()
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        
+    }
+}
+
 class TestVC: BaseVC {
     
     var subVC: UIViewController? = nil
@@ -20,20 +27,15 @@ class TestVC: BaseVC {
     
     let state = State<String?>(nil)
     func configTestView() {
+
+//        view.addObserver(Instance.share, forKeyPath: #keyPath(UIView.frame), options: [.new], context: nil)
         
         vRoot.attach {
             UIView().attach($0)
             
-            UITextField().attach($0)
-                .onText(self.state)
-                .size(.fill, 50)
-            
-            Label("1").attach($0)
-                .viewUpdateOn(self.state, { (v, r) in
-                    v.text = r
-                })
-                .numberOfLines(State(0))
-                .size(.fill, .wrap)
+            UIView().attach($0)
+                .width(50)
+                .height(on: Simulate.ego.width)
             
             
         }

@@ -40,8 +40,8 @@ extension NSObject {
             lastValue = rect
             block(lastValue)
         }
-        let unbinder = Unbinders.create { [weak self] in
-            self?.removeObserver(observer, forKeyPath: keyPath)
+        let unbinder = Unbinders.create { [unowned(unsafe) self] in
+            self.removeObserver(observer, forKeyPath: keyPath)
         }
         addObserver(observer, forKeyPath: keyPath, options: [.new, .initial], context: nil)
         py_setUnbinder(unbinder, for: id)
