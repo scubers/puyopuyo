@@ -59,7 +59,7 @@ class FlatCaculator {
             case .center: caculateChildren.reserveCapacity(filteredChildren.count + 2)
             case .avg: caculateChildren.reserveCapacity(filteredChildren.count * 2 + 1)
             case .sides: caculateChildren.reserveCapacity(filteredChildren.count * 2 - 1)
-            default: break
+            default: caculateChildren.reserveCapacity(filteredChildren.count)
             }
         } else {
             caculateChildren.reserveCapacity(filteredChildren.count)
@@ -195,8 +195,7 @@ class FlatCaculator {
             lastEnd = _caculateCenter(measure: measure, at: idx, from: lastEnd)
         }
         
-//        if layout.format == .trailing && !layoutCalSize.main.isWrap {
-        if formattable && layout.format == .trailing {
+        if layout.format == .trailing {
             // 如果格式化为靠后，则需要最后重排一遍
             // 计算最后一个需要移动的距离
             let delta = layoutFixedSize.main - layoutCalPadding.end - lastEnd

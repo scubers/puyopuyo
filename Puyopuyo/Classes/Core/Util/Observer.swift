@@ -53,7 +53,7 @@ extension UIView {
     
     public func py_boundsState() -> State<CGRect> {
         let s = State<CGRect>(.zero)
-        let id = "\(Date().timeIntervalSince1970)\(arc4random())"
+        let id = UUID().description
         py_addObserver(for: #keyPath(UIView.bounds), id: id, block: { (rect: CGRect?) in
             s.input(value: rect ?? .zero)
         })
@@ -62,7 +62,7 @@ extension UIView {
     
     public func py_centerState() -> State<CGPoint> {
         let s = State<CGPoint>(.zero)
-        let id = "\(Date().timeIntervalSince1970)\(arc4random())"
+        let id = UUID().description
         py_addObserver(for: #keyPath(UIView.center), id: id, block: { (point: CGPoint?) in
             s.input(value: point ?? .zero)
         })
@@ -71,13 +71,12 @@ extension UIView {
     
     public func py_frameStateByBoundsCenter() -> State<CGRect> {
         let s = State(CGRect.zero)
-        let id = "\(Date().timeIntervalSince1970)\(arc4random())"
-        py_addObserver(for: #keyPath(UIView.bounds), id: "\(id)_bounds", block: { [weak self] (_: CGRect?) in
+        py_addObserver(for: #keyPath(UIView.bounds), id: UUID().description, block: { [weak self] (_: CGRect?) in
             if let self = self {
                 s.input(value: self.frame)
             }
         })
-        py_addObserver(for: #keyPath(UIView.center), id: "\(id)_center", block: { [weak self] (_: CGPoint?) in
+        py_addObserver(for: #keyPath(UIView.center), id: UUID().description, block: { [weak self] (_: CGPoint?) in
             if let self = self {
                 s.input(value: self.frame)
             }
@@ -88,8 +87,7 @@ extension UIView {
     
     public func py_frameStateByKVO() -> State<CGRect> {
         let s = State<CGRect>(.zero)
-        let id = "\(Date().timeIntervalSince1970)\(arc4random())"
-        py_addObserver(for: #keyPath(UIView.frame), id: "\(id)_frame", block: { (rect: CGRect?) in
+        py_addObserver(for: #keyPath(UIView.frame), id: UUID().description, block: { (rect: CGRect?) in
             if let value = rect {
                 s.input(value: value)
             }

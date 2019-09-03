@@ -18,6 +18,10 @@ class Instance: NSObject {
     }
 }
 
+struct MyParts {
+    
+}
+
 class TestVC: BaseVC {
     
     var subVC: UIViewController? = nil
@@ -36,7 +40,6 @@ class TestVC: BaseVC {
             UIView().attach($0)
                 .width(50)
                 .height(on: Simulate.ego.width)
-            
             
         }
     }
