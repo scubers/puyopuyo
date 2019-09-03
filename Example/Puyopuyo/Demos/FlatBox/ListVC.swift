@@ -75,9 +75,7 @@ extension ListVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellType.rawValue) as? BaseCell else { fatalError() }
-        
-        cell.state.value = data[indexPath.row]
-        
+        cell.viewState.input(value: data[indexPath.row])
         return cell
     }
     
@@ -92,17 +90,18 @@ struct ListData {
     var time: String?
 }
 
-class BaseCell: UITableViewCell {
-    let state = State<ListData?>(nil)
+class BaseCell: UITableViewCell, StatefulView {
+    typealias StateType = ListData?
+    let viewState: State<ListData?> = State<ListData?>(nil)
     
     var name: State<String?> {
-        return state.map({ $0?.name })
+        return viewState.map({ $0?.name })
     }
     var textData: State<String?> {
-        return state.map({ $0?.text })
+        return viewState.map({ $0?.text })
     }
     var time: State<String?> {
-        return state.map({ $0?.time })
+        return viewState.map({ $0?.time })
     }
 }
 

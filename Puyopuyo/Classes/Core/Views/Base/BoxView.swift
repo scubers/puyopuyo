@@ -7,6 +7,17 @@
 
 import Foundation
 
+public protocol StatefulView {
+    associatedtype StateType
+    var viewState: State<StateType> { get }
+}
+
+public protocol InteractiveView {
+    associatedtype InteractType
+    var interactor: State<InteractType> { get }
+}
+
+
 open class BoxView: UIView {
     
     public override init(frame: CGRect) {

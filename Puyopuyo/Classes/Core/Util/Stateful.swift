@@ -49,26 +49,19 @@ public typealias _St = State
 
 public class State<Value>: Outputing, Inputing {
     
-    public func input(value: State<Value>.InputType) {
+    public typealias OutputType = Value
+    public typealias InputType = Value
+    
+    public init(_ value: Value) {
         self._value = value
     }
     
-    public func outputing(_ block: @escaping (State<Value>.OutputType) -> Void) -> Unbinder {
-        if let value = _value {
-            block(value)
-        }
-        let callee = Callee(block)
-        callees.append(callee)
-        let pointer = Unmanaged.passUnretained(callee).toOpaque()
-        return UnbinderImpl { [weak self] in
-            self?.callees.removeAll(where: { Unmanaged.passUnretained($0).toOpaque() == pointer })
-        }
+    private init() {}
+    
+    deinit {
+        onDestroy()
     }
-    
-    public typealias OutputType = Value
-    
-    public typealias InputType = Value
-    
+
     public var value: Value {
         set {
             _value = newValue
@@ -85,62 +78,57 @@ public class State<Value>: Outputing, Inputing {
             }
         }
     }
+    private var callees = [Callee<Value>]()
+    private var onDestroy: () -> Void = {}
     
-    public init(_ value: Value) {
+    public func input(value: State<Value>.InputType) {
         self._value = value
     }
     
-    private init() {}
-    
-    deinit {
-        onDestroy()
+    public func outputing(_ block: @escaping (State<Value>.OutputType) -> Void) -> Unbinder {
+        if let value = _value {
+            block(value)
+        }
+        let callee = Callee(block)
+        callees.append(callee)
+        let pointer = Unmanaged.passUnretained(callee).toOpaque()
+        return UnbinderImpl { [weak self] in
+            self?.callees.removeAll(where: { Unmanaged.passUnretained($0).toOpaque() == pointer })
+        }
     }
     
-    var onDestroy: () -> Void = {}
-
     private class Callee<T> {
         var block: (T) -> Void
         init(_ block: @escaping (T) -> Void) {
             self.block = block
         }
     }
-    
-    private var callees = [Callee<Value>]()
 
 }
 
 extension State {
     public func optional() -> State<Value?> {
         let new = State<Value?>(nil)
-        let unbinder = outputing { (value) in
+        _ = outputing { (value) in
             new.input(value: value)
-        }
-        new.onDestroy = {
-            unbinder.py_unbind()
         }
         return new
     }
     
     public func map<R>(_ block: @escaping (Value) -> R) -> State<R> {
         let newState = State<R>()
-        let unbinder = outputing { (value) in
+        _ = outputing { (value) in
             newState.input(value: block(value))
-        }
-        newState.onDestroy = {
-            unbinder.py_unbind()
         }
         return newState
     }
     
     public func filter(_ filter: @escaping (Value) -> Bool) -> State<Value> {
         let new = State<Value>()
-        let unbinder = self.outputing { (v) in
+        _ = self.outputing { (v) in
             if filter(v) {
                 new.input(value: v)
             }
-        }
-        new.onDestroy = {
-            unbinder.py_unbind()
         }
         return new
     }

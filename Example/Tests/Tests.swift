@@ -28,7 +28,7 @@ class Tests: XCTestCase {
                 let cell = ListCell(style: .value1, reuseIdentifier: "1")
 //                let cell = ListCell2(style: .value1, reuseIdentifier: "1")
 //                let cell = ListCell3(style: .value1, reuseIdentifier: "1")
-                cell.state.value = ListData(name: "slkdjflksdjflkjsdf", text: "来看房来看房龙看房龙蛋飞龙扽静", time: "lskdj")
+                cell.viewState.input(value: ListData(name: "slkdjflksdjflkjsdf", text: "来看房来看房龙看房龙蛋飞龙扽静", time: "lskdj"))
                 _ = cell.sizeThatFits(CGSize(width: 320, height: 0))
 //                _ = cell.systemLayoutSizeFitting(CGSize(width: 320, height: 0))
             }
@@ -66,17 +66,18 @@ struct ListData {
     var time: String?
 }
 
-class BaseCell: UITableViewCell {
-    let state = State<ListData?>(nil)
+class BaseCell: UITableViewCell, StatefulView {
+    typealias StateType = ListData?
+    var viewState: State<ListData?> = State<ListData?>(nil)
     
     var name: State<String?> {
-        return state.map({ $0?.name })
+        return viewState.map({ $0?.name })
     }
     var textData: State<String?> {
-        return state.map({ $0?.text })
+        return viewState.map({ $0?.text })
     }
     var time: State<String?> {
-        return state.map({ $0?.time })
+        return viewState.map({ $0?.time })
     }
 }
 
