@@ -29,7 +29,7 @@ class VBoxVC: BaseVC {
                     height = 200
                     """).attach($0)
                     .aligment(.right)
-                    .size(.wrap(add: 50), 200)
+                    .size(.wrap(add: 50), 150)
                 
                 Label("""
                     aligment = center

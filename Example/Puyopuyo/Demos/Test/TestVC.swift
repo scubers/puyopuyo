@@ -32,16 +32,16 @@ class TestVC: BaseVC {
     let state = State<String?>(nil)
     func configTestView() {
 
-//        view.addObserver(Instance.share, forKeyPath: #keyPath(UIView.frame), options: [.new], context: nil)
-        
-        vRoot.attach {
-            UIView().attach($0)
-            
-            UIView().attach($0)
-                .width(50)
-                .height(on: Simulate.ego.width)
-            
-        }
+let textState = State<String?>(nil)
+VBox().attach(view) {
+    UITextField().attach($0)
+        .onText(textState)
+        .size(.fill, 50)
+    
+    UILabel().attach($0)
+        .text(textState)
+    }
+    .size(.fill, .fill)
     }
     
     private func test1() {
