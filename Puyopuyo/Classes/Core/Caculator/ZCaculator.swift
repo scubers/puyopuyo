@@ -91,12 +91,4 @@ class ZCaculator {
         return Size(width: width, height: height)
     }
     
-    private func checkAligmentAvailable(_ aligment: Aligment) {
-        if aligment.contains([.left, .right]) {
-            fatalError("不能同时设置左右")
-        }
-        if aligment.contains([.top, .bottom]) {
-            fatalError("不能同时设置左右")
-        }
-    }
 }

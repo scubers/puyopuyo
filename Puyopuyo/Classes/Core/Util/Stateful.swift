@@ -50,6 +50,7 @@ public typealias _St = State
 public class State<Value>: Outputing, Inputing {
     
     public typealias OutputType = Value
+    
     public typealias InputType = Value
     
     public init(_ value: Value) {
@@ -78,8 +79,14 @@ public class State<Value>: Outputing, Inputing {
             }
         }
     }
+    
     private var callees = [Callee<Value>]()
+    
     private var onDestroy: () -> Void = {}
+    
+    public func resend() {
+        input(value: value)
+    }
     
     public func input(value: State<Value>.InputType) {
         self._value = value
@@ -97,6 +104,13 @@ public class State<Value>: Outputing, Inputing {
         }
     }
     
+    private var singleUnbinder: Unbinder?
+    
+    public func singleOutput(_ block: @escaping (Value) -> Void) {
+        singleUnbinder?.py_unbind()
+        singleUnbinder = outputing(block)
+    }
+    
     private class Callee<T> {
         var block: (T) -> Void
         init(_ block: @escaping (T) -> Void) {
@@ -107,6 +121,7 @@ public class State<Value>: Outputing, Inputing {
 }
 
 extension State {
+    
     public func optional() -> State<Value?> {
         let new = State<Value?>(nil)
         _ = outputing { (value) in
@@ -116,11 +131,11 @@ extension State {
     }
     
     public func map<R>(_ block: @escaping (Value) -> R) -> State<R> {
-        let newState = State<R>()
+        let new = State<R>()
         _ = outputing { (value) in
-            newState.input(value: block(value))
+            new.input(value: block(value))
         }
-        return newState
+        return new
     }
     
     public func filter(_ filter: @escaping (Value) -> Bool) -> State<Value> {
@@ -136,9 +151,10 @@ extension State {
     public func ignore(_ condition: @escaping (Value, Value) -> Bool) -> State<Value> {
         let new = State<Value>()
         var last: Value!
-        let unbinder = self.outputing { (v) in
+        _ = outputing { (v) in
             guard last != nil else {
                 last = v
+                new.input(value: v)
                 return
             }
             let ignore = condition(last, v)
@@ -146,9 +162,6 @@ extension State {
             if !ignore {
                 new.input(value: v)
             }
-        }
-        new.onDestroy = {
-            unbinder.py_unbind()
         }
         return new
     }
@@ -164,9 +177,11 @@ extension State where Value: Equatable {
 private class UnbinderImpl: NSObject, Unbinder {
     
     private var block: () -> Void
+    
     init(_ block: @escaping () -> Void) {
         self.block = block
     }
+    
     func py_unbind() {
         block()
         block = {}

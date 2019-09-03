@@ -40,7 +40,7 @@ public class Puyo<T: UIView> {
     }
     
     @discardableResult
-    public func viewUpdateOn<O: Outputing, R>(_ state: O, _ action: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
+    public func viewUpdate<O: Outputing, R>(on state: O, _ action: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
         return on(state, { (v, r) in
             action(v, r)
             v.py_setNeedsLayout()

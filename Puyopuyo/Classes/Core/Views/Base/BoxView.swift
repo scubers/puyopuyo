@@ -57,9 +57,9 @@ open class BoxView: UIView {
         _layoutSubviews()
     }
 
-    public func animate(_ interval: TimeInterval, block: () -> Void) {
-        block()
+    public func animate(_ interval: TimeInterval, block: @escaping () -> Void) {
         UIView.animate(withDuration: interval, animations: {
+            block()
             self.layoutIfNeeded()
         })
     }
