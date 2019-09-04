@@ -32,16 +32,16 @@ class TestVC: BaseVC {
     let state = State<String?>(nil)
     func configTestView() {
 
-let textState = State<String?>(nil)
-VBox().attach(view) {
-    UITextField().attach($0)
-        .onText(textState)
-        .size(.fill, 50)
-    
-    UILabel().attach($0)
-        .text(textState)
-    }
-    .size(.fill, .fill)
+        let textState = State<String?>(nil)
+        VBox().attach(view) {
+            UITextField().attach($0)
+                .onText(textState)
+                .size(.fill, 50)
+            
+            UILabel().attach($0)
+                .text(textState)
+            }
+            .size(.fill, .fill)
     }
     
     private func test1() {

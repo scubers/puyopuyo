@@ -17,16 +17,21 @@ public protocol InteractiveView {
     var interactor: State<InteractType> { get }
 }
 
+public protocol ViewConstructable {
+    func buildView() -> UIView
+}
 
 open class BoxView: UIView {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
         autoresizingMask = .init(rawValue: 0)
+        buildBody()
     }
     
     public required init?(coder aDecoder: NSCoder) {
-        fatalError()
+        super.init(frame: .zero)
+        buildBody()
     }
     
     public var regulator: Regulator {
@@ -68,6 +73,9 @@ open class BoxView: UIView {
         return Caculator.sizeThatFit(size: size, to: regulator)
     }
     
+    open func buildBody() {
+        
+    }
     
     // MARK: - 边界相关
     var borders: Borders = Borders()
