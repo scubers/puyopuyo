@@ -26,21 +26,6 @@ open class PuyoHelper {
         setNeedsLayout(view)
     }
     
-    open class func visibility(for view: UIView, visibility: Visiblity) {
-        switch visibility {
-        case .gone:
-            view.isHidden = true
-            view.py_measure.activated = false
-        case .invisible:
-            view.isHidden = true
-            view.py_measure.activated = true
-        case .visible:
-            view.isHidden = false
-            view.py_measure.activated = true
-        }
-        setNeedsLayout(view)
-    }
-    
     open class func aligment(for view: UIView, aligment: Aligment) {
         view.py_measure.aligment = aligment
         setNeedsLayout(view)

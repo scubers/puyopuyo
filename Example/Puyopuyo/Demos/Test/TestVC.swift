@@ -29,19 +29,26 @@ class TestVC: BaseVC {
 //    var subVC: UIViewController? = VBoxVC()
 //    var subVC: UIViewController? = FlatFormationAligmentVC()
     
-    let state = State<String?>(nil)
+    let state = State<ControlState>(.controlled)
     func configTestView() {
 
-        let textState = State<String?>(nil)
-        VBox().attach(view) {
-            UITextField().attach($0)
-                .onText(textState)
-                .size(.fill, 50)
+        vRoot.attach {
             
-            UILabel().attach($0)
-                .text(textState)
-            }
-            .size(.fill, .fill)
+            Label("1").attach($0)
+                .text(self.state.map({ "\($0)"}))
+                .size(100, 100)
+                .userInteractionEnabled(State(true))
+                .onTap(to: self, { (self, _) in
+                    self.state.value = Util.random(array: ControlState.allCases)
+                })
+            
+            Label("2").attach($0)
+                .control(self.state)
+                .size(100, 100)
+            Label("3").attach($0)
+                .size(100, 100)
+        }
+
     }
     
     private func test1() {

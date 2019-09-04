@@ -224,15 +224,16 @@ extension Puyo where T: UIView {
     
     // MARK: - Visibility
     @discardableResult
-    public func visible(_ visibility: Visiblity) -> Self {
-        PuyoHelper.visibility(for: view, visibility: visibility)
+    public func control(_ control: ControlState) -> Self {
+        view.controlState = control
         return self
     }
     
     @discardableResult
-    public func visible<S: Outputing>(_ visibility: S) -> Self where S.OutputType == Visiblity {
-        view.py_setUnbinder(visibility.safeBind(view, { (v, a) in
-            PuyoHelper.visibility(for: v, visibility: a)
+    public func control<S: Outputing>(_ control: S) -> Self where S.OutputType == ControlState {
+        view.py_setUnbinder(control.safeBind(view, { (v, a) in
+            v.controlState = a
+            v.py_setNeedsLayout()
         }), for: #function)
         return self
     }
