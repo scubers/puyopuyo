@@ -7,7 +7,7 @@
 
 import Foundation
 
-private class _FakeFlatLayout: FlatRegulator {
+private class _FakeFlatRegulator: FlatRegulator {
     
     private var lastDelta: CGPoint = .zero
     
@@ -42,33 +42,33 @@ private class _FakeFlatLayout: FlatRegulator {
 
 class FlowCaculator {
     
-    init(_ layout: FlowRegulator, parent: Measure) {
-        self.layout = layout
+    init(_ regulator: FlowRegulator, parent: Measure) {
+        self.regulator = regulator
         self.parent = parent
     }
     
-    let layout: FlowRegulator
+    let regulator: FlowRegulator
     let parent: Measure
     var arrange: Int {
-        return layout.arrange
+        return regulator.arrange
     }
     var layoutDirection: Direction {
-        return layout.direction
+        return regulator.direction
     }
     
-    lazy var layoutFixedSize = CalFixedSize(cgSize: self.layout.py_size, direction: layout.direction)
-    lazy var layoutCalPadding = CalEdges(insets: layout.padding, direction: layout.direction)
-    lazy var layoutCalSize = CalSize(size: layout.size, direction: layout.direction)
+    lazy var layoutFixedSize = CalFixedSize(cgSize: self.regulator.py_size, direction: regulator.direction)
+    lazy var layoutCalPadding = CalEdges(insets: regulator.padding, direction: regulator.direction)
+    lazy var layoutCalSize = CalSize(size: regulator.size, direction: regulator.direction)
     
     func caculate() -> Size {
         
         var caculateChildren = [Measure]()
-        layout.enumerateChild { (_, m) in
+        regulator.enumerateChild { (_, m) in
             if m.activated {
                 caculateChildren.append(m)
             }
         }
-        if layout.arrange > 0 {
+        if regulator.arrange > 0 {
             return _caculateByFixedCount(available: caculateChildren)
         }
         return _caculateByContent(available: caculateChildren)
@@ -76,7 +76,7 @@ class FlowCaculator {
     
     private func _caculateByContent(available children: [Measure]) -> Size {
         
-        var fakeLines = [_FakeFlatLayout]()
+        var fakeLines = [_FakeFlatRegulator]()
         
         var currentLine = [Measure]()
         var maxCross: CGFloat = 0
@@ -91,8 +91,8 @@ class FlowCaculator {
         }
         
         children.enumerated().forEach({ (idx, m) in
-            let subCalSize = m.caculate(byParent: Measure()).getCalSize(by: layout.direction)
-            let subCalMargin = CalEdges(insets: m.margin, direction: layout.direction)
+            let subCalSize = m.caculate(byParent: Measure()).getCalSize(by: regulator.direction)
+            let subCalMargin = CalEdges(insets: m.margin, direction: regulator.direction)
             let subCrossSize = subCalSize.cross
             // 计算当前累计的最大cross
             maxCross += (getLength(from: subCrossSize) + (CGFloat(min(1, currentLine.count)) * getOppsiteSpace()) + subCalMargin.crossFixed)
@@ -120,7 +120,7 @@ class FlowCaculator {
     private func _caculateByFixedCount(available children: [Measure]) -> Size {
         let line = getLine(from: children)
         
-        var fakeLines = [_FakeFlatLayout]()
+        var fakeLines = [_FakeFlatRegulator]()
         fakeLines.reserveCapacity(line)
         for idx in 0..<line {
             let lineChildren = children[idx * arrange..<min(idx * arrange + arrange, children.count)]
@@ -134,73 +134,73 @@ class FlowCaculator {
 
 private extension FlowCaculator {
     
-    func constructFakeOutside(children: [Measure]) -> _FakeFlatLayout {
-        let outside = _FakeFlatLayout(target: nil, children: children)
-        outside.justifyContent = layout.justifyContent
-        outside.aligment = layout.aligment
+    func constructFakeOutside(children: [Measure]) -> _FakeFlatRegulator {
+        let outside = _FakeFlatRegulator(target: nil, children: children)
+        outside.justifyContent = regulator.justifyContent
+        outside.aligment = regulator.aligment
         outside.direction = layoutDirection
         outside.space = getNormalSpace()
         outside.format = getNormalFormat()
-        outside.margin = layout.margin
-        outside.padding = layout.padding
-        outside.reverse = layout.reverse
-        outside.size = layout.size
-        outside.py_size = layout.py_size
+        outside.margin = regulator.margin
+        outside.padding = regulator.padding
+        outside.reverse = regulator.reverse
+        outside.size = regulator.size
+        outside.py_size = regulator.py_size
         return outside
     }
     
-    func constructFakeLine(children: [Measure]) -> _FakeFlatLayout {
-        let line = _FakeFlatLayout(children: children)
-        line.justifyContent = layout.justifyContent
+    func constructFakeLine(children: [Measure]) -> _FakeFlatRegulator {
+        let line = _FakeFlatRegulator(children: children)
+        line.justifyContent = regulator.justifyContent
         line.direction = getOppsiteDirection()
         line.space = getOppsiteSpace()
         line.format = getOppsiteFormat()
-        line.reverse = layout.reverse
-        line.aligment = layout.aligment
+        line.reverse = regulator.reverse
+        line.aligment = regulator.aligment
 
         var lineCalSize = CalSize(main: .wrap, cross: .wrap, direction: layoutDirection)
         if !layoutCalSize.cross.isWrap {
             // 当流式布局为包裹的时候，内部计算布局需要给定一个尺寸
-            lineCalSize.cross = .fix(max(0, layoutFixedSize.cross - layout.getCalPadding().crossFixed))
+            lineCalSize.cross = .fix(max(0, layoutFixedSize.cross - regulator.getCalPadding().crossFixed))
         }
         line.size = lineCalSize.getSize()
-        let size = line.caculate(byParent: layout)
+        let size = line.caculate(byParent: regulator)
         line.py_size = CGSize(width: size.width.fixedValue, height: size.height.fixedValue)
         return line
     }
     
     func getLine(from children: [Measure]) -> Int {
-        let base = children.count / layout.arrange
-        let more = children.count % layout.arrange
+        let base = children.count / regulator.arrange
+        let more = children.count % regulator.arrange
         return base + (more > 0 ? 1 : 0)
     }
     
     func getNormalSpace() -> CGFloat {
         if layoutDirection == .x {
-            return layout.hSpace
+            return regulator.hSpace
         }
-        return layout.vSpace
+        return regulator.vSpace
     }
     
     func getNormalFormat() -> Format {
         if layoutDirection == .x {
-            return layout.hFormat
+            return regulator.hFormat
         }
-        return layout.vFormat
+        return regulator.vFormat
     }
     
     func getOppsiteFormat() -> Format {
         if layoutDirection == .x {
-            return layout.vFormat
+            return regulator.vFormat
         }
-        return layout.hFormat
+        return regulator.hFormat
     }
     
     func getOppsiteSpace() -> CGFloat {
         if layoutDirection == .x {
-            return layout.vSpace
+            return regulator.vSpace
         }
-        return layout.hSpace
+        return regulator.hSpace
     }
     
     func getOppsiteDirection() -> Direction {

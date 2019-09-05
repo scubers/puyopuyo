@@ -24,8 +24,8 @@ struct MyParts {
 
 class TestVC: BaseVC {
     
-//    var subVC: UIViewController? = nil
-    var subVC: UIViewController? = FlowBoxBaseVC()
+    var subVC: UIViewController? = nil
+//    var subVC: UIViewController? = FlowBoxBaseVC()
 //    var subVC: UIViewController? = VBoxVC()
 //    var subVC: UIViewController? = FlatFormationAligmentVC()
     
@@ -34,25 +34,15 @@ class TestVC: BaseVC {
 
         vRoot.attach {
             
-            UIScrollView().attach($0) {
-                VFlow().attach($0) {
-                    for idx in 0..<20 {
-                        Label("\(idx)").attach($0)
-                            .width(40 + CGFloat(idx) * 4)
-                            .height(on: Simulate.ego.width)
-                    }
-                    }
-                    .hSpace(State(10))
-                    .vSpace(State(10))
-                    .size(.wrap, .wrap)
-                    .margin(all: 10)
-                    .padding(all: 10)
-                    .autoJudgeScroll(true)
-                }
-                .margin(all: 10)
-                .size(.fill, .fill)
-            
+            for idx in 0..<5 {
+                Label("\(idx)").attach($0)
+                    .width(40 + CGFloat(idx) * 4)
+                    .height(on: Simulate.ego.width)
+                    .aligment(.center)
+            }
+
         }
+        .format(.avg)
 
     }
     

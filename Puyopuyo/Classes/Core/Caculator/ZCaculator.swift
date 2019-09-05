@@ -9,15 +9,15 @@ import Foundation
 
 class ZCaculator {
     
-    let layout: ZRegulator
+    let regulator: ZRegulator
     let parent: Measure
-    init(_ layout: ZRegulator, parent: Measure) {
-        self.layout = layout
+    init(_ regulator: ZRegulator, parent: Measure) {
+        self.regulator = regulator
         self.parent = parent
     }
     
-    lazy var layoutFixedWidth: CGFloat = self.layout.padding.left + self.layout.padding.right
-    lazy var layoutFixedHeight: CGFloat = self.layout.padding.top + self.layout.padding.bottom
+    lazy var regFixedWidth: CGFloat = self.regulator.padding.left + self.regulator.padding.right
+    lazy var regFixedHeight: CGFloat = self.regulator.padding.top + self.regulator.padding.bottom
 //    lazy var layoutCalPadding = CalEdges(insets: layout.padding, direction: layout.direction)
 //    lazy var layoutCalFixedSize = CalFixedSize(cgSize: layout.target?.py_size ?? .zero, direction: layout.direction)
 //    lazy var layoutCalSize = CalSize(size: layout.size, direction: layout.direction)
@@ -25,10 +25,10 @@ class ZCaculator {
     
     func caculate() -> Size {
         
-        let layoutFixedSize = layout.py_size
+        let layoutFixedSize = regulator.py_size
         
         var children = [Measure]()
-        layout.enumerateChild { (_, m) in
+        regulator.enumerateChild { (_, m) in
             if m.activated {
                 children.append(m)
             }
@@ -38,14 +38,14 @@ class ZCaculator {
         
         for (measure) in children {
             
-            let subSize = measure.caculate(byParent: layout)
+            let subSize = measure.caculate(byParent: regulator)
             let subMargin = measure.margin
             
             if subSize.width.isWrap || subSize.height.isWrap {
                 fatalError()
             }
-            let zContainerSize = CGSize(width: max(layoutFixedSize.width - layoutFixedWidth - (subMargin.left + subMargin.right), 0),
-                                        height: max(layoutFixedSize.height - layoutFixedHeight - (subMargin.top + subMargin.bottom), 0))
+            let zContainerSize = CGSize(width: max(layoutFixedSize.width - regFixedWidth - (subMargin.left + subMargin.right), 0),
+                                        height: max(layoutFixedSize.height - regFixedHeight - (subMargin.top + subMargin.bottom), 0))
             // 计算大小
             let sizeAfterCaculate = Caculator.caculate(size: subSize, by: zContainerSize)
             measure.py_size = CGSize(width: sizeAfterCaculate.width.fixedValue, height: sizeAfterCaculate.height.fixedValue)
@@ -55,7 +55,7 @@ class ZCaculator {
             // 计算中心
             var center = CGPoint(x: layoutFixedSize.width / 2, y: layoutFixedSize.height / 2)
             let aligment = measure.aligment
-            let justifyContent = layout.justifyContent
+            let justifyContent = regulator.justifyContent
 
             // 水平方向
             let horzAligment: Aligment = aligment.hasHorzAligment() ? aligment : justifyContent
@@ -63,29 +63,29 @@ class ZCaculator {
             let vertAligment: Aligment = aligment.hasVertAligment() ? aligment : justifyContent
             
             if horzAligment.contains(.left) {
-                center.x = layout.padding.left + subMargin.left + sizeAfterCaculate.width.fixedValue / 2
+                center.x = regulator.padding.left + subMargin.left + sizeAfterCaculate.width.fixedValue / 2
             } else if horzAligment.contains(.right) {
-                center.x = layoutFixedSize.width - (layout.padding.right + subMargin.right + sizeAfterCaculate.width.fixedValue / 2)
+                center.x = layoutFixedSize.width - (regulator.padding.right + subMargin.right + sizeAfterCaculate.width.fixedValue / 2)
             }
             
             if vertAligment.contains(.top) {
-                center.y = layout.padding.top + subMargin.top + sizeAfterCaculate.height.fixedValue / 2
+                center.y = regulator.padding.top + subMargin.top + sizeAfterCaculate.height.fixedValue / 2
             } else if vertAligment.contains(.bottom) {
-                center.y = layoutFixedSize.height - (layout.padding.bottom + subMargin.bottom + sizeAfterCaculate.height.fixedValue / 2)
+                center.y = layoutFixedSize.height - (regulator.padding.bottom + subMargin.bottom + sizeAfterCaculate.height.fixedValue / 2)
             }
             
             measure.py_center = center
         }
         
         // 计算布局自身大小
-        var width = layout.size.width
+        var width = regulator.size.width
         if width.isWrap {
-            width = .fix(maxSizeWithMargin.width + layout.padding.left + layout.padding.right)
+            width = .fix(maxSizeWithMargin.width + regulator.padding.left + regulator.padding.right)
         }
         
-        var height = layout.size.height
+        var height = regulator.size.height
         if height.isWrap {
-            height = .fix(maxSizeWithMargin.height + layout.padding.top + layout.padding.bottom)
+            height = .fix(maxSizeWithMargin.height + regulator.padding.top + regulator.padding.bottom)
         }
         
         return Size(width: width, height: height)
