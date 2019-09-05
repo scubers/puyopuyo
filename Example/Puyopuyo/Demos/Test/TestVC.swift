@@ -29,7 +29,7 @@ class TestVC: BaseVC {
 //    var subVC: UIViewController? = VBoxVC()
 //    var subVC: UIViewController? = FlatFormationAligmentVC()
     
-    let state = State<ControlState>(.controlled)
+    let state = State<Visibility>(.visible)
     func configTestView() {
 
         vRoot.attach {

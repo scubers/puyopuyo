@@ -63,25 +63,25 @@ extension UIView: MeasureTargetable {
 }
 
 extension UIView {
-    public var controlState: ControlState {
+    public var py_visibility: Visibility {
         set {
             // hidden
             switch newValue {
-            case .controlled: fallthrough
+            case .visible: fallthrough
             case .free: isHidden = false
             default: isHidden = true
             }
             // activated
             switch newValue {
-            case .controlled: fallthrough
-            case .placeholder: py_measure.activated = true
+            case .visible: fallthrough
+            case .invisible: py_measure.activated = true
             default: py_measure.activated = false
             }
         }
         get {
             switch (py_measure.activated, isHidden) {
-            case (true, false): return .controlled
-            case (true, true): return .placeholder
+            case (true, false): return .visible
+            case (true, true): return .invisible
             case (false, true): return .gone
             case (false, false): return .free
             }

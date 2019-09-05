@@ -7,9 +7,9 @@
 
 import Foundation
 
-public enum ControlState: CaseIterable {
-    case controlled // 计算+可见
-    case placeholder// 计算+不可见
+public enum Visibility: CaseIterable {
+    case visible // 计算+可见
+    case invisible// 计算+不可见
     case free // 不计算+可见
     case gone // 不计算+不可见
 }
