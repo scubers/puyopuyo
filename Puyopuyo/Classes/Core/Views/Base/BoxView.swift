@@ -34,6 +34,9 @@ open class BoxView: UIView {
         buildBody()
     }
     
+    public var isScrollViewControl = false
+    public var isSelfPositionControl = true
+    
     public var regulator: Regulator {
         return py_measure as! Regulator
     }
@@ -114,18 +117,18 @@ private extension BoxView {
             
             if superview is BoxView {
                 // 父视图为布局
-            } else {
+            } else if isSelfPositionControl {
                 // 父视图为普通视图
                 let newSize = bounds.size
                 center = CGPoint(x: bounds.midX + regulator.margin.left, y: bounds.midY + regulator.margin.top)
                 
                 // 控制父视图的scroll
-                if let scrollView = superview as? UIScrollView, regulator.autoJudgeScroll {
+                if isScrollViewControl, let scrollView = superview as? UIScrollView {
                     if regulator.size.width.isWrap {
-                        scrollView.contentSize.width = newSize.width + regulator.padding.left + regulator.padding.right + frame.origin.x
+                        scrollView.contentSize.width = newSize.width + regulator.margin.left + regulator.margin.right
                     }
                     if regulator.size.height.isWrap {
-                        scrollView.contentSize.height = newSize.height + regulator.padding.bottom + regulator.padding.top + frame.origin.y
+                        scrollView.contentSize.height = newSize.height + regulator.margin.bottom + regulator.margin.top
                     }
                 }
             }

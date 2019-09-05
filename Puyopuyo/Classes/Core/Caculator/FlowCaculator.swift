@@ -95,19 +95,19 @@ class FlowCaculator {
             let subCalMargin = CalEdges(insets: m.margin, direction: layout.direction)
             let subCrossSize = subCalSize.cross
             // 计算当前累计的最大cross
-            let subCross = (getLength(from: subCrossSize) + max(0, CGFloat(currentLine.count) * getOppsiteSpace())) + subCalMargin.crossFixed
+            maxCross += (getLength(from: subCrossSize) + (CGFloat(min(1, currentLine.count)) * getOppsiteSpace()) + subCalMargin.crossFixed)
             
-            if (maxCross + subCross) > totalCross { // 内容超出
+            if maxCross > totalCross { // 内容超出
                 if currentLine.isEmpty {
                     fakeLines.append(constructFakeLine(children: [m]))
                 } else {
+                    // 另起新的一行
                     fakeLines.append(constructFakeLine(children: currentLine))
                     maxCross = getLength(from: subCrossSize) + subCalMargin.crossFixed
                     currentLine = [m]
                 }
             } else { // 内容未超出
                 currentLine.append(m)
-                maxCross += subCross
             }
         })
         if !currentLine.isEmpty {

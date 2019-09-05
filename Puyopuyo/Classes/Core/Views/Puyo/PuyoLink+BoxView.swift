@@ -49,7 +49,14 @@ extension Puyo where T: BoxView {
     
     @discardableResult
     public func autoJudgeScroll(_ judge: Bool) -> Self {
-        view.regulator.autoJudgeScroll = judge
+        view.isScrollViewControl = judge
+        setNeedsLayout()
+        return self
+    }
+    
+    @discardableResult
+    public func isSelfPositionControl(_ control: Bool) -> Self {
+        view.isSelfPositionControl = control
         setNeedsLayout()
         return self
     }
