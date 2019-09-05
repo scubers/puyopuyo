@@ -23,6 +23,9 @@ class FlowBoxBaseVC: BaseVC {
         let hSpace = _St<CGFloat>(10)
         let vSpace = _St<CGFloat>(10)
         
+        let width = _St<SizeDescription>(.fill)
+        let height = _St<SizeDescription>(.fill)
+        
         var total = 10
         
         let spaceRange: [CGFloat] = [10, 20, 30, 40]
@@ -40,7 +43,7 @@ class FlowBoxBaseVC: BaseVC {
                             reverse.value = !reverse.value
                             vFormat.value = formatI.next()
                             hFormat.value = formatI.next()
-                            arrange.value = Util.random(array: Array(1...total))
+                            arrange.value = Util.random(array: Array(0...total))
                             direction.value = directionI.next()
                             
                             justifyContent.value = Util.random(array: direction.value == .x ? Aligment.horzAligments() : Aligment.vertAligments())
@@ -78,15 +81,21 @@ class FlowBoxBaseVC: BaseVC {
             
             
             VFlow(count: 2).attach($0) {
-                let height: CGFloat = 20
-                OptionView(prefix: "arrange", receiver: arrange, options: Array(1...total)).attach($0).size(.fill, height)
-                OptionView(prefix: "direction", receiver: direction, options: Direction.allCases).attach($0).size(.fill, height)
-                OptionView(prefix: "reverse", receiver: reverse, options: [true, false]).attach($0).size(.fill, height)
-                OptionView(prefix: "hFormat", receiver: hFormat, options: Format.allCases).attach($0).size(.fill, height)
-                OptionView(prefix: "vFormat", receiver: vFormat, options: Format.allCases).attach($0).size(.fill, height)
-                OptionView(prefix: "hSpace", receiver: hSpace, options: spaceRange).attach($0).size(.fill, height)
-                OptionView(prefix: "vSpace", receiver: vSpace, options: spaceRange).attach($0).size(.fill, height)
-                OptionView(prefix: "content", receiver: justifyContent, options: Aligment.vertAligments() + Aligment.horzAligments()).attach($0).size(.fill, height)
+                let heightValue: CGFloat = 20
+                OptionView(prefix: "width", receiver: width, options: [.fill, .wrap]).attach($0).size(.fill, heightValue)
+                OptionView(prefix: "height", receiver: height, options: [.fill, .wrap]).attach($0).size(.fill, heightValue)
+                
+                OptionView(prefix: "arrange", receiver: arrange, options: Array(0...total)).attach($0).size(.fill, heightValue)
+                OptionView(prefix: "direction", receiver: direction, options: Direction.allCases).attach($0).size(.fill, heightValue)
+                
+                OptionView(prefix: "hFormat", receiver: hFormat, options: Format.allCases).attach($0).size(.fill, heightValue)
+                OptionView(prefix: "vFormat", receiver: vFormat, options: Format.allCases).attach($0).size(.fill, heightValue)
+                
+                OptionView(prefix: "hSpace", receiver: hSpace, options: spaceRange).attach($0).size(.fill, heightValue)
+                OptionView(prefix: "vSpace", receiver: vSpace, options: spaceRange).attach($0).size(.fill, heightValue)
+                
+                OptionView(prefix: "reverse", receiver: reverse, options: [true, false]).attach($0).size(.fill, heightValue)
+                OptionView(prefix: "content", receiver: justifyContent, options: Aligment.vertAligments() + Aligment.horzAligments()).attach($0).size(.fill, heightValue)
                 }
                 .padding(left: 10, right: 10)
                 .size(.fill, .wrap)
@@ -135,8 +144,9 @@ class FlowBoxBaseVC: BaseVC {
                     
                     }
 //                    .aligment(.right)
-                    .size(.fill, .fill)
-                    .size(.wrap, .wrap)
+//                    .size(.wrap, .wrap)
+                    .width(width)
+                    .height(height)
                     .padding(all: 10)
                     .margin(all: 10)
                     .hSpace(hSpace)

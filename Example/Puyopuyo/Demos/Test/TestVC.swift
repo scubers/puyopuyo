@@ -24,8 +24,8 @@ struct MyParts {
 
 class TestVC: BaseVC {
     
-    var subVC: UIViewController? = nil
-//    var subVC: UIViewController? = FlowBoxBaseVC()
+//    var subVC: UIViewController? = nil
+    var subVC: UIViewController? = FlowBoxBaseVC()
 //    var subVC: UIViewController? = VBoxVC()
 //    var subVC: UIViewController? = FlatFormationAligmentVC()
     
@@ -34,19 +34,24 @@ class TestVC: BaseVC {
 
         vRoot.attach {
             
-            Label("1").attach($0)
-                .text(self.state.map({ "\($0)"}))
-                .size(100, 100)
-                .userInteractionEnabled(State(true))
-                .onTap(to: self, { (self, _) in
-                    self.state.value = Util.random(array: ControlState.allCases)
-                })
+            UIScrollView().attach($0) {
+                VFlow().attach($0) {
+                    for idx in 0..<20 {
+                        Label("\(idx)").attach($0)
+                            .width(40 + CGFloat(idx) * 4)
+                            .height(on: Simulate.ego.width)
+                    }
+                    }
+                    .hSpace(State(10))
+                    .vSpace(State(10))
+                    .size(.wrap, .wrap)
+                    .margin(all: 10)
+                    .padding(all: 10)
+                    .autoJudgeScroll(true)
+                }
+                .margin(all: 10)
+                .size(.fill, .fill)
             
-            Label("2").attach($0)
-                .control(self.state)
-                .size(100, 100)
-            Label("3").attach($0)
-                .size(100, 100)
         }
 
     }

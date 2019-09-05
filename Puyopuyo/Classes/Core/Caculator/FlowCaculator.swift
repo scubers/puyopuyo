@@ -68,12 +68,62 @@ class FlowCaculator {
                 caculateChildren.append(m)
             }
         }
-        let line = getLine(from: caculateChildren)
+        if layout.arrange > 0 {
+            return _caculateByFixedCount(available: caculateChildren)
+        }
+        return _caculateByContent(available: caculateChildren)
+    }
+    
+    private func _caculateByContent(available children: [Measure]) -> Size {
+        
+        var fakeLines = [_FakeFlatLayout]()
+        
+        var currentLine = [Measure]()
+        var maxCross: CGFloat = 0
+        let totalCross = layoutFixedSize.cross - layoutCalPadding.crossFixed
+        
+        func getLength(from size: SizeDescription) -> CGFloat {
+            assert(!size.isWrap)
+            if size.isRatio {
+                return .greatestFiniteMagnitude
+            }
+            return size.fixedValue
+        }
+        
+        children.enumerated().forEach({ (idx, m) in
+            let subCalSize = m.caculate(byParent: Measure()).getCalSize(by: layout.direction)
+            let subCalMargin = CalEdges(insets: m.margin, direction: layout.direction)
+            let subCrossSize = subCalSize.cross
+            // 计算当前累计的最大cross
+            let subCross = (getLength(from: subCrossSize) + max(0, CGFloat(currentLine.count) * getOppsiteSpace())) + subCalMargin.crossFixed
+            
+            if (maxCross + subCross) > totalCross { // 内容超出
+                if currentLine.isEmpty {
+                    fakeLines.append(constructFakeLine(children: [m]))
+                } else {
+                    fakeLines.append(constructFakeLine(children: currentLine))
+                    maxCross = getLength(from: subCrossSize) + subCalMargin.crossFixed
+                    currentLine = [m]
+                }
+            } else { // 内容未超出
+                currentLine.append(m)
+                maxCross += subCross
+            }
+        })
+        if !currentLine.isEmpty {
+            fakeLines.append(constructFakeLine(children: currentLine))
+        }
+        let size = constructFakeOutside(children: fakeLines).caculate(byParent: parent)
+        return size
+    }
+    
+    private func _caculateByFixedCount(available children: [Measure]) -> Size {
+        let line = getLine(from: children)
         
         var fakeLines = [_FakeFlatLayout]()
         fakeLines.reserveCapacity(line)
         for idx in 0..<line {
-            let lineChildren = caculateChildren[idx * arrange..<min(idx * arrange + arrange, caculateChildren.count)]
+            let lineChildren = children[idx * arrange..<min(idx * arrange + arrange, children.count)]
             fakeLines.append(constructFakeLine(children: Array(lineChildren)))
         }
         

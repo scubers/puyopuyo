@@ -23,12 +23,11 @@ extension UInt32: SizeDescriptible { public var sizeDescription: SizeDescription
 extension Int64: SizeDescriptible { public var sizeDescription: SizeDescription { return .fix(CGFloat(self)) } }
 extension UInt64: SizeDescriptible { public var sizeDescription: SizeDescription { return .fix(CGFloat(self)) } }
 
-public struct SizeDescription: SizeDescriptible {
+public struct SizeDescription: SizeDescriptible, CustomStringConvertible {
     
     public var sizeDescription: SizeDescription {
         return self
     }
-    
     
     public enum SizeType {
         // 固有尺寸
@@ -86,6 +85,16 @@ public struct SizeDescription: SizeDescriptible {
     
     public func getWrapSize(by wrappedValue: CGFloat) -> CGFloat {
         return Swift.min(Swift.max(wrappedValue + add, min), max)
+    }
+    
+    public var description: String {
+        if isRatio {
+            return "ratio: \(ratio)"
+        } else if isWrap {
+            return "wrap(add: \(add), min: \(min), max: \(max == .greatestFiniteMagnitude ? "inf" : max.description))"
+        } else {
+            return "fix: \(fixedValue)"
+        }
     }
     
 }
