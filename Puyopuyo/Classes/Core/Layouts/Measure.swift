@@ -7,11 +7,13 @@
 
 import UIKit
 
-public enum Direction: CaseIterable {
+public enum Direction: CaseIterable, Outputing {
+    public typealias OutputType = Direction
     case x, y
 }
 
-public struct Aligment: OptionSet, CustomStringConvertible {
+public struct Aligment: OptionSet, CustomStringConvertible, Outputing {
+    public typealias OutputType = Aligment
     public var description: String {
         let all = [Aligment.top, .left, .bottom, .right, .horzCenter, .vertCenter]
         let contain = all.filter({ self.contains($0) })

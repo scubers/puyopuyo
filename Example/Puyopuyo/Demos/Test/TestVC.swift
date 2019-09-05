@@ -38,7 +38,8 @@ class TestVC: BaseVC {
                 Label("\(idx)").attach($0)
                     .width(40 + CGFloat(idx) * 4)
                     .height(on: Simulate.ego.width)
-                    .aligment(.center)
+                    .numberOfLines(5)
+                
             }
 
         }

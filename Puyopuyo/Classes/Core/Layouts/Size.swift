@@ -11,9 +11,7 @@ public protocol SizeDescriptible {
     var sizeDescription: SizeDescription { get }
 }
 
-extension CGFloat: SizeDescriptible {
-    public var sizeDescription: SizeDescription { return .fix(self) }
-}
+extension CGFloat: SizeDescriptible { public var sizeDescription: SizeDescription { return .fix(self) } }
 extension Double: SizeDescriptible { public var sizeDescription: SizeDescription { return .fix(CGFloat(self)) } }
 extension Float: SizeDescriptible { public var sizeDescription: SizeDescription { return .fix(CGFloat(self)) } }
 extension Int: SizeDescriptible { public var sizeDescription: SizeDescription { return .fix(CGFloat(self)) } }
@@ -23,7 +21,9 @@ extension UInt32: SizeDescriptible { public var sizeDescription: SizeDescription
 extension Int64: SizeDescriptible { public var sizeDescription: SizeDescription { return .fix(CGFloat(self)) } }
 extension UInt64: SizeDescriptible { public var sizeDescription: SizeDescription { return .fix(CGFloat(self)) } }
 
-public struct SizeDescription: SizeDescriptible, CustomStringConvertible {
+public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Outputing {
+    
+    public typealias OutputType = SizeDescription
     
     public var sizeDescription: SizeDescription {
         return self

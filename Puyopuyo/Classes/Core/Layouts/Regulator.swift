@@ -7,7 +7,8 @@
 
 import Foundation
 
-public enum Format: CaseIterable {
+public enum Format: CaseIterable, Outputing {
+    public typealias OutputType = Format
     case leading
     case center
     case sides

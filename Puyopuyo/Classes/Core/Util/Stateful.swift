@@ -45,6 +45,13 @@ extension Outputing {
     
 }
 
+extension Outputing where OutputType == Self {
+    public func outputing(_ block: @escaping (OutputType) -> Void) -> Unbinder {
+        block(self)
+        return Unbinders.create {}
+    }
+}
+
 public typealias _St = State
 
 public class State<Value>: Outputing, Inputing {
@@ -241,3 +248,32 @@ public struct SimpleInput<T>: Inputing {
         self.action = output
     }
 }
+
+extension Optional: Outputing { public typealias OutputType = Optional<Wrapped> }
+
+extension String: Outputing { public typealias OutputType = String }
+extension Bool: Outputing { public typealias OutputType = Bool }
+extension CGRect: Outputing { public typealias OutputType = CGRect }
+extension UIEdgeInsets: Outputing { public typealias OutputType = UIEdgeInsets }
+extension CGPoint: Outputing { public typealias OutputType = CGPoint }
+extension CGSize: Outputing { public typealias OutputType = CGSize }
+extension Array: Outputing { public typealias OutputType = Array }
+extension Dictionary: Outputing { public typealias OutputType = Dictionary }
+
+extension UIImage: Outputing { public typealias OutputType = UIImage }
+extension UIColor: Outputing { public typealias OutputType = UIColor }
+extension UIFont: Outputing { public typealias OutputType = UIFont }
+extension UIControl.State: Outputing { public typealias OutputType = UIControl.State }
+extension UIControl.Event: Outputing { public typealias OutputType = UIControl.Event }
+extension UIView.ContentMode: Outputing { public typealias OutputType = UIView.ContentMode }
+extension NSTextAlignment: Outputing { public typealias OutputType = NSTextAlignment }
+
+extension Int: Outputing { public typealias OutputType = Int }
+extension CGFloat: Outputing { public typealias OutputType = CGFloat }
+extension Double: Outputing { public typealias OutputType = Double }
+extension Float: Outputing { public typealias OutputType = Float }
+extension UInt: Outputing { public typealias OutputType = UInt }
+extension Int32: Outputing { public typealias OutputType = Int32 }
+extension UInt32: Outputing { public typealias OutputType = UInt32 }
+extension Int64: Outputing { public typealias OutputType = Int64 }
+extension UInt64: Outputing { public typealias OutputType = UInt64 }
