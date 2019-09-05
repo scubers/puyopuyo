@@ -13,8 +13,9 @@ import RxSwift
 class FlowBoxBaseVC: BaseVC {
     override func configView() {
         
-        let reverse = _St<Bool>(false)
-        let hFormat = _St<Format>(.leading)
+//        let reverse = _St<Bool>(false)
+        let reverse = false.yo.state()
+        let hFormat = Format.leading.yo.state()
         let vFormat = _St<Format>(.leading)
         let arrange = _St<Int>(3)
         let direction = _St<Direction>(.y)
@@ -62,7 +63,7 @@ class FlowBoxBaseVC: BaseVC {
                             let v =
                                 Label("\(total)").attach()
                                     .size(40, 40)
-                                    .backgroundColor(State(Util.randomColor()).optional())
+                                    .backgroundColor(Util.randomColor().yo.some())
                                     .onTap(to: self, { (self, tap) in
                                         self.vRoot.animate(0.2, block: {
                                             tap.view?.removeFromSuperview()

@@ -60,7 +60,7 @@ class StyleTestViewController: BaseVC, UIScrollViewDelegate {
                         .addWeakAction(to: self, for: .editingChanged, { (self, v) in
                             self.text.onNext(v.text ?? "")
                         })
-                        .backgroundColor(State(.lightGray).optional())
+                        .backgroundColor(State(.lightGray).yo.some())
                         .size(100, 40)
                     
                     UIView().attach($0)

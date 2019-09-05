@@ -57,7 +57,7 @@ extension UIView {
         py_addObserver(for: #keyPath(UIView.bounds), id: id, block: { (rect: CGRect?) in
             s.input(value: rect ?? .zero)
         })
-        return s.distinct()
+        return s.yo.distinct()
     }
     
     public func py_centerState() -> State<CGPoint> {
@@ -66,7 +66,7 @@ extension UIView {
         py_addObserver(for: #keyPath(UIView.center), id: id, block: { (point: CGPoint?) in
             s.input(value: point ?? .zero)
         })
-        return s.distinct()
+        return s.yo.distinct()
     }
     
     public func py_frameStateByBoundsCenter() -> State<CGRect> {
@@ -92,6 +92,6 @@ extension UIView {
                 s.input(value: value)
             }
         })
-        return s.distinct()
+        return s.yo.distinct()
     }
 }

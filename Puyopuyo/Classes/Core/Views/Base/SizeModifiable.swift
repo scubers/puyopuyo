@@ -102,8 +102,8 @@ extension Simulate: ValueModifiable {
         return
             view
                 .py_frameStateByBoundsCenter()
-                .map({ actions.reduce(transform($0)) { $1($0) } })
-                .distinct()
+                .yo.map({ actions.reduce(transform($0)) { $1($0) } })
+                .yo.distinct()
     }
 }
 

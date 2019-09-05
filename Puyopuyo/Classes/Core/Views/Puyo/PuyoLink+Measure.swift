@@ -70,14 +70,14 @@ extension Puyo where T: UIView {
     @discardableResult
     public func width(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
         if let s = view?.py_boundsState() {
-            return width(s.map(block))
+            return width(s.yo.map(block))
         }
         return self
     }
     
     @discardableResult
     public func width(on modifiable: ValueModifiable) -> Self {
-        return width(modifiable.checkSelfSimulate(view).modifyValue().map({ SizeDescription.fix($0)}))
+        return width(modifiable.checkSelfSimulate(view).modifyValue().yo.map({ SizeDescription.fix($0)}))
     }
     
     @discardableResult
@@ -105,14 +105,14 @@ extension Puyo where T: UIView {
     @discardableResult
     public func height(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
         if let s = view?.py_boundsState() {
-            height(s.map(block))
+            height(s.yo.map(block))
         }
         return self
     }
     
     @discardableResult
     public func height(on modifiable: ValueModifiable) -> Self {
-        return height(modifiable.checkSelfSimulate(view).modifyValue().map({ SizeDescription.fix($0) }))
+        return height(modifiable.checkSelfSimulate(view).modifyValue().yo.map({ SizeDescription.fix($0) }))
     }
     
     @discardableResult
@@ -169,7 +169,7 @@ extension Puyo where T: UIView {
     @discardableResult
     public func marginTop(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
         if let s = view?.py_boundsState() {
-            margin(top: s.map(block))
+            margin(top: s.yo.map(block))
         }
         return self
     }
@@ -177,7 +177,7 @@ extension Puyo where T: UIView {
     @discardableResult
     public func marginLeft(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
         if let s = view?.py_boundsState() {
-            margin(left: s.map(block))
+            margin(left: s.yo.map(block))
         }
         return self
     }
@@ -185,7 +185,7 @@ extension Puyo where T: UIView {
     @discardableResult
     public func marginBottom(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
         if let s = view?.py_boundsState() {
-            margin(bottom: s.map(block))
+            margin(bottom: s.yo.map(block))
         }
         return self
     }
@@ -193,7 +193,7 @@ extension Puyo where T: UIView {
     @discardableResult
     public func marginAll(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
         if let s = view?.py_boundsState() {
-            margin(all: s.map(block))
+            margin(all: s.yo.map(block))
         }
         return self
     }
@@ -201,7 +201,7 @@ extension Puyo where T: UIView {
     @discardableResult
     public func marginRight(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
         if let s = view?.py_boundsState() {
-            margin(right: s.map(block))
+            margin(right: s.yo.map(block))
         }
         return self
     }

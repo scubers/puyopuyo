@@ -18,7 +18,7 @@ public class Unbinders {
     }
 }
 
-public protocol Outputing {
+public protocol Outputing: PuyoExt {
     associatedtype OutputType
     func outputing(_ block: @escaping (OutputType) -> Void) -> Unbinder
 }
@@ -64,7 +64,7 @@ public class State<Value>: Outputing, Inputing {
         self._value = value
     }
     
-    private init() {}
+    fileprivate init() {}
     
     deinit {
         onDestroy()
@@ -127,27 +127,31 @@ public class State<Value>: Outputing, Inputing {
 
 }
 
-extension State {
+extension Yo where Base: Outputing {
     
-    public func optional() -> State<Value?> {
-        let new = State<Value?>(nil)
-        _ = outputing { (value) in
+    public func state() -> State<Base.OutputType> {
+        return map({$0})
+    }
+    
+    public func some() -> State<Base.OutputType?> {
+        let new = State<Base.OutputType?>(nil)
+        _ = base.outputing { (value) in
             new.input(value: value)
         }
         return new
     }
     
-    public func map<R>(_ block: @escaping (Value) -> R) -> State<R> {
+    public func map<R>(_ block: @escaping (Base.OutputType) -> R) -> State<R> {
         let new = State<R>()
-        _ = outputing { (value) in
+        _ = base.outputing { (value) in
             new.input(value: block(value))
         }
         return new
     }
     
-    public func filter(_ filter: @escaping (Value) -> Bool) -> State<Value> {
-        let new = State<Value>()
-        _ = self.outputing { (v) in
+    public func filter(_ filter: @escaping (Base.OutputType) -> Bool) -> State<Base.OutputType> {
+        let new = State<Base.OutputType>()
+        _ = base.outputing { (v) in
             if filter(v) {
                 new.input(value: v)
             }
@@ -155,10 +159,10 @@ extension State {
         return new
     }
     
-    public func ignore(_ condition: @escaping (Value, Value) -> Bool) -> State<Value> {
-        let new = State<Value>()
-        var last: Value!
-        _ = outputing { (v) in
+    public func ignore(_ condition: @escaping (Base.OutputType, Base.OutputType) -> Bool) -> State<Base.OutputType> {
+        let new = State<Base.OutputType>()
+        var last: Base.OutputType!
+        _ = base.outputing { (v) in
             guard last != nil else {
                 last = v
                 new.input(value: v)
@@ -172,11 +176,10 @@ extension State {
         }
         return new
     }
-    
 }
 
-extension State where Value: Equatable {
-    public func distinct() -> State<Value> {
+extension Yo where Base: Outputing, Base.OutputType: Equatable {
+    public func distinct() -> State<Base.OutputType> {
         return ignore({ $0 == $1 })
     }
 }

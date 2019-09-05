@@ -102,8 +102,8 @@ extension Puyo where T: UIView {
     }
     
     @discardableResult
-    public func center<S: Outputing>(_ frame: S) -> Self where S.OutputType == CGPoint {
-        view.py_setUnbinder(frame.safeBind(view, { (v, a) in
+    public func center<S: Outputing>(_ point: S) -> Self where S.OutputType == CGPoint {
+        view.py_setUnbinder(point.safeBind(view, { (v, a) in
             v.center = a
         }), for: #function)
         return self
