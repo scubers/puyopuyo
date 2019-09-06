@@ -38,9 +38,6 @@ class TestVC: BaseVC {
                 Label("\(idx)").attach($0)
                     .width(40 + CGFloat(idx) * 4)
                     .height(on: Simulate.ego.width)
-                    .numberOfLines(5)
-                    .backgroundColor(UIColor.black.yo.some())
-                
             }
 
         }

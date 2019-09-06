@@ -17,15 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        
-        let v = UIView()
-        
-        let u = Unbinders.create { [unowned(unsafe) v] in
-            print(v)
-        }
-        
-        v.py_setUnbinder(u, for: "1")
-        
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.rootViewController = UINavigationController(rootViewController: MenuVC())
         window?.makeKeyAndVisible()

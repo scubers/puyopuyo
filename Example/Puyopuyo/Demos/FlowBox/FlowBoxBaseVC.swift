@@ -149,7 +149,7 @@ class FlowBoxBaseVC: BaseVC {
                     .width(width)
                     .height(height)
                     .padding(all: 10)
-                    .margin(all: 20)
+                    .margin(all: 10)
                     .hSpace(hSpace)
                     .vSpace(vSpace)
                     .justifyContent(justifyContent)

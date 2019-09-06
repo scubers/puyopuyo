@@ -91,6 +91,11 @@ public class State<Value>: Outputing, Inputing {
     
     private var onDestroy: () -> Void = {}
     
+    /// 返回一个没有初始值的state，此时如果调用value方法会崩溃
+    public static func unstable() -> State<Value> {
+        return State<Value>()
+    }
+    
     public func resend() {
         input(value: value)
     }

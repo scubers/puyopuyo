@@ -9,7 +9,8 @@ import Foundation
 
 public class FlowRegulator: FlatRegulator {
     
-    public var arrange: Int = 0
+    /// 每排的数量，若设置为0，则根据内容排列，性能较指定数量低，若非必要，可以指定数量
+    public var arrange: Int = 1
     
     public var vSpace: CGFloat = 0
     public var hSpace: CGFloat = 0
