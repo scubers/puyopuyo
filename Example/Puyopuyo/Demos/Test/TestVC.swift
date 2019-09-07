@@ -34,14 +34,28 @@ class TestVC: BaseVC {
 
         vRoot.attach {
             
-            for idx in 0..<5 {
-                Label("\(idx)").attach($0)
-                    .width(40 + CGFloat(idx) * 4)
-                    .height(on: Simulate.ego.width)
-            }
+            VFlow(count: 0).attach($0) {
+                Label("1").attach($0)
+                    .size(50, 50)
+                Label("1").attach($0)
+                    .size(50, 50)
+                Label("1").attach($0)
+                    .size(50, 50)
+                
+                Label("2").attach($0)
+                    .size(.fill, 60)
+                    .margin(right: 10)
+                
+                Label("3").attach($0)
+                    .size(.fill, 60)
+                
+                Label("4").attach($0)
+                    .size(40, 60)
+                }
+                .space(20)
+                .size(.fill, .wrap)
 
         }
-        .format(.avg)
 
     }
     

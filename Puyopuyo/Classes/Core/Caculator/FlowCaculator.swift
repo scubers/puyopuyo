@@ -94,8 +94,15 @@ class FlowCaculator {
             let subCalSize = m.caculate(byParent: Measure()).getCalSize(by: regulator.direction)
             let subCalMargin = CalEdges(insets: m.margin, direction: regulator.direction)
             let subCrossSize = subCalSize.cross
+            
+            let space = CGFloat(min(1, currentLine.count)) * getOppsiteSpace()
             // 计算当前累计的最大cross
-            maxCross += (getLength(from: subCrossSize) + (CGFloat(min(1, currentLine.count)) * getOppsiteSpace()) + subCalMargin.crossFixed)
+            if subCrossSize.isRatio && maxCross + space + subCalMargin.crossFixed < totalCross {
+                // 还有剩余空间
+                maxCross = totalCross
+            } else {
+                maxCross += (getLength(from: subCrossSize) + space + subCalMargin.crossFixed)
+            }
             
             if maxCross > totalCross { // 内容超出
                 if currentLine.isEmpty {
