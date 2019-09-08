@@ -51,7 +51,7 @@ extension NSObject {
 
 extension UIView {
     
-    public func py_boundsState() -> State<CGRect> {
+    public func py_boundsState() -> SimpleOutput<CGRect> {
         let s = State<CGRect>(.zero)
         let id = UUID().description
         py_addObserver(for: #keyPath(UIView.bounds), id: id, block: { (rect: CGRect?) in
@@ -60,7 +60,7 @@ extension UIView {
         return s.yo.distinct()
     }
     
-    public func py_centerState() -> State<CGPoint> {
+    public func py_centerState() -> SimpleOutput<CGPoint> {
         let s = State<CGPoint>(.zero)
         let id = UUID().description
         py_addObserver(for: #keyPath(UIView.center), id: id, block: { (point: CGPoint?) in
@@ -69,7 +69,7 @@ extension UIView {
         return s.yo.distinct()
     }
     
-    public func py_frameStateByBoundsCenter() -> State<CGRect> {
+    public func py_frameStateByBoundsCenter() -> SimpleOutput<CGRect> {
         let s = State(CGRect.zero)
         py_addObserver(for: #keyPath(UIView.bounds), id: UUID().description, block: { [weak self] (_: CGRect?) in
             if let self = self {
@@ -82,10 +82,10 @@ extension UIView {
             }
         })
         // 因为这里是合并，不知道为何不能去重
-        return s //.distinct()
+        return s.yo.filter({_ in true})
     }
     
-    public func py_frameStateByKVO() -> State<CGRect> {
+    public func py_frameStateByKVO() -> SimpleOutput<CGRect> {
         let s = State<CGRect>(.zero)
         py_addObserver(for: #keyPath(UIView.frame), id: UUID().description, block: { (rect: CGRect?) in
             if let value = rect {

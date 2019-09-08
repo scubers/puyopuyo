@@ -18,9 +18,9 @@ class HBoxVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let text1: _St<String?> = one.yo.map({ $0.description })
-        let text2: _St<String?> = two.yo.map({ $0.description })
-        let text3: _St<String?> = three.yo.map({ $0.description })
+        let text1: SimpleOutput<String?> = one.yo.map({ $0.description })
+        let text2: SimpleOutput<String?> = two.yo.map({ $0.description })
+        let text3: SimpleOutput<String?> = three.yo.map({ $0.description })
         
         HBox().attach(vRoot) {
             Label("1").attach($0)

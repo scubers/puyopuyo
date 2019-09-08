@@ -20,6 +20,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.rootViewController = UINavigationController(rootViewController: MenuVC())
         window?.makeKeyAndVisible()
+        
+//        let output = SimpleOutput<Int> { (input) in
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+//                for idx in 0..<10 {
+//                    input.input(value: idx)
+//                }
+//            })
+//        }
+        
+//        let state = State<Int>(0)
+        let state = SimpleOutput<Int> { (input) -> Unbinder in
+            input.input(value: 100)
+            return Unbinders.create()
+        }
+        
+        _ = state.yo.test_map({ $0 * 2 }).outputing {
+            print($0)
+        }
+        
+        for idx in 1...10 {
+//            state.value = idx
+            
+        }
 
         return true
     }

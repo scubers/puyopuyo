@@ -16,6 +16,9 @@ public class Unbinders {
     public static func create(_ block: @escaping () -> Void) -> Unbinder {
         return UnbinderImpl(block)
     }
+    public static func create() -> Unbinder {
+        return UnbinderImpl({})
+    }
 }
 
 public protocol Outputing: PuyoExt {
@@ -48,7 +51,45 @@ extension Outputing {
 extension Outputing where OutputType == Self {
     public func outputing(_ block: @escaping (OutputType) -> Void) -> Unbinder {
         block(self)
-        return Unbinders.create {}
+        return Unbinders.create()
+    }
+}
+
+public struct SimpleInput<T>: Inputing {
+    public typealias InputType = T
+    public func input(value: SimpleInput<T>.InputType) {
+        action(value)
+    }
+    private var action: (T) -> Void
+    public init(_ output: @escaping (T) -> Void) {
+        self.action = output
+    }
+}
+
+
+public class SimpleOutput<Value>: Outputing {
+    
+    public typealias OutputType = Value
+    
+    private var gen: (SimpleInput<Value>) -> Unbinder = { _ in Unbinders.create {} }
+    
+    public init(_ block: @escaping (SimpleInput<Value>) -> Unbinder) {
+        gen = block
+    }
+    
+    public init<T: Outputing>(from: T) where T.OutputType == Value {
+        gen = { (input: SimpleInput<Value>) -> Unbinder in
+            return from.outputing({ (x) in
+                input.input(value: x)
+            })
+        }
+    }
+    
+    public func outputing(_ block: @escaping (Value) -> Void) -> Unbinder {
+        let input = SimpleInput<Value> { x in
+            block(x)
+        }
+        return gen(input)
     }
 }
 
@@ -135,7 +176,11 @@ public class State<Value>: Outputing, Inputing {
 extension Yo where Base: Outputing {
     
     public func state() -> State<Base.OutputType> {
-        return map({$0})
+        let new = State<Base.OutputType>()
+        _ = base.outputing({ (v) in
+            new.input(value: v)
+        })
+        return new
     }
     
     public func some() -> State<Base.OutputType?> {
@@ -146,45 +191,68 @@ extension Yo where Base: Outputing {
         return new
     }
     
-    public func map<R>(_ block: @escaping (Base.OutputType) -> R) -> State<R> {
-        let new = State<R>()
-        _ = base.outputing { (value) in
-            new.input(value: block(value))
-        }
-        return new
+    public func map<R>(_ block: @escaping (Base.OutputType) -> R) -> SimpleOutput<R> {
+        return SimpleOutput<R>({ (input) -> Unbinder in
+            return self.base.outputing({ (x) in
+                input.input(value: block(x))
+            })
+        })
     }
     
-    public func filter(_ filter: @escaping (Base.OutputType) -> Bool) -> State<Base.OutputType> {
-        let new = State<Base.OutputType>()
-        _ = base.outputing { (v) in
-            if filter(v) {
-                new.input(value: v)
-            }
-        }
-        return new
+    public func filter(_ filter: @escaping (Base.OutputType) -> Bool) -> SimpleOutput<Base.OutputType> {
+        return SimpleOutput<Base.OutputType>({ (i) -> Unbinder in
+            return self.base.outputing({ (x) in
+                if filter(x) {
+                    i.input(value: x)
+                }
+            })
+        })
     }
     
-    public func ignore(_ condition: @escaping (Base.OutputType, Base.OutputType) -> Bool) -> State<Base.OutputType> {
-        let new = State<Base.OutputType>()
+    public func ignore(_ condition: @escaping (Base.OutputType, Base.OutputType) -> Bool) -> SimpleOutput<Base.OutputType> {
         var last: Base.OutputType!
-        _ = base.outputing { (v) in
-            guard last != nil else {
-                last = v
-                new.input(value: v)
-                return
-            }
-            let ignore = condition(last, v)
-            last = v
-            if !ignore {
-                new.input(value: v)
-            }
-        }
-        return new
+        return SimpleOutput<Base.OutputType>({ (i) -> Unbinder in
+            return self.base.outputing({ (x) in
+                guard last != nil else {
+                    last = x
+                    i.input(value: x)
+                    return
+                }
+                let ignore = condition(last, x)
+                last = x
+                if !ignore {
+                    i.input(value: x)
+                }
+            })
+        })
+//        let new = State<Base.OutputType>()
+//        var last: Base.OutputType!
+//        _ = base.outputing { (v) in
+//            guard last != nil else {
+//                last = v
+//                new.input(value: v)
+//                return
+//            }
+//            let ignore = condition(last, v)
+//            last = v
+//            if !ignore {
+//                new.input(value: v)
+//            }
+//        }
+//        return new
+    }
+    
+    public func test_map<R>(_ block: @escaping (Base.OutputType) -> R) -> SimpleOutput<R> {
+        return SimpleOutput<R>({ (input) in
+            return self.base.outputing({ (v) in
+                input.input(value: block(v))
+            })
+        })
     }
 }
 
 extension Yo where Base: Outputing, Base.OutputType: Equatable {
-    public func distinct() -> State<Base.OutputType> {
+    public func distinct() -> SimpleOutput<Base.OutputType> {
         return ignore({ $0 == $1 })
     }
 }
@@ -244,17 +312,6 @@ extension NSObject {
         }
     }
     
-}
-
-public struct SimpleInput<T>: Inputing {
-    public typealias InputType = T
-    public func input(value: SimpleInput<T>.InputType) {
-        action(value)
-    }
-    private var action: (T) -> Void
-    public init(_ output: @escaping (T) -> Void) {
-        self.action = output
-    }
 }
 
 extension Optional: Outputing { public typealias OutputType = Optional<Wrapped> }

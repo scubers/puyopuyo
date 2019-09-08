@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol ValueModifiable {
-    func modifyValue() -> State<CGFloat>
+    func modifyValue() -> SimpleOutput<CGFloat>
 }
 
 public struct Simulate {
@@ -96,7 +96,7 @@ extension Simulate: ValueModifiable {
         return s
     }
     
-    public func modifyValue() -> State<CGFloat> {
+    public func modifyValue() -> SimpleOutput<CGFloat> {
         let transform = self.transform
         let actions = self.actions
         return
@@ -117,7 +117,7 @@ extension ValueModifiable {
 }
 
 extension State: ValueModifiable where Value == CGFloat {
-    public func modifyValue() -> State<CGFloat> {
-        return self
+    public func modifyValue() -> SimpleOutput<CGFloat> {
+        return self.yo.map({$0})
     }
 }
