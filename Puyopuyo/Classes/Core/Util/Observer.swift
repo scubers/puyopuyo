@@ -32,19 +32,23 @@ class _Observer<Value>: NSObject {
     #endif
 }
 
-extension NSObject {
-    public func py_addObserver<Value: Equatable>(for keyPath: String, id: String, block: @escaping (Value?) -> Void) {
-        var lastValue: Value?
-        let observer = _Observer<Value>(key: keyPath) { (rect) in
-            guard rect != lastValue else { return }
-            lastValue = rect
-            block(lastValue)
+extension NSObject {    
+    public func py_observing<Value: Equatable>(for keyPath: String) -> SimpleOutput<Value?> {
+        return SimpleOutput<Value?> { (i) -> Unbinder in
+            var lastValue: Value?
+            let observer = _Observer<Value>(key: keyPath) { (rect) in
+                guard rect != lastValue else { return }
+                lastValue = rect
+                i.input(value: rect)
+            }
+            let unbinder = Unbinders.create { [unowned(unsafe) self] in
+                self.removeObserver(observer, forKeyPath: keyPath)
+            }
+            self.addObserver(observer, forKeyPath: keyPath, options: [.new, .initial], context: nil)
+            self.py_setUnbinder(unbinder, for: UUID().description)
+            return unbinder
         }
-        let unbinder = Unbinders.create { [unowned(unsafe) self] in
-            self.removeObserver(observer, forKeyPath: keyPath)
-        }
-        addObserver(observer, forKeyPath: keyPath, options: [.new, .initial], context: nil)
-        py_setUnbinder(unbinder, for: id)
+        .yo.distinct()
     }
     
 }
@@ -52,46 +56,36 @@ extension NSObject {
 extension UIView {
     
     public func py_boundsState() -> SimpleOutput<CGRect> {
-        let s = State<CGRect>(.zero)
-        let id = UUID().description
-        py_addObserver(for: #keyPath(UIView.bounds), id: id, block: { (rect: CGRect?) in
-            s.input(value: rect ?? .zero)
-        })
-        return s.yo.distinct()
+        return
+            py_observing(for: #keyPath(UIView.bounds))
+                .yo.map({ (rect: CGRect?) in rect ?? .zero})
+                .yo.distinct()
     }
     
     public func py_centerState() -> SimpleOutput<CGPoint> {
-        let s = State<CGPoint>(.zero)
-        let id = UUID().description
-        py_addObserver(for: #keyPath(UIView.center), id: id, block: { (point: CGPoint?) in
-            s.input(value: point ?? .zero)
-        })
-        return s.yo.distinct()
+        return
+            py_observing(for: #keyPath(UIView.center))
+                .yo.map({ (x: CGPoint?) in x ?? .zero})
+                .yo.distinct()
     }
     
     public func py_frameStateByBoundsCenter() -> SimpleOutput<CGRect> {
-        let s = State(CGRect.zero)
-        py_addObserver(for: #keyPath(UIView.bounds), id: UUID().description, block: { [weak self] (_: CGRect?) in
-            if let self = self {
-                s.input(value: self.frame)
-            }
-        })
-        py_addObserver(for: #keyPath(UIView.center), id: UUID().description, block: { [weak self] (_: CGPoint?) in
-            if let self = self {
-                s.input(value: self.frame)
-            }
-        })
+        
+        let bounds = py_boundsState().yo.map({_ in CGRect.zero})
+        let center = py_centerState().yo.map({_ in CGRect.zero})
+        return
+            SimpleOutput.merge([bounds, center])
+                .yo.map({ [weak self] (_) -> CGRect in
+                    guard let self = self else { return .zero }
+                    return self.frame
+                })
         // 因为这里是合并，不知道为何不能去重
-        return s.yo.filter({_ in true})
     }
     
     public func py_frameStateByKVO() -> SimpleOutput<CGRect> {
-        let s = State<CGRect>(.zero)
-        py_addObserver(for: #keyPath(UIView.frame), id: UUID().description, block: { (rect: CGRect?) in
-            if let value = rect {
-                s.input(value: value)
-            }
-        })
-        return s.yo.distinct()
+        return
+            py_observing(for: #keyPath(UIView.frame))
+                .yo.map({ (x: CGRect?) in x ?? .zero})
+                .yo.distinct()
     }
 }

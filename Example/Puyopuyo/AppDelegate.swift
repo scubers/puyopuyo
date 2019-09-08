@@ -21,29 +21,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = UINavigationController(rootViewController: MenuVC())
         window?.makeKeyAndVisible()
         
-//        let output = SimpleOutput<Int> { (input) in
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-//                for idx in 0..<10 {
-//                    input.input(value: idx)
-//                }
-//            })
-//        }
-        
-//        let state = State<Int>(0)
-        let state = SimpleOutput<Int> { (input) -> Unbinder in
-            input.input(value: 100)
-            return Unbinders.create()
-        }
-        
-        _ = state.yo.test_map({ $0 * 2 }).outputing {
-            print($0)
-        }
-        
-        for idx in 1...10 {
-//            state.value = idx
-            
-        }
 
+        let v = UIView()
+        let b = v.py_boundsState()
+        let b1 = v.py_frameStateByKVO()
+        let binder = SimpleOutput.merge([b, b1]).yo.distinct().outputing { (rect) in
+            print(rect)
+        }
+        
+        v.frame = CGRect(x: 1, y: 1, width: 1, height: 1)
+        v.bounds = CGRect(x: 9, y: 9, width: 9, height: 9)
+        
         return true
     }
 

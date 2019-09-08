@@ -11,55 +11,56 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func backgroundColor<S: Outputing>(_ color: S) -> Self where S.OutputType == UIColor? {
-        view.py_setUnbinder(color.safeBind(view, { (v, a) in
+        color.safeBind(to: view, id: #function) { (v, a) in
             v.backgroundColor = a
-        }), for: #function)
+        }
         return self
     }
     
     @discardableResult
     public func contentMode<S: Outputing>(_ mode: S) -> Self where S.OutputType == UIView.ContentMode {
-        view.py_setUnbinder(mode.safeBind(view, { (v, a) in
+        mode.safeBind(to: view, id: #function) { (v, a) in
             v.contentMode = a
-        }), for: #function)
+        }
         return self
     }
     
     @discardableResult
     public func clipToBounds<S: Outputing>(_ clip: S) -> Self where S.OutputType == Bool {
-        view.py_setUnbinder(clip.safeBind(view, { (v, a) in
+        clip.safeBind(to: view, id: #function) { (v, a) in
             v.clipsToBounds = a
-        }), for: #function)
+        }
         return self
     }
     
     @discardableResult
     public func cornerRadius<S: Outputing>(_ radius: S) -> Self where S.OutputType == CGFloat {
-        view.py_setUnbinder(radius.safeBind(view, { (v, a) in
+        radius.safeBind(to: view, id: #function) { (v, a) in
             v.layer.cornerRadius = a
             v.clipsToBounds = true
-        }), for: #function)
+        }
         return self
     }
     
     @discardableResult
     public func borderWidth<S: Outputing>(_ width: S) -> Self where S.OutputType == CGFloat {
-        view.py_setUnbinder(width.safeBind(view, { (v, a) in
+        width.safeBind(to: view, id: #function) { (v, a) in
             v.layer.borderWidth = a
-        }), for: #function)
+        }
         return self
     }
     
     @discardableResult
     public func borderColor<S: Outputing>(_ color: S) -> Self where S.OutputType == UIColor? {
-        view.py_setUnbinder(color.safeBind(view, { (v, a) in
+        color.safeBind(to: view, id: #function) { (v, a) in
             v.layer.borderColor = a?.cgColor
-        }), for: #function)
+        }
         return self
     }
     
     @discardableResult
     public func alpha<S: Outputing>(_ alpha: S) -> Self where S.OutputType == CGFloat {
+        
         view.py_setUnbinder(alpha.safeBind(view, { (v, a) in
             v.alpha = a
         }), for: #function)

@@ -11,7 +11,7 @@ public protocol Unbinder {
     func py_unbind()
 }
 
-public class Unbinders {
+public struct Unbinders {
     private init() {}
     public static func create(_ block: @escaping () -> Void) -> Unbinder {
         return UnbinderImpl(block)
@@ -38,6 +38,18 @@ extension Outputing {
                 action(object, s)
             }
         }
+    }
+    
+    /// 对象销毁时则移除绑定
+    @discardableResult
+    public func safeBind<Object: NSObject>(to object: Object, id: String, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
+        let unbinder = outputing { [weak object] (v) in
+            if let object = object {
+                action(object, v)
+            }
+        }
+        object.py_setUnbinder(unbinder, for: id)
+        return unbinder
     }
     
     public func send<Input: Inputing>(to input: Input) -> Unbinder where Input.InputType == OutputType {
@@ -67,7 +79,7 @@ public struct SimpleInput<T>: Inputing {
 }
 
 
-public class SimpleOutput<Value>: Outputing {
+public struct SimpleOutput<Value>: Outputing {
     
     public typealias OutputType = Value
     
@@ -90,6 +102,19 @@ public class SimpleOutput<Value>: Outputing {
             block(x)
         }
         return gen(input)
+    }
+    
+    public static func merge<T: Outputing>(_ outputs: [T]) -> SimpleOutput<Value> where T.OutputType == Value {
+        return SimpleOutput<Value> { (i) -> Unbinder in
+            let unbinders = outputs.map({ (o) -> Unbinder in
+                return o.outputing({ (v) in
+                    i.input(value: v)
+                })
+            })
+            return Unbinders.create {
+                unbinders.forEach({ $0.py_unbind() })
+            }
+        }
     }
 }
 
@@ -170,7 +195,6 @@ public class State<Value>: Outputing, Inputing {
             self.block = block
         }
     }
-
 }
 
 extension Yo where Base: Outputing {
@@ -183,12 +207,16 @@ extension Yo where Base: Outputing {
         return new
     }
     
-    public func some() -> State<Base.OutputType?> {
-        let new = State<Base.OutputType?>(nil)
-        _ = base.outputing { (value) in
-            new.input(value: value)
-        }
+    public func someState() -> State<Base.OutputType?> {
+        let new = State<Base.OutputType?>()
+        _ = base.outputing({ (v) in
+            new.input(value: v)
+        })
         return new
+    }
+    
+    public func some() -> SimpleOutput<Base.OutputType?> {
+        return map({ $0 })
     }
     
     public func map<R>(_ block: @escaping (Base.OutputType) -> R) -> SimpleOutput<R> {
@@ -225,30 +253,8 @@ extension Yo where Base: Outputing {
                 }
             })
         })
-//        let new = State<Base.OutputType>()
-//        var last: Base.OutputType!
-//        _ = base.outputing { (v) in
-//            guard last != nil else {
-//                last = v
-//                new.input(value: v)
-//                return
-//            }
-//            let ignore = condition(last, v)
-//            last = v
-//            if !ignore {
-//                new.input(value: v)
-//            }
-//        }
-//        return new
     }
     
-    public func test_map<R>(_ block: @escaping (Base.OutputType) -> R) -> SimpleOutput<R> {
-        return SimpleOutput<R>({ (input) in
-            return self.base.outputing({ (v) in
-                input.input(value: block(v))
-            })
-        })
-    }
 }
 
 extension Yo where Base: Outputing, Base.OutputType: Equatable {
@@ -325,14 +331,6 @@ extension CGSize: Outputing { public typealias OutputType = CGSize }
 extension Array: Outputing { public typealias OutputType = Array }
 extension Dictionary: Outputing { public typealias OutputType = Dictionary }
 
-extension UIImage: Outputing { public typealias OutputType = UIImage }
-extension UIColor: Outputing { public typealias OutputType = UIColor }
-extension UIFont: Outputing { public typealias OutputType = UIFont }
-extension UIControl.State: Outputing { public typealias OutputType = UIControl.State }
-extension UIControl.Event: Outputing { public typealias OutputType = UIControl.Event }
-extension UIView.ContentMode: Outputing { public typealias OutputType = UIView.ContentMode }
-extension NSTextAlignment: Outputing { public typealias OutputType = NSTextAlignment }
-
 extension Int: Outputing { public typealias OutputType = Int }
 extension CGFloat: Outputing { public typealias OutputType = CGFloat }
 extension Double: Outputing { public typealias OutputType = Double }
@@ -342,3 +340,11 @@ extension Int32: Outputing { public typealias OutputType = Int32 }
 extension UInt32: Outputing { public typealias OutputType = UInt32 }
 extension Int64: Outputing { public typealias OutputType = Int64 }
 extension UInt64: Outputing { public typealias OutputType = UInt64 }
+
+extension UIImage: Outputing { public typealias OutputType = UIImage }
+extension UIColor: Outputing { public typealias OutputType = UIColor }
+extension UIFont: Outputing { public typealias OutputType = UIFont }
+extension UIControl.State: Outputing { public typealias OutputType = UIControl.State }
+extension UIControl.Event: Outputing { public typealias OutputType = UIControl.Event }
+extension UIView.ContentMode: Outputing { public typealias OutputType = UIView.ContentMode }
+extension NSTextAlignment: Outputing { public typealias OutputType = NSTextAlignment }

@@ -20,14 +20,14 @@ extension Puyo where T: UIView {
     @discardableResult
     public func size<S: Outputing>(_ width: S?, _ height: S?) -> Self where S.OutputType == SizeDescription {
         if let width = width {
-            view.py_setUnbinder(width.safeBind(view, { (v, w) in
-                PuyoHelper.size(for: v, width: w, height: nil)
-            }), for: "\(#function)_width")
+            width.safeBind(to: view, id: "\(#function)_width") { (v, a) in
+                PuyoHelper.size(for: v, width: a, height: nil)
+            }
         }
         if let height = height {
-            view.py_setUnbinder(height.safeBind(view, { (v, h) in
-                PuyoHelper.size(for: v, width: nil, height: h)
-            }), for: "\(#function)_height")
+            height.safeBind(to: view, id: "\(#function)_height") { (v, a) in
+                PuyoHelper.size(for: v, width: nil, height: a)
+            }
         }
         return self
     }
