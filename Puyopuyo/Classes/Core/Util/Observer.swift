@@ -32,7 +32,7 @@ class _Observer<Value>: NSObject {
     #endif
 }
 
-extension NSObject {    
+extension NSObject {
     public func py_observing<Value: Equatable>(for keyPath: String) -> SimpleOutput<Value?> {
         return SimpleOutput<Value?> { (i) -> Unbinder in
             var lastValue: Value?

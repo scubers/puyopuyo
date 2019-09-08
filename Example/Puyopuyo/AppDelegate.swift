@@ -21,7 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = UINavigationController(rootViewController: MenuVC())
         window?.makeKeyAndVisible()
         
-
         let v = UIView()
         let b = v.py_boundsState()
         let b1 = v.py_frameStateByKVO()

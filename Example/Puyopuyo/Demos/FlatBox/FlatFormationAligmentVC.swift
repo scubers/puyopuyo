@@ -11,13 +11,13 @@ import Puyopuyo
 
 class FlatFormationAligmentVC: BaseVC {
     
-    let formation = _St<Format>(.sides)
-    let aligment = _St<Aligment>(.center)
-    let text = _St<String?>(nil)
-    let reversed = _St<Bool>(false)
+    let formation = State<Format>(.sides)
+    let aligment = State<Aligment>(.center)
+    let text = State<String?>(nil)
+    let reversed = State<Bool>(false)
     
-    let frame = _St<CGRect>(.zero)
-    let center = _St<CGPoint>(.zero)
+    let frame = State<CGRect>(.zero)
+    let center = State<CGPoint>(.zero)
     
     override func configView() {
         _ = formation.outputing { [weak self] (f) in

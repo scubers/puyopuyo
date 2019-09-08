@@ -11,9 +11,9 @@ import Puyopuyo
 
 class HBoxVC: BaseVC {
     
-    let one = _St<Aligment>(.top)
-    let two = _St<Aligment>(.center)
-    let three = _St<Aligment>(.bottom)
+    let one = State<Aligment>(.top)
+    let two = State<Aligment>(.center)
+    let three = State<Aligment>(.bottom)
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -136,7 +136,7 @@ class TestVC: BaseVC {
             .size(.fill, .fill)
             .tg_gravity(TGGravity.horz.right)
             .tg_size(.fill, .fill)
-            .activated(_St(false))
+            .activated(State(false))
             .attach(vRoot)
     }
     
