@@ -11,7 +11,7 @@ public struct SimpleOutput<Value>: Outputing {
     
     public typealias OutputType = Value
     
-    private var action: (SimpleInput<Value>) -> Unbinder = { _ in Unbinders.create() }
+    private var action: (SimpleInput<Value>) -> Unbinder
     
     public init(_ block: @escaping (SimpleInput<Value>) -> Unbinder) {
         action = block
