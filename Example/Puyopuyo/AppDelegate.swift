@@ -21,25 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = UINavigationController(rootViewController: MenuVC())
         window?.makeKeyAndVisible()
         
-        let tv = UITextView()
-        let output = SimpleOutput<String?> { (input) -> Unbinder in
-            let obj = NotificationCenter.default.addObserver(forName: UITextView.textDidChangeNotification, object: tv, queue: OperationQueue.main) { (noti) in
-                if let tv = noti.object as? UITextView {
-                    input.input(value: tv.text)
-                } else {
-                    input.input(value: nil)
-                }
-            }
-            return Unbinders.create {
-                NotificationCenter.default.removeObserver(obj)
-            }
-        }
-        output.outputing { (string) in
-            print(string)
-        }
-        tv.text = "lksjdflsjfldsjf"
-        
-        
         return true
     }
 

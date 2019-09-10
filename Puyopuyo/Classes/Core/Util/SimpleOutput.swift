@@ -91,6 +91,34 @@ extension Yo where Base: Outputing {
     
 }
 
+
+public protocol AOptionalType {
+    associatedtype WrappedType
+    var aWrappedValue: WrappedType? { get }
+}
+
+extension Optional: AOptionalType {
+    public typealias WrappedType = Wrapped
+    public var aWrappedValue: Wrapped? {
+        return self
+    }
+}
+
+extension Yo where Base: Outputing, Base.OutputType: AOptionalType {
+    public func unwrap(or: Base.OutputType.WrappedType) -> SimpleOutput<Base.OutputType.WrappedType> {
+        return SimpleOutput<Base.OutputType.WrappedType>({ (input) -> Unbinder in
+            return self.base.outputing({ (value) in
+                if let value = value.aWrappedValue {
+                    input.input(value: value)
+                } else {
+                    input.input(value: or)
+                }
+            })
+        })
+    }
+}
+
+
 extension Yo where Base: Outputing, Base.OutputType: Equatable {
     public func distinct() -> SimpleOutput<Base.OutputType> {
         return ignore({ $0 == $1 })

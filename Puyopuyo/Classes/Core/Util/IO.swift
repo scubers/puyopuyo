@@ -71,6 +71,7 @@ extension Outputing {
     }
 }
 
+
 extension Outputing where OutputType == Self {
     public func outputing(_ block: @escaping (OutputType) -> Void) -> Unbinder {
         block(self)
