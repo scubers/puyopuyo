@@ -70,35 +70,6 @@ extension Yo where Base: Outputing {
     }
 }
 
-extension Outputing {
-    public func safeBind<Object: AnyObject>(_ object: Object, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
-        return outputing { [weak object] (s) in
-            if let object = object {
-                action(object, s)
-            }
-        }
-    }
-    
-    /// 对象销毁时则移除绑定
-    @discardableResult
-    public func safeBind<Object: NSObject>(to object: Object, id: String, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
-        let unbinder = outputing { [weak object] (v) in
-            if let object = object {
-                action(object, v)
-            }
-        }
-        object.py_setUnbinder(unbinder, for: id)
-        return unbinder
-    }
-    
-    public func send<Input: Inputing>(to input: Input) -> Unbinder where Input.InputType == OutputType {
-        return outputing { (v) in
-            input.input(value: v)
-        }
-    }
-    
-}
-
 extension Outputing where OutputType == Self {
     public func outputing(_ block: @escaping (OutputType) -> Void) -> Unbinder {
         block(self)

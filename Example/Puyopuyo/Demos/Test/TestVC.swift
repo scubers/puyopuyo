@@ -31,7 +31,7 @@ class TestVC: BaseVC {
     
     let state = State<Visibility>(.visible)
     func configTestView() {
-
+        
         vRoot.attach {
             
             let state = "".yo.someState()
@@ -43,6 +43,7 @@ class TestVC: BaseVC {
             
             UITextField().attach($0)
                 .resizeByContent()
+                .textAligment(NSTextAlignment.center)
                 .size(.wrap(add: 10, min: 50), 50)
                 .onText(state)
                 .onEvent(.editingDidBegin, SimpleInput { _ in
@@ -61,8 +62,8 @@ class TestVC: BaseVC {
                 }
                 .size(.fill, 50)
 
-        }
-        .space(10)
+            }
+            .space(10)
 
     }
     
@@ -129,7 +130,7 @@ class TestVC: BaseVC {
             
             for (idx, label) in labels.enumerated() {
                 label.attach(x)
-                    .text("\(idx)")
+                    .text("\(idx)".yo.some())
                     .tg_size(50 + idx * 3, 50 + idx * 3 + 1)
                 
                 //                if idx % 3 == 2 && idx != 2 {

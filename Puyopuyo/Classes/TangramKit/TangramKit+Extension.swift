@@ -92,7 +92,7 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func tg_visibility<S: Outputing>(_ visibility: S) -> Self where S.OutputType == TGVisibility {
-        view.py_setUnbinder(visibility.safeBind(view, { (v, a) in
+        view.py_setUnbinder(visibility.yo.safeBind(view, { (v, a) in
             v.tg_visibility = a
         }), for: #function)
         return self

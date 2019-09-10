@@ -10,21 +10,21 @@ import Foundation
 // MARK: - BoxView
 extension Puyo where T: BoxView {
     @discardableResult
-    public func padding(all: CGFloat? = nil, top: CGFloat? = nil, left: CGFloat? = nil, bottom: CGFloat? = nil, right: CGFloat? = nil) -> Self {
+    public func padding(all: CGFloatable? = nil, top: CGFloatable? = nil, left: CGFloatable? = nil, bottom: CGFloatable? = nil, right: CGFloatable? = nil) -> Self {
         if let all = all {
-            view.regulator.padding = UIEdgeInsets(top: all, left: all, bottom: all, right: all)
+            view.regulator.padding = UIEdgeInsets(top: all.cgFloatValue, left: all.cgFloatValue, bottom: all.cgFloatValue, right: all.cgFloatValue)
         }
-        if let top = top { view.regulator.padding.top = top }
-        if let left = left { view.regulator.padding.left = left }
-        if let bottom = bottom { view.regulator.padding.bottom = bottom }
-        if let right = right { view.regulator.padding.right = right }
-        setNeedsLayout()
+        if let top = top { view.regulator.padding.top = top.cgFloatValue }
+        if let left = left { view.regulator.padding.left = left.cgFloatValue }
+        if let bottom = bottom { view.regulator.padding.bottom = bottom.cgFloatValue }
+        if let right = right { view.regulator.padding.right = right.cgFloatValue }
+        view.py_setNeedsLayout()
         return self
     }
     
     @discardableResult
     public func padding<O: Outputing>(_ padding: O) -> Self where O.OutputType == UIEdgeInsets {
-        view.py_setUnbinder(padding.safeBind(view, { (v, i) in
+        view.py_setUnbinder(padding.yo.safeBind(view, { (v, i) in
             v.regulator.padding = i
             v.py_setNeedsLayout()
         }), for: #function)
@@ -40,7 +40,7 @@ extension Puyo where T: BoxView {
     
     @discardableResult
     public func justifyContent<O: Outputing>(_ aligment: O) -> Self where O.OutputType == Aligment {
-        view.py_setUnbinder(aligment.safeBind(view, { (v, a) in
+        view.py_setUnbinder(aligment.yo.safeBind(view, { (v, a) in
             v.regulator.justifyContent = a
             v.py_setNeedsLayout()
         }), for: #function)
@@ -95,16 +95,9 @@ extension Puyo where T: BoxView {
 extension Puyo where T: FlatBox {
     
     @discardableResult
-    public func space(_ space: CGFloat) -> Self {
-        view.regulator.space = space
-        setNeedsLayout()
-        return self
-    }
-    
-    @discardableResult
-    public func space<O: Outputing>(_ space: O) -> Self where O.OutputType == CGFloat {
-        view.py_setUnbinder(space.safeBind(view, { (v, s) in
-            v.regulator.space = s
+    public func space<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
+        view.py_setUnbinder(space.yo.safeBind(view, { (v, s) in
+            v.regulator.space = s.cgFloatValue
             v.py_setNeedsLayout()
         }), for: #function)
         return self
@@ -119,7 +112,7 @@ extension Puyo where T: FlatBox {
     
     @discardableResult
     public func format<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
-        view.py_setUnbinder(formation.safeBind(view, { (v, f) in
+        view.py_setUnbinder(formation.yo.safeBind(view, { (v, f) in
             v.regulator.format = f
             v.py_setNeedsLayout()
         }), for: #function)
@@ -135,7 +128,7 @@ extension Puyo where T: FlatBox {
     
     @discardableResult
     public func direction<O: Outputing>(_ direction: O) -> Self where O.OutputType == Direction {
-        view.py_setUnbinder(direction.safeBind(view, { (v, d) in
+        view.py_setUnbinder(direction.yo.safeBind(view, { (v, d) in
             v.regulator.direction = d
             v.py_setNeedsLayout()
         }), for: #function)
@@ -151,7 +144,7 @@ extension Puyo where T: FlatBox {
     
     @discardableResult
     public func reverse<O: Outputing>(_ reverse: O) -> Self where O.OutputType == Bool {
-        view.py_setUnbinder(reverse.safeBind(view, { (v, r) in
+        view.py_setUnbinder(reverse.yo.safeBind(view, { (v, r) in
             v.regulator.reverse = r
             v.py_setNeedsLayout()
         }), for: #function)
@@ -164,15 +157,8 @@ extension Puyo where T: FlatBox {
 extension Puyo where T: FlowBox {
     
     @discardableResult
-    public func arrangeCount(_ count: Int) -> Self {
-        view.regulator.arrange = count
-        setNeedsLayout()
-        return self
-    }
-    
-    @discardableResult
     public func arrangeCount<O: Outputing>(_ count: O) -> Self where O.OutputType == Int {
-        view.py_setUnbinder(count.safeBind(view, { (v, c) in
+        view.py_setUnbinder(count.yo.safeBind(view, { (v, c) in
             v.regulator.arrange = c
             v.py_setNeedsLayout()
         }), for: #function)
@@ -180,18 +166,18 @@ extension Puyo where T: FlowBox {
     }
     
     @discardableResult
-    public func hSpace<O: Outputing>(_ space: O) -> Self where O.OutputType == CGFloat {
-        view.py_setUnbinder(space.safeBind(view, { (v, s) in
-            v.regulator.hSpace = s
+    public func hSpace<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
+        view.py_setUnbinder(space.yo.safeBind(view, { (v, s) in
+            v.regulator.hSpace = s.cgFloatValue
             v.py_setNeedsLayout()
         }), for: #function)
         return self
     }
     
     @discardableResult
-    public func vSpace<O: Outputing>(_ space: O) -> Self where O.OutputType == CGFloat {
-        view.py_setUnbinder(space.safeBind(view, { (v, s) in
-            v.regulator.vSpace = s
+    public func vSpace<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
+        view.py_setUnbinder(space.yo.safeBind(view, { (v, s) in
+            v.regulator.vSpace = s.cgFloatValue
             v.py_setNeedsLayout()
         }), for: #function)
         return self
@@ -199,7 +185,7 @@ extension Puyo where T: FlowBox {
     
     @discardableResult
     public func hFormat<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
-        view.py_setUnbinder(formation.safeBind(view, { (v, f) in
+        view.py_setUnbinder(formation.yo.safeBind(view, { (v, f) in
             v.regulator.hFormat = f
             v.py_setNeedsLayout()
         }), for: #function)
@@ -208,7 +194,7 @@ extension Puyo where T: FlowBox {
     
     @discardableResult
     public func vFormat<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
-        view.py_setUnbinder(formation.safeBind(view, { (v, f) in
+        view.py_setUnbinder(formation.yo.safeBind(view, { (v, f) in
             v.regulator.vFormat = f
             v.py_setNeedsLayout()
         }), for: #function)

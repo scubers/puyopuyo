@@ -10,7 +10,7 @@ import Foundation
 extension Puyo where T: UIImageView {
     @discardableResult
     public func image<S: Outputing>(_ image: S) -> Self where S.OutputType == UIImage? {
-        view.py_setUnbinder(image.safeBind(view, { (v, a) in
+        view.py_setUnbinder(image.yo.safeBind(view, { (v, a) in
             v.image = a
         }), for: #function)
         return self
