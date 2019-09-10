@@ -13,6 +13,13 @@ public protocol CGFloatable {
 
 extension CGFloat: CGFloatable { public var cgFloatValue: CGFloat { return self } }
 extension Int: CGFloatable { public var cgFloatValue: CGFloat { return CGFloat(self) } }
+extension Int32: CGFloatable { public var cgFloatValue: CGFloat { return CGFloat(self) } }
+extension Int64: CGFloatable { public var cgFloatValue: CGFloat { return CGFloat(self) } }
+extension UInt: CGFloatable { public var cgFloatValue: CGFloat { return CGFloat(self) } }
+extension UInt32: CGFloatable { public var cgFloatValue: CGFloat { return CGFloat(self) } }
+extension UInt64: CGFloatable { public var cgFloatValue: CGFloat { return CGFloat(self) } }
+extension Double: CGFloatable { public var cgFloatValue: CGFloat { return CGFloat(self) } }
+extension Float: CGFloatable { public var cgFloatValue: CGFloat { return CGFloat(self) } }
 
 public class Puyo<T: UIView> {
 
