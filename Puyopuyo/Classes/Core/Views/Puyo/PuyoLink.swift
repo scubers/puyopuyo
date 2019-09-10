@@ -74,4 +74,9 @@ extension UIView: PuyoAttacher {
             superview.setNeedsLayout()
         }
     }
+    func py_setNeedsLayoutIfMayBeWrap() {
+        if py_measure.size.maybeWrap() {
+            py_setNeedsLayout()
+        }
+    }
 }

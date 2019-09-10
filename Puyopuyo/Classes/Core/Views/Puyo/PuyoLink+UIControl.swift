@@ -11,7 +11,7 @@ extension Puyo where T: UIControl {
     
     @discardableResult
     public func addWeakBind<Object: AnyObject>(to object: Object, for event: UIControl.Event, _ binding: @escaping (Object) -> (T) -> Void, unique: Bool = false) -> Self {
-        return self.addAction(for: event, { [weak object] (control) in
+        return addAction(for: event, { [weak object] (control) in
             if let object = object {
                 binding(object)(control)
             }
@@ -20,7 +20,7 @@ extension Puyo where T: UIControl {
     
     @discardableResult
     public func addWeakAction<Object: AnyObject>(to object: Object, for event: UIControl.Event, _ action: @escaping (Object, T) -> Void, unique: Bool = false) -> Self {
-        return self.addAction(for: event, { [weak object] (control) in
+        return addAction(for: event, { [weak object] (control) in
             if let object = object {
                 action(object, control)
             }
@@ -35,6 +35,14 @@ extension Puyo where T: UIControl {
         if unique {
             view.py_setUnbinder(unbinder, for: "py_unique_action_\(event)")
         }
+        return self
+    }
+    
+    @discardableResult
+    public func onEvent<I: Inputing>(_ event: UIControl.Event, _ input: I) -> Self where I.InputType == T {
+        addWeakAction(to: view, for: event, { (_, v) in
+            input.input(value: v)
+        })
         return self
     }
 }

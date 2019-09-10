@@ -34,28 +34,35 @@ class TestVC: BaseVC {
 
         vRoot.attach {
             
-            VFlow(count: 0).attach($0) {
-                Label("1").attach($0)
-                    .size(50, 50)
-                Label("1").attach($0)
-                    .size(50, 50)
-                Label("1").attach($0)
-                    .size(50, 50)
-                
-                Label("2").attach($0)
-                    .size(.fill, 60)
-                    .margin(right: 10)
-                
-                Label("3").attach($0)
-                    .size(.fill, 60)
-                
-                Label("4").attach($0)
-                    .size(40, 60)
+            let state = "".yo.someState()
+            
+            UITextView().attach($0)
+                .size(.fill, .wrap(min: 30))
+                .font(UIFont.systemFont(ofSize: 14))
+                .onText(state)
+            
+            UITextField().attach($0)
+                .resizeByContent()
+                .size(.wrap(add: 10, min: 50), 50)
+                .onText(state)
+                .onEvent(.editingDidBegin, SimpleInput { _ in
+                    print("begin")
+                })
+                .onEvent(.editingDidEnd, SimpleInput { _ in
+                    print("end")
+                })
+            
+            HLine().attach($0) {
+                UITextField().attach($0) {
+                    $0.tg_width >= 50
+                    $0.tg_height.equal(50)
                 }
-                .space(20)
-                .size(.fill, .wrap)
+                .onText(state)
+                }
+                .size(.fill, 50)
 
         }
+        .space(10)
 
     }
     

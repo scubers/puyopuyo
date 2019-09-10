@@ -21,15 +21,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = UINavigationController(rootViewController: MenuVC())
         window?.makeKeyAndVisible()
         
-        let v = UIView()
-        let b = v.py_boundsState()
-        let b1 = v.py_frameStateByKVO()
-        let binder = SimpleOutput.merge([b, b1]).yo.distinct().outputing { (rect) in
-            print(rect)
+        let tv = UITextView()
+        let output = SimpleOutput<String?> { (input) -> Unbinder in
+            let obj = NotificationCenter.default.addObserver(forName: UITextView.textDidChangeNotification, object: tv, queue: OperationQueue.main) { (noti) in
+                if let tv = noti.object as? UITextView {
+                    input.input(value: tv.text)
+                } else {
+                    input.input(value: nil)
+                }
+            }
+            return Unbinders.create {
+                NotificationCenter.default.removeObserver(obj)
+            }
         }
+        output.outputing { (string) in
+            print(string)
+        }
+        tv.text = "lksjdflsjfldsjf"
         
-        v.frame = CGRect(x: 1, y: 1, width: 1, height: 1)
-        v.bounds = CGRect(x: 9, y: 9, width: 9, height: 9)
         
         return true
     }

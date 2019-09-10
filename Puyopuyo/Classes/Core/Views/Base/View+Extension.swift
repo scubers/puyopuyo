@@ -60,6 +60,10 @@ extension UIView: MeasureTargetable {
         return s as! V
     }
     
+    public func py_mayBeWrap() -> Bool {
+        return py_measure.size.maybeWrap()
+    }
+    
 }
 
 extension UIView {

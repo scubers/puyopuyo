@@ -20,12 +20,21 @@ extension Puyo where T: UITextField {
     
     // MARK: - state
     
+    /// 若TextField可能包裹，则每次输入都会重新布局，若非必要，不要设置
+    @discardableResult
+    public func resizeByContent() -> Self {
+        addWeakAction(to: view, for: .editingChanged, { (v, _) in
+            v.py_setNeedsLayoutIfMayBeWrap()
+        })
+        return self
+    }
+    
     @discardableResult
     public func text<S: Outputing>(_ text: S) -> Self where S.OutputType == String? {
         view.py_setUnbinder(text.safeBind(view, { (v, a) in
             guard a != v.text else { return }
             v.text = a
-            v.py_setNeedsLayout()
+            v.py_setNeedsLayoutIfMayBeWrap()
         }), for: #function)
         return self
     }
@@ -35,7 +44,7 @@ extension Puyo where T: UITextField {
         view.py_setUnbinder(text.safeBind(view, { (v, a) in
             guard a != v.text else { return }
             v.text = a
-            v.py_setNeedsLayout()
+            v.py_setNeedsLayoutIfMayBeWrap()
         }), for: #function)
         addWeakAction(to: view, for: .editingChanged, { (_, v) in
             text.input(value: v.text)
@@ -52,13 +61,6 @@ extension Puyo where T: UITextField {
     }
     
     @discardableResult
-    public func font(_ font: UIFont) -> Self {
-        view.font = font
-        view.py_setNeedsLayout()
-        return self
-    }
-    
-    @discardableResult
     public func textColor<S: Outputing>(_ color: S) -> Self where S.OutputType == UIColor? {
         view.py_setUnbinder(color.safeBind(view, { (v, a) in
             v.textColor = a
@@ -70,7 +72,7 @@ extension Puyo where T: UITextField {
     public func font<S: Outputing>(_ font: S) -> Self where S.OutputType == UIFont {
         view.py_setUnbinder(font.safeBind(view, { (v, a) in
             v.font = a
-            v.py_setNeedsLayout()
+            v.py_setNeedsLayoutIfMayBeWrap()
         }), for: #function)
         return self
     }
@@ -79,7 +81,6 @@ extension Puyo where T: UITextField {
     public func textAligment<S: Outputing>(_ aligment: S) -> Self where S.OutputType == NSTextAlignment {
         view.py_setUnbinder(aligment.safeBind(view, { (v, a) in
             v.textAlignment = a
-            v.py_setNeedsLayout()
         }), for: #function)
         return self
     }
