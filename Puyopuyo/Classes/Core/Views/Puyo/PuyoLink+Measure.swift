@@ -20,12 +20,12 @@ extension Puyo where T: UIView {
     @discardableResult
     public func size<S: Outputing>(_ width: S?, _ height: S?) -> Self where S.OutputType == SizeDescription {
         if let width = width {
-            width.yo.safeBind(to: view, id: "\(#function)_width") { (v, a) in
+            width.safeBind(to: view, id: "\(#function)_width") { (v, a) in
                 PuyoHelper.size(for: v, width: a, height: nil)
             }
         }
         if let height = height {
-            height.yo.safeBind(to: view, id: "\(#function)_height") { (v, a) in
+            height.safeBind(to: view, id: "\(#function)_height") { (v, a) in
                 PuyoHelper.size(for: v, width: nil, height: a)
             }
         }
@@ -130,27 +130,27 @@ extension Puyo where T: UIView {
     @discardableResult
     public func margin<S: Outputing>(all: S? = nil, top: S? = nil, left: S? = nil, bottom: S? = nil, right: S? = nil) -> Self where S.OutputType : CGFloatable {
         if let s = all {
-            view.py_setUnbinder(s.yo.safeBind(view, { (v, a) in
+            view.py_setUnbinder(s.safeBind(view, { (v, a) in
                 PuyoHelper.margin(for: v, all: a.cgFloatValue)
             }), for: "\(#function)_all")
         }
         if let s = top {
-            view.py_setUnbinder(s.yo.safeBind(view, { (v, a) in
+            view.py_setUnbinder(s.safeBind(view, { (v, a) in
                 PuyoHelper.margin(for: v, top: a.cgFloatValue)
             }), for: "\(#function)_top")
         }
         if let s = left {
-            view.py_setUnbinder(s.yo.safeBind(view, { (v, a) in
+            view.py_setUnbinder(s.safeBind(view, { (v, a) in
                 PuyoHelper.margin(for: v, left: a.cgFloatValue)
             }), for: "\(#function)_left")
         }
         if let s = bottom {
-            view.py_setUnbinder(s.yo.safeBind(view, { (v, a) in
+            view.py_setUnbinder(s.safeBind(view, { (v, a) in
                 PuyoHelper.margin(for: v, bottom: a.cgFloatValue)
             }), for: "\(#function)_bottom")
         }
         if let s = right {
-            view.py_setUnbinder(s.yo.safeBind(view, { (v, a) in
+            view.py_setUnbinder(s.safeBind(view, { (v, a) in
                 PuyoHelper.margin(for: v, right: a.cgFloatValue)
             }), for: "\(#function)_right")
         }
@@ -159,7 +159,7 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func margin<S: Outputing>(_ margin: S) -> Self where S.OutputType == UIEdgeInsets {
-        let unbinder = margin.yo.safeBind(view) { (v, m) in
+        let unbinder = margin.safeBind(view) { (v, m) in
             PuyoHelper.margin(for: v, all: nil, top: m.top, left: m.left, bottom: m.bottom, right: m.right)
         }
         view.py_setUnbinder(unbinder, for: #function)
@@ -216,7 +216,7 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func aligment<S: Outputing>(_ aligment: S) -> Self where S.OutputType == Aligment {
-        view.py_setUnbinder(aligment.yo.safeBind(view, { (v, a) in
+        view.py_setUnbinder(aligment.safeBind(view, { (v, a) in
             PuyoHelper.aligment(for: v, aligment: a)
         }), for: #function)
         return self
@@ -231,7 +231,7 @@ extension Puyo where T: UIView {
     
     @discardableResult
     public func visibility<S: Outputing>(_ visibility: S) -> Self where S.OutputType == Visibility {
-        view.py_setUnbinder(visibility.yo.safeBind(view, { (v, a) in
+        view.py_setUnbinder(visibility.safeBind(view, { (v, a) in
             v.py_visibility = a
             v.py_setNeedsLayout()
         }), for: #function)
@@ -241,7 +241,7 @@ extension Puyo where T: UIView {
     // MARK: - Activated
     @discardableResult
     public func activated<S: Outputing>(_ activated: S) -> Self where S.OutputType == Bool {
-        view.py_setUnbinder(activated.yo.safeBind(view, { (v, a) in
+        view.py_setUnbinder(activated.safeBind(view, { (v, a) in
             v.py_measure.activated = a
             v.py_setNeedsLayout()
         }), for: #function)

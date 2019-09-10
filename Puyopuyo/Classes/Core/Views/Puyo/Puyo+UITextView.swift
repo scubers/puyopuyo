@@ -11,7 +11,7 @@ extension Puyo where T: UITextView {
     
     @discardableResult
     public func onText<S: Outputing & Inputing>(_ text: S) -> Self where S.OutputType == String?, S.InputType == String? {
-        view.py_setUnbinder(text.yo.safeBind(view, { (v, a) in
+        view.py_setUnbinder(text.safeBind(view, { (v, a) in
             guard a != v.text else { return }
             v.text = a
             v.py_setNeedsLayoutIfMayBeWrap()
@@ -31,14 +31,14 @@ extension Puyo where T: UITextView {
                 NotificationCenter.default.removeObserver(obj)
             }
         }
-        let unbinder = output.yo.distinct().yo.send(to: text)
+        let unbinder = output.yo.distinct().send(to: text)
         view.py_setUnbinder(unbinder, for: "\(#function)_input")
         return self
     }
     
     @discardableResult
     public func textColor<S: Outputing>(_ color: S) -> Self where S.OutputType == UIColor? {
-        view.py_setUnbinder(color.yo.safeBind(view, { (v, a) in
+        view.py_setUnbinder(color.safeBind(view, { (v, a) in
             v.textColor = a
         }), for: #function)
         return self
@@ -46,7 +46,7 @@ extension Puyo where T: UITextView {
     
     @discardableResult
     public func font<S: Outputing>(_ font: S) -> Self where S.OutputType == UIFont {
-        view.py_setUnbinder(font.yo.safeBind(view, { (v, a) in
+        view.py_setUnbinder(font.safeBind(view, { (v, a) in
             v.font = a
             v.py_setNeedsLayoutIfMayBeWrap()
         }), for: #function)

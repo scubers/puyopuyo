@@ -11,7 +11,7 @@ extension Puyo where T: UISwitch {
     
     @discardableResult
     public func isOn<S: Outputing & Inputing>(_ state: S) -> Self where S.OutputType == Bool, S.InputType == Bool {
-        state.yo.safeBind(to: view, id: #function) { (v, a) in
+        state.safeBind(to: view, id: #function) { (v, a) in
             v.isOn = a
         }
         addWeakAction(to: view, for: .valueChanged, { (_, v) in

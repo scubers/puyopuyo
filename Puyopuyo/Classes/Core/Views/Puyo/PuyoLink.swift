@@ -46,7 +46,7 @@ public class Puyo<T: UIView> {
     
     @discardableResult
     public func on<O: Outputing, R>(_ state: O, _ action: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
-        view.py_setUnbinder(state.yo.safeBind(view, { (v, r) in
+        view.py_setUnbinder(state.safeBind(view, { (v, r) in
             action(v, r)
         }), for: UUID().description)
         return self

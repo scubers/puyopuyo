@@ -42,9 +42,10 @@ public protocol Inputing {
     func input(value: InputType)
 }
 
-extension Yo where Base: Outputing {
-    public func safeBind<Object: AnyObject>(_ object: Object, _ action: @escaping (Object, Base.OutputType) -> Void) -> Unbinder {
-        return base.outputing { [weak object] (s) in
+extension Outputing {
+    
+    public func safeBind<Object: AnyObject>(_ object: Object, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
+        return outputing { [weak object] (s) in
             if let object = object {
                 action(object, s)
             }
@@ -53,8 +54,8 @@ extension Yo where Base: Outputing {
     
     /// 对象销毁时则移除绑定
     @discardableResult
-    public func safeBind<Object: NSObject>(to object: Object, id: String, _ action: @escaping (Object, Base.OutputType) -> Void) -> Unbinder {
-        let unbinder = base.outputing { [weak object] (v) in
+    public func safeBind<Object: NSObject>(to object: Object, id: String, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
+        let unbinder = outputing { [weak object] (v) in
             if let object = object {
                 action(object, v)
             }
@@ -63,8 +64,8 @@ extension Yo where Base: Outputing {
         return unbinder
     }
     
-    public func send<Input: Inputing>(to input: Input) -> Unbinder where Input.InputType == Base.OutputType {
-        return base.outputing { (v) in
+    public func send<Input: Inputing>(to input: Input) -> Unbinder where Input.InputType == OutputType {
+        return outputing { (v) in
             input.input(value: v)
         }
     }
