@@ -45,10 +45,10 @@ extension Puyo where T: UITextField {
         }), for: #function)
         
         addWeakAction(to: view, for: .editingChanged, { (_, v) in
-            func getType<T: PuyoOptionalType>(from: String?) -> T where T.PuyoWrappedType == String {
+            func getOptionalType<T: PuyoOptionalType>(from: String?) -> T where T.PuyoWrappedType == String {
                 return from as! T
             }
-            text.input(value: getType(from: v.text))
+            text.input(value: getOptionalType(from: v.text))
         })
         return self
     }

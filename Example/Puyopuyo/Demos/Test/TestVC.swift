@@ -34,7 +34,7 @@ class TestVC: BaseVC {
         
         vRoot.attach {
             
-            let state = "".yo.someState()
+            let state: State<String?> = "".yo.someState()
             
             UIButton().attach($0)
                 .title("确定", state: .normal)
