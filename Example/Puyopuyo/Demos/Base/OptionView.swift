@@ -13,7 +13,9 @@ class OptionView<T>: ZBox {
 
     var receiver: State<T>?
     var options: [T] = []
-    init(prefix: String, receiver: State<T>, options: [T]) {
+    private var action: () -> Void
+    init(prefix: String, receiver: State<T>, options: [T], _ action: @escaping () -> Void = {}) {
+        self.action = action
         super.init(frame: .zero)
         self.receiver = receiver
         self.options = options
@@ -33,6 +35,7 @@ class OptionView<T>: ZBox {
         options.forEach { (o) in
             alert.addAction(UIAlertAction(title: "\(o)", style: .default, handler: { (_) in
                 self.receiver?.value = o
+                self.action()
             }))
         }
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))

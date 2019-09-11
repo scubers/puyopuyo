@@ -13,7 +13,6 @@ import RxSwift
 class FlowBoxBaseVC: BaseVC {
     override func configView() {
         
-//        let reverse = State<Bool>(false)
         let reverse = false.yo.state()
         let hFormat = Format.leading.yo.state()
         let vFormat = State<Format>(.leading)
@@ -83,20 +82,25 @@ class FlowBoxBaseVC: BaseVC {
             
             VFlow(count: 2).attach($0) {
                 let heightValue: CGFloat = 20
-                OptionView(prefix: "width", receiver: width, options: [.fill, .wrap]).attach($0).size(.fill, heightValue)
-                OptionView(prefix: "height", receiver: height, options: [.fill, .wrap]).attach($0).size(.fill, heightValue)
                 
-                OptionView(prefix: "arrange", receiver: arrange, options: Array(0...total)).attach($0).size(.fill, heightValue)
-                OptionView(prefix: "direction", receiver: direction, options: Direction.allCases).attach($0).size(.fill, heightValue)
+                let action: () -> Void = { [weak self] in
+                    self?.vRoot.animate(0.2, block: {})
+                }
                 
-                OptionView(prefix: "hFormat", receiver: hFormat, options: Format.allCases).attach($0).size(.fill, heightValue)
-                OptionView(prefix: "vFormat", receiver: vFormat, options: Format.allCases).attach($0).size(.fill, heightValue)
+                OptionView(prefix: "width", receiver: width, options: [.fill, .wrap], action).attach($0).size(.fill, heightValue)
+                OptionView(prefix: "height", receiver: height, options: [.fill, .wrap], action).attach($0).size(.fill, heightValue)
                 
-                OptionView(prefix: "hSpace", receiver: hSpace, options: spaceRange).attach($0).size(.fill, heightValue)
-                OptionView(prefix: "vSpace", receiver: vSpace, options: spaceRange).attach($0).size(.fill, heightValue)
+                OptionView(prefix: "arrange", receiver: arrange, options: Array(0...total), action).attach($0).size(.fill, heightValue)
+                OptionView(prefix: "direction", receiver: direction, options: Direction.allCases, action).attach($0).size(.fill, heightValue)
                 
-                OptionView(prefix: "reverse", receiver: reverse, options: [true, false]).attach($0).size(.fill, heightValue)
-                OptionView(prefix: "content", receiver: justifyContent, options: Aligment.vertAligments() + Aligment.horzAligments()).attach($0).size(.fill, heightValue)
+                OptionView(prefix: "hFormat", receiver: hFormat, options: Format.allCases, action).attach($0).size(.fill, heightValue)
+                OptionView(prefix: "vFormat", receiver: vFormat, options: Format.allCases, action).attach($0).size(.fill, heightValue)
+                
+                OptionView(prefix: "hSpace", receiver: hSpace, options: spaceRange, action).attach($0).size(.fill, heightValue)
+                OptionView(prefix: "vSpace", receiver: vSpace, options: spaceRange, action).attach($0).size(.fill, heightValue)
+                
+                OptionView(prefix: "reverse", receiver: reverse, options: [true, false], action).attach($0).size(.fill, heightValue)
+                OptionView(prefix: "content", receiver: justifyContent, options: Aligment.vertAligments() + Aligment.horzAligments(), action).attach($0).size(.fill, heightValue)
                 }
                 .padding(left: 10, right: 10)
                 .size(.fill, .wrap)
@@ -104,36 +108,11 @@ class FlowBoxBaseVC: BaseVC {
             UIScrollView().attach($0) {
                 VFlow(count: 3).attach($0) {
                     
-                    let fix = Label("fix").attach($0).activated(false)
                     for idx in 0..<total {
-                        let x =
-                            Label("\(idx + 1)").attach($0)
-                                .width(40 + CGFloat(idx) * 3)
-                                .height(on: Simulate.ego.width)
-                        
-                                //                        .height(on: $0, { .fix($0.width * 0.2)})
-//                                .height(Simulate($0).width.multiply(0.2))
-                        //                        .height(Simulate().simulateSelf().width)
-                        //                        .height(40)
-                        
-                        //                        .width(Simulate($0).width.multiply(0.2))
-                        //                        .heightOnSelf({ .fix($0.width) })
-                        
-//                        if idx == 0 {
-//                            fix
-//                                .top(Simulate(x.view).top.add(-10))
-//                                .left(Simulate(x.view).left.add(-10))
-//                        }
-//                        if idx == 9 {
-//                            fix
-//                                .bottom(Simulate(x.view).bottom.add(10))
-//                                .right(Simulate(x.view).right.add(10))
-//                        }
-                        
+                        Label("\(idx + 1)").attach($0)
+                            .width(40 + CGFloat(idx) * 3)
+                            .height(on: Simulate.ego.width)
                     }
-                    
-                    
-
                     
                     let flow = $0
                     _ = adding.outputing({ (v) in
@@ -144,8 +123,6 @@ class FlowBoxBaseVC: BaseVC {
                     })
                     
                     }
-//                    .aligment(.right)
-//                    .size(.wrap, .wrap)
                     .width(width)
                     .height(height)
                     .padding(all: 10)
