@@ -86,8 +86,7 @@ class TestVC: BaseVC {
                         
                         Label("正").attach($0)
                             .height(.fill)
-                            .widthOnSelf({ .fix($0.height) })
-                            .widthOnSelf({ .fix($0.height * 0.5) })
+                            .width(on: Simulate.ego.height.multiply(0.5))
                         
                         Label("fill").attach($0)
                             .size(.fill, .fill)
@@ -113,11 +112,13 @@ class TestVC: BaseVC {
                     
                     }
                     .width(.fill)
-                    .heightOnSelf({ .fix($0.width * 0.5) })
+                    .height(on: Simulate.ego.width.multiply(0.5))
+//                    .heightOnSelf({ .fix($0.width * 0.5) })
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
                     v.view.animate(0.25, block: {
-                        v.heightOnSelf({ .fix($0.width) })
+//                        v.heightOnSelf({ .fix($0.width) })
+                        v.height(on: Simulate.ego.width)
                     })
                 })
                 

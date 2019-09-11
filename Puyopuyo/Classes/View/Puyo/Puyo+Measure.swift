@@ -8,63 +8,59 @@
 import Foundation
 
 
+// MARK: - Size ext
 extension Puyo where T: UIView {
     
-    // MARK: - Size
     @discardableResult
-    public func size(_ width: SizeDescription?, _ height: SizeDescription?) -> Self {
-        PuyoHelper.size(for: view, width: width, height: height)
-        return self
-    }
-    
-    @discardableResult
-    public func size<S: Outputing>(_ width: S?, _ height: S?) -> Self where S.OutputType == SizeDescription {
-        if let width = width {
-            width.safeBind(to: view, id: "\(#function)_width") { (v, a) in
-                PuyoHelper.size(for: v, width: a, height: nil)
-            }
+    public func size<O: Outputing>(_ w: O?, _ h: O?) -> Self where O.OutputType: SizeDescriptible {
+        if let x = w {
+            x.safeBind(to: view, id: "\(#function)_width", { (v, a) in
+                v.py_measure.size.width = a.sizeDescription
+                v.py_setNeedsLayout()
+            })
         }
-        if let height = height {
-            height.safeBind(to: view, id: "\(#function)_height") { (v, a) in
-                PuyoHelper.size(for: v, width: nil, height: a)
-            }
+        if let x = h {
+            x.safeBind(to: view, id: "\(#function)_height", { (v, a) in
+                v.py_measure.size.height = a.sizeDescription
+                v.py_setNeedsLayout()
+            })
         }
         return self
     }
     
     @discardableResult
-    public func size(_ width: SizeDescriptible?, _ height: SizeDescriptible?) -> Self {
-        PuyoHelper.size(for: view, width: width?.sizeDescription, height: height?.sizeDescription)
-        return self
-    }
-    
-    @discardableResult
-    public func size(_ width: SizeDescription?, _ height: SizeDescriptible?) -> Self {
-        PuyoHelper.size(for: view, width: width, height: height?.sizeDescription)
-        return self
-    }
-    
-    @discardableResult
-    public func size(_ width: SizeDescriptible?, _ height: SizeDescription?) -> Self {
-        PuyoHelper.size(for: view, width: width?.sizeDescription, height: height)
-        return self
-    }
-    
-    @discardableResult
-    public func width(_ width: SizeDescriptible?) -> Self {
-        PuyoHelper.size(for: view, width: width?.sizeDescription, height: nil)
-        return self
-    }
-    
-    @discardableResult
-    public func width(_ width: SizeDescription?) -> Self {
-        PuyoHelper.size(for: view, width: width, height: nil)
-        return self
-    }
-    
-    @discardableResult
-    public func width<S: Outputing>(_ width: S) -> Self where S.OutputType == SizeDescription {
+    public func width(_ width: SizeDescription) -> Self {
         return size(width, nil)
+    }
+    
+    @discardableResult
+    public func height(_ height: SizeDescription) -> Self {
+        return size(nil, height)
+    }
+    
+    @discardableResult
+    public func width<O: Outputing>(_ w: O) -> Self where O.OutputType: SizeDescriptible {
+        return size(w, nil)
+    }
+    
+    @discardableResult
+    public func height<O: Outputing>(_ h: O) -> Self where O.OutputType: SizeDescriptible {
+        return size(nil, h)
+    }
+    
+    @discardableResult
+    public func size(_ w: SizeDescription, _ h: SizeDescription) -> Self {
+        return width(w).height(h)
+    }
+    
+    @discardableResult
+    public func size(_ w: SizeDescriptible, _ h: SizeDescription) -> Self {
+        return width(w.sizeDescription).height(h)
+    }
+    
+    @discardableResult
+    public func size(_ w: SizeDescription, _ h: SizeDescriptible) -> Self {
+        return width(w).height(h.sizeDescription)
     }
     
     @discardableResult
@@ -76,33 +72,6 @@ extension Puyo where T: UIView {
     }
     
     @discardableResult
-    public func width(on modifiable: ValueModifiable) -> Self {
-        return width(modifiable.checkSelfSimulate(view).modifyValue().yo.map({ SizeDescription.fix($0)}))
-    }
-    
-    @discardableResult
-    public func widthOnSelf(_ block: @escaping (CGRect) -> SizeDescription) -> Self {
-        return width(on: view, block)
-    }
-    
-    @discardableResult
-    public func height(_ height: SizeDescriptible?) -> Self {
-        PuyoHelper.size(for: view, width: nil, height: height?.sizeDescription)
-        return self
-    }
-    
-    @discardableResult
-    public func height(_ height: SizeDescription?) -> Self {
-        PuyoHelper.size(for: view, width: nil, height: height)
-        return self
-    }
-    
-    @discardableResult
-    public func height<S: Outputing>(_ height: S) -> Self where S.OutputType == SizeDescription {
-        return size(nil, height)
-    }
-    
-    @discardableResult
     public func height(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
         if let s = view?.py_boundsState() {
             height(s.yo.map(block))
@@ -111,16 +80,20 @@ extension Puyo where T: UIView {
     }
     
     @discardableResult
+    public func width(on modifiable: ValueModifiable) -> Self {
+        return width(modifiable.checkSelfSimulate(view).modifyValue().yo.map({ SizeDescription.fix($0)}))
+    }
+    
+    @discardableResult
     public func height(on modifiable: ValueModifiable) -> Self {
         return height(modifiable.checkSelfSimulate(view).modifyValue().yo.map({ SizeDescription.fix($0) }))
     }
     
-    @discardableResult
-    public func heightOnSelf(_ block: @escaping (CGRect) -> SizeDescription) -> Self {
-        return height(on: view, block)
-    }
+}
+
+// MARK: - Margin ext
+extension Puyo where T: UIView {
     
-    // MARK: - Margin
     @discardableResult
     public func margin(all: CGFloatable? = nil, top: CGFloatable? = nil, left: CGFloatable? = nil, bottom: CGFloatable? = nil, right: CGFloatable? = nil) -> Self {
         PuyoHelper.margin(for: view, all: all?.cgFloatValue, top: top?.cgFloatValue, left: left?.cgFloatValue, bottom: bottom?.cgFloatValue, right: right?.cgFloatValue)
@@ -206,7 +179,10 @@ extension Puyo where T: UIView {
         return self
     }
     
-    // MARK: - Aligment
+}
+
+// MARK: - Aligment ext
+extension Puyo where T: UIView {
     
     @discardableResult
     public func aligment(_ aligment: Aligment) -> Self {
@@ -222,7 +198,11 @@ extension Puyo where T: UIView {
         return self
     }
     
-    // MARK: - Visibility
+}
+
+// MARK: - Visibility
+extension Puyo where T: UIView {
+    
     @discardableResult
     public func visibility(_ visibility: Visibility) -> Self {
         view.py_visibility = visibility
@@ -237,8 +217,10 @@ extension Puyo where T: UIView {
         }), for: #function)
         return self
     }
-    
-    // MARK: - Activated
+}
+
+// MARK: - Activated
+extension Puyo where T: UIView {
     @discardableResult
     public func activated<S: Outputing>(_ activated: S) -> Self where S.OutputType == Bool {
         view.py_setUnbinder(activated.safeBind(view, { (v, a) in
@@ -248,9 +230,4 @@ extension Puyo where T: UIView {
         return self
     }
     
-    @discardableResult
-    public func activated(_ activated: Bool) -> Self {
-        view.py_measure.activated = activated
-        return self
-    }
 }

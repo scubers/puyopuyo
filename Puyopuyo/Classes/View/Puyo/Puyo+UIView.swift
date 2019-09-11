@@ -91,7 +91,6 @@ extension Puyo where T: UIView {
         if let v = h { view.frame.size.height = v }
         return self
     }
-
     
     @discardableResult
     public func bounds<S: Outputing>(_ frame: S) -> Self where S.OutputType == CGRect {
@@ -177,7 +176,6 @@ extension Puyo where T: UIView {
         return self
     }
     
-    
     @discardableResult
     public func left(_ left: ValueModifiable) -> Self {
         view.py_setUnbinder(left.modifyValue().safeBind(view, { (v, a) in
@@ -211,8 +209,6 @@ extension Puyo where T: UIView {
         }), for: #function)
         return self
     }
-    /*
-    */
     
     @discardableResult
     public func onTap<Object: AnyObject>(to object: Object, _ action: @escaping (Object, UITapGestureRecognizer) -> Void) -> Self {

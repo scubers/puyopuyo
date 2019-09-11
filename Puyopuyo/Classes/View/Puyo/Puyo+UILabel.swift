@@ -19,6 +19,15 @@ extension Puyo where T: UILabel {
     }
     
     @discardableResult
+    public func attrText<S: Outputing>(_ text: S) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == NSAttributedString {
+        view.py_setUnbinder(text.safeBind(view, { (v, a) in
+            v.attributedText = a.puyoWrapValue
+            v.py_setNeedsLayoutIfMayBeWrap()
+        }), for: #function)
+        return self
+    }
+    
+    @discardableResult
     public func textColor<S: Outputing>(_ color: S) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIColor {
         view.py_setUnbinder(color.safeBind(view, { (v, a) in
             v.textColor = a.puyoWrapValue
@@ -49,6 +58,14 @@ extension Puyo where T: UILabel {
         view.py_setUnbinder(lines.safeBind(view, { (v, a) in
             v.numberOfLines = a
             v.py_setNeedsLayout()
+        }), for: #function)
+        return self
+    }
+    
+    @discardableResult
+    public func isEnabled<S: Outputing>(_ enabled: S) -> Self where S.OutputType == Bool {
+        view.py_setUnbinder(enabled.safeBind(view, { (v, a) in
+            v.isEnabled = a
         }), for: #function)
         return self
     }

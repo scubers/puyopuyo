@@ -9,7 +9,6 @@ import Foundation
 
 extension Puyo where T: UITextField {
     
-    // MARK: - value
     @discardableResult
     public func textDelegate<S: Outputing>(_ delegate: S) -> Self where S.OutputType == UITextFieldDelegate? {
         view.py_setUnbinder(delegate.safeBind(view, { (v, s) in
@@ -17,8 +16,6 @@ extension Puyo where T: UITextField {
         }), for: #function)
         return self
     }
-    
-    // MARK: - state
     
     /// 若TextField可能包裹，则每次输入都会重新布局，若非必要，不要设置
     @discardableResult
@@ -93,6 +90,20 @@ extension Puyo where T: UITextField {
     @discardableResult
     public func textAligment(_ aligment: NSTextAlignment) -> Self {
         view.textAlignment = aligment
+        return self
+    }
+    
+    @discardableResult
+    public func clearButtonMode(_ mode: UITextField.ViewMode) -> Self {
+        view.clearButtonMode = mode
+        return self
+    }
+    
+    @discardableResult
+    public func background<S: Outputing>(_ image: S) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIImage {
+        image.safeBind(to: view, id: #function) { (v, a) in
+            v.background = a.puyoWrapValue
+        }
         return self
     }
     
