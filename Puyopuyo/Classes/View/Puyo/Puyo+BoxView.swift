@@ -136,13 +136,6 @@ extension Puyo where T: FlatBox {
     }
     
     @discardableResult
-    public func reverse(_ reverse: Bool) -> Self {
-        view.regulator.reverse = reverse
-        setNeedsLayout()
-        return self
-    }
-    
-    @discardableResult
     public func reverse<O: Outputing>(_ reverse: O) -> Self where O.OutputType == Bool {
         view.py_setUnbinder(reverse.safeBind(view, { (v, r) in
             v.regulator.reverse = r
@@ -189,6 +182,18 @@ extension Puyo where T: FlowBox {
             v.regulator.hFormat = f
             v.py_setNeedsLayout()
         }), for: #function)
+        return self
+    }
+    
+    @discardableResult
+    public func hFormat(_ format: Format) -> Self {
+        view.regulator.hFormat = format
+        return self
+    }
+    
+    @discardableResult
+    public func vFormat(_ format: Format) -> Self {
+        view.regulator.vFormat = format
         return self
     }
     

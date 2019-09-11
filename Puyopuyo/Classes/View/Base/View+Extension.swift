@@ -8,19 +8,18 @@
 import Foundation
 
 public protocol MeasureHolder {
-//    func py_getMeasure() -> Measure
     var py_measure: Measure { get }
 }
 
-extension UIView: MeasureHolder {
 
+// MARK: - MeasureHolder impl
+extension UIView: MeasureHolder {
     public var py_measure: Measure {
         return MeasureFactory.getMeasure(from: self)
     }
 }
 
-private var py_measureChangedKey = "py_measureChangedKey"
-
+// MARK: - MeasureTargetable impl
 extension UIView: MeasureTargetable {
     public var py_size: CGSize {
         get {
@@ -51,22 +50,10 @@ extension UIView: MeasureTargetable {
         return sizeThatFits(size)
     }
     
-    public func py_measureChanged<V: Outputing & Inputing>() -> V where V.OutputType == CGRect, V.InputType == CGRect {
-        if let s = objc_getAssociatedObject(self, &py_measureChangedKey) as? State<CGRect> {
-            return s as! V
-        }
-        let s = State<CGRect>(frame)
-        objc_setAssociatedObject(self, &py_measureChangedKey, s, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        return s as! V
-    }
-    
-    public func py_mayBeWrap() -> Bool {
-        return py_measure.size.maybeWrap()
-    }
-    
 }
-
+// MARK: - UIView ext methods
 extension UIView {
+    
     public var py_visibility: Visibility {
         set {
             // hidden
@@ -91,4 +78,43 @@ extension UIView {
             }
         }
     }
+    
+    public func py_mayBeWrap() -> Bool {
+        return py_measure.size.maybeWrap()
+    }
+    
+    public func py_boundsState() -> SimpleOutput<CGRect> {
+        return
+            py_observing(for: #keyPath(UIView.bounds))
+                .yo.map({ (rect: CGRect?) in rect ?? .zero})
+                .yo.distinct()
+    }
+    
+    public func py_centerState() -> SimpleOutput<CGPoint> {
+        return
+            py_observing(for: #keyPath(UIView.center))
+                .yo.map({ (x: CGPoint?) in x ?? .zero})
+                .yo.distinct()
+    }
+    
+    public func py_frameStateByBoundsCenter() -> SimpleOutput<CGRect> {
+        
+        let bounds = py_boundsState().yo.map({_ in CGRect.zero})
+        let center = py_centerState().yo.map({_ in CGRect.zero})
+        return
+            SimpleOutput.merge([bounds, center])
+                .yo.map({ [weak self] (_) -> CGRect in
+                    guard let self = self else { return .zero }
+                    return self.frame
+                })
+        // 因为这里是合并，不知道为何不能去重
+    }
+    
+    public func py_frameStateByKVO() -> SimpleOutput<CGRect> {
+        return
+            py_observing(for: #keyPath(UIView.frame))
+                .yo.map({ (x: CGRect?) in x ?? .zero})
+                .yo.distinct()
+    }
+
 }

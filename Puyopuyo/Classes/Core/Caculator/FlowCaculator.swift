@@ -7,7 +7,7 @@
 
 import Foundation
 
-private class _FakeFlatRegulator: FlatRegulator {
+private class VirtualFlatRegulator: FlatRegulator {
     
     private var lastDelta: CGPoint = .zero
     
@@ -20,7 +20,7 @@ private class _FakeFlatRegulator: FlatRegulator {
             let oldDelta = lastDelta
             lastDelta = CGPoint(x: outCenter.x - size.width / 2, y: outCenter.y - size.height / 2)
             
-            fakeTarget.children.forEach { (m) in
+            virtualTarget.children.forEach { (m) in
                 let target = m.getRealTarget()
                 var center = target.py_center
                 center.x += lastDelta.x - oldDelta.x
@@ -76,7 +76,7 @@ class FlowCaculator {
     
     private func _caculateByContent(available children: [Measure]) -> Size {
         
-        var fakeLines = [_FakeFlatRegulator]()
+        var virtualLines = [VirtualFlatRegulator]()
         
         var currentLine = [Measure]()
         var maxCross: CGFloat = 0
@@ -106,10 +106,10 @@ class FlowCaculator {
             
             if maxCross > totalCross { // 内容超出
                 if currentLine.isEmpty {
-                    fakeLines.append(constructFakeLine(children: [m]))
+                    virtualLines.append(getVirtualLine(children: [m]))
                 } else {
                     // 另起新的一行
-                    fakeLines.append(constructFakeLine(children: currentLine))
+                    virtualLines.append(getVirtualLine(children: currentLine))
                     maxCross = getLength(from: subCrossSize) + subCalMargin.crossFixed
                     currentLine = [m]
                 }
@@ -118,31 +118,31 @@ class FlowCaculator {
             }
         })
         if !currentLine.isEmpty {
-            fakeLines.append(constructFakeLine(children: currentLine))
+            virtualLines.append(getVirtualLine(children: currentLine))
         }
-        let size = constructFakeOutside(children: fakeLines).caculate(byParent: parent)
+        let size = getVirtualRegulator(children: virtualLines).caculate(byParent: parent)
         return size
     }
     
     private func _caculateByFixedCount(available children: [Measure]) -> Size {
         let line = getLine(from: children)
         
-        var fakeLines = [_FakeFlatRegulator]()
+        var fakeLines = [VirtualFlatRegulator]()
         fakeLines.reserveCapacity(line)
         for idx in 0..<line {
             let lineChildren = children[idx * arrange..<min(idx * arrange + arrange, children.count)]
-            fakeLines.append(constructFakeLine(children: Array(lineChildren)))
+            fakeLines.append(getVirtualLine(children: Array(lineChildren)))
         }
         
-        let size = constructFakeOutside(children: fakeLines).caculate(byParent: parent)
+        let size = getVirtualRegulator(children: fakeLines).caculate(byParent: parent)
         return size
     }
 }
 
 private extension FlowCaculator {
     
-    func constructFakeOutside(children: [Measure]) -> _FakeFlatRegulator {
-        let outside = _FakeFlatRegulator(target: nil, children: children)
+    func getVirtualRegulator(children: [Measure]) -> VirtualFlatRegulator {
+        let outside = VirtualFlatRegulator(target: nil, children: children)
         outside.justifyContent = regulator.justifyContent
         outside.aligment = regulator.aligment
         outside.direction = layoutDirection
@@ -156,8 +156,8 @@ private extension FlowCaculator {
         return outside
     }
     
-    func constructFakeLine(children: [Measure]) -> _FakeFlatRegulator {
-        let line = _FakeFlatRegulator(children: children)
+    func getVirtualLine(children: [Measure]) -> VirtualFlatRegulator {
+        let line = VirtualFlatRegulator(children: children)
         line.justifyContent = regulator.justifyContent
         line.direction = getOppsiteDirection()
         line.space = getOppsiteSpace()

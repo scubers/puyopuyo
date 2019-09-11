@@ -94,13 +94,13 @@ public struct Aligment: OptionSet, CustomStringConvertible, Outputing {
 /// 描述一个节点相对于父节点的属性
 public class Measure: Measurable, MeasureTargetable {
     
-    var fakeTarget = _FakeTarget()
+    var virtualTarget = VirtualTarget()
     
     private weak var target: MeasureTargetable?
     
     public init(target: MeasureTargetable? = nil, children: [Measure] = []) {
         self.target = target
-        self.fakeTarget.children = children
+        self.virtualTarget.children = children
     }
     
     public var direction: Direction = .x {
@@ -154,13 +154,13 @@ public class Measure: Measurable, MeasureTargetable {
         if let target = target {
             return target
         }
-        return fakeTarget
+        return virtualTarget
     }
     
     
 }
 
-class _FakeTarget: MeasureTargetable {
+class VirtualTarget: MeasureTargetable {
     
     var py_size: CGSize = .zero
     

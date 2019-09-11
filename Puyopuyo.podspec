@@ -32,15 +32,28 @@ TODO: Add long description of the pod here.
 
   
   
+  s.subspec 'Util' do |c|
+    c.source_files = 'Puyopuyo/Classes/Util/**/*'
+  end
+  
   s.subspec 'Core' do |c|
     c.source_files = 'Puyopuyo/Classes/Core/**/*'
+    c.dependency 'Puyopuyo/Util'
   end
+  
+  s.subspec 'View' do |c|
+    c.source_files = 'Puyopuyo/Classes/View/**/*'
+    c.dependency 'Puyopuyo/Core'
+  end
+  
+  s.default_subspec = 'View'
   
   s.subspec 'TangramKit' do |c|
       c.source_files = 'Puyopuyo/Classes/TangramKit/**/*'
-      c.dependency 'Puyopuyo/Core'
+      c.dependency 'Puyopuyo/View'
       c.dependency 'TangramKit'
   end
+  
   
   # s.resource_bundles = {
   #   'Puyopuyo' => ['Puyopuyo/Assets/*.png']

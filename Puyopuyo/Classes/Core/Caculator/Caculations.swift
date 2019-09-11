@@ -8,6 +8,13 @@
 import Foundation
 
 /**
+ 
+ 提供计算使用的结构体
+ Size -> CalSize
+ CGSize -> CalFixedSize
+ CGPoint -> CalCenter
+ UIEdgeInset -> CalEdges
+ 
  ------------------------
  direction = x
       forward

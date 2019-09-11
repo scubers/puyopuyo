@@ -3,7 +3,7 @@
 use_frameworks!
 
 target 'Puyopuyo_Example' do
-  pod 'Puyopuyo', :path => '../'
+  pod 'Puyopuyo/TangramKit', :path => '../'
   pod 'TangramKit'
   pod 'RxSwift'
   pod 'SnapKit'
