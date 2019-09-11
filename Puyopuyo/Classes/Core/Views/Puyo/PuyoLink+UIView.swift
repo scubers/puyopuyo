@@ -10,9 +10,9 @@ import Foundation
 extension Puyo where T: UIView {
     
     @discardableResult
-    public func backgroundColor<S: Outputing>(_ color: S) -> Self where S.OutputType == UIColor? {
+    public func backgroundColor<S: Outputing>(_ color: S) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIColor {
         color.safeBind(to: view, id: #function) { (v, a) in
-            v.backgroundColor = a
+            v.backgroundColor = a.puyoWrapValue
         }
         return self
     }
@@ -51,9 +51,9 @@ extension Puyo where T: UIView {
     }
     
     @discardableResult
-    public func borderColor<S: Outputing>(_ color: S) -> Self where S.OutputType == UIColor? {
+    public func borderColor<S: Outputing>(_ color: S) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIColor {
         color.safeBind(to: view, id: #function) { (v, a) in
-            v.layer.borderColor = a?.cgColor
+            v.layer.borderColor = a.puyoWrapValue?.cgColor
         }
         return self
     }

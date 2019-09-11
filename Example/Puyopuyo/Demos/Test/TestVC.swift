@@ -36,6 +36,9 @@ class TestVC: BaseVC {
             
             let state = "".yo.someState()
             
+            UIButton().attach($0)
+                .title("确定", state: .normal)
+            
             UITextView().attach($0)
                 .size(.fill, .wrap(min: 30))
                 .font(UIFont.systemFont(ofSize: 14))
@@ -43,7 +46,7 @@ class TestVC: BaseVC {
             
             UITextField().attach($0)
                 .resizeByContent()
-                .textAligment(NSTextAlignment.center)
+                .textAligment(.center)
                 .size(.wrap(add: 10, min: 50), 50)
                 .onText(state)
                 .onEvent(.editingDidBegin, SimpleInput { _ in
@@ -52,6 +55,9 @@ class TestVC: BaseVC {
                 .onEvent(.editingDidEnd, SimpleInput { _ in
                     print("end")
                 })
+            
+            Label().attach($0)
+                .text("111")
             
             HLine().attach($0) {
                 UITextField().attach($0) {

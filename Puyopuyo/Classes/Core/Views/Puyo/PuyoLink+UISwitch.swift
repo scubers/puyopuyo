@@ -10,7 +10,7 @@ import Foundation
 extension Puyo where T: UISwitch {
     
     @discardableResult
-    public func isOn<S: Outputing & Inputing>(_ state: S) -> Self where S.OutputType == Bool, S.InputType == Bool {
+    public func isOn<S: Outputing & Inputing>(_ state: S) -> Self where S.OutputType == S.InputType, S.InputType == Bool {
         state.safeBind(to: view, id: #function) { (v, a) in
             v.isOn = a
         }

@@ -92,23 +92,23 @@ extension Yo where Base: Outputing {
 }
 
 
-public protocol AOptionalType {
-    associatedtype WrappedType
-    var aWrappedValue: WrappedType? { get }
+public protocol PuyoOptionalType {
+    associatedtype PuyoWrappedType
+    var puyoWrapValue: PuyoWrappedType? { get }
 }
 
-extension Optional: AOptionalType {
-    public typealias WrappedType = Wrapped
-    public var aWrappedValue: Wrapped? {
+extension Optional: PuyoOptionalType {
+    public typealias PuyoWrappedType = Wrapped
+    public var puyoWrapValue: Wrapped? {
         return self
     }
 }
 
-extension Yo where Base: Outputing, Base.OutputType: AOptionalType {
-    public func unwrap(or: Base.OutputType.WrappedType) -> SimpleOutput<Base.OutputType.WrappedType> {
-        return SimpleOutput<Base.OutputType.WrappedType>({ (input) -> Unbinder in
+extension Yo where Base: Outputing, Base.OutputType: PuyoOptionalType {
+    public func unwrap(or: Base.OutputType.PuyoWrappedType) -> SimpleOutput<Base.OutputType.PuyoWrappedType> {
+        return SimpleOutput<Base.OutputType.PuyoWrappedType>({ (input) -> Unbinder in
             return self.base.outputing({ (value) in
-                if let value = value.aWrappedValue {
+                if let value = value.puyoWrapValue {
                     input.input(value: value)
                 } else {
                     input.input(value: or)
@@ -124,3 +124,14 @@ extension Yo where Base: Outputing, Base.OutputType: Equatable {
         return ignore({ $0 == $1 })
     }
 }
+
+extension PuyoOptionalType where PuyoWrappedType == Self {
+    public var puyoWrapValue: PuyoWrappedType? {
+        return Optional.some(self)
+    }
+}
+
+extension String: PuyoOptionalType { public typealias PuyoWrappedType = String }
+extension UIColor: PuyoOptionalType { public typealias PuyoWrappedType = UIColor }
+extension UIFont: PuyoOptionalType { public typealias PuyoWrappedType = UIFont }
+extension NSNumber: PuyoOptionalType { public typealias PuyoWrappedType = NSNumber }

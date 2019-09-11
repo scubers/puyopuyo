@@ -10,26 +10,26 @@ import Foundation
 extension Puyo where T: UILabel {
     
     @discardableResult
-    public func text<S: Outputing>(_ text: S) -> Self where S.OutputType == String? {
+    public func text<S: Outputing>(_ text: S) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == String {
         view.py_setUnbinder(text.safeBind(view, { (v, a) in
-            v.text = a
+            v.text = a.puyoWrapValue
             v.py_setNeedsLayoutIfMayBeWrap()
         }), for: #function)
         return self
     }
     
     @discardableResult
-    public func textColor<S: Outputing>(_ color: S) -> Self where S.OutputType == UIColor? {
+    public func textColor<S: Outputing>(_ color: S) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIColor {
         view.py_setUnbinder(color.safeBind(view, { (v, a) in
-            v.textColor = a
+            v.textColor = a.puyoWrapValue
         }), for: #function)
         return self
     }
     
     @discardableResult
-    public func font<S: Outputing>(_ font: S) -> Self where S.OutputType == UIFont {
+    public func font<S: Outputing>(_ font: S) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIFont {
         view.py_setUnbinder(font.safeBind(view, { (v, a) in
-            v.font = a
+            v.font = a.puyoWrapValue
             v.py_setNeedsLayoutIfMayBeWrap()
         }), for: #function)
         return self
