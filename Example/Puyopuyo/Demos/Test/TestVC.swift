@@ -11,15 +11,16 @@ import Puyopuyo
 import TangramKit
 import RxSwift
 
-class Instance: NSObject {
-    static var share = Instance()
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        
+class NewView: ZBox, InteractiveView {
+    var viewInteractor = SimpleIO<String>()
+    override func buildBody() {
+        attach {
+            UIButton(type: .contactAdd).attach($0)
+                .onEvent(.touchUpInside, SimpleInput { [weak self] _ in
+                    self?.viewInteractor.input(value: "100")
+                })
+        }
     }
-}
-
-struct MyParts {
-    
 }
 
 class TestVC: BaseVC {
@@ -35,6 +36,12 @@ class TestVC: BaseVC {
         vRoot.attach {
             
             let state: State<String?> = "".yo.someState()
+            
+            NewView().attach($0)
+                .size(.fill, 50)
+                .onInteract(SimpleInput {
+                    print($0)
+                })
             
             UIButton().attach($0)
                 .title("确定", state: .normal)

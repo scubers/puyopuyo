@@ -207,3 +207,19 @@ extension Puyo where T: FlowBox {
     }
 
 }
+
+extension Puyo where T: InteractiveView {
+    @discardableResult
+    public func onInteract<I: Inputing>(_ input: I) -> Self where I.InputType == T.InteractType {
+        _ = view.viewInteractor.send(to: input)
+        return self
+    }
+}
+
+extension Puyo where T: StatefulView {
+    @discardableResult
+    public func viewState<O: Outputing>(_ output: O) -> Self where O.OutputType == T.StateType {
+        _ = output.send(to: view.viewState)
+        return self
+    }
+}

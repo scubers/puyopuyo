@@ -14,7 +14,7 @@ public protocol StatefulView {
 
 public protocol InteractiveView {
     associatedtype InteractType
-    var interactor: State<InteractType> { get }
+    var viewInteractor: SimpleIO<InteractType> { get }
 }
 
 public protocol ViewConstructable {

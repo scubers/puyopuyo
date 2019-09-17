@@ -9,6 +9,7 @@ import Foundation
 
 public struct SimpleInput<T>: Inputing {
     public typealias InputType = T
+    public var uuid: String = UUID().description
     public func input(value: SimpleInput<T>.InputType) {
         action(value)
     }
