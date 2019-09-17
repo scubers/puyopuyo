@@ -102,6 +102,10 @@ open class BoxView: UIView {
                 }
         }
     }
+    
+    deinit {
+        positionControlUnbinder?.py_unbind()
+    }
 }
 
 private extension BoxView {
