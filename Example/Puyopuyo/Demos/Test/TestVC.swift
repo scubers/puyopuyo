@@ -35,45 +35,17 @@ class TestVC: BaseVC {
         
         vRoot.attach {
             
-            let state: State<String?> = "".yo.someState()
-            
-            NewView().attach($0)
-                .size(.fill, 50)
-                .onEventProduced(SimpleInput {
-                    print($0)
-                })
-            
-            UIButton().attach($0)
-                .title("确定", state: .normal)
-            
-            UITextView().attach($0)
-                .size(.fill, .wrap(min: 30))
-                .font(UIFont.systemFont(ofSize: 14))
-                .onText(state)
-            
-            UITextField().attach($0)
-                .resizeByContent()
-                .textAligment(.center)
-                .size(.wrap(add: 10, min: 50), 50)
-                .onText(state)
-                .onEvent(.editingDidBegin, SimpleInput { _ in
-                    print("begin")
-                })
-                .onEvent(.editingDidEnd, SimpleInput { _ in
-                    print("end")
-                })
-            
-            Label().attach($0)
-                .text("111")
-            
-            HLine().attach($0) {
-                UITextField().attach($0) {
-                    $0.tg_width >= 50
-                    $0.tg_height.equal(50)
+            UIView().attach($0) {
+                ZBox().attach($0)
+                    .size(.fill, .fill)
+                    .margin(all: 10)
                 }
-                .onText(state)
+                .size(100, 100)
+                .attach { x in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                        x.attach().height(200)
+                    })
                 }
-                .size(.fill, 50)
 
             }
             .space(10)

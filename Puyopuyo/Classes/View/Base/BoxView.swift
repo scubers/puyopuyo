@@ -85,6 +85,23 @@ open class BoxView: UIView {
         borders.updateBottom(to: layer)
         borders.updateRight(to: layer)
     }
+    
+    private var positionControlUnbinder: Unbinder?
+    
+    open override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        positionControlUnbinder?.py_unbind()
+        if isSelfPositionControl, let spv = superview, !(spv is BoxView) {
+            positionControlUnbinder =
+            SimpleOutput
+                .merge([spv.py_frameStateByKVO().yo.map({ $0.size }),
+                        spv.py_frameStateByBoundsCenter().yo.map({ $0.size })])
+                .yo.distinct()
+                .outputing { [weak self] (_) in
+                    self?.setNeedsLayout()
+                }
+        }
+    }
 }
 
 private extension BoxView {
@@ -115,9 +132,9 @@ private extension BoxView {
                 // 父视图为布局
             } else if isSelfPositionControl {
                 // 父视图为普通视图
-                let newSize = bounds.size
                 center = CGPoint(x: bounds.midX + regulator.margin.left, y: bounds.midY + regulator.margin.top)
                 
+                let newSize = bounds.size
                 // 控制父视图的scroll
                 if isScrollViewControl, let scrollView = superview as? UIScrollView {
                     if regulator.size.width.isWrap {
@@ -147,4 +164,5 @@ private extension BoxView {
         action()
         autoresizesSubviews = true
     }
+    
 }
