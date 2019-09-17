@@ -12,13 +12,9 @@ public protocol StatefulView {
     var viewState: State<StateType> { get }
 }
 
-public protocol InteractiveView {
-    associatedtype InteractType
-    var viewInteractor: SimpleIO<InteractType> { get }
-}
-
-public protocol ViewConstructable {
-    func buildView() -> UIView
+public protocol EventableView {
+    associatedtype EventType
+    var eventProducer: SimpleIO<EventType> { get }
 }
 
 open class BoxView: UIView {

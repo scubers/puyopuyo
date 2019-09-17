@@ -208,10 +208,10 @@ extension Puyo where T: FlowBox {
 
 }
 
-extension Puyo where T: InteractiveView {
+extension Puyo where T: EventableView {
     @discardableResult
-    public func onInteract<I: Inputing>(_ input: I) -> Self where I.InputType == T.InteractType {
-        _ = view.viewInteractor.send(to: input)
+    public func onEventProduced<I: Inputing>(_ input: I) -> Self where I.InputType == T.EventType {
+        _ = view.eventProducer.send(to: input)
         return self
     }
 }

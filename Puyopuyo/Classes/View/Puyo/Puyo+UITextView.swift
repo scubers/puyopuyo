@@ -35,21 +35,4 @@ extension Puyo where T: UITextView {
         view.py_setUnbinder(unbinder, for: "\(#function)_input")
         return self
     }
-    
-    @discardableResult
-    public func textColor<S: Outputing>(_ color: S) -> Self where S.OutputType == UIColor? {
-        view.py_setUnbinder(color.safeBind(view, { (v, a) in
-            v.textColor = a
-        }), for: #function)
-        return self
-    }
-    
-    @discardableResult
-    public func font<S: Outputing>(_ font: S) -> Self where S.OutputType == UIFont {
-        view.py_setUnbinder(font.safeBind(view, { (v, a) in
-            v.font = a
-            v.py_setNeedsLayoutIfMayBeWrap()
-        }), for: #function)
-        return self
-    }
 }

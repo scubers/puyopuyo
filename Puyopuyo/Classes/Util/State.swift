@@ -22,10 +22,6 @@ public class State<Value>: Outputing, Inputing {
     
     fileprivate init() {}
     
-    deinit {
-        onDestroy()
-    }
-
     public var value: Value {
         set {
             _value = newValue
@@ -37,15 +33,11 @@ public class State<Value>: Outputing, Inputing {
     
     private var _value: Value! {
         didSet {
-            self.callees.forEach {
-                $0.block(_value)
-            }
+            inputers.forEach { $0.input(value: _value) }
         }
     }
     
-    private var callees = [Callee<Value>]()
-    
-    private var onDestroy: () -> Void = {}
+    private var inputers = [SimpleInput<Value>]()
     
     /// 返回一个没有初始值的state，此时如果调用value方法会崩溃
     public static func unstable() -> State<Value> {
@@ -64,11 +56,11 @@ public class State<Value>: Outputing, Inputing {
         if let value = _value {
             block(value)
         }
-        let callee = Callee(block)
-        callees.append(callee)
-        let pointer = Unmanaged.passUnretained(callee).toOpaque()
+        let inputer = SimpleInput(block)
+        inputers.append(inputer)
+        let id = inputer.uuid
         return UnbinderImpl { [weak self] in
-            self?.callees.removeAll(where: { Unmanaged.passUnretained($0).toOpaque() == pointer })
+            self?.inputers.removeAll(where: { $0.uuid == id })
         }
     }
     
@@ -77,13 +69,6 @@ public class State<Value>: Outputing, Inputing {
     public func singleOutput(_ block: @escaping (Value) -> Void) {
         singleUnbinder?.py_unbind()
         singleUnbinder = outputing(block)
-    }
-    
-    private class Callee<T> {
-        var block: (T) -> Void
-        init(_ block: @escaping (T) -> Void) {
-            self.block = block
-        }
     }
 }
 

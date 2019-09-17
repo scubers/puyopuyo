@@ -11,13 +11,13 @@ import Puyopuyo
 import TangramKit
 import RxSwift
 
-class NewView: ZBox, InteractiveView {
-    var viewInteractor = SimpleIO<String>()
+class NewView: ZBox, EventableView {
+    var eventProducer = SimpleIO<String>()
     override func buildBody() {
         attach {
             UIButton(type: .contactAdd).attach($0)
                 .onEvent(.touchUpInside, SimpleInput { [weak self] _ in
-                    self?.viewInteractor.input(value: "100")
+                    self?.eventProducer.input(value: "100")
                 })
         }
     }
@@ -39,7 +39,7 @@ class TestVC: BaseVC {
             
             NewView().attach($0)
                 .size(.fill, 50)
-                .onInteract(SimpleInput {
+                .onEventProduced(SimpleInput {
                     print($0)
                 })
             
