@@ -38,13 +38,14 @@ class TestVC: BaseVC {
                 .size(.fill, .fill)
                 .flatBox(.y)
                 .attach {
-                    for i in 0..<20 {
+                    for i in 0..<2 {
                        Label("\(i)").attach($0)
                     }
                 }
                 .justifyContent(.center)
                 .space(20)
             }
+            .margin(top: 10)
             .padding(all: 10)
             .space(10)
     }

@@ -116,5 +116,25 @@ extension UIView {
                 .yo.map({ (x: CGRect?) in x ?? .zero})
                 .yo.distinct()
     }
+    
+    /// ios11监听safeAreaInsets, ios10及以下，则监听frame变化并且通过转换坐标后得到与statusbar的差距
+    public func py_safeArea() -> SimpleOutput<UIEdgeInsets> {
+        if #available(iOS 11, *) {
+            return py_observing(for: #keyPath(UIView.safeAreaInsets)).yo.map({ (insets: UIEdgeInsets?) in insets ?? .zero }).yo.distinct()
+        } else {
+            // ios 11 以下只可能存在statusbar影响的safeArea
+            return
+                SimpleOutput.merge([py_frameStateByBoundsCenter(), py_frameStateByKVO()])
+                    .yo.map({ [weak self] rect -> UIEdgeInsets in
+                        guard let self = self else { return .zero }
+                        let newRect = self.convert(self.bounds, to: UIApplication.shared.keyWindow)
+                        var inset = UIEdgeInsets.zero
+                        let statusFrame = UIApplication.shared.statusBarFrame
+                        inset.top = min(statusFrame.height, max(0, statusFrame.height - newRect.origin.y))
+                        return inset
+                    })
+                    .yo.distinct()
+        }
+    }
 
 }

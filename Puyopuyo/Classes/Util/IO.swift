@@ -54,7 +54,7 @@ extension Outputing {
     
     /// 对象销毁时则移除绑定
     @discardableResult
-    public func safeBind<Object: NSObject>(to object: Object, id: String, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
+    public func safeBind<Object: NSObject>(to object: Object, id: String = UUID().description, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
         let unbinder = outputing { [weak object] (v) in
             if let object = object {
                 action(object, v)
