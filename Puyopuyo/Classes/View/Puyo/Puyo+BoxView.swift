@@ -214,6 +214,16 @@ extension Puyo where T: EventableView {
         _ = view.eventProducer.send(to: input)
         return self
     }
+    
+    @discardableResult
+    public func onEventProduced<Object: AnyObject>(to: Object, _ action: @escaping (Object, T.EventType) -> Void) -> Self {
+        view.eventProducer.outputing { [weak to] (event) in
+            if let to = to {
+                action(to, event)
+            }
+        }
+        return self
+    }
 }
 
 extension Puyo where T: StatefulView {

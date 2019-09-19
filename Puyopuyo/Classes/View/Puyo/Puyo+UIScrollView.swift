@@ -32,4 +32,22 @@ extension Puyo where T: UIScrollView {
         return self
     }
     
+    @discardableResult
+    public func flatBox(_ direction: Direction) -> Puyo<FlatBox> {
+        if direction == .y {
+            view.attach().alwaysVertBounds(true)
+            return
+                FlatBox().attach(view)
+                    .direction(direction)
+                    .autoJudgeScroll(true)
+                    .size(.fill, .wrap)
+        } else {
+            view.attach().alwaysHorzBounds(true)
+            return
+                FlatBox().attach(view)
+                    .direction(direction)
+                    .autoJudgeScroll(true)
+                    .size(.wrap, .fill)
+        }
+    }
 }

@@ -26,6 +26,12 @@ extension Puyo where T: UIView {
     }
     
     @discardableResult
+    public func contentMode(_ mode: UIView.ContentMode) -> Self {
+        view.contentMode = mode
+        return self
+    }
+    
+    @discardableResult
     public func clipToBounds<S: Outputing>(_ clip: S) -> Self where S.OutputType == Bool {
         clip.safeBind(to: view, id: #function) { (v, a) in
             v.clipsToBounds = a

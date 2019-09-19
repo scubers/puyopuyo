@@ -34,22 +34,19 @@ class TestVC: BaseVC {
     func configTestView() {
         
         vRoot.attach {
-            
-            UIView().attach($0) {
-                ZBox().attach($0)
-                    .size(.fill, .fill)
-                    .margin(all: 10)
+            UIScrollView().attach($0)
+                .size(.fill, .fill)
+                .flatBox(.y)
+                .attach {
+                    for i in 0..<20 {
+                       Label("\(i)").attach($0)
+                    }
                 }
-                .size(100, 100)
-                .attach { x in
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-                        x.attach().height(200)
-                    })
-                }
-
+                .justifyContent(.center)
+                .space(20)
             }
+            .padding(all: 10)
             .space(10)
-
     }
     
     private func test1() {
