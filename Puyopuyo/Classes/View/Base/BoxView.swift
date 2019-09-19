@@ -154,7 +154,7 @@ private extension BoxView {
         }
         
         if needResizing {
-            _ = regulator.caculate(byParent: parentMeasure)
+//            _ = regulator.caculate(byParent: parentMeasure)
         }
         
         isLayoutingSubview = false

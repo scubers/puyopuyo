@@ -42,6 +42,7 @@ class TestVC: BaseVC {
                 Label().attach($0)
                     .size(100, .fill)
                 }
+                .padding(left: 10)
                 .format(.center)
                 .space(10)
                 .size(.fill, 100)

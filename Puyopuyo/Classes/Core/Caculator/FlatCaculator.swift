@@ -198,13 +198,13 @@ class FlatCaculator {
         
         var lastEnd: CGFloat = regCalPadding.start
         
-        var children = measures
-        if regulator.reverse {
-            children.reverse()
-        }
-        
-        for (idx, measure) in children.enumerated() {
-            lastEnd = _caculateCenter(measure: measure, at: idx, from: lastEnd)
+        let reversed = regulator.reverse
+        for idx in 0..<measures.count {
+            var index = idx
+            if reversed {
+                index = measures.count - index - 1
+            }
+            lastEnd = _caculateCenter(measure: measures[index], at: idx, from: lastEnd)
         }
         
         if regulator.format == .trailing {
@@ -212,9 +212,9 @@ class FlatCaculator {
             // 计算最后一个需要移动的距离
             let delta = regFixedSize.main - regCalPadding.end - lastEnd
             if regulator.direction == .x {
-                children.forEach({ $0.py_center.x += delta })
+                measures.forEach({ $0.py_center.x += delta })
             } else {
-                children.forEach({ $0.py_center.y += delta })
+                measures.forEach({ $0.py_center.y += delta })
             }
         }
         
@@ -233,11 +233,20 @@ class FlatCaculator {
         // cross
         let cross: CGFloat
         let aligment = measure.aligment.contains(.none) ? regulator.justifyContent : measure.aligment
+        
+        var calCrossSize = regFixedSize.cross
+        if regCalSize.cross.isWrap {
+            // 如果是包裹，则需要使用当前最大cross进行计算
+            calCrossSize = maxCross + regCalPadding.crossFixed
+        }
+        
         if aligment.isCenter(for: regulator.direction) {
-            cross = regFixedSize.cross / 2
+//            cross = regFixedSize.cross / 2
+            cross = calCrossSize / 2
             
         } else if aligment.isBackward(for: regulator.direction) {
-            cross = regFixedSize.cross - (regCalPadding.backward + calMargin.backward + calSize.cross / 2)
+//            cross = regFixedSize.cross - (regCalPadding.backward + calMargin.backward + calSize.cross / 2)
+            cross = calCrossSize - (regCalPadding.backward + calMargin.backward + calSize.cross / 2)
         } else {
             // 若无设置，则默认forward
             cross = calSize.cross / 2 + regCalPadding.forward + calMargin.forward
