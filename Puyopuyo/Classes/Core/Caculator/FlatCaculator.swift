@@ -71,7 +71,11 @@ class FlatCaculator {
         
         // 2.2、插入首format 首center, avg
         if (formattable) && (regulator.format == .center || regulator.format == .avg) {
-            appendAndRegulateChild(getPlaceholder())
+            let holder = getPlaceholder()
+            var edges = holder.margin.getCalEdges(by: regulator.direction)
+            edges.start = -regulator.space
+            holder.margin = edges.getInsets()
+            appendAndRegulateChild(holder)
         }
         // 2.3、计算中间节点和插入format节点
         filteredChildren.enumerated().forEach { (idx, m) in
@@ -81,13 +85,21 @@ class FlatCaculator {
             
             // format 中side,avg, 子节点必须 2 个以上才能使用
             if (formattable && idx != originChildrenTotal - 1) && (regulator.format == .sides || regulator.format == .avg) {
-                appendAndRegulateChild(getPlaceholder())
+                let holder = getPlaceholder()
+                var edges = holder.margin.getCalEdges(by: regulator.direction)
+                edges.start = -regulator.space
+                holder.margin = edges.getInsets()
+                appendAndRegulateChild(holder)
             }
             
         }
         // 2.4 插入尾format 尾center,avg
         if (formattable) && (regulator.format == .center || regulator.format == .avg) {
-            appendAndRegulateChild(getPlaceholder())
+            let holder = getPlaceholder()
+            var edges = holder.margin.getCalEdges(by: regulator.direction)
+            edges.start = -regulator.space
+            holder.margin = edges.getInsets()
+            appendAndRegulateChild(holder)
         }
         
         // 3、累加space到totalFixedMain

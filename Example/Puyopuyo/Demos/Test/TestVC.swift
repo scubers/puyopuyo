@@ -34,18 +34,18 @@ class TestVC: BaseVC {
     func configTestView() {
         
         vRoot.attach {
-            UIScrollView().attach($0)
-                .size(.fill, .fill)
-                .flatBox(.y)
-                .attach {
-                    for i in 0..<2 {
-                       Label("\(i)").attach($0)
-                    }
+            
+            HBox().attach($0) {
+                Label().attach($0)
+                    .size(200, .fill)
+                
+                Label().attach($0)
+                    .size(100, .fill)
                 }
-                .justifyContent(.center)
-                .space(20)
+                .format(.center)
+                .space(10)
+                .size(.fill, 100)
             }
-            .margin(top: 10)
             .padding(all: 10)
             .space(10)
     }
