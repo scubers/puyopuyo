@@ -38,11 +38,9 @@ class TestVC: BaseVC {
             VFlow(count: 3).attach($0) {
                 for i in 0..<9 {
                     Label(i.description).attach($0)
-                        .size(.fill, .fill)
+                        .size(.fill, 50)
                 }
                 }
-                .space(10)
-                .padding(all: 10)
                 .size(200, 200)
             
             }

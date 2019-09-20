@@ -130,12 +130,7 @@ class FlowCaculator {
         
         let virtualRegulator = getVirtualRegulator(children: fakeLines)
         let size = virtualRegulator.caculate(byParent: parent)
-        let measure = Measure()
-        fakeLines.forEach {
-            measure.py_size = $0.py_size
-            _ = $0.caculate(byParent: measure)
-            $0.justifyChildrenWithCenter()
-        }
+        fakeLines.forEach { $0.justifyChildrenWithCenter() }
         return size
     }
 }
@@ -170,12 +165,6 @@ private extension FlowCaculator {
         if !layoutCalSize.cross.isWrap {
             // 当流式布局为包裹的时候，内部计算布局需要给定一个尺寸
             lineCalSize.cross = .fix(max(0, layoutFixedSize.cross - regulator.getCalPadding().crossFixed))
-        }
-        for m in children {
-            if m.size.getCalSize(by: layoutDirection).main.isRatio {
-                lineCalSize.main = .ratio(1)
-                break
-            }
         }
         line.size = lineCalSize.getSize()
         return line
