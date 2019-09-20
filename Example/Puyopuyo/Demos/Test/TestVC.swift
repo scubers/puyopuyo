@@ -35,17 +35,14 @@ class TestVC: BaseVC {
         
         vRoot.attach {
             
-            HBox().attach($0) {
-                Label().attach($0)
-                    .size(200, .fill)
-                
-                Label().attach($0)
-                    .size(100, .fill)
+            VFlow(count: 3).attach($0) {
+                for i in 0..<9 {
+                    Label(i.description).attach($0)
+                        .size(.fill, 50)
                 }
-                .padding(left: 10)
-                .format(.center)
-                .space(10)
-                .size(.fill, 100)
+                }
+                .size(200, 200)
+            
             }
             .padding(all: 10)
             .space(10)

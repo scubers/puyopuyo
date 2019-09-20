@@ -9,33 +9,26 @@ import Foundation
 
 private class VirtualFlatRegulator: FlatRegulator {
     
-    private var lastDelta: CGPoint = .zero
-    
-    override var py_center: CGPoint {
-        didSet {
-            let outCenter = py_center
-            let size = py_size
-
-            // 计算虚拟位置的偏移量
-            let oldDelta = lastDelta
-            lastDelta = CGPoint(x: outCenter.x - size.width / 2, y: outCenter.y - size.height / 2)
-            
-            virtualTarget.children.forEach { (m) in
-                let target = m.getRealTarget()
-                var center = target.py_center
-                center.x += lastDelta.x - oldDelta.x
-                center.y += lastDelta.y - oldDelta.y
-                target.py_center = center
-            }
-        }
-    }
-    
     override func caculate(byParent parent: Measure) -> Size {
-        // 每次自身布局，都需要清空虚拟位置的偏移量
-        lastDelta = .zero
         // 虚拟布局，计算前，需要应用一下当前自身设置
         Caculator.adapting(size: size, to: self, in: parent)
         return super.caculate(byParent: parent)
+    }
+
+    func justifyChildrenWithCenter() {
+        let center = py_center
+        let size = py_size
+        
+        // 计算虚拟位置的偏移量
+        let lastDelta = CGPoint(x: center.x - size.width / 2, y: center.y - size.height / 2)
+        
+        virtualTarget.children.forEach { (m) in
+            let target = m.getRealTarget()
+            var center = target.py_center
+            center.x += lastDelta.x// - oldDelta.x
+            center.y += lastDelta.y// - oldDelta.y
+            target.py_center = center
+        }
     }
     
 }
@@ -121,6 +114,7 @@ class FlowCaculator {
             virtualLines.append(getVirtualLine(children: currentLine))
         }
         let size = getVirtualRegulator(children: virtualLines).caculate(byParent: parent)
+        virtualLines.forEach({ $0.justifyChildrenWithCenter() })
         return size
     }
     
@@ -134,7 +128,9 @@ class FlowCaculator {
             fakeLines.append(getVirtualLine(children: Array(lineChildren)))
         }
         
-        let size = getVirtualRegulator(children: fakeLines).caculate(byParent: parent)
+        let virtualRegulator = getVirtualRegulator(children: fakeLines)
+        let size = virtualRegulator.caculate(byParent: parent)
+        fakeLines.forEach { $0.justifyChildrenWithCenter() }
         return size
     }
 }
@@ -171,8 +167,6 @@ private extension FlowCaculator {
             lineCalSize.cross = .fix(max(0, layoutFixedSize.cross - regulator.getCalPadding().crossFixed))
         }
         line.size = lineCalSize.getSize()
-        let size = line.caculate(byParent: regulator)
-        line.py_size = CGSize(width: size.width.fixedValue, height: size.height.fixedValue)
         return line
     }
     
