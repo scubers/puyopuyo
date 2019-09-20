@@ -44,6 +44,7 @@ public struct SimpleOutput<Value>: Outputing {
             }
         }
     }
+    
 }
 
 
@@ -53,42 +54,75 @@ extension Yo where Base: Outputing {
         return map({ $0 })
     }
     
-    public func map<R>(_ block: @escaping (Base.OutputType) -> R) -> SimpleOutput<R> {
-        return SimpleOutput<R>({ (input) -> Unbinder in
-            return self.base.outputing({ (x) in
-                input.input(value: block(x))
+    public func bind<T>(_ action: @escaping (Base.OutputType, SimpleInput<T>) -> Void) -> SimpleOutput<T> {
+        return SimpleOutput<T>({ (i) -> Unbinder in
+            return self.base.outputing({ (v) in
+                action(v, i)
             })
         })
     }
     
+    public func map<R>(_ block: @escaping (Base.OutputType) -> R) -> SimpleOutput<R> {
+        return bind({ $1.input(value: block($0)) })
+    }
+    
     public func filter(_ filter: @escaping (Base.OutputType) -> Bool) -> SimpleOutput<Base.OutputType> {
-        return SimpleOutput<Base.OutputType>({ (i) -> Unbinder in
-            return self.base.outputing({ (x) in
-                if filter(x) {
-                    i.input(value: x)
-                }
-            })
+        return bind({ (v, i) in
+            if filter(v) { i.input(value: v) }
         })
     }
     
     public func ignore(_ condition: @escaping (Base.OutputType, Base.OutputType) -> Bool) -> SimpleOutput<Base.OutputType> {
         var last: Base.OutputType!
-        return SimpleOutput<Base.OutputType>({ (i) -> Unbinder in
-            return self.base.outputing({ (x) in
-                guard last != nil else {
-                    last = x
-                    i.input(value: x)
-                    return
-                }
-                let ignore = condition(last, x)
-                last = x
-                if !ignore {
-                    i.input(value: x)
-                }
-            })
+        return bind({ (v, i) in
+            guard last != nil else {
+                last = v
+                i.input(value: v)
+                return
+            }
+            let ignore = condition(last, v)
+            last = v
+            if !ignore {
+                i.input(value: v)
+            }
         })
     }
     
+    public func take(_ count: Int) -> SimpleOutput<Base.OutputType> {
+        var times: Int = 0
+        return bind({ (v, i) in
+            guard times <= count else { return }
+            times += 1
+            i.input(value: v)
+        })
+    }
+    
+    public func skip(_ count: Int) -> SimpleOutput<Base.OutputType> {
+        var times = 0
+        return bind({ (v, i) in
+            guard times > count else {
+                times += 1
+                return
+            }
+            i.input(value: v)
+        })
+    }
+    
+    public func scheduleOn(_ queue: OperationQueue) -> SimpleOutput<Base.OutputType> {
+        return bind({ (v, i) in
+            if OperationQueue.current == queue {
+                i.input(value: v)
+            } else {
+                queue.addOperation {
+                    i.input(value: v)
+                }
+            }
+        })
+    }
+    
+    public func scheduleOnMain() -> SimpleOutput<Base.OutputType> {
+        return scheduleOn(OperationQueue.main)
+    }
 }
 
 
@@ -106,14 +140,12 @@ extension Optional: PuyoOptionalType {
 
 extension Yo where Base: Outputing, Base.OutputType: PuyoOptionalType {
     public func unwrap(or: Base.OutputType.PuyoWrappedType) -> SimpleOutput<Base.OutputType.PuyoWrappedType> {
-        return SimpleOutput<Base.OutputType.PuyoWrappedType>({ (input) -> Unbinder in
-            return self.base.outputing({ (value) in
-                if let value = value.puyoWrapValue {
-                    input.input(value: value)
-                } else {
-                    input.input(value: or)
-                }
-            })
+        return bind({ (v, i) in
+            if let v = v.puyoWrapValue {
+                i.input(value: v)
+            } else {
+                i.input(value: or)
+            }
         })
     }
 }
