@@ -110,6 +110,17 @@ public struct CalCenter {
         self.direction = direction
     }
     
+    public init(point: CGPoint, direction: Direction) {
+        self.direction = direction
+        if direction == .x {
+            main = point.x
+            cross = point.y
+        } else {
+            main = point.y
+            cross = point.x
+        }
+    }
+    
     public func getPoint() -> CGPoint {
         if direction == .x {
             return CGPoint(x: main, y: cross)
@@ -117,6 +128,12 @@ public struct CalCenter {
         return CGPoint(x: cross, y: main)
     }
     
+}
+
+extension CGPoint {
+    func getCalCenter(by direction: Direction) -> CalCenter {
+        return CalCenter(point: self, direction: direction)
+    }
 }
 
 public struct CalSize {

@@ -211,11 +211,16 @@ class FlatCaculator {
             // 如果格式化为靠后，则需要最后重排一遍
             // 计算最后一个需要移动的距离
             let delta = regFixedSize.main - regCalPadding.end - lastEnd
-            if regulator.direction == .x {
-                measures.forEach({ $0.py_center.x += delta })
-            } else {
-                measures.forEach({ $0.py_center.y += delta })
-            }
+            measures.forEach({ m in
+                var calCenter = m.py_center.getCalCenter(by: regulator.direction)
+                calCenter.main += delta
+                m.py_center = calCenter.getPoint()
+            })
+//            if regulator.direction == .x {
+//                measures.forEach({ $0.py_center.x += delta })
+//            } else {
+//                measures.forEach({ $0.py_center.y += delta })
+//            }
         }
         
         return lastEnd

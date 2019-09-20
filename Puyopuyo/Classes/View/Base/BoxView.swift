@@ -51,7 +51,7 @@ open class BoxView: UIView {
         super.setNeedsLayout()
         // 若自身可能为包裹，则需要通知上层重新布局
         let measure = py_measure
-        if let superview = superview as? BoxView, measure.size.maybeWrap() {
+        if let superview = superview as? BoxView, measure.size.maybeWrap(), !isLayoutingSubview {
             superview.setNeedsLayout()
         }
     }
