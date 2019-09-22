@@ -9,9 +9,14 @@ import Foundation
 
 private class VirtualFlatRegulator: FlatRegulator {
     
+    override init(target: MeasureTargetable? = nil, children: [Measure] = []) {
+        super.init(target: target, children: children)
+        caculateChildrenImmediately = true
+    }
+    
     override func caculate(byParent parent: Measure) -> Size {
         // 虚拟布局，计算前，需要应用一下当前自身设置
-        Caculator.adapting(size: size, to: self, in: parent)
+//        Caculator.adapting(size: size, to: self, in: parent)
         return super.caculate(byParent: parent)
     }
 

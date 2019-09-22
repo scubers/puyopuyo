@@ -23,6 +23,8 @@ public class Regulator: Measure {
     
     public var padding = UIEdgeInsets.zero
     
+    public var caculateChildrenImmediately = false
+    
     public func enumerateChild(_ block: (Int, Measure) -> Void) {
         py_enumerateChild(block)
     }

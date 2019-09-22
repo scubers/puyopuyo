@@ -124,9 +124,9 @@ private extension BoxView {
         
         _unResizingSubviews {
             // 本身固有尺寸
-            _selfSizeAdapting(size: regulator.size)
+//            _selfSizeAdapting(size: regulator.size)
             // 旧尺寸
-            let oldSize = bounds.size
+//            let oldSize = bounds.size
             // 计算后尺寸不可能为包裹
             let sizeAfterCaculate = regulator.caculate(byParent: parentMeasure)
             // 应用计算后的固有尺寸
@@ -150,7 +150,7 @@ private extension BoxView {
                 }
             }
             
-            needResizing = oldSize != bounds.size
+//            needResizing = oldSize != bounds.size
         }
         
         if needResizing {
@@ -164,9 +164,9 @@ private extension BoxView {
     }
     
     func _unResizingSubviews(_ action: () -> Void) {
-        autoresizesSubviews = false
+//        autoresizesSubviews = false
         action()
-        autoresizesSubviews = true
+//        autoresizesSubviews = true
     }
     
 }

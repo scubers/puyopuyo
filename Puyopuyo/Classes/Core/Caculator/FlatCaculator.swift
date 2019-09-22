@@ -34,6 +34,12 @@ class FlatCaculator {
     
     /// 计算本身布局属性，可能返回的size 为 .fixed, .ratio, 不可能返回wrap
     func caculate() -> Size {
+        
+        if !(parent is Regulator) {
+            Caculator.adapting(size: _getEstimateSize(measure: regulator), to: regulator, in: parent)
+        }
+        
+        
         /// 在此需要假定layout的尺寸已经计算好了
         
         // 1、 第一次循环，获取需要计算的子节点
@@ -107,7 +113,8 @@ class FlatCaculator {
         
         // 4、第三次循环，计算主轴上的比例节点
         ratioMainMeasures.forEach { (measure) in
-            let subSize = measure.caculate(byParent: regulator)
+//            let subSize = measure.caculate(byParent: regulator)
+            let subSize = _getEstimateSize(measure: measure)
             let calSize = CalSize(size: subSize, direction: regulator.direction)
             let calMargin = CalEdges(insets: measure.margin, direction: regulator.direction)
             // cross
@@ -121,6 +128,9 @@ class FlatCaculator {
             let subMainSize = SizeDescription.fix(max(0, (calSize.main.ratio / totalMainRatio) * (regFixedSize.main - totalFixedMain)))
             measure.py_size = CalFixedSize(main: subMainSize.fixedValue, cross: subCrossSize.fixedValue, direction: regulator.direction).getSize()
             maxCross = max(subCrossSize.fixedValue + calMargin.crossFixed, maxCross)
+            if regulator.caculateChildrenImmediately {
+                _ = measure.caculate(byParent: regulator)
+            }
         }
         
         // 5、第四次循环，计算子节点center，若format == .trailing, 则可能出现第六次循环
@@ -157,7 +167,8 @@ class FlatCaculator {
     private func appendAndRegulateChild(_ measure: Measure) {
         caculateChildren.append(measure)
         // 计算size的具体值
-        let subSize = measure.caculate(byParent: regulator)
+//        let subSize = measure.caculate(byParent: regulator)
+        let subSize = _getEstimateSize(measure: measure)
         if subSize.width.isWrap || subSize.height.isWrap {
             fatalError("计算后的尺寸不能是包裹")
         }
@@ -186,6 +197,10 @@ class FlatCaculator {
             maxCross = max(subCrossSize.fixedValue + subCalMargin.crossFixed, maxCross)
             // 累计main长度
             totalFixedMain += subCalSize.main.fixedValue
+            
+            if regulator.caculateChildrenImmediately {
+                _ = measure.caculate(byParent: regulator)
+            }
         }
     }
     
@@ -261,6 +276,13 @@ class FlatCaculator {
         measure.py_center = center
         
         return main + calSize.main / 2 + calMargin.end
+    }
+    
+    private func _getEstimateSize(measure: Measure) -> Size {
+        if measure.size.maybeWrap() {
+            return measure.caculate(byParent: regulator)
+        }
+        return measure.size
     }
     
 }

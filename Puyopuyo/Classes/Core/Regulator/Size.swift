@@ -138,11 +138,15 @@ public struct Size {
     }
     
     public func bothNotWrap() -> Bool {
-        return !(width.isWrap || height.isWrap)
+        return !maybeWrap()
     }
     
     public func maybeWrap() -> Bool {
         return width.isWrap || height.isWrap
+    }
+    
+    public func maybeRatio() -> Bool {
+        return width.isRatio || height.isRatio
     }
     
 }
