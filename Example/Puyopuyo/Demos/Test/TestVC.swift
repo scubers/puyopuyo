@@ -34,9 +34,14 @@ class TestVC: BaseVC {
     func configTestView() {
         
         vRoot.attach {
-            
+//            for i in 0..<6 {
+//                Label("\(i)").attach($0)
+//                    .size(.fill, 50)
+//
+//            }
+
             VFlow(count: 3).attach($0) {
-                for i in 0..<9 {
+                for i in 0..<21 {
                     Label(i.description).attach($0)
                         .size(.fill, .fill)
                 }
@@ -47,6 +52,7 @@ class TestVC: BaseVC {
             .padding(all: 10)
             
         }
+        .format(.sides)
         .padding(all: 10)
         .space(10)
     }

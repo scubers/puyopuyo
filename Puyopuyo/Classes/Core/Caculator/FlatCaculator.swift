@@ -39,101 +39,76 @@ class FlatCaculator {
             Caculator.adapting(size: _getEstimateSize(measure: regulator), to: regulator, in: parent)
         }
         
-        
-        /// 在此需要假定layout的尺寸已经计算好了
-        
-        // 1、 第一次循环，获取需要计算的子节点
-        var filteredChildren = [Measure]()
+        // 1.第一次循环，计算正常节点，忽略未激活节点，缓存主轴比例节点
         regulator.enumerateChild { (idx, m) in
-            // 过滤非激活节点
             guard m.activated else { return }
-            filteredChildren.append(m)
-            // 1.1、需要处理formattable
-            if formattable
-                && (m.size.getCalSize(by: regulator.direction).main.isRatio || regCalSize.main.isWrap) {
-                formattable = false
-                if regulator.format != .leading {
-                    print("Constraint error!!! Regulator's Format.\(regulator.format) reset to .leading")
-                    regulator.format = .leading
-                }
+            let subSize = m.size.getCalSize(by: regulator.direction)
+            
+            if (subSize.main.isRatio && formattable || regCalSize.main.isWrap) && regulator.format != .leading {
+                // 校验是否可format
+                _setNotFormattable()
             }
+            // 初步计算，不会计算主轴比例项目
+            appendAndRegulateNormalChild(m)
+                
         }
         
-        // 1.1 扩充容器，提前确定容量，避免重复开辟空间
+        // 2.准备信息
+        // 2.1 准备总数，插值格式化的比例总额
+        var totalCount = caculateChildren.count
         if formattable {
             switch regulator.format {
-            case .center: caculateChildren.reserveCapacity(filteredChildren.count + 2)
-            case .avg: caculateChildren.reserveCapacity(filteredChildren.count * 2 + 1)
-            case .sides: caculateChildren.reserveCapacity(filteredChildren.count * 2 - 1)
-            default: caculateChildren.reserveCapacity(filteredChildren.count)
+            case .center:
+                totalCount += 2
+                totalMainRatio = CGFloat(totalCount - caculateChildren.count)
+            case .avg:
+                totalCount = totalCount * 2 + 1
+                totalMainRatio = CGFloat(totalCount - caculateChildren.count)
+            case .sides:
+                totalCount = totalCount * 2 - 1
+                totalMainRatio = CGFloat(totalCount - caculateChildren.count)
+            default: break
             }
-        } else {
-            caculateChildren.reserveCapacity(filteredChildren.count)
         }
         
-        // 2、 第二次循环，开始计算普通节点尺寸
-        // 2.1、同时需要把format一并计算，减少循环，format需要添加的位置尾，一前一后，和中间插缝
-        let originChildrenTotal = filteredChildren.count
-        
-        // 2.2、插入首format 首center, avg
-        if (formattable) && (regulator.format == .center || regulator.format == .avg) {
-            let holder = getPlaceholder()
-            var edges = holder.margin.getCalEdges(by: regulator.direction)
-            edges.start = -regulator.space
-            holder.margin = edges.getInsets()
-            appendAndRegulateChild(holder)
-        }
-        // 2.3、计算中间节点和插入format节点
-        filteredChildren.enumerated().forEach { (idx, m) in
-            
-            // 当前节点
-            appendAndRegulateChild(m)
-            
-            // format 中side,avg, 子节点必须 2 个以上才能使用
-            if (formattable && idx != originChildrenTotal - 1) && (regulator.format == .sides || regulator.format == .avg) {
-                let holder = getPlaceholder()
-                var edges = holder.margin.getCalEdges(by: regulator.direction)
-                edges.start = -regulator.space
-                holder.margin = edges.getInsets()
-                appendAndRegulateChild(holder)
-            }
-            
-        }
-        // 2.4 插入尾format 尾center,avg
-        if (formattable) && (regulator.format == .center || regulator.format == .avg) {
-            let holder = getPlaceholder()
-            var edges = holder.margin.getCalEdges(by: regulator.direction)
-            edges.start = -regulator.space
-            holder.margin = edges.getInsets()
-            appendAndRegulateChild(holder)
-        }
-        
-        // 3、累加space到totalFixedMain
+        // 2.2 累加space到totalFixedMain
         totalFixedMain += max(0, (CGFloat(caculateChildren.count - 1) * regulator.space))
         
-        // 4、第三次循环，计算主轴上的比例节点
-        ratioMainMeasures.forEach { (measure) in
-//            let subSize = measure.caculate(byParent: regulator)
-            let subSize = _getEstimateSize(measure: measure)
-            let calSize = CalSize(size: subSize, direction: regulator.direction)
-            let calMargin = CalEdges(insets: measure.margin, direction: regulator.direction)
-            // cross
-            var subCrossSize = calSize.cross
-            
-            if subCrossSize.isRatio {
-                let ratio = subCrossSize.ratio
-                subCrossSize = .fix(max(0, (regFixedSize.cross - (regCalPadding.crossFixed + calMargin.crossFixed)) * ratio))
-            }
-            // main
-            let subMainSize = SizeDescription.fix(max(0, (calSize.main.ratio / totalMainRatio) * (regFixedSize.main - totalFixedMain)))
-            measure.py_size = CalFixedSize(main: subMainSize.fixedValue, cross: subCrossSize.fixedValue, direction: regulator.direction).getSize()
-            maxCross = max(subCrossSize.fixedValue + calMargin.crossFixed, maxCross)
-            if regulator.caculateChildrenImmediately {
-                _ = measure.caculate(byParent: regulator)
-            }
+        // 3. 第二次循环，计算主轴比例节点
+        let currentChildren = caculateChildren
+        caculateChildren = []
+        caculateChildren.reserveCapacity(totalCount)
+
+        // 插入首format
+        if formattable && (regulator.format == .center || regulator.format == .avg) {
+            let m = getPlaceholder()
+            regulateRatioChild(m)
+            caculateChildren.append(m)
         }
-        
-        // 5、第四次循环，计算子节点center，若format == .trailing, 则可能出现第六次循环
+        if formattable && (regulator.format == .sides || regulator.format == .avg) {
+            // 需要插值计算
+            currentChildren.enumerated().forEach { (idx, m) in
+                caculateChildren.append(m)
+                if idx != currentChildren.count - 1 {
+                    let m = getPlaceholder()
+                    regulateRatioChild(m)
+                    caculateChildren.append(m)
+                }
+            }
+        } else {
+            // 计算正常主轴比例
+            ratioMainMeasures.forEach { regulateRatioChild($0) }
+            caculateChildren.append(contentsOf: currentChildren)
+        }
+
+        // 插入尾format
+        if (formattable) && (regulator.format == .center || regulator.format == .avg) {
+            let m = getPlaceholder()
+            regulateRatioChild(m)
+            caculateChildren.append(m)
+        }
+    
+        // 4、第三次循环，计算子节点center，若format == .trailing, 则可能出现第四次循环
         let lastEnd = caculateCenter(measures: caculateChildren)
         
         // 计算自身大小
@@ -160,11 +135,16 @@ class FlatCaculator {
     
     private func getPlaceholder() -> Measure {
         let m = Measure()
-        m.size = CalSize(main: .fill, cross: .fix(0), direction: regulator.direction).getSize()
+        let calSize = CalSize(main: .fill, cross: .fix(0), direction: regulator.direction)
+        m.size = calSize.getSize()
+        var edges = m.margin.getCalEdges(by: regulator.direction)
+        // 占位节点需要抵消间距
+        edges.start = -regulator.space
+        m.margin = edges.getInsets()
         return m
     }
     
-    private func appendAndRegulateChild(_ measure: Measure) {
+    private func appendAndRegulateNormalChild(_ measure: Measure) {
         caculateChildren.append(measure)
         // 计算size的具体值
 //        let subSize = measure.caculate(byParent: regulator)
@@ -204,6 +184,26 @@ class FlatCaculator {
         }
     }
     
+    private func regulateRatioChild(_ measure: Measure) {
+        let subSize = _getEstimateSize(measure: measure)
+        let calSize = CalSize(size: subSize, direction: regulator.direction)
+        let calMargin = CalEdges(insets: measure.margin, direction: regulator.direction)
+        // cross
+        var subCrossSize = calSize.cross
+
+        if subCrossSize.isRatio {
+            let ratio = subCrossSize.ratio
+            subCrossSize = .fix(max(0, (regFixedSize.cross - (regCalPadding.crossFixed + calMargin.crossFixed)) * ratio))
+        }
+        // main
+        let subMainSize = SizeDescription.fix(max(0, (calSize.main.ratio / totalMainRatio) * (regFixedSize.main - totalFixedMain)))
+        measure.py_size = CalFixedSize(main: subMainSize.fixedValue, cross: subCrossSize.fixedValue, direction: regulator.direction).getSize()
+        maxCross = max(subCrossSize.fixedValue + calMargin.crossFixed, maxCross)
+        if regulator.caculateChildrenImmediately {
+            _ = measure.caculate(byParent: regulator)
+        }
+    }
+    
     /// 这里为measures的大小都计算好，需要计算每个节点的center
     ///
     /// - Parameters:
@@ -231,11 +231,6 @@ class FlatCaculator {
                 calCenter.main += delta
                 m.py_center = calCenter.getPoint()
             })
-//            if regulator.direction == .x {
-//                measures.forEach({ $0.py_center.x += delta })
-//            } else {
-//                measures.forEach({ $0.py_center.y += delta })
-//            }
         }
         
         return lastEnd
@@ -261,11 +256,9 @@ class FlatCaculator {
         }
         
         if aligment.isCenter(for: regulator.direction) {
-//            cross = regFixedSize.cross / 2
             cross = calCrossSize / 2
             
         } else if aligment.isBackward(for: regulator.direction) {
-//            cross = regFixedSize.cross - (regCalPadding.backward + calMargin.backward + calSize.cross / 2)
             cross = calCrossSize - (regCalPadding.backward + calMargin.backward + calSize.cross / 2)
         } else {
             // 若无设置，则默认forward
@@ -283,6 +276,12 @@ class FlatCaculator {
             return measure.caculate(byParent: regulator)
         }
         return measure.size
+    }
+    
+    private func _setNotFormattable() {
+        formattable = false
+        regulator.format = .leading
+        print("Constraint error!!! Regulator[\(regulator)] Format.\(regulator.format) reset to .leading")
     }
     
 }
