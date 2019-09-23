@@ -25,6 +25,12 @@ class ZCaculator {
     
     func caculate() -> Size {
         
+        
+        if !(parent is Regulator) {
+            Caculator.adapting(size: _getEstimateSize(measure: regulator), to: regulator, in: parent)
+        }
+        
+        
         let layoutFixedSize = regulator.py_size
         
         var children = [Measure]()
@@ -38,7 +44,8 @@ class ZCaculator {
         
         for (measure) in children {
             
-            let subSize = measure.caculate(byParent: regulator)
+//            let subSize = measure.caculate(byParent: regulator)
+            let subSize = _getEstimateSize(measure: measure)
             let subMargin = measure.margin
             
             if subSize.width.isWrap || subSize.height.isWrap {
@@ -75,6 +82,10 @@ class ZCaculator {
             }
             
             measure.py_center = center
+            
+            if regulator.caculateChildrenImmediately {
+                _ = measure.caculate(byParent: regulator)
+            }
         }
         
         // 计算布局自身大小
@@ -91,4 +102,10 @@ class ZCaculator {
         return Size(width: width, height: height)
     }
     
+    private func _getEstimateSize(measure: Measure) -> Size {
+        if measure.size.maybeWrap() {
+            return measure.caculate(byParent: regulator)
+        }
+        return measure.size
+    }
 }
