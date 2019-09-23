@@ -32,6 +32,8 @@ public class FlowRegulator: FlatRegulator {
         }
     }
     
+    public var stretchRows = false
+    
     public override func caculate(byParent parent: Measure) -> Size {
         return FlowCaculator(self, parent: parent).caculate()
     }

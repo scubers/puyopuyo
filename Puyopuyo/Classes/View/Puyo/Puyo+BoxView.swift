@@ -205,6 +205,15 @@ extension Puyo where T: FlowBox {
         }), for: #function)
         return self
     }
+    
+    @discardableResult
+    public func stretchRows<O: Outputing>(_ stretch: O) -> Self where O.OutputType == Bool {
+        stretch.safeBind(to: view, id: #function) { (v, a) in
+            v.regulator.stretchRows = a
+            v.py_setNeedsLayout()
+        }
+        return self
+    }
 
 }
 
@@ -217,7 +226,7 @@ extension Puyo where T: EventableView {
     
     @discardableResult
     public func onEventProduced<Object: AnyObject>(to: Object, _ action: @escaping (Object, T.EventType) -> Void) -> Self {
-        view.eventProducer.outputing { [weak to] (event) in
+        _ = view.eventProducer.outputing { [weak to] (event) in
             if let to = to {
                 action(to, event)
             }
