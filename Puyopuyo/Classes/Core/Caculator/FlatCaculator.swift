@@ -133,15 +133,22 @@ class FlatCaculator {
         
     }
     
+    private lazy var placeholders = [Measure]()
     private func getPlaceholder() -> Measure {
-        let m = Measure()
+        let m = MeasureFactory.getPlaceholder()
+//        let m = Measure()
         let calSize = CalSize(main: .fill, cross: .fix(0), direction: regulator.direction)
         m.size = calSize.getSize()
         var edges = m.margin.getCalEdges(by: regulator.direction)
         // 占位节点需要抵消间距
         edges.start = -regulator.space
         m.margin = edges.getInsets()
+        placeholders.append(m)
         return m
+    }
+    
+    deinit {
+        MeasureFactory.recyclePlaceholders(placeholders)
     }
     
     private func appendAndRegulateNormalChild(_ measure: Measure) {

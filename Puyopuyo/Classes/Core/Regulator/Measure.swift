@@ -92,7 +92,14 @@ public struct Aligment: OptionSet, CustomStringConvertible, Outputing {
 }
 
 /// 描述一个节点相对于父节点的属性
-public class Measure: Measurable, MeasureTargetable {
+public class Measure: Measurable, MeasureTargetable, Hashable {
+    
+    public static func == (lhs: Measure, rhs: Measure) -> Bool {
+        return lhs === rhs
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+    }
     
     var virtualTarget = VirtualTarget()
     

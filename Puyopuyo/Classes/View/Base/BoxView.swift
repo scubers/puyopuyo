@@ -21,7 +21,6 @@ open class BoxView: UIView {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        autoresizingMask = .init(rawValue: 0)
         buildBody()
     }
     
@@ -37,21 +36,10 @@ open class BoxView: UIView {
         return py_measure as! Regulator
     }
     
-    private var isLayoutingSubview = false
-    
-    /// 只应用固有尺寸
-    func _selfSizeAdapting(size: Size) {
-        if superview is BoxView {
-            return
-        }
-        Caculator.adapting(size: size, to: regulator, in: superview?.py_measure ?? Measure())
-    }
-    
     open override func setNeedsLayout() {
         super.setNeedsLayout()
         // 若自身可能为包裹，则需要通知上层重新布局
-        let measure = py_measure
-        if let superview = superview as? BoxView, measure.size.maybeWrap(), !isLayoutingSubview {
+        if regulator.size.maybeWrap(), let superview = superview as? BoxView {
             superview.setNeedsLayout()
         }
     }
@@ -98,7 +86,10 @@ open class BoxView: UIView {
                         spv.py_frameStateByBoundsCenter().yo.map({ $0.size })])
                 .yo.distinct()
                 .outputing { [weak self] (_) in
-                    self?.setNeedsLayout()
+                    guard let self = self else { return }
+                    if self.regulator.size.maybeRatio() {
+                        self.setNeedsLayout()
+                    }
                 }
         }
     }
@@ -112,61 +103,32 @@ private extension BoxView {
 
     func _layoutSubviews() {
         
-        guard !isLayoutingSubview else {
-            return
-        }
-        
-        isLayoutingSubview = true
-        
         let parentMeasure = superview?.py_measure ?? Measure()
 
-        var needResizing = false
-        
-        _unResizingSubviews {
-            // 本身固有尺寸
-//            _selfSizeAdapting(size: regulator.size)
-            // 旧尺寸
-//            let oldSize = bounds.size
-            // 计算后尺寸不可能为包裹
-            let sizeAfterCaculate = regulator.caculate(byParent: parentMeasure)
-            // 应用计算后的固有尺寸
-            _selfSizeAdapting(size: sizeAfterCaculate)
+        let sizeAfterCaculate = regulator.caculate(byParent: parentMeasure)
+        // 应用计算后的固有尺寸
+        if superview is BoxView {
+            // 父视图为布局
+        } else if isSelfPositionControl {
+            // 父视图为普通视图
+            Caculator.adapting(size: sizeAfterCaculate, to: regulator, in: parentMeasure)
+            center = CGPoint(x: bounds.midX + regulator.margin.left, y: bounds.midY + regulator.margin.top)
             
-            if superview is BoxView {
-                // 父视图为布局
-            } else if isSelfPositionControl {
-                // 父视图为普通视图
-                center = CGPoint(x: bounds.midX + regulator.margin.left, y: bounds.midY + regulator.margin.top)
-                
-                let newSize = bounds.size
-                // 控制父视图的scroll
-                if isScrollViewControl, let scrollView = superview as? UIScrollView {
-                    if regulator.size.width.isWrap {
-                        scrollView.contentSize.width = newSize.width + regulator.margin.left + regulator.margin.right
-                    }
-                    if regulator.size.height.isWrap {
-                        scrollView.contentSize.height = newSize.height + regulator.margin.bottom + regulator.margin.top
-                    }
+            let newSize = bounds.size
+            // 控制父视图的scroll
+            if isScrollViewControl, let scrollView = superview as? UIScrollView {
+                if regulator.size.width.isWrap {
+                    scrollView.contentSize.width = newSize.width + regulator.margin.left + regulator.margin.right
+                }
+                if regulator.size.height.isWrap {
+                    scrollView.contentSize.height = newSize.height + regulator.margin.bottom + regulator.margin.top
                 }
             }
+        }
             
-//            needResizing = oldSize != bounds.size
-        }
-        
-        if needResizing {
-//            _ = regulator.caculate(byParent: parentMeasure)
-        }
-        
-        isLayoutingSubview = false
         // 更新边线
         _updatingBorders()
         
-    }
-    
-    func _unResizingSubviews(_ action: () -> Void) {
-//        autoresizesSubviews = false
-        action()
-//        autoresizesSubviews = true
     }
     
 }
