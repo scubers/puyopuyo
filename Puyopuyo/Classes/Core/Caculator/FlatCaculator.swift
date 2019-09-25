@@ -29,7 +29,7 @@ class FlatCaculator {
     /// 需要计算的子节点
     var caculateChildren = [Measure]()
     
-    /// 是否可用format，主轴为包裹，或者ratioMeasures.count > 0 则不能使用
+    /// 是否可用format，主轴为包裹，或者存在主轴比例的子节点时，则不能使用
     var formattable: Bool = true
     
     /// 计算本身布局属性，可能返回的size 为 .fixed, .ratio, 不可能返回wrap
