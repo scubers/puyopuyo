@@ -33,28 +33,24 @@ public struct Borders {
     weak var rightLayer: CAShapeLayer?
     
     mutating func updateTop(to superLayer: CALayer) {
-        guard let top = top else {
-            topLayer?.removeFromSuperlayer()
-            return
-        }
-        let layer = generate(border: top)
+        topLayer?.removeFromSuperlayer()
+        guard let border = top else { return }
+        let layer = generate(border: border)
         topLayer = layer
         let frame = superLayer.frame
         var layerFrame = CGRect.zero
-        layerFrame.origin.x = top.leadInset
-        layerFrame.origin.y = top.offset
-        layerFrame.size.width = frame.size.width - (top.leadInset + top.trailInset)
-        layerFrame.size.height = top.thick
+        layerFrame.origin.x = border.leadInset
+        layerFrame.origin.y = border.offset
+        layerFrame.size.width = frame.size.width - (border.leadInset + border.trailInset)
+        layerFrame.size.height = border.thick
         layer.frame = layerFrame
         layer.path = getHorzPath(layerFrame).cgPath
         superLayer.addSublayer(layer)
     }
     
     mutating func updateLeft(to superLayer: CALayer) {
-        guard let border = left else {
-            leftLayer?.removeFromSuperlayer()
-            return
-        }
+        leftLayer?.removeFromSuperlayer()
+        guard let border = left else { return }
         let layer = generate(border: border)
         leftLayer = layer
         let frame = superLayer.frame
@@ -69,10 +65,8 @@ public struct Borders {
     }
     
     mutating func updateBottom(to superLayer: CALayer) {
-        guard let border = bottom else {
-            bottomLayer?.removeFromSuperlayer()
-            return
-        }
+        bottomLayer?.removeFromSuperlayer()
+        guard let border = bottom else { return }
         let layer = generate(border: border)
         bottomLayer = layer
         let frame = superLayer.frame
@@ -87,10 +81,8 @@ public struct Borders {
     }
     
     mutating func updateRight(to superLayer: CALayer) {
-        guard let border = right else {
-            rightLayer?.removeFromSuperlayer()
-            return
-        }
+        rightLayer?.removeFromSuperlayer()
+        guard let border = right else { return }
         let layer = generate(border: border)
         rightLayer = layer
         let frame = superLayer.frame
