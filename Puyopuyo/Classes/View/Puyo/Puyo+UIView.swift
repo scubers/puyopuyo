@@ -241,8 +241,8 @@ extension Puyo where T: UIView {
     }
     
     @discardableResult
-    public func stylesSheet(_ styles: [StyleSheet]) -> Self {
-        styles.forEach({ view.applyStyles($0.styles) })
+    public func stylesSheet(_ styles: StyleSheet) -> Self {
+        view.applyStyles(styles.styles)
         return self
     }
     

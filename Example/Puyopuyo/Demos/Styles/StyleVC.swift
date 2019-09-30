@@ -10,15 +10,31 @@ import UIKit
 import Puyopuyo
 
 class StyleVC: BaseVC {
-
+    
+    var styleSheet: StyleSheet {
+        if #available(iOS 13.0, *) {
+            return StyleSheet(styles: [
+                Styles.cornerRadius(10),
+                Styles.clipToBounds(true),
+                UIFont.systemFont(ofSize: 16),
+                TextColorStyle(value: .black),
+                Styles.bgColor(.brown),
+                ImageStyle(value: .checkmark),
+            ])
+        } else {
+            return StyleSheet(styles: [])
+        }
+    }
+    
     override func configView() {
+        
         vRoot.attach() {
+            
             UIButton().attach($0)
                 .title("ripple", state: .normal)
-                .styles([
-                    Styles.cornerRadius(10),
-                    TapRippleStyle<UIView>()// 有问题
-                ])
+                .styleSheet(self.styleSheet.combine([
+                    TapRippleStyle()
+                ]))
                 .onTap(to: self, { (self, g) in
                     print("ripple")
                 })
@@ -26,29 +42,36 @@ class StyleVC: BaseVC {
             
             UIButton().attach($0)
                 .title("Cover", state: .normal)
-                .styles([
-                    Styles.cornerRadius(10),
-                    TapCoverStyle<UIView>(),
-                ])
+                .styleSheet(self.styleSheet.combine([
+                    TapCoverStyle(),
+                ]))
                 .onTap(to: self, { (self, _) in
                     print("cover")
                 })
                 .size(200, 50)
             
-            Label("ripple + Cover").attach($0)
+            Label("scale").attach($0)
+                .onTap(to: self, { (self, _) in
+                    print("scale")
+                })
+                .size(200, 50)
+                .styleSheet(self.styleSheet.combine([
+                    TapScaleStyle()
+                ]))
+            
+            Label("ripple + Cover + scale").attach($0)
                 .size(200, 50)
                 .onTap(to: self, { (self, _) in
-                    print("ripple + cover")
+                    print("ripple + cover + scale")
                 })
-                .styles([
-                    Styles.cornerRadius(10),
-                    Styles.clipToBounds(true),
-                    TapCoverStyle<UIView>(),
-                    TapRippleStyle<UIView>(color: UIColor.red.withAlphaComponent(0.5))
-                ])
+                .styleSheet(self.styleSheet.combine([
+                    TapCoverStyle(),
+                    TapRippleStyle(color: UIColor.red.withAlphaComponent(0.5)),
+                    TapScaleStyle()
+                ]))
         }
         .styles([
-            TapRippleStyle<UIView>()
+            TapRippleStyle()
         ])
         .space(4)
         .padding(all: 10)

@@ -20,10 +20,9 @@ import Foundation
 }
 
 // MARK: - Conveniences
-@objc public class Styles: NSObject, Style {
+final public class Styles: Style {
     var style: Style?
     init(style: Style) {
-        super.init()
         self.style = style
     }
     public func apply(to styleable: Styleable) {
@@ -31,11 +30,19 @@ import Foundation
     }
 }
 
-@objc public class StyleSheet: NSObject {
+final public class StyleSheet: Outputing {
+    public typealias OutputType = StyleSheet
     public var styles: [Style]
     @objc public init(styles: [Style]) {
         self.styles = styles
-        super.init()
+    }
+    
+    public func combine(sheet: StyleSheet) -> StyleSheet {
+        return StyleSheet(styles: styles + sheet.styles)
+    }
+    
+    public func combine(_ styles: [Style]) -> StyleSheet {
+        return StyleSheet(styles: self.styles + styles)
     }
 }
 
@@ -48,9 +55,9 @@ extension Styleable {
 }
 
 extension UIView {
-    @objc public func py_applyStyleSheets(_ styleSheets: [StyleSheet]) {
-        styleSheets.forEach({ self.applyStyles($0.styles) })
-    }
+//    @objc public func py_applyStyleSheets(_ styleSheets: [StyleSheet]) {
+//        styleSheets.forEach({ self.applyStyles($0.styles) })
+//    }
 }
 
 extension UIView: Styleable {

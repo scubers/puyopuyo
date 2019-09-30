@@ -17,10 +17,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.view py_applyStyleSheets:@[
-        [[StyleSheet alloc] initWithStyles:@[
-            [Styles whiteBg],
-        ]]
-    ]];
+//    [self.view py_applyStyleSheets:@[
+//        [[StyleSheet alloc] initWithStyles:@[
+//            [Styles whiteBg],
+//        ]]
+//    ]];
 }
 @end

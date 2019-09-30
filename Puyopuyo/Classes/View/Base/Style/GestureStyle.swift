@@ -7,15 +7,19 @@
 
 import Foundation
 
-public protocol GestureStyleable {
+public protocol GestureStyleable: Styleable {
     var gestureStyleView: UIView { get }
+}
+
+public protocol GestureStyle: Style {
+    func apply(to gestureStyle: GestureStyleable)
 }
 
 public protocol IdentifiableStyle {
     var styleIdentifier: String { get }
 }
 
-open class BaseGestureStyle<T: GestureStyleable>: Style, IdentifiableStyle {
+open class BaseGestureStyle: GestureStyle, IdentifiableStyle {
     
     public var styleIdentifier: String
     
@@ -24,10 +28,15 @@ open class BaseGestureStyle<T: GestureStyleable>: Style, IdentifiableStyle {
     }
     
     public func apply(to styleable: Styleable) {
-        if let v = StyleUtil.convert(styleable, GestureStyleable.self)?.gestureStyleView {
-            _removeSpecifyGesture(view: v)
-            v.addGestureRecognizer(getGesture())
+        if let s = StyleUtil.convert(styleable, GestureStyleable.self) {
+            apply(to: s)
         }
+    }
+    
+    public func apply(to gestureStyleable: GestureStyleable) {
+        let v = gestureStyleable.gestureStyleView
+        _removeSpecifyGesture(view: v)
+        v.addGestureRecognizer(getGesture())
     }
     
     private func _removeSpecifyGesture(view: UIView) {
@@ -74,7 +83,7 @@ class ShouldSimulateOtherGestureDelegate: NSObject, UIGestureRecognizerDelegate,
 
 // MARK: - TapGestureStyle
 
-open class TapGestureStyle<T: GestureStyleable>: BaseGestureStyle<T> {
+open class TapGestureStyle: BaseGestureStyle {
     public init(identifier: String, _ action: @escaping (UITapGestureRecognizer) -> Void) {
         super.init(identifier: identifier)
         self.action = action
@@ -89,7 +98,7 @@ open class TapGestureStyle<T: GestureStyleable>: BaseGestureStyle<T> {
     }
 }
 // MARK: - LongPress
-open class LongPressGestureStyle<T: GestureStyleable>: BaseGestureStyle<T> {
+open class LongPressGestureStyle: BaseGestureStyle {
     public init(identifier: String, _ action: @escaping (UILongPressGestureRecognizer) -> Void) {
         super.init(identifier: identifier)
         self.action = action
@@ -101,5 +110,17 @@ open class LongPressGestureStyle<T: GestureStyleable>: BaseGestureStyle<T> {
             self.action(g as! UILongPressGestureRecognizer)
         }
         return tap
+    }
+}
+
+// MARK: -
+public class LayerGesture: UIGestureRecognizer {
+    public var layer = CAShapeLayer()
+    public var color = UIColor.lightGray.withAlphaComponent(0.6)
+    public init(color: UIColor? = nil) {
+        super.init(target: nil, action: nil)
+        if let color = color {
+            self.color = color
+        }
     }
 }

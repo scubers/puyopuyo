@@ -46,7 +46,7 @@ class TestVC: BaseVC {
                     Label(i.description).attach($0)
                         .size(.fill, .fill)
                         .styles([
-                            TapRippleStyle<UIView>()
+                            TapRippleStyle()
                         ])
                 }
             }

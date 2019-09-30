@@ -8,11 +8,11 @@
 import Foundation
 
 // MARK: - TapCoverStyle
-public class TapRippleStyle<T: GestureStyleable>: TapGestureStyle<T> {
+public class TapRippleStyle: BaseGestureStyle {
     
     var color: UIColor = UIColor.lightGray.withAlphaComponent(0.6)
     public init(color: UIColor? = nil) {
-        super.init(identifier: "TapRippleStyle") { (_) in }
+        super.init(identifier: "TapRippleStyle")
         if let c = color {
             self.color = c
         }
@@ -43,6 +43,7 @@ public class TapRippleStyle<T: GestureStyleable>: TapGestureStyle<T> {
         big.duration = duration
         let size = view.bounds.size
         big.toValue = UIBezierPath(arcCenter: point, radius: max(size.height, size.width), startAngle: 0, endAngle: CGFloat.pi * 2, clockwise: true).cgPath
+        big.timingFunction = CAMediaTimingFunction(name: .easeOut)
         round.add(big, forKey: "big")
         
         let alpha = CABasicAnimation(keyPath: "opacity")
@@ -59,10 +60,10 @@ public class TapRippleStyle<T: GestureStyleable>: TapGestureStyle<T> {
 }
 
 // MARK: - TapCoverStyle
-public class TapCoverStyle<T: GestureStyleable>: TapGestureStyle<T> {
+public class TapCoverStyle: BaseGestureStyle {
     var color: UIColor = UIColor.lightGray.withAlphaComponent(0.6)
     public init(color: UIColor? = nil) {
-        super.init(identifier: "TapCoverStyle") { (_) in }
+        super.init(identifier: "TapCoverStyle")
         if let c = color {
             self.color = c
         }
@@ -75,13 +76,7 @@ public class TapCoverStyle<T: GestureStyleable>: TapGestureStyle<T> {
         return gesture
     }
     
-    class Gesture: UIGestureRecognizer {
-        private var color: UIColor = UIColor.lightGray.withAlphaComponent(0.4)
-        init(color: UIColor?) {
-            super.init(target: nil, action: nil)
-            if let color = color { self.color = color }
-        }
-        private var layer = CAShapeLayer()
+    class Gesture: LayerGesture {
         override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
             layer.frame = view?.bounds ?? .zero
             layer.fillColor = color.cgColor
@@ -116,6 +111,49 @@ public class TapCoverStyle<T: GestureStyleable>: TapGestureStyle<T> {
             big.toValue = 0
             layer.add(big, forKey: "dimiss")
             layer.opacity = 0
+        }
+    }
+}
+
+// MARK: - TapScaleStyle
+public class TapScaleStyle: BaseGestureStyle {
+    var scale: Double
+    public init(scale: Double = 0.9) {
+        self.scale = scale
+        super.init(identifier: "TapScaleStyle")
+    }
+    
+    public override func getGesture() -> UIGestureRecognizer {
+        let tap = Gesture()
+        tap.scale = scale
+        let d = ShouldSimulateOtherGestureDelegate()
+        tap.delegate = d
+        tap.py_setUnbinder(d, for: "\(styleIdentifier)_delegate")
+        return tap
+    }
+    
+    class Gesture: UIGestureRecognizer {
+        var scale: Double = 1
+        override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
+            startAnimate()
+        }
+        override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
+            dismissAnimate()
+        }
+        override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
+            dismissAnimate()
+        }
+        private func startAnimate() {
+            guard let view = view else { return }
+            UIView.animate(withDuration: 0.15) {
+                view.layer.transform = CATransform3DMakeScale(CGFloat(self.scale), CGFloat(self.scale), 1)
+            }
+        }
+        private func dismissAnimate() {
+            guard let view = view else { return }
+            UIView.animate(withDuration: 0.2, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 3, options: .curveEaseInOut, animations: {
+                view.layer.transform = CATransform3DIdentity
+            }, completion: nil)
         }
     }
 }
