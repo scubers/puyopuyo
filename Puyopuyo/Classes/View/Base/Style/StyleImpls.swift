@@ -13,9 +13,11 @@ extension UILabel: TextColorDecorable, TextAligmentDecorable, TextLinesDecorable
         self.font = font
     }
     public func applyTextColor(_ color: UIColor?, state: UIControl.State) {
+        guard state == .normal else { return }
         textColor = color
     }
     public func applyTextAligment(_ aligment: NSTextAlignment, state: UIControl.State) {
+        guard state == .normal else { return }
         textAlignment = aligment
     }
     public func applyNumberOfLine(_ line: Int) {
@@ -28,9 +30,11 @@ extension UITextField: TextColorDecorable, TextAligmentDecorable, TextLinesDecor
         self.font = font
     }
     public func applyTextColor(_ color: UIColor?, state: UIControl.State) {
+        guard state == .normal else { return }
         textColor = color
     }
     public func applyTextAligment(_ aligment: NSTextAlignment, state: UIControl.State) {
+        guard state == .normal else { return }
         textAlignment = aligment
     }
     public func applyNumberOfLine(_ line: Int) {
@@ -42,9 +46,11 @@ extension UITextView: TextColorDecorable, TextAligmentDecorable, TextLinesDecora
         self.font = font
     }
     public func applyTextColor(_ color: UIColor?, state: UIControl.State) {
+        guard state == .normal else { return }
         textColor = color
     }
     public func applyTextAligment(_ aligment: NSTextAlignment, state: UIControl.State) {
+        guard state == .normal else { return }
         textAlignment = aligment
     }
     public func applyNumberOfLine(_ line: Int) {
@@ -77,21 +83,25 @@ extension UIButton: TextColorDecorable, TextAligmentDecorable, TextLinesDecorabl
 // MARK: - UIImageView
 extension UIImageView: ImageDecorable, TintColorDecorable {
     public func applyImage(_ image: UIImage?, state: UIControl.State) {
+        guard state == .normal else { return }
         self.image = image
     }
     public func applyTintColor(_ color: UIColor?, state: UIControl.State) {
+        guard state == .normal else { return }
         tintColor = color
     }
 }
 // MARK: - UIBarButtonItem
 extension UIBarButtonItem: TintColorDecorable {
     public func applyTintColor(_ color: UIColor?, state: UIControl.State) {
+        guard state == .normal else { return }
         tintColor = color
     }
 }
 // MARK: - UINavigationBar
 extension UINavigationBar: TintColorDecorable {
     public func applyTintColor(_ color: UIColor?, state: UIControl.State) {
+        guard state == .normal else { return }
         tintColor = color
     }
 }

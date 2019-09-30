@@ -55,8 +55,8 @@ class TestVC: BaseVC {
             .space(5)
             .padding(all: 10)
             .styles([
-                Styles.borderWidth(1),
-                Styles.borderColor(UIColor.purple.cgColor)
+                (\UIView.layer.borderWidth).getStyle(with: 1),
+                (\UIView.layer.borderColor).getStyle(with: UIColor.purple.cgColor)
             ])
             
         }

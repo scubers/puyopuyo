@@ -20,8 +20,6 @@ import Foundation
 }
 
 // MARK: - Conveniences
-@objc(PYStyles) public class Styles: NSObject {
-}
 
 open class StyleSheet: Outputing {
     public typealias OutputType = StyleSheet

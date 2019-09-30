@@ -21,6 +21,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = UINavigationController(rootViewController: MenuVC())
         window?.makeKeyAndVisible()
         
+        let v = UIView()
+        v[keyPath: \UIView.py_measure.size.width] = .fill
+        
         return true
     }
 

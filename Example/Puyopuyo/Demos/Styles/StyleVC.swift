@@ -12,23 +12,28 @@ import Puyopuyo
 class StyleVC: BaseVC {
     
     var styleSheet: StyleSheet {
-        if #available(iOS 13.0, *) {
-            return StyleSheet(styles: [
-                Styles.cornerRadius(10),
-                Styles.clipToBounds(true),
-                UIFont.systemFont(ofSize: 16),
-                TextColorStyle(value: .black),
-                Styles.bgColor(.brown),
-                ImageStyle(value: .checkmark),
-            ])
-        } else {
-            return StyleSheet(styles: [])
-        }
+        return StyleSheet(styles: [
+            (\UIView.layer.cornerRadius).getStyle(with: 10),
+            (\UIView.clipsToBounds).getStyle(with: true),
+            (\UIView.backgroundColor).getStyle(with: .brown),
+            (\UIView.layer.borderWidth).getStyle(with: 1),
+            (\UIView.layer.borderColor).getStyle(with: UIColor.purple.cgColor),
+            (\UIView.py_measure.size).getStyle(with: Size(width: .fix(200), height: .fix(50))),
+            UIFont.systemFont(ofSize: 16),
+            TextColorStyle(value: .black, state: .normal),
+            TextColorStyle(value: .red, state: .highlighted),
+        ])
     }
     
     override func configView() {
         
         vRoot.attach() {
+            
+            UIButton().attach($0)
+                .title("normal", state: .normal)
+                .styleSheet(self.styleSheet.combine([
+                    
+                ]))
             
             UIButton().attach($0)
                 .title("ripple", state: .normal)
@@ -38,7 +43,6 @@ class StyleVC: BaseVC {
                 .onTap(to: self, { (self, g) in
                     print("ripple")
                 })
-                .size(200, 50)
             
             UIButton().attach($0)
                 .title("Cover", state: .normal)
@@ -48,19 +52,16 @@ class StyleVC: BaseVC {
                 .onTap(to: self, { (self, _) in
                     print("cover")
                 })
-                .size(200, 50)
             
             Label("scale").attach($0)
                 .onTap(to: self, { (self, _) in
                     print("scale")
                 })
-                .size(200, 50)
                 .styleSheet(self.styleSheet.combine([
                     TapScaleStyle()
                 ]))
             
             Label("ripple + Cover + scale").attach($0)
-                .size(200, 50)
                 .onTap(to: self, { (self, _) in
                     print("ripple + cover + scale")
                 })
