@@ -18,7 +18,13 @@ class BaseVC: UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "back", style: .plain, target: self, action: #selector(BaseVC.back))
         vRoot.attach(view).size(.ratio(1), .ratio(1))
         configView()
-        Util.randomViewColor(view: view)
+        if shouldRandomColor() {
+            Util.randomViewColor(view: view)
+        }
+    }
+    
+    func shouldRandomColor() -> Bool {
+        return true
     }
     
     var vRoot: VBox = VBox()

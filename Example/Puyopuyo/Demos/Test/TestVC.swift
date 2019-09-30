@@ -25,7 +25,8 @@ class NewView: ZBox, EventableView {
 
 class TestVC: BaseVC {
     
-    var subVC: UIViewController? = nil
+//    var subVC: UIViewController? = nil
+    var subVC: UIViewController? = StyleVC()
 //    var subVC: UIViewController? = FlowBoxBaseVC()
 //    var subVC: UIViewController? = VBoxVC()
 //    var subVC: UIViewController? = FlatFormationAligmentVC()
@@ -44,12 +45,19 @@ class TestVC: BaseVC {
                 for i in 0..<21 {
                     Label(i.description).attach($0)
                         .size(.fill, .fill)
+                        .styles([
+                            TapRippleStyle<UIView>()
+                        ])
                 }
             }
             .stretchRows(true)
             .size(180, 180)
             .space(5)
             .padding(all: 10)
+            .styles([
+                .borderWidth(1),
+                .borderColor(UIColor.purple.cgColor)
+            ])
             
         }
         .format(.sides)

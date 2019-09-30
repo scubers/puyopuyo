@@ -19,6 +19,9 @@
 		A81CE1492312EE6900E19E6B /* OptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81CE1482312EE6900E19E6B /* OptionView.swift */; };
 		A846265123093E4E003A282C /* FlatFormationAligmentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A846265023093E4E003A282C /* FlatFormationAligmentVC.swift */; };
 		A84626542309574C003A282C /* TestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84626532309574C003A282C /* TestVC.swift */; };
+		A86F4378233F45730008606F /* StylesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A86F4377233F45730008606F /* StylesViewController.m */; };
+		A86F437F233F60370008606F /* Styles.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86F437E233F60370008606F /* Styles.swift */; };
+		A86F4381233F9C100008606F /* StyleVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A86F4380233F9C100008606F /* StyleVC.swift */; };
 		A897FCDC230AF7630061029E /* ListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A897FCDB230AF7630061029E /* ListVC.swift */; };
 		A897FCDE230AFBD80061029E /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = A897FCDD230AFBD80061029E /* Util.swift */; };
 		A8D9430722FF3640002E487F /* VBoxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9430622FF3640002E487F /* VBoxVC.swift */; };
@@ -66,6 +69,11 @@
 		A81CE1482312EE6900E19E6B /* OptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionView.swift; sourceTree = "<group>"; };
 		A846265023093E4E003A282C /* FlatFormationAligmentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlatFormationAligmentVC.swift; sourceTree = "<group>"; };
 		A84626532309574C003A282C /* TestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVC.swift; sourceTree = "<group>"; };
+		A86F4375233F45730008606F /* Puyopuyo_Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Puyopuyo_Example-Bridging-Header.h"; sourceTree = "<group>"; };
+		A86F4376233F45730008606F /* StylesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StylesViewController.h; sourceTree = "<group>"; };
+		A86F4377233F45730008606F /* StylesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StylesViewController.m; sourceTree = "<group>"; };
+		A86F437E233F60370008606F /* Styles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Styles.swift; sourceTree = "<group>"; };
+		A86F4380233F9C100008606F /* StyleVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleVC.swift; sourceTree = "<group>"; };
 		A897FCDB230AF7630061029E /* ListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListVC.swift; sourceTree = "<group>"; };
 		A897FCDD230AFBD80061029E /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		A8D9430622FF3640002E487F /* VBoxVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VBoxVC.swift; sourceTree = "<group>"; };
@@ -145,6 +153,9 @@
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
 				09883C4922C5E5FB006CE05A /* StyleTestViewController.swift */,
+				A86F4376233F45730008606F /* StylesViewController.h */,
+				A86F4377233F45730008606F /* StylesViewController.m */,
+				A86F4375233F45730008606F /* Puyopuyo_Example-Bridging-Header.h */,
 			);
 			name = "Example for Puyopuyo";
 			path = Puyopuyo;
@@ -202,9 +213,19 @@
 			path = Test;
 			sourceTree = "<group>";
 		};
+		A86F437D233F60290008606F /* Styles */ = {
+			isa = PBXGroup;
+			children = (
+				A86F437E233F60370008606F /* Styles.swift */,
+				A86F4380233F9C100008606F /* StyleVC.swift */,
+			);
+			path = Styles;
+			sourceTree = "<group>";
+		};
 		A8D9430222FF360B002E487F /* Demos */ = {
 			isa = PBXGroup;
 			children = (
+				A86F437D233F60290008606F /* Styles */,
 				A81CE13D231063E200E19E6B /* FlowBox */,
 				A846265223095743003A282C /* Test */,
 				A8D9431322FFF0EB002E487F /* Stateful */,
@@ -328,7 +349,7 @@
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
 						DevelopmentTeam = FJ535WN7FW;
-						LastSwiftMigration = 0900;
+						LastSwiftMigration = 1100;
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
@@ -458,16 +479,19 @@
 				A846265123093E4E003A282C /* FlatFormationAligmentVC.swift in Sources */,
 				A8D9430C22FF3937002E487F /* ZBoxVC.swift in Sources */,
 				A81CE1492312EE6900E19E6B /* OptionView.swift in Sources */,
+				A86F4381233F9C100008606F /* StyleVC.swift in Sources */,
 				A8D9430722FF3640002E487F /* VBoxVC.swift in Sources */,
 				A8D9431022FFEBE7002E487F /* FlatBoxMenu.swift in Sources */,
 				09883C4A22C5E5FB006CE05A /* StyleTestViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				A86F4378233F45730008606F /* StylesViewController.m in Sources */,
 				A81CE1452312811400E19E6B /* FlowBoxBaseVC.swift in Sources */,
 				A8E53FB322C8E679000B2B6D /* BaseVC.swift in Sources */,
 				A81CE143231280EE00E19E6B /* FlowBoxMenu.swift in Sources */,
 				A8E53FB522C8E6BB000B2B6D /* MenuVC.swift in Sources */,
 				A897FCDE230AFBD80061029E /* Util.swift in Sources */,
 				A897FCDC230AF7630061029E /* ListVC.swift in Sources */,
+				A86F437F233F60370008606F /* Styles.swift in Sources */,
 				A8D9430E22FFEB00002E487F /* ZBoxMenu.swift in Sources */,
 				A8D9431622FFF102002E487F /* StatefulVC.swift in Sources */,
 				A8D9430922FF3694002E487F /* Label.swift in Sources */,
@@ -618,6 +642,7 @@
 			baseConfigurationReference = B80C4BDF60E8E994E6351B56 /* Pods-Puyopuyo_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = FJ535WN7FW;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Puyopuyo/Info.plist;
@@ -625,6 +650,8 @@
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Puyopuyo/Puyopuyo_Example-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.2;
 			};
@@ -635,6 +662,7 @@
 			baseConfigurationReference = 77FB953E25BC3D91DC89F5C7 /* Pods-Puyopuyo_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				DEVELOPMENT_TEAM = FJ535WN7FW;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Puyopuyo/Info.plist;
@@ -642,6 +670,7 @@
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Puyopuyo/Puyopuyo_Example-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.2;
 			};

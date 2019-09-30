@@ -19,6 +19,7 @@ class MenuVC: BaseVC {
             ("FlowBox", FlowBoxMenu.self),
             ("ZBox", ZBoxMenu.self),
             ("Stateful", StatefulVC.self),
+            ("Style", StyleVC.self),
         ]
     }
     

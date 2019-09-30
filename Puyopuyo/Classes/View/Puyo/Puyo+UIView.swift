@@ -232,33 +232,42 @@ extension Puyo where T: UIView {
         return self
     }
     
-}
-
-class _PuyoTapTarget<Tap>: NSObject, Unbinder {
-    
-    var action: (Tap) -> Void
-    init(_ action: @escaping (Tap) -> Void) {
-        self.action = action
+    @discardableResult
+    public func styleSheet<O: Outputing>(_ styles: O) -> Self where O.OutputType: StyleSheet {
+        styles.safeBind(to: view, id: #function) { (v, s) in
+            v.applyStyles(s.styles)
+        }
+        return self
     }
     
-    @objc func targetAction(_ btn: Any) {
-        action(btn as! Tap)
+    @discardableResult
+    public func stylesSheet(_ styles: [StyleSheet]) -> Self {
+        styles.forEach({ view.applyStyles($0.styles) })
+        return self
     }
     
-    func py_unbind() {
-        
+    @discardableResult
+    public func styles(_ styles: [Style]) -> Self {
+        view.applyStyles(styles)
+        return self
     }
+    
+    @discardableResult
+    public func styles(_ styles: [Styles]) -> Self {
+        view.applyStyles(styles)
+        return self
+    }
+    
 }
 
 extension UIView {
     public func py_setTap(action: @escaping (UITapGestureRecognizer) -> Void) -> Unbinder {
-        let target = _PuyoTapTarget<UITapGestureRecognizer>(action)
-        let tap = UITapGestureRecognizer(target: target, action: #selector(_PuyoTapTarget<UITapGestureRecognizer>.targetAction(_:)))
-        addGestureRecognizer(tap)
-        let unbinder = Unbinders.create { [weak self] in
-            self?.removeGestureRecognizer(tap)
+        let tap = UITapGestureRecognizer()
+        let unbinder = tap.py_addAction { (g) in
+            action(g as! UITapGestureRecognizer)
         }
-        py_setUnbinder(target, for: #function)
+        addGestureRecognizer(tap)
+        py_setUnbinder(unbinder, for: #function)
         return unbinder
     }
 }
