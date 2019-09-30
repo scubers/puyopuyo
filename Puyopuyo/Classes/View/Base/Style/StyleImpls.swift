@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - UILabel
-extension UILabel: TextColorStyleable, TextAligmentStyleable, TextLinesStyleable, FontStyleable {
+extension UILabel: TextColorDecorable, TextAligmentDecorable, TextLinesDecorable, FontDecorable {
     public func applyFont(_ font: UIFont?) {
         self.font = font
     }
@@ -23,7 +23,7 @@ extension UILabel: TextColorStyleable, TextAligmentStyleable, TextLinesStyleable
     }
 }
 // MARK: - UITextField
-extension UITextField: TextColorStyleable, TextAligmentStyleable, TextLinesStyleable, FontStyleable {
+extension UITextField: TextColorDecorable, TextAligmentDecorable, TextLinesDecorable, FontDecorable {
     public func applyFont(_ font: UIFont?) {
         self.font = font
     }
@@ -37,7 +37,7 @@ extension UITextField: TextColorStyleable, TextAligmentStyleable, TextLinesStyle
     }
 }
 // MARK: - UITextView
-extension UITextView: TextColorStyleable, TextAligmentStyleable, TextLinesStyleable, FontStyleable {
+extension UITextView: TextColorDecorable, TextAligmentDecorable, TextLinesDecorable, FontDecorable {
     public func applyFont(_ font: UIFont?) {
         self.font = font
     }
@@ -51,7 +51,7 @@ extension UITextView: TextColorStyleable, TextAligmentStyleable, TextLinesStylea
     }
 }
 // MARK: - UIButton
-extension UIButton: TextColorStyleable, TextAligmentStyleable, TextLinesStyleable, ImageStyleable, BgImageStyleable, TitleShadowColorStyleable, FontStyleable {
+extension UIButton: TextColorDecorable, TextAligmentDecorable, TextLinesDecorable, ImageDecorable, BgImageDecorable, TitleShadowColorDecorable, FontDecorable {
     public func applyFont(_ font: UIFont?) {
         titleLabel?.font = font
     }
@@ -75,7 +75,7 @@ extension UIButton: TextColorStyleable, TextAligmentStyleable, TextLinesStyleabl
     }
 }
 // MARK: - UIImageView
-extension UIImageView: ImageStyleable, TintColorStyleable {
+extension UIImageView: ImageDecorable, TintColorDecorable {
     public func applyImage(_ image: UIImage?, state: UIControl.State) {
         self.image = image
     }
@@ -84,13 +84,13 @@ extension UIImageView: ImageStyleable, TintColorStyleable {
     }
 }
 // MARK: - UIBarButtonItem
-extension UIBarButtonItem: TintColorStyleable {
+extension UIBarButtonItem: TintColorDecorable {
     public func applyTintColor(_ color: UIColor?, state: UIControl.State) {
         tintColor = color
     }
 }
 // MARK: - UINavigationBar
-extension UINavigationBar: TintColorStyleable {
+extension UINavigationBar: TintColorDecorable {
     public func applyTintColor(_ color: UIColor?, state: UIControl.State) {
         tintColor = color
     }

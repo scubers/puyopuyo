@@ -7,8 +7,8 @@
 
 import Foundation
 
-// MARK: - ViewSingleValueStyle
-public class ViewSingleValueStyle<View, Value, KeyPath> where KeyPath: ReferenceWritableKeyPath<View, Value>, View: UIView {
+// MARK: - SingleValueStyle
+open class SingleValueStyle<Object, Value, KeyPath> where KeyPath: ReferenceWritableKeyPath<Object, Value>, Object: AnyObject {
     public var value: Value
     public var keyPath: KeyPath
     public init(value: Value, keyPath: KeyPath) {
@@ -17,13 +17,32 @@ public class ViewSingleValueStyle<View, Value, KeyPath> where KeyPath: Reference
     }
 }
 
-// MARK: - UIViewValueStyle
-public class UIViewValueStyle<Value>: ViewSingleValueStyle<UIView, Value, ReferenceWritableKeyPath<UIView, Value>>, Style {
-    public func apply(to styleable: Styleable) {
-        guard let view = styleable as? UIView else {
+// MARK: - UIViewStyle
+public protocol UIViewDecorable {
+    var decorableView: UIView { get }
+}
+extension UIView: UIViewDecorable {
+    public var decorableView: UIView {
+        return self
+    }
+}
+
+public class UIViewStyle<Value>: SingleValueStyle<UIView, Value, ReferenceWritableKeyPath<UIView, Value>>, Style {
+    public func apply(to decorable: Decorable) {
+        guard let view = (decorable as? UIViewDecorable)?.decorableView else {
             return
         }
         view[keyPath: self.keyPath] = value
+    }
+}
+
+// MARK: - CALayerStyle
+public class CALayerStyle<Value>: SingleValueStyle<CALayer, Value, ReferenceWritableKeyPath<CALayer, Value>>, Style {
+    public func apply(to decorable: Decorable) {
+        guard let layer = (decorable as? UIViewDecorable)?.decorableView.layer else {
+            return
+        }
+        layer[keyPath: self.keyPath] = value
     }
 }
 
@@ -33,13 +52,13 @@ open class CommonValueStyle<T, U>: Style {
     public init(value: T) {
         self.value = value
     }
-    public func apply(to styleable: Styleable) {
-        if let s = StyleUtil.convert(styleable, U.self) {
-            applyStyleable(s)
+    public func apply(to decroable: Decorable) {
+        if let s = StyleUtil.convert(decroable, U.self) {
+            applyDecorable(s)
         }
     }
     
-    public func applyStyleable(_ styleable: U) {
+    public func applyDecorable(_ decroable: U) {
         
     }
 }

@@ -7,32 +7,32 @@
 
 import Foundation
 // MARK: - TextColor
-public protocol TextColorStyleable {
+public protocol TextColorDecorable {
     func applyTextColor(_ color: UIColor?, state: UIControl.State)
 }
 
-public class TextColorStyle: UIControlBaseStyle<UIColor?, TextColorStyleable> {
-    public override func applyStyleable(_ styleable: TextColorStyleable) {
-        styleable.applyTextColor(value, state: controlState)
+public class TextColorStyle: UIControlBaseStyle<UIColor?, TextColorDecorable> {
+    public override func applyDecorable(_ decorable: TextColorDecorable) {
+        decorable.applyTextColor(value, state: controlState)
     }
 }
 // MARK: - TextAligment
-public protocol TextAligmentStyleable {
+public protocol TextAligmentDecorable {
     func applyTextAligment(_ aligment: NSTextAlignment, state: UIControl.State)
 }
 
-public class TextAligmentStyle: UIControlBaseStyle<NSTextAlignment, TextAligmentStyleable> {
-    public override func applyStyleable(_ styleable: TextAligmentStyleable) {
-        styleable.applyTextAligment(value, state: controlState)
+public class TextAligmentStyle: UIControlBaseStyle<NSTextAlignment, TextAligmentDecorable> {
+    public override func applyDecorable(_ decorable: TextAligmentDecorable) {
+        decorable.applyTextAligment(value, state: controlState)
     }
 }
 // MARK: - TextLine
-public protocol TextLinesStyleable {
+public protocol TextLinesDecorable {
     func applyNumberOfLine(_ line: Int)
 }
 
-public class TextLinsStyle: CommonValueStyle<Int, TextLinesStyleable> {
-    public override func applyStyleable(_ styleable: TextLinesStyleable) {
-        styleable.applyNumberOfLine(value)
+public class TextLinsStyle: CommonValueStyle<Int, TextLinesDecorable> {
+    public override func applyDecorable(_ decorable: TextLinesDecorable) {
+        decorable.applyNumberOfLine(value)
     }
 }

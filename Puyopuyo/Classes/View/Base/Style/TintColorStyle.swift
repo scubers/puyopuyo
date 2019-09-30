@@ -7,12 +7,12 @@
 
 import Foundation
 
-public protocol TintColorStyleable {
+public protocol TintColorDecorable {
     func applyTintColor(_ color: UIColor?, state: UIControl.State)
 }
 
-public class TintColorStyle: UIControlBaseStyle<UIColor?, TintColorStyleable> {
-    public override func applyStyleable(_ styleable: TintColorStyleable) {
-        styleable.applyTintColor(value, state: controlState)
+public class TintColorStyle: UIControlBaseStyle<UIColor?, TintColorDecorable> {
+    public override func applyDecorable(_ decorable: TintColorDecorable) {
+        decorable.applyTintColor(value, state: controlState)
     }
 }

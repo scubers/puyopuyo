@@ -8,11 +8,11 @@
 import Foundation
 
 // MARK: - Declare
-@objc public protocol Styleable {
+@objc public protocol Decorable {
 }
 
 @objc public protocol Style {
-    func apply(to styleable: Styleable)
+    func apply(to decorable: Decorable)
 }
 
 @objc public protocol UIControlStatable {
@@ -20,10 +20,10 @@ import Foundation
 }
 
 // MARK: - Conveniences
-public struct Styles {
+@objc(PYStyles) public class Styles: NSObject {
 }
 
-final public class StyleSheet: Outputing {
+open class StyleSheet: Outputing {
     public typealias OutputType = StyleSheet
     public var styles: [Style]
     @objc public init(styles: [Style]) {
@@ -39,11 +39,13 @@ final public class StyleSheet: Outputing {
     }
 }
 
-extension Styleable {
+extension Decorable {
     public func applyStyles(_ styles: [Style]) {
-        styles.forEach({
-            $0.apply(to: self)
-        })
+        styles.forEach({ $0.apply(to: self) })
+    }
+    
+    public func applyStyleSheet(_ sheet: StyleSheet) {
+        applyStyles(sheet.styles)
     }
 }
 
@@ -53,7 +55,7 @@ extension UIView {
 //    }
 }
 
-extension UIView: Styleable {
+extension UIView: Decorable {
 }
 // MARK: - Util
 struct StyleUtil {

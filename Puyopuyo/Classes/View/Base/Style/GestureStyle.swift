@@ -7,12 +7,12 @@
 
 import Foundation
 
-public protocol GestureStyleable: Styleable {
+public protocol GestureDecorable: Decorable {
     var gestureStyleView: UIView { get }
 }
 
 public protocol GestureStyle: Style {
-    func apply(to gestureStyle: GestureStyleable)
+    func apply(to gestureStyle: GestureDecorable)
 }
 
 public protocol IdentifiableStyle {
@@ -27,14 +27,14 @@ open class BaseGestureStyle: GestureStyle, IdentifiableStyle {
         self.styleIdentifier = identifier
     }
     
-    public func apply(to styleable: Styleable) {
-        if let s = StyleUtil.convert(styleable, GestureStyleable.self) {
+    public func apply(to decorable: Decorable) {
+        if let s = StyleUtil.convert(decorable, GestureDecorable.self) {
             apply(to: s)
         }
     }
     
-    public func apply(to gestureStyleable: GestureStyleable) {
-        let v = gestureStyleable.gestureStyleView
+    public func apply(to gestureDecorable: GestureDecorable) {
+        let v = gestureDecorable.gestureStyleView
         _removeSpecifyGesture(view: v)
         v.addGestureRecognizer(getGesture())
     }
@@ -51,7 +51,7 @@ open class BaseGestureStyle: GestureStyle, IdentifiableStyle {
     
 }
 
-extension UIView: GestureStyleable {
+extension UIView: GestureDecorable {
     public var gestureStyleView: UIView {
         return self
     }

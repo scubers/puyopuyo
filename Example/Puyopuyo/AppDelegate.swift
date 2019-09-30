@@ -21,12 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = UINavigationController(rootViewController: MenuVC())
         window?.makeKeyAndVisible()
         
-        let v = UILabel()
-        v.attach().styles([
-            Styles.blackBg,
-            Styles.systemFont,
-            Styles.borderWidth(1),
-        ])
         return true
     }
 
