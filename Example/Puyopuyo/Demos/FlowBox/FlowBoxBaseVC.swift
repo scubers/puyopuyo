@@ -112,6 +112,9 @@ class FlowBoxBaseVC: BaseVC {
                         Label("\(idx + 1)").attach($0)
                             .width(40 + CGFloat(idx) * 3)
                             .height(on: Simulate.ego.width)
+                            .styles([
+                                TapScaleStyle()
+                            ])
                     }
                     
                     let flow = $0

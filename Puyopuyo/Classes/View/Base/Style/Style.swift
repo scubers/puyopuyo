@@ -20,14 +20,7 @@ import Foundation
 }
 
 // MARK: - Conveniences
-final public class Styles: Style {
-    var style: Style?
-    init(style: Style) {
-        self.style = style
-    }
-    public func apply(to styleable: Styleable) {
-        style?.apply(to: styleable)
-    }
+public struct Styles {
 }
 
 final public class StyleSheet: Outputing {

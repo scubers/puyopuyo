@@ -23,9 +23,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let v = UILabel()
         v.attach().styles([
-            .blackBg,
-            .systemFont,
-            .borderWidth(1),
+            Styles.blackBg,
+            Styles.systemFont,
+            Styles.borderWidth(1),
         ])
         return true
     }

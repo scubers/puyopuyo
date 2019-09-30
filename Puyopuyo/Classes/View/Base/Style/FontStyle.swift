@@ -20,7 +20,7 @@ extension UIFont: Style {
 }
 
 extension Styles {
-    public static var systemFont: Styles {
-        return Styles(style: UIFont.systemFont(ofSize: UIFont.systemFontSize))
+    public static var systemFont: Style {
+        return UIFont.systemFont(ofSize: UIFont.systemFontSize)
     }
 }

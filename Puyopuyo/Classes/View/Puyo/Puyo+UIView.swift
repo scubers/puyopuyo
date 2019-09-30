@@ -252,12 +252,6 @@ extension Puyo where T: UIView {
         return self
     }
     
-    @discardableResult
-    public func styles(_ styles: [Styles]) -> Self {
-        view.applyStyles(styles)
-        return self
-    }
-    
 }
 
 extension UIView {
