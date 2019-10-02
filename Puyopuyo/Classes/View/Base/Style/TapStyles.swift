@@ -157,3 +157,35 @@ public class TapScaleStyle: BaseGestureStyle {
         }
     }
 }
+
+// MARK: - TapSelectStyle
+public class TapSelectStyle: BaseGestureStyle {
+    var animated = false
+    var duration: TimeInterval = 0.2
+    public init(animated: Bool = false, duration: TimeInterval = 0.2) {
+        super.init(identifier: "TapSelectStyle")
+        self.animated = animated
+        self.duration = duration
+    }
+    public override func getGesture() -> UIGestureRecognizer {
+        let tap = UITapGestureRecognizer()
+        let d = ShouldSimulateOtherGestureDelegate()
+        tap.delegate = d
+        tap.py_setUnbinder(d, for: styleIdentifier + "_delegate")
+        let duration = self.duration
+        let animated = self.animated
+        tap.py_addAction { g in
+            let action = {
+                g.view?.py_styleSelected = !(g.view?.py_styleSelected ?? false)
+            }
+            if animated {
+                UIView.animate(withDuration: duration) {
+                    action()
+                }
+            } else {
+                action()
+            }
+        }
+        return tap
+    }
+}

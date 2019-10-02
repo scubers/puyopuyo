@@ -8,7 +8,10 @@
 import Foundation
 
 // MARK: - SingleValueStyle
-open class SingleValueStyle<Object, DecorableType, Value, KeyPath>: Style where KeyPath: ReferenceWritableKeyPath<Object, Value>, Object: AnyObject {
+open class AnyReferenceKeyPathStyle<Object, DecorableType, Value, KeyPath>
+    : Style
+    where KeyPath: ReferenceWritableKeyPath<Object, Value>, Object: AnyObject {
+    
     public var value: Value
     public var keyPath: KeyPath
     public init(value: Value, keyPath: KeyPath) {
@@ -49,7 +52,7 @@ extension ReferenceWritableKeyPath where Root: UIView {
     }
 }
 
-public class UIViewStyle<View: UIView, Value>: SingleValueStyle<View, View, Value, ReferenceWritableKeyPath<View, Value>> {
+public class UIViewStyle<View: UIView, Value>: AnyReferenceKeyPathStyle<View, View, Value, ReferenceWritableKeyPath<View, Value>> {
     public override func applyDecorable(_ target: View) {
         target[keyPath: self.keyPath] = value
     }

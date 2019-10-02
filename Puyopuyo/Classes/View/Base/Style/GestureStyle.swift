@@ -36,7 +36,9 @@ open class BaseGestureStyle: GestureStyle, IdentifiableStyle {
     public func apply(to gestureDecorable: GestureDecorable) {
         let v = gestureDecorable.gestureStyleView
         _removeSpecifyGesture(view: v)
-        v.addGestureRecognizer(getGesture())
+        let gesture = getGesture()
+        gesture.styleIdentifier = styleIdentifier
+        v.addGestureRecognizer(gesture)
     }
     
     private func _removeSpecifyGesture(view: UIView) {

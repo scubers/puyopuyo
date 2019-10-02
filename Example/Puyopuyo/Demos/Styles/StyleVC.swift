@@ -22,6 +22,14 @@ class StyleVC: BaseVC {
             UIFont.systemFont(ofSize: 16),
             TextColorStyle(value: .black, state: .normal),
             TextColorStyle(value: .red, state: .highlighted),
+            TapSelectStyle(animated: true)
+        ])
+    }
+    
+    var selectedSheet: StyleSheet {
+        return styleSheet.combine([
+            (\UIView.backgroundColor).getStyle(with: .blue),
+            TapSelectStyle(animated: true)
         ])
     }
     
@@ -40,6 +48,7 @@ class StyleVC: BaseVC {
                 .styleSheet(self.styleSheet.combine([
                     TapRippleStyle()
                 ]))
+                .styleSheet(self.selectedSheet, selected: true)
                 .onTap(to: self, { (self, g) in
                     print("ripple")
                 })
@@ -49,6 +58,7 @@ class StyleVC: BaseVC {
                 .styleSheet(self.styleSheet.combine([
                     TapCoverStyle(),
                 ]))
+                .styleSheet(self.selectedSheet, selected: true)
                 .onTap(to: self, { (self, _) in
                     print("cover")
                 })
@@ -57,6 +67,7 @@ class StyleVC: BaseVC {
                 .onTap(to: self, { (self, _) in
                     print("scale")
                 })
+                .styleSheet(self.selectedSheet, selected: true)
                 .styleSheet(self.styleSheet.combine([
                     TapScaleStyle()
                 ]))
@@ -65,6 +76,7 @@ class StyleVC: BaseVC {
                 .onTap(to: self, { (self, _) in
                     print("ripple + cover + scale")
                 })
+                .styleSheet(self.selectedSheet, selected: true)
                 .styleSheet(self.styleSheet.combine([
                     TapCoverStyle(),
                     TapRippleStyle(color: UIColor.red.withAlphaComponent(0.5)),
