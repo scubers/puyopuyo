@@ -9,7 +9,7 @@
 import UIKit
 import Puyopuyo
 
-class FlatFormationAligmentVC: BaseVC {
+class FlatMixVC: BaseVC {
     
     let formation = State<Format>(.sides)
     let aligment = State<Aligment>(.center)
@@ -30,25 +30,38 @@ class FlatFormationAligmentVC: BaseVC {
             self?.refreshTitle()
         }
         
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "change", style: .plain, target: self, action: #selector(change))
+//        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "change", style: .plain, target: self, action: #selector(change))
+        let btn = Label("change")
+            .attach()
+            .frame(w: 60, h: 40)
+            .styleSheet(.mainButton)
+            .onTap(to: self, { (self, _) in
+                self.change()
+            })
+            .view
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: btn)
         
         vRoot.attach() {
             
             Label().attach($0)
                 .numberOfLines(State(0))
                 .text(self.text)
+                .styleSheet(.mainButton)
             
             Label("1").attach($0)
                 .textAligment(State(.center))
                 .size(100, 50)
+                .styleSheet(.mainButton)
             
             Label("2").attach($0)
                 .textAligment(State(.center))
                 .size(100, 100)
+                .styleSheet(.mainButton)
             
             Label("3").attach($0)
                 .textAligment(State(.center))
                 .size(50, 50)
+                .styleSheet(.mainButton)
             
             UIButton().attach($0)
                 .activated(false)

@@ -241,14 +241,14 @@ extension Puyo where T: UIView {
     }
     
     @discardableResult
-    public func stylesSheet(_ sheet: StyleSheet) -> Self {
+    public func styleSheet(_ sheet: StyleSheet) -> Self {
         view.py_styleSheet = sheet
         return self
     }
     
     @discardableResult
     public func styles(_ styles: [Style]) -> Self {
-        return stylesSheet(StyleSheet(styles: styles))
+        return styleSheet(StyleSheet(styles: styles))
     }
     
     @discardableResult

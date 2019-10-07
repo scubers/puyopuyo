@@ -22,6 +22,7 @@ class VBoxVC: BaseVC {
                     height = 100
                     """).attach($0)
                     .size(.wrap(add: 20), 100)
+                    .styleSheet(.mainButton)
                 
                 Label("""
                     aligment = right
@@ -30,6 +31,7 @@ class VBoxVC: BaseVC {
                     """).attach($0)
                     .aligment(.right)
                     .size(.wrap(add: 50), 150)
+                    .styleSheet(.mainButton)
                 
                 Label("""
                     aligment = center
@@ -38,6 +40,7 @@ class VBoxVC: BaseVC {
                     """).attach($0)
                     .aligment(.center)
                     .size(.wrap(add: 80), .wrap)
+                    .styleSheet(.mainButton)
                 
                 
                 HBox().attach($0) {
@@ -54,6 +57,7 @@ class VBoxVC: BaseVC {
                     .justifyContent(.center)
                     .size(.fill, .wrap)
                     .borders([.thick(1), .color(.purple), .dash(3, 3)])
+                    .styleSheet(.mainButton)
                 
                 
                 }

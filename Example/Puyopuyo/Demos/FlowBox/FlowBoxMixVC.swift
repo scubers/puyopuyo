@@ -10,7 +10,7 @@ import UIKit
 import Puyopuyo
 import RxSwift
 
-class FlowBoxBaseVC: BaseVC {
+class FlowBoxMixVC: BaseVC {
     override func configView() {
         
         let reverse = false.asOutput().state()

@@ -12,7 +12,7 @@ class FlowBoxMenu: MenuVC {
     
     override func getData() -> [(String, UIViewController.Type)] {
         return [
-            ("FlowBoxBase", FlowBoxBaseVC.self),
+            ("FlowBox mix", FlowBoxMixVC.self),
         ]
     }
 
