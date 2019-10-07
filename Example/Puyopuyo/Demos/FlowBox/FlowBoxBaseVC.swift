@@ -113,7 +113,7 @@ class FlowBoxBaseVC: BaseVC {
                             .width(40 + CGFloat(idx) * 3)
                             .height(on: Simulate.ego.width)
                             .styles([
-                                TapScaleStyle()
+                                TapRippleStyle()
                             ])
                     }
                     

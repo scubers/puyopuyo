@@ -24,7 +24,7 @@ class Tests: XCTestCase {
     func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measure() {
-            for _ in 0..<1000 {
+            for _ in 0..<100 {
                 let cell = ListCell(style: .value1, reuseIdentifier: "1")
 //                let cell = ListCell2(style: .value1, reuseIdentifier: "1")
 //                let cell = ListCell3(style: .value1, reuseIdentifier: "1")
