@@ -13,8 +13,8 @@ import RxSwift
 class FlowBoxBaseVC: BaseVC {
     override func configView() {
         
-        let reverse = false.yo.state()
-        let hFormat = Format.leading.yo.state()
+        let reverse = false.asOutput().state()
+        let hFormat = Format.leading.asOutput().state()
         let vFormat = State<Format>(.leading)
         let arrange = State<Int>(3)
         let direction = State<Direction>(.y)
@@ -37,7 +37,7 @@ class FlowBoxBaseVC: BaseVC {
             
             HBox().attach($0) {
                 UIButton().attach($0)
-                    .title("change".yo.some(), state: .normal)
+                    .title("change".asOutput().some(), state: .normal)
                     .addWeakAction(to: self, for: .touchUpInside, { (self, _) in
                         self.vRoot.animate(0.2, block: {
                             reverse.value = !reverse.value
@@ -62,7 +62,7 @@ class FlowBoxBaseVC: BaseVC {
                             let v =
                                 Label("\(total)").attach()
                                     .size(40, 40)
-                                    .backgroundColor(Util.randomColor().yo.some())
+                                    .backgroundColor(Util.randomColor().asOutput().some())
                                     .onTap(to: self, { (self, tap) in
                                         self.vRoot.animate(0.2, block: {
                                             tap.view?.removeFromSuperview()

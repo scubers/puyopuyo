@@ -48,7 +48,7 @@ public struct SimpleOutput<Value>: Outputing {
 }
 
 extension Outputing {
-    public func asOutputing() -> SimpleOutput<OutputType> {
+    public func asOutput() -> SimpleOutput<OutputType> {
         return SimpleOutput { (i) -> Unbinder in
             return self.outputing { (v) in
                 i.input(value: v)
@@ -57,32 +57,33 @@ extension Outputing {
     }
 }
 
-extension Yo where Base: Outputing {
+//extension Yo where Base: Outputing {
+extension SimpleOutput {
     
-    public func some() -> SimpleOutput<Base.OutputType?> {
+    public func some() -> SimpleOutput<OutputType?> {
         return map({ $0 })
     }
     
-    public func bind<T>(_ action: @escaping (Base.OutputType, SimpleInput<T>) -> Void) -> SimpleOutput<T> {
+    public func bind<T>(_ action: @escaping (OutputType, SimpleInput<T>) -> Void) -> SimpleOutput<T> {
         return SimpleOutput<T>({ (i) -> Unbinder in
-            return self.base.outputing({ (v) in
+            return self.outputing({ (v) in
                 action(v, i)
             })
         })
     }
     
-    public func map<R>(_ block: @escaping (Base.OutputType) -> R) -> SimpleOutput<R> {
+    public func map<R>(_ block: @escaping (OutputType) -> R) -> SimpleOutput<R> {
         return bind({ $1.input(value: block($0)) })
     }
     
-    public func filter(_ filter: @escaping (Base.OutputType) -> Bool) -> SimpleOutput<Base.OutputType> {
+    public func filter(_ filter: @escaping (OutputType) -> Bool) -> SimpleOutput<OutputType> {
         return bind({ (v, i) in
             if filter(v) { i.input(value: v) }
         })
     }
     
-    public func ignore(_ condition: @escaping (Base.OutputType, Base.OutputType) -> Bool) -> SimpleOutput<Base.OutputType> {
-        var last: Base.OutputType!
+    public func ignore(_ condition: @escaping (OutputType, OutputType) -> Bool) -> SimpleOutput<OutputType> {
+        var last: OutputType!
         return bind({ (v, i) in
             guard last != nil else {
                 last = v
@@ -97,7 +98,7 @@ extension Yo where Base: Outputing {
         })
     }
     
-    public func take(_ count: Int) -> SimpleOutput<Base.OutputType> {
+    public func take(_ count: Int) -> SimpleOutput<OutputType> {
         var times: Int = 0
         return bind({ (v, i) in
             guard times <= count else { return }
@@ -106,7 +107,7 @@ extension Yo where Base: Outputing {
         })
     }
     
-    public func skip(_ count: Int) -> SimpleOutput<Base.OutputType> {
+    public func skip(_ count: Int) -> SimpleOutput<OutputType> {
         var times = 0
         return bind({ (v, i) in
             guard times > count else {
@@ -117,7 +118,7 @@ extension Yo where Base: Outputing {
         })
     }
     
-    public func scheduleOn(_ queue: OperationQueue) -> SimpleOutput<Base.OutputType> {
+    public func scheduleOn(_ queue: OperationQueue) -> SimpleOutput<OutputType> {
         return bind({ (v, i) in
             if OperationQueue.current == queue {
                 i.input(value: v)
@@ -129,7 +130,7 @@ extension Yo where Base: Outputing {
         })
     }
     
-    public func scheduleOnMain() -> SimpleOutput<Base.OutputType> {
+    public func scheduleOnMain() -> SimpleOutput<OutputType> {
         return scheduleOn(OperationQueue.main)
     }
 }
@@ -147,8 +148,9 @@ extension Optional: PuyoOptionalType {
     }
 }
 
-extension Yo where Base: Outputing, Base.OutputType: PuyoOptionalType {
-    public func unwrap(or: Base.OutputType.PuyoWrappedType) -> SimpleOutput<Base.OutputType.PuyoWrappedType> {
+//extension Yo where Base: Outputing, Base.OutputType: PuyoOptionalType {
+extension SimpleOutput where OutputType: PuyoOptionalType {
+    public func unwrap(or: OutputType.PuyoWrappedType) -> SimpleOutput<OutputType.PuyoWrappedType> {
         return bind({ (v, i) in
             if let v = v.puyoWrapValue {
                 i.input(value: v)
@@ -160,8 +162,8 @@ extension Yo where Base: Outputing, Base.OutputType: PuyoOptionalType {
 }
 
 
-extension Yo where Base: Outputing, Base.OutputType: Equatable {
-    public func distinct() -> SimpleOutput<Base.OutputType> {
+extension SimpleOutput where OutputType: Equatable {
+    public func distinct() -> SimpleOutput<OutputType> {
         return ignore({ $0 == $1 })
     }
 }

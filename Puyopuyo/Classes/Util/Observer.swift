@@ -48,7 +48,7 @@ extension NSObject {
             self.py_setUnbinder(unbinder, for: UUID().description)
             return unbinder
         }
-        .yo.distinct()
+        .distinct()
     }
     
 }

@@ -31,7 +31,7 @@ extension Puyo where T: UITextView {
                 NotificationCenter.default.removeObserver(obj)
             }
         }
-        let unbinder = output.yo.distinct().send(to: text)
+        let unbinder = output.distinct().send(to: text)
         view.py_setUnbinder(unbinder, for: "\(#function)_input")
         return self
     }

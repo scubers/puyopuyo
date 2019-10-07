@@ -32,11 +32,4 @@ public class SimpleIO<Value>: Inputing, Outputing {
         }
     }
     
-    private class Callee<T> {
-        var block: (T) -> Void
-        init(_ block: @escaping (T) -> Void) {
-            self.block = block
-        }
-    }
-    
 }

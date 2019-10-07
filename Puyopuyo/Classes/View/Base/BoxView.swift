@@ -82,9 +82,9 @@ open class BoxView: UIView {
         if isSelfPositionControl, let spv = superview, !(spv is BoxView) {
             positionControlUnbinder =
             SimpleOutput
-                .merge([spv.py_frameStateByKVO().yo.map({ $0.size }),
-                        spv.py_frameStateByBoundsCenter().yo.map({ $0.size })])
-                .yo.distinct()
+                .merge([spv.py_frameStateByKVO().asOutput().map({ $0.size }),
+                        spv.py_frameStateByBoundsCenter().asOutput().map({ $0.size })])
+                .distinct()
                 .outputing { [weak self] (_) in
                     guard let self = self else { return }
                     if self.regulator.size.maybeRatio() {

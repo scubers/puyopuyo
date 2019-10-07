@@ -102,8 +102,8 @@ extension Simulate: ValueModifiable {
         return
             view
                 .py_frameStateByBoundsCenter()
-                .yo.map({ actions.reduce(transform($0)) { $1($0) } })
-                .yo.distinct()
+                .map({ actions.reduce(transform($0)) { $1($0) } })
+                .distinct()
     }
 }
 
@@ -118,6 +118,6 @@ extension ValueModifiable {
 
 extension State: ValueModifiable where Value == CGFloat {
     public func modifyValue() -> SimpleOutput<CGFloat> {
-        return self.yo.map({$0})
+        return self.asOutput().map({$0})
     }
 }

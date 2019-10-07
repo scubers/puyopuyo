@@ -129,7 +129,7 @@ class TestVC: BaseVC {
             
             for (idx, label) in labels.enumerated() {
                 label.attach(x)
-                    .text("\(idx)".yo.some())
+                    .text("\(idx)".asOutput().some())
                     .tg_size(50 + idx * 3, 50 + idx * 3 + 1)
                 
                 //                if idx % 3 == 2 && idx != 2 {

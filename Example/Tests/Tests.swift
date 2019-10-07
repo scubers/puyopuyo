@@ -71,13 +71,13 @@ class BaseCell: UITableViewCell, StatefulView {
     var viewState: State<ListData?> = State<ListData?>(nil)
     
     var name: SimpleOutput<String?> {
-        return viewState.yo.map({ $0?.name })
+        return viewState.asOutput().map({ $0?.name })
     }
     var textData: SimpleOutput<String?> {
-        return viewState.yo.map({ $0?.text })
+        return viewState.asOutput().map({ $0?.text })
     }
     var time: SimpleOutput<String?> {
-        return viewState.yo.map({ $0?.time })
+        return viewState.asOutput().map({ $0?.time })
     }
 }
 

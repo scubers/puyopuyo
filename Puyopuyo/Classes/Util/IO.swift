@@ -8,23 +8,23 @@
 import Foundation
 
 // MARK: - Extension
-public struct Yo<Base> {
-    public let base: Base
-    public init(_ base: Base) {
-        self.base = base
-    }
-}
-
-public protocol PuyopuyoExt {
-    associatedtype PuyopuyoExtType
-    var yo: PuyopuyoExtType {get}
-}
-
-extension PuyopuyoExt {
-    public var yo: Yo<Self> {
-        return Yo(self)
-    }
-}
+//public struct Yo<Base> {
+//    public let base: Base
+//    public init(_ base: Base) {
+//        self.base = base
+//    }
+//}
+//
+//public protocol PuyopuyoExt {
+//    associatedtype PuyopuyoExtType
+//    var yo: PuyopuyoExtType {get}
+//}
+//
+//extension PuyopuyoExt {
+//    public var yo: Yo<Self> {
+//        return Yo(self)
+//    }
+//}
 
 // MARK: - Unbinder
 public protocol Unbinder {
@@ -32,7 +32,7 @@ public protocol Unbinder {
 }
 
 // MARK: - Outputing, Inputing
-public protocol Outputing: PuyopuyoExt {
+public protocol Outputing {
     associatedtype OutputType
     func outputing(_ block: @escaping (OutputType) -> Void) -> Unbinder
 }

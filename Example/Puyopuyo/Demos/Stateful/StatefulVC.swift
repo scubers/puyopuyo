@@ -12,7 +12,7 @@ import Puyopuyo
 
 class StatefulVC: BaseVC, UITextFieldDelegate {
     
-    var text = "text".yo.someState()
+    var text = "text".asOutput().someState()
     var textColor = State<UIColor>(.black)
     lazy var backgroundColor = State<UIColor>(Util.randomColor())
     var width = State<SizeDescription>(.fix(100))
@@ -44,12 +44,12 @@ class StatefulVC: BaseVC, UITextFieldDelegate {
                 
                 Label("").attach($0)
                     .text(self.text)
-                    .textColor(self.textColor.yo.some())
+                    .textColor(self.textColor.asOutput().some())
                     .size(self.width, self.height)
                 
                 Label("").attach($0)
                     .text(self.text)
-                    .backgroundColor(self.backgroundColor.yo.some())
+                    .backgroundColor(self.backgroundColor.asOutput().some())
                     .size(self.width, self.height)
                 }
                 .space(10)

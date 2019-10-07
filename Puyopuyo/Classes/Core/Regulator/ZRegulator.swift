@@ -31,9 +31,9 @@ extension Simulate {
         return
             SimpleOutput
                 .merge([view.py_frameStateByKVO(), view.py_frameStateByBoundsCenter()])
-                .yo.distinct()
-                .yo.map({ actions.reduce(transform($0)) { $1($0) } })
-                .yo.distinct()
+                .distinct()
+                .map({ actions.reduce(transform($0)) { $1($0) } })
+                .distinct()
     }
 }
 

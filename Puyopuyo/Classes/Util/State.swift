@@ -72,19 +72,20 @@ public class State<Value>: Outputing, Inputing {
     }
 }
 
-extension Yo where Base: Outputing {
+//extension Yo where Base: Outputing {
+extension SimpleOutput {
     
-    public func state() -> State<Base.OutputType> {
-        let new = State<Base.OutputType>()
-        _ = base.outputing({ (v) in
+    public func state() -> State<OutputType> {
+        let new = State<OutputType>()
+        _ = outputing({ (v) in
             new.input(value: v)
         })
         return new
     }
     
-    public func someState() -> State<Base.OutputType?> {
-        let new = State<Base.OutputType?>()
-        _ = base.outputing({ (v) in
+    public func someState() -> State<OutputType?> {
+        let new = State<OutputType?>()
+        _ = outputing({ (v) in
             new.input(value: v)
         })
         return new

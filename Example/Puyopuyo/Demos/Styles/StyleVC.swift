@@ -34,7 +34,7 @@ class StyleVC: BaseVC {
                            selected: self.styleSheet.combine([
                                 (\UIView.backgroundColor).getStyle(with: UIColor.purple)
                            ]),
-                           toggle: self.toggle.asOutputing())
+                           toggle: self.toggle.asOutput())
         ])
     }
     
