@@ -48,11 +48,25 @@ extension Decorable {
 }
 
 extension UIView {
+    
+    public var py_styleSheet: StyleSheet? {
+        set {
+            if let sheet = newValue {
+                applyStyleSheet(sheet)
+            }
+            objc_setAssociatedObject(self, &Key.py_styleSheetKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        get {
+            return objc_getAssociatedObject(self, &Key.py_styleSheetKey) as? StyleSheet
+        }
+    }
+
     private struct Key {
         static var py_styleSheetKey = "py_styleSheetKey"
         static var py_selectedStyleSheetKey = "py_selectedStyleSheetKey"
         static var py_selectedKey = "py_selectedKey"
     }
+    /*
     
     public var py_currentStyleSheet: StyleSheet? {
         return py_styleSelected ? py_selectedStyleSheet : py_styleSheet
@@ -66,17 +80,6 @@ extension UIView {
         }
     }
     
-    public var py_styleSheet: StyleSheet? {
-        set {
-            if !py_styleSelected, let sheet = newValue {
-                applyStyleSheet(sheet)
-            }
-            objc_setAssociatedObject(self, &Key.py_styleSheetKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-        get {
-            return objc_getAssociatedObject(self, &Key.py_styleSheetKey) as? StyleSheet
-        }
-    }
     public var py_selectedStyleSheet: StyleSheet? {
         set {
             if py_styleSelected, let sheet = newValue {
@@ -106,7 +109,7 @@ extension UIView {
             return (objc_getAssociatedObject(self, &Key.py_selectedKey) as? NSNumber)?.boolValue ?? false
         }
     }
-    
+    */
 }
 
 extension UIView: Decorable {

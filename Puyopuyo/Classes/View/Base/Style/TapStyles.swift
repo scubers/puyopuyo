@@ -162,11 +162,23 @@ public class TapScaleStyle: BaseGestureStyle {
 public class TapSelectStyle: BaseGestureStyle {
     var animated = false
     var duration: TimeInterval = 0.2
-    public init(animated: Bool = false, duration: TimeInterval = 0.2) {
+    var normalSheet: StyleSheet!
+    var selectedSheet: StyleSheet?
+    var selected = false
+    public init(normal: StyleSheet, selected: StyleSheet? = nil, animated: Bool = true, duration: TimeInterval = 0.2) {
         super.init(identifier: "TapSelectStyle")
         self.animated = animated
         self.duration = duration
+        self.normalSheet = normal
+        self.selectedSheet = selected
     }
+    
+    public override func apply(to gestureStyle: GestureDecorable) {
+        super.apply(to: gestureStyle)
+        // 初次应用时，需要把指定的样式应用上
+        applyStyleSheet(view: gestureStyle)
+    }
+    
     public override func getGesture() -> UIGestureRecognizer {
         let tap = UITapGestureRecognizer()
         let d = ShouldSimulateOtherGestureDelegate()
@@ -175,9 +187,10 @@ public class TapSelectStyle: BaseGestureStyle {
         let duration = self.duration
         let animated = self.animated
         tap.py_addAction { g in
-            let action = {
-                g.view?.py_styleSelected = !(g.view?.py_styleSelected ?? false)
-            }
+            self.selected = !self.selected
+            
+            let action = { self.applyStyleSheet(view: g.view!) }
+            
             if animated {
                 UIView.animate(withDuration: duration) {
                     action()
@@ -187,5 +200,13 @@ public class TapSelectStyle: BaseGestureStyle {
             }
         }
         return tap
+    }
+    
+    private func applyStyleSheet(view: Decorable) {
+        if selected, let sheet = selectedSheet {
+            view.applyStyleSheet(sheet)
+        } else {
+            view.applyStyleSheet(normalSheet)
+        }
     }
 }

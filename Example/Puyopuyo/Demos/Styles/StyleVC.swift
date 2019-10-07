@@ -22,14 +22,16 @@ class StyleVC: BaseVC {
             UIFont.systemFont(ofSize: 16),
             TextColorStyle(value: .black, state: .normal),
             TextColorStyle(value: .red, state: .highlighted),
-            TapSelectStyle(animated: true)
+//            TapSelectStyle(animated: true)
         ])
     }
     
-    var selectedSheet: StyleSheet {
-        return styleSheet.combine([
-            (\UIView.backgroundColor).getStyle(with: .blue),
-            TapSelectStyle(animated: true)
+    var selectableSheet: StyleSheet {
+        return StyleSheet(styles: [
+            TapSelectStyle(normal: self.styleSheet,
+                           selected: self.styleSheet.combine([
+                                (\UIView.backgroundColor).getStyle(with: UIColor.purple)
+                           ]))
         ])
     }
     
@@ -45,20 +47,18 @@ class StyleVC: BaseVC {
             
             UIButton().attach($0)
                 .title("ripple", state: .normal)
-                .styleSheet(self.styleSheet.combine([
+                .styleSheet(self.selectableSheet.combine([
                     TapRippleStyle()
                 ]))
-                .styleSheet(self.selectedSheet, selected: true)
                 .onTap(to: self, { (self, g) in
                     print("ripple")
                 })
             
             UIButton().attach($0)
                 .title("Cover", state: .normal)
-                .styleSheet(self.styleSheet.combine([
+                .styleSheet(self.selectableSheet.combine([
                     TapCoverStyle(),
                 ]))
-                .styleSheet(self.selectedSheet, selected: true)
                 .onTap(to: self, { (self, _) in
                     print("cover")
                 })
@@ -67,8 +67,7 @@ class StyleVC: BaseVC {
                 .onTap(to: self, { (self, _) in
                     print("scale")
                 })
-                .styleSheet(self.selectedSheet, selected: true)
-                .styleSheet(self.styleSheet.combine([
+                .styleSheet(self.selectableSheet.combine([
                     TapScaleStyle()
                 ]))
             
@@ -76,8 +75,7 @@ class StyleVC: BaseVC {
                 .onTap(to: self, { (self, _) in
                     print("ripple + cover + scale")
                 })
-                .styleSheet(self.selectedSheet, selected: true)
-                .styleSheet(self.styleSheet.combine([
+                .styleSheet(self.selectableSheet.combine([
                     TapCoverStyle(),
                     TapRippleStyle(color: UIColor.red.withAlphaComponent(0.5)),
                     TapScaleStyle()

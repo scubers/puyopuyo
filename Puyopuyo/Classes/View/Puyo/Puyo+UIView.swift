@@ -233,23 +233,27 @@ extension Puyo where T: UIView {
     }
     
     @discardableResult
-    public func styleSheet<O: Outputing>(_ styles: O, selected: Bool = false) -> Self where O.OutputType: StyleSheet {
-        styles.safeBind(to: view, id: "\(#function)_\(selected)") { (v, s) in
-            v.py_setStyleSheet(s, selected: selected)
+    public func styleSheet<O: Outputing>(_ styles: O) -> Self where O.OutputType: StyleSheet {
+        styles.safeBind(to: view, id: "\(#function)") { (v, s) in
+            v.py_styleSheet = s
         }
         return self
     }
     
     @discardableResult
-    public func stylesSheet(_ sheet: StyleSheet, selected: Bool = false) -> Self {
-        view.py_setStyleSheet(sheet, selected: selected)
+    public func stylesSheet(_ sheet: StyleSheet) -> Self {
+        view.py_styleSheet = sheet
         return self
     }
     
     @discardableResult
-    public func styles(_ styles: [Style], selected: Bool = false) -> Self {
-        view.py_setStyleSheet(StyleSheet(styles: styles), selected: selected)
-        return self
+    public func styles(_ styles: [Style]) -> Self {
+        return stylesSheet(StyleSheet(styles: styles))
+    }
+    
+    @discardableResult
+    public func style(_ style: Style) -> Self {
+        return styles([style])
     }
     
 }
