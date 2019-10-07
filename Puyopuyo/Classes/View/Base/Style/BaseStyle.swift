@@ -62,7 +62,12 @@ open class CommonValueStyle<T, U>: Style {
     }
 }
 
+
 // MARK: - UIControlBaseStyle
+
+public protocol UIControlStatable {
+    var controlState: UIControl.State { get }
+}
 open class UIControlBaseStyle<T, U>: CommonValueStyle<T, U>, UIControlStatable {
     public var controlState: UIControl.State = .normal
     public init(value: T, state: UIControl.State = .normal) {

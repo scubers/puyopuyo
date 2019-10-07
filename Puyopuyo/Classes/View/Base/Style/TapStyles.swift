@@ -7,7 +7,7 @@
 
 import Foundation
 
-// MARK: - TapCoverStyle
+// MARK: - TapRippleStyle
 public class TapRippleStyle: BaseGestureStyle {
     
     var color: UIColor = UIColor.lightGray.withAlphaComponent(0.6)
@@ -165,12 +165,19 @@ public class TapSelectStyle: BaseGestureStyle {
     var normalSheet: StyleSheet!
     var selectedSheet: StyleSheet?
     var selected = false
-    public init(normal: StyleSheet, selected: StyleSheet? = nil, animated: Bool = true, duration: TimeInterval = 0.2) {
+    weak var lastView: Decorable?
+    public init(normal: StyleSheet, selected: StyleSheet? = nil, toggle: SimpleOutput<Bool>? = nil, animated: Bool = true, duration: TimeInterval = 0.2) {
         super.init(identifier: "TapSelectStyle")
         self.animated = animated
         self.duration = duration
         self.normalSheet = normal
         self.selectedSheet = selected
+        _ = toggle?.outputing({ (value) in
+            self.selected = value
+            if let view = self.lastView {
+                self.applyStyleSheet(view: view)
+            }
+        })
     }
     
     public override func apply(to gestureStyle: GestureDecorable) {
@@ -208,5 +215,6 @@ public class TapSelectStyle: BaseGestureStyle {
         } else {
             view.applyStyleSheet(normalSheet)
         }
+        lastView = view
     }
 }

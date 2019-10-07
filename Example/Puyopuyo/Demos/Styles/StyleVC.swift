@@ -26,12 +26,15 @@ class StyleVC: BaseVC {
         ])
     }
     
+    let toggle = State<Bool>(false)
+    
     var selectableSheet: StyleSheet {
         return StyleSheet(styles: [
             TapSelectStyle(normal: self.styleSheet,
                            selected: self.styleSheet.combine([
                                 (\UIView.backgroundColor).getStyle(with: UIColor.purple)
-                           ]))
+                           ]),
+                           toggle: self.toggle.asOutputing())
         ])
     }
     
@@ -41,9 +44,10 @@ class StyleVC: BaseVC {
             
             UIButton().attach($0)
                 .title("normal", state: .normal)
-                .styleSheet(self.styleSheet.combine([
-                    
-                ]))
+                .onTap(to: self, { (self, _) in
+                    self.toggle.value = !self.toggle.value
+                })
+                .styleSheet(self.styleSheet)
             
             UIButton().attach($0)
                 .title("ripple", state: .normal)
