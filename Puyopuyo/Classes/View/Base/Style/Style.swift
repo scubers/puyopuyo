@@ -20,7 +20,7 @@ import Foundation
 open class StyleSheet: Outputing {
     public typealias OutputType = StyleSheet
     public var styles: [Style]
-    @objc public init(styles: [Style]) {
+    public init(styles: [Style]) {
         self.styles = styles
     }
     
