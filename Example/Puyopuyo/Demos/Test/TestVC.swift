@@ -25,8 +25,8 @@ class NewView: ZBox, EventableView {
 
 class TestVC: BaseVC {
     
-//    var subVC: UIViewController? = nil
-    var subVC: UIViewController? = StyleVC()
+    var subVC: UIViewController? = nil
+//    var subVC: UIViewController? = StyleVC()
 //    var subVC: UIViewController? = FlowBoxBaseVC()
 //    var subVC: UIViewController? = VBoxVC()
 //    var subVC: UIViewController? = FlatFormationAligmentVC()
@@ -34,30 +34,34 @@ class TestVC: BaseVC {
     let state = State<Visibility>(.visible)
     func configTestView() {
         
+        let text = State<String?>(nil)
+        
+        let vi = State<Visibility>(.visible)
+        
         vRoot.attach {
-//            for i in 0..<6 {
-//                Label("\(i)").attach($0)
-//                    .size(.fill, 50)
-//
-//            }
+            
+            UITextField().attach($0)
+                .margin(left: 10, right: 10)
+                .onText(text)
+                .size(.fill, 30)
+            
+            UISwitch().attach($0)
+                .onEvent(.valueChanged, SimpleInput { s in
+                    vi.value = s.isOn ? .gone : .visible
+                })
 
-            VFlow(count: 3).attach($0) {
-                for i in 0..<21 {
-                    Label(i.description).attach($0)
-                        .size(.fill, .fill)
-                        .styles([
-                            TapRippleStyle()
-                        ])
-                }
+            HBox().attach($0) {
+                Label("内容").attach($0)
+                    .visibility(vi)
+                
+                Label().attach($0)
+                    .text(text)
+                    .numberOfLines(0)
+                    .size(.fill, .wrap)
             }
-            .stretchRows(true)
-            .size(180, 180)
-            .space(5)
-            .padding(all: 10)
-            .styles([
-                (\UIView.layer.borderWidth).getStyle(with: 1),
-                (\UIView.layer.borderColor).getStyle(with: UIColor.purple.cgColor)
-            ])
+            .space(10)
+            .size(.fill, .wrap(min: 100))
+            
             
         }
         .format(.sides)
