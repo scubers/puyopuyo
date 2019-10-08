@@ -125,8 +125,8 @@ public class Measure: Measurable, MeasureTargetable, Hashable {
     
     public var activated = true
     
-    public func caculate(byParent parent: Measure) -> Size {
-        return MeasureCaculator.caculate(measure: self, byParent: parent)
+    public func caculate(byParent parent: Measure, remain size: CGSize) -> Size {
+        return MeasureCaculator.caculate(measure: self, byParent: parent, remain: size)
     }
     
     public var py_size: CGSize {

@@ -34,13 +34,15 @@ private class VirtualFlatRegulator: FlatRegulator {
 
 class FlowCaculator {
     
-    init(_ regulator: FlowRegulator, parent: Measure) {
+    init(_ regulator: FlowRegulator, parent: Measure, remain: CGSize) {
         self.regulator = regulator
         self.parent = parent
+        self.remain = remain
     }
     
     let regulator: FlowRegulator
     let parent: Measure
+    let remain: CGSize
     var arrange: Int {
         return regulator.arrange
     }
@@ -67,7 +69,8 @@ class FlowCaculator {
     }
     
     private func _caculateByContent(available children: [Measure]) -> Size {
-        
+        return Size();
+        /*
         var virtualLines = [VirtualFlatRegulator]()
         
         var currentLine = [Measure]()
@@ -115,6 +118,7 @@ class FlowCaculator {
         let size = getVirtualRegulator(children: virtualLines).caculate(byParent: parent)
         virtualLines.forEach({ $0.justifyChildrenWithCenter() })
         return size
+        */
     }
     
     private func _caculateByFixedCount(available children: [Measure]) -> Size {
@@ -128,7 +132,7 @@ class FlowCaculator {
         }
         
         let virtualRegulator = getVirtualRegulator(children: fakeLines)
-        let size = virtualRegulator.caculate(byParent: parent)
+        let size = virtualRegulator.caculate(byParent: parent, remain: remain)
         fakeLines.forEach { $0.justifyChildrenWithCenter() }
         return size
     }
@@ -163,7 +167,8 @@ private extension FlowCaculator {
         var lineCalSize = CalSize(main: .wrap, cross: .wrap, direction: layoutDirection)
         if !layoutCalSize.cross.isWrap {
             // 当流式布局为包裹的时候，内部计算布局需要给定一个尺寸
-            lineCalSize.cross = .fix(max(0, layoutFixedSize.cross - regulator.getCalPadding().crossFixed))
+//            lineCalSize.cross = .fix(max(0, layoutFixedSize.cross - regulator.getCalPadding().crossFixed))
+            lineCalSize.cross = .fill
         }
         
         if layoutCalSize.main.isWrap && regulator.stretchRows {

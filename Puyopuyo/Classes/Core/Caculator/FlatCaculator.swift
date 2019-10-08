@@ -11,9 +11,11 @@ class FlatCaculator {
     
     let regulator: FlatRegulator
     let parent: Measure
-    init(_ regulator: FlatRegulator, parent: Measure) {
+    let remain: CGSize
+    init(_ regulator: FlatRegulator, parent: Measure, remain: CGSize) {
         self.regulator = regulator
         self.parent = parent
+        self.remain = remain
     }
     
     lazy var regFixedSize = CalFixedSize(cgSize: self.regulator.py_size, direction: regulator.direction)
@@ -35,9 +37,11 @@ class FlatCaculator {
     /// 计算本身布局属性，可能返回的size 为 .fixed, .ratio, 不可能返回wrap
     func caculate() -> Size {
         
-        if !(parent is Regulator) {
-            Caculator.adapting(size: _getEstimateSize(measure: regulator), to: regulator, in: parent)
-        }
+//        if !(parent is Regulator) {
+            // 父视图为普通视图时，需要优先应用自身大小
+//            Caculator.adapting(size: _getEstimateSize(measure: regulator, remain: remain), to: regulator, remain: remain)
+        Caculator.adaptingEstimateSize(measure: regulator, remain: remain)
+//        }
         
         // 1.第一次循环，计算正常节点，忽略未激活节点，缓存主轴比例节点
         regulator.enumerateChild { (idx, m) in
@@ -151,11 +155,22 @@ class FlatCaculator {
         MeasureFactory.recyclePlaceholders(placeholders)
     }
     
+    private func getCurrentRemainSizeForChildren() -> CalFixedSize {
+        var size = CalFixedSize(main: regFixedSize.main - totalFixedMain, cross: regFixedSize.cross - regCalPadding.crossFixed, direction: regulator.direction)
+        if size.main <= 0 && regCalSize.main.isWrap {
+            size.main = .greatestFiniteMagnitude
+        }
+        if size.cross <= 0 && regCalSize.cross.isWrap {
+            size.cross = .greatestFiniteMagnitude
+        }
+        return size
+    }
+    
     private func appendAndRegulateNormalChild(_ measure: Measure) {
         caculateChildren.append(measure)
         // 计算size的具体值
 //        let subSize = measure.caculate(byParent: regulator)
-        let subSize = _getEstimateSize(measure: measure)
+        let subSize = _getEstimateSize(measure: measure, remain: getCurrentRemainSizeForChildren().getSize())
         if subSize.width.isWrap || subSize.height.isWrap {
             fatalError("计算后的尺寸不能是包裹")
         }
@@ -186,13 +201,13 @@ class FlatCaculator {
             totalFixedMain += subCalSize.main.fixedValue
             
             if regulator.caculateChildrenImmediately {
-                _ = measure.caculate(byParent: regulator)
+                _ = measure.caculate(byParent: regulator, remain: Caculator.remainSize(with: measure.py_size, margin: measure.margin))
             }
         }
     }
     
     private func regulateRatioChild(_ measure: Measure) {
-        let subSize = _getEstimateSize(measure: measure)
+        let subSize = _getEstimateSize(measure: measure, remain: getCurrentRemainSizeForChildren().getSize())
         let calSize = CalSize(size: subSize, direction: regulator.direction)
         let calMargin = CalEdges(insets: measure.margin, direction: regulator.direction)
         // cross
@@ -207,7 +222,7 @@ class FlatCaculator {
         measure.py_size = CalFixedSize(main: subMainSize.fixedValue, cross: subCrossSize.fixedValue, direction: regulator.direction).getSize()
         maxCross = max(subCrossSize.fixedValue + calMargin.crossFixed, maxCross)
         if regulator.caculateChildrenImmediately {
-            _ = measure.caculate(byParent: regulator)
+            _ = measure.caculate(byParent: regulator, remain: Caculator.remainSize(with: measure.py_size, margin: measure.margin))
         }
     }
     
@@ -278,9 +293,9 @@ class FlatCaculator {
         return main + calSize.main / 2 + calMargin.end
     }
     
-    private func _getEstimateSize(measure: Measure) -> Size {
+    private func _getEstimateSize(measure: Measure, remain: CGSize) -> Size {
         if measure.size.maybeWrap() {
-            return measure.caculate(byParent: regulator)
+            return measure.caculate(byParent: regulator, remain: remain)
         }
         return measure.size
     }

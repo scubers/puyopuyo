@@ -105,13 +105,17 @@ private extension BoxView {
         
         let parentMeasure = superview?.py_measure ?? Measure()
 
-        let sizeAfterCaculate = regulator.caculate(byParent: parentMeasure)
         // 应用计算后的固有尺寸
         if superview is BoxView {
             // 父视图为布局
+            if regulator.size.bothNotWrap() {
+                _ = regulator.caculate(byParent: parentMeasure, remain: Caculator.remainSize(with: bounds.size, margin: regulator.margin))
+            }
         } else if isSelfPositionControl {
             // 父视图为普通视图
-            Caculator.adapting(size: sizeAfterCaculate, to: regulator, in: parentMeasure)
+            let sizeAfterCaculate = regulator.caculate(byParent: parentMeasure, remain: parentMeasure.py_size)
+            
+            Caculator.adapting(size: sizeAfterCaculate, to: regulator, remain: parentMeasure.py_size)
             center = CGPoint(x: bounds.midX + regulator.margin.left, y: bounds.midY + regulator.margin.top)
             
             let newSize = bounds.size

@@ -11,13 +11,16 @@ class ZCaculator {
     
     let regulator: ZRegulator
     let parent: Measure
-    init(_ regulator: ZRegulator, parent: Measure) {
+    let remain: CGSize
+    init(_ regulator: ZRegulator, parent: Measure, remain: CGSize) {
         self.regulator = regulator
         self.parent = parent
+        self.remain = remain
     }
     
     lazy var regFixedWidth: CGFloat = self.regulator.padding.left + self.regulator.padding.right
     lazy var regFixedHeight: CGFloat = self.regulator.padding.top + self.regulator.padding.bottom
+    lazy var layoutFixedSize = self.regulator.py_size
 //    lazy var layoutCalPadding = CalEdges(insets: layout.padding, direction: layout.direction)
 //    lazy var layoutCalFixedSize = CalFixedSize(cgSize: layout.target?.py_size ?? .zero, direction: layout.direction)
 //    lazy var layoutCalSize = CalSize(size: layout.size, direction: layout.direction)
@@ -27,11 +30,11 @@ class ZCaculator {
         
         
         if !(parent is Regulator) {
-            Caculator.adapting(size: _getEstimateSize(measure: regulator), to: regulator, in: parent)
+            Caculator.adapting(size: _getEstimateSize(measure: regulator, remain: remain), to: regulator, remain: remain)
         }
         
         
-        let layoutFixedSize = regulator.py_size
+//        let layoutFixedSize = regulator.py_size
         
         var children = [Measure]()
         regulator.enumerateChild { (_, m) in
@@ -45,7 +48,7 @@ class ZCaculator {
         for (measure) in children {
             
 //            let subSize = measure.caculate(byParent: regulator)
-            let subSize = _getEstimateSize(measure: measure)
+            let subSize = _getEstimateSize(measure: measure, remain: getCurrentRemainForChildren())
             let subMargin = measure.margin
             
             if subSize.width.isWrap || subSize.height.isWrap {
@@ -84,7 +87,7 @@ class ZCaculator {
             measure.py_center = center
             
             if regulator.caculateChildrenImmediately {
-                _ = measure.caculate(byParent: regulator)
+                _ = measure.caculate(byParent: regulator, remain: Caculator.remainSize(with: measure.py_size, margin: measure.margin))
             }
         }
         
@@ -102,10 +105,15 @@ class ZCaculator {
         return Size(width: width, height: height)
     }
     
-    private func _getEstimateSize(measure: Measure) -> Size {
+    private func _getEstimateSize(measure: Measure, remain: CGSize) -> Size {
         if measure.size.maybeWrap() {
-            return measure.caculate(byParent: regulator)
+            return measure.caculate(byParent: regulator, remain: remain)
         }
         return measure.size
+    }
+    
+    private func getCurrentRemainForChildren() -> CGSize {
+        return CGSize(width: max(0, layoutFixedSize.width - regFixedWidth),
+                      height: max(0, layoutFixedSize.height - regFixedHeight))
     }
 }

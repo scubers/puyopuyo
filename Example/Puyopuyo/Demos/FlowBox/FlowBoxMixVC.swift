@@ -43,7 +43,7 @@ class FlowBoxMixVC: BaseVC {
                             reverse.value = !reverse.value
                             vFormat.value = formatI.next()
                             hFormat.value = formatI.next()
-                            arrange.value = Util.random(array: Array(0...total))
+                            arrange.value = Util.random(array: Array(1...total))
                             direction.value = directionI.next()
                             
                             justifyContent.value = Util.random(array: direction.value == .x ? Aligment.horzAligments() : Aligment.vertAligments())
@@ -90,7 +90,7 @@ class FlowBoxMixVC: BaseVC {
                 OptionView(prefix: "width", receiver: width, options: [.fill, .wrap], action).attach($0).size(.fill, heightValue)
                 OptionView(prefix: "height", receiver: height, options: [.fill, .wrap], action).attach($0).size(.fill, heightValue)
                 
-                OptionView(prefix: "arrange", receiver: arrange, options: Array(0...total), action).attach($0).size(.fill, heightValue)
+                OptionView(prefix: "arrange", receiver: arrange, options: Array(1...total), action).attach($0).size(.fill, heightValue)
                 OptionView(prefix: "direction", receiver: direction, options: Direction.allCases, action).attach($0).size(.fill, heightValue)
                 
                 OptionView(prefix: "hFormat", receiver: hFormat, options: Format.allCases, action).attach($0).size(.fill, heightValue)

@@ -20,7 +20,7 @@ public class FlatRegulator: Regulator {
     
     public var reverse = false
     
-    public override func caculate(byParent parent: Measure) -> Size {
-        return FlatCaculator(self, parent: parent).caculate()
+    public override func caculate(byParent parent: Measure, remain size: CGSize) -> Size {
+        return FlatCaculator(self, parent: parent, remain: size).caculate()
     }
 }

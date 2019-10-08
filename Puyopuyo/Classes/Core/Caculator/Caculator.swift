@@ -45,21 +45,26 @@ class Caculator {
         }
         return CalSize(main: main, cross: cross, direction: calSize.direction)
     }
-    
+    /// 允许size 存在0的情况，则视为不限制
     static func sizeThatFit(size: CGSize, to measure: Measure) -> CGSize {
         let temp = Measure()
         temp.py_size = size
-        let sizeAfterCalulate = measure.caculate(byParent: temp)
+        var remain = size
+        if remain.width == 0 { remain.width = .greatestFiniteMagnitude }
+        if remain.height == 0 { remain.height = .greatestFiniteMagnitude }
+        let sizeAfterCalulate = measure.caculate(byParent: temp, remain: remain)
         let fixedSize = Caculator.caculate(size: sizeAfterCalulate, by: size)
         return CGSize(width: fixedSize.width.fixedValue, height: fixedSize.height.fixedValue)
     }
     
-    static func adapting(size: Size, to measure: Measure, in parent: Measure) {
-        let parentCGSize = parent.py_size
-        let margin = measure.margin
+    static func adapting(size: Size, to measure: Measure, remain: CGSize) {
         
-        let wrappedSize = CGSize(width: max(0, parentCGSize.width - margin.left - margin.right),
-                                 height: max(0, parentCGSize.height - margin.top - margin.bottom))
+//        let parentCGSize = usableSize(with: remain, margin: measure.margin)
+//        let margin = measure.margin
+//        let wrappedSize = CGSize(width: max(0, parentCGSize.width - margin.left - margin.right),
+//                                 height: max(0, parentCGSize.height - margin.top - margin.bottom))
+        
+        let wrappedSize = usableSize(with: remain, margin: measure.margin)
         
         // 本身固有尺寸
         if size.isFixed() || size.isRatio() {
@@ -76,4 +81,26 @@ class Caculator {
             }
         }
     }
+    
+    static func remainSize(with size: CGSize, margin: UIEdgeInsets) -> CGSize {
+        return CGSize(width: max(0, size.width + margin.left + margin.right),
+                      height: max(0, size.height + margin.top + margin.bottom))
+    }
+    
+    static func usableSize(with remain: CGSize, margin: UIEdgeInsets) -> CGSize {
+        return CGSize(width: max(0, remain.width - margin.left - margin.right),
+                      height: max(0, remain.height - margin.top - margin.bottom))
+    }
+    
+    static func adaptingEstimateSize(measure: Measure, remain: CGSize) {
+        var size = measure.py_size
+        if !measure.size.width.isWrap {
+            size.width = caculateFix(measure.size.width, by: remain.width - measure.margin.left - measure.margin.right).fixedValue
+        }
+        if !measure.size.height.isWrap {
+            size.height = caculateFix(measure.size.height, by: remain.height - measure.margin.top - measure.margin.bottom).fixedValue
+        }
+        measure.py_size = size
+    }
+    
 }

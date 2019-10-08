@@ -9,8 +9,8 @@ import Foundation
 
 public class ZRegulator: Regulator {
     
-    public override func caculate(byParent parent: Measure) -> Size {
-        return ZCaculator(self, parent: parent).caculate()
+    public override func caculate(byParent parent: Measure, remain size: CGSize) -> Size {
+        return ZCaculator(self, parent: parent, remain: size).caculate()
     }
 }
 

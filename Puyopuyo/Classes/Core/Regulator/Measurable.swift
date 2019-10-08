@@ -15,7 +15,8 @@ public protocol Measurable {
     ///
     /// - Parameter direction: direction description
     /// - Returns: return value 返回的Size的main和cross都不可能是wrap，一定是固定值或者比重
-    func caculate(byParent parent: Measure) -> Size
+//    func caculate(byParent parent: Measure) -> Size
+    func caculate(byParent parent: Measure, remain size: CGSize) -> Size
 }
 
 public protocol MeasureTargetable: class {
