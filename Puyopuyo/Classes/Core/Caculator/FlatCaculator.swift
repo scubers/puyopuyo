@@ -155,8 +155,21 @@ class FlatCaculator {
         MeasureFactory.recyclePlaceholders(placeholders)
     }
     
-    private func getCurrentRemainSizeForChildren() -> CalFixedSize {
+    private func getCurrentRemainSizeForNormalChildren() -> CalFixedSize {
         var size = CalFixedSize(main: regFixedSize.main - totalFixedMain, cross: regFixedSize.cross - regCalPadding.crossFixed, direction: regulator.direction)
+        if size.main <= 0 && regCalSize.main.isWrap {
+            size.main = .greatestFiniteMagnitude
+        }
+        if size.cross <= 0 && regCalSize.cross.isWrap {
+            size.cross = .greatestFiniteMagnitude
+        }
+        return size
+    }
+    
+    private func getCurrentRemainSizeForRatioChildren(measure: Measure) -> CalFixedSize {
+        let calSize = measure.size.getCalSize(by: regulator.direction)
+        let mainMax = max(0, (calSize.main.ratio / totalMainRatio) * (regFixedSize.main - totalFixedMain))
+        var size = CalFixedSize(main: mainMax, cross: regFixedSize.cross - regCalPadding.crossFixed, direction: regulator.direction)
         if size.main <= 0 && regCalSize.main.isWrap {
             size.main = .greatestFiniteMagnitude
         }
@@ -170,7 +183,7 @@ class FlatCaculator {
         caculateChildren.append(measure)
         // 计算size的具体值
 //        let subSize = measure.caculate(byParent: regulator)
-        let subSize = _getEstimateSize(measure: measure, remain: getCurrentRemainSizeForChildren().getSize())
+        let subSize = _getEstimateSize(measure: measure, remain: getCurrentRemainSizeForNormalChildren().getSize())
         if subSize.width.isWrap || subSize.height.isWrap {
             fatalError("计算后的尺寸不能是包裹")
         }
@@ -207,7 +220,7 @@ class FlatCaculator {
     }
     
     private func regulateRatioChild(_ measure: Measure) {
-        let subSize = _getEstimateSize(measure: measure, remain: getCurrentRemainSizeForChildren().getSize())
+        let subSize = _getEstimateSize(measure: measure, remain: getCurrentRemainSizeForRatioChildren(measure: measure).getSize())
         let calSize = CalSize(size: subSize, direction: regulator.direction)
         let calMargin = CalEdges(insets: measure.margin, direction: regulator.direction)
         // cross

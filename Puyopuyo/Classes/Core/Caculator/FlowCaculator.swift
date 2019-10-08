@@ -69,8 +69,7 @@ class FlowCaculator {
     }
     
     private func _caculateByContent(available children: [Measure]) -> Size {
-        return Size();
-        /*
+//        return Size();
         var virtualLines = [VirtualFlatRegulator]()
         
         var currentLine = [Measure]()
@@ -86,7 +85,7 @@ class FlowCaculator {
         }
         
         children.enumerated().forEach({ (idx, m) in
-            let subCalSize = m.caculate(byParent: Measure()).getCalSize(by: regulator.direction)
+            let subCalSize = m.caculate(byParent: Measure(), remain: remain).getCalSize(by: regulator.direction)
             let subCalMargin = CalEdges(insets: m.margin, direction: regulator.direction)
             let subCrossSize = subCalSize.cross
             
@@ -103,9 +102,10 @@ class FlowCaculator {
                 if currentLine.isEmpty {
                     virtualLines.append(getVirtualLine(children: [m]))
                 } else {
-                    // 另起新的一行
+                    // 之前的行先归档
                     virtualLines.append(getVirtualLine(children: currentLine))
                     maxCross = getLength(from: subCrossSize) + subCalMargin.crossFixed
+                    // 另起新的一行
                     currentLine = [m]
                 }
             } else { // 内容未超出
@@ -115,10 +115,9 @@ class FlowCaculator {
         if !currentLine.isEmpty {
             virtualLines.append(getVirtualLine(children: currentLine))
         }
-        let size = getVirtualRegulator(children: virtualLines).caculate(byParent: parent)
+        let size = getVirtualRegulator(children: virtualLines).caculate(byParent: parent, remain: remain)
         virtualLines.forEach({ $0.justifyChildrenWithCenter() })
         return size
-        */
     }
     
     private func _caculateByFixedCount(available children: [Measure]) -> Size {
@@ -166,8 +165,7 @@ private extension FlowCaculator {
 
         var lineCalSize = CalSize(main: .wrap, cross: .wrap, direction: layoutDirection)
         if !layoutCalSize.cross.isWrap {
-            // 当流式布局为包裹的时候，内部计算布局需要给定一个尺寸
-//            lineCalSize.cross = .fix(max(0, layoutFixedSize.cross - regulator.getCalPadding().crossFixed))
+            // 当流式布局为非包裹的时候，内部计算布局优先撑满
             lineCalSize.cross = .fill
         }
         

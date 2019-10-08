@@ -39,7 +39,7 @@ class TestVC: BaseVC {
         let vi = State<Visibility>(.visible)
         
         vRoot.attach {
-            /*
+            
             UITextField().attach($0)
                 .margin(left: 10, right: 10)
                 .onText(text)
@@ -57,19 +57,30 @@ class TestVC: BaseVC {
                 Label().attach($0)
                     .text(text)
                     .numberOfLines(0)
-                    .size(.fill, .wrap)
+                    .size(.fill, .wrap(max: 150))
             }
             .space(10)
             .size(.fill, .wrap(min: 100))
-            */
-            VFlow(count: 2).attach($0) {
-                for i in 0..<6 {
-                    Label("\(i)").attach($0)
-                        .size(.fill, 20)
-                }
+            /*
+            VFlow(count: 0).attach($0) {
+                
+                Label("1").attach($0)
+                    .size(.fill, 20)
+                Label("2").attach($0)
+                    .size(100, 20)
+                Label("3").attach($0)
+                    .size(200, 20)
+                Label("3").attach($0)
+                    .size(.fill, 20)
+                Label("4").attach($0)
+                    .size(50, .fill)
+                Label("5").attach($0)
+                    .size(50, 60)
             }
+            .space(10)
             .padding(all: 10)
             .size(.fill, .fill)
+ */
             
         }
         .format(.sides)
