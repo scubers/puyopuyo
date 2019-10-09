@@ -111,23 +111,26 @@ private extension BoxView {
             if regulator.size.bothNotWrap() {
                 _ = regulator.caculate(byParent: parentMeasure, remain: Caculator.remainSize(with: bounds.size, margin: regulator.margin))
             }
-        } else if isSelfPositionControl {
+        } else {
             // 父视图为普通视图
             let sizeAfterCaculate = regulator.caculate(byParent: parentMeasure, remain: parentMeasure.py_size)
-            
             Caculator.adapting(size: sizeAfterCaculate, to: regulator, remain: parentMeasure.py_size)
-            center = CGPoint(x: bounds.midX + regulator.margin.left, y: bounds.midY + regulator.margin.top)
-            
-            let newSize = bounds.size
-            // 控制父视图的scroll
-            if isScrollViewControl, let scrollView = superview as? UIScrollView {
-                if regulator.size.width.isWrap {
-                    scrollView.contentSize.width = newSize.width + regulator.margin.left + regulator.margin.right
+            if isSelfPositionControl {
+                center = CGPoint(x: bounds.midX + regulator.margin.left, y: bounds.midY + regulator.margin.top)
+                
+                let newSize = bounds.size
+                // 控制父视图的scroll
+                if isScrollViewControl, let scrollView = superview as? UIScrollView {
+                    if regulator.size.width.isWrap {
+                        scrollView.contentSize.width = newSize.width + regulator.margin.left + regulator.margin.right
+                    }
+                    if regulator.size.height.isWrap {
+                        scrollView.contentSize.height = newSize.height + regulator.margin.bottom + regulator.margin.top
+                    }
                 }
-                if regulator.size.height.isWrap {
-                    scrollView.contentSize.height = newSize.height + regulator.margin.bottom + regulator.margin.top
-                }
+                
             }
+            
         }
             
         // 更新边线
