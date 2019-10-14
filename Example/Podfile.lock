@@ -18,7 +18,7 @@ DEPENDENCIES:
   - TangramKit
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - RxSwift
     - SnapKit
     - TangramKit
@@ -35,4 +35,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: b0c1265b0142777c4da42db560b3e3f28c2b76dd
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.8.3

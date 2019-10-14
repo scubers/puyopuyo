@@ -94,12 +94,12 @@ class ZCaculator {
         // 计算布局自身大小
         var width = regulator.size.width
         if width.isWrap {
-            width = .fix(maxSizeWithMargin.width + regulator.padding.left + regulator.padding.right)
+            width = .fix(width.getWrapSize(by: maxSizeWithMargin.width + regulator.padding.left + regulator.padding.right))
         }
         
         var height = regulator.size.height
         if height.isWrap {
-            height = .fix(maxSizeWithMargin.height + regulator.padding.top + regulator.padding.bottom)
+            height = .fix(height.getWrapSize(by: maxSizeWithMargin.height + regulator.padding.top + regulator.padding.bottom))
         }
         
         return Size(width: width, height: height)
