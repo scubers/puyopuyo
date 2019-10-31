@@ -59,6 +59,15 @@ public class Puyo<T: UIView> {
             v.py_setNeedsLayout()
         })
     }
+    
+    @discardableResult
+    public func viewUpdate<O: Outputing, R, Object: AnyObject>(on state: O, to object: Object, _ action: @escaping (Object, T, R) -> Void) -> Self where O.OutputType == R {
+        return viewUpdate(on: state) { [weak object] (t, r) in
+            if let o = object {
+                action(o, t, r)
+            }
+        }
+    }
 }
 
 public typealias PuyoBlock = (UIView) -> Void

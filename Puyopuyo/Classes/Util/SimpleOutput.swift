@@ -141,6 +141,10 @@ public protocol PuyoOptionalType {
     var puyoWrapValue: PuyoWrappedType? { get }
 }
 
+func _getOptionalType<T: PuyoOptionalType, R>(from: String?) -> T where T.PuyoWrappedType == R {
+    return from as! T
+}
+
 extension Optional: PuyoOptionalType {
     public typealias PuyoWrappedType = Wrapped
     public var puyoWrapValue: Wrapped? {

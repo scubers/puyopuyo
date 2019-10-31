@@ -45,6 +45,13 @@ class TestVC: BaseVC {
                 .onText(text)
                 .size(.fill, 30)
             
+            UITextView().attach($0)
+                .onText(text)
+                .textChange(SimpleInput<String?> { x in
+                    print(x)
+                })
+                .size(.fill, 70)
+            
             UISwitch().attach($0)
                 .onEvent(.valueChanged, SimpleInput { s in
                     vi.value = s.isOn ? .gone : .visible

@@ -10,10 +10,10 @@ import Foundation
 extension Puyo where T: UITextView {
     
     @discardableResult
-    public func onText<S: Outputing & Inputing>(_ text: S) -> Self where S.OutputType == String?, S.InputType == String? {
+    public func onText<S: Outputing & Inputing>(_ text: S) -> Self where S.OutputType: PuyoOptionalType, S.InputType == S.OutputType, S.OutputType.PuyoWrappedType == String {
         view.py_setUnbinder(text.safeBind(view, { (v, a) in
-            guard a != v.text else { return }
-            v.text = a
+            guard a.puyoWrapValue != v.text else { return }
+            v.text = a.puyoWrapValue
             v.py_setNeedsLayoutIfMayBeWrap()
         }), for: "\(#function)_output")
         
@@ -31,8 +31,30 @@ extension Puyo where T: UITextView {
                 NotificationCenter.default.removeObserver(obj)
             }
         }
-        let unbinder = output.distinct().send(to: text)
+        let unbinder = output.distinct().map({ _getOptionalType(from: $0) }).send(to: text)
         view.py_setUnbinder(unbinder, for: "\(#function)_input")
         return self
     }
+    
+    @discardableResult
+    public func textChange<S: Inputing>(_ text: S) -> Self where S.InputType == String? {
+        let output = SimpleOutput<String?> { (input) -> Unbinder in
+            let obj = NotificationCenter.default.addObserver(forName: UITextView.textDidChangeNotification, object: self.view, queue: OperationQueue.main) { (noti) in
+                if let tv = noti.object as? UITextView {
+                    input.input(value: tv.text)
+                    tv.py_setNeedsLayoutIfMayBeWrap()
+                } else {
+                    input.input(value: nil)
+                }
+                
+            }
+            return Unbinders.create {
+                NotificationCenter.default.removeObserver(obj)
+            }
+        }
+        let unbinder = output.distinct().map({ _getOptionalType(from: $0) }).send(to: text)
+        view.py_setUnbinder(unbinder, for: "\(#function)")
+        return self
+    }
+
 }
