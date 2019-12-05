@@ -39,7 +39,7 @@ class FlowBoxMixVC: BaseVC {
                 UIButton().attach($0)
                     .title("change".asOutput().some(), state: .normal)
                     .addWeakAction(to: self, for: .touchUpInside, { (self, _) in
-                        self.vRoot.animate(0.2, block: {
+//                        self.vRoot.animate(0.2, block: {
                             reverse.value = !reverse.value
                             vFormat.value = formatI.next()
                             hFormat.value = formatI.next()
@@ -50,29 +50,29 @@ class FlowBoxMixVC: BaseVC {
                             
                             hSpace.value = Util.random(array: spaceRange)
                             vSpace.value = Util.random(array: spaceRange)
-                        })
+//                        })
                     })
                     .size(100, 20)
                 
                 UIButton().attach($0)
                     .title(State("add"), state: .normal)
                     .addWeakAction(to: self, for: .touchUpInside, { (self, _) in
-                        self.vRoot.animate(0.2, block: {
+//                        self.vRoot.animate(0.2, block: {
                             total += 1
                             let v =
                                 Label("\(total)").attach()
                                     .size(40, 40)
                                     .backgroundColor(Util.randomColor().asOutput().some())
                                     .onTap(to: self, { (self, tap) in
-                                        self.vRoot.animate(0.2, block: {
+//                                        self.vRoot.animate(0.2, block: {
                                             tap.view?.removeFromSuperview()
                                             total -= 1
-                                        })
+//                                        })
                                     })
                                     .view
                             
                             adding.input(value: v)
-                        })
+//                        })
                     })
                     .size(50, .fill)
                 }
@@ -83,8 +83,8 @@ class FlowBoxMixVC: BaseVC {
             VFlow(count: 2).attach($0) {
                 let heightValue: CGFloat = 20
                 
-                let action: () -> Void = { [weak self] in
-                    self?.vRoot.animate(0.2, block: {})
+                let action: () -> Void = {
+//                    self?.vRoot.animate(0.2, block: {})
                 }
                 
                 OptionView(prefix: "width", receiver: width, options: [.fill, .wrap], action).attach($0).size(.fill, heightValue)
@@ -125,26 +125,38 @@ class FlowBoxMixVC: BaseVC {
                             .height(on: Simulate.ego.width)
                     })
                     
-                    }
-                    .width(width)
-                    .height(height)
-                    .padding(all: 10)
-                    .margin(all: 10)
-                    .hSpace(hSpace)
-                    .vSpace(vSpace)
-                    .justifyContent(justifyContent)
-                    .direction(direction)
-                    .arrangeCount(arrange)
-                    .reverse(reverse)
-                    .hFormat(hFormat)
-                    .vFormat(vFormat)
-                    .autoJudgeScroll(true)
                 }
-                .size(.fill, .fill)
+                .width(width)
+                .height(height)
+                .padding(all: 10)
                 .margin(all: 10)
-            
+                .hSpace(hSpace)
+                .vSpace(vSpace)
+                .justifyContent(justifyContent)
+                .direction(direction)
+                .arrangeCount(arrange)
+                .reverse(reverse)
+                .hFormat(hFormat)
+                .vFormat(vFormat)
+                .autoJudgeScroll(true)
+                .animator(_Animator());
             }
-            .justifyContent(.center)
-            .space(10)
+            .size(.fill, .fill)
+            .margin(all: 10)
+            
+        }
+        .justifyContent(.center)
+        .space(10)
+    
+    }
+    
+    class _Animator: Animator {
+        func animate(view: BoxView, layouting: @escaping () -> Void) {
+            guard view.bounds != .zero else {
+                layouting()
+                return
+            }
+            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 2, initialSpringVelocity: 5, options: .curveEaseOut, animations: layouting, completion: nil)
+        }
     }
 }

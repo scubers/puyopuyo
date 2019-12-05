@@ -35,22 +35,23 @@ class HBoxVC: BaseVC {
                 .aligment(self.three)
                 .text(text3)
                 .height(50)
-            }
-            .padding(top: 50, left: 30, bottom: 10)
-            .space(10)
-            .size(.fill, 400)
-            .borders([.thick(1), .color(.purple), .dash(5, 5)])
-            .margin(all: 30)
+        }
+        .padding(top: 50, left: 30, bottom: 10)
+        .space(10)
+        .size(.fill, 400)
+        .borders([.thick(1), .color(.purple), .dash(5, 5)])
+        .margin(all: 30)
+        .animator(Animators.default)
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "change", style: .plain, target: self, action: #selector(change))
         Util.randomViewColor(view: view)
     }
     
     @objc private func change() {
-        vRoot.animate(0.2) {
+//        vRoot.animate(0.2) {
             self.one.value = Util.random(array: [.top, .vertCenter, .bottom])
             self.two.value = Util.random(array: [.top, .vertCenter, .bottom])
             self.three.value = Util.random(array: [.top, .vertCenter, .bottom])
-        }
+//        }
     }
 }

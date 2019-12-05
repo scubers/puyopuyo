@@ -17,6 +17,33 @@ public protocol EventableView {
     var eventProducer: SimpleIO<EventType> { get }
 }
 
+public protocol Animator {
+    func animate(view: BoxView, layouting: @escaping () -> Void)
+}
+
+public struct Animators {
+    
+    /// no animation
+    public static let none: Animator = NonAnimator()
+    
+    /// default animation
+    public static let `default`: Animator = DefaultAnimator()
+    
+    struct NonAnimator: Animator {
+        public func animate(view: BoxView, layouting: @escaping () -> Void) {
+            layouting()
+        }
+    }
+    
+    struct DefaultAnimator: Animator {
+        func animate(view: BoxView, layouting: @escaping () -> Void) {
+            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 2, initialSpringVelocity: 5, options: .curveEaseOut, animations: layouting, completion: nil)
+        }
+    }
+
+}
+
+
 open class BoxView: UIView {
     
     public override init(frame: CGRect) {
@@ -32,6 +59,8 @@ open class BoxView: UIView {
     public var isScrollViewControl = false
     public var isSelfPositionControl = true
     
+    public var animator: Animator = Animators.none
+    
     public var regulator: Regulator {
         return py_measure as! Regulator
     }
@@ -46,16 +75,14 @@ open class BoxView: UIView {
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        _layoutSubviews()
+        var layouted = false
+        animator.animate(view: self) {
+            self._layoutSubviews()
+            layouted = true
+        }
+        assert(layouted, "\(animator) should call `layouting` block!!!!")
     }
 
-    public func animate(_ interval: TimeInterval, block: @escaping () -> Void) {
-        UIView.animate(withDuration: interval, animations: {
-            block()
-            self.layoutIfNeeded()
-        })
-    }
-    
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
         return Caculator.sizeThatFit(size: size, to: regulator)
     }

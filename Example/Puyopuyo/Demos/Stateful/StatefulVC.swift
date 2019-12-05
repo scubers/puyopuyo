@@ -65,14 +65,14 @@ class StatefulVC: BaseVC, UITextFieldDelegate {
     }
     
     private func change(value: Bool) {
-        UIView.animate(withDuration: 0.2) {
+//        UIView.animate(withDuration: 0.2) {
             self.text.value = "A random string: \(arc4random_uniform(10))"
             self.width.value = self.randomSize()
             self.height.value = self.randomSize()
             self.textColor.value = Util.randomColor()
             self.backgroundColor.value = Util.randomColor()
             self.vRoot.layoutIfNeeded()
-        }
+//        }
     }
     
     private func randomSize() -> SizeDescription {

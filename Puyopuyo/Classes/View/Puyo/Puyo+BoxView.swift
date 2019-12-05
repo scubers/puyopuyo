@@ -9,6 +9,13 @@ import Foundation
 
 // MARK: - BoxView
 extension Puyo where T: BoxView {
+    
+    @discardableResult
+    public func animator(_ animator: Animator) -> Self {
+        view.animator = animator
+        return self
+    }
+    
     @discardableResult
     public func padding(all: CGFloatable? = nil, top: CGFloatable? = nil, left: CGFloatable? = nil, bottom: CGFloatable? = nil, right: CGFloatable? = nil) -> Self {
         if let all = all {

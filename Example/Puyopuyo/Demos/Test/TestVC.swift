@@ -115,9 +115,9 @@ class TestVC: BaseVC {
                         
                         let v = $0
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-                            self.vRoot.animate(0.2, block: {
+//                            self.vRoot.animate(0.2, block: {
                                 v.attach().height(200)
-                            })
+//                            })
                         })
                 }
                 
@@ -138,10 +138,10 @@ class TestVC: BaseVC {
 //                    .heightOnSelf({ .fix($0.width * 0.5) })
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
-                    v.view.animate(0.25, block: {
+//                    v.view.animate(0.25, block: {
 //                        v.heightOnSelf({ .fix($0.width) })
                         v.height(on: Simulate.ego.width)
-                    })
+//                    })
                 })
                 
                 

@@ -81,11 +81,11 @@ class FlatMixVC: BaseVC {
     }
     
     @objc private func change() {
-        vRoot.animate(0.2) {
+//        vRoot.animate(0.2) {
             self.formation.value = Util.random(array: [Format.leading, .center, .sides, .avg, .trailing])
             self.aligment.value = Util.random(array: [Aligment.left, .right, .center])
             self.reversed.value = Util.random(array: [false, true])
-        }
+//        }
     }
     
     private func refreshTitle() {
