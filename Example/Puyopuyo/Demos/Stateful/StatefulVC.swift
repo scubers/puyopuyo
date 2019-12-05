@@ -51,13 +51,14 @@ class StatefulVC: BaseVC, UITextFieldDelegate {
                     .text(self.text)
                     .backgroundColor(self.backgroundColor.asOutput().some())
                     .size(self.width, self.height)
-                }
-                .space(10)
-                .size(.fill, .wrap)
-                .padding(all: 10)
-                .justifyContent(.center)
             }
-            .size(.fill, .fill)
+            .space(10)
+            .size(.fill, .wrap)
+            .padding(all: 10)
+            .justifyContent(.center)
+            .animator(Animators.default)
+        }
+        .size(.fill, .fill)
     }
     
     private func valueChanged(_ view: UISwitch) -> Void {
