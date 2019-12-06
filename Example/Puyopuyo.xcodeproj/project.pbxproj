@@ -25,6 +25,8 @@
 		A8841064234B3DA60002B9EB /* BaseStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8841063234B3DA60002B9EB /* BaseStyles.swift */; };
 		A897FCDC230AF7630061029E /* ListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A897FCDB230AF7630061029E /* ListVC.swift */; };
 		A897FCDE230AFBD80061029E /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = A897FCDD230AFBD80061029E /* Util.swift */; };
+		A8BCEEB62399620F002DB739 /* AligmentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BCEEB52399620F002DB739 /* AligmentVC.swift */; };
+		A8BCEEB823996424002DB739 /* SelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BCEEB723996424002DB739 /* SelectionView.swift */; };
 		A8D9430722FF3640002E487F /* VBoxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9430622FF3640002E487F /* VBoxVC.swift */; };
 		A8D9430922FF3694002E487F /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9430822FF3694002E487F /* Label.swift */; };
 		A8D9430C22FF3937002E487F /* ZBoxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9430B22FF3937002E487F /* ZBoxVC.swift */; };
@@ -78,6 +80,8 @@
 		A8841063234B3DA60002B9EB /* BaseStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseStyles.swift; sourceTree = "<group>"; };
 		A897FCDB230AF7630061029E /* ListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListVC.swift; sourceTree = "<group>"; };
 		A897FCDD230AFBD80061029E /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		A8BCEEB52399620F002DB739 /* AligmentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AligmentVC.swift; sourceTree = "<group>"; };
+		A8BCEEB723996424002DB739 /* SelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionView.swift; sourceTree = "<group>"; };
 		A8D9430622FF3640002E487F /* VBoxVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VBoxVC.swift; sourceTree = "<group>"; };
 		A8D9430822FF3694002E487F /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
 		A8D9430B22FF3937002E487F /* ZBoxVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZBoxVC.swift; sourceTree = "<group>"; };
@@ -232,9 +236,18 @@
 			path = BaseStyles;
 			sourceTree = "<group>";
 		};
+		A8BCEEB4239961F6002DB739 /* Aligment */ = {
+			isa = PBXGroup;
+			children = (
+				A8BCEEB52399620F002DB739 /* AligmentVC.swift */,
+			);
+			path = Aligment;
+			sourceTree = "<group>";
+		};
 		A8D9430222FF360B002E487F /* Demos */ = {
 			isa = PBXGroup;
 			children = (
+				A8BCEEB4239961F6002DB739 /* Aligment */,
 				A8841062234B3D9B0002B9EB /* BaseStyles */,
 				A86F437D233F60290008606F /* Styles */,
 				A81CE13D231063E200E19E6B /* FlowBox */,
@@ -263,6 +276,7 @@
 				A8D9430822FF3694002E487F /* Label.swift */,
 				A897FCDD230AFBD80061029E /* Util.swift */,
 				A81CE1482312EE6900E19E6B /* OptionView.swift */,
+				A8BCEEB723996424002DB739 /* SelectionView.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -507,8 +521,10 @@
 				A8D9430E22FFEB00002E487F /* ZBoxMenu.swift in Sources */,
 				A8D9431622FFF102002E487F /* StatefulVC.swift in Sources */,
 				A8D9430922FF3694002E487F /* Label.swift in Sources */,
+				A8BCEEB62399620F002DB739 /* AligmentVC.swift in Sources */,
 				A84626542309574C003A282C /* TestVC.swift in Sources */,
 				A81CE13C2310509B00E19E6B /* HBoxVC.swift in Sources */,
+				A8BCEEB823996424002DB739 /* SelectionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

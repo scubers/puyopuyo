@@ -93,6 +93,7 @@ class TestVC: BaseVC {
         .format(.sides)
         .padding(all: 10)
         .space(10)
+        .animator(Animators.default)
     }
     
     private func test1() {
