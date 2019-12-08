@@ -11,9 +11,9 @@ import Puyopuyo
 
 class DemoScroll: UIScrollView {
 
-    var builder: (UIView) -> Void
+//    var builder: (UIView) -> Void
     init(builder: @escaping (UIView) -> Void, box: @escaping (FlatBox) -> Void = {_ in}) {
-        self.builder = builder
+//        self.builder = builder
         super.init(frame: .zero)
         
         attach()
@@ -23,7 +23,7 @@ class DemoScroll: UIScrollView {
             .space(20)
             .attach {
                 box($0)
-                _ = self.builder($0)
+                _ = builder($0)
         }
     }
     required init?(coder: NSCoder) {
