@@ -19,11 +19,11 @@ class MenuVC: BaseVC {
             ("FlatBox Proerties", FlatPropertiesVC.self),
             ("FlowBox Proerties", FlowPropertiesVC.self),
             ("Advance usage", AdvanceVC.self),
-            ("FlatBox", FlatBoxMenu.self),
-            ("FlowBox", FlowBoxMenu.self),
-            ("ZBox", ZBoxMenu.self),
-            ("Stateful", StatefulVC.self),
-            ("Style", StyleVC.self),
+//            ("FlatBox", FlatBoxMenu.self),
+//            ("FlowBox", FlowBoxMenu.self),
+//            ("ZBox", ZBoxMenu.self),
+//            ("Stateful", StatefulVC.self),
+//            ("Style", StyleVC.self),
         ]
     }
     

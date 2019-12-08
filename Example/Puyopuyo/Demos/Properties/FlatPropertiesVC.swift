@@ -14,6 +14,7 @@ class FlatPropertiesVC: BaseVC {
         DemoScroll(
             builder: {
                 self.direction().attach($0)
+                self.format().attach($0)
                 self.justifyContent().attach($0)
                 self.space().attach($0)
                 self.reverse().attach($0)
@@ -51,6 +52,39 @@ class FlatPropertiesVC: BaseVC {
         .attach()
         .onEventProduced(to: self, { _, x in
             justifyContent.value = x
+        })
+        .view
+    }
+    
+    func format() -> UIView {
+        let format = State<Format>(.leading)
+        return DemoView<Format>(
+            title: "format",
+            builder: {
+                HBox().attach($0) {
+                    Label.demo("1").attach($0)
+                    Label.demo("2").attach($0)
+                    Label.demo("3").attach($0)
+                }
+                .space(2)
+                .padding(all: 10)
+                .justifyContent(.center)
+                .size(.fill, 60)
+                .animator(Animators.default)
+                .format(format)
+                .view
+            },
+            selectors: [Selector(desc: "leading", value: .leading),
+                        Selector(desc: "center", value: .center),
+                        Selector(desc: "avg", value: .avg),
+                        Selector(desc: "sides", value: .sides),
+                        Selector(desc: "traing", value: .trailing),
+            ],
+            desc: "布局主轴上的格式"
+        )
+        .attach()
+        .onEventProduced(to: self, { _, x in
+            format.value = x
         })
         .view
     }
@@ -106,11 +140,7 @@ class FlatPropertiesVC: BaseVC {
                 .animator(Animators.default)
                 .view
             },
-            selectors: [Selector(desc: "0", value: 0),
-                        Selector(desc: "10", value: 10),
-                        Selector(desc: "20", value: 20),
-                        Selector(desc: "30", value: 30),
-                        Selector(desc: "40", value: 40)],
+            selectors: [0, 10, 20, 30, 40].map({ Selector(desc: "\($0)", value: $0)}),
             desc: "Box布局系统的内边距"
         )
         .attach()
