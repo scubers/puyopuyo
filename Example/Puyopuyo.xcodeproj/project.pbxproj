@@ -25,8 +25,13 @@
 		A8841064234B3DA60002B9EB /* BaseStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8841063234B3DA60002B9EB /* BaseStyles.swift */; };
 		A897FCDC230AF7630061029E /* ListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A897FCDB230AF7630061029E /* ListVC.swift */; };
 		A897FCDE230AFBD80061029E /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = A897FCDD230AFBD80061029E /* Util.swift */; };
-		A8BCEEB62399620F002DB739 /* AligmentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BCEEB52399620F002DB739 /* AligmentVC.swift */; };
+		A8BCEEB62399620F002DB739 /* UIViewProertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BCEEB52399620F002DB739 /* UIViewProertiesVC.swift */; };
 		A8BCEEB823996424002DB739 /* SelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BCEEB723996424002DB739 /* SelectionView.swift */; };
+		A8BEC48C239C9EB4001FD6BF /* DemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BEC48B239C9EB4001FD6BF /* DemoView.swift */; };
+		A8BEC48E239CD3E6001FD6BF /* DemoScroll.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BEC48D239CD3E6001FD6BF /* DemoScroll.swift */; };
+		A8BEC490239CD656001FD6BF /* FlatPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BEC48F239CD656001FD6BF /* FlatPropertiesVC.swift */; };
+		A8BEC492239CDB6B001FD6BF /* FlowPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BEC491239CDB6B001FD6BF /* FlowPropertiesVC.swift */; };
+		A8BEC495239CDF5D001FD6BF /* AdvanceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BEC494239CDF5D001FD6BF /* AdvanceVC.swift */; };
 		A8D9430722FF3640002E487F /* VBoxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9430622FF3640002E487F /* VBoxVC.swift */; };
 		A8D9430922FF3694002E487F /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9430822FF3694002E487F /* Label.swift */; };
 		A8D9430C22FF3937002E487F /* ZBoxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9430B22FF3937002E487F /* ZBoxVC.swift */; };
@@ -80,8 +85,13 @@
 		A8841063234B3DA60002B9EB /* BaseStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseStyles.swift; sourceTree = "<group>"; };
 		A897FCDB230AF7630061029E /* ListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListVC.swift; sourceTree = "<group>"; };
 		A897FCDD230AFBD80061029E /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
-		A8BCEEB52399620F002DB739 /* AligmentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AligmentVC.swift; sourceTree = "<group>"; };
+		A8BCEEB52399620F002DB739 /* UIViewProertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewProertiesVC.swift; sourceTree = "<group>"; };
 		A8BCEEB723996424002DB739 /* SelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionView.swift; sourceTree = "<group>"; };
+		A8BEC48B239C9EB4001FD6BF /* DemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoView.swift; sourceTree = "<group>"; };
+		A8BEC48D239CD3E6001FD6BF /* DemoScroll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoScroll.swift; sourceTree = "<group>"; };
+		A8BEC48F239CD656001FD6BF /* FlatPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlatPropertiesVC.swift; sourceTree = "<group>"; };
+		A8BEC491239CDB6B001FD6BF /* FlowPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowPropertiesVC.swift; sourceTree = "<group>"; };
+		A8BEC494239CDF5D001FD6BF /* AdvanceVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvanceVC.swift; sourceTree = "<group>"; };
 		A8D9430622FF3640002E487F /* VBoxVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VBoxVC.swift; sourceTree = "<group>"; };
 		A8D9430822FF3694002E487F /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
 		A8D9430B22FF3937002E487F /* ZBoxVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZBoxVC.swift; sourceTree = "<group>"; };
@@ -236,18 +246,29 @@
 			path = BaseStyles;
 			sourceTree = "<group>";
 		};
-		A8BCEEB4239961F6002DB739 /* Aligment */ = {
+		A8BCEEB4239961F6002DB739 /* Properties */ = {
 			isa = PBXGroup;
 			children = (
-				A8BCEEB52399620F002DB739 /* AligmentVC.swift */,
+				A8BCEEB52399620F002DB739 /* UIViewProertiesVC.swift */,
+				A8BEC48F239CD656001FD6BF /* FlatPropertiesVC.swift */,
+				A8BEC491239CDB6B001FD6BF /* FlowPropertiesVC.swift */,
 			);
-			path = Aligment;
+			path = Properties;
+			sourceTree = "<group>";
+		};
+		A8BEC493239CDF50001FD6BF /* Advance */ = {
+			isa = PBXGroup;
+			children = (
+				A8BEC494239CDF5D001FD6BF /* AdvanceVC.swift */,
+			);
+			path = Advance;
 			sourceTree = "<group>";
 		};
 		A8D9430222FF360B002E487F /* Demos */ = {
 			isa = PBXGroup;
 			children = (
-				A8BCEEB4239961F6002DB739 /* Aligment */,
+				A8BEC493239CDF50001FD6BF /* Advance */,
+				A8BCEEB4239961F6002DB739 /* Properties */,
 				A8841062234B3D9B0002B9EB /* BaseStyles */,
 				A86F437D233F60290008606F /* Styles */,
 				A81CE13D231063E200E19E6B /* FlowBox */,
@@ -277,6 +298,8 @@
 				A897FCDD230AFBD80061029E /* Util.swift */,
 				A81CE1482312EE6900E19E6B /* OptionView.swift */,
 				A8BCEEB723996424002DB739 /* SelectionView.swift */,
+				A8BEC48B239C9EB4001FD6BF /* DemoView.swift */,
+				A8BEC48D239CD3E6001FD6BF /* DemoScroll.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -501,11 +524,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				A8D9431222FFEC45002E487F /* ZBoxSizeVC.swift in Sources */,
+				A8BEC495239CDF5D001FD6BF /* AdvanceVC.swift in Sources */,
 				A846265123093E4E003A282C /* FlatMixVC.swift in Sources */,
+				A8BEC490239CD656001FD6BF /* FlatPropertiesVC.swift in Sources */,
 				A8D9430C22FF3937002E487F /* ZBoxVC.swift in Sources */,
 				A81CE1492312EE6900E19E6B /* OptionView.swift in Sources */,
 				A86F4381233F9C100008606F /* StyleVC.swift in Sources */,
 				A8D9430722FF3640002E487F /* VBoxVC.swift in Sources */,
+				A8BEC48E239CD3E6001FD6BF /* DemoScroll.swift in Sources */,
 				A8D9431022FFEBE7002E487F /* FlatBoxMenu.swift in Sources */,
 				09883C4A22C5E5FB006CE05A /* StyleTestViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
@@ -521,10 +547,12 @@
 				A8D9430E22FFEB00002E487F /* ZBoxMenu.swift in Sources */,
 				A8D9431622FFF102002E487F /* StatefulVC.swift in Sources */,
 				A8D9430922FF3694002E487F /* Label.swift in Sources */,
-				A8BCEEB62399620F002DB739 /* AligmentVC.swift in Sources */,
+				A8BCEEB62399620F002DB739 /* UIViewProertiesVC.swift in Sources */,
+				A8BEC492239CDB6B001FD6BF /* FlowPropertiesVC.swift in Sources */,
 				A84626542309574C003A282C /* TestVC.swift in Sources */,
 				A81CE13C2310509B00E19E6B /* HBoxVC.swift in Sources */,
 				A8BCEEB823996424002DB739 /* SelectionView.swift in Sources */,
+				A8BEC48C239C9EB4001FD6BF /* DemoView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

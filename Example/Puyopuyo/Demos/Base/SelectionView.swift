@@ -9,14 +9,19 @@
 import UIKit
 import Puyopuyo
 
+struct Selector<T> {
+    var desc: String
+    var value: T
+}
+
 class SelectionView<T: Equatable>: VFlow, StatefulView, EventableView {
     
-    private var selection = [T]()
+    private var selection = [Selector<T>]()
     
-    var viewState = State<T?>(nil)
-    var eventProducer = SimpleIO<T>()
+    var viewState = State<Selector<T>?>(nil)
+    var eventProducer = SimpleIO<Selector<T>>()
     
-    init(_ selection: [T]) {
+    init(_ selection: [Selector<T>]) {
         self.selection = selection
         super.init(frame: .zero)
     }
@@ -35,20 +40,24 @@ class SelectionView<T: Equatable>: VFlow, StatefulView, EventableView {
                         self.viewState.value = x
                     })
                     .backgroundColor(self.viewState.asOutput().map({ (e) -> UIColor in
-                        if let e = e, e == x {
-                            return .purple
+                        if let e = e, e.value == x.value {
+                            return Theme.color
                         }
-                        return .gray
+                        return .clear
                     }))
+                    .styles([
+                    ])
+                    .borderWidth(0.5)
+                    .borderColor(Theme.color)
+                    .cornerRadius(4)
                     .titleColor(UIColor.black, state: .normal)
-                    .title("\(x)", state: .normal)
+                    .width(.wrap(add: 6))
+                    .title(x.desc, state: .normal)
             }
         }
-        .backgroundColor(UIColor.brown)
         .padding(all: 10)
         .space(5)
         .animator(Animators.default)
     }
-    
     
 }

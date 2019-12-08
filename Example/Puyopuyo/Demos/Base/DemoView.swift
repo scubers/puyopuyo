@@ -1,0 +1,66 @@
+//
+//  DemoView.swift
+//  Puyopuyo_Example
+//
+//  Created by Jrwong on 2019/12/8.
+//  Copyright © 2019 CocoaPods. All rights reserved.
+//
+
+import UIKit
+import Puyopuyo
+
+typealias ViewBuilder = (UIView) -> UIView
+
+class DemoView<T: Equatable>: VBox, EventableView {
+    
+    var eventProducer = SimpleIO<T>()
+    
+    var builder: ViewBuilder
+    var title: String
+    var desc: String
+    var selectors: [Selector<T>]
+    init(title: String, builder: @escaping ViewBuilder, selectors: [Selector<T>], desc: String = "") {
+        self.builder = builder
+        self.title = title
+        self.selectors = selectors
+        self.desc = desc
+        super.init(frame: .zero)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+
+    override func buildBody() {
+        attach {
+            Label(self.title).attach($0)
+                .size(.fill, 40)
+                .textAligment(.center)
+                .backgroundColor(UIColor.black.withAlphaComponent(0.2))
+            
+            self.builder($0).attach($0)
+            
+            SelectionView(self.selectors).attach($0)
+                .topBorder([.color(UIColor.black.withAlphaComponent(0.2)), .thick(0.5)])
+                .size(.fill, .wrap)
+                .visibility(self.selectors.count > 0 ? .visible : .gone)
+                .onEventProduced(to: self) { (self, s) in
+                    self.eventProducer.input(value: s.value)
+                }
+            
+            Spacer().attach($0).size(.fill, 0.5)
+                .backgroundColor(UIColor.black.withAlphaComponent(0.2))
+            
+            Label(self.desc).attach($0)
+                .textAligment(.left)
+                .margin(all: 4)
+                .size(.fill, .wrap)
+                .visibility(self.desc.count > 0 ? .visible : .gone)
+        }
+        .animator(Animators.default)
+        .size(.fill, .wrap)
+        .borderWidth(0.5)
+        .borderColor(UIColor.lightGray)
+        .cornerRadius(4)
+    }
+}

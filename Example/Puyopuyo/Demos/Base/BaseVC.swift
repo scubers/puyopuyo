@@ -9,6 +9,10 @@
 import UIKit
 import Puyopuyo
 
+class Theme {
+    static let color = UIColor.systemPink
+}
+
 class BaseVC: UIViewController {
 
     override func viewDidLoad() {

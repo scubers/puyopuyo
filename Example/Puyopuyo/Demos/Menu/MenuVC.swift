@@ -15,7 +15,10 @@ class MenuVC: BaseVC {
     func getData() -> [(String, UIViewController.Type)] {
         return [
             ("Test", TestVC.self),
-            ("Aligment", AligmentVC.self),
+            ("UIView Proerties", UIViewProertiesVC.self),
+            ("FlatBox Proerties", FlatPropertiesVC.self),
+            ("FlowBox Proerties", FlowPropertiesVC.self),
+            ("Advance usage", AdvanceVC.self),
             ("FlatBox", FlatBoxMenu.self),
             ("FlowBox", FlowBoxMenu.self),
             ("ZBox", ZBoxMenu.self),

@@ -22,7 +22,7 @@ extension Int64: SizeDescriptible { public var sizeDescription: SizeDescription 
 extension UInt64: SizeDescriptible { public var sizeDescription: SizeDescription { return .fix(CGFloat(self)) } }
 
 /// 描述一个测量长度
-public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Outputing {
+public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Outputing, Equatable {
     
     public typealias OutputType = SizeDescription
     
