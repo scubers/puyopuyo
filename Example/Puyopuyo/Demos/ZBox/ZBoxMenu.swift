@@ -9,10 +9,10 @@
 import UIKit
 
 class ZBoxMenu: MenuVC {
-    override func getData() -> [(String, UIViewController.Type)] {
-        return [
-            ("ZBox Base", ZBoxVC.self),
-            ("ZBox Size", ZBoxSizeVC.self),
-        ]
-    }
+//    override func getData() -> [(String, UIViewController.Type)] {
+//        return [
+//            ("ZBox Base", ZBoxVC.self),
+//            ("ZBox Size", ZBoxSizeVC.self),
+//        ]
+//    }
 }

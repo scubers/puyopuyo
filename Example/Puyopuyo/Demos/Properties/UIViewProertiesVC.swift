@@ -111,8 +111,7 @@ class UIViewProertiesVC: BaseVC {
             desc: "布局系统内，子view的外边局"
         )
         .attach()
-        .onEventProduced(to: self) { s, x in
-            print(s)
+        .onEventProduced(to: self) { _, x in
             margin.value = x
         }
         .view

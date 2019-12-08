@@ -150,6 +150,10 @@ class TestVC: BaseVC {
         }
     }
     
+    override func shouldRandomColor() -> Bool {
+        return true
+    }
+    
     private func tk_flowTest() {
         //        TGFlowLayout(.vert, arrangedCount: 3).attach() { x in
         TGFloatLayout().attach() { x in

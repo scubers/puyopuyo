@@ -1,0 +1,98 @@
+//
+//  Scaffold.swift
+//  Puyopuyo_Example
+//
+//  Created by Jrwong on 2019/12/8.
+//  Copyright © 2019 CocoaPods. All rights reserved.
+//
+
+import Puyopuyo
+import UIKit
+
+class Scaffold: UIView {
+    init(navBar: ViewBuilder? = nil, body: @escaping ViewBuilder) {
+        super.init(frame: .zero)
+
+        VBox().attach(self) {
+            ZBox().attach($0) {
+                navBar?($0).attach($0)
+                    .width(.fill)
+                    .aligment(.bottom)
+            }
+            .bottomBorder([.color(UIColor.black.withAlphaComponent(0.2)), .thick(0.5)])
+            .width(.fill)
+            .height($0.py_safeArea().map({ SizeDescription.wrap(add: $0.top) }))
+
+            body($0).attach($0)
+                .size(.fill, .fill)
+        }
+        .size(.fill, .fill)
+    }
+
+    required init?(coder _: NSCoder) {
+        fatalError()
+    }
+}
+
+class NavBar: ZBox, EventableView {
+    enum Event {
+        case tapLeading
+        case tapTrailing
+        case tapTitle
+    }
+
+    var eventProducer = SimpleIO<Event>()
+
+    init(title: @escaping ViewBuilder,
+         leading: ViewBuilder? = nil,
+         tailing: ViewBuilder? = nil,
+         navHeight: State<CGFloat> = State(64)) {
+        super.init(frame: .zero)
+        attach {
+            VBox().attach($0) {
+                leading?($0).attach($0)
+            }
+            .aligment(.left)
+            .onTap(to: self) { s, _ in
+                s.eventProducer.input(value: .tapLeading)
+            }
+
+            VBox().attach($0) {
+                title($0).attach($0)
+                    .size(.wrap, .wrap)
+            }
+            .aligment(.center)
+            .onTap(to: self) { s, _ in
+                s.eventProducer.input(value: .tapTitle)
+            }
+
+            VBox().attach($0) {
+                tailing?($0).attach($0)
+            }
+            .aligment(.right)
+            .onTap(to: self) { s, _ in
+                s.eventProducer.input(value: .tapTrailing)
+            }
+        }
+        .justifyContent(.vertCenter)
+        .padding(left: 16, right: 16)
+        .width(.fill)
+        .height(navHeight)
+    }
+
+    convenience init(title: String) {
+        self.init(title: {
+            Label(title).attach($0).view
+        }, leading: {
+            UIButton().attach($0)
+                .title("<-  ", state: .normal)
+                .titleColor(UIColor.black, state: .normal)
+                .userInteractionEnabled(false)
+                .view
+        })
+    }
+
+    required init?(coder _: NSCoder) {
+        fatalError()
+    }
+}

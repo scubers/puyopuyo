@@ -10,10 +10,10 @@ import UIKit
 
 class FlowBoxMenu: MenuVC {
     
-    override func getData() -> [(String, UIViewController.Type)] {
-        return [
-            ("FlowBox mix", FlowBoxMixVC.self),
-        ]
-    }
+//    override func getData() -> [(String, UIViewController.Type)] {
+//        return [
+//            ("FlowBox mix", FlowBoxMixVC.self),
+//        ]
+//    }
 
 }

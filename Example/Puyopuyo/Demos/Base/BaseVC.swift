@@ -11,23 +11,45 @@ import UIKit
 
 class Theme {
     static let color = UIColor.systemPink
+    static let dividerColor = UIColor.black.withAlphaComponent(0.2)
 }
 
 class BaseVC: UIViewController {
+    override func loadView() {
+        view = Scaffold(
+            navBar: { _ in
+                NavBar(title: "\(type(of: self))").attach()
+                    .onEventProduced(to: self, { (s, e) in
+                        if e == .tapLeading {
+                            s.navigationController?.popViewController(animated: true)
+                        }
+                    })
+                    .view
+            }, body: { _ in
+                self.vRoot
+            }
+        )
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.isTranslucent = false
         view.backgroundColor = .white
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "back", style: .plain, target: self, action: #selector(BaseVC.back))
-        vRoot.attach(view).size(.ratio(1), .ratio(1))
+//        vRoot.attach(view).size(.ratio(1), .ratio(1))
         configView()
         if shouldRandomColor() {
             Util.randomViewColor(view: view)
         }
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
     func shouldRandomColor() -> Bool {
-        return true
+        return false
     }
 
     var vRoot: VBox = VBox()
