@@ -32,6 +32,7 @@ public class BgImageStyle: UIControlBaseStyle<UIImage?, BgImageDecorable> {
 }
 
 // MARK: - TitleShadowColor
+
 public protocol TitleShadowColorDecorable {
     func applyTitleShadowColor(_ color: UIColor?, state: UIControl.State)
 }

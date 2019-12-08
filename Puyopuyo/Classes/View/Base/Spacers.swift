@@ -10,10 +10,11 @@ import UIKit
 public class Spacer: UIView {
     public init(_ space: CGFloat = 10) {
         super.init(frame: .zero)
-        self.py_measure.size.height = .fix(space)
-        self.py_measure.size.width = .fix(space)
+        py_measure.size.height = .fix(space)
+        py_measure.size.width = .fix(space)
     }
-    public required init?(coder aDecoder: NSCoder) {
+
+    public required init?(coder _: NSCoder) {
         fatalError()
     }
 }

@@ -8,9 +8,8 @@
 import Foundation
 
 class MeasureFactory {
-    
     static var measureHoldingKey = "measureHoldingKey"
-    
+
     static func getMeasure(from view: UIView) -> Measure {
         var measure = objc_getAssociatedObject(view, &MeasureFactory.measureHoldingKey) as? Measure
         if measure == nil {
@@ -35,7 +34,7 @@ class MeasureFactory {
         }
         return placeholders.removeFirst()
     }
-    
+
     static func recyclePlaceholders(_ measures: [Measure]) {
 //        placeholders.append(contentsOf: measures)
         measures.forEach({ placeholders.insert($0) })

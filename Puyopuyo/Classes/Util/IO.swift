@@ -8,30 +8,33 @@
 import Foundation
 
 // MARK: - Extension
-//public struct Yo<Base> {
+
+// public struct Yo<Base> {
 //    public let base: Base
 //    public init(_ base: Base) {
 //        self.base = base
 //    }
-//}
+// }
 //
-//public protocol PuyopuyoExt {
+// public protocol PuyopuyoExt {
 //    associatedtype PuyopuyoExtType
 //    var yo: PuyopuyoExtType {get}
-//}
+// }
 //
-//extension PuyopuyoExt {
+// extension PuyopuyoExt {
 //    public var yo: Yo<Self> {
 //        return Yo(self)
 //    }
-//}
+// }
 
 // MARK: - Unbinder
+
 public protocol Unbinder {
     func py_unbind()
 }
 
 // MARK: - Outputing, Inputing
+
 public protocol Outputing {
     associatedtype OutputType
     func outputing(_ block: @escaping (OutputType) -> Void) -> Unbinder
@@ -43,19 +46,18 @@ public protocol Inputing {
 }
 
 extension Outputing {
-    
     public func safeBind<Object: AnyObject>(_ object: Object, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
-        return outputing { [weak object] (s) in
+        return outputing { [weak object] s in
             if let object = object {
                 action(object, s)
             }
         }
     }
-    
+
     /// 对象销毁时则移除绑定
     @discardableResult
     public func safeBind<Object: NSObject>(to object: Object, id: String = UUID().description, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
-        let unbinder = outputing { [weak object] (v) in
+        let unbinder = outputing { [weak object] v in
             if let object = object {
                 action(object, v)
             }
@@ -63,14 +65,13 @@ extension Outputing {
         object.py_setUnbinder(unbinder, for: id)
         return unbinder
     }
-    
+
     public func send<Input: Inputing>(to input: Input) -> Unbinder where Input.InputType == OutputType {
-        return outputing { (v) in
+        return outputing { v in
             input.input(value: v)
         }
     }
 }
-
 
 extension Outputing where OutputType == Self {
     public func outputing(_ block: @escaping (OutputType) -> Void) -> Unbinder {
@@ -80,13 +81,12 @@ extension Outputing where OutputType == Self {
 }
 
 class UnbinderImpl: NSObject, Unbinder {
-    
     private var block: () -> Void
-    
+
     init(_ block: @escaping () -> Void) {
         self.block = block
     }
-    
+
     func py_unbind() {
         block()
         block = {}
@@ -98,17 +98,19 @@ public struct Unbinders {
     public static func create(_ block: @escaping () -> Void) -> Unbinder {
         return UnbinderImpl(block)
     }
+
     public static func create() -> Unbinder {
         return UnbinderImpl({})
     }
 }
 
 // MARK: - NSObject unbinder impl
+
 extension NSObject {
     public func py_setUnbinder(_ unbinder: Unbinder, for key: String) {
         py_unbinderContainer.setUnbinder(unbinder, for: key)
     }
-    
+
     private static var puyopuyo_unbinderContainerKey = "puyoUnbinder"
     private var py_unbinderContainer: UnbinderContainer {
         var container = objc_getAssociatedObject(self, &NSObject.puyopuyo_unbinderContainerKey)
@@ -118,7 +120,7 @@ extension NSObject {
         }
         return container as! UnbinderContainer
     }
-    
+
     private class UnbinderContainer: NSObject {
         private var unbinders = [String: Unbinder]()
         private var name: String = ""
@@ -128,28 +130,27 @@ extension NSObject {
             self.name = name
             self.address = address
         }
-        
+
         func setUnbinder(_ unbinder: Unbinder, for key: String) {
             let old = unbinders[key]
             old?.py_unbind()
             unbinders[key] = unbinder
         }
-        
+
         deinit {
             #if DEV
-            print("container for \(name) deallcating!!")
+                print("container for \(name) deallcating!!")
             #endif
-            unbinders.forEach { (_, unbinder) in
+            unbinders.forEach { _, unbinder in
                 unbinder.py_unbind()
             }
         }
     }
-    
 }
 
 // MARK: - Default impls
 
-extension Optional: Outputing { public typealias OutputType = Optional<Wrapped> }
+extension Optional: Outputing { public typealias OutputType = Wrapped? }
 
 extension String: Outputing { public typealias OutputType = String }
 extension Bool: Outputing { public typealias OutputType = Bool }

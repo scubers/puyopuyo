@@ -20,19 +20,18 @@ public protocol IdentifiableStyle {
 }
 
 open class BaseGestureStyle: GestureStyle, IdentifiableStyle {
-    
     public var styleIdentifier: String
-    
+
     public init(identifier: String) {
-        self.styleIdentifier = identifier
+        styleIdentifier = identifier
     }
-    
+
     public func apply(to decorable: Decorable) {
         if let s = StyleUtil.convert(decorable, GestureDecorable.self) {
             apply(to: s)
         }
     }
-    
+
     public func apply(to gestureDecorable: GestureDecorable) {
         let v = gestureDecorable.gestureStyleView
         _removeSpecifyGesture(view: v)
@@ -40,17 +39,16 @@ open class BaseGestureStyle: GestureStyle, IdentifiableStyle {
         gesture.styleIdentifier = styleIdentifier
         v.addGestureRecognizer(gesture)
     }
-    
+
     private func _removeSpecifyGesture(view: UIView) {
         if let gs = view.gestureRecognizers, let target = gs.first(where: { $0.styleIdentifier == self.styleIdentifier }) {
             view.removeGestureRecognizer(target)
         }
     }
-    
+
     open func getGesture() -> UIGestureRecognizer {
         fatalError("impl in subclass")
     }
-    
 }
 
 extension UIView: GestureDecorable {
@@ -59,7 +57,7 @@ extension UIView: GestureDecorable {
     }
 }
 
-fileprivate var gestureStyleIdentifierKey = "gestureStyleIdentifierKey"
+private var gestureStyleIdentifierKey = "gestureStyleIdentifierKey"
 extension UIGestureRecognizer {
     public var styleIdentifier: String? {
         set {
@@ -72,6 +70,7 @@ extension UIGestureRecognizer {
 }
 
 // MARK: - Delegate
+
 class ShouldSimulateOtherGestureDelegate: NSObject, UIGestureRecognizerDelegate, Unbinder {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer.view == otherGestureRecognizer.view {
@@ -79,8 +78,8 @@ class ShouldSimulateOtherGestureDelegate: NSObject, UIGestureRecognizerDelegate,
         }
         return false
     }
-    func py_unbind() {
-    }
+
+    func py_unbind() {}
 }
 
 // MARK: - TapGestureStyle
@@ -90,25 +89,29 @@ open class TapGestureStyle: BaseGestureStyle {
         super.init(identifier: identifier)
         self.action = action
     }
+
     var action = { (_: UITapGestureRecognizer) -> Void in }
-    override open func getGesture() -> UIGestureRecognizer {
+    open override func getGesture() -> UIGestureRecognizer {
         let tap = UIGestureRecognizer()
-        tap.py_addAction { (g) in
+        tap.py_addAction { g in
             self.action(g as! UITapGestureRecognizer)
         }
         return tap
     }
 }
+
 // MARK: - LongPress
+
 open class LongPressGestureStyle: BaseGestureStyle {
     public init(identifier: String, _ action: @escaping (UILongPressGestureRecognizer) -> Void) {
         super.init(identifier: identifier)
         self.action = action
     }
+
     var action = { (_: UILongPressGestureRecognizer) -> Void in }
-    override open func getGesture() -> UIGestureRecognizer {
+    open override func getGesture() -> UIGestureRecognizer {
         let tap = UILongPressGestureRecognizer()
-        tap.py_addAction { (g) in
+        tap.py_addAction { g in
             self.action(g as! UILongPressGestureRecognizer)
         }
         return tap
@@ -116,6 +119,7 @@ open class LongPressGestureStyle: BaseGestureStyle {
 }
 
 // MARK: -
+
 public class LayerGesture: UIGestureRecognizer {
     public var layer = CAShapeLayer()
     public var color = UIColor.lightGray.withAlphaComponent(0.6)

@@ -7,5 +7,4 @@
 
 import Foundation
 
-extension Puyo where T: UILabel {
-}
+extension Puyo where T: UILabel {}

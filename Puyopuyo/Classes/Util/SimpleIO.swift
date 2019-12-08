@@ -8,21 +8,19 @@
 import Foundation
 
 public class SimpleIO<Value>: Inputing, Outputing {
-    
     public typealias InputType = Value
     public typealias OutputType = Value
-    
+
     private var inputers = [SimpleInput<Value>]()
-    
-    public init() {
-    }
-    
+
+    public init() {}
+
     public func input(value: Value) {
-        inputers.forEach { (c) in
+        inputers.forEach { c in
             c.input(value: value)
         }
     }
-    
+
     public func outputing(_ block: @escaping (Value) -> Void) -> Unbinder {
         let inputer = SimpleInput(block)
         inputers.append(inputer)
@@ -31,5 +29,4 @@ public class SimpleIO<Value>: Inputing, Outputing {
             self?.inputers.removeAll(where: { $0.uuid == id })
         }
     }
-    
 }

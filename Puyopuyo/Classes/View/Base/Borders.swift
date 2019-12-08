@@ -7,10 +7,7 @@
 
 import Foundation
 
-
-
 public struct Borders {
-    
     public static func all(_ border: Border?) -> Borders {
         var b = Borders()
         b.top = border
@@ -19,19 +16,19 @@ public struct Borders {
         b.right = border
         return b
     }
-    
+
     public var top: Border?
     weak var topLayer: CAShapeLayer?
-    
+
     public var left: Border?
     weak var leftLayer: CAShapeLayer?
-    
+
     public var bottom: Border?
     weak var bottomLayer: CAShapeLayer?
-    
+
     public var right: Border?
     weak var rightLayer: CAShapeLayer?
-    
+
     mutating func updateTop(to superLayer: CALayer) {
         topLayer?.removeFromSuperlayer()
         guard let border = top else { return }
@@ -47,7 +44,7 @@ public struct Borders {
         layer.path = getHorzPath(layerFrame).cgPath
         superLayer.addSublayer(layer)
     }
-    
+
     mutating func updateLeft(to superLayer: CALayer) {
         leftLayer?.removeFromSuperlayer()
         guard let border = left else { return }
@@ -63,7 +60,7 @@ public struct Borders {
         layer.path = getVertPath(layerFrame).cgPath
         superLayer.addSublayer(layer)
     }
-    
+
     mutating func updateBottom(to superLayer: CALayer) {
         bottomLayer?.removeFromSuperlayer()
         guard let border = bottom else { return }
@@ -79,7 +76,7 @@ public struct Borders {
         layer.path = getHorzPath(layerFrame).cgPath
         superLayer.addSublayer(layer)
     }
-    
+
     mutating func updateRight(to superLayer: CALayer) {
         rightLayer?.removeFromSuperlayer()
         guard let border = right else { return }
@@ -95,7 +92,7 @@ public struct Borders {
         layer.path = getVertPath(layerFrame).cgPath
         superLayer.addSublayer(layer)
     }
-    
+
     private func generate(border: Border) -> CAShapeLayer {
         let layer = CAShapeLayer()
         layer.strokeColor = border.color?.cgColor
@@ -106,13 +103,14 @@ public struct Borders {
         layer.lineDashPattern = border.dash.map({ NSNumber(value: Float($0)) })
         return layer
     }
-    
+
     private func getHorzPath(_ frame: CGRect) -> UIBezierPath {
         let path = UIBezierPath()
         path.move(to: CGPoint(x: 0, y: frame.height / 2))
         path.addLine(to: CGPoint(x: frame.width, y: frame.height / 2))
         return path
     }
+
     private func getVertPath(_ frame: CGRect) -> UIBezierPath {
         let path = UIBezierPath()
         path.move(to: CGPoint(x: frame.width / 2, y: 0))
@@ -145,16 +143,17 @@ public struct Border {
         self.offset = offset
         self.dash = dash
     }
+
     public init?(options: [BorderOptions]) {
         if options.isEmpty { return nil }
         options.forEach {
             switch $0 {
-            case .thick(let x): self.thick = x
-            case .color(let x): self.color = x
-            case .lead(let x): self.leadInset = x
-            case .trail(let x): self.trailInset = x
-            case .offset(let x): self.offset = x
-            case .dash(let x, let y): self.dash = [x, y]
+            case let .thick(x): self.thick = x
+            case let .color(x): self.color = x
+            case let .lead(x): self.leadInset = x
+            case let .trail(x): self.trailInset = x
+            case let .offset(x): self.offset = x
+            case let .dash(x, y): self.dash = [x, y]
             }
         }
     }

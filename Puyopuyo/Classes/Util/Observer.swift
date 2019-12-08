@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 class _Observer<Value>: NSObject {
     var key: String = ""
     var change: (Value?) -> Void = { _ in }
@@ -16,7 +15,8 @@ class _Observer<Value>: NSObject {
         self.key = key
         self.change = change
     }
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+
+    override func observeValue(forKeyPath keyPath: String?, of _: Any?, change: [NSKeyValueChangeKey: Any]?, context _: UnsafeMutableRawPointer?) {
         if keyPath == key {
             if let change = change {
                 self.change(change[.newKey] as? Value)
@@ -25,10 +25,11 @@ class _Observer<Value>: NSObject {
             }
         }
     }
+
     #if DEV
-    deinit {
-        print("observer deinit")
-    }
+        deinit {
+            print("observer deinit")
+        }
     #endif
 }
 
@@ -36,7 +37,7 @@ extension NSObject {
     public func py_observing<Value: Equatable>(for keyPath: String) -> SimpleOutput<Value?> {
         return SimpleOutput<Value?> { (i) -> Unbinder in
             var lastValue: Value?
-            let observer = _Observer<Value>(key: keyPath) { (rect) in
+            let observer = _Observer<Value>(key: keyPath) { rect in
                 guard rect != lastValue else { return }
                 lastValue = rect
                 i.input(value: rect)
@@ -50,5 +51,4 @@ extension NSObject {
         }
         .distinct()
     }
-    
 }

@@ -22,49 +22,45 @@ public protocol Animator {
 }
 
 public struct Animators {
-    
     /// no animation
     public static let none: Animator = NonAnimator()
-    
+
     /// default animation
     public static let `default`: Animator = DefaultAnimator()
-    
+
     struct NonAnimator: Animator {
-        public func animate(view: BoxView, layouting: @escaping () -> Void) {
+        public func animate(view _: BoxView, layouting: @escaping () -> Void) {
             layouting()
         }
     }
-    
+
     struct DefaultAnimator: Animator {
-        func animate(view: BoxView, layouting: @escaping () -> Void) {
+        func animate(view _: BoxView, layouting: @escaping () -> Void) {
             UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 2, initialSpringVelocity: 5, options: .curveEaseOut, animations: layouting, completion: nil)
         }
     }
-
 }
 
-
 open class BoxView: UIView {
-    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         buildBody()
     }
-    
-    public required init?(coder aDecoder: NSCoder) {
+
+    public required init?(coder _: NSCoder) {
         super.init(frame: .zero)
         buildBody()
     }
-    
+
     public var isScrollViewControl = false
     public var isSelfPositionControl = true
-    
+
     public var animator: Animator = Animators.none
-    
+
     public var regulator: Regulator {
         return py_measure as! Regulator
     }
-    
+
     open override func setNeedsLayout() {
         super.setNeedsLayout()
         // 若自身可能为包裹，则需要通知上层重新布局
@@ -72,7 +68,7 @@ open class BoxView: UIView {
             superview.setNeedsLayout()
         }
     }
-    
+
     open override func layoutSubviews() {
         super.layoutSubviews()
         var layouted = false
@@ -86,33 +82,32 @@ open class BoxView: UIView {
     open override func sizeThatFits(_ size: CGSize) -> CGSize {
         return Caculator.sizeThatFit(size: size, to: regulator)
     }
-    
-    open func buildBody() {
-        
-    }
-    
+
+    open func buildBody() {}
+
     // MARK: - 边界相关
+
     var borders: Borders = Borders()
-    
+
     func _updatingBorders() {
         borders.updateTop(to: layer)
         borders.updateLeft(to: layer)
         borders.updateBottom(to: layer)
         borders.updateRight(to: layer)
     }
-    
+
     private var positionControlUnbinder: Unbinder?
-    
+
     open override func didMoveToSuperview() {
         super.didMoveToSuperview()
         positionControlUnbinder?.py_unbind()
         if isSelfPositionControl, let spv = superview, !(spv is BoxView) {
             positionControlUnbinder =
-            SimpleOutput
+                SimpleOutput
                 .merge([spv.py_frameStateByKVO().asOutput().map({ $0.size }),
                         spv.py_frameStateByBoundsCenter().asOutput().map({ $0.size })])
                 .distinct()
-                .outputing { [weak self] (_) in
+                .outputing { [weak self] _ in
                     guard let self = self else { return }
                     if self.regulator.size.maybeRatio() {
                         self.setNeedsLayout()
@@ -120,16 +115,14 @@ open class BoxView: UIView {
                 }
         }
     }
-    
+
     deinit {
         positionControlUnbinder?.py_unbind()
     }
 }
 
 private extension BoxView {
-
     func _layoutSubviews() {
-        
         let parentMeasure = superview?.py_measure ?? Measure()
 
         // 应用计算后的固有尺寸
@@ -144,7 +137,7 @@ private extension BoxView {
             Caculator.adapting(size: sizeAfterCaculate, to: regulator, remain: parentMeasure.py_size)
             if isSelfPositionControl {
                 center = CGPoint(x: bounds.midX + regulator.margin.left, y: bounds.midY + regulator.margin.top)
-                
+
                 let newSize = bounds.size
                 // 控制父视图的scroll
                 if isScrollViewControl, let scrollView = superview as? UIScrollView {
@@ -155,14 +148,10 @@ private extension BoxView {
                         scrollView.contentSize.height = newSize.height + regulator.margin.bottom + regulator.margin.top
                     }
                 }
-                
             }
-            
         }
-            
+
         // 更新边线
         _updatingBorders()
-        
     }
-    
 }

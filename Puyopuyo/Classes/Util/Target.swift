@@ -8,21 +8,18 @@
 import Foundation
 
 class PuyoTarget<T>: NSObject, Unbinder {
-    
     var action: (T) -> Void
     init(_ action: @escaping (T) -> Void) {
         self.action = action
     }
-    
+
     @objc func targetAction(_ target: Any) {
         if let target = target as? T {
             action(target)
         }
     }
-    
-    func py_unbind() {
-        
-    }
+
+    func py_unbind() {}
 }
 
 extension UIControl {

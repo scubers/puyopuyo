@@ -6,7 +6,9 @@
 //
 
 import Foundation
+
 // MARK: - TextColor
+
 public protocol TextColorDecorable {
     func applyTextColor(_ color: UIColor?, state: UIControl.State)
 }
@@ -16,7 +18,9 @@ public class TextColorStyle: UIControlBaseStyle<UIColor?, TextColorDecorable> {
         decorable.applyTextColor(value, state: controlState)
     }
 }
+
 // MARK: - TextAligment
+
 public protocol TextAligmentDecorable {
     func applyTextAligment(_ aligment: NSTextAlignment, state: UIControl.State)
 }
@@ -26,7 +30,9 @@ public class TextAligmentStyle: UIControlBaseStyle<NSTextAlignment, TextAligment
         decorable.applyTextAligment(value, state: controlState)
     }
 }
+
 // MARK: - TextLine
+
 public protocol TextLinesDecorable {
     func applyNumberOfLine(_ line: Int)
 }

@@ -8,8 +8,8 @@
 import Foundation
 
 // MARK: - Declare
-@objc public protocol Decorable {
-}
+
+@objc public protocol Decorable {}
 
 @objc public protocol Style {
     func apply(to decorable: Decorable)
@@ -23,11 +23,11 @@ open class StyleSheet: Outputing {
     public init(styles: [Style]) {
         self.styles = styles
     }
-    
+
     public func combine(sheet: StyleSheet) -> StyleSheet {
         return StyleSheet(styles: styles + sheet.styles)
     }
-    
+
     public func combine(_ styles: [Style]) -> StyleSheet {
         return StyleSheet(styles: self.styles + styles)
     }
@@ -37,14 +37,13 @@ extension Decorable {
     public func applyStyles(_ styles: [Style]) {
         styles.forEach({ $0.apply(to: self) })
     }
-    
+
     public func applyStyleSheet(_ sheet: StyleSheet) {
         applyStyles(sheet.styles)
     }
 }
 
 extension UIView {
-    
     public var py_styleSheet: StyleSheet? {
         set {
             if let sheet = newValue {
@@ -62,11 +61,12 @@ extension UIView {
     }
 }
 
-extension UIView: Decorable {
-}
+extension UIView: Decorable {}
+
 // MARK: - Util
+
 struct StyleUtil {
-    static func convert<T>(_ value: Any, _ type: T.Type) -> T? {
+    static func convert<T>(_ value: Any, _: T.Type) -> T? {
         if let v = value as? T {
             return v
         }

@@ -10,18 +10,17 @@ import Foundation
 import Puyopuyo
 
 class HBoxVC: BaseVC {
-    
     let one = State<Aligment>(.top)
     let two = State<Aligment>(.center)
     let three = State<Aligment>(.bottom)
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         let text1: SimpleOutput<String?> = one.asOutput().map({ $0.description })
         let text2: SimpleOutput<String?> = two.asOutput().map({ $0.description })
         let text3: SimpleOutput<String?> = three.asOutput().map({ $0.description })
-        
+
         HBox().attach(vRoot) {
             Label("1").attach($0)
                 .aligment(self.one)
@@ -42,16 +41,16 @@ class HBoxVC: BaseVC {
         .borders([.thick(1), .color(.purple), .dash(5, 5)])
         .margin(all: 30)
         .animator(Animators.default)
-        
+
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "change", style: .plain, target: self, action: #selector(change))
         Util.randomViewColor(view: view)
     }
-    
+
     @objc private func change() {
 //        vRoot.animate(0.2) {
-            self.one.value = Util.random(array: [.top, .vertCenter, .bottom])
-            self.two.value = Util.random(array: [.top, .vertCenter, .bottom])
-            self.three.value = Util.random(array: [.top, .vertCenter, .bottom])
+        one.value = Util.random(array: [.top, .vertCenter, .bottom])
+        two.value = Util.random(array: [.top, .vertCenter, .bottom])
+        three.value = Util.random(array: [.top, .vertCenter, .bottom])
 //        }
     }
 }

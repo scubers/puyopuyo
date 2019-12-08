@@ -8,6 +8,7 @@
 import Foundation
 
 // MARK: - Font style
+
 public protocol FontDecorable {
     func applyFont(_ font: UIFont?)
 }

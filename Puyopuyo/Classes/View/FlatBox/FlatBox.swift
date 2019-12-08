@@ -9,23 +9,20 @@
 import Foundation
 
 open class FlatBox: BoxView {
-    
     public override var regulator: FlatRegulator {
         return py_measure as! FlatRegulator
     }
-    
 }
 
-open class HBox: FlatBox {
-}
+open class HBox: FlatBox {}
 
 open class VBox: FlatBox {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         regulator.direction = .y
     }
-    public required init?(coder aDecoder: NSCoder) {
+
+    public required init?(coder _: NSCoder) {
         fatalError()
     }
 }
-

@@ -13,8 +13,9 @@ public struct SimpleInput<T>: Inputing {
     public func input(value: SimpleInput<T>.InputType) {
         action(value)
     }
+
     private var action: (T) -> Void
     public init(_ output: @escaping (T) -> Void) {
-        self.action = output
+        action = output
     }
 }
