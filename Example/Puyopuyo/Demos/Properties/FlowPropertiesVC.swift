@@ -6,17 +6,17 @@
 //  Copyright © 2019 CocoaPods. All rights reserved.
 //
 
-import UIKit
 import Puyopuyo
+import UIKit
 
 class FlowPropertiesVC: BaseVC {
     override func configView() {
-        
         DemoScroll(
             builder: {
                 self.arrange().attach($0)
                 self.reverse().attach($0)
-            })
+            }
+        )
         .attach(vRoot)
         .size(.fill, .fill)
     }
@@ -31,15 +31,16 @@ class FlowPropertiesVC: BaseVC {
                     .size(.fill, .wrap)
                     .view
             },
-            selectors: (0..<10).map({ Selector(desc: "\($0)", value: $0)}),
-            desc: "流式布局一行内的个数，0：代表自动计算换行")
-            .attach()
-            .onEventProduced(to: self, { (self, x) in
-                arrange.value = x
-            })
-            .view
+            selectors: (0 ..< 10).map({ Selector(desc: "\($0)", value: $0) }),
+            desc: "流式布局一行内的个数，0：代表自动计算换行"
+        )
+        .attach()
+        .onEventProduced(to: self, { _, x in
+            arrange.value = x
+        })
+        .view
     }
-    
+
     func reverse() -> UIView {
         let reverse = State<Bool>(false)
         return DemoView<Bool>(
@@ -52,20 +53,20 @@ class FlowPropertiesVC: BaseVC {
                     .view
             },
             selectors: [Selector(desc: "false", value: false),
-                        Selector(desc: "true", value: true),
-            ],
-            desc: "")
-            .attach()
-            .onEventProduced(to: self, { (self, x) in
-                reverse.value = x
-            })
-            .view
+                        Selector(desc: "true", value: true)],
+            desc: ""
+        )
+        .attach()
+        .onEventProduced(to: self, { _, x in
+            reverse.value = x
+        })
+        .view
     }
-    
+
     func getFlow() -> FlowBox {
         return
             VFlow().attach {
-                for idx in 0..<10 {
+                for idx in 0 ..< 10 {
                     Label.demo("\(idx + 1)").attach($0)
                         .size(40, 40)
                 }
@@ -74,7 +75,7 @@ class FlowPropertiesVC: BaseVC {
             .padding(all: 4)
             .view
     }
-    
+
     override func shouldRandomColor() -> Bool {
         return false
     }
