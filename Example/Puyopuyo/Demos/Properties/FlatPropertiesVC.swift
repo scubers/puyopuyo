@@ -16,6 +16,7 @@ class FlatPropertiesVC: BaseVC {
                 self.direction().attach($0)
                 self.format().attach($0)
                 self.justifyContent().attach($0)
+                self.activate().attach($0)
                 self.space().attach($0)
                 self.reverse().attach($0)
                 self.padding().attach($0)
@@ -47,6 +48,39 @@ class FlatPropertiesVC: BaseVC {
                         Selector(desc: "center", value: .center)],
             desc: """
             Box.justfyContent，布局次轴上用于统一控制子View的偏移
+            """
+        )
+        .attach()
+        .onEventProduced(to: self, { _, x in
+            justifyContent.value = x
+        })
+        .view
+    }
+    
+    func activate() -> UIView {
+        let justifyContent = State<Alignment>(.top)
+        return DemoView<Alignment>(
+            title: "activate",
+            builder: {
+                HBox().attach($0) {
+                    Label.demo("1").attach($0)
+                        .frame(x: 0, y: 0, w: 20, h: 20)
+                        .activated(false)
+                    Label.demo("2").attach($0)
+                    Label.demo("3").attach($0)
+                }
+                .space(2)
+                .padding(all: 10)
+                .justifyContent(justifyContent)
+                .size(.fill, 60)
+                .animator(Animators.default)
+                .view
+            },
+            selectors: [Selector(desc: "top", value: .top),
+                        Selector(desc: "bottom", value: .bottom),
+                        Selector(desc: "center", value: .center)],
+            desc: """
+            activate = false, 则不受布局控制，可自由设置frame
             """
         )
         .attach()
