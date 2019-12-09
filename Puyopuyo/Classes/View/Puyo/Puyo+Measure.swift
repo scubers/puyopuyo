@@ -202,6 +202,7 @@ extension Puyo where T: UIView {
     @discardableResult
     public func visibility(_ visibility: Visibility) -> Self {
         view.py_visibility = visibility
+        view.py_setNeedsLayout()
         return self
     }
 
