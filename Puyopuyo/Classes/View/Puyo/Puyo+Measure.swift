@@ -178,19 +178,19 @@ extension Puyo where T: UIView {
     }
 }
 
-// MARK: - Aligment ext
+// MARK: - Alignment ext
 
 extension Puyo where T: UIView {
     @discardableResult
-    public func aligment(_ aligment: Aligment) -> Self {
-        PuyoHelper.aligment(for: view, aligment: aligment)
+    public func alignment(_ alignment: Alignment) -> Self {
+        PuyoHelper.alignment(for: view, alignment: alignment)
         return self
     }
 
     @discardableResult
-    public func aligment<S: Outputing>(_ aligment: S) -> Self where S.OutputType == Aligment {
-        view.py_setUnbinder(aligment.safeBind(view, { v, a in
-            PuyoHelper.aligment(for: v, aligment: a)
+    public func alignment<S: Outputing>(_ alignment: S) -> Self where S.OutputType == Alignment {
+        view.py_setUnbinder(alignment.safeBind(view, { v, a in
+            PuyoHelper.alignment(for: v, alignment: a)
         }), for: #function)
         return self
     }

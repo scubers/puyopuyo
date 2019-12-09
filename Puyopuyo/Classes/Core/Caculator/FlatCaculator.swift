@@ -276,7 +276,7 @@ class FlatCaculator {
 
         // cross
         let cross: CGFloat
-        let aligment = measure.aligment.contains(.none) ? regulator.justifyContent : measure.aligment
+        let alignment = measure.alignment.contains(.none) ? regulator.justifyContent : measure.alignment
 
         var calCrossSize = regFixedSize.cross
         if regCalSize.cross.isWrap {
@@ -284,10 +284,10 @@ class FlatCaculator {
             calCrossSize = maxCross + regCalPadding.crossFixed
         }
 
-        if aligment.isCenter(for: regulator.direction) {
+        if alignment.isCenter(for: regulator.direction) {
             cross = calCrossSize / 2
 
-        } else if aligment.isBackward(for: regulator.direction) {
+        } else if alignment.isBackward(for: regulator.direction) {
             cross = calCrossSize - (regCalPadding.backward + calMargin.backward + calSize.cross / 2)
         } else {
             // 若无设置，则默认forward

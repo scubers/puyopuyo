@@ -11,7 +11,7 @@ import UIKit
 
 class FlatMixVC: BaseVC {
     let formation = State<Format>(.sides)
-    let aligment = State<Aligment>(.center)
+    let aligment = State<Alignment>(.center)
     let text = State<String?>(nil)
     let reversed = State<Bool>(false)
 
@@ -47,17 +47,17 @@ class FlatMixVC: BaseVC {
                 .styleSheet(.mainButton)
 
             Label("1").attach($0)
-                .textAligment(State(.center))
+                .textAlignment(State(.center))
                 .size(100, 50)
                 .styleSheet(.mainButton)
 
             Label("2").attach($0)
-                .textAligment(State(.center))
+                .textAlignment(State(.center))
                 .size(100, 100)
                 .styleSheet(.mainButton)
 
             Label("3").attach($0)
-                .textAligment(State(.center))
+                .textAlignment(State(.center))
                 .size(50, 50)
                 .styleSheet(.mainButton)
 
@@ -81,7 +81,7 @@ class FlatMixVC: BaseVC {
     @objc private func change() {
 //        vRoot.animate(0.2) {
         formation.value = Util.random(array: [Format.leading, .center, .sides, .avg, .trailing])
-        aligment.value = Util.random(array: [Aligment.left, .right, .center])
+        aligment.value = Util.random(array: [Alignment.left, .right, .center])
         reversed.value = Util.random(array: [false, true])
 //        }
     }

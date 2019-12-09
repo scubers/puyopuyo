@@ -34,7 +34,7 @@ import Foundation
 
  */
 
-public struct CalAligment: OptionSet {
+public struct CalAlignment: OptionSet {
     public init(rawValue: Int) {
         self.rawValue = rawValue
     }
@@ -42,9 +42,9 @@ public struct CalAligment: OptionSet {
     public typealias RawValue = Int
     public let rawValue: Int
 
-    public static let center = CalAligment(rawValue: 1)
-    public static let forward = CalAligment(rawValue: 2)
-    public static let backward = CalAligment(rawValue: 4)
+    public static let center = CalAlignment(rawValue: 1)
+    public static let forward = CalAlignment(rawValue: 2)
+    public static let backward = CalAlignment(rawValue: 4)
 }
 
 public struct CalEdges {

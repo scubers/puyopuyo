@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - UILabel
 
-extension UILabel: TextColorDecorable, TextAligmentDecorable, TextLinesDecorable, FontDecorable {
+extension UILabel: TextColorDecorable, TextAlignmentDecorable, TextLinesDecorable, FontDecorable {
     public func applyFont(_ font: UIFont?) {
         self.font = font
     }
@@ -19,9 +19,9 @@ extension UILabel: TextColorDecorable, TextAligmentDecorable, TextLinesDecorable
         textColor = color
     }
 
-    public func applyTextAligment(_ aligment: NSTextAlignment, state: UIControl.State) {
+    public func applyTextAlignment(_ alignment: NSTextAlignment, state: UIControl.State) {
         guard state == .normal else { return }
-        textAlignment = aligment
+        textAlignment = alignment
     }
 
     public func applyNumberOfLine(_ line: Int) {
@@ -31,7 +31,7 @@ extension UILabel: TextColorDecorable, TextAligmentDecorable, TextLinesDecorable
 
 // MARK: - UITextField
 
-extension UITextField: TextColorDecorable, TextAligmentDecorable, TextLinesDecorable, FontDecorable {
+extension UITextField: TextColorDecorable, TextAlignmentDecorable, TextLinesDecorable, FontDecorable {
     public func applyFont(_ font: UIFont?) {
         self.font = font
     }
@@ -41,9 +41,9 @@ extension UITextField: TextColorDecorable, TextAligmentDecorable, TextLinesDecor
         textColor = color
     }
 
-    public func applyTextAligment(_ aligment: NSTextAlignment, state: UIControl.State) {
+    public func applyTextAlignment(_ alignment: NSTextAlignment, state: UIControl.State) {
         guard state == .normal else { return }
-        textAlignment = aligment
+        textAlignment = alignment
     }
 
     public func applyNumberOfLine(_: Int) {}
@@ -51,7 +51,7 @@ extension UITextField: TextColorDecorable, TextAligmentDecorable, TextLinesDecor
 
 // MARK: - UITextView
 
-extension UITextView: TextColorDecorable, TextAligmentDecorable, TextLinesDecorable, FontDecorable {
+extension UITextView: TextColorDecorable, TextAlignmentDecorable, TextLinesDecorable, FontDecorable {
     public func applyFont(_ font: UIFont?) {
         self.font = font
     }
@@ -61,9 +61,9 @@ extension UITextView: TextColorDecorable, TextAligmentDecorable, TextLinesDecora
         textColor = color
     }
 
-    public func applyTextAligment(_ aligment: NSTextAlignment, state: UIControl.State) {
+    public func applyTextAlignment(_ alignment: NSTextAlignment, state: UIControl.State) {
         guard state == .normal else { return }
-        textAlignment = aligment
+        textAlignment = alignment
     }
 
     public func applyNumberOfLine(_: Int) {}
@@ -71,7 +71,7 @@ extension UITextView: TextColorDecorable, TextAligmentDecorable, TextLinesDecora
 
 // MARK: - UIButton
 
-extension UIButton: TextColorDecorable, TextAligmentDecorable, TextLinesDecorable, ImageDecorable, BgImageDecorable, TitleShadowColorDecorable, FontDecorable {
+extension UIButton: TextColorDecorable, TextAlignmentDecorable, TextLinesDecorable, ImageDecorable, BgImageDecorable, TitleShadowColorDecorable, FontDecorable {
     public func applyFont(_ font: UIFont?) {
         titleLabel?.font = font
     }
@@ -80,8 +80,8 @@ extension UIButton: TextColorDecorable, TextAligmentDecorable, TextLinesDecorabl
         setTitleColor(color, for: state)
     }
 
-    public func applyTextAligment(_ aligment: NSTextAlignment, state _: UIControl.State) {
-        titleLabel?.textAlignment = aligment
+    public func applyTextAlignment(_ alignment: NSTextAlignment, state _: UIControl.State) {
+        titleLabel?.textAlignment = alignment
     }
 
     public func applyNumberOfLine(_ line: Int) {

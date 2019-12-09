@@ -18,7 +18,7 @@ class FlowBoxMixVC: BaseVC {
         let vFormat = State<Format>(.leading)
         let arrange = State<Int>(3)
         let direction = State<Direction>(.y)
-        let justifyContent = State<Aligment>(.center)
+        let justifyContent = State<Alignment>(.center)
         let adding = State<UIView?>(nil)
         let hSpace = State<CGFloat>(10)
         let vSpace = State<CGFloat>(10)
@@ -46,7 +46,7 @@ class FlowBoxMixVC: BaseVC {
                             arrange.value = Util.random(array: Array(0...total))
                             direction.value = directionI.next()
                             
-                            justifyContent.value = Util.random(array: direction.value == .x ? Aligment.horzAligments() : Aligment.vertAligments())
+                            justifyContent.value = Util.random(array: direction.value == .x ? Alignment.horzAlignments() : Alignment.vertAlignments())
                             
                             hSpace.value = Util.random(array: spaceRange)
                             vSpace.value = Util.random(array: spaceRange)
@@ -100,7 +100,7 @@ class FlowBoxMixVC: BaseVC {
                 OptionView(prefix: "vSpace", receiver: vSpace, options: spaceRange, action).attach($0).size(.fill, heightValue)
                 
                 OptionView(prefix: "reverse", receiver: reverse, options: [true, false], action).attach($0).size(.fill, heightValue)
-                OptionView(prefix: "content", receiver: justifyContent, options: Aligment.vertAligments() + Aligment.horzAligments(), action).attach($0).size(.fill, heightValue)
+                OptionView(prefix: "content", receiver: justifyContent, options: Alignment.vertAlignments() + Alignment.horzAlignments(), action).attach($0).size(.fill, heightValue)
                 }
                 .padding(left: 10, right: 10)
                 .size(.fill, .wrap)

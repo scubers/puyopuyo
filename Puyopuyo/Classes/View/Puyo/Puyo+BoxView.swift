@@ -39,15 +39,15 @@ extension Puyo where T: BoxView {
     }
 
     @discardableResult
-    public func justifyContent(_ aligment: Aligment) -> Self {
-        view.regulator.justifyContent = aligment
+    public func justifyContent(_ alignment: Alignment) -> Self {
+        view.regulator.justifyContent = alignment
         setNeedsLayout()
         return self
     }
 
     @discardableResult
-    public func justifyContent<O: Outputing>(_ aligment: O) -> Self where O.OutputType == Aligment {
-        view.py_setUnbinder(aligment.safeBind(view, { v, a in
+    public func justifyContent<O: Outputing>(_ alignment: O) -> Self where O.OutputType == Alignment {
+        view.py_setUnbinder(alignment.safeBind(view, { v, a in
             v.regulator.justifyContent = a
             v.py_setNeedsLayout()
         }), for: #function)

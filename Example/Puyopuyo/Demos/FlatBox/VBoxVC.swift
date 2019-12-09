@@ -29,7 +29,7 @@ class VBoxVC: BaseVC {
                     width = .wrap add 50
                     height = 200
                     """).attach($0)
-                    .aligment(.right)
+                    .alignment(.right)
                     .size(.wrap(add: 50), 150)
                     .styleSheet(.mainButton)
                 
@@ -38,7 +38,7 @@ class VBoxVC: BaseVC {
                     width = .wrap add 80
                     height = wrap
                     """).attach($0)
-                    .aligment(.center)
+                    .alignment(.center)
                     .size(.wrap(add: 80), .wrap)
                     .styleSheet(.mainButton)
                 

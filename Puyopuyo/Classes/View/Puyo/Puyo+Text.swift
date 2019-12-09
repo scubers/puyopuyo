@@ -12,7 +12,7 @@ public protocol PuyoTextable {
     func py_setAttrText(_ text: NSAttributedString?)
     func py_setTextColor(_ color: UIColor?)
     func py_setTextFont(_ font: UIFont?)
-    func py_setTextAligment(_ aligment: NSTextAlignment)
+    func py_setTextAlignment(_ alignment: NSTextAlignment)
     func py_setNumberOfLine(_ line: Int)
 }
 
@@ -63,16 +63,16 @@ extension Puyo where T: PuyoTextable & UIView {
     }
 
     @discardableResult
-    public func textAligment<S: Outputing>(_ aligment: S) -> Self where S.OutputType == NSTextAlignment {
-        view.py_setUnbinder(aligment.safeBind(view, { v, a in
-            v.py_setTextAligment(a)
+    public func textAlignment<S: Outputing>(_ alignment: S) -> Self where S.OutputType == NSTextAlignment {
+        view.py_setUnbinder(alignment.safeBind(view, { v, a in
+            v.py_setTextAlignment(a)
         }), for: #function)
         return self
     }
 
     @discardableResult
-    public func textAligment(_ aligment: NSTextAlignment) -> Self {
-        view.py_setTextAligment(aligment)
+    public func textAlignment(_ alignment: NSTextAlignment) -> Self {
+        view.py_setTextAlignment(alignment)
         return self
     }
 
@@ -99,8 +99,8 @@ extension UILabel: PuyoTextable {
         self.font = font
     }
 
-    public func py_setTextAligment(_ aligment: NSTextAlignment) {
-        textAlignment = aligment
+    public func py_setTextAlignment(_ alignment: NSTextAlignment) {
+        textAlignment = alignment
     }
 
     public func py_setAttrText(_ text: NSAttributedString?) {
@@ -125,8 +125,8 @@ extension UITextField: PuyoTextable {
         self.font = font
     }
 
-    public func py_setTextAligment(_ aligment: NSTextAlignment) {
-        textAlignment = aligment
+    public func py_setTextAlignment(_ alignment: NSTextAlignment) {
+        textAlignment = alignment
     }
 
     public func py_setAttrText(_ text: NSAttributedString?) {
@@ -149,8 +149,8 @@ extension UITextView: PuyoTextable {
         self.font = font
     }
 
-    public func py_setTextAligment(_ aligment: NSTextAlignment) {
-        textAlignment = aligment
+    public func py_setTextAlignment(_ alignment: NSTextAlignment) {
+        textAlignment = alignment
     }
 
     public func py_setAttrText(_ text: NSAttributedString?) {
@@ -173,8 +173,8 @@ extension UIButton: PuyoTextable {
         titleLabel?.font = font
     }
 
-    public func py_setTextAligment(_ aligment: NSTextAlignment) {
-        titleLabel?.textAlignment = aligment
+    public func py_setTextAlignment(_ alignment: NSTextAlignment) {
+        titleLabel?.textAlignment = alignment
     }
 
     public func py_setAttrText(_ text: NSAttributedString?) {

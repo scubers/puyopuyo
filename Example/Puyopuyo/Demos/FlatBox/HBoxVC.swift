@@ -10,9 +10,9 @@ import Foundation
 import Puyopuyo
 
 class HBoxVC: BaseVC {
-    let one = State<Aligment>(.top)
-    let two = State<Aligment>(.center)
-    let three = State<Aligment>(.bottom)
+    let one = State<Alignment>(.top)
+    let two = State<Alignment>(.center)
+    let three = State<Alignment>(.bottom)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,15 +23,15 @@ class HBoxVC: BaseVC {
 
         HBox().attach(vRoot) {
             Label("1").attach($0)
-                .aligment(self.one)
+                .alignment(self.one)
                 .height(50)
                 .text(text1)
             Label("2").attach($0)
-                .aligment(self.two)
+                .alignment(self.two)
                 .text(text2)
                 .height(50)
             Label("3").attach($0)
-                .aligment(self.three)
+                .alignment(self.three)
                 .text(text3)
                 .height(50)
         }

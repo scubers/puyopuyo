@@ -26,7 +26,7 @@ extension StyleSheet {
             StyleSheet(styles: [
                 UIFont.systemFont(ofSize: 14),
                 ClipToBoundsStyle(value: true),
-                TextAligmentStyle(value: .center),
+                TextAlignmentStyle(value: .center),
                 TapCoverStyle(),
             ]).combine(sheet: rounded)
     }
@@ -37,7 +37,7 @@ extension StyleSheet {
             StyleSheet(styles: [
                 UIFont.systemFont(ofSize: 16),
                 TextColorStyle(value: .black),
-                TextAligmentStyle(value: .left),
+                TextAlignmentStyle(value: .left),
                 (\UILabel.lineBreakMode).getStyle(with: .byTruncatingTail)
             ])
     }
@@ -48,7 +48,7 @@ extension StyleSheet {
             StyleSheet(styles: [
                 UIFont.systemFont(ofSize: 14),
                 TextColorStyle(value: .black),
-                TextAligmentStyle(value: .left),
+                TextAlignmentStyle(value: .left),
                 (\UILabel.lineBreakMode).getStyle(with: .byTruncatingTail)
             ])
     }

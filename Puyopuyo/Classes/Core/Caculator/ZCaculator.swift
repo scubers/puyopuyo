@@ -26,9 +26,10 @@ class ZCaculator {
 //    lazy var totalFixedMain: CGFloat = self.layoutCalPadding.start + self.layoutCalPadding.end
 
     func caculate() -> Size {
-        if !(parent is Regulator) {
-            Caculator.adapting(size: _getEstimateSize(measure: regulator, remain: remain), to: regulator, remain: remain)
-        }
+//        if !(parent is Regulator) {
+//            Caculator.adapting(size: _getEstimateSize(measure: regulator, remain: remain), to: regulator, remain: remain)
+//        }
+        Caculator.adaptingEstimateSize(measure: regulator, remain: remain)
 
 //        let layoutFixedSize = regulator.py_size
 
@@ -59,23 +60,23 @@ class ZCaculator {
 
             // 计算中心
             var center = CGPoint(x: layoutFixedSize.width / 2, y: layoutFixedSize.height / 2)
-            let aligment = measure.aligment
+            let alignment = measure.alignment
             let justifyContent = regulator.justifyContent
 
             // 水平方向
-            let horzAligment: Aligment = aligment.hasHorzAligment() ? aligment : justifyContent
+            let horzAlignment: Alignment = alignment.hasHorzAlignment() ? alignment : justifyContent
             // 垂直方向
-            let vertAligment: Aligment = aligment.hasVertAligment() ? aligment : justifyContent
+            let vertAlignment: Alignment = alignment.hasVertAlignment() ? alignment : justifyContent
 
-            if horzAligment.contains(.left) {
+            if horzAlignment.contains(.left) {
                 center.x = regulator.padding.left + subMargin.left + sizeAfterCaculate.width.fixedValue / 2
-            } else if horzAligment.contains(.right) {
+            } else if horzAlignment.contains(.right) {
                 center.x = layoutFixedSize.width - (regulator.padding.right + subMargin.right + sizeAfterCaculate.width.fixedValue / 2)
             }
 
-            if vertAligment.contains(.top) {
+            if vertAlignment.contains(.top) {
                 center.y = regulator.padding.top + subMargin.top + sizeAfterCaculate.height.fixedValue / 2
-            } else if vertAligment.contains(.bottom) {
+            } else if vertAlignment.contains(.bottom) {
                 center.y = layoutFixedSize.height - (regulator.padding.bottom + subMargin.bottom + sizeAfterCaculate.height.fixedValue / 2)
             }
 
@@ -108,7 +109,14 @@ class ZCaculator {
     }
 
     private func getCurrentRemainForChildren() -> CGSize {
-        return CGSize(width: max(0, layoutFixedSize.width - regFixedWidth),
-                      height: max(0, layoutFixedSize.height - regFixedHeight))
+        var size = CGSize(width: max(0, layoutFixedSize.width - regFixedWidth),
+                          height: max(0, layoutFixedSize.height - regFixedHeight))
+        if regulator.size.width.isWrap {
+            size.width = .greatestFiniteMagnitude
+        }
+        if regulator.size.height.isWrap {
+            size.height = .greatestFiniteMagnitude
+        }
+        return size
     }
 }

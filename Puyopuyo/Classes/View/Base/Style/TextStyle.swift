@@ -19,15 +19,15 @@ public class TextColorStyle: UIControlBaseStyle<UIColor?, TextColorDecorable> {
     }
 }
 
-// MARK: - TextAligment
+// MARK: - TextAlignment
 
-public protocol TextAligmentDecorable {
-    func applyTextAligment(_ aligment: NSTextAlignment, state: UIControl.State)
+public protocol TextAlignmentDecorable {
+    func applyTextAlignment(_ alignment: NSTextAlignment, state: UIControl.State)
 }
 
-public class TextAligmentStyle: UIControlBaseStyle<NSTextAlignment, TextAligmentDecorable> {
-    public override func applyDecorable(_ decorable: TextAligmentDecorable) {
-        decorable.applyTextAligment(value, state: controlState)
+public class TextAlignmentStyle: UIControlBaseStyle<NSTextAlignment, TextAlignmentDecorable> {
+    public override func applyDecorable(_ decorable: TextAlignmentDecorable) {
+        decorable.applyTextAlignment(value, state: controlState)
     }
 }
 

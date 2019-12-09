@@ -26,8 +26,8 @@ class FlatPropertiesVC: BaseVC {
     }
 
     func justifyContent() -> UIView {
-        let justifyContent = State<Aligment>(.top)
-        return DemoView<Aligment>(
+        let justifyContent = State<Alignment>(.top)
+        return DemoView<Alignment>(
             title: "justifyContent",
             builder: {
                 HBox().attach($0) {
@@ -55,7 +55,7 @@ class FlatPropertiesVC: BaseVC {
         })
         .view
     }
-    
+
     func format() -> UIView {
         let format = State<Format>(.leading)
         return DemoView<Format>(
@@ -78,8 +78,7 @@ class FlatPropertiesVC: BaseVC {
                         Selector(desc: "center", value: .center),
                         Selector(desc: "avg", value: .avg),
                         Selector(desc: "sides", value: .sides),
-                        Selector(desc: "traing", value: .trailing),
-            ],
+                        Selector(desc: "traing", value: .trailing)],
             desc: "布局主轴上的格式"
         )
         .attach()
@@ -140,7 +139,7 @@ class FlatPropertiesVC: BaseVC {
                 .animator(Animators.default)
                 .view
             },
-            selectors: [0, 10, 20, 30, 40].map({ Selector(desc: "\($0)", value: $0)}),
+            selectors: [0, 10, 20, 30, 40].map({ Selector(desc: "\($0)", value: $0) }),
             desc: "Box布局系统的内边距"
         )
         .attach()

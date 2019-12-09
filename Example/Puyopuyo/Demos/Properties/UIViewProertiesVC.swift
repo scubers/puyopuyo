@@ -13,7 +13,7 @@ class UIViewProertiesVC: BaseVC {
     override func configView() {
         DemoScroll(
             builder: {
-                self.aligment().attach($0)
+                self.alignment().attach($0)
                 self.size().attach($0)
                 self.margin().attach($0)
             }
@@ -22,16 +22,16 @@ class UIViewProertiesVC: BaseVC {
         .size(.fill, .fill)
     }
 
-    func aligment() -> UIView {
-        let aligment = State<Aligment>(.center)
-        return DemoView<Aligment>(
-            title: "UIView.AligmentSelf: 3",
+    func alignment() -> UIView {
+        let aligment = State<Alignment>(.center)
+        return DemoView<Alignment>(
+            title: "UIView.AlignmentSelf: 3",
             builder: {
                 HBox().attach($0) {
                     Label.demo("1").attach($0)
                     Label.demo("2").attach($0)
                     Label.demo("3").attach($0)
-                        .aligment(aligment)
+                        .alignment(aligment)
                 }
                 .space(2)
                 .padding(all: 10)

@@ -59,7 +59,7 @@ class ListVC: BaseVC {
 
                 FPSView().attach($0)
                     .size(100, 25)
-                    .aligment([.left, .top])
+                    .alignment([.left, .top])
             }
             .size(.fill, .fill)
         }

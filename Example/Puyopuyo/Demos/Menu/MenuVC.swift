@@ -18,6 +18,7 @@ class MenuVC: BaseVC {
                 self.getCell(title: "UIView Properties", vc: UIViewProertiesVC.self).attach($0)
                 self.getCell(title: "FlatBox Properties", vc: FlatPropertiesVC.self).attach($0)
                 self.getCell(title: "FlowBox Properties", vc: FlowPropertiesVC.self).attach($0)
+                self.getCell(title: "ZBox Properties", vc: ZPropertiesVC.self).attach($0)
                 self.getCell(title: "Advance Usage", vc: AdvanceVC.self).attach($0)
             }
         )
@@ -28,7 +29,7 @@ class MenuVC: BaseVC {
     func getCell(title: String, vc: UIViewController.Type) -> UIView {
         return HBox().attach {
             Label(title).attach($0)
-                .textAligment(.left)
+                .textAlignment(.left)
                 .size(.fill, .fill)
         }
         .size(.fill, 40)

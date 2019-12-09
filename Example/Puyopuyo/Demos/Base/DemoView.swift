@@ -35,7 +35,7 @@ class DemoView<T: Equatable>: VBox, EventableView {
         attach {
             Label(self.title).attach($0)
                 .size(.fill, 40)
-                .textAligment(.center)
+                .textAlignment(.center)
                 .backgroundColor(UIColor.black.withAlphaComponent(0.2))
             
             self.builder($0).attach($0)
@@ -52,7 +52,7 @@ class DemoView<T: Equatable>: VBox, EventableView {
                 .backgroundColor(UIColor.black.withAlphaComponent(0.2))
             
             Label(self.desc).attach($0)
-                .textAligment(.left)
+                .textAlignment(.left)
                 .margin(all: 4)
                 .size(.fill, .wrap)
                 .visibility(self.desc.count > 0 ? .visible : .gone)

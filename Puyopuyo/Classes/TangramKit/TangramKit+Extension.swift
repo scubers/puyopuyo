@@ -79,8 +79,8 @@ extension Puyo where T: UIView {
     }
     
     @discardableResult
-    public func tg_alignment(_ aligment: TGGravity) -> Self {
-        view.tg_alignment = aligment
+    public func tg_alignment(_ alignment: TGGravity) -> Self {
+        view.tg_alignment = alignment
         return self
     }
     

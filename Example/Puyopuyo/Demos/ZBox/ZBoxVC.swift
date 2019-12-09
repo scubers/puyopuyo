@@ -16,35 +16,35 @@ class ZBoxVC: BaseVC {
             
             ZBox().attach($0) {
                 Label("left, top").attach($0)
-                    .aligment([.left, .top])
+                    .alignment([.left, .top])
                 
                 Label("right, top").attach($0)
-                    .aligment([.right, .top])
+                    .alignment([.right, .top])
                 
                 Label("left, bottom").attach($0)
-                    .aligment([.left, .bottom])
+                    .alignment([.left, .bottom])
                 
                 Label("right, bottom").attach($0)
-                    .aligment([.right, .bottom])
+                    .alignment([.right, .bottom])
                 
                 Label("right, center").attach($0)
-                    .aligment([.right, .vertCenter])
+                    .alignment([.right, .vertCenter])
                 
                 Label("left, center").attach($0)
-                    .aligment([.left, .vertCenter])
+                    .alignment([.left, .vertCenter])
                 
                 Label("center, top").attach($0)
-                    .aligment([.horzCenter, .top])
+                    .alignment([.horzCenter, .top])
                 
                 Label("center, bottom").attach($0)
-                    .aligment([.horzCenter, .bottom])
+                    .alignment([.horzCenter, .bottom])
                 
                 Label("center, center").attach($0)
-                    .aligment([.center])
+                    .alignment([.center])
                 
             }
             .padding(all: 10)
-            .aligment(.center)
+            .alignment(.center)
             .size(300, 300)
         }
         .format(.center)

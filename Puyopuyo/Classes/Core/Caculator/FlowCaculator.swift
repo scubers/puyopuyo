@@ -138,7 +138,7 @@ private extension FlowCaculator {
     func getVirtualRegulator(children: [Measure]) -> VirtualFlatRegulator {
         let outside = VirtualFlatRegulator(target: nil, children: children)
         outside.justifyContent = regulator.justifyContent
-        outside.aligment = regulator.aligment
+        outside.alignment = regulator.alignment
         outside.direction = layoutDirection
         outside.space = getNormalSpace()
         outside.format = getNormalFormat()
@@ -157,7 +157,7 @@ private extension FlowCaculator {
         line.space = getOppsiteSpace()
         line.format = getOppsiteFormat()
         line.reverse = regulator.reverse
-        line.aligment = regulator.aligment
+        line.alignment = regulator.alignment
 
         var lineCalSize = CalSize(main: .wrap, cross: .wrap, direction: layoutDirection)
         if !layoutCalSize.cross.isWrap {

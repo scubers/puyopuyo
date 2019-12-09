@@ -12,10 +12,10 @@ public enum Direction: CaseIterable, Outputing {
     case x, y
 }
 
-public struct Aligment: OptionSet, CustomStringConvertible, Outputing {
-    public typealias OutputType = Aligment
+public struct Alignment: OptionSet, CustomStringConvertible, Outputing {
+    public typealias OutputType = Alignment
     public var description: String {
-        let all = [Aligment.top, .left, .bottom, .right, .horzCenter, .vertCenter]
+        let all = [Alignment.top, .left, .bottom, .right, .horzCenter, .vertCenter]
         let contain = all.filter({ self.contains($0) })
         return
             contain.map { x -> String in
@@ -38,32 +38,32 @@ public struct Aligment: OptionSet, CustomStringConvertible, Outputing {
     public typealias RawValue = Int
     public let rawValue: Int
 
-    public static let none = Aligment(rawValue: 1)
-    public static let top = Aligment(rawValue: 2)
-    public static let bottom = Aligment(rawValue: 4)
-    public static let left = Aligment(rawValue: 8)
-    public static let right = Aligment(rawValue: 16)
-    public static let horzCenter = Aligment(rawValue: 32)
-    public static let vertCenter = Aligment(rawValue: 64)
+    public static let none = Alignment(rawValue: 1)
+    public static let top = Alignment(rawValue: 2)
+    public static let bottom = Alignment(rawValue: 4)
+    public static let left = Alignment(rawValue: 8)
+    public static let right = Alignment(rawValue: 16)
+    public static let horzCenter = Alignment(rawValue: 32)
+    public static let vertCenter = Alignment(rawValue: 64)
 
-    public static let center = Aligment.vertCenter.union(.horzCenter)
+    public static let center = Alignment.vertCenter.union(.horzCenter)
 
-    public static func horzAligments() -> [Aligment] {
+    public static func horzAlignments() -> [Alignment] {
         return [.left, .right, .horzCenter]
     }
 
-    public static func vertAligments() -> [Aligment] {
+    public static func vertAlignments() -> [Alignment] {
         return [.top, .bottom, .vertCenter]
     }
 
-    public func hasHorzAligment() -> Bool {
+    public func hasHorzAlignment() -> Bool {
         return
             contains(.left)
             || contains(.right)
             || contains(.horzCenter)
     }
 
-    public func hasVertAligment() -> Bool {
+    public func hasVertAlignment() -> Bool {
         return
             contains(.top)
             || contains(.bottom)
@@ -118,7 +118,7 @@ public class Measure: Measurable, MeasureTargetable, Hashable {
 
     public var margin = UIEdgeInsets.zero
 
-    public var aligment: Aligment = .none
+    public var alignment: Alignment = .none
 
     public var size = Size(width: .wrap, height: .wrap)
 

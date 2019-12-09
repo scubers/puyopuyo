@@ -17,7 +17,7 @@ class Scaffold: UIView {
             ZBox().attach($0) {
                 navBar?($0).attach($0)
                     .width(.fill)
-                    .aligment(.bottom)
+                    .alignment(.bottom)
             }
             .bottomBorder([.color(UIColor.black.withAlphaComponent(0.2)), .thick(0.5)])
             .width(.fill)
@@ -52,7 +52,7 @@ class NavBar: ZBox, EventableView {
             VBox().attach($0) {
                 leading?($0).attach($0)
             }
-            .aligment(.left)
+            .alignment(.left)
             .onTap(to: self) { s, _ in
                 s.eventProducer.input(value: .tapLeading)
             }
@@ -61,7 +61,7 @@ class NavBar: ZBox, EventableView {
                 title($0).attach($0)
                     .size(.wrap, .wrap)
             }
-            .aligment(.center)
+            .alignment(.center)
             .onTap(to: self) { s, _ in
                 s.eventProducer.input(value: .tapTitle)
             }
@@ -69,7 +69,7 @@ class NavBar: ZBox, EventableView {
             VBox().attach($0) {
                 tailing?($0).attach($0)
             }
-            .aligment(.right)
+            .alignment(.right)
             .onTap(to: self) { s, _ in
                 s.eventProducer.input(value: .tapTrailing)
             }

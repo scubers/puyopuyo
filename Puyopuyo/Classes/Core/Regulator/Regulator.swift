@@ -18,7 +18,7 @@ public enum Format: CaseIterable, Outputing {
 
 /// 描述一个布局具备控制子节点的属性
 public class Regulator: Measure {
-    public var justifyContent: Aligment = .center
+    public var justifyContent: Alignment = .center
 
     public var padding = UIEdgeInsets.zero
 

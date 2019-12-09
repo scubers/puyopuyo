@@ -23,7 +23,7 @@ class AdvanceVC: BaseVC {
     
     func superviewRatio() -> UIView {
 //        let aligment = State<SizeDescription>()
-        return DemoView<Aligment>(
+        return DemoView<Alignment>(
             title: "宽度为父view的0.8",
             builder: {
                 HBox().attach($0) {

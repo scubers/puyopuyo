@@ -28,26 +28,26 @@ pod 'Puyopuyo'
 ```swift
 VBox().attach($0) {
     Label("""
-        aligment = left
+        alignment = left
         width = .wrap add 20
         height = 100
         """).attach($0)
         .size(.wrap(add: 20), 100)
 
     Label("""
-        aligment = right
+        alignment = right
         width = .wrap add 50
         height = 200
         """).attach($0)
-        .aligment(.right)
+        .alignment(.right)
         .size(.wrap(add: 50), 150)
 
     Label("""
-        aligment = center
+        alignment = center
         width = .wrap add 80
         height = wrap
         """).attach($0)
-        .aligment(.center)
+        .alignment(.center)
         .size(.wrap(add: 80), .wrap)    
 
     }

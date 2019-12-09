@@ -19,7 +19,7 @@ class ZBoxSizeVC: BaseVC {
                     ZBox().attach($0) {
                         Label("over parent 20 point").attach($0)
                             .size(.fill, .fill)
-                            .aligment(.center)
+                            .alignment(.center)
                             .margin(top: -20, left: -20)
                         }
                         .size(100, 100)
@@ -28,7 +28,7 @@ class ZBoxSizeVC: BaseVC {
                         ZBox().attach($0) {
                             Label("20 point smaller").attach($0)
                                 .size(.fill, .fill)
-                                .aligment(.center)
+                                .alignment(.center)
                                 .margin(top: 20, left: 20)
                             }
                             .size(100, 100)
@@ -36,7 +36,7 @@ class ZBoxSizeVC: BaseVC {
                         ZBox().attach($0) {
                             Label("20 point smaller").attach($0)
                                 .size(.fill, .fill)
-                                .aligment(.center)
+                                .alignment(.center)
                             }
                             .padding(top: 20, left: 20)
                             .size(100, 100)
