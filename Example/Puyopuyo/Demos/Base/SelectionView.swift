@@ -31,7 +31,6 @@ class SelectionView<T: Equatable>: VFlow, StatefulView, EventableView {
     }
     
     override func buildBody() {
-        regulator.arrange = 0
         attach { v in
             self.selection.enumerated().forEach { (idx, x) in
                 UIButton().attach(v)
@@ -55,6 +54,7 @@ class SelectionView<T: Equatable>: VFlow, StatefulView, EventableView {
                     .title(x.desc, state: .normal)
             }
         }
+        .arrangeCount(0)
         .padding(all: 10)
         .space(5)
         .animator(Animators.default)

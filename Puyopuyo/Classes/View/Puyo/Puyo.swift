@@ -89,7 +89,7 @@ extension PuyoAttacher where Self: UIView {
 extension UIView: PuyoAttacher {
     func py_setNeedsLayout() {
         setNeedsLayout()
-        if let superview = superview as? BoxView {
+        if let superview = superview, BoxUtil.isBox(superview) {
             superview.setNeedsLayout()
         }
     }

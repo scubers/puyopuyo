@@ -9,7 +9,7 @@
 import Puyopuyo
 import UIKit
 
-class MenuVC: BaseVC {
+ class MenuVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -43,4 +43,4 @@ class MenuVC: BaseVC {
     func push(vc: UIViewController) {
         navigationController?.pushViewController(vc, animated: true)
     }
-}
+ }

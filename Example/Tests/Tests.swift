@@ -25,8 +25,11 @@ class Tests: XCTestCase {
         // This is an example of a performance test case.
         self.measure() {
             for _ in 0..<300 {
-                let cell = ListCell(style: .value1, reuseIdentifier: "1")
-//                let cell = ListCell2(style: .value1, reuseIdentifier: "1")
+                // puyo
+//                let cell = ListCell(style: .value1, reuseIdentifier: "1")
+                // tg
+                let cell = ListCell2(style: .value1, reuseIdentifier: "1")
+                // autolayout
 //                let cell = ListCell3(style: .value1, reuseIdentifier: "1")
                 cell.viewState.input(value: ListData(name: "slkdjflksdjflkjsdf", text: "来看房来看房龙看房龙蛋飞龙扽静", time: "lskdj"))
                 _ = cell.sizeThatFits(CGSize(width: 320, height: 0))
@@ -83,7 +86,7 @@ class BaseCell: UITableViewCell, StatefulView {
 
 class ListCell: BaseCell {
     
-    private var root: BoxView!
+    private var root: UIView!
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

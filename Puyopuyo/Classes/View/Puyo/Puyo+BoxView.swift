@@ -9,10 +9,10 @@ import Foundation
 
 // MARK: - BoxView
 
-extension Puyo where T: BoxView {
+extension Puyo where T: Boxable {
     @discardableResult
     public func animator(_ animator: Animator) -> Self {
-        view.animator = animator
+        view.boxHelper.animator = animator
         return self
     }
 
@@ -56,52 +56,52 @@ extension Puyo where T: BoxView {
 
     @discardableResult
     public func autoJudgeScroll(_ judge: Bool) -> Self {
-        view.isScrollViewControl = judge
+        view.boxHelper.isScrollViewControl = judge
         setNeedsLayout()
         return self
     }
 
     @discardableResult
     public func isSelfPositionControl(_ control: Bool) -> Self {
-        view.isSelfPositionControl = control
+        view.boxHelper.isSelfPositionControl = control
         setNeedsLayout()
         return self
     }
 
     @discardableResult
     public func borders(_ options: [BorderOptions]) -> Self {
-        view.borders = Borders.all(Border(options: options))
+        view.boxHelper.borders = Borders.all(Border(options: options))
         return self
     }
 
     @discardableResult
     public func topBorder(_ options: [BorderOptions]) -> Self {
-        view.borders.top = Border(options: options)
+        view.boxHelper.borders.top = Border(options: options)
         return self
     }
 
     @discardableResult
     public func leftBorder(_ options: [BorderOptions]) -> Self {
-        view.borders.left = Border(options: options)
+        view.boxHelper.borders.left = Border(options: options)
         return self
     }
 
     @discardableResult
     public func bottomBorder(_ options: [BorderOptions]) -> Self {
-        view.borders.bottom = Border(options: options)
+        view.boxHelper.borders.bottom = Border(options: options)
         return self
     }
 
     @discardableResult
     public func rightBorder(_ options: [BorderOptions]) -> Self {
-        view.borders.right = Border(options: options)
+        view.boxHelper.borders.right = Border(options: options)
         return self
     }
 }
 
 // MARK: - FlatBox
 
-extension Puyo where T: FlatBox {
+extension Puyo where T: Boxable, T.R: FlatRegulator {
     @discardableResult
     public func space<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
         view.py_setUnbinder(space.safeBind(view, { v, s in
@@ -155,7 +155,7 @@ extension Puyo where T: FlatBox {
 
 // MARK: - FlowBox
 
-extension Puyo where T: FlowBox {
+extension Puyo where T: Boxable, T.R: FlowRegulator {
     @discardableResult
     public func arrangeCount<O: Outputing>(_ count: O) -> Self where O.OutputType == Int {
         view.py_setUnbinder(count.safeBind(view, { v, c in

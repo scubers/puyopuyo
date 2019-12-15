@@ -7,17 +7,7 @@
 
 import UIKit
 
-public class BoxHelper {
-    public var regulator: Regulator
-
-    weak var _view: UIView?
-    let temp = UIView()
-    var view: UIView { _view ?? temp }
-
-    public init(regulator: Regulator, view: UIView) {
-        self.regulator = regulator
-        _view = view
-    }
+public class BoxHelper<R: Regulator> {
 
     public var isScrollViewControl = false
 
@@ -25,20 +15,20 @@ public class BoxHelper {
 
     public var animator: Animator = Animators.none
 
-    public func layoutSubviews() {
+    public func layoutSubviews(view: UIView, regulator: R) {
         var layouted = false
-        animator.animate(view: view as! BoxView) {
-            self._layoutSubviews()
+        animator.animate(view: view) {
+            self._layoutSubviews(view: view, regulator: regulator)
             layouted = true
         }
         assert(layouted, "\(animator) should call `layouting` block!!!!")
     }
 
-    private func _layoutSubviews() {
+    private func _layoutSubviews(view: UIView, regulator: R) {
         let parentMeasure = view.superview?.py_measure ?? Measure()
 
         // 应用计算后的固有尺寸
-        if view.superview is BoxView {
+        if isBox(view: view.superview) {
             // 父视图为布局
             if regulator.size.bothNotWrap() {
                 _ = regulator.caculate(byParent: parentMeasure, remain: Caculator.remainSize(with: view.bounds.size, margin: regulator.margin))
@@ -51,21 +41,21 @@ public class BoxHelper {
                 view.center = CGPoint(x: view.bounds.midX + regulator.margin.left, y: view.bounds.midY + regulator.margin.top)
                 
                 if isScrollViewControl, let superview = view.superview as? UIScrollView {
-                    control(scrollView: superview)
+                    control(scrollView: superview, by: view, regulator: regulator)
                 }
             }
         }
         
-        control(scrollView: view as? UIScrollView)
+        control(scrollView: view as? UIScrollView, by: view, regulator: regulator)
 
         // 更新边线
-        _updatingBorders()
+        _updatingBorders(view: view)
     }
 
     private var positionControlUnbinder: Unbinder?
-    public func didMoveToSuperview() {
+    public func didMoveToSuperview(view: UIView, regulator: R) {
         positionControlUnbinder?.py_unbind()
-        if isSelfPositionControl, let spv = view.superview, !(spv is BoxView) {
+        if isSelfPositionControl, let spv = view.superview, !isBox(view: spv) {
             positionControlUnbinder =
                 SimpleOutput
                 .merge([spv.py_frameStateByKVO().asOutput().map({ $0.size }),
@@ -73,25 +63,30 @@ public class BoxHelper {
                 .distinct()
                 .outputing { [weak self] _ in
                     guard let self = self else { return }
-                    if self.regulator.size.maybeRatio() {
-                        self.setNeedsLayout()
+                    if regulator.size.maybeRatio() {
+                        self.setNeedsLayout(view: view, regulator: regulator)
                     }
                 }
         }
     }
 
-    public func setNeedsLayout() {
+    public func setNeedsLayout(view: UIView, regulator: R) {
         // 若自身可能为包裹，则需要通知上层重新布局
-        if regulator.size.maybeWrap(), let superview = view.superview as? BoxView {
+        if regulator.size.maybeWrap(), let superview = view.superview, checkBoxable(view: superview) {
             superview.setNeedsLayout()
         }
     }
+    
+    private func checkBoxable(view: UIView?) -> Bool {
+        guard let view = view else { return false }
+        return view.py_measure is Regulator
+    }
 
-    public func sizeThatFits(_ size: CGSize) -> CGSize {
+    public func sizeThatFits(_ size: CGSize, regulator: R) -> CGSize {
         return Caculator.sizeThatFit(size: size, to: regulator)
     }
 
-    public func control(scrollView: UIScrollView?) {
+    public func control(scrollView: UIScrollView?, by view: UIView, regulator: R) {
         guard let scrollView = scrollView else { return }
         let newSize = view.bounds.size
         // 控制父视图的scroll
@@ -105,10 +100,27 @@ public class BoxHelper {
 
     var borders: Borders = Borders()
 
-    func _updatingBorders() {
+    func _updatingBorders(view: UIView) {
         borders.updateTop(to: view.layer)
         borders.updateLeft(to: view.layer)
         borders.updateBottom(to: view.layer)
         borders.updateRight(to: view.layer)
+    }
+    
+    private func isBox(view: UIView?) -> Bool {
+        return BoxUtil.isBox(view)
+    }
+}
+
+public protocol Boxable {
+    associatedtype R: Regulator
+    var boxHelper: BoxHelper<R> { get }
+    var regulator: R { get }
+}
+
+struct BoxUtil {
+    static func isBox(_ view: UIView?) -> Bool {
+        guard let v = view else { return false }
+        return v.py_measure is Regulator
     }
 }

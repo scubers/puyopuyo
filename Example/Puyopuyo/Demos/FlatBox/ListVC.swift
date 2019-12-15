@@ -106,7 +106,7 @@ class BaseCell: UITableViewCell, StatefulView {
 }
 
 class ListCell: BaseCell {
-    private var root: BoxView!
+    private var root: UIView!
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

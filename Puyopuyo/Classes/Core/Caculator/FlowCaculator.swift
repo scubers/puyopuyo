@@ -53,6 +53,9 @@ class FlowCaculator {
     lazy var layoutCalSize = CalSize(size: regulator.size, direction: regulator.direction)
 
     func caculate() -> Size {
+        
+        Caculator.adaptingEstimateSize(measure: regulator, remain: remain)
+        
         var caculateChildren = [Measure]()
         regulator.enumerateChild { _, m in
             if m.activated {
@@ -66,7 +69,6 @@ class FlowCaculator {
     }
 
     private func _caculateByContent(available children: [Measure]) -> Size {
-//        return Size();
         var virtualLines = [VirtualFlatRegulator]()
 
         var currentLine = [Measure]()

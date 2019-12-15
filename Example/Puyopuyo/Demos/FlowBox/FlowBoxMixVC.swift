@@ -151,7 +151,7 @@ class FlowBoxMixVC: BaseVC {
     }
     
     class _Animator: Animator {
-        func animate(view: BoxView, layouting: @escaping () -> Void) {
+        func animate(view: UIView, layouting: @escaping () -> Void) {
             guard view.bounds != .zero else {
                 layouting()
                 return
