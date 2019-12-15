@@ -8,7 +8,6 @@
 import UIKit
 
 public class BoxHelper<R: Regulator> {
-
     public var isScrollViewControl = false
 
     public var isSelfPositionControl = true
@@ -39,14 +38,12 @@ public class BoxHelper<R: Regulator> {
             Caculator.adapting(size: sizeAfterCaculate, to: regulator, remain: parentMeasure.py_size)
             if isSelfPositionControl {
                 view.center = CGPoint(x: view.bounds.midX + regulator.margin.left, y: view.bounds.midY + regulator.margin.top)
-                
+
                 if isScrollViewControl, let superview = view.superview as? UIScrollView {
                     control(scrollView: superview, by: view, regulator: regulator)
                 }
             }
         }
-        
-        control(scrollView: view as? UIScrollView, by: view, regulator: regulator)
 
         // 更新边线
         _updatingBorders(view: view)
@@ -76,7 +73,7 @@ public class BoxHelper<R: Regulator> {
             superview.setNeedsLayout()
         }
     }
-    
+
     private func checkBoxable(view: UIView?) -> Bool {
         guard let view = view else { return false }
         return view.py_measure is Regulator
@@ -106,7 +103,7 @@ public class BoxHelper<R: Regulator> {
         borders.updateBottom(to: view.layer)
         borders.updateRight(to: view.layer)
     }
-    
+
     private func isBox(view: UIView?) -> Bool {
         return BoxUtil.isBox(view)
     }
@@ -124,3 +121,6 @@ struct BoxUtil {
         return v.py_measure is Regulator
     }
 }
+
+public typealias BoxBuilder<T> = (T) -> Void
+public typealias BoxGenerator<T> = () -> T

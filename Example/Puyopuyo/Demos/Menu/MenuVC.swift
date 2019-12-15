@@ -19,6 +19,8 @@ import UIKit
                 self.getCell(title: "FlatBox Properties", vc: FlatPropertiesVC.self).attach($0)
                 self.getCell(title: "FlowBox Properties", vc: FlowPropertiesVC.self).attach($0)
                 self.getCell(title: "ZBox Properties", vc: ZPropertiesVC.self).attach($0)
+                self.getCell(title: "ScrollBox Properties", vc: ScrollBoxPropertiesVC.self).attach($0)
+                self.getCell(title: "NavigationBox Properties", vc: NavigationBoxPropertiesVC.self).attach($0)
                 self.getCell(title: "Advance Usage", vc: AdvanceVC.self).attach($0)
             }
         )

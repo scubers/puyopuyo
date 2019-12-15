@@ -19,6 +19,8 @@ class MeasureFactory {
                 measure = ZRegulator(target: view)
             } else if view is FlatBox {
                 measure = FlatRegulator(target: view)
+            } else if view is ScrollBox {
+                measure = FlatRegulator(target: view)
             } else {
                 measure = Measure(target: view)
             }

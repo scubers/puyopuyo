@@ -15,20 +15,26 @@ class Theme {
 }
 
 class BaseVC: UIViewController {
+    var navState = State(NavigationBox.ViewState())
+    var navHeight = State<CGFloat>(44)
+
     override func loadView() {
-        view = Scaffold(
-            navBar: { _ in
+        view = NavigationBox(
+            navBar: {
                 NavBar(title: "\(type(of: self))").attach()
-                    .onEventProduced(to: self, { (s, e) in
+                    .onEventProduced(to: self, { s, e in
                         if e == .tapLeading {
                             s.navigationController?.popViewController(animated: true)
                         }
                     })
                     .view
-            }, body: { _ in
+            }, body: {
                 self.vRoot
             }
         )
+        .attach()
+        .viewState(navState)
+        .view
     }
 
     override func viewDidLoad() {

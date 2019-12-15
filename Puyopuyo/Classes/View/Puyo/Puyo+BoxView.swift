@@ -15,6 +15,14 @@ extension Puyo where T: Boxable {
         view.boxHelper.animator = animator
         return self
     }
+    
+    @discardableResult
+    public func animator<O: Outputing>(_ animator: O) -> Self where O.OutputType == Animator {
+        animator.safeBind(to: view, id: #function) { (v, a) in
+            v.boxHelper.animator = a
+        }
+        return self
+    }
 
     @discardableResult
     public func padding(all: CGFloatable? = nil, top: CGFloatable? = nil, left: CGFloatable? = nil, bottom: CGFloatable? = nil, right: CGFloatable? = nil) -> Self {
@@ -219,6 +227,15 @@ extension Puyo where T: Boxable, T.R: FlowRegulator {
             v.regulator.stretchRows = a
             v.py_setNeedsLayout()
         }
+        return self
+    }
+}
+
+// MARK: - ScrollBox
+extension Puyo where T: ScrollBox {
+    @discardableResult
+    public func scrollDelegate(_ delegate: UIScrollViewDelegate, retained: Bool = false) -> Self {
+        view.scrollDelegate = RetainWrapper(value: delegate, retained: retained)
         return self
     }
 }

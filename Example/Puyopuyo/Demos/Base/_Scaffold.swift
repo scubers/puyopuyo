@@ -9,7 +9,7 @@
 import Puyopuyo
 import UIKit
 
-class Scaffold: UIView {
+class _Scaffold: UIView {
     init(navBar: ViewBuilder? = nil, body: @escaping ViewBuilder) {
         super.init(frame: .zero)
 
@@ -46,7 +46,7 @@ class NavBar: ZBox, EventableView {
     init(title: @escaping ViewBuilder,
          leading: ViewBuilder? = nil,
          tailing: ViewBuilder? = nil,
-         navHeight: State<CGFloat> = State(64)) {
+         navHeight: State<CGFloat> = State(44)) {
         super.init(frame: .zero)
         attach {
             VBox().attach($0) {

@@ -42,13 +42,12 @@ public struct Animators {
 }
 
 open class BoxView<R: Regulator>: UIView, Boxable {
-    
     public var boxHelper = BoxHelper<R>()
-    
+
     public var regulator: R {
         return py_measure as! R
     }
-    
+
     public override init(frame: CGRect) {
         super.init(frame: frame)
         buildBody()
