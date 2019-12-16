@@ -7,14 +7,13 @@
 
 import UIKit
 
-public class NavigationBox: ZBox, StatefulView {
+public class NavigationBox: VBox, StatefulView {
     public struct ViewState {
         public init() {}
         public var visible: Visibility = .visible
         public var navOffset = CGPoint.zero
         public var bodyAvoidNavBar = true
-        public var backgroundColor: UIColor = .clear
-        public var height: SizeDescription = .fix(44)
+        public var backgroundColor: UIColor = .white
         public var animator: Animator = Animators.default
         public var alpha: CGFloat = 1
     }
@@ -30,7 +29,6 @@ public class NavigationBox: ZBox, StatefulView {
                 ZBox().attach {
                     navBar().attach($0)
                         .width(.fill)
-                        .height(self.viewState.asOutput().map({ $0.height }))
                         .alignment(.bottom)
                 }
                 .visibility(self.viewState.asOutput().map({ $0.visible }))
@@ -54,14 +52,16 @@ public class NavigationBox: ZBox, StatefulView {
                 .size(.fill, .fill)
                 .margin(output.map({ [weak self, weak nav] (_) -> UIEdgeInsets in
                     guard let self = self, let nav = nav else { return .zero }
-                    if !self.viewState.value.bodyAvoidNavBar { return .zero }
-                    return .init(top: nav.bounds.height, left: 0, bottom: 0, right: 0)
+                    if self.viewState.value.bodyAvoidNavBar { return .zero }
+                    return .init(top: -nav.bounds.height, left: 0, bottom: 0, right: 0)
                 }))
                 .alignment(.bottom)
-
+            
             nav.attach($0)
         }
+        .reverse(true)
         .animator(viewState.asOutput().map({ $0.animator }))
+        .justifyContent(.center)
         .size(.fill, .fill)
     }
 

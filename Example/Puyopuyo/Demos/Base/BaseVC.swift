@@ -16,7 +16,6 @@ class Theme {
 
 class BaseVC: UIViewController {
     var navState = State(NavigationBox.ViewState())
-    var navHeight = State<CGFloat>(44)
 
     override func loadView() {
         view = NavigationBox(

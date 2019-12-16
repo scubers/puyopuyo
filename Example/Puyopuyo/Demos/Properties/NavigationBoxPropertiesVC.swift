@@ -10,18 +10,47 @@ import Puyopuyo
 import UIKit
 
 class NavigationBoxPropertiesVC: BaseVC {
-    override func configView() {
-        DemoScroll(
-            builder: {
-                self.color().attach($0)
-                self.height().attach($0)
-                self.visible().attach($0)
-                self.alpha().attach($0)
+    private var navHeight = State<SizeDescription>(.fix(44))
+
+    override func loadView() {
+        view = NavigationBox(
+            navBar: {
+                NavBar(title: "Nav Bar").attach()
+                    .height(self.navHeight)
+                    .onEventProduced(to: self, { s, _ in
+                        s.navigationController?.popViewController(animated: true)
+                    })
+                    .view
+            }, body: {
+                DemoScroll(
+                    builder: {
+                        self.color().attach($0)
+                        self.height().attach($0)
+                        self.visible().attach($0)
+                        self.alpha().attach($0)
+                        self.avoid().attach($0)
+                    }
+                )
             }
         )
-        .attach(vRoot)
-        .size(.fill, .fill)
+        .attach()
+        .viewState(navState)
+        .view
     }
+
+//    override func configView() {
+//        DemoScroll(
+//            builder: {
+//                self.color().attach($0)
+//                self.height().attach($0)
+//                self.visible().attach($0)
+//                self.alpha().attach($0)
+//                self.avoid().attach($0)
+//            }
+//        )
+//        .attach(vRoot)
+//        .size(.fill, .fill)
+//    }
 
     func color() -> UIView {
         return DemoView<UIColor>(
@@ -37,32 +66,51 @@ class NavigationBoxPropertiesVC: BaseVC {
             ]
         )
         .attach()
-        .onEventProduced(to: self, { _, x in
-            self.navState.value.backgroundColor = x
+        .onEventProduced(to: self, { s, x in
+            s.navState.value.backgroundColor = x
         })
         .view
     }
 
     func height() -> UIView {
-        return DemoView<CGFloat>(
+        return DemoView<SizeDescription>(
             title: "nav height",
             builder: {
                 UIView().attach($0).view
             },
             selectors: [
-                Selector(desc: "44", value: 44),
-                Selector(desc: "64", value: 64),
-                Selector(desc: "84", value: 84),
-                Selector(desc: "94", value: 94),
+                Selector(desc: "44", value: .fix(44)),
+                Selector(desc: "64", value: .fix(64)),
+                Selector(desc: "84", value: .fix(84)),
+                Selector(desc: "94", value: .fix(94)),
+                Selector(desc: ".wrap", value: .wrap),
             ]
         )
         .attach()
-        .onEventProduced(to: self, { _, x in
-            self.navState.value.height = .fix(x)
+        .onEventProduced(to: self, { s, x in
+            s.navHeight.value = x
         })
         .view
     }
-    
+
+    func avoid() -> UIView {
+        return DemoView<Bool>(
+            title: "avoid nav height",
+            builder: {
+                UIView().attach($0).view
+            },
+            selectors: [
+                Selector(desc: "true", value: true),
+                Selector(desc: "false", value: false),
+            ]
+        )
+        .attach()
+        .onEventProduced(to: self, { s, x in
+            s.navState.value.bodyAvoidNavBar = x
+        })
+        .view
+    }
+
     func alpha() -> UIView {
         return DemoView<CGFloat>(
             title: "nav height",
@@ -78,11 +126,12 @@ class NavigationBoxPropertiesVC: BaseVC {
             ]
         )
         .attach()
-        .onEventProduced(to: self, { _, x in
-            self.navState.value.alpha = x
+        .onEventProduced(to: self, { s, x in
+            s.navState.value.alpha = x
         })
         .view
     }
+
     func visible() -> UIView {
         return DemoView<Visibility>(
             title: "nav height",
@@ -92,11 +141,12 @@ class NavigationBoxPropertiesVC: BaseVC {
             selectors: [
                 Selector(desc: "gone", value: .gone),
                 Selector(desc: "visble", value: .visible),
+                Selector(desc: "invisible", value: .invisible),
             ]
         )
         .attach()
-        .onEventProduced(to: self, { _, x in
-            self.navState.value.visible = x
+        .onEventProduced(to: self, { s, x in
+            s.navState.value.visible = x
         })
         .view
     }
