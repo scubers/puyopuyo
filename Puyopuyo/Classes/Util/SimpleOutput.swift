@@ -55,6 +55,14 @@ extension Outputing {
     }
 }
 
+extension Inputing {
+    public func asInput() -> SimpleInput<InputType> {
+        return SimpleInput { x in
+            self.input(value: x)
+        }
+    }
+}
+
 // extension Yo where Base: Outputing {
 extension SimpleOutput {
     public func some() -> SimpleOutput<OutputType?> {

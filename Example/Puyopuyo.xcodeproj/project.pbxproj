@@ -29,6 +29,7 @@
 		A8969BE323A67EAC00104403 /* NavigationBoxPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8969BE223A67EAC00104403 /* NavigationBoxPropertiesVC.swift */; };
 		A897FCDC230AF7630061029E /* ListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A897FCDB230AF7630061029E /* ListVC.swift */; };
 		A897FCDE230AFBD80061029E /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = A897FCDD230AFBD80061029E /* Util.swift */; };
+		A8A1B16423A7DA3100E05207 /* TableBoxPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A1B16323A7DA3100E05207 /* TableBoxPropertiesVC.swift */; };
 		A8BCEEB62399620F002DB739 /* UIViewProertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BCEEB52399620F002DB739 /* UIViewProertiesVC.swift */; };
 		A8BCEEB823996424002DB739 /* SelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BCEEB723996424002DB739 /* SelectionView.swift */; };
 		A8BEC48C239C9EB4001FD6BF /* DemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BEC48B239C9EB4001FD6BF /* DemoView.swift */; };
@@ -93,6 +94,7 @@
 		A8969BE223A67EAC00104403 /* NavigationBoxPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBoxPropertiesVC.swift; sourceTree = "<group>"; };
 		A897FCDB230AF7630061029E /* ListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListVC.swift; sourceTree = "<group>"; };
 		A897FCDD230AFBD80061029E /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		A8A1B16323A7DA3100E05207 /* TableBoxPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableBoxPropertiesVC.swift; sourceTree = "<group>"; };
 		A8BCEEB52399620F002DB739 /* UIViewProertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewProertiesVC.swift; sourceTree = "<group>"; };
 		A8BCEEB723996424002DB739 /* SelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionView.swift; sourceTree = "<group>"; };
 		A8BEC48B239C9EB4001FD6BF /* DemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoView.swift; sourceTree = "<group>"; };
@@ -263,6 +265,7 @@
 				A84E5CC0239EB5AC0091D39B /* ZPropertiesVC.swift */,
 				A8969BD623A629E000104403 /* ScrollBoxPropertiesVC.swift */,
 				A8969BE223A67EAC00104403 /* NavigationBoxPropertiesVC.swift */,
+				A8A1B16323A7DA3100E05207 /* TableBoxPropertiesVC.swift */,
 			);
 			path = Properties;
 			sourceTree = "<group>";
@@ -567,6 +570,7 @@
 				A8BEC492239CDB6B001FD6BF /* FlowPropertiesVC.swift in Sources */,
 				A84626542309574C003A282C /* TestVC.swift in Sources */,
 				A81CE13C2310509B00E19E6B /* HBoxVC.swift in Sources */,
+				A8A1B16423A7DA3100E05207 /* TableBoxPropertiesVC.swift in Sources */,
 				A8BCEEB823996424002DB739 /* SelectionView.swift in Sources */,
 				A8BEC48C239C9EB4001FD6BF /* DemoView.swift in Sources */,
 			);

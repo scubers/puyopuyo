@@ -231,15 +231,6 @@ extension Puyo where T: Boxable, T.R: FlowRegulator {
     }
 }
 
-// MARK: - ScrollBox
-extension Puyo where T: ScrollBox {
-    @discardableResult
-    public func scrollDelegate(_ delegate: UIScrollViewDelegate, retained: Bool = false) -> Self {
-        view.scrollDelegate = RetainWrapper(value: delegate, retained: retained)
-        return self
-    }
-}
-
 extension Puyo where T: EventableView {
     @discardableResult
     public func onEventProduced<I: Inputing>(_ input: I) -> Self where I.InputType == T.EventType {

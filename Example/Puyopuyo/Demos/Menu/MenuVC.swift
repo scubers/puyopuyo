@@ -9,40 +9,48 @@
 import Puyopuyo
 import UIKit
 
- class MenuVC: BaseVC {
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        DemoScroll(
-            builder: {
-                self.getCell(title: "UIView Properties", vc: UIViewProertiesVC.self).attach($0)
-                self.getCell(title: "FlatBox Properties", vc: FlatPropertiesVC.self).attach($0)
-                self.getCell(title: "FlowBox Properties", vc: FlowPropertiesVC.self).attach($0)
-                self.getCell(title: "ZBox Properties", vc: ZPropertiesVC.self).attach($0)
-                self.getCell(title: "ScrollBox Properties", vc: ScrollBoxPropertiesVC.self).attach($0)
-                self.getCell(title: "NavigationBox Properties", vc: NavigationBoxPropertiesVC.self).attach($0)
-                self.getCell(title: "Advance Usage", vc: AdvanceVC.self).attach($0)
+class MenuVC: BaseVC {
+    override func configView() {
+        TableBox<(String, UIViewController.Type), UIView, Void>(
+            cell: { [weak self] o, i in
+                guard let self = self else { fatalError() }
+                let padding: CGFloat = 16
+                return HBox().attach {
+                    Label("").attach($0)
+                        .textAlignment(.left)
+                        .text(o.map({ $0.0.0 }))
+                }
+                .size(.fill, .wrap)
+                .onTap(to: self, { _, _ in
+                    i.input(value: ())
+                })
+                .padding(all: padding)
+                .bottomBorder([.color(Theme.dividerColor), .thick(0.5), .lead(padding), .trail(padding)])
+                .view
             }
         )
         .attach(vRoot)
+        .viewState(State([[
+            ("UIView Properties", UIViewProertiesVC.self),
+            ("FlatBox Properties", FlatPropertiesVC.self),
+            ("FlowBox Properties", FlowPropertiesVC.self),
+            ("ZBox Properties", ZPropertiesVC.self),
+            ("ScrollBox Properties", ScrollBoxPropertiesVC.self),
+            ("NavigationBox Properties", NavigationBoxPropertiesVC.self),
+            ("TableBox Properties", TableBoxPropertiesVC.self),
+            ("Advance Usage", AdvanceVC.self),
+        ]]))
+        .onEventProduced(to: self, { s, e in
+            s.push(vc: e.data.1.init())
+        })
         .size(.fill, .fill)
     }
 
-    func getCell(title: String, vc: UIViewController.Type) -> UIView {
-        return HBox().attach {
-            Label(title).attach($0)
-                .textAlignment(.left)
-                .size(.fill, .fill)
-        }
-        .size(.fill, 40)
-        .onTap(to: self, { s, _ in
-            s.push(vc: vc.init())
-        })
-        .bottomBorder([.color(Theme.dividerColor), .thick(0.5)])
-        .view
+    override func viewDidLoad() {
+        super.viewDidLoad()
     }
 
     func push(vc: UIViewController) {
         navigationController?.pushViewController(vc, animated: true)
     }
- }
+}

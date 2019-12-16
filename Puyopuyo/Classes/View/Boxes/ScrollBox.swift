@@ -41,3 +41,13 @@ public class ScrollBox: ZBox {
         fatalError()
     }
 }
+
+// MARK: - ScrollBox
+extension Puyo where T: ScrollBox {
+    @discardableResult
+    public func scrollDelegate(_ delegate: UIScrollViewDelegate, retained: Bool = false) -> Self {
+        view.scrollDelegate = RetainWrapper(value: delegate, retained: retained)
+        return self
+    }
+}
+
