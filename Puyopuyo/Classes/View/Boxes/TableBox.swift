@@ -18,6 +18,7 @@ public class TableBox<Data, Cell: UIView, CellEvent>:
             case cellEvent(CellEvent)
             case cellSelect
         }
+
         public var eventType: EventType
         public var data: Data
         public var indexPath: IndexPath
@@ -43,14 +44,13 @@ public class TableBox<Data, Cell: UIView, CellEvent>:
                          footer: BoxGenerator<UIView>? = nil,
                          delegate: RetainWrapper<UITableViewDelegate>? = nil,
                          dataSource: RetainWrapper<UITableViewDataSource>? = nil) {
-        
         self.tableView = tableView()
         cellGenerator = cell
         super.init(frame: .zero)
-        
+
         delegateProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: delegate)
         dataSourceProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: dataSource)
-        
+
         self.tableView.delegate = delegateProxy
         self.tableView.dataSource = dataSourceProxy
         self.tableView.attach(self).size(.fill, .fill)
@@ -168,7 +168,7 @@ extension PYProxyChain: UITableViewDelegate, UITableViewDataSource {
         }
         return target.tableView(tableView, numberOfRowsInSection: section)
     }
-    
+
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let target = target(with: #selector(UITableViewDataSource.tableView(_:numberOfRowsInSection:))) as? UITableViewDataSource else {
             return UITableViewCell()

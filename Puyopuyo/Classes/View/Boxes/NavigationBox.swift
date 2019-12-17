@@ -56,7 +56,7 @@ public class NavigationBox: VBox, StatefulView {
                     return .init(top: -nav.bounds.height, left: 0, bottom: 0, right: 0)
                 }))
                 .alignment(.bottom)
-            
+
             nav.attach($0)
         }
         .reverse(true)

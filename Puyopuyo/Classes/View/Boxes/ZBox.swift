@@ -7,6 +7,4 @@
 
 import Foundation
 
-open class ZBox: BoxView<ZRegulator> {
-    
-}
+open class ZBox: BoxView<ZRegulator> {}

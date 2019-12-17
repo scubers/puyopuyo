@@ -20,7 +20,7 @@ public class ScrollBox: ZBox {
                 flow: BoxGenerator<FlowBox>? = nil,
                 builder: @escaping BoxBuilder<UIView>) {
         super.init(frame: .zero)
-        
+
         assert(flat != nil || flow != nil, "")
 
         scrollView.attach(self) {
@@ -43,6 +43,7 @@ public class ScrollBox: ZBox {
 }
 
 // MARK: - ScrollBox
+
 extension Puyo where T: ScrollBox {
     @discardableResult
     public func scrollDelegate(_ delegate: UIScrollViewDelegate, retained: Bool = false) -> Self {
@@ -50,4 +51,3 @@ extension Puyo where T: ScrollBox {
         return self
     }
 }
-
