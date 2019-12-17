@@ -10,10 +10,10 @@ import Puyopuyo
 import UIKit
 
 class MenuVC: BaseVC {
+    
     override func configView() {
         TableBox<(String, UIViewController.Type), UIView, Void>(
-            cell: { [weak self] o, i in
-                guard let self = self else { fatalError() }
+            cell: { o, _ in
                 let padding: CGFloat = 16
                 return HBox().attach {
                     Label("").attach($0)
@@ -21,9 +21,6 @@ class MenuVC: BaseVC {
                         .text(o.map({ $0.0.0 }))
                 }
                 .size(.fill, .wrap)
-                .onTap(to: self, { _, _ in
-                    i.input(value: ())
-                })
                 .padding(all: padding)
                 .bottomBorder([.color(Theme.dividerColor), .thick(0.5), .lead(padding), .trail(padding)])
                 .view

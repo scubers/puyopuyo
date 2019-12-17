@@ -31,8 +31,8 @@ public class TableBox<Data, Cell: UIView, CellEvent>:
 
     public private(set) var tableView: UITableView
 
-    public var delegate: RetainWrapper<UITableViewDelegate>?
-    public var dataSource: RetainWrapper<UITableViewDataSource>?
+    private var delegateProxy: DelegateProxy<UITableViewDelegate>!
+    private var dataSourceProxy: DelegateProxy<UITableViewDataSource>!
 
     public typealias CellGenerator<Data, Cell, CellEvent> = (SimpleOutput<(Data, IndexPath)>, SimpleInput<CellEvent>) -> Cell
     var cellGenerator: CellGenerator<Data, Cell, CellEvent>
@@ -40,12 +40,19 @@ public class TableBox<Data, Cell: UIView, CellEvent>:
     public required init(tableView: @escaping BoxGenerator<UITableView> = { UITableView() },
                          header: BoxGenerator<UIView>? = nil,
                          cell: @escaping CellGenerator<Data, Cell, CellEvent>,
-                         footer: BoxGenerator<UIView>? = nil) {
+                         footer: BoxGenerator<UIView>? = nil,
+                         delegate: RetainWrapper<UITableViewDelegate>? = nil,
+                         dataSource: RetainWrapper<UITableViewDataSource>? = nil) {
+        
         self.tableView = tableView()
         cellGenerator = cell
         super.init(frame: .zero)
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
+        
+        delegateProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: delegate)
+        dataSourceProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: dataSource)
+        
+        self.tableView.delegate = delegateProxy
+        self.tableView.dataSource = dataSourceProxy
         self.tableView.attach(self).size(.fill, .fill)
         let headerView = ZBox().attach {
             header?().attach($0)
@@ -122,11 +129,13 @@ public class TableBox<Data, Cell: UIView, CellEvent>:
 
     public func tableView(_: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         heightCache[indexPath] = cell.bounds.height
+        delegateProxy.backup?.value?.tableView?(tableView, willDisplay: cell, forRowAt: indexPath)
     }
 
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         eventProducer.input(value: .init(eventType: .cellSelect, data: viewState.value[indexPath.section][indexPath.row], indexPath: indexPath))
+        delegateProxy.backup?.value?.tableView?(tableView, didSelectRowAt: indexPath)
     }
 
     private class BoxCell<T, E>: UITableViewCell {
@@ -149,5 +158,21 @@ public class TableBox<Data, Cell: UIView, CellEvent>:
         override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority _: UILayoutPriority, verticalFittingPriority _: UILayoutPriority) -> CGSize {
             return root.sizeThatFits(targetSize)
         }
+    }
+}
+
+extension PYProxyChain: UITableViewDelegate, UITableViewDataSource {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard let target = target(with: #selector(UITableViewDataSource.tableView(_:numberOfRowsInSection:))) as? UITableViewDataSource else {
+            return 0
+        }
+        return target.tableView(tableView, numberOfRowsInSection: section)
+    }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let target = target(with: #selector(UITableViewDataSource.tableView(_:numberOfRowsInSection:))) as? UITableViewDataSource else {
+            return UITableViewCell()
+        }
+        return target.tableView(tableView, cellForRowAt: indexPath)
     }
 }

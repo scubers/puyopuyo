@@ -33,23 +33,24 @@ TODO: Add long description of the pod here.
   
   
   s.subspec 'Util' do |c|
-    c.source_files = 'Puyopuyo/Classes/Util/**/*'
+    c.public_header_files = 'Puyopuyo/Classes/Util/**/*.h'
+    c.source_files = 'Puyopuyo/Classes/Util/**/*.{h,m,swift}'
   end
   
   s.subspec 'Core' do |c|
-    c.source_files = 'Puyopuyo/Classes/Core/**/*'
+    c.source_files = 'Puyopuyo/Classes/Core/**/*.{h,m,swift}'
     c.dependency 'Puyopuyo/Util'
   end
   
   s.subspec 'View' do |c|
-    c.source_files = 'Puyopuyo/Classes/View/**/*'
+    c.source_files = 'Puyopuyo/Classes/View/**/*.{h,m,swift}'
     c.dependency 'Puyopuyo/Core'
   end
   
   s.default_subspec = 'View'
   
   s.subspec 'TangramKit' do |c|
-      c.source_files = 'Puyopuyo/Classes/TangramKit/**/*'
+      c.source_files = 'Puyopuyo/Classes/TangramKit/**/*.{h,m,swift}'
       c.dependency 'Puyopuyo/View'
       c.dependency 'TangramKit'
   end
