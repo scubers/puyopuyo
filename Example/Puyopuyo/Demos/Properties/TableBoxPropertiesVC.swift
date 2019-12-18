@@ -9,7 +9,10 @@
 import Puyopuyo
 import UIKit
 
-class TableBoxPropertiesVC: BaseVC {
+class TableBoxPropertiesVC: BaseVC, UITableViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print("\(scrollView.contentOffset)")
+    }
     var datas = State([[String]]())
 
     enum Event {

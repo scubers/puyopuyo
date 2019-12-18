@@ -7,10 +7,16 @@
 
 import UIKit
 
+public protocol TableBoxDelegatable {
+    func setDelegate(_ delegate: UITableViewDelegate, retained: Bool)
+    func setDataSource(_ dataSource: UITableViewDataSource, retained: Bool)
+}
+
 public class TableBox<Data, Cell: UIView, CellEvent>:
     ZBox,
     StatefulView,
     EventableView,
+    TableBoxDelegatable,
     UITableViewDataSource,
     UITableViewDelegate {
     public struct Event {
@@ -32,8 +38,24 @@ public class TableBox<Data, Cell: UIView, CellEvent>:
 
     public private(set) var tableView: UITableView
 
-    private var delegateProxy: DelegateProxy<UITableViewDelegate>!
-    private var dataSourceProxy: DelegateProxy<UITableViewDataSource>!
+    private var delegateProxy: DelegateProxy<UITableViewDelegate>! {
+        didSet {
+            tableView.delegate = delegateProxy
+        }
+    }
+    private var dataSourceProxy: DelegateProxy<UITableViewDataSource>! {
+        didSet {
+            tableView.dataSource = dataSourceProxy
+        }
+    }
+    
+    public func setDelegate(_ delegate: UITableViewDelegate, retained: Bool) {
+        delegateProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: RetainWrapper(value: delegate, retained: retained))
+    }
+    
+    public func setDataSource(_ dataSource: UITableViewDataSource, retained: Bool) {
+        dataSourceProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: RetainWrapper(value: dataSource, retained: retained))
+    }
 
     public typealias CellGenerator<Data, Cell, CellEvent> = (SimpleOutput<(Data, IndexPath)>, SimpleInput<CellEvent>) -> Cell
     var cellGenerator: CellGenerator<Data, Cell, CellEvent>
@@ -50,9 +72,10 @@ public class TableBox<Data, Cell: UIView, CellEvent>:
 
         delegateProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: delegate)
         dataSourceProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: dataSource)
-
+        
         self.tableView.delegate = delegateProxy
         self.tableView.dataSource = dataSourceProxy
+
         self.tableView.attach(self).size(.fill, .fill)
         let headerView = ZBox().attach {
             header?().attach($0)
@@ -112,7 +135,7 @@ public class TableBox<Data, Cell: UIView, CellEvent>:
             event.safeBind(to: self) { [weak cell] s, e in
                 guard let idx = cell?.state.value.1 else { return }
                 let data = s.viewState.value[idx.section][idx.row]
-                s.eventProducer.input(value: .init(eventType: .cellEvent(e), data: data, indexPath: indexPath))
+                s.eventProducer.input(value: .init(eventType: .cellEvent(e), data: data, indexPath: idx))
             }
         } else {
             cell?.state.value = (data, indexPath)
@@ -174,5 +197,20 @@ extension PYProxyChain: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
         return target.tableView(tableView, cellForRowAt: indexPath)
+    }
+}
+
+extension Puyo where T: TableBoxDelegatable {
+
+    @discardableResult
+    public func setDelegate(_ delegate: UITableViewDelegate, retained: Bool = false) -> Self {
+        view.setDelegate(delegate, retained: retained)
+        return self
+    }
+    
+    @discardableResult
+    public func setDataSource(_ dataSource: UITableViewDataSource, retained: Bool = false) -> Self {
+        view.setDataSource(dataSource, retained: retained)
+        return self
     }
 }

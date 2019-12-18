@@ -10,7 +10,6 @@ import Puyopuyo
 import UIKit
 
 class MenuVC: BaseVC {
-    
     override func configView() {
         TableBox<(String, UIViewController.Type), UIView, Void>(
             cell: { o, _ in
