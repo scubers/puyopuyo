@@ -92,7 +92,7 @@ open class TapGestureStyle: BaseGestureStyle {
 
     var action = { (_: UITapGestureRecognizer) -> Void in }
     open override func getGesture() -> UIGestureRecognizer {
-        let tap = UIGestureRecognizer()
+        let tap = UITapGestureRecognizer()
         tap.py_addAction { g in
             self.action(g as! UITapGestureRecognizer)
         }
