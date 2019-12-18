@@ -61,17 +61,15 @@ public class TableBox<Data, Cell: UIView, CellEvent>:
     var cellGenerator: CellGenerator<Data, Cell, CellEvent>
 
     public required init(tableView: @escaping BoxGenerator<UITableView> = { UITableView() },
-                         header: BoxGenerator<UIView>? = nil,
                          cell: @escaping CellGenerator<Data, Cell, CellEvent>,
-                         footer: BoxGenerator<UIView>? = nil,
-                         delegate: RetainWrapper<UITableViewDelegate>? = nil,
-                         dataSource: RetainWrapper<UITableViewDataSource>? = nil) {
+                         header: BoxGenerator<UIView>? = nil,
+                         footer: BoxGenerator<UIView>? = nil) {
         self.tableView = tableView()
         cellGenerator = cell
         super.init(frame: .zero)
 
-        delegateProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: delegate)
-        dataSourceProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: dataSource)
+        delegateProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
+        dataSourceProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
         
         self.tableView.delegate = delegateProxy
         self.tableView.dataSource = dataSourceProxy

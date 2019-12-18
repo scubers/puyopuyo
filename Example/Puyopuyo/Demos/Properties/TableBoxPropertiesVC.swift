@@ -13,6 +13,7 @@ class TableBoxPropertiesVC: BaseVC, UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         print("\(scrollView.contentOffset)")
     }
+
     var datas = State([[String]]())
 
     enum Event {
@@ -21,22 +22,20 @@ class TableBoxPropertiesVC: BaseVC, UITableViewDelegate {
 
     override func configView() {
         TableBox<String, UIView, Event>(
-            header: {
-                VBox().attach {
-                    Label.demo("header").attach($0)
-                    Label.demo("header").attach($0)
-                    Label.demo("header").attach($0)
-                    Label.demo("header").attach($0)
-                }
-                .space(4)
-                .view
-            }, cell: { [weak self] o, i in
+            cell: { [weak self] o, i in
                 guard let self = self else { fatalError() }
-                return VFlow(count: 3).attach {
-                    Label.demo("demo").attach($0)
-                        .text(o.asOutput().map({ $0.0 }))
-                        .size(50, 50)
+                return VFlow(count: 0).attach {
+                    let v = $0
+                    _ = o.outputing { _, idx in
+                        v.subviews.forEach({ $0.removeFromSuperview() })
+                        for i in 0 ..< idx.row {
+                            Label.demo("demo").attach(v)
+                                .text(i.description)
+                                .size(50, 50)
+                        }
+                    }
                 }
+                .space(10)
                 .padding(all: 10)
                 .width(.fill)
                 .styles([TapRippleStyle()])
@@ -46,6 +45,15 @@ class TableBoxPropertiesVC: BaseVC, UITableViewDelegate {
                 })
                 .view
 
+            }, header: {
+                VBox().attach {
+                    Label.demo("header").attach($0)
+                    Label.demo("header").attach($0)
+                    Label.demo("header").attach($0)
+                    Label.demo("header").attach($0)
+                }
+                .space(4)
+                .view
             }, footer: {
                 Label.demo("footer")
             }
