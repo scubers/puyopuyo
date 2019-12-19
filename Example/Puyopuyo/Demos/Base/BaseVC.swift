@@ -18,7 +18,8 @@ class BaseVC: UIViewController {
     var navState = State(NavigationBox.ViewState())
 
     override func loadView() {
-        view = NavigationBox(
+        super.loadView()
+        NavigationBox(
             navBar: {
                 NavBar(title: "\(type(of: self))").attach()
                     .onEventProduced(to: self, { s, e in
@@ -31,9 +32,9 @@ class BaseVC: UIViewController {
                 self.vRoot
             }
         )
-        .attach()
+        .attach(view)
+        .size(.fill, .fill)
         .viewState(navState)
-        .view
     }
 
     override func viewDidLoad() {
@@ -69,7 +70,7 @@ class BaseVC: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+
     deinit {
         print("\(self) deinit!!!")
     }

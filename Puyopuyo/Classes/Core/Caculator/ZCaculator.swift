@@ -26,9 +26,7 @@ class ZCaculator {
 //    lazy var totalFixedMain: CGFloat = self.layoutCalPadding.start + self.layoutCalPadding.end
 
     func caculate() -> Size {
-//        if !(parent is Regulator) {
-//            Caculator.adapting(size: _getEstimateSize(measure: regulator, remain: remain), to: regulator, remain: remain)
-//        }
+//        if !(parent is Regulator) {}
         Caculator.adaptingEstimateSize(measure: regulator, remain: remain)
 
 //        let layoutFixedSize = regulator.py_size

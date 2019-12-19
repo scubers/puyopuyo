@@ -35,11 +35,8 @@ class FlatCaculator {
 
     /// 计算本身布局属性，可能返回的size 为 .fixed, .ratio, 不可能返回wrap
     func caculate() -> Size {
-//        if !(parent is Regulator) {
-        // 父视图为普通视图时，需要优先应用自身大小
-//            Caculator.adapting(size: _getEstimateSize(measure: regulator, remain: remain), to: regulator, remain: remain)
+//        if !(parent is Regulator) {}
         Caculator.adaptingEstimateSize(measure: regulator, remain: remain)
-//        }
 
         // 1.第一次循环，计算正常节点，忽略未激活节点，缓存主轴比例节点
         regulator.enumerateChild { _, m in
@@ -223,8 +220,10 @@ class FlatCaculator {
         var subCrossSize = calSize.cross
 
         if subCrossSize.isRatio {
-            let ratio = subCrossSize.ratio
-            subCrossSize = .fix(max(0, (regFixedSize.cross - (regCalPadding.crossFixed + calMargin.crossFixed)) * ratio))
+//            let ratio = subCrossSize.ratio
+//            subCrossSize = .fix(max(0, (regFixedSize.cross - (regCalPadding.crossFixed + calMargin.crossFixed)) * ratio))
+            // 次轴的ratio为全部占满，因为只有一个
+            subCrossSize = .fix(max(0, regFixedSize.cross - (regCalPadding.crossFixed + calMargin.crossFixed)))
         }
         // main
         let subMainSize = SizeDescription.fix(max(0, (calSize.main.ratio / totalMainRatio) * (regFixedSize.main - totalFixedMain)))

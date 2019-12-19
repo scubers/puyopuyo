@@ -110,7 +110,7 @@ extension NSObject {
     public func py_setUnbinder(_ unbinder: Unbinder, for key: String) {
         py_unbinderContainer.setUnbinder(unbinder, for: key)
     }
-    
+
     @discardableResult
     public func py_removeUnbinder(for key: String) -> Unbinder? {
         return py_unbinderContainer.removeUnbinder(for: key)
@@ -141,15 +141,15 @@ extension NSObject {
             old?.py_unbind()
             unbinders[key] = unbinder
         }
-        
+
         func removeUnbinder(for key: String) -> Unbinder? {
             return unbinders.removeValue(forKey: key)
         }
 
         deinit {
             #if DEV
+                print("container for \(name) deallcating!!")
             #endif
-            print("container for \(name) deallcating!!")
             unbinders.forEach { _, unbinder in
                 unbinder.py_unbind()
             }

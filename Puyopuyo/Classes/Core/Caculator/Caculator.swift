@@ -23,7 +23,8 @@ class Caculator {
             return size
         }
         if size.isRatio {
-            return .fix(size.ratio * relayLength)
+//            return .fix(size.ratio * relayLength)
+            return .fix(relayLength)
         }
         fatalError()
     }

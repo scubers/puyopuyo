@@ -27,6 +27,7 @@ class MenuVC: BaseVC {
         )
         .attach(vRoot)
         .viewState(State([[
+            ("Test", TestVC.self),
             ("UIView Properties", UIViewProertiesVC.self),
             ("FlatBox Properties", FlatPropertiesVC.self),
             ("FlowBox Properties", FlowPropertiesVC.self),

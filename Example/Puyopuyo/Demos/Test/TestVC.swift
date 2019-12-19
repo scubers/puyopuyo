@@ -6,10 +6,10 @@
 //  Copyright © 2019 CocoaPods. All rights reserved.
 //
 
-import UIKit
 import Puyopuyo
-import TangramKit
 import RxSwift
+import TangramKit
+import UIKit
 
 class NewView: ZBox, EventableView {
     var eventProducer = SimpleIO<String>()
@@ -24,166 +24,130 @@ class NewView: ZBox, EventableView {
 }
 
 class TestVC: BaseVC {
-    
-    var subVC: UIViewController? = nil
+//    var subVC: UIViewController?
 //    var subVC: UIViewController? = StyleVC()
-//    var subVC: UIViewController? = FlowBoxBaseVC()
+    var subVC: UIViewController? = FlowBoxMixVC()
 //    var subVC: UIViewController? = VBoxVC()
 //    var subVC: UIViewController? = FlatFormationAligmentVC()
-    
+
     let state = State<Visibility>(.visible)
     func configTestView() {
-        
         let text = State<String?>(nil)
-        
-        let vi = State<Visibility>(.visible)
-        
-        vRoot.attach {
-            
-            UITextField().attach($0)
-                .margin(left: 10, right: 10)
-                .onText(text)
-                .size(.fill, 30)
-            
-            UITextView().attach($0)
-                .onText(text)
-                .textChange(SimpleInput<String?> { x in
-                    print(x)
-                })
-                .size(.fill, 70)
-            
-            UISwitch().attach($0)
-                .onEvent(.valueChanged, SimpleInput { s in
-                    vi.value = s.isOn ? .gone : .visible
-                })
 
+        let vi = State<Visibility>(.visible)
+
+        vRoot.attach {
+//            VBox().attach($0) {
+//                VBox().attach($0) {
+//                    Label("23").attach($0)
+//                    Label("23").attach($0)
+//                    Label("23").attach($0)
+//                }
+//                .borderWidth(1)
+//                .borderColor(UIColor.black)
+//                .size(.fill, .wrap)
+//            }
+//            .padding(all: 10)
+//            .width(.fill)
             HBox().attach($0) {
-                Label("内容").attach($0)
-                    .visibility(vi)
-                
-                Label().attach($0)
-                    .text(text)
-                    .numberOfLines(0)
-                    .size(.fill, .wrap(max: 150))
+                ZBox().attach($0) {
+                    Label("11111").attach($0)
+                }
+                .height(.fill)
+                .width(.ratio(1))
+
+                ZBox().attach($0) {
+                    Label("22222").attach($0)
+                }
+                .height(.fill)
+                .width(.ratio(3))
             }
-            .space(10)
-            .size(.fill, .wrap(min: 100))
-            /*
-            VFlow(count: 0).attach($0) {
-                
-                Label("1").attach($0)
-                    .size(.fill, 20)
-                Label("2").attach($0)
-                    .size(100, 20)
-                Label("3").attach($0)
-                    .size(200, 20)
-                Label("3").attach($0)
-                    .size(.fill, 20)
-                Label("4").attach($0)
-                    .size(50, .fill)
-                Label("5").attach($0)
-                    .size(50, 60)
-            }
-            .space(10)
-            .padding(all: 10)
             .size(.fill, .fill)
- */
-            
         }
         .format(.sides)
         .padding(all: 10)
         .space(10)
         .animator(Animators.default)
     }
-    
+
     private func test1() {
         vRoot.attach()
             .space(10)
-            .attach() {
-                
+            .attach {
                 HBox().attach($0)
                     .size(.fill, 100)
                     .margin(all: 10)
                     .padding(all: 10)
-                    .attach() {
-                        
+                    .attach {
                         Label("正").attach($0)
                             .height(.fill)
                             .width(on: Simulate.ego.height.multiply(0.5))
-                        
+
                         Label("fill").attach($0)
                             .size(.fill, .fill)
-                        
+
                         let v = $0
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
 //                            self.vRoot.animate(0.2, block: {
-                                v.attach().height(200)
+                            v.attach().height(200)
 //                            })
                         })
-                }
-                
-                
+                    }
+
                 let v = ZBox().attach($0) {
-                    
                     let total = 10
-                    for idx in 0..<total {
+                    for idx in 0 ..< total {
                         UIView().attach($0)
                             .width(on: $0, { .fix($0.width * (1 - CGFloat(idx) / CGFloat(total))) })
                             .height(on: $0, { .fix($0.height * (1 - CGFloat(idx) / CGFloat(total))) })
                     }
-                    
-                    
-                    }
-                    .width(.fill)
-                    .height(on: Simulate.ego.width.multiply(0.5))
+                }
+                .width(.fill)
+                .height(on: Simulate.ego.width.multiply(0.5))
 //                    .heightOnSelf({ .fix($0.width * 0.5) })
-                
+
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
 //                    v.view.animate(0.25, block: {
 //                        v.heightOnSelf({ .fix($0.width) })
-                        v.height(on: Simulate.ego.width)
+                    v.height(on: Simulate.ego.width)
 //                    })
                 })
-                
-                
-                
-        }
+            }
     }
-    
+
     override func shouldRandomColor() -> Bool {
         return true
     }
-    
+
     private func tk_flowTest() {
         //        TGFlowLayout(.vert, arrangedCount: 3).attach() { x in
-        TGFloatLayout().attach() { x in
-            
-            let labels = Array(repeating: 1, count: 10).map({ (idx) in
-                return Label("\(idx)")
+        TGFloatLayout().attach { x in
+
+            let labels = Array(repeating: 1, count: 10).map({ idx in
+                Label("\(idx)")
             })
-            
+
             for (idx, label) in labels.enumerated() {
                 label.attach(x)
                     .text("\(idx)".asOutput().some())
                     .tg_size(50 + idx * 3, 50 + idx * 3 + 1)
-                
+
                 //                if idx % 3 == 2 && idx != 2 {
                 if idx == 2 {
                     label.tg_reverseFloat = true
                     //                    label.attach().tg_size(.fill, 50)
                 }
             }
-            
-            }
-            .size(.fill, .fill)
-            .tg_gravity(TGGravity.horz.right)
-            .tg_size(.fill, .fill)
-            .activated(State(false))
-            .attach(vRoot)
+        }
+        .size(.fill, .fill)
+        .tg_gravity(TGGravity.horz.right)
+        .tg_size(.fill, .fill)
+        .activated(State(false))
+        .attach(vRoot)
     }
-    
+
     override func configView() {
-        vRoot.attach() {
+        vRoot.attach {
             if let v = self.subView() {
                 self.addChild(self.subVC!)
                 v.attach($0)
@@ -193,12 +157,11 @@ class TestVC: BaseVC {
             }
         }
     }
-    
+
     func subView() -> UIView? {
         if let type = subVC {
             return type.view
         }
         return nil
     }
-    
 }

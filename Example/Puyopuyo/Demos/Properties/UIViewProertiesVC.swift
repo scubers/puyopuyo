@@ -78,7 +78,7 @@ class UIViewProertiesVC: BaseVC {
             desc: """
             控制自身view的大小
             ratio: 占主轴上的比重（ratio / 主轴上的ratio之和）
-            占次轴上的比例（1倍，0.5倍）
+            占次轴上占满
             """
         )
         .attach()
