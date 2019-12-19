@@ -30,7 +30,7 @@ class TableBoxPropertiesVC: BaseVC, UITableViewDelegate {
                         v.subviews.forEach({ $0.removeFromSuperview() })
                         for i in 0 ..< idx.row {
                             Label.demo("demo").attach(v)
-                                .text(i.description)
+                                .text((i + idx.row).description)
                                 .size(50, 50)
                         }
                     }

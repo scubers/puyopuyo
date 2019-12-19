@@ -69,4 +69,8 @@ class BaseVC: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    deinit {
+        print("\(self) deinit!!!")
+    }
 }

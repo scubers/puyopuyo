@@ -34,7 +34,8 @@ class _Observer<Value>: NSObject {
 }
 
 extension NSObject {
-    public func py_observing<Value: Equatable>(for keyPath: String) -> SimpleOutput<Value?> {
+    
+    public func py_observing<Value: Equatable>(for keyPath: String, id: String = UUID().description) -> SimpleOutput<Value?> {
         return SimpleOutput<Value?> { (i) -> Unbinder in
             var lastValue: Value?
             let observer = _Observer<Value>(key: keyPath) { rect in
@@ -44,11 +45,17 @@ extension NSObject {
             }
             let unbinder = Unbinders.create { [unowned(unsafe) self] in
                 self.removeObserver(observer, forKeyPath: keyPath)
+//                self.py_removeUnbinder(for: id)?.py_unbind()
             }
             self.addObserver(observer, forKeyPath: keyPath, options: [.new, .initial], context: nil)
-            self.py_setUnbinder(unbinder, for: UUID().description)
+            self.py_setUnbinder(unbinder, for: id)
             return unbinder
         }
         .distinct()
+        
+    }
+    
+    public func py_identifier() -> String {
+        return "\(Unmanaged.passRetained(self).toOpaque())"
     }
 }
