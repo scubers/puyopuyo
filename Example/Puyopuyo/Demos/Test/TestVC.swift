@@ -23,20 +23,54 @@ class NewView: ZBox, EventableView {
     }
 }
 
+struct TestStruct: ViewPresentor, EventableView {
+    var eventProducer = SimpleIO<Int>()
+    
+    init(vc: UIViewController) {
+        self.vc = vc
+    }
+    
+    weak var vc: UIViewController?
+
+    var baseView: UIView {
+        HBox().attach {
+            for i in 0 ..< 3 {
+                Label("\(i)\(i)").attach($0)
+                    .onTap { _ in
+                        self.eventProducer.input(value: i)
+                    }
+            }
+        }
+        .view
+    }
+}
+
 class TestVC: BaseVC {
-//    var subVC: UIViewController?
+    var subVC: UIViewController?
 //    var subVC: UIViewController? = StyleVC()
-    var subVC: UIViewController? = FlowBoxMixVC()
+//    var subVC: UIViewController? = FlowBoxMixVC()
 //    var subVC: UIViewController? = VBoxVC()
 //    var subVC: UIViewController? = FlatFormationAligmentVC()
 
     let state = State<Visibility>(.visible)
+    
+    lazy var presentor = TestStruct(vc: self)
+    
     func configTestView() {
+        
         let text = State<String?>(nil)
 
         let vi = State<Visibility>(.visible)
+        
+        let this = WeakCatcher(value: self)
+        _ = presentor.eventProducer.outputing { (idx) in
+            this.execute { (this) -> Void? in
+                print(idx)
+            }
+        }
 
         vRoot.attach {
+            self.presentor.baseView.attach($0)
 //            VBox().attach($0) {
 //                VBox().attach($0) {
 //                    Label("23").attach($0)
@@ -50,19 +84,12 @@ class TestVC: BaseVC {
 //            .padding(all: 10)
 //            .width(.fill)
             HBox().attach($0) {
-                ZBox().attach($0) {
-                    Label("11111").attach($0)
-                }
-                .height(.fill)
-                .width(.ratio(1))
-
-                ZBox().attach($0) {
-                    Label("22222").attach($0)
-                }
-                .height(.fill)
-                .width(.ratio(3))
+                Label("lksjdf").attach($0)
+                Label("lksjdf\nlksjd").attach($0)
+                    .size(.fill, .wrap)
             }
-            .size(.fill, .fill)
+            .justifyContent(.center)
+            .size(100, .wrap)
         }
         .format(.sides)
         .padding(all: 10)

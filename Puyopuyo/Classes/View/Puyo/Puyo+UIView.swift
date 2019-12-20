@@ -225,6 +225,14 @@ extension Puyo where T: UIView {
     }
 
     @discardableResult
+    public func onTap(_ action: @escaping (UITapGestureRecognizer) -> Void) -> Self {
+        view.py_setUnbinder(view.py_setTap(action: { tap in
+            action(tap)
+        }), for: UUID().description)
+        return self
+    }
+
+    @discardableResult
     public func tag(_ tag: Int) -> Self {
         view.tag = tag
         return self

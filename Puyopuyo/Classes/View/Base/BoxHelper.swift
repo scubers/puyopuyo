@@ -26,9 +26,9 @@ public class BoxHelper<R: Regulator> {
     private func _layoutSubviews(view: UIView, regulator: R) {
         let parentMeasure = view.superview?.py_measure ?? Measure()
 
-        // 应用计算后的固有尺寸
+        // 父视图为布局
         if isBox(view: view.superview) {
-            // 父视图为布局
+            // 当父视图为布局，并且当前view可能是wrap的情况下，父布局在计算的时候已经帮子布局计算完成，所以不需要再次计算
             if regulator.size.bothNotWrap() {
                 _ = regulator.caculate(byParent: parentMeasure, remain: Caculator.remainSize(with: view.bounds.size, margin: regulator.margin))
             }

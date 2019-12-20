@@ -7,7 +7,6 @@ target 'Puyopuyo_Example' do
   pod 'TangramKit'
   pod 'RxSwift'
   pod 'SnapKit'
-  pod 'RxDataSources'
 
   target 'Puyopuyo_Tests' do
     inherit! :search_paths

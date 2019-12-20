@@ -7,6 +7,11 @@
 
 import Foundation
 
+public protocol ViewPresentor {
+    associatedtype PresentView: UIView
+    var baseView: PresentView { get }
+}
+
 public protocol StatefulView {
     associatedtype StateType
     var viewState: State<StateType> { get }
@@ -41,11 +46,11 @@ public struct Animators {
     }
 }
 
-open class BoxView<R: Regulator>: UIView, Boxable {
-    public var boxHelper = BoxHelper<R>()
+open class BoxView<RegulatorType: Regulator>: UIView, Boxable {
+    public var boxHelper = BoxHelper<RegulatorType>()
 
-    public var regulator: R {
-        return py_measure as! R
+    public var regulator: RegulatorType {
+        return py_measure as! RegulatorType
     }
 
     public override init(frame: CGRect) {
