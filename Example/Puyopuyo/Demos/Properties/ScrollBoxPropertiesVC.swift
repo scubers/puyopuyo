@@ -12,7 +12,7 @@ import UIKit
 class ScrollBoxPropertiesVC: BaseVC {
     override func configView() {
         ScrollBox(
-            flow: {
+            flat: {
                 HFlow().attach()
                     .arrangeCount(0)
                     .view

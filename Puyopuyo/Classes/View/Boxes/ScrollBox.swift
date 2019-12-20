@@ -7,7 +7,10 @@
 
 import UIKit
 
-public class ScrollBox: ZBox {
+public class ScrollBox<T: Boxable & UIView>: ZBox, Delegatable where T.RegulatorType: FlatRegulator {
+    
+    public typealias DelegateType = UIScrollViewDelegate
+    
     public private(set) var scrollView = UIScrollView()
 
     public var delegate: RetainWrapper<UIScrollViewDelegate>? {
@@ -16,23 +19,17 @@ public class ScrollBox: ZBox {
         }
     }
     
-    public init(flat: BoxGenerator<FlatBox>? = nil,
-                flow: BoxGenerator<FlowBox>? = nil,
+    public func setDelegate(_ delegate: UIScrollViewDelegate, retained: Bool) {
+        self.delegate = RetainWrapper(value: delegate, retained: retained)
+    }
+    
+    public init(flat: @escaping BoxGenerator<T>,
                 direction: Direction = .y,
                 builder: @escaping BoxBuilder<UIView>) {
         super.init(frame: .zero)
-
-        assert(flat != nil || flow != nil, "")
-        
         
         scrollView.attach(self) {
-            flat?().attach($0) {
-                builder($0)
-            }
-            .size(direction == .y ? .fill : .wrap, direction == .y ? .wrap : .fill)
-            .autoJudgeScroll(true)
-
-            flow?().attach($0) {
+            flat().attach($0) {
                 builder($0)
             }
             .size(direction == .y ? .fill : .wrap, direction == .y ? .wrap : .fill)
@@ -43,15 +40,5 @@ public class ScrollBox: ZBox {
 
     public required init?(coder _: NSCoder) {
         fatalError()
-    }
-}
-
-// MARK: - ScrollBox
-
-extension Puyo where T: ScrollBox {
-    @discardableResult
-    public func scrollDelegate(_ delegate: UIScrollViewDelegate, retained: Bool = false) -> Self {
-        view.delegate = RetainWrapper(value: delegate, retained: retained)
-        return self
     }
 }

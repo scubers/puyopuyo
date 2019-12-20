@@ -15,10 +15,10 @@ extension Puyo where T: Boxable {
         view.boxHelper.animator = animator
         return self
     }
-    
+
     @discardableResult
     public func animator<O: Outputing>(_ animator: O) -> Self where O.OutputType == Animator {
-        animator.safeBind(to: view, id: #function) { (v, a) in
+        animator.safeBind(to: view, id: #function) { v, a in
             v.boxHelper.animator = a
         }
         return self
@@ -109,7 +109,7 @@ extension Puyo where T: Boxable {
 
 // MARK: - FlatBox
 
-extension Puyo where T: Boxable, T.R: FlatRegulator {
+extension Puyo where T: Boxable, T.RegulatorType: FlatRegulator {
     @discardableResult
     public func space<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
         view.py_setUnbinder(space.safeBind(view, { v, s in
@@ -163,7 +163,7 @@ extension Puyo where T: Boxable, T.R: FlatRegulator {
 
 // MARK: - FlowBox
 
-extension Puyo where T: Boxable, T.R: FlowRegulator {
+extension Puyo where T: Boxable, T.RegulatorType: FlowRegulator {
     @discardableResult
     public func arrangeCount<O: Outputing>(_ count: O) -> Self where O.OutputType == Int {
         view.py_setUnbinder(count.safeBind(view, { v, c in
@@ -253,6 +253,22 @@ extension Puyo where T: StatefulView {
     @discardableResult
     public func viewState<O: Outputing>(_ output: O) -> Self where O.OutputType == T.StateType {
         _ = output.send(to: view.viewState)
+        return self
+    }
+}
+
+public extension Puyo where T: Delegatable {
+    @discardableResult
+    func setDelegate(_ delegate: T.DelegateType, retained: Bool = false) -> Self {
+        view.setDelegate(delegate, retained: retained)
+        return self
+    }
+}
+
+public extension Puyo where T: DataSourceable {
+    @discardableResult
+    func setDelegate(_ dataSource: T.DataSourceType, retained: Bool = false) -> Self {
+        view.setDataSource(dataSource, retained: retained)
         return self
     }
 }

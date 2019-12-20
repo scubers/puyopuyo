@@ -11,6 +11,7 @@ class MeasureFactory {
     static var measureHoldingKey = "measureHoldingKey"
 
     static func getMeasure(from view: UIView) -> Measure {
+        
         var measure = objc_getAssociatedObject(view, &MeasureFactory.measureHoldingKey) as? Measure
         if measure == nil {
             if view is FlowBox {
@@ -18,8 +19,6 @@ class MeasureFactory {
             } else if view is ZBox {
                 measure = ZRegulator(target: view)
             } else if view is FlatBox {
-                measure = FlatRegulator(target: view)
-            } else if view is ScrollBox {
                 measure = FlatRegulator(target: view)
             } else {
                 measure = Measure(target: view)

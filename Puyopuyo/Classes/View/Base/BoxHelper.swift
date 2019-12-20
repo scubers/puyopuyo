@@ -110,9 +110,9 @@ public class BoxHelper<R: Regulator> {
 }
 
 public protocol Boxable {
-    associatedtype R: Regulator
-    var boxHelper: BoxHelper<R> { get }
-    var regulator: R { get }
+    associatedtype RegulatorType: Regulator
+    var boxHelper: BoxHelper<RegulatorType> { get }
+    var regulator: RegulatorType { get }
 }
 
 struct BoxUtil {

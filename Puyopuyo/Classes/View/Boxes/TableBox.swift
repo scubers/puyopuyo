@@ -7,18 +7,17 @@
 
 import UIKit
 
-public protocol TableBoxDelegatable {
-    func setDelegate(_ delegate: UITableViewDelegate, retained: Bool)
-    func setDataSource(_ dataSource: UITableViewDataSource, retained: Bool)
-}
-
 public class TableBox<Data, Cell: UIView, CellEvent>:
     ZBox,
     StatefulView,
     EventableView,
-    TableBoxDelegatable,
+    Delegatable,
+    DataSourceable,
     UITableViewDataSource,
     UITableViewDelegate {
+    public typealias DelegateType = UITableViewDelegate
+    public typealias DataSourceType = UITableViewDataSource
+
     public struct Event {
         public enum EventType {
             case cellEvent(CellEvent)
@@ -43,16 +42,17 @@ public class TableBox<Data, Cell: UIView, CellEvent>:
             tableView.delegate = delegateProxy
         }
     }
+
     private var dataSourceProxy: DelegateProxy<UITableViewDataSource>! {
         didSet {
             tableView.dataSource = dataSourceProxy
         }
     }
-    
+
     public func setDelegate(_ delegate: UITableViewDelegate, retained: Bool) {
         delegateProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: RetainWrapper(value: delegate, retained: retained))
     }
-    
+
     public func setDataSource(_ dataSource: UITableViewDataSource, retained: Bool) {
         dataSourceProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: RetainWrapper(value: dataSource, retained: retained))
     }
@@ -70,7 +70,7 @@ public class TableBox<Data, Cell: UIView, CellEvent>:
 
         delegateProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
         dataSourceProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
-        
+
         self.tableView.delegate = delegateProxy
         self.tableView.dataSource = dataSourceProxy
 
@@ -195,20 +195,5 @@ extension PYProxyChain: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
         return target.tableView(tableView, cellForRowAt: indexPath)
-    }
-}
-
-extension Puyo where T: TableBoxDelegatable {
-
-    @discardableResult
-    public func setDelegate(_ delegate: UITableViewDelegate, retained: Bool = false) -> Self {
-        view.setDelegate(delegate, retained: retained)
-        return self
-    }
-    
-    @discardableResult
-    public func setDataSource(_ dataSource: UITableViewDataSource, retained: Bool = false) -> Self {
-        view.setDataSource(dataSource, retained: retained)
-        return self
     }
 }

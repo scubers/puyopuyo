@@ -59,6 +59,7 @@ class TableBoxPropertiesVC: BaseVC, UITableViewDelegate {
             }
         )
         .attach(vRoot)
+        .setDelegate(self)
         .onEventProduced(to: self, { _, e in
             print("\(e.indexPath), \(e.data), \(e.eventType)")
         })
