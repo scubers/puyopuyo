@@ -11,35 +11,44 @@ import UIKit
 
 class MenuVC: BaseVC {
     override func configView() {
-        TableBox<(String, UIViewController.Type), UIView, Void>(
-            cell: { o, _ in
-                let padding: CGFloat = 16
-                return HBox().attach {
-                    Label("").attach($0)
-                        .textAlignment(.left)
-                        .text(o.map({ $0.0.0 }))
-                }
-                .size(.fill, .wrap)
-                .padding(all: padding)
-                .bottomBorder([.color(Theme.dividerColor), .thick(0.5), .lead(padding), .trail(padding)])
-                .view
-            }
+        ListBox(
+            sections: [
+                BasicSection<(String, UIViewController.Type), UIView, Void>(
+                    identifier: "menu",
+                    dataSource: State([
+                        ("Test", TestVC.self),
+                        ("UIView Properties", UIViewProertiesVC.self),
+                        ("FlatBox Properties", FlatPropertiesVC.self),
+                        ("FlowBox Properties", FlowPropertiesVC.self),
+                        ("ZBox Properties", ZPropertiesVC.self),
+                        ("ScrollBox Properties", ScrollBoxPropertiesVC.self),
+                        ("NavigationBox Properties", NavigationBoxPropertiesVC.self),
+                        ("ListBox Properties", ListBoxPropertiesVC.self),
+                        ("Advance Usage", AdvanceVC.self),
+                    ]),
+                    _cell: { o, _ in
+                        let padding: CGFloat = 16
+                        return HBox().attach {
+                            Label("").attach($0)
+                                .textAlignment(.left)
+                                .text(o.map({ $1.0 }))
+                        }
+                        .size(.fill, .wrap)
+                        .padding(all: padding)
+                        .bottomBorder([.color(Theme.dividerColor), .thick(0.5), .lead(padding), .trail(padding)])
+                        .view
+                    },
+                    _event: { [weak self] e in
+                        switch e {
+                        case let .didSelect(_, (_, vc)):
+                            self?.push(vc: vc.init())
+                        default: break
+                        }
+                    }
+                ),
+            ]
         )
         .attach(vRoot)
-        .viewState(State([[
-            ("Test", TestVC.self),
-            ("UIView Properties", UIViewProertiesVC.self),
-            ("FlatBox Properties", FlatPropertiesVC.self),
-            ("FlowBox Properties", FlowPropertiesVC.self),
-            ("ZBox Properties", ZPropertiesVC.self),
-            ("ScrollBox Properties", ScrollBoxPropertiesVC.self),
-            ("NavigationBox Properties", NavigationBoxPropertiesVC.self),
-            ("TableBox Properties", TableBoxPropertiesVC.self),
-            ("Advance Usage", AdvanceVC.self),
-        ]]))
-        .onEventProduced(to: self, { s, e in
-            s.push(vc: e.data.1.init())
-        })
         .size(.fill, .fill)
     }
 
