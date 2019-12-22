@@ -13,7 +13,7 @@ class MenuVC: BaseVC {
     override func configView() {
         ListBox(
             sections: [
-                BasicSection<(String, UIViewController.Type), UIView, Void>(
+                ListSection<(String, UIViewController.Type), UIView, Void>(
                     identifier: "menu",
                     dataSource: State([
                         ("Test", TestVC.self),

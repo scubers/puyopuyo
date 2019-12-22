@@ -7,7 +7,7 @@
 
 import UIKit
 
-public protocol ListSection {
+public protocol ListBoxSection {
     var listBox: ListBox? { get set }
     func numberOfRows() -> Int
     func didSelect(row: Int)
@@ -17,17 +17,16 @@ public protocol ListSection {
 }
 
 /**
- 内部嵌套UITableView的一个Box，封装TableView的重用机制。
+ 封装TableView的重用机制。
  ListBox的大小不能为包裹，因为内部UITableView需要一个明确的大小。
  */
-public class ListBox: ZBox,
+public class ListBox: UITableView,
     StatefulView,
     Delegatable,
     DataSourceable,
     UITableViewDelegate,
     UITableViewDataSource {
-    public var viewState = State<[ListSection]>([])
-    public private(set) var tableView: UITableView
+    public var viewState = State<[ListBoxSection]>([])
     public var wrapContent = false
 
     private var heightCache = [IndexPath: CGFloat]()
@@ -37,16 +36,11 @@ public class ListBox: ZBox,
     private var headerView: UIView!
     private var footerView: UIView!
 
-    public init(tableView: BoxGenerator<UITableView> = {
-        let v = UITableView()
-        v.separatorStyle = .none
-        return v
-    },
-                sections: [ListSection] = [],
+    public init(style: UITableView.Style = .plain,
+                sections: [ListBoxSection] = [],
                 header: BoxGenerator<UIView>? = nil,
                 footer: BoxGenerator<UIView>? = nil) {
-        self.tableView = tableView()
-        super.init(frame: .zero)
+        super.init(frame: .zero, style: style)
 
         delegateProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
         dataSourceProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
@@ -65,15 +59,14 @@ public class ListBox: ZBox,
         .size(.fill, .wrap)
         .view
 
-        self.tableView.tableHeaderView = headerView
-        self.tableView.tableFooterView = footerView
+        tableHeaderView = headerView
+        tableFooterView = footerView
 
         viewState.value = sections
-        self.tableView.dataSource = dataSourceProxy
-        self.tableView.delegate = delegateProxy
-        self.tableView.estimatedRowHeight = 60
-        self.tableView.rowHeight = UITableView.automaticDimension
-        self.tableView.attach(self).size(.fill, .fill)
+        dataSource = dataSourceProxy
+        delegate = delegateProxy
+        estimatedRowHeight = 60
+        rowHeight = UITableView.automaticDimension
 
         viewState.safeBind(to: self) { this, sections in
             sections.forEach { s in
@@ -84,13 +77,12 @@ public class ListBox: ZBox,
         }
 
         // 监听tableView变化，动态改变ListBox大小
-        self.tableView.py_observing(for: #keyPath(UITableView.contentSize))
+        py_observing(for: #keyPath(UITableView.contentSize))
             .safeBind(to: self, { (this, size: CGSize?) in
                 if this.wrapContent {
                     this.attach().size(.fill, size?.height ?? 0)
                 }
             })
-        
     }
 
     public required init?(coder _: NSCoder) {
@@ -99,13 +91,13 @@ public class ListBox: ZBox,
 
     private var delegateProxy: DelegateProxy<UITableViewDelegate>! {
         didSet {
-            tableView.delegate = delegateProxy
+            delegate = delegateProxy
         }
     }
 
     private var dataSourceProxy: DelegateProxy<UITableViewDataSource>! {
         didSet {
-            tableView.dataSource = dataSourceProxy
+            dataSource = dataSourceProxy
         }
     }
 
@@ -120,7 +112,7 @@ public class ListBox: ZBox,
         footerView.setNeedsLayout()
         footerView.layoutIfNeeded()
 
-        tableView.reloadData()
+        reloadData()
     }
 
     // MARK: - Delegatable, DataSourceable
@@ -203,7 +195,7 @@ public class ListBox: ZBox,
     }
 }
 
-public class BasicSection<Data, Cell: UIView, CellEvent>: ListSection {
+public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
     public weak var listBox: ListBox?
 
     public let dataSource: State<[Data]>
@@ -255,7 +247,7 @@ public class BasicSection<Data, Cell: UIView, CellEvent>: ListSection {
     func cellIdentifier() -> String {
         return identifier
     }
-    
+
     func headerIdentifier() -> String {
         return "\(cellIdentifier())_header"
     }
@@ -263,7 +255,6 @@ public class BasicSection<Data, Cell: UIView, CellEvent>: ListSection {
     func footerIdentifier() -> String {
         return "\(cellIdentifier())_footer"
     }
-
 
     public func cell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? ListBoxCell<Data, CellEvent>
@@ -385,7 +376,7 @@ public class BasicSection<Data, Cell: UIView, CellEvent>: ListSection {
 
 public extension Puyo where T: ListBox {
     @discardableResult
-    func wrapContent(_ wrap: Bool = true) -> Self {
+    func wrapContent(_: Bool = true) -> Self {
         view.wrapContent = true
         view.py_setNeedsLayout()
         return self
@@ -407,4 +398,3 @@ extension PYProxyChain: UITableViewDelegate, UITableViewDataSource {
         return target.tableView(tableView, cellForRowAt: indexPath)
     }
 }
-

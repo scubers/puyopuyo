@@ -14,15 +14,10 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
         print(scrollView.contentOffset)
     }
 
-    var sections = State<[ListSection]>([])
+    var sections = State<[ListBoxSection]>([])
 
     override func configView() {
         ListBox(
-            tableView: {
-                UITableView().attach()
-                    .alwaysVertBounds(false)
-                    .view
-            },
             header: {
                 VBox().attach {
                     Label.demo("table Header").attach($0)
@@ -39,6 +34,7 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
             }
         )
         .attach(vRoot)
+        .backgroundColor(UIColor.clear)
         .viewState(sections)
         .setDelegate(self)
         .size(.fill, .fill)
@@ -54,7 +50,7 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
         }
 
         sections.value = [
-            BasicSection<String, UIView, Void>(
+            ListSection<String, UIView, Void>(
                 identifier: "1",
                 dataSource: first,
                 _cell: { [weak self] o, _ -> UIView in
@@ -88,7 +84,7 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
                 }
             ),
 
-            BasicSection<String, UIView, Void>(
+            ListSection<String, UIView, Void>(
                 identifier: "2",
                 dataSource: State((0 ..< 10).map({ $0.description })),
                 _cell: { [weak self] o, _ -> UIView in
