@@ -9,9 +9,9 @@ import Foundation
 
 // MARK: - Size ext
 
-extension Puyo where T: UIView {
+public extension Puyo where T: UIView {
     @discardableResult
-    public func size<O: Outputing>(_ w: O?, _ h: O?) -> Self where O.OutputType: SizeDescriptible {
+    func size<O: Outputing>(_ w: O?, _ h: O?) -> Self where O.OutputType: SizeDescriptible {
         if let x = w {
             x.safeBind(to: view, id: "\(#function)_width", { v, a in
                 v.py_measure.size.width = a.sizeDescription
@@ -28,42 +28,42 @@ extension Puyo where T: UIView {
     }
 
     @discardableResult
-    public func width(_ width: SizeDescription) -> Self {
+    func width(_ width: SizeDescription) -> Self {
         return size(width, nil)
     }
 
     @discardableResult
-    public func height(_ height: SizeDescription) -> Self {
+    func height(_ height: SizeDescription) -> Self {
         return size(nil, height)
     }
 
     @discardableResult
-    public func width<O: Outputing>(_ w: O) -> Self where O.OutputType: SizeDescriptible {
+    func width<O: Outputing>(_ w: O) -> Self where O.OutputType: SizeDescriptible {
         return size(w, nil)
     }
 
     @discardableResult
-    public func height<O: Outputing>(_ h: O) -> Self where O.OutputType: SizeDescriptible {
+    func height<O: Outputing>(_ h: O) -> Self where O.OutputType: SizeDescriptible {
         return size(nil, h)
     }
 
     @discardableResult
-    public func size(_ w: SizeDescription, _ h: SizeDescription) -> Self {
+    func size(_ w: SizeDescription, _ h: SizeDescription) -> Self {
         return width(w).height(h)
     }
 
     @discardableResult
-    public func size(_ w: SizeDescriptible, _ h: SizeDescription) -> Self {
+    func size(_ w: SizeDescriptible, _ h: SizeDescription) -> Self {
         return width(w.sizeDescription).height(h)
     }
 
     @discardableResult
-    public func size(_ w: SizeDescription, _ h: SizeDescriptible) -> Self {
+    func size(_ w: SizeDescription, _ h: SizeDescriptible) -> Self {
         return width(w).height(h.sizeDescription)
     }
 
     @discardableResult
-    public func width(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
+    func width(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
         if let s = view?.py_boundsState() {
             return width(s.map(block))
         }
@@ -71,7 +71,7 @@ extension Puyo where T: UIView {
     }
 
     @discardableResult
-    public func height(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
+    func height(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
         if let s = view?.py_boundsState() {
             height(s.map(block))
         }
@@ -79,12 +79,12 @@ extension Puyo where T: UIView {
     }
 
     @discardableResult
-    public func width(on modifiable: ValueModifiable) -> Self {
+    func width(on modifiable: ValueModifiable) -> Self {
         return width(modifiable.checkSelfSimulate(view).modifyValue().map({ SizeDescription.fix($0) }))
     }
 
     @discardableResult
-    public func height(on modifiable: ValueModifiable) -> Self {
+    func height(on modifiable: ValueModifiable) -> Self {
         return height(modifiable.checkSelfSimulate(view).modifyValue().map({ SizeDescription.fix($0) }))
     }
 }

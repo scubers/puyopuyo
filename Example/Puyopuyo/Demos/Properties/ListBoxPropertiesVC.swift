@@ -9,26 +9,19 @@
 import Puyopuyo
 import UIKit
 
-class ListBoxPropertiesVC: BaseVC {
+class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print(scrollView.contentOffset)
+    }
+
     var sections = State<[ListSection]>([])
 
     override func configView() {
-//        ScrollBox<VBox>(
-//            flat: {
-//                VBox().attach()
-//                    .padding(all: 10)
-//                    .view
-//            }, builder: {
-//
-//            }
-//        )
-//        .attach(vRoot)
-//        .size(.fill, .fill)
-
         ListBox(
             tableView: {
-                //                UITableView(frame: .zero, style: .grouped)
-                UITableView()
+                UITableView().attach()
+                    .alwaysVertBounds(false)
+                    .view
             },
             header: {
                 VBox().attach {
@@ -46,18 +39,18 @@ class ListBoxPropertiesVC: BaseVC {
             }
         )
         .attach(vRoot)
-//        .wrapContent()
         .viewState(sections)
+        .setDelegate(self)
         .size(.fill, .fill)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let first = State((0 ..< 16).map({ $0.description }))
+        let first = State((0 ..< 3).map({ $0.description }))
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            first.value = (0 ..< 3).map({ $0.description })
+            first.value = (0 ..< 16).map({ $0.description })
         }
 
         sections.value = [

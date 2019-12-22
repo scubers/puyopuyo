@@ -7,9 +7,9 @@
 
 import Foundation
 
-extension Puyo where T: UITextView {
+public extension Puyo where T: UITextView {
     @discardableResult
-    public func onText<S: Outputing & Inputing>(_ text: S) -> Self where S.OutputType: PuyoOptionalType, S.InputType == S.OutputType, S.OutputType.PuyoWrappedType == String {
+    func onText<S: Outputing & Inputing>(_ text: S) -> Self where S.OutputType: PuyoOptionalType, S.InputType == S.OutputType, S.OutputType.PuyoWrappedType == String {
         view.py_setUnbinder(text.safeBind(view, { v, a in
             guard a.puyoWrapValue != v.text else { return }
             v.text = a.puyoWrapValue
@@ -35,7 +35,7 @@ extension Puyo where T: UITextView {
     }
 
     @discardableResult
-    public func textChange<S: Inputing>(_ text: S) -> Self where S.InputType == String? {
+    func textChange<S: Inputing>(_ text: S) -> Self where S.InputType == String? {
         let output = SimpleOutput<String?> { (input) -> Unbinder in
             let obj = NotificationCenter.default.addObserver(forName: UITextView.textDidChangeNotification, object: self.view, queue: OperationQueue.main) { noti in
                 if let tv = noti.object as? UITextView {

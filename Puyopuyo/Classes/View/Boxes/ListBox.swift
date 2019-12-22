@@ -11,22 +11,10 @@ public protocol ListSection {
     var listBox: ListBox? { get set }
     func numberOfRows() -> Int
     func didSelect(row: Int)
-    func cellIdentifier() -> String
     func cell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell
     func header(for tableView: UITableView, at section: Int) -> UIView?
     func footer(for tableView: UITableView, at section: Int) -> UIView?
 }
-
-public extension ListSection {
-    func headerIdentifier() -> String {
-        return "\(cellIdentifier())_header"
-    }
-
-    func footerIdentifier() -> String {
-        return "\(cellIdentifier())_footer"
-    }
-}
-
 
 /**
  内部嵌套UITableView的一个Box，封装TableView的重用机制。
@@ -251,9 +239,9 @@ public class BasicSection<Data, Cell: UIView, CellEvent>: ListSection {
 
     public enum Event {
         case didSelect(Int, Data)
-        case headerEvent(Int, [Data])
-        case footerEvent(Int, [Data])
-        case event(Int, Data, CellEvent)
+        case headerEvent(Int, [Data], CellEvent)
+        case footerEvent(Int, [Data], CellEvent)
+        case itemEvent(Int, Data, CellEvent)
     }
 
     public func numberOfRows() -> Int {
@@ -264,9 +252,18 @@ public class BasicSection<Data, Cell: UIView, CellEvent>: ListSection {
         onCellEvent(.didSelect(row, dataSource.value[row]))
     }
 
-    public func cellIdentifier() -> String {
+    func cellIdentifier() -> String {
         return identifier
     }
+    
+    func headerIdentifier() -> String {
+        return "\(cellIdentifier())_header"
+    }
+
+    func footerIdentifier() -> String {
+        return "\(cellIdentifier())_footer"
+    }
+
 
     public func cell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? ListBoxCell<Data, CellEvent>
@@ -282,7 +279,7 @@ public class BasicSection<Data, Cell: UIView, CellEvent>: ListSection {
                 guard let cell = cell else { return }
                 let idx = cell.state.value.0
                 let data = cell.state.value.1
-                self.onCellEvent(.event(idx, data, event))
+                self.onCellEvent(.itemEvent(idx, data, event))
             }
         } else {
             cell?.state.value = (indexPath.row, data)
@@ -307,9 +304,9 @@ public class BasicSection<Data, Cell: UIView, CellEvent>: ListSection {
                                                      root: headerRoot,
                                                      state: state,
                                                      event: event)
-        _ = event.outputing { [weak self] _ in
+        _ = event.outputing { [weak self] e in
             guard let self = self, let header = self.header else { return }
-            self.onCellEvent(.headerEvent(header.state.value.0, header.state.value.1))
+            self.onCellEvent(.headerEvent(header.state.value.0, header.state.value.1, e))
         }
         return header!
     }
@@ -328,9 +325,9 @@ public class BasicSection<Data, Cell: UIView, CellEvent>: ListSection {
                                                      root: footerRoot,
                                                      state: state,
                                                      event: event)
-        _ = event.outputing { [weak self] _ in
+        _ = event.outputing { [weak self] e in
             guard let self = self, let footer = self.footer else { return }
-            self.onCellEvent(.footerEvent(footer.state.value.0, footer.state.value.1))
+            self.onCellEvent(.footerEvent(footer.state.value.0, footer.state.value.1, e))
         }
         return footer!
     }

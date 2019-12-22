@@ -9,15 +9,15 @@ import Foundation
 
 // MARK: - BoxView
 
-extension Puyo where T: Boxable {
+public extension Puyo where T: Boxable {
     @discardableResult
-    public func animator(_ animator: Animator) -> Self {
+    func animator(_ animator: Animator) -> Self {
         view.boxHelper.animator = animator
         return self
     }
 
     @discardableResult
-    public func animator<O: Outputing>(_ animator: O) -> Self where O.OutputType == Animator {
+    func animator<O: Outputing>(_ animator: O) -> Self where O.OutputType == Animator {
         animator.safeBind(to: view, id: #function) { v, a in
             v.boxHelper.animator = a
         }
@@ -25,7 +25,7 @@ extension Puyo where T: Boxable {
     }
 
     @discardableResult
-    public func padding(all: CGFloatable? = nil, top: CGFloatable? = nil, left: CGFloatable? = nil, bottom: CGFloatable? = nil, right: CGFloatable? = nil) -> Self {
+    func padding(all: CGFloatable? = nil, top: CGFloatable? = nil, left: CGFloatable? = nil, bottom: CGFloatable? = nil, right: CGFloatable? = nil) -> Self {
         if let all = all {
             view.regulator.padding = UIEdgeInsets(top: all.cgFloatValue, left: all.cgFloatValue, bottom: all.cgFloatValue, right: all.cgFloatValue)
         }
@@ -38,7 +38,7 @@ extension Puyo where T: Boxable {
     }
 
     @discardableResult
-    public func padding<O: Outputing>(_ padding: O) -> Self where O.OutputType == UIEdgeInsets {
+    func padding<O: Outputing>(_ padding: O) -> Self where O.OutputType == UIEdgeInsets {
         view.py_setUnbinder(padding.safeBind(view, { v, i in
             v.regulator.padding = i
             v.py_setNeedsLayout()
@@ -47,14 +47,14 @@ extension Puyo where T: Boxable {
     }
 
     @discardableResult
-    public func justifyContent(_ alignment: Alignment) -> Self {
+    func justifyContent(_ alignment: Alignment) -> Self {
         view.regulator.justifyContent = alignment
         setNeedsLayout()
         return self
     }
 
     @discardableResult
-    public func justifyContent<O: Outputing>(_ alignment: O) -> Self where O.OutputType == Alignment {
+    func justifyContent<O: Outputing>(_ alignment: O) -> Self where O.OutputType == Alignment {
         view.py_setUnbinder(alignment.safeBind(view, { v, a in
             v.regulator.justifyContent = a
             v.py_setNeedsLayout()
@@ -63,45 +63,45 @@ extension Puyo where T: Boxable {
     }
 
     @discardableResult
-    public func autoJudgeScroll(_ judge: Bool) -> Self {
+    func autoJudgeScroll(_ judge: Bool) -> Self {
         view.boxHelper.isScrollViewControl = judge
         setNeedsLayout()
         return self
     }
 
     @discardableResult
-    public func isSelfPositionControl(_ control: Bool) -> Self {
+    func isSelfPositionControl(_ control: Bool) -> Self {
         view.boxHelper.isSelfPositionControl = control
         setNeedsLayout()
         return self
     }
 
     @discardableResult
-    public func borders(_ options: [BorderOptions]) -> Self {
+    func borders(_ options: [BorderOptions]) -> Self {
         view.boxHelper.borders = Borders.all(Border(options: options))
         return self
     }
 
     @discardableResult
-    public func topBorder(_ options: [BorderOptions]) -> Self {
+    func topBorder(_ options: [BorderOptions]) -> Self {
         view.boxHelper.borders.top = Border(options: options)
         return self
     }
 
     @discardableResult
-    public func leftBorder(_ options: [BorderOptions]) -> Self {
+    func leftBorder(_ options: [BorderOptions]) -> Self {
         view.boxHelper.borders.left = Border(options: options)
         return self
     }
 
     @discardableResult
-    public func bottomBorder(_ options: [BorderOptions]) -> Self {
+    func bottomBorder(_ options: [BorderOptions]) -> Self {
         view.boxHelper.borders.bottom = Border(options: options)
         return self
     }
 
     @discardableResult
-    public func rightBorder(_ options: [BorderOptions]) -> Self {
+    func rightBorder(_ options: [BorderOptions]) -> Self {
         view.boxHelper.borders.right = Border(options: options)
         return self
     }
@@ -109,9 +109,9 @@ extension Puyo where T: Boxable {
 
 // MARK: - FlatBox
 
-extension Puyo where T: Boxable, T.RegulatorType: FlatRegulator {
+public extension Puyo where T: Boxable, T.RegulatorType: FlatRegulator {
     @discardableResult
-    public func space<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
+    func space<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
         view.py_setUnbinder(space.safeBind(view, { v, s in
             v.regulator.space = s.cgFloatValue
             v.py_setNeedsLayout()
@@ -120,14 +120,14 @@ extension Puyo where T: Boxable, T.RegulatorType: FlatRegulator {
     }
 
     @discardableResult
-    public func format(_ formation: Format) -> Self {
+    func format(_ formation: Format) -> Self {
         view.regulator.format = formation
         setNeedsLayout()
         return self
     }
 
     @discardableResult
-    public func format<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
+    func format<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
         view.py_setUnbinder(formation.safeBind(view, { v, f in
             v.regulator.format = f
             v.py_setNeedsLayout()
@@ -136,14 +136,14 @@ extension Puyo where T: Boxable, T.RegulatorType: FlatRegulator {
     }
 
     @discardableResult
-    public func direction(_ direction: Direction) -> Self {
+    func direction(_ direction: Direction) -> Self {
         view.regulator.direction = direction
         setNeedsLayout()
         return self
     }
 
     @discardableResult
-    public func direction<O: Outputing>(_ direction: O) -> Self where O.OutputType == Direction {
+    func direction<O: Outputing>(_ direction: O) -> Self where O.OutputType == Direction {
         view.py_setUnbinder(direction.safeBind(view, { v, d in
             v.regulator.direction = d
             v.py_setNeedsLayout()
@@ -152,7 +152,7 @@ extension Puyo where T: Boxable, T.RegulatorType: FlatRegulator {
     }
 
     @discardableResult
-    public func reverse<O: Outputing>(_ reverse: O) -> Self where O.OutputType == Bool {
+    func reverse<O: Outputing>(_ reverse: O) -> Self where O.OutputType == Bool {
         view.py_setUnbinder(reverse.safeBind(view, { v, r in
             v.regulator.reverse = r
             v.py_setNeedsLayout()
@@ -163,9 +163,9 @@ extension Puyo where T: Boxable, T.RegulatorType: FlatRegulator {
 
 // MARK: - FlowBox
 
-extension Puyo where T: Boxable, T.RegulatorType: FlowRegulator {
+public extension Puyo where T: Boxable, T.RegulatorType: FlowRegulator {
     @discardableResult
-    public func arrangeCount<O: Outputing>(_ count: O) -> Self where O.OutputType == Int {
+    func arrangeCount<O: Outputing>(_ count: O) -> Self where O.OutputType == Int {
         view.py_setUnbinder(count.safeBind(view, { v, c in
             v.regulator.arrange = c
             v.py_setNeedsLayout()
@@ -174,7 +174,7 @@ extension Puyo where T: Boxable, T.RegulatorType: FlowRegulator {
     }
 
     @discardableResult
-    public func hSpace<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
+    func hSpace<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
         view.py_setUnbinder(space.safeBind(view, { v, s in
             v.regulator.hSpace = s.cgFloatValue
             v.py_setNeedsLayout()
@@ -183,7 +183,7 @@ extension Puyo where T: Boxable, T.RegulatorType: FlowRegulator {
     }
 
     @discardableResult
-    public func vSpace<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
+    func vSpace<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
         view.py_setUnbinder(space.safeBind(view, { v, s in
             v.regulator.vSpace = s.cgFloatValue
             v.py_setNeedsLayout()
@@ -192,7 +192,7 @@ extension Puyo where T: Boxable, T.RegulatorType: FlowRegulator {
     }
 
     @discardableResult
-    public func hFormat<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
+    func hFormat<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
         view.py_setUnbinder(formation.safeBind(view, { v, f in
             v.regulator.hFormat = f
             v.py_setNeedsLayout()
@@ -201,19 +201,19 @@ extension Puyo where T: Boxable, T.RegulatorType: FlowRegulator {
     }
 
     @discardableResult
-    public func hFormat(_ format: Format) -> Self {
+    func hFormat(_ format: Format) -> Self {
         view.regulator.hFormat = format
         return self
     }
 
     @discardableResult
-    public func vFormat(_ format: Format) -> Self {
+    func vFormat(_ format: Format) -> Self {
         view.regulator.vFormat = format
         return self
     }
 
     @discardableResult
-    public func vFormat<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
+    func vFormat<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
         view.py_setUnbinder(formation.safeBind(view, { v, f in
             v.regulator.vFormat = f
             v.py_setNeedsLayout()
@@ -222,7 +222,7 @@ extension Puyo where T: Boxable, T.RegulatorType: FlowRegulator {
     }
 
     @discardableResult
-    public func stretchRows<O: Outputing>(_ stretch: O) -> Self where O.OutputType == Bool {
+    func stretchRows<O: Outputing>(_ stretch: O) -> Self where O.OutputType == Bool {
         stretch.safeBind(to: view, id: #function) { v, a in
             v.regulator.stretchRows = a
             v.py_setNeedsLayout()
@@ -231,15 +231,15 @@ extension Puyo where T: Boxable, T.RegulatorType: FlowRegulator {
     }
 }
 
-extension Puyo where T: EventableView {
+public extension Puyo where T: EventableView {
     @discardableResult
-    public func onEventProduced<I: Inputing>(_ input: I) -> Self where I.InputType == T.EventType {
+    func onEventProduced<I: Inputing>(_ input: I) -> Self where I.InputType == T.EventType {
         _ = view.eventProducer.send(to: input)
         return self
     }
 
     @discardableResult
-    public func onEventProduced<Object: AnyObject>(to: Object, _ action: @escaping (Object, T.EventType) -> Void) -> Self {
+    func onEventProduced<Object: AnyObject>(to: Object, _ action: @escaping (Object, T.EventType) -> Void) -> Self {
         _ = view.eventProducer.outputing { [weak to] event in
             if let to = to {
                 action(to, event)
@@ -249,9 +249,9 @@ extension Puyo where T: EventableView {
     }
 }
 
-extension Puyo where T: StatefulView {
+public extension Puyo where T: StatefulView {
     @discardableResult
-    public func viewState<O: Outputing>(_ output: O) -> Self where O.OutputType == T.StateType {
+    func viewState<O: Outputing>(_ output: O) -> Self where O.OutputType == T.StateType {
         _ = output.send(to: view.viewState)
         return self
     }
