@@ -30,6 +30,7 @@
 		A8969BE323A67EAC00104403 /* NavigationBoxPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8969BE223A67EAC00104403 /* NavigationBoxPropertiesVC.swift */; };
 		A897FCDC230AF7630061029E /* ListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A897FCDB230AF7630061029E /* ListVC.swift */; };
 		A897FCDE230AFBD80061029E /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = A897FCDD230AFBD80061029E /* Util.swift */; };
+		A8BB377C23AFD55000A88012 /* CollectionBoxPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BB377B23AFD55000A88012 /* CollectionBoxPropertiesVC.swift */; };
 		A8BCEEB62399620F002DB739 /* UIViewProertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BCEEB52399620F002DB739 /* UIViewProertiesVC.swift */; };
 		A8BCEEB823996424002DB739 /* SelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BCEEB723996424002DB739 /* SelectionView.swift */; };
 		A8BEC48C239C9EB4001FD6BF /* DemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BEC48B239C9EB4001FD6BF /* DemoView.swift */; };
@@ -95,6 +96,7 @@
 		A8969BE223A67EAC00104403 /* NavigationBoxPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBoxPropertiesVC.swift; sourceTree = "<group>"; };
 		A897FCDB230AF7630061029E /* ListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListVC.swift; sourceTree = "<group>"; };
 		A897FCDD230AFBD80061029E /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		A8BB377B23AFD55000A88012 /* CollectionBoxPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionBoxPropertiesVC.swift; sourceTree = "<group>"; };
 		A8BCEEB52399620F002DB739 /* UIViewProertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewProertiesVC.swift; sourceTree = "<group>"; };
 		A8BCEEB723996424002DB739 /* SelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectionView.swift; sourceTree = "<group>"; };
 		A8BEC48B239C9EB4001FD6BF /* DemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoView.swift; sourceTree = "<group>"; };
@@ -269,6 +271,7 @@
 				A8969BD623A629E000104403 /* ScrollBoxPropertiesVC.swift */,
 				A8969BE223A67EAC00104403 /* NavigationBoxPropertiesVC.swift */,
 				A8035A8123AE93BA00F8D613 /* ListBoxPropertiesVC.swift */,
+				A8BB377B23AFD55000A88012 /* CollectionBoxPropertiesVC.swift */,
 			);
 			path = Properties;
 			sourceTree = "<group>";
@@ -546,6 +549,7 @@
 				A8D9431222FFEC45002E487F /* ZBoxSizeVC.swift in Sources */,
 				A8BEC495239CDF5D001FD6BF /* AdvanceVC.swift in Sources */,
 				A8698302239CF98E00B3D514 /* _Scaffold.swift in Sources */,
+				A8BB377C23AFD55000A88012 /* CollectionBoxPropertiesVC.swift in Sources */,
 				A846265123093E4E003A282C /* FlatMixVC.swift in Sources */,
 				A8BEC490239CD656001FD6BF /* FlatPropertiesVC.swift in Sources */,
 				A8D9430C22FF3937002E487F /* ZBoxVC.swift in Sources */,

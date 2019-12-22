@@ -26,7 +26,7 @@ public class ListBox: UITableView,
     DataSourceable,
     UITableViewDelegate,
     UITableViewDataSource {
-    public var viewState = State<[ListBoxSection]>([])
+    public let viewState = State<[ListBoxSection]>([])
     public var wrapContent = false
 
     private var heightCache = [IndexPath: CGFloat]()

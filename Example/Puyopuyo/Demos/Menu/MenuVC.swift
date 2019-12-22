@@ -24,6 +24,7 @@ class MenuVC: BaseVC {
                         ("ScrollBox Properties", ScrollBoxPropertiesVC.self),
                         ("NavigationBox Properties", NavigationBoxPropertiesVC.self),
                         ("ListBox Properties", ListBoxPropertiesVC.self),
+                        ("CollectionBox Properties", CollectionBoxPropertiesVC.self),
                         ("Advance Usage", AdvanceVC.self),
                     ]),
                     _cell: { o, _ in
