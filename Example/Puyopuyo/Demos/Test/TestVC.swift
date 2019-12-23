@@ -25,11 +25,11 @@ class NewView: ZBox, EventableView {
 
 struct TestStruct: ViewPresentor, EventableView {
     var eventProducer = SimpleIO<Int>()
-    
+
     init(vc: UIViewController) {
         self.vc = vc
     }
-    
+
     weak var vc: UIViewController?
 
     var baseView: UIView {
@@ -53,20 +53,22 @@ class TestVC: BaseVC {
 //    var subVC: UIViewController? = FlatFormationAligmentVC()
 
     let state = State<Visibility>(.visible)
-    
+
     lazy var presentor = TestStruct(vc: self)
-    
+
     func configTestView() {
-        
         let text = State<String?>(nil)
 
         let vi = State<Visibility>(.visible)
-        
+
         let this = WeakCatcher(value: self)
-        _ = presentor.eventProducer.outputing { (idx) in
-            this.execute { (this) -> Void? in
+        _ = presentor.eventProducer.outputing { idx in
+            this.voidExecute { _ in
                 print(idx)
             }
+//            this.execute { (this) -> Void? in
+//                print(idx)
+//            }
         }
 
         vRoot.attach {

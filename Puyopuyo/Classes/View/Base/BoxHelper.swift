@@ -53,10 +53,17 @@ public class BoxHelper<R: Regulator> {
     public func didMoveToSuperview(view: UIView, regulator: R) {
         positionControlUnbinder?.py_unbind()
         if isSelfPositionControl, let spv = view.superview, !isBox(view: spv) {
+            let frame = spv
+                .py_observing(for: #keyPath(UIView.frame), id: "\(view.description)\(#function)frame")
+                .map({ (f: CGRect?) in f?.size ?? .zero })
+
+            let bounds = spv
+                .py_observing(for: #keyPath(UIView.bounds), id: "\(view.description)\(#function)bounds")
+                .map({ (f: CGRect?) in f?.size ?? .zero })
+
             positionControlUnbinder =
                 SimpleOutput
-                .merge([spv.py_frameStateByKVO().asOutput().map({ $0.size }),
-                        spv.py_frameStateByBoundsCenter().asOutput().map({ $0.size })])
+                .merge([frame, bounds])
                 .distinct()
                 .outputing { [weak self] _ in
                     guard let self = self else { return }

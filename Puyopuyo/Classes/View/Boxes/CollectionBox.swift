@@ -120,7 +120,7 @@ public class CollectionBox: UICollectionView,
 public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSection {
     public var collectionBox: CollectionBox?
 
-    public let dataSource: State<[Data]>
+    public let dataSource = State<[Data]>([])
 
     public typealias HeaderFooterGenerator<Data, CellEvent> = (SimpleOutput<(Int, Data)>, SimpleInput<CellEvent>) -> UIView?
     var headerGenerator: HeaderFooterGenerator<[Data], CellEvent>
@@ -134,7 +134,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
 
     public var identifier: String
     public init(identifier: String,
-                dataSource: State<[Data]>,
+                dataSource: SimpleOutput<[Data]>,
                 _cell: @escaping CellGenerator<Data, Cell, CellEvent>,
                 _header: @escaping HeaderFooterGenerator<[Data], CellEvent> = { _, _ in EmptyView() },
                 _footer: @escaping HeaderFooterGenerator<[Data], CellEvent> = { _, _ in EmptyView() },
@@ -144,7 +144,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         onCellEvent = _event
         headerGenerator = _header
         footerGenerator = _footer
-        self.dataSource = dataSource
+        _ = dataSource.send(to: self.dataSource)
 
         _ = self.dataSource.outputing { [weak self] _ in
             self?.collectionBox?.reloadData()

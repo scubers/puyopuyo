@@ -12,8 +12,9 @@ import UIKit
 class NavigationBoxPropertiesVC: BaseVC {
     private var navHeight = State<SizeDescription>(.fix(44))
 
-    override func loadView() {
-        view = NavigationBox(
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        NavigationBox(
             navBar: {
                 NavBar(title: "Nav Bar").attach()
                     .height(self.navHeight)
@@ -33,9 +34,8 @@ class NavigationBoxPropertiesVC: BaseVC {
                 )
             }
         )
-        .attach()
+        .attach(vRoot)
         .viewState(navState)
-        .view
     }
 
 //    override func configView() {

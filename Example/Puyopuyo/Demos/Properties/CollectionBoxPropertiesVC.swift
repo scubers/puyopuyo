@@ -15,7 +15,7 @@ class CollectionBoxPropertiesVC: BaseVC {
             sections: [
                 CollectionSection<String, UIView, Void>(
                     identifier: "1",
-                    dataSource: State((0 ..< 50).map({ $0.description })),
+                    dataSource: (0 ..< 50).map({ $0.description }).asOutput(),
                     _cell: { o, _ in
                         HBox().attach() {
                             Label.demo("").attach($0)

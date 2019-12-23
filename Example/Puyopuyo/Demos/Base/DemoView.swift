@@ -15,30 +15,23 @@ class DemoView<T: Equatable>: VBox, EventableView {
     
     var eventProducer = SimpleIO<T>()
     
-    var builder: ViewBuilder
     var title: String
     var desc: String
     var selectors: [Selector<T>]
     init(title: String, builder: @escaping ViewBuilder, selectors: [Selector<T>], desc: String = "") {
-        self.builder = builder
+//        self.builder = builder
         self.title = title
         self.selectors = selectors
         self.desc = desc
         super.init(frame: .zero)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError()
-    }
-
-    override func buildBody() {
+        
         attach {
             Label(self.title).attach($0)
                 .size(.fill, 40)
                 .textAlignment(.center)
                 .backgroundColor(UIColor.black.withAlphaComponent(0.2))
             
-            self.builder($0).attach($0)
+            builder($0).attach($0)
             
             SelectionView(self.selectors).attach($0)
                 .topBorder([.color(UIColor.black.withAlphaComponent(0.2)), .thick(0.5)])
@@ -63,4 +56,9 @@ class DemoView<T: Equatable>: VBox, EventableView {
         .borderColor(UIColor.lightGray)
         .cornerRadius(4)
     }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+
 }

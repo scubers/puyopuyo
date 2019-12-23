@@ -26,7 +26,7 @@ class MenuVC: BaseVC {
                         ("ListBox Properties", ListBoxPropertiesVC.self),
                         ("CollectionBox Properties", CollectionBoxPropertiesVC.self),
                         ("Advance Usage", AdvanceVC.self),
-                    ]),
+                    ]).asOutput(),
                     _cell: { o, _ in
                         let padding: CGFloat = 16
                         return HBox().attach {

@@ -179,7 +179,7 @@ public class ListBox: UITableView,
 public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
     public weak var listBox: ListBox?
 
-    public let dataSource: State<[Data]>
+    public let dataSource = State<[Data]>([])
 
     public typealias HeaderFooterGenerator<Data, CellEvent> = (SimpleOutput<(Int, Data)>, SimpleInput<CellEvent>) -> UIView?
     var headerGenerator: HeaderFooterGenerator<[Data], CellEvent>
@@ -193,7 +193,7 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
 
     public var identifier: String
     public init(identifier: String,
-                dataSource: State<[Data]>,
+                dataSource: SimpleOutput<[Data]>,
                 _cell: @escaping CellGenerator<Data, Cell, CellEvent>,
                 _header: @escaping HeaderFooterGenerator<[Data], CellEvent> = { _, _ in EmptyView() },
                 _footer: @escaping HeaderFooterGenerator<[Data], CellEvent> = { _, _ in EmptyView() },
@@ -203,7 +203,7 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
         headerGenerator = _header
         footerGenerator = _footer
         onCellEvent = _event
-        self.dataSource = dataSource
+        _ = dataSource.send(to: self.dataSource)
 
         _ = self.dataSource.outputing { [weak self] _ in
             self?.listBox?.reload()
