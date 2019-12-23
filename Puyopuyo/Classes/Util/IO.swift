@@ -7,45 +7,33 @@
 
 import Foundation
 
-// MARK: - Extension
-
-// public struct Yo<Base> {
-//    public let base: Base
-//    public init(_ base: Base) {
-//        self.base = base
-//    }
-// }
-//
-// public protocol PuyopuyoExt {
-//    associatedtype PuyopuyoExtType
-//    var yo: PuyopuyoExtType {get}
-// }
-//
-// extension PuyopuyoExt {
-//    public var yo: Yo<Self> {
-//        return Yo(self)
-//    }
-// }
-
 // MARK: - Unbinder
 
+/// 解绑器
 public protocol Unbinder {
     func py_unbind()
 }
 
 // MARK: - Outputing, Inputing
 
+/// 输出接口
 public protocol Outputing {
     associatedtype OutputType
     func outputing(_ block: @escaping (OutputType) -> Void) -> Unbinder
 }
 
+/// 输入接口
 public protocol Inputing {
     associatedtype InputType
     func input(value: InputType)
 }
 
 extension Outputing {
+    
+    /// 将输出接口绑定到对象Object中，并持续接收outputing值
+    /// - Parameters:
+    ///   - object: 绑定对象
+    ///   - action: action description
     public func safeBind<Object: AnyObject>(_ object: Object, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
         return outputing { [weak object] s in
             if let object = object {
@@ -65,7 +53,9 @@ extension Outputing {
         object.py_setUnbinder(unbinder, for: id)
         return unbinder
     }
-
+    
+    /// 输出接口绑定到指定输入接口
+    /// - Parameter input: input description
     public func send<Input: Inputing>(to input: Input) -> Unbinder where Input.InputType == OutputType {
         return outputing { v in
             input.input(value: v)

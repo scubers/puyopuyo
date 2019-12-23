@@ -15,7 +15,7 @@ class CollectionBoxPropertiesVC: BaseVC {
             sections: [
                 CollectionSection<String, UIView, Void>(
                     identifier: "1",
-                    dataSource: (0 ..< 50).map({ $0.description }).asOutput(),
+                    dataSource: (0 ..< 5).map({ $0.description }).asOutput(),
                     _cell: { o, _ in
                         HBox().attach() {
                             Label.demo("").attach($0)
@@ -27,6 +27,26 @@ class CollectionBoxPropertiesVC: BaseVC {
                         .padding(all: 8)
                         .width(.fill)
                         .view
+                    },
+                    _event: {
+                        print($0)
+                    }
+                ),
+                CollectionSection<String, UIView, Void>(
+                    identifier: "2",
+                    dataSource: (0 ..< 50).map({ $0.description }).asOutput(),
+                    _cell: { o, _ in
+                        HBox().attach() {
+                            Label.demo("").attach($0)
+                                .text(o.map({ $1 }))
+                                .height(50)
+                                .width(50)
+                        }
+                        .padding(all: 8)
+                        .view
+                    },
+                    _header: { _, _ in
+                        Label.demo("lsdkj")
                     },
                     _event: {
                         print($0)

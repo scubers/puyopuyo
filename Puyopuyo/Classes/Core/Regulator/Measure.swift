@@ -7,11 +7,13 @@
 
 import UIKit
 
+/// 布局方向，x为水平方向，y为竖直方向
 public enum Direction: CaseIterable, Outputing {
     public typealias OutputType = Direction
     case x, y
 }
 
+/// 偏移枚举，可组合
 public struct Alignment: OptionSet, CustomStringConvertible, Outputing {
     public typealias OutputType = Alignment
     public var description: String {
@@ -99,9 +101,11 @@ public class Measure: Measurable, MeasureTargetable, Hashable {
     }
 
     public func hash(into _: inout Hasher) {}
-
+    
+    /// 虚拟目标计算节点
     var virtualTarget = VirtualTarget()
-
+    
+    /// 真实计算节点
     private weak var target: MeasureTargetable?
 
     public init(target: MeasureTargetable? = nil, children: [Measure] = []) {
@@ -115,13 +119,17 @@ public class Measure: Measurable, MeasureTargetable, Hashable {
             assert(type(of: self) != Measure.self)
         }
     }
-
+    
+    /// 计算节点外边距
     public var margin = UIEdgeInsets.zero
-
+    
+    /// 计算节点偏移
     public var alignment: Alignment = .none
-
+    
+    /// 计算节点大小描述
     public var size = Size(width: .wrap, height: .wrap)
-
+    
+    /// 是否激活本节点
     public var activated = true
 
     public func caculate(byParent parent: Measure, remain size: CGSize) -> Size {

@@ -79,12 +79,12 @@ public extension Puyo where T: UIView {
     }
 
     @discardableResult
-    func width(on modifiable: ValueModifiable) -> Self {
+    func width(simulate modifiable: ValueModifiable) -> Self {
         return width(modifiable.checkSelfSimulate(view).modifyValue().map({ SizeDescription.fix($0) }))
     }
 
     @discardableResult
-    func height(on modifiable: ValueModifiable) -> Self {
+    func height(simulate modifiable: ValueModifiable) -> Self {
         return height(modifiable.checkSelfSimulate(view).modifyValue().map({ SizeDescription.fix($0) }))
     }
 }

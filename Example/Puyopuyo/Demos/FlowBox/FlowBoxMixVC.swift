@@ -111,7 +111,7 @@ class FlowBoxMixVC: BaseVC {
                     for idx in 0..<total {
                         Label("\(idx + 1)").attach($0)
                             .width(40 + CGFloat(idx) * 3)
-                            .height(on: Simulate.ego.width)
+                            .height(simulate: Simulate.ego.width)
                             .styles([
                                 TapRippleStyle()
                             ])
@@ -122,7 +122,7 @@ class FlowBoxMixVC: BaseVC {
                         guard let v = v else { return }
                         v.attach(flow)
                             .width(40 + CGFloat(total) * 3)
-                            .height(on: Simulate.ego.width)
+                            .height(simulate: Simulate.ego.width)
                     })
                     
                 }

@@ -52,46 +52,27 @@ class TestVC: BaseVC {
 //    var subVC: UIViewController? = VBoxVC()
 //    var subVC: UIViewController? = FlatFormationAligmentVC()
 
-    let state = State<Visibility>(.visible)
-
-    lazy var presentor = TestStruct(vc: self)
-
     func configTestView() {
-        let text = State<String?>(nil)
-
-        let vi = State<Visibility>(.visible)
-
-        let this = WeakCatcher(value: self)
-        _ = presentor.eventProducer.outputing { idx in
-            this.voidExecute { _ in
-                print(idx)
-            }
-//            this.execute { (this) -> Void? in
-//                print(idx)
-//            }
-        }
-
         vRoot.attach {
-            self.presentor.baseView.attach($0)
-//            VBox().attach($0) {
-//                VBox().attach($0) {
-//                    Label("23").attach($0)
-//                    Label("23").attach($0)
-//                    Label("23").attach($0)
-//                }
-//                .borderWidth(1)
-//                .borderColor(UIColor.black)
-//                .size(.fill, .wrap)
-//            }
-//            .padding(all: 10)
-//            .width(.fill)
+            
             HBox().attach($0) {
-                Label("lksjdf").attach($0)
-                Label("lksjdf\nlksjd").attach($0)
-                    .size(.fill, .wrap)
+                UIView().attach($0)
+                    .height(.fill)
+                    .backgroundColor(UIColor.black)
+                    .width(simulate: Simulate.ego.height.add(10))
             }
-            .justifyContent(.center)
-            .size(100, .wrap)
+            .padding(all: 8)
+            .size(.fill, 50)
+            
+            ZBox().attach($0) {
+//                VBox().attach($0) {
+                Label.demo("3").attach($0)
+                Label.demo("4").attach($0)
+//                }
+//                .width(.fill)
+            }
+            .width(100)
+            .padding(all: 8)
         }
         .format(.sides)
         .padding(all: 10)
@@ -110,7 +91,7 @@ class TestVC: BaseVC {
                     .attach {
                         Label("正").attach($0)
                             .height(.fill)
-                            .width(on: Simulate.ego.height.multiply(0.5))
+                            .width(simulate: Simulate.ego.height.multiply(0.5))
 
                         Label("fill").attach($0)
                             .size(.fill, .fill)
@@ -132,13 +113,13 @@ class TestVC: BaseVC {
                     }
                 }
                 .width(.fill)
-                .height(on: Simulate.ego.width.multiply(0.5))
+                .height(simulate: Simulate.ego.width.multiply(0.5))
 //                    .heightOnSelf({ .fix($0.width * 0.5) })
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
 //                    v.view.animate(0.25, block: {
 //                        v.heightOnSelf({ .fix($0.width) })
-                    v.height(on: Simulate.ego.width)
+                    v.height(simulate: Simulate.ego.width)
 //                    })
                 })
             }

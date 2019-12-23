@@ -42,7 +42,11 @@ public class Puyo<T: UIView> {
     static func ensureInactivate(_ view: UIView, _ msg: String = "") {
         assert(!view.py_measure.activated, msg)
     }
-
+    
+    /// 接收一个outputing，并且绑定到view上，持续接收action
+    /// - Parameters:
+    ///   - state: state description
+    ///   - action: action description
     @discardableResult
     public func on<O: Outputing, R>(_ state: O, _ action: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
         view.py_setUnbinder(state.safeBind(view, { v, r in
@@ -50,7 +54,11 @@ public class Puyo<T: UIView> {
         }), for: UUID().description)
         return self
     }
-
+    
+    /// 接收一个outputing，并且绑定到view上，持续接收action，后，重新布局
+    /// - Parameters:
+    ///   - state: state description
+    ///   - action: action description
     @discardableResult
     public func viewUpdate<O: Outputing, R>(on state: O, _ action: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
         return on(state, { v, r in
