@@ -61,6 +61,7 @@ public class BoxHelper<R: Regulator> {
                 .outputing { [weak self] _ in
                     guard let self = self else { return }
                     if regulator.size.maybeRatio() {
+                        view.setNeedsLayout()
                         self.setNeedsLayout(view: view, regulator: regulator)
                     }
                 }

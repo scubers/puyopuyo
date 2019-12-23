@@ -30,8 +30,6 @@ public class ListBox: UITableView,
     public var wrapContent = false
 
     private var heightCache = [IndexPath: CGFloat]()
-    private var headerHeightCache = [Int: CGFloat]()
-    private var footerHeightCache = [Int: CGFloat]()
 
     private var headerView: UIView!
     private var footerView: UIView!
@@ -103,8 +101,6 @@ public class ListBox: UITableView,
 
     public func reload() {
         heightCache.removeAll()
-        headerHeightCache.removeAll()
-        footerHeightCache.removeAll()
 
         headerView.setNeedsLayout()
         headerView.layoutIfNeeded()
@@ -148,9 +144,6 @@ public class ListBox: UITableView,
     }
 
     public func tableView(_: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if let h = headerHeightCache[section] {
-            return h
-        }
         return UITableView.automaticDimension
     }
 
@@ -160,9 +153,6 @@ public class ListBox: UITableView,
     }
 
     public func tableView(_: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        if let h = footerHeightCache[section] {
-            return h
-        }
         return UITableView.automaticDimension
     }
 
@@ -184,15 +174,6 @@ public class ListBox: UITableView,
         delegateProxy.backup?.value?.tableView?(tableView, willDisplay: cell, forRowAt: indexPath)
     }
 
-    public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        headerHeightCache[section] = view.bounds.height
-        delegateProxy.backup?.value?.tableView?(tableView, willDisplayHeaderView: view, forSection: section)
-    }
-
-    public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-        footerHeightCache[section] = view.bounds.height
-        delegateProxy.backup?.value?.tableView?(tableView, willDisplayFooterView: view, forSection: section)
-    }
 }
 
 public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
