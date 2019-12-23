@@ -175,7 +175,25 @@ private extension FlowCaculator {
         if regulator.stretchRows {
             lineCalSize.main = .fill
         }
-
+        
+        if !layoutCalSize.main.isWrap {
+            // 找出最大的main
+            var maxRatio: CGFloat?
+            children.forEach { (m) in
+                let size = m.size.getCalSize(by: layoutDirection)
+                if size.main.isRatio {
+                    if let m = maxRatio {
+                        maxRatio = max(m, size.main.ratio)
+                    } else {
+                        maxRatio = size.main.ratio
+                    }
+                }
+            }
+            if let max = maxRatio {
+                lineCalSize.main = .ratio(max)
+            }
+        }
+        
         line.size = lineCalSize.getSize()
         return line
     }

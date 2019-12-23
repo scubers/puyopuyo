@@ -55,24 +55,23 @@ class TestVC: BaseVC {
     func configTestView() {
         vRoot.attach {
             
-            HBox().attach($0) {
-                UIView().attach($0)
-                    .height(.fill)
-                    .backgroundColor(UIColor.black)
-                    .width(simulate: Simulate.ego.height.add(10))
+            VFlow(count: 0).attach($0) {
+                for i in 0..<9 {
+                    if i < 3 {
+                        Label.demo(i.description).attach($0)
+//                            .height(.ratio(CGFloat(i)))
+                            .height(.ratio(CGFloat(i + 1)))
+                    } else {
+                        Label.demo(i.description).attach($0)
+                            .size(.fill, .fill)
+                    }
+                }
             }
+            .space(4)
             .padding(all: 8)
-            .size(.fill, 50)
-            
-            ZBox().attach($0) {
-//                VBox().attach($0) {
-                Label.demo("3").attach($0)
-                Label.demo("4").attach($0)
-//                }
-//                .width(.fill)
-            }
-            .width(100)
-            .padding(all: 8)
+            .size(.fill, .fill)
+//            .size(200, 200)
+        
         }
         .format(.sides)
         .padding(all: 10)

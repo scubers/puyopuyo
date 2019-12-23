@@ -196,8 +196,7 @@ class FlatCaculator {
             // cross
             var subCrossSize = subCalSize.cross
             if subCalSize.cross.isRatio {
-                let ratio = subCalSize.cross.ratio
-                subCrossSize = .fix((regFixedSize.cross - (regCalPadding.crossFixed + subCalMargin.crossFixed)) * ratio)
+                subCrossSize = .fix((regFixedSize.cross - (regCalPadding.crossFixed + subCalMargin.crossFixed)))
             }
             // 设置具体size
             measure.py_size = CalFixedSize(main: subCalSize.main.fixedValue, cross: subCrossSize.fixedValue, direction: regulator.direction).getSize()
