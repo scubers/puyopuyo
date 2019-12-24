@@ -60,7 +60,7 @@ class TestVC: BaseVC {
                     if i < 3 {
                         Label.demo(i.description).attach($0)
 //                            .height(.ratio(CGFloat(i)))
-                            .height(.ratio(CGFloat(i + 1)))
+                            .height(.ratio(2))
                     } else {
                         Label.demo(i.description).attach($0)
                             .size(.fill, .fill)

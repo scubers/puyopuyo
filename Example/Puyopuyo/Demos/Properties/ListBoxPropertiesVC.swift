@@ -46,7 +46,8 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
         let first = State((0 ..< 3).map({ $0.description }))
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            first.value = (0 ..< 16).map({ $0.description })
+//            first.value = (0 ..< 16).map({ $0.description })
+            first.value = [1,4,5,0].map({ $0.description })
         }
 
         sections.value = [

@@ -18,7 +18,12 @@ class Tests: XCTestCase {
     
     func testExample() {
         // This is an example of a functional test case.
-        XCTAssert(true, "Pass")
+//        XCTAssert(true, "Pass")
+        let diff = Diff(src: [4,5,6].map({ $0.description }), dest: [6, 5].map({ $0.description }))
+        diff.check()
+        print(diff.insert)
+        print(diff.delete)
+        print(diff.move)
     }
     
     func testPerformanceExample() {
