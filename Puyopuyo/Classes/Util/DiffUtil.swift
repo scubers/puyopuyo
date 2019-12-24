@@ -15,11 +15,14 @@ extension String: DiffIdentiable {
     public var diffIdentifier: String { self }
 }
 
-public class Diff<T: DiffIdentiable> {
-    public struct Change<T> {
-        public var from = 0
-        public var to = 0
+public class Diff<T: DiffIdentiable>: CustomStringConvertible {
+    public struct Change<T>: CustomStringConvertible {
+        public var from = -1
+        public var to = -1
         public var value: T
+        public var description: String {
+            return "<from:\(from)|to:\(to)|value:\(value)>"
+        }
     }
 
     class Record {
@@ -51,15 +54,15 @@ public class Diff<T: DiffIdentiable> {
             let r = self.getRecord(value)
             let index = r.indexes.removeLast()
             if index < 0 {
-                self.insert.append(Change(from: 0, to: idx, value: value))
+                self.insert.append(Change(from: -1, to: idx, value: value))
             } else if index != idx {
                 self.move.append(Change(from: index, to: idx, value: value))
             }
         }
 
         src.enumerated().forEach { idx, value in
-            if getRecord(value).indexes.removeLast() > 0 {
-                self.delete.append(Change(from: idx, to: 0, value: value))
+            if !(getRecord(value).indexes.removeLast() < 0) {
+                self.delete.append(Change(from: idx, to: -1, value: value))
             }
         }
     }
@@ -76,5 +79,14 @@ public class Diff<T: DiffIdentiable> {
     
     public func isDifferent() -> Bool {
         return !insert.isEmpty || !move.isEmpty || !delete.isEmpty
+    }
+    
+    public var description: String {
+        return """
+        [diff] src: \(src), dest: \(dest)
+        [insert] \(insert)
+        [delete] \(delete)
+        [move] \(move)
+        """
     }
 }

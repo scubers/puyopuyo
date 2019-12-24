@@ -11,11 +11,19 @@ import UIKit
 
 class CollectionBoxPropertiesVC: BaseVC {
     override func configView() {
+        let state1 = State((0 ..< 5).map({ $0.description }))
+        let state2 = State((0 ..< 9).map({ $0.description }))
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//            state.input(value: [])
+            state1.input(value: [1, 2, 3, 4, 0].map({ $0.description }))
+            state2.input(value: [1, 6, 7, 4, 3, 9, 0].map({ $0.description }))
+        }
         CollectionBox(
             sections: [
                 CollectionSection<String, UIView, Void>(
                     identifier: "1",
-                    dataSource: (0 ..< 5).map({ $0.description }).asOutput(),
+                    dataSource: state1.asOutput(),
+                    _diffIdentifier: { $0 },
                     _cell: { o, _ in
                         HBox().attach() {
                             Label.demo("").attach($0)
@@ -34,7 +42,8 @@ class CollectionBoxPropertiesVC: BaseVC {
                 ),
                 CollectionSection<String, UIView, Void>(
                     identifier: "2",
-                    dataSource: (0 ..< 50).map({ $0.description }).asOutput(),
+                    dataSource: state2.asOutput(),
+                    _diffIdentifier: { $0 },
                     _cell: { o, _ in
                         HBox().attach() {
                             Label.demo("").attach($0)
@@ -46,7 +55,22 @@ class CollectionBoxPropertiesVC: BaseVC {
                         .view
                     },
                     _header: { _, _ in
-                        Label.demo("lsdkj")
+                        HBox().attach {
+                            Label.demo("header").attach($0)
+                        }
+                        .format(.center)
+                        .padding(all: 10)
+                        .size(.fill, .wrap)
+                        .view
+                    },
+                    _footer: { _, _ in
+                        HBox().attach {
+                            Label.demo("footer").attach($0)
+                        }
+                        .format(.center)
+                        .padding(all: 10)
+                        .size(.fill, .wrap)
+                        .view
                     },
                     _event: {
                         print($0)

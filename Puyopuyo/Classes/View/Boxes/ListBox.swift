@@ -7,7 +7,7 @@
 
 import UIKit
 
-public protocol ListBoxSection {
+public protocol ListBoxSection: class {
     var listBox: ListBox? { get set }
     func numberOfRows() -> Int
     func didSelect(row: Int)
@@ -68,8 +68,7 @@ public class ListBox: UITableView,
 
         viewState.safeBind(to: self) { this, sections in
             sections.forEach { s in
-                var section = s
-                section.listBox = this
+                s.listBox = this
             }
             this.reload()
         }
@@ -143,7 +142,7 @@ public class ListBox: UITableView,
         return UITableView.automaticDimension
     }
 
-    public func tableView(_: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    public func tableView(_: UITableView, heightForHeaderInSection _: Int) -> CGFloat {
         return UITableView.automaticDimension
     }
 
@@ -152,7 +151,7 @@ public class ListBox: UITableView,
         return sec.header(for: tableView, at: section)
     }
 
-    public func tableView(_: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    public func tableView(_: UITableView, heightForFooterInSection _: Int) -> CGFloat {
         return UITableView.automaticDimension
     }
 
@@ -173,7 +172,6 @@ public class ListBox: UITableView,
         heightCache[indexPath] = cell.bounds.height
         delegateProxy.backup?.value?.tableView?(tableView, willDisplay: cell, forRowAt: indexPath)
     }
-
 }
 
 public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
@@ -192,8 +190,10 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
     var onCellEvent: OnCellEvent<Event>
 
     public var identifier: String
+    private var diffIdentifier: ((Data) -> String)?
     public init(identifier: String,
                 dataSource: SimpleOutput<[Data]>,
+                _diffIdentifier: ((Data) -> String)? = nil,
                 _cell: @escaping CellGenerator<Data, Cell, CellEvent>,
                 _header: @escaping HeaderFooterGenerator<[Data], CellEvent> = { _, _ in EmptyView() },
                 _footer: @escaping HeaderFooterGenerator<[Data], CellEvent> = { _, _ in EmptyView() },
@@ -203,11 +203,10 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
         headerGenerator = _header
         footerGenerator = _footer
         onCellEvent = _event
-        _ = dataSource.send(to: self.dataSource)
-
-        _ = self.dataSource.outputing { [weak self] _ in
-            self?.listBox?.reload()
-        }
+        diffIdentifier = _diffIdentifier
+        _ = dataSource.outputing({ [weak self] (data) in
+            self?.reload(with: data)
+        })
     }
 
     public enum Event {
@@ -260,6 +259,7 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
     }
 
     private var header: ListHeaderFooter<[Data], CellEvent>?
+
     private var footer: ListHeaderFooter<[Data], CellEvent>?
 
     public func header(for _: UITableView, at section: Int) -> UIView? {
@@ -302,6 +302,39 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
             self.onCellEvent(.footerEvent(footer.state.value.0, footer.state.value.1, e))
         }
         return footer!
+    }
+    
+    private func reload(with data: [Data]) {
+        
+        guard let box = listBox else {
+            dataSource.value = data
+            return
+        }
+        
+        guard let diffIdentifier = self.diffIdentifier else {
+            dataSource.value = data
+            listBox?.reload()
+            return
+        }
+        
+        let diff = Diff(src: dataSource.value.map({ diffIdentifier($0) }), dest: data.map({ diffIdentifier($0) }))
+        diff.check()
+        
+        if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
+            
+            dataSource.value = data
+            box.beginUpdates()
+            if !diff.insert.isEmpty {
+                box.insertRows(at: diff.insert.map({ IndexPath(row: $0.to, section: section)}), with: .automatic)
+            }
+            if !diff.delete.isEmpty {
+                box.deleteRows(at: diff.delete.map({ IndexPath(row: $0.from, section: section)}), with: .automatic)
+            }
+            diff.move.forEach { (c) in
+                box.moveRow(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
+            }
+            box.endUpdates()
+        }
     }
 
     private class ListBoxCell<Data, E>: UITableViewCell {

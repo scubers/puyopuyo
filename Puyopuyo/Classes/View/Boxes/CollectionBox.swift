@@ -7,7 +7,7 @@
 
 import UIKit
 
-public protocol CollectionBoxSection {
+public protocol CollectionBoxSection: class {
     var collectionBox: CollectionBox? { get set }
     func cellIdentifier() -> String
     func cellType() -> AnyClass
@@ -16,6 +16,9 @@ public protocol CollectionBoxSection {
     func didSelect(item: Int)
     func cell(for collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionViewCell
     func view(for collectionView: UICollectionView, supplementary kind: String, at indexPath: IndexPath) -> UICollectionReusableView
+    func size(for collectionView: UICollectionView, layout: UICollectionViewLayout, at indexPath: IndexPath) -> CGSize
+    func headerSize(for collectionView: UICollectionView, layout: UICollectionViewLayout, at section: Int) -> CGSize
+    func footerSize(for collectionView: UICollectionView, layout: UICollectionViewLayout, at section: Int) -> CGSize
 }
 
 public extension CollectionBoxSection {
@@ -28,11 +31,11 @@ public class CollectionBox: UICollectionView,
     StatefulView,
     Delegatable,
     DataSourceable,
-    UICollectionViewDelegate,
+    UICollectionViewDelegateFlowLayout,
     UICollectionViewDataSource {
     public let viewState = State<[CollectionBoxSection]>([])
 
-    private var delegateProxy: DelegateProxy<UICollectionViewDelegate>! {
+    private var delegateProxy: DelegateProxy<UICollectionViewDelegateFlowLayout>! {
         didSet {
             delegate = delegateProxy
         }
@@ -45,14 +48,17 @@ public class CollectionBox: UICollectionView,
     }
 
     public private(set) var layout = UICollectionViewFlowLayout()
-
+    
+    fileprivate var sizeCache = [IndexPath: CGSize]()
+    
     public init(
         direction: UICollectionView.ScrollDirection = .vertical,
         minimumLineSpacing: CGFloat = 0,
         minimumInteritemSpacing: CGFloat = 0,
         sections: [CollectionBoxSection] = []
     ) {
-        layout.estimatedItemSize = CGSize(width: 100, height: 100)
+        layout.estimatedItemSize = CGSize(width: 50, height: 50)
+//        layout.itemSize = CGSize(width: 100, height: 100)
         layout.scrollDirection = direction
         layout.minimumLineSpacing = minimumLineSpacing
         layout.minimumInteritemSpacing = minimumInteritemSpacing
@@ -69,6 +75,7 @@ public class CollectionBox: UICollectionView,
 
         viewState.safeBind(to: self) { this, sections in
             sections.forEach { section in
+                section.collectionBox = this
                 this.register(section.cellType(), forCellWithReuseIdentifier: section.cellIdentifier())
                 [UICollectionView.elementKindSectionHeader, UICollectionView.elementKindSectionFooter].forEach { type in
                     this.register(section.supplementaryType(for: type),
@@ -76,7 +83,13 @@ public class CollectionBox: UICollectionView,
                                   withReuseIdentifier: section.supplementaryIdentifier(for: type))
                 }
             }
+            this.reloadData()
         }
+    }
+    
+    public override func reloadData() {
+        sizeCache.removeAll()
+        super.reloadData()
     }
 
     public required init?(coder _: NSCoder) {
@@ -84,8 +97,8 @@ public class CollectionBox: UICollectionView,
     }
 
     // MARK: - Delegatable, DataSourceable
-
-    public func setDelegate(_ delegate: UICollectionViewDelegate, retained: Bool) {
+    
+    public func setDelegate(_ delegate: UICollectionViewDelegateFlowLayout, retained: Bool) {
         delegateProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: RetainWrapper(value: delegate, retained: retained))
     }
 
@@ -94,7 +107,7 @@ public class CollectionBox: UICollectionView,
     }
 
     // MARK: - UICollectionViewDelegate, UICollectionViewDataSource
-
+    
     public func numberOfSections(in _: UICollectionView) -> Int {
         return viewState.value.count
     }
@@ -115,6 +128,23 @@ public class CollectionBox: UICollectionView,
     public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         return viewState.value[indexPath.section].view(for: collectionView, supplementary: kind, at: indexPath)
     }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        if let size = sizeCache[indexPath] {
+            return size
+        }
+        let size = viewState.value[indexPath.section].size(for: collectionView, layout: collectionViewLayout, at: indexPath)
+        sizeCache[indexPath] = size
+        return size
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return viewState.value[section].headerSize(for: collectionView, layout: collectionViewLayout, at: section)
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return viewState.value[section].footerSize(for: collectionView, layout: collectionViewLayout, at: section)
+    }
 }
 
 public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSection {
@@ -133,8 +163,10 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
     var onCellEvent: OnCellEvent<Event>
 
     public var identifier: String
+    private var diffIdentifier: ((Data) -> String)?
     public init(identifier: String,
                 dataSource: SimpleOutput<[Data]>,
+                _diffIdentifier: ((Data) -> String)? = nil,
                 _cell: @escaping CellGenerator<Data, Cell, CellEvent>,
                 _header: @escaping HeaderFooterGenerator<[Data], CellEvent> = { _, _ in EmptyView() },
                 _footer: @escaping HeaderFooterGenerator<[Data], CellEvent> = { _, _ in EmptyView() },
@@ -144,11 +176,10 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         onCellEvent = _event
         headerGenerator = _header
         footerGenerator = _footer
-        _ = dataSource.send(to: self.dataSource)
-
-        _ = self.dataSource.outputing { [weak self] _ in
-            self?.collectionBox?.reloadData()
-        }
+        diffIdentifier = _diffIdentifier
+        _ = dataSource.outputing({ [weak self] data in
+            self?.reload(with: data)
+        })
     }
 
     public enum Event {
@@ -204,7 +235,6 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         return cell
     }
 
-
     public func view(for collectionView: UICollectionView, supplementary kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: supplementaryIdentifier(for: kind), for: indexPath) as! CollectionBoxSupplementaryView<[Data], CellEvent>
         view.targetSize = collectionView.bounds.size
@@ -233,6 +263,62 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
             view.state.value = (indexPath.section, dataSource.value)
         }
         return view
+    }
+    
+    private let dummyItemState = State<(Int, Data)>.unstable()
+    private lazy var dummyItem: UIView = { self.cellGenerator(self.dummyItemState.asOutput(), SimpleIO<CellEvent>().asInput()) }()
+    
+    private let dummyHeaderState = State<(Int, [Data])>.unstable()
+    private lazy var dummyHeader: UIView = { self.headerGenerator(self.dummyHeaderState.asOutput(), SimpleIO<CellEvent>().asInput()) ?? EmptyView() }()
+    private let dummyFooterState = State<(Int, [Data])>.unstable()
+    private lazy var dummyFooter: UIView = { self.footerGenerator(self.dummyFooterState.asOutput(), SimpleIO<CellEvent>().asInput()) ?? EmptyView() }()
+    
+    public func size(for collectionView: UICollectionView, layout: UICollectionViewLayout, at indexPath: IndexPath) -> CGSize {
+        dummyItemState.value = (indexPath.row, dataSource.value[indexPath.row])
+        return dummyItem.sizeThatFits(collectionView.bounds.size)
+    }
+    
+    public func headerSize(for collectionView: UICollectionView, layout: UICollectionViewLayout, at section: Int) -> CGSize {
+        dummyHeaderState.value = (section, dataSource.value)
+        return dummyHeader.sizeThatFits(collectionView.bounds.size)
+    }
+    
+    public func footerSize(for collectionView: UICollectionView, layout: UICollectionViewLayout, at section: Int) -> CGSize {
+        dummyFooterState.value = (section, dataSource.value)
+        return dummyFooter.sizeThatFits(collectionView.bounds.size)
+    }
+
+    private func reload(with data: [Data]) {
+        guard let box = collectionBox else {
+            dataSource.value = data
+            return
+        }
+
+        guard let diffIdentifier = self.diffIdentifier else {
+            dataSource.value = data
+            box.reloadData()
+            return
+        }
+        
+        box.sizeCache.removeAll()
+        
+        let diff = Diff(src: dataSource.value.map({ diffIdentifier($0) }), dest: data.map({ diffIdentifier($0) }))
+        diff.check()
+        if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
+            // 清空相关的cache
+            dataSource.value = data
+            box.performBatchUpdates({
+                diff.move.forEach { c in
+                    box.moveItem(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
+                }
+                if !diff.delete.isEmpty {
+                    box.deleteItems(at: diff.delete.map({ IndexPath(row: $0.from, section: section) }))
+                }
+                if !diff.insert.isEmpty {
+                    box.insertItems(at: diff.insert.map({ IndexPath(row: $0.to, section: section) }))
+                }
+            }, completion: nil)
+        }
     }
 
     public class EmptyView: UIView {

@@ -43,17 +43,18 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let first = State((0 ..< 3).map({ $0.description }))
+        let first = State(([0,1,2]).map({ $0.description }))
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
 //            first.value = (0 ..< 16).map({ $0.description })
-            first.value = [1,4,5,0].map({ $0.description })
+            first.value = [2,0,4,6,1].map({ $0.description })
         }
 
         sections.value = [
             ListSection<String, UIView, Void>(
                 identifier: "1",
                 dataSource: first.asOutput(),
+                _diffIdentifier: { $0 },
                 _cell: { [weak self] o, _ -> UIView in
                     guard let self = self else { return UIView() }
                     return self.getCell(state: o)
@@ -99,8 +100,9 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
     func getCell(state: SimpleOutput<(Int, String)>) -> UIView {
         return VFlow(count: 0).attach {
             let v = $0
-            _ = state.outputing { idx, _ in
+            _ = state.outputing { idx, s in
                 v.subviews.forEach({ $0.removeFromSuperview() })
+                Label.demo(s).attach(v)
                 for i in 1 ... idx + 1 {
                     Label.demo("demo").attach(v)
                         .text(i.description)
