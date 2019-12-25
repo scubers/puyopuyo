@@ -348,6 +348,7 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
             self.event = event
             super.init(style: .value1, reuseIdentifier: id)
             contentView.addSubview(root)
+            contentView.backgroundColor = .clear
         }
 
         required init?(coder _: NSCoder) {
