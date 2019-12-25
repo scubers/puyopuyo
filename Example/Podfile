@@ -6,7 +6,7 @@ target 'Puyopuyo_Example' do
   pod 'Puyopuyo/TangramKit', :path => '../'
   pod 'TangramKit'
   pod 'RxSwift'
-  pod 'SnapKit'
+  pod 'SnapKit', :inhibit_warnings => true
 
   target 'Puyopuyo_Tests' do
     inherit! :search_paths

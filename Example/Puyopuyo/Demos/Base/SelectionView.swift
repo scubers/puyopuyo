@@ -14,7 +14,7 @@ struct Selector<T> {
     var value: T
 }
 
-class SelectionView<T: Equatable>: VFlow, StatefulView, EventableView {
+class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
     
     private var selection = [Selector<T>]()
     

@@ -7,26 +7,27 @@
 
 import Foundation
 
-public protocol ViewPresentor {
-    associatedtype PresentView: UIView
-    var baseView: PresentView { get }
-}
+@available(*, deprecated, message: "use Stateful")
+public typealias StatefulView = Stateful
 
-public protocol StatefulView {
+public protocol Stateful {
     associatedtype StateType
     var viewState: State<StateType> { get }
 }
 
-public extension StatefulView {
+public extension Stateful {
     var _state: SimpleOutput<StateType> { viewState.asOutput() }
 }
 
-public protocol EventableView {
+@available(*, deprecated, message: "use Eventable")
+public typealias EventableView = Eventable
+
+public protocol Eventable {
     associatedtype EventType
     var eventProducer: SimpleIO<EventType> { get }
 }
 
-public extension EventableView {
+public extension Eventable {
     func emmit(_ event: EventType) {
         eventProducer.input(value: event)
     }

@@ -21,7 +21,7 @@ public protocol ListBoxSection: class {
  ListBox的大小不能为包裹，因为内部UITableView需要一个明确的大小。
  */
 public class ListBox: UITableView,
-    StatefulView,
+    Stateful,
     Delegatable,
     DataSourceable,
     UITableViewDelegate,

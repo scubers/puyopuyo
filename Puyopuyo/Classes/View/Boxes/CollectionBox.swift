@@ -28,7 +28,7 @@ public extension CollectionBoxSection {
 }
 
 public class CollectionBox: UICollectionView,
-    StatefulView,
+    Stateful,
     Delegatable,
     DataSourceable,
     UICollectionViewDelegateFlowLayout,

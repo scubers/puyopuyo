@@ -34,7 +34,7 @@ class _Scaffold: UIView {
     }
 }
 
-class NavBar: ZBox, EventableView {
+class NavBar: ZBox, Eventable {
     enum Event {
         case tapLeading
         case tapTrailing

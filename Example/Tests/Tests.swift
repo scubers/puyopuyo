@@ -75,7 +75,7 @@ struct ListData {
     var time: String?
 }
 
-class BaseCell: UITableViewCell, StatefulView {
+class BaseCell: UITableViewCell, Stateful {
     typealias StateType = ListData?
     var viewState: State<ListData?> = State<ListData?>(nil)
     

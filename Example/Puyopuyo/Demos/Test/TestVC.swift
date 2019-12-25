@@ -11,7 +11,7 @@ import RxSwift
 import TangramKit
 import UIKit
 
-class NewView: ZBox, EventableView {
+class NewView: ZBox, Eventable {
     var eventProducer = SimpleIO<String>()
     override func buildBody() {
         attach {
@@ -20,28 +20,6 @@ class NewView: ZBox, EventableView {
                     self?.eventProducer.input(value: "100")
                 })
         }
-    }
-}
-
-struct TestStruct: ViewPresentor, EventableView {
-    var eventProducer = SimpleIO<Int>()
-
-    init(vc: UIViewController) {
-        self.vc = vc
-    }
-
-    weak var vc: UIViewController?
-
-    var baseView: UIView {
-        HBox().attach {
-            for i in 0 ..< 3 {
-                Label("\(i)\(i)").attach($0)
-                    .onTap { _ in
-                        self.eventProducer.input(value: i)
-                    }
-            }
-        }
-        .view
     }
 }
 

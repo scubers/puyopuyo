@@ -270,7 +270,7 @@ public extension Puyo where T: Boxable, T.RegulatorType: FlowRegulator {
     }
 }
 
-public extension Puyo where T: EventableView {
+public extension Puyo where T: Eventable {
     @discardableResult
     func onEventProduced<I: Inputing>(_ input: I) -> Self where I.InputType == T.EventType {
         _ = view.eventProducer.send(to: input)
@@ -288,7 +288,7 @@ public extension Puyo where T: EventableView {
     }
 }
 
-public extension Puyo where T: StatefulView {
+public extension Puyo where T: Stateful {
     @discardableResult
     func viewState<O: Outputing>(_ output: O) -> Self where O.OutputType == T.StateType {
         _ = output.send(to: view.viewState)

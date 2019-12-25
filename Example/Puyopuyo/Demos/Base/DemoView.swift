@@ -11,7 +11,7 @@ import Puyopuyo
 
 typealias ViewBuilder = (UIView) -> UIView
 
-class DemoView<T: Equatable>: VBox, EventableView {
+class DemoView<T: Equatable>: VBox, Eventable {
     
     var eventProducer = SimpleIO<T>()
     
