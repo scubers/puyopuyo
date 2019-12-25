@@ -57,8 +57,6 @@ public class CollectionBox: UICollectionView,
         minimumInteritemSpacing: CGFloat = 0,
         sections: [CollectionBoxSection] = []
     ) {
-        layout.estimatedItemSize = CGSize(width: 50, height: 50)
-//        layout.itemSize = CGSize(width: 100, height: 100)
         layout.scrollDirection = direction
         layout.minimumLineSpacing = minimumLineSpacing
         layout.minimumInteritemSpacing = minimumInteritemSpacing

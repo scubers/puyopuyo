@@ -55,6 +55,14 @@ public extension Puyo where T: UIScrollView {
         }
         return self
     }
+    
+    @discardableResult
+    func pagingEnabled<O: Outputing>(_ value: O) -> Self where O.OutputType == Bool {
+        value.safeBind(to: view, id: #function) { v, a in
+            v.isPagingEnabled = a
+        }
+        return self
+    }
 
     @discardableResult
     func flatBox(_ direction: Direction) -> Puyo<FlatBox> {

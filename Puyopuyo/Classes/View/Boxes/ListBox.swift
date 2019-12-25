@@ -172,6 +172,16 @@ public class ListBox: UITableView,
         heightCache[indexPath] = cell.bounds.height
         delegateProxy.backup?.value?.tableView?(tableView, willDisplay: cell, forRowAt: indexPath)
     }
+
+    public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        (view as? UITableViewHeaderFooterView)?.backgroundView?.backgroundColor = .clear
+        delegateProxy.backup?.value?.tableView?(tableView, willDisplayHeaderView: view, forSection: section)
+    }
+
+    public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+        (view as? UITableViewHeaderFooterView)?.backgroundView?.backgroundColor = .clear
+        delegateProxy.backup?.value?.tableView?(tableView, willDisplayFooterView: view, forSection: section)
+    }
 }
 
 public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
@@ -204,7 +214,7 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
         footerGenerator = _footer
         onCellEvent = _event
         diffIdentifier = _diffIdentifier
-        _ = dataSource.outputing({ [weak self] (data) in
+        _ = dataSource.outputing({ [weak self] data in
             self?.reload(with: data)
         })
     }
@@ -237,12 +247,13 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
     }
 
     public func cell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCell(withIdentifier: identifier) as? ListBoxCell<Data, CellEvent>
+        let id = identifier
+        var cell = tableView.dequeueReusableCell(withIdentifier: id) as? ListBoxCell<Data, CellEvent>
         let data = dataSource.value[indexPath.row]
         if cell == nil {
             let state = State((indexPath.row, data))
             let event = SimpleIO<CellEvent>()
-            cell = ListBoxCell<Data, CellEvent>(id: identifier,
+            cell = ListBoxCell<Data, CellEvent>(id: id,
                                                 root: cellGenerator(state.asOutput(), event.asInput()),
                                                 state: state,
                                                 event: event)
@@ -258,79 +269,81 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
         return cell!
     }
 
-    private var header: ListHeaderFooter<[Data], CellEvent>?
+    public func header(for tableView: UITableView, at section: Int) -> UIView? {
+        let id = headerIdentifier()
+        var view = tableView.dequeueReusableHeaderFooterView(withIdentifier: id) as? ListHeaderFooter<[Data], CellEvent>
 
-    private var footer: ListHeaderFooter<[Data], CellEvent>?
+        if view == nil {
+            let state = State((section, dataSource.value))
+            let event = SimpleIO<CellEvent>()
+            guard let root = headerGenerator(state.asOutput(), event.asInput()) else {
+                return nil
+            }
+            view = ListHeaderFooter<[Data], CellEvent>(id: id,
+                                                         root: root,
+                                                         state: state,
+                                                         event: event)
+            _ = event.outputing { [weak self] e in
+                guard let self = self, let header = view else { return }
+                self.onCellEvent(.headerEvent(header.state.value.0, header.state.value.1, e))
+            }
+        } else {
+            view?.state.value = (section, dataSource.value)
+        }
 
-    public func header(for _: UITableView, at section: Int) -> UIView? {
-        if let header = header {
-            header.state.value = (section, dataSource.value)
-            return header
-        }
-        let state = State((section, dataSource.value))
-        let event = SimpleIO<CellEvent>()
-        guard let headerRoot = headerGenerator(state.asOutput(), event.asInput()) else {
-            return nil
-        }
-        header = ListHeaderFooter<[Data], CellEvent>(id: identifier,
-                                                     root: headerRoot,
-                                                     state: state,
-                                                     event: event)
-        _ = event.outputing { [weak self] e in
-            guard let self = self, let header = self.header else { return }
-            self.onCellEvent(.headerEvent(header.state.value.0, header.state.value.1, e))
-        }
-        return header!
+        return view!
     }
 
-    public func footer(for _: UITableView, at section: Int) -> UIView? {
-        if let footer = footer {
-            footer.state.value = (section, dataSource.value)
-            return footer
+    public func footer(for tableView: UITableView, at section: Int) -> UIView? {
+        let id = footerIdentifier()
+        var view = tableView.dequeueReusableHeaderFooterView(withIdentifier: id) as? ListHeaderFooter<[Data], CellEvent>
+
+        if view == nil {
+            let state = State((section, dataSource.value))
+            let event = SimpleIO<CellEvent>()
+            guard let root = footerGenerator(state.asOutput(), event.asInput()) else {
+                return nil
+            }
+            view = ListHeaderFooter<[Data], CellEvent>(id: id,
+                                                         root: root,
+                                                         state: state,
+                                                         event: event)
+            _ = event.outputing { [weak self] e in
+                guard let self = self, let header = view else { return }
+                self.onCellEvent(.footerEvent(header.state.value.0, header.state.value.1, e))
+            }
+        } else {
+            view?.state.value = (section, dataSource.value)
         }
-        let state = State((section, dataSource.value))
-        let event = SimpleIO<CellEvent>()
-        guard let footerRoot = footerGenerator(state.asOutput(), event.asInput()) else {
-            return nil
-        }
-        footer = ListHeaderFooter<[Data], CellEvent>(id: identifier,
-                                                     root: footerRoot,
-                                                     state: state,
-                                                     event: event)
-        _ = event.outputing { [weak self] e in
-            guard let self = self, let footer = self.footer else { return }
-            self.onCellEvent(.footerEvent(footer.state.value.0, footer.state.value.1, e))
-        }
-        return footer!
+
+        return view!
     }
-    
+
     private func reload(with data: [Data]) {
-        
         guard let box = listBox else {
             dataSource.value = data
             return
         }
-        
+
         guard let diffIdentifier = self.diffIdentifier else {
             dataSource.value = data
             listBox?.reload()
             return
         }
-        
+
         let diff = Diff(src: dataSource.value.map({ diffIdentifier($0) }), dest: data.map({ diffIdentifier($0) }))
         diff.check()
-        
+
         if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
-            
             dataSource.value = data
             box.beginUpdates()
             if !diff.insert.isEmpty {
-                box.insertRows(at: diff.insert.map({ IndexPath(row: $0.to, section: section)}), with: .automatic)
+                box.insertRows(at: diff.insert.map({ IndexPath(row: $0.to, section: section) }), with: .automatic)
             }
             if !diff.delete.isEmpty {
-                box.deleteRows(at: diff.delete.map({ IndexPath(row: $0.from, section: section)}), with: .automatic)
+                box.deleteRows(at: diff.delete.map({ IndexPath(row: $0.from, section: section) }), with: .automatic)
             }
-            diff.move.forEach { (c) in
+            diff.move.forEach { c in
                 box.moveRow(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
             }
             box.endUpdates()
