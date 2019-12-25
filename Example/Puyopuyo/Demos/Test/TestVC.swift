@@ -24,21 +24,33 @@ class NewView: ZBox, Eventable {
 }
 
 class TestVC: BaseVC {
-//    var subVC: UIViewController?
+    var subVC: UIViewController?
 //    var subVC: UIViewController? = StyleVC()
-    var subVC: UIViewController? = FlowBoxMixVC()
+//    var subVC: UIViewController? = FlowBoxMixVC()
 //    var subVC: UIViewController? = VBoxVC()
 //    var subVC: UIViewController? = FlatFormationAligmentVC()
 
     func configTestView() {
         vRoot.attach {
+            let v =
+            HFlow().attach($0) {
+                Label.demo("lskdjfl").attach($0)
+                    .size(50, 50)
+                    .margin(all: 10)
+            }
+            .view
             
+            print(v.sizeThatFits(.zero))
+
             VFlow(count: 0).attach($0) {
-                for i in 0..<9 {
+                for i in 0 ..< 9 {
                     if i < 3 {
                         Label.demo(i.description).attach($0)
-//                            .height(.ratio(CGFloat(i)))
                             .height(.ratio(2))
+                    } else if i == 4 {
+                        Label.demo(i.description).attach($0)
+                            .margin(all: 8)
+                            .size(.fill, .fill)
                     } else {
                         Label.demo(i.description).attach($0)
                             .size(.fill, .fill)
@@ -49,7 +61,6 @@ class TestVC: BaseVC {
             .padding(all: 8)
             .size(.fill, .fill)
 //            .size(200, 200)
-        
         }
         .format(.sides)
         .padding(all: 10)
