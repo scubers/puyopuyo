@@ -93,13 +93,19 @@ public extension Puyo where T: UIView {
 
 extension Puyo where T: UIView {
     @discardableResult
-    public func margin(all: CGFloatable? = nil, top: CGFloatable? = nil, left: CGFloatable? = nil, bottom: CGFloatable? = nil, right: CGFloatable? = nil) -> Self {
-        PuyoHelper.margin(for: view, all: all?.cgFloatValue, top: top?.cgFloatValue, left: left?.cgFloatValue, bottom: bottom?.cgFloatValue, right: right?.cgFloatValue)
+    public func margin(all: CGFloatable? = nil,
+                       horz: CGFloatable? = nil,
+                       vert: CGFloatable? = nil,
+                       top: CGFloatable? = nil,
+                       left: CGFloatable? = nil,
+                       bottom: CGFloatable? = nil,
+                       right: CGFloatable? = nil) -> Self {
+        PuyoHelper.margin(for: view, all: all?.cgFloatValue, horz: horz?.cgFloatValue, vert: vert?.cgFloatValue, top: top?.cgFloatValue, left: left?.cgFloatValue, bottom: bottom?.cgFloatValue, right: right?.cgFloatValue)
         return self
     }
 
     @discardableResult
-    public func margin<S: Outputing>(all: S? = nil, top: S? = nil, left: S? = nil, bottom: S? = nil, right: S? = nil) -> Self where S.OutputType: CGFloatable {
+    public func margin<S: Outputing>(all: S? = nil, horz: S? = nil, vert: S? = nil, top: S? = nil, left: S? = nil, bottom: S? = nil, right: S? = nil) -> Self where S.OutputType: CGFloatable {
         if let s = all {
             view.py_setUnbinder(s.safeBind(view, { v, a in
                 PuyoHelper.margin(for: v, all: a.cgFloatValue)
@@ -109,6 +115,16 @@ extension Puyo where T: UIView {
             view.py_setUnbinder(s.safeBind(view, { v, a in
                 PuyoHelper.margin(for: v, top: a.cgFloatValue)
             }), for: "\(#function)_top")
+        }
+        if let s = horz {
+            view.py_setUnbinder(s.safeBind(view, { v, a in
+                PuyoHelper.margin(for: v, horz: a.cgFloatValue)
+            }), for: "\(#function)_horz")
+        }
+        if let s = vert {
+            view.py_setUnbinder(s.safeBind(view, { v, a in
+                PuyoHelper.margin(for: v, vert: a.cgFloatValue)
+            }), for: "\(#function)_vert")
         }
         if let s = left {
             view.py_setUnbinder(s.safeBind(view, { v, a in

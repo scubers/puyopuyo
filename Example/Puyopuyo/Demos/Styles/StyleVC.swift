@@ -43,14 +43,14 @@ class StyleVC: BaseVC {
         vRoot.attach() {
             
             UIButton().attach($0)
-                .title("normal", state: .normal)
+                .text("normal", state: .normal)
                 .onTap(to: self, { (self, _) in
                     self.toggle.value = !self.toggle.value
                 })
                 .styleSheet(self.styleSheet)
             
             UIButton().attach($0)
-                .title("ripple", state: .normal)
+                .text("ripple", state: .normal)
                 .styleSheet(self.selectableSheet.combine([
                     TapRippleStyle()
                 ]))
@@ -59,7 +59,7 @@ class StyleVC: BaseVC {
                 })
             
             UIButton().attach($0)
-                .title("Cover", state: .normal)
+                .text("Cover", state: .normal)
                 .styleSheet(self.selectableSheet.combine([
                     TapCoverStyle(),
                 ]))

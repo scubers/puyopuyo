@@ -81,15 +81,17 @@ class NavBar: ZBox, EventableView {
     }
 
     convenience init(title: String) {
-        self.init(title: {
-            Label(title).attach($0).view
-        }, leading: {
-            UIButton().attach($0)
-                .title("<-  ", state: .normal)
-                .titleColor(UIColor.black, state: .normal)
-                .userInteractionEnabled(false)
-                .view
-        })
+        self.init(
+            title: {
+                Label(title).attach($0).view
+            }, leading: {
+                UIButton().attach($0)
+                    .text("<-  ")
+                    .textColor(UIColor.black)
+                    .userInteractionEnabled(false)
+                    .view
+            }
+        )
     }
 
     required init?(coder _: NSCoder) {

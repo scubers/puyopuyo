@@ -25,15 +25,54 @@ public extension Puyo where T: Boxable {
     }
 
     @discardableResult
-    func padding(all: CGFloatable? = nil, top: CGFloatable? = nil, left: CGFloatable? = nil, bottom: CGFloatable? = nil, right: CGFloatable? = nil) -> Self {
-        if let all = all {
-            view.regulator.padding = UIEdgeInsets(top: all.cgFloatValue, left: all.cgFloatValue, bottom: all.cgFloatValue, right: all.cgFloatValue)
+    func padding(all: CGFloatable? = nil,
+                 horz: CGFloatable? = nil,
+                 vert: CGFloatable? = nil,
+                 top: CGFloatable? = nil,
+                 left: CGFloatable? = nil,
+                 bottom: CGFloatable? = nil,
+                 right: CGFloatable? = nil) -> Self {
+        PuyoHelper.padding(for: view, all: all?.cgFloatValue, horz: horz?.cgFloatValue, vert: vert?.cgFloatValue, top: top?.cgFloatValue, left: left?.cgFloatValue, bottom: bottom?.cgFloatValue, right: right?.cgFloatValue)
+        return self
+    }
+
+    @discardableResult
+    func padding<S: Outputing>(all: S? = nil, horz: S? = nil, vert: S? = nil, top: S? = nil, left: S? = nil, bottom: S? = nil, right: S? = nil) -> Self where S.OutputType: CGFloatable {
+        if let s = all {
+            view.py_setUnbinder(s.safeBind(view, { v, a in
+                PuyoHelper.padding(for: v, all: a.cgFloatValue)
+            }), for: "\(#function)_all")
         }
-        if let top = top { view.regulator.padding.top = top.cgFloatValue }
-        if let left = left { view.regulator.padding.left = left.cgFloatValue }
-        if let bottom = bottom { view.regulator.padding.bottom = bottom.cgFloatValue }
-        if let right = right { view.regulator.padding.right = right.cgFloatValue }
-        view.py_setNeedsLayout()
+        if let s = top {
+            view.py_setUnbinder(s.safeBind(view, { v, a in
+                PuyoHelper.padding(for: v, top: a.cgFloatValue)
+            }), for: "\(#function)_top")
+        }
+        if let s = horz {
+            view.py_setUnbinder(s.safeBind(view, { v, a in
+                PuyoHelper.padding(for: v, horz: a.cgFloatValue)
+            }), for: "\(#function)_horz")
+        }
+        if let s = vert {
+            view.py_setUnbinder(s.safeBind(view, { v, a in
+                PuyoHelper.padding(for: v, vert: a.cgFloatValue)
+            }), for: "\(#function)_vert")
+        }
+        if let s = left {
+            view.py_setUnbinder(s.safeBind(view, { v, a in
+                PuyoHelper.padding(for: v, left: a.cgFloatValue)
+            }), for: "\(#function)_left")
+        }
+        if let s = bottom {
+            view.py_setUnbinder(s.safeBind(view, { v, a in
+                PuyoHelper.padding(for: v, bottom: a.cgFloatValue)
+            }), for: "\(#function)_bottom")
+        }
+        if let s = right {
+            view.py_setUnbinder(s.safeBind(view, { v, a in
+                PuyoHelper.padding(for: v, right: a.cgFloatValue)
+            }), for: "\(#function)_right")
+        }
         return self
     }
 

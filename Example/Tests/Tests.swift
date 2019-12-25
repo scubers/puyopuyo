@@ -108,7 +108,7 @@ class ListCell: BaseCell {
                             .size(.fill, .fill)
                         
                         UIButton().attach($0)
-                            .title(State("广告"), state: .normal)
+                            .text(State("广告"))
                             .size(80, 25)
                         }
                         .size(.fill, 30)
@@ -183,7 +183,7 @@ class ListCell2: BaseCell {
                             .tg_size(.fill, .fill)
                         
                         UIButton().attach($0)
-                            .title(State("广告"), state: .normal)
+                            .text(State("广告"), state: .normal)
                             .tg_size(80, 25)
                         }
                         .tg_size(.fill, 30)

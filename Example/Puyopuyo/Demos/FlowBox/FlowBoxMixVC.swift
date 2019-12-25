@@ -37,7 +37,7 @@ class FlowBoxMixVC: BaseVC {
             
             HBox().attach($0) {
                 UIButton().attach($0)
-                    .title("change".asOutput().some(), state: .normal)
+                    .text("change")
                     .addWeakAction(to: self, for: .touchUpInside, { (self, _) in
 //                        self.vRoot.animate(0.2, block: {
                             reverse.value = !reverse.value
@@ -55,7 +55,7 @@ class FlowBoxMixVC: BaseVC {
                     .size(100, 20)
                 
                 UIButton().attach($0)
-                    .title(State("add"), state: .normal)
+                    .text("add")
                     .addWeakAction(to: self, for: .touchUpInside, { (self, _) in
 //                        self.vRoot.animate(0.2, block: {
                             total += 1

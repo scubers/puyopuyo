@@ -46,9 +46,9 @@ struct TestStruct: ViewPresentor, EventableView {
 }
 
 class TestVC: BaseVC {
-    var subVC: UIViewController?
+//    var subVC: UIViewController?
 //    var subVC: UIViewController? = StyleVC()
-//    var subVC: UIViewController? = FlowBoxMixVC()
+    var subVC: UIViewController? = FlowBoxMixVC()
 //    var subVC: UIViewController? = VBoxVC()
 //    var subVC: UIViewController? = FlatFormationAligmentVC()
 

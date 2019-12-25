@@ -32,7 +32,9 @@ class SelectionView<T: Equatable>: VFlow, StatefulView, EventableView {
     
     override func buildBody() {
         attach { v in
-            self.selection.enumerated().forEach { (idx, x) in
+            self.selection.enumerated().forEach { (arg) in
+                
+                let (_, x) = arg
                 UIButton().attach(v)
                     .onTap(to: self, { (self, _) in
                         self.eventProducer.input(value: x)
@@ -49,9 +51,9 @@ class SelectionView<T: Equatable>: VFlow, StatefulView, EventableView {
                     .borderWidth(0.5)
                     .borderColor(Theme.color)
                     .cornerRadius(4)
-                    .titleColor(UIColor.black, state: .normal)
+                    .textColor(UIColor.black, state: .normal)
                     .width(.wrap(add: 6))
-                    .title(x.desc, state: .normal)
+                    .text(x.desc, state: .normal)
             }
         }
         .arrangeCount(0)

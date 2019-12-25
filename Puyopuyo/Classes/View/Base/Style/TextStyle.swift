@@ -7,6 +7,12 @@
 
 import Foundation
 
+// MARK: - TextStyle
+public protocol TextDecorable {
+    func applyText(_ text: String?, state: UIControl.State)
+    func applyAttrText(_ text: NSAttributedString?, state: UIControl.State)
+}
+
 // MARK: - TextColor
 
 public protocol TextColorDecorable {

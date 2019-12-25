@@ -60,12 +60,4 @@ public extension Puyo where T: UITextField {
         view.clearButtonMode = mode
         return self
     }
-
-    @discardableResult
-    func background<S: Outputing>(_ image: S) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIImage {
-        image.safeBind(to: view, id: #function) { v, a in
-            v.background = a.puyoWrapValue
-        }
-        return self
-    }
 }

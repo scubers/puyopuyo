@@ -17,9 +17,19 @@ public protocol StatefulView {
     var viewState: State<StateType> { get }
 }
 
+public extension StatefulView {
+    var _state: SimpleOutput<StateType> { viewState.asOutput() }
+}
+
 public protocol EventableView {
     associatedtype EventType
     var eventProducer: SimpleIO<EventType> { get }
+}
+
+public extension EventableView {
+    func emmit(_ event: EventType) {
+        eventProducer.input(value: event)
+    }
 }
 
 public protocol Animator {

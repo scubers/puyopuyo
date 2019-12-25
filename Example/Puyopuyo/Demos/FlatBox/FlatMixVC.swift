@@ -63,7 +63,7 @@ class FlatMixVC: BaseVC {
 
             UIButton().attach($0)
                 .activated(false)
-                .title(State("change"), state: .normal)
+                .text("change")
                 .addWeakAction(to: self, for: .touchUpInside, { s, _ in
                     s.change()
                 })
