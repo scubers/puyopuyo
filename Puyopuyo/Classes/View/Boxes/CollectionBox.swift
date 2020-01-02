@@ -300,7 +300,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         
         box.sizeCache.removeAll()
         
-        let diff = Diff(src: dataSource.value.map({ diffIdentifier($0) }), dest: data.map({ diffIdentifier($0) }))
+        let diff = Diff(src: dataSource.value, dest: data, identifier: diffIdentifier)
         diff.check()
         if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
             // 清空相关的cache

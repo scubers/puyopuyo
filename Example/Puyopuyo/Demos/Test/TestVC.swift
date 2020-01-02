@@ -29,19 +29,17 @@ class TestVC: BaseVC {
 //    var subVC: UIViewController? = FlowBoxMixVC()
 //    var subVC: UIViewController? = VBoxVC()
 //    var subVC: UIViewController? = FlatFormationAligmentVC()
+    
+    var vv: HFlow!
 
     func configTestView() {
         vRoot.attach {
-            let v =
             HFlow().attach($0) {
                 Label.demo("lskdjfl").attach($0)
                     .size(50, 50)
                     .margin(all: 10)
             }
-            .view
             
-            print(v.sizeThatFits(.zero))
-
             VFlow(count: 0).attach($0) {
                 for i in 0 ..< 9 {
                     if i < 3 {
@@ -50,10 +48,10 @@ class TestVC: BaseVC {
                     } else if i == 4 {
                         Label.demo(i.description).attach($0)
                             .margin(all: 8)
-                            .size(.fill, .fill)
+                            .size(.fill, .ratio(3))
                     } else {
                         Label.demo(i.description).attach($0)
-                            .size(.fill, .fill)
+                            .size(.fill, .ratio(CGFloat(i)))
                     }
                 }
             }

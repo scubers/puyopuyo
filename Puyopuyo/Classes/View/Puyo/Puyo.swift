@@ -75,6 +75,12 @@ public class Puyo<T: UIView> {
             }
         }
     }
+
+    @discardableResult
+    public func assign(to pointer: UnsafeMutablePointer<T>) -> Self {
+        pointer.pointee = view
+        return self
+    }
 }
 
 public typealias PuyoBlock = (UIView) -> Void

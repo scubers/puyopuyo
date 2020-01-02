@@ -7,15 +7,7 @@
 
 import UIKit
 
-public protocol DiffIdentiable {
-    var diffIdentifier: String { get }
-}
-
-extension String: DiffIdentiable {
-    public var diffIdentifier: String { self }
-}
-
-public class Diff<T: DiffIdentiable>: CustomStringConvertible {
+public class Diff<T>: CustomStringConvertible {
     public struct Change<T>: CustomStringConvertible {
         public var from = -1
         public var to = -1
@@ -31,14 +23,16 @@ public class Diff<T: DiffIdentiable>: CustomStringConvertible {
 
     public var src: [T]
     public var dest: [T]
+    private var identifier: (T) -> String
 
     public var insert = [Change<T>]()
     public var delete = [Change<T>]()
     public var move = [Change<T>]()
 
-    public init(src: [T], dest: [T]) {
+    public init(src: [T], dest: [T], identifier: @escaping (T) -> String = { "\($0)" }) {
         self.src = src
         self.dest = dest
+        self.identifier = identifier
     }
 
     public func check() {
@@ -69,11 +63,11 @@ public class Diff<T: DiffIdentiable>: CustomStringConvertible {
 
     private var map = [String: Record]()
     private func getRecord(_ value: T) -> Record {
-        if let r = map[value.diffIdentifier] {
+        if let r = map[identifier(value)] {
             return r
         }
         let r = Record()
-        map[value.diffIdentifier] = r
+        map[identifier(value)] = r
         return r
     }
     

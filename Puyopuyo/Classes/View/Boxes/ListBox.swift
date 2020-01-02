@@ -331,7 +331,8 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
             return
         }
 
-        let diff = Diff(src: dataSource.value.map({ diffIdentifier($0) }), dest: data.map({ diffIdentifier($0) }))
+//        let diff = Diff(src: dataSource.value.map({ diffIdentifier($0) }), dest: data.map({ diffIdentifier($0) }))
+        let diff = Diff(src: dataSource.value, dest: data, identifier: diffIdentifier)
         diff.check()
 
         if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
