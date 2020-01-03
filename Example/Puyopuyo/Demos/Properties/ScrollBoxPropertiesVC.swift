@@ -13,11 +13,12 @@ class ScrollBoxPropertiesVC: BaseVC {
     override func configView() {
         ScrollBox(
             flat: {
-                HFlow().attach()
+                VFlow().attach()
                     .arrangeCount(0)
+                    .hFormat(.sides)
+                    .vSpace(10)
                     .view
             },
-            direction: .x,
             builder: {
                 for i in 0 ..< 100 {
                     Label.demo("\(i)").attach($0)

@@ -13,7 +13,7 @@ public class Diff<T>: CustomStringConvertible {
         public var to = -1
         public var value: T
         public var description: String {
-            return "<from:\(from)|to:\(to)|value:\(value)>"
+            return "<value:\(value) | from:\(from) | to:\(to)>"
         }
     }
 
