@@ -60,7 +60,7 @@ class TestVC: BaseVC {
             .size(.fill, .fill)
 //            .size(200, 200)
         }
-        .format(.sides)
+        .format(.between)
         .padding(all: 10)
         .space(10)
         .animator(Animators.default)

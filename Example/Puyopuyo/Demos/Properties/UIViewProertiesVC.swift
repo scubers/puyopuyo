@@ -62,6 +62,8 @@ class UIViewProertiesVC: BaseVC {
                 HBox().attach($0) {
                     Label.demo("1").attach($0)
                         .size(s, s)
+                    Label.demo("2").attach($0)
+                        .size(40, 40)
                 }
                 .space(2)
                 .padding(all: 10)
@@ -77,7 +79,7 @@ class UIViewProertiesVC: BaseVC {
                         Selector(desc: ".ratio(0.5)", value: .ratio(0.5))],
             desc: """
             控制自身view的大小
-            ratio: 占主轴上的比重（ratio / 主轴上的ratio之和）
+            ratio: 占主轴上剩余空间的比重（ratio / 主轴上的ratio之和）
             占次轴上占满
             """
         )

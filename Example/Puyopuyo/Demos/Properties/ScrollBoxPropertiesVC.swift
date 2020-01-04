@@ -15,7 +15,7 @@ class ScrollBoxPropertiesVC: BaseVC {
             flat: {
                 VFlow().attach()
                     .arrangeCount(0)
-                    .hFormat(.sides)
+                    .hFormat(.between)
                     .vSpace(10)
                     .view
             },

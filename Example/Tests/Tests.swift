@@ -132,7 +132,7 @@ class ListCell: BaseCell {
                         UILabel().attach($0)
                             .text(self.time)
                         }
-                        .format(.sides)
+                        .format(.between)
                         .size(.fill, 30)
                     
                     HBox().attach($0) {

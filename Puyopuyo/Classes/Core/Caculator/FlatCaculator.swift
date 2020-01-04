@@ -59,10 +59,10 @@ class FlatCaculator {
             case .center:
                 totalCount += 2
                 totalMainRatio = CGFloat(totalCount - caculateChildren.count)
-            case .avg:
+            case .round:
                 totalCount = totalCount * 2 + 1
                 totalMainRatio = CGFloat(totalCount - caculateChildren.count)
-            case .sides:
+            case .between:
                 totalCount = totalCount * 2 - 1
                 totalMainRatio = CGFloat(totalCount - caculateChildren.count)
             default: break
@@ -78,12 +78,12 @@ class FlatCaculator {
         caculateChildren.reserveCapacity(totalCount)
 
         // 插入首format
-        if formattable, regulator.format == .center || regulator.format == .avg {
+        if formattable, regulator.format == .center || regulator.format == .round {
             let m = getPlaceholder()
             regulateRatioChild(m)
             caculateChildren.append(m)
         }
-        if formattable, regulator.format == .sides || regulator.format == .avg {
+        if formattable, regulator.format == .between || regulator.format == .round {
             // 需要插值计算
             currentChildren.enumerated().forEach { idx, m in
                 caculateChildren.append(m)
@@ -100,7 +100,7 @@ class FlatCaculator {
         }
 
         // 插入尾format
-        if formattable, regulator.format == .center || regulator.format == .avg {
+        if formattable, regulator.format == .center || regulator.format == .round {
             let m = getPlaceholder()
             regulateRatioChild(m)
             caculateChildren.append(m)

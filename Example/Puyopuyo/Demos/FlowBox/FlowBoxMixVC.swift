@@ -30,7 +30,7 @@ class FlowBoxMixVC: BaseVC {
         
         let spaceRange: [CGFloat] = [10, 20, 30, 40]
         
-        let formatI = Iterator<Format>([.leading, .trailing, .center, .avg, .sides])
+        let formatI = Iterator<Format>([.leading, .trailing, .center, .round, .between])
         let directionI = Iterator<Direction>([.x, .y])
         
         vRoot.attach() {

@@ -110,8 +110,8 @@ class FlatPropertiesVC: BaseVC {
             },
             selectors: [Selector(desc: "leading", value: .leading),
                         Selector(desc: "center", value: .center),
-                        Selector(desc: "avg", value: .avg),
-                        Selector(desc: "sides", value: .sides),
+                        Selector(desc: "avg", value: .round),
+                        Selector(desc: "sides", value: .between),
                         Selector(desc: "traing", value: .trailing)],
             desc: "布局主轴上的格式"
         )
