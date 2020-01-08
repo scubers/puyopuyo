@@ -216,10 +216,22 @@ extension UINavigationBar: TintColorDecorable {
 
 extension UISearchBar: KeyboardTypeDecorable,
     TintColorDecorable {
-    public func applyTintColor(_ color: UIColor?, state: UIControl.State) {
+    public func applyTintColor(_ color: UIColor?, state _: UIControl.State) {
         tintColor = color
     }
+
     public func applyKeyboardType(_ type: UIKeyboardType) {
         keyboardType = type
     }
+}
+
+extension UISlider: TintColorDecorable {
+    public func applyTintColor(_ color: UIColor?, state _: UIControl.State) {
+        tintColor = color
+    }
+}
+
+extension UISwitch: TintColorDecorable {
+    public func applyTintColor(_ color: UIColor?, state _: UIControl.State) {
+        tintColor = color
 }
