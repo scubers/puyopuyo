@@ -7,10 +7,6 @@
 
 import Foundation
 
-// MARK: - Declare
-
-@objc public protocol Decorable {}
-
 @objc public protocol Style {
     func apply(to decorable: Decorable)
 }

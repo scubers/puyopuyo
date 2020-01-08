@@ -120,3 +120,19 @@ public extension Puyo where T: BgImageDecorable {
         return self
     }
 }
+
+public extension Puyo where T: KeyboardTypeDecorable {
+    @discardableResult
+    func keyboardType<S: Outputing>(_ type: S) -> Self where S.OutputType == UIKeyboardType {
+        view.py_setUnbinder(type.safeBind(view, { v, a in
+            v.applyKeyboardType(a)
+        }), for: "\(#function)")
+        return self
+    }
+
+    @discardableResult
+    func keyboardType(_ type: UIKeyboardType) -> Self {
+        view.applyKeyboardType(type)
+        return self
+    }
+}

@@ -13,7 +13,12 @@ extension UILabel: TextColorDecorable,
     TextAlignmentDecorable,
     TextLinesDecorable,
     FontDecorable,
+    TintColorDecorable,
     TextDecorable {
+    public func applyTintColor(_ color: UIColor?, state _: UIControl.State) {
+        tintColor = color
+    }
+
     public func applyText(_ text: String?, state _: UIControl.State) {
         self.text = text
     }
@@ -47,7 +52,12 @@ extension UITextField: TextColorDecorable,
     FontDecorable,
     TextDecorable,
     TintColorDecorable,
+    KeyboardTypeDecorable,
     BgImageDecorable {
+    public func applyKeyboardType(_ type: UIKeyboardType) {
+        keyboardType = type
+    }
+
     public func applyTintColor(_ color: UIColor?, state _: UIControl.State) {
         tintColor = color
     }
@@ -89,7 +99,12 @@ extension UITextView: TextColorDecorable,
     TextAlignmentDecorable,
     TextLinesDecorable,
     FontDecorable,
+    KeyboardTypeDecorable,
     TextDecorable {
+    public func applyKeyboardType(_ type: UIKeyboardType) {
+        keyboardType = type
+    }
+
     public func applyText(_ text: String?, state _: UIControl.State) {
         self.text = text
     }
@@ -196,5 +211,15 @@ extension UIBarButtonItem: TintColorDecorable {
 extension UINavigationBar: TintColorDecorable {
     public func applyTintColor(_ color: UIColor?, state _: UIControl.State) {
         tintColor = color
+    }
+}
+
+extension UISearchBar: KeyboardTypeDecorable,
+    TintColorDecorable {
+    public func applyTintColor(_ color: UIColor?, state: UIControl.State) {
+        tintColor = color
+    }
+    public func applyKeyboardType(_ type: UIKeyboardType) {
+        keyboardType = type
     }
 }

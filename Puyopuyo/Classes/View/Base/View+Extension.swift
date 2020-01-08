@@ -137,3 +137,17 @@ extension UIView {
         }
     }
 }
+
+public extension Bool {
+    func py_goneOrVisible() -> Visibility {
+        return self ? .visible : .gone
+    }
+
+    func py_invisibleOrVisible() -> Visibility {
+        return self ? .visible : .invisible
+    }
+
+    func py_toggled() -> Bool {
+        return !self
+    }
+}
