@@ -139,11 +139,13 @@ extension UIView {
 }
 
 public extension Bool {
-    func py_goneOrVisible() -> Visibility {
+    /// return if visible or gone
+    func py_visibleOrGone() -> Visibility {
         return self ? .visible : .gone
     }
 
-    func py_invisibleOrVisible() -> Visibility {
+    /// return if visible or invisible
+    func py_visibleOrNot() -> Visibility {
         return self ? .visible : .invisible
     }
 
