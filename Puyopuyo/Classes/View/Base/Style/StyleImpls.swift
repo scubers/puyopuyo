@@ -234,4 +234,5 @@ extension UISlider: TintColorDecorable {
 extension UISwitch: TintColorDecorable {
     public func applyTintColor(_ color: UIColor?, state _: UIControl.State) {
         tintColor = color
+    }
 }
