@@ -47,7 +47,7 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
 //            first.value = (0 ..< 16).map({ $0.description })
-            first.value = [2,0,4,6,1].map({ $0.description })
+            first.value = [0, 4, 2, 6, 1].map({ $0.description })
         }
 
         sections.value = [

@@ -29,7 +29,7 @@ public class ListBox: UITableView,
     public let viewState = State<[ListBoxSection]>([])
     public var wrapContent = false
 
-    private var heightCache = [IndexPath: CGFloat]()
+    fileprivate var heightCache = [IndexPath: CGFloat]()
 
     private var headerView: UIView!
     private var footerView: UIView!
@@ -280,9 +280,9 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
                 return nil
             }
             view = ListHeaderFooter<[Data], CellEvent>(id: id,
-                                                         root: root,
-                                                         state: state,
-                                                         event: event)
+                                                       root: root,
+                                                       state: state,
+                                                       event: event)
             _ = event.outputing { [weak self] e in
                 guard let self = self, let header = view else { return }
                 self.onCellEvent(.headerEvent(header.state.value.0, header.state.value.1, e))
@@ -305,9 +305,9 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
                 return nil
             }
             view = ListHeaderFooter<[Data], CellEvent>(id: id,
-                                                         root: root,
-                                                         state: state,
-                                                         event: event)
+                                                       root: root,
+                                                       state: state,
+                                                       event: event)
             _ = event.outputing { [weak self] e in
                 guard let self = self, let header = view else { return }
                 self.onCellEvent(.footerEvent(header.state.value.0, header.state.value.1, e))
@@ -331,7 +331,8 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
             return
         }
 
-//        let diff = Diff(src: dataSource.value.map({ diffIdentifier($0) }), dest: data.map({ diffIdentifier($0) }))
+        listBox?.heightCache.removeAll()
+
         let diff = Diff(src: dataSource.value, dest: data, identifier: diffIdentifier)
         diff.check()
 
@@ -348,6 +349,12 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
                 box.moveRow(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
             }
             box.endUpdates()
+
+            if !diff.stay.isEmpty {
+                box.beginUpdates()
+                box.reloadRows(at: diff.stay.map({ IndexPath(row: $0.from, section: section) }), with: .none)
+                box.endUpdates()
+            }
         }
     }
 

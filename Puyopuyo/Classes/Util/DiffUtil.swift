@@ -25,9 +25,10 @@ public class Diff<T>: CustomStringConvertible {
     public var dest: [T]
     private var identifier: (T) -> String
 
-    public var insert = [Change<T>]()
-    public var delete = [Change<T>]()
-    public var move = [Change<T>]()
+    public private(set) var insert = [Change<T>]()
+    public private(set) var delete = [Change<T>]()
+    public private(set) var move = [Change<T>]()
+    public private(set) var stay = [Change<T>]()
 
     public init(src: [T], dest: [T], identifier: @escaping (T) -> String = { "\($0)" }) {
         self.src = src
@@ -51,6 +52,8 @@ public class Diff<T>: CustomStringConvertible {
                 self.insert.append(Change(from: -1, to: idx, value: value))
             } else if index != idx {
                 self.move.append(Change(from: index, to: idx, value: value))
+            } else if index == idx {
+                self.stay.append(Change(from: index, to: idx, value: value))
             }
         }
 
