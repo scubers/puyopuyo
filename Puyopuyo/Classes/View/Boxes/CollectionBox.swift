@@ -46,8 +46,8 @@ public class CollectionBox: UICollectionView,
             dataSource = dataSourceProxy
         }
     }
-
-    public private(set) var layout = UICollectionViewFlowLayout()
+    
+    public private(set) var layout: UICollectionViewFlowLayout = CollectionBoxFlowLayout()
 
     fileprivate var sizeCache = [IndexPath: CGSize]()
 
@@ -55,11 +55,13 @@ public class CollectionBox: UICollectionView,
         direction: UICollectionView.ScrollDirection = .vertical,
         minimumLineSpacing: CGFloat = 0,
         minimumInteritemSpacing: CGFloat = 0,
+        pinHeader: Bool = false,
         sections: [CollectionBoxSection] = []
     ) {
         layout.scrollDirection = direction
         layout.minimumLineSpacing = minimumLineSpacing
         layout.minimumInteritemSpacing = minimumInteritemSpacing
+        layout.setSectionHeaderPin(pinHeader)
         super.init(frame: .zero, collectionViewLayout: layout)
 
         viewState.value = sections
@@ -328,7 +330,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
             }, completion: {
                 // 完成编辑后，刷新不动的item
                 if $0, !diff.stay.isEmpty {
-                    box.reloadItems(at: diff.stay.map({ IndexPath(row: $0.from, section: section)}))
+                    box.reloadItems(at: diff.stay.map({ IndexPath(row: $0.from, section: section) }))
                 }
             })
         }
