@@ -8,7 +8,7 @@
 import UIKit
 
 public class RetainWrapper<Wrapped: AnyObject> {
-    private(set) public var retained = true
+    public private(set) var retained = true
     weak var weakValue: Wrapped?
     var strongValue: Wrapped?
 
@@ -29,14 +29,13 @@ extension RetainWrapper: Unbinder {
 }
 
 public class ProxyChain<Delegate: AnyObject>: PYProxyChain {
-    
     public var delegates: [Delegate] {
         return targets.filter({ $0.getValue() != nil }).map({ $0.getValue() as! Delegate })
     }
-    
-    required public init(wrappers: [RetainWrapper<Delegate>]) {
+
+    public required init(wrappers: [RetainWrapper<Delegate>]) {
         super.init(targets: wrappers.map {
-            return PYTarget(value: $0.value as Any, retained: $0.retained)
+            PYTarget(value: $0.value as Any, retained: $0.retained)
         })
     }
 }
@@ -44,7 +43,7 @@ public class ProxyChain<Delegate: AnyObject>: PYProxyChain {
 public class DelegateProxy<Delegate: AnyObject>: PYProxyChain {
     public var original: RetainWrapper<Delegate>
     public var backup: RetainWrapper<Delegate>?
-    required public init(original: RetainWrapper<Delegate>, backup: RetainWrapper<Delegate>?) {
+    public required init(original: RetainWrapper<Delegate>, backup: RetainWrapper<Delegate>?) {
         self.original = original
         self.backup = backup
         var objs = [PYTarget(value: original.value as Any, retained: original.retained)]
@@ -54,3 +53,8 @@ public class DelegateProxy<Delegate: AnyObject>: PYProxyChain {
         super.init(targets: objs)
     }
 }
+
+extension PYProxyChain: UITextFieldDelegate {}
+extension PYProxyChain: UITextViewDelegate {}
+extension PYProxyChain: UISearchBarDelegate {}
+extension PYProxyChain: UIPickerViewDelegate {}
