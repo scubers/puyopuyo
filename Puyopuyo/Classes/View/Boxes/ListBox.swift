@@ -411,6 +411,10 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
             return root.sizeThatFits(targetSize)
         }
     }
+    
+    deinit {
+        print("ListSection deinit!!!")
+    }
 }
 
 public extension Puyo where T: ListBox {

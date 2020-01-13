@@ -147,22 +147,23 @@ public class CollectionBox: UICollectionView,
     }
 }
 
-public struct CollectionContext<T> {
+public struct RecycleContext<T, View: UIView> {
     public var index: Int = 0
     public var size: CGSize = .zero
     public var data: T
+    public weak var view: View?
 }
 
 public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSection {
-    public var collectionBox: CollectionBox?
+    public weak var collectionBox: CollectionBox?
 
     public let dataSource = State<[Data]>([])
 
     public typealias HeaderFooterGenerator<Data, CellEvent> = (SimpleOutput<Data>, SimpleInput<CellEvent>) -> UIView?
-    var headerGenerator: HeaderFooterGenerator<CollectionContext<[Data]>, CellEvent>
-    var footerGenerator: HeaderFooterGenerator<CollectionContext<[Data]>, CellEvent>
+    var headerGenerator: HeaderFooterGenerator<RecycleContext<[Data], UICollectionView>, CellEvent>
+    var footerGenerator: HeaderFooterGenerator<RecycleContext<[Data], UICollectionView>, CellEvent>
 
-    public typealias CellGenerator<Data, Cell, CellEvent> = (SimpleOutput<CollectionContext<Data>>, SimpleInput<CellEvent>) -> Cell
+    public typealias CellGenerator<Data, Cell, CellEvent> = (SimpleOutput<RecycleContext<Data, UICollectionView>>, SimpleInput<CellEvent>) -> Cell
     var cellGenerator: CellGenerator<Data, Cell, CellEvent>
 
     public typealias OnCellEvent<Event> = (Event) -> Void
@@ -174,8 +175,8 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
                 dataSource: SimpleOutput<[Data]>,
                 _diffIdentifier: ((Data) -> String)? = nil,
                 _cell: @escaping CellGenerator<Data, Cell, CellEvent>,
-                _header: @escaping HeaderFooterGenerator<CollectionContext<[Data]>, CellEvent> = { _, _ in EmptyView() },
-                _footer: @escaping HeaderFooterGenerator<CollectionContext<[Data]>, CellEvent> = { _, _ in EmptyView() },
+                _header: @escaping HeaderFooterGenerator<RecycleContext<[Data], UICollectionView>, CellEvent> = { _, _ in EmptyView() },
+                _footer: @escaping HeaderFooterGenerator<RecycleContext<[Data], UICollectionView>, CellEvent> = { _, _ in EmptyView() },
                 _event: @escaping OnCellEvent<Event> = { _ in }) {
         self.identifier = identifier
         cellGenerator = _cell
@@ -223,22 +224,22 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         let data = dataSource.value[indexPath.row]
         if cell.root == nil {
 //            let state = State((indexPath.row, collectionView.bounds.size, data))
-            let state = State(CollectionContext(index: indexPath.row, size: collectionView.bounds.size, data: data))
+            let state = State(RecycleContext(index: indexPath.row, size: collectionView.bounds.size, data: data, view: collectionView))
             let event = SimpleIO<CellEvent>()
             let root = cellGenerator(state.asOutput(), event.asInput())
             cell.root = root
             cell.state = state
             cell.event = event
             cell.contentView.addSubview(root)
-            _ = event.outputing { [weak cell] event in
-                guard let cell = cell else { return }
+            _ = event.outputing { [weak cell, weak self] event in
+                guard let self = self, let cell = cell else { return }
                 let idx = cell.state.value.index
                 let data = cell.state.value.data
                 self.onCellEvent(.itemEvent(idx, data, event))
             }
         } else {
 //            cell.state.value = (indexPath.row, collectionView.bounds.size, data)
-            cell.state.value = CollectionContext(index: indexPath.row, size: collectionView.bounds.size, data: data)
+            cell.state.value = RecycleContext(index: indexPath.row, size: collectionView.bounds.size, data: data)
         }
         return cell
     }
@@ -248,7 +249,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         view.targetSize = collectionView.bounds.size
         if view.root == nil {
 //            let state = State((indexPath.section, dataSource.value))
-            let state = State(CollectionContext(index: indexPath.section, size: collectionView.bounds.size, data: dataSource.value))
+            let state = State(RecycleContext(index: indexPath.section, size: collectionView.bounds.size, data: dataSource.value, view: collectionView))
             let event = SimpleIO<CellEvent>()
             var root: UIView
             if kind == UICollectionView.elementKindSectionHeader {
@@ -270,31 +271,31 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
             }
         } else {
 //            view.state.value = (indexPath.section, dataSource.value)
-            view.state.value = CollectionContext(index: indexPath.section, size: collectionView.bounds.size, data: dataSource.value)
+            view.state.value = RecycleContext(index: indexPath.section, size: collectionView.bounds.size, data: dataSource.value)
         }
         return view
     }
 
-    private let dummyItemState = State<CollectionContext<Data>>.unstable()
+    private let dummyItemState = State<RecycleContext<Data, UICollectionView>>.unstable()
     private lazy var dummyItem: UIView = { self.cellGenerator(self.dummyItemState.asOutput(), SimpleIO<CellEvent>().asInput()) }()
 
-    private let dummyHeaderState = State<CollectionContext<[Data]>>.unstable()
+    private let dummyHeaderState = State<RecycleContext<[Data], UICollectionView>>.unstable()
     private lazy var dummyHeader: UIView = { self.headerGenerator(self.dummyHeaderState.asOutput(), SimpleIO<CellEvent>().asInput()) ?? EmptyView() }()
-    private let dummyFooterState = State<CollectionContext<[Data]>>.unstable()
+    private let dummyFooterState = State<RecycleContext<[Data], UICollectionView>>.unstable()
     private lazy var dummyFooter: UIView = { self.footerGenerator(self.dummyFooterState.asOutput(), SimpleIO<CellEvent>().asInput()) ?? EmptyView() }()
 
     public func size(for collectionView: UICollectionView, layout _: UICollectionViewLayout, at indexPath: IndexPath) -> CGSize {
-        dummyItemState.value = CollectionContext(index: indexPath.row, size: collectionView.bounds.size, data: dataSource.value[indexPath.row])
+        dummyItemState.value = RecycleContext(index: indexPath.row, size: collectionView.bounds.size, data: dataSource.value[indexPath.row])
         return dummyItem.sizeThatFits(collectionView.bounds.size)
     }
 
     public func headerSize(for collectionView: UICollectionView, layout _: UICollectionViewLayout, at section: Int) -> CGSize {
-        dummyHeaderState.value = CollectionContext(index: section, size: collectionView.bounds.size, data: dataSource.value)
+        dummyHeaderState.value = RecycleContext(index: section, size: collectionView.bounds.size, data: dataSource.value)
         return dummyHeader.sizeThatFits(collectionView.bounds.size)
     }
 
     public func footerSize(for collectionView: UICollectionView, layout _: UICollectionViewLayout, at section: Int) -> CGSize {
-        dummyFooterState.value = CollectionContext(index: section, size: collectionView.bounds.size, data: dataSource.value)
+        dummyFooterState.value = RecycleContext(index: section, size: collectionView.bounds.size, data: dataSource.value)
         return dummyFooter.sizeThatFits(collectionView.bounds.size)
     }
 
@@ -341,11 +342,15 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
             return CGSize(width: 0.1, height: 0.1)
         }
     }
+    
+    deinit {
+        print("CollectionSection deinit!!!")
+    }
 }
 
 private class CollectionBoxCell<D, E>: UICollectionViewCell {
     var root: UIView?
-    var state: State<CollectionContext<D>>!
+    var state: State<RecycleContext<D, UICollectionView>>!
     var event: SimpleIO<E>!
 
     var targetSize: CGSize = .zero
@@ -358,7 +363,7 @@ private class CollectionBoxCell<D, E>: UICollectionViewCell {
 
 private class CollectionBoxSupplementaryView<D, E>: UICollectionReusableView {
     var root: UIView?
-    var state: State<CollectionContext<D>>!
+    var state: State<RecycleContext<D, UICollectionView>>!
     var event: SimpleIO<E>!
 
     var targetSize: CGSize = .zero
