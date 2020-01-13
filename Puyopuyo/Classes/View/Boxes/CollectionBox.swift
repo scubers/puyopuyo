@@ -238,7 +238,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
             }
         } else {
 //            cell.state.value = (indexPath.row, collectionView.bounds.size, data)
-            cell.state.value = RecycleContext(index: indexPath.row, size: cell.targetSize, data: data)
+            cell.state.value = RecycleContext(index: indexPath.row, size: cell.targetSize, data: data, view: collectionView)
         }
         return cell
     }
@@ -271,7 +271,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
             }
         } else {
 //            view.state.value = (indexPath.section, dataSource.value)
-            view.state.value = RecycleContext(index: indexPath.section, size: view.targetSize, data: dataSource.value)
+            view.state.value = RecycleContext(index: indexPath.section, size: view.targetSize, data: dataSource.value, view: collectionView)
         }
         return view
     }
@@ -291,17 +291,17 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
     }
 
     public func size(for collectionView: UICollectionView, layout _: UICollectionViewLayout, at indexPath: IndexPath) -> CGSize {
-        dummyItemState.value = RecycleContext(index: indexPath.row, size: getLayoutableContentSize(collectionView), data: dataSource.value[indexPath.row])
+        dummyItemState.value = RecycleContext(index: indexPath.row, size: getLayoutableContentSize(collectionView), data: dataSource.value[indexPath.row], view: collectionView)
         return dummyItem.sizeThatFits(collectionView.bounds.size)
     }
 
     public func headerSize(for collectionView: UICollectionView, layout _: UICollectionViewLayout, at section: Int) -> CGSize {
-        dummyHeaderState.value = RecycleContext(index: section, size: getLayoutableContentSize(collectionView), data: dataSource.value)
+        dummyHeaderState.value = RecycleContext(index: section, size: getLayoutableContentSize(collectionView), data: dataSource.value, view: collectionView)
         return dummyHeader.sizeThatFits(collectionView.bounds.size)
     }
 
     public func footerSize(for collectionView: UICollectionView, layout _: UICollectionViewLayout, at section: Int) -> CGSize {
-        dummyFooterState.value = RecycleContext(index: section, size: getLayoutableContentSize(collectionView), data: dataSource.value)
+        dummyFooterState.value = RecycleContext(index: section, size: getLayoutableContentSize(collectionView), data: dataSource.value, view: collectionView)
         return dummyFooter.sizeThatFits(collectionView.bounds.size)
     }
 
