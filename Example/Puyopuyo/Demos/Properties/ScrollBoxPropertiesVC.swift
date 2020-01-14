@@ -11,14 +11,17 @@ import UIKit
 
 class ScrollBoxPropertiesVC: BaseVC {
     override func configView() {
-        ScrollBox(
+        ScrollingBox(
             flat: {
-                VFlow().attach()
-                    .arrangeCount(0)
-                    .hFormat(.between)
-                    .vSpace(10)
-                    .view
+//                HFlow().attach()
+//                    .arrangeCount(0)
+//                    .hFormat(.between)
+//                    .space(10)
+//                    .padding(all: 5)
+//                    .view
+                VBox()
             },
+            direction: .y,
             builder: {
                 for i in 0 ..< 100 {
                     Label.demo("\(i)").attach($0)
@@ -29,7 +32,6 @@ class ScrollBoxPropertiesVC: BaseVC {
         .attach(vRoot)
         .size(.fill, .fill)
         .margin(all: 10)
-        .padding(all: 5)
     }
 
     override func shouldRandomColor() -> Bool {
