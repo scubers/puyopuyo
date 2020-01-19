@@ -29,7 +29,6 @@ public protocol Inputing {
 }
 
 extension Outputing {
-    
     /// 将输出接口绑定到对象Object中，并持续接收outputing值
     /// - Parameters:
     ///   - object: 绑定对象
@@ -53,13 +52,28 @@ extension Outputing {
         object.py_setUnbinder(unbinder, for: id)
         return unbinder
     }
-    
+
     /// 输出接口绑定到指定输入接口
     /// - Parameter input: input description
     public func send<Input: Inputing>(to input: Input) -> Unbinder where Input.InputType == OutputType {
         return outputing { v in
             input.input(value: v)
         }
+    }
+
+    public func setAction<Holder: NSObject>(_ action: OutputAction<Holder, OutputType>) {
+        guard let holder = action.holder else { return }
+        let unbinder = outputing(action.action)
+        holder.py_setUnbinder(unbinder, for: "\(#function)_setActionToHolderKey")
+    }
+}
+
+public struct OutputAction<Holder: NSObject, Value> {
+    public var holder: Holder?
+    public var action: (Value) -> Void
+    public init(_ holder: Holder?, _ action: @escaping (Value) -> Void) {
+        self.holder = holder
+        self.action = action
     }
 }
 
