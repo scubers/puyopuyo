@@ -40,8 +40,13 @@ class TestVC: BaseVC {
                 VBox().attach($0) {
                     Label.demo("2").attach($0)
                         .width(on: $0, { .fix($0.width * 0.5) })
+                    Label.demo("2").attach($0)
+                        .width(on: $0, { .fix($0.width * 0.8) })
                 }
                 .width(.ratio(5))
+                
+                Label.demo("1").attach($0)
+                    .width(.ratio(2))
             }
             .size(.fill, .wrap)
         }

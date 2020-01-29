@@ -64,7 +64,7 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func width(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
-        if let s = view?.py_boundsState() {
+        if let s = view?.py_boundsState().distinct() {
             return width(s.map(block))
         }
         return self
@@ -72,7 +72,7 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func height(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
-        if let s = view?.py_boundsState() {
+        if let s = view?.py_boundsState().distinct() {
             height(s.map(block))
         }
         return self
