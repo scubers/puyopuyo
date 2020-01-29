@@ -26,8 +26,9 @@ class ZCaculator {
 //    lazy var totalFixedMain: CGFloat = self.layoutCalPadding.start + self.layoutCalPadding.end
 
     func caculate() -> Size {
-//        if !(parent is Regulator) {}
-        Caculator.adaptingEstimateSize(measure: regulator, remain: remain)
+        if !(parent is Regulator) {
+            Caculator.adaptingEstimateSize(measure: regulator, remain: remain)
+        }
 
 //        let layoutFixedSize = regulator.py_size
 
@@ -100,10 +101,43 @@ class ZCaculator {
     }
 
     private func _getEstimateSize(measure: Measure, remain: CGSize) -> Size {
+//        if measure.size.maybeWrap() {
+//            return measure.caculate(byParent: regulator, remain: remain)
+//        }
+//        return measure.size
+        
+        if measure.size.bothNotWrap() {
+            return measure.size
+        }
+           
+        let calSize = measure.size
+        var finalSize = calSize
+        let originSize = measure.py_size
+
+        if calSize.width.isRatio {
+            finalSize.width = .fix(calSize.width.getFixValue(relay: remain.width, totalRatio: 1, ratioFill: false))
+        }
+           
+        if calSize.height.isRatio {
+            finalSize.height = .fix(calSize.height.getFixValue(relay: remain.height, totalRatio: 1, ratioFill: false))
+        }
+           
         if measure.size.maybeWrap() {
+            // 需要往下级计算
+            var width: CGFloat = originSize.width
+            var height: CGFloat = originSize.height
+            if !calSize.width.isWrap {
+                width = finalSize.width.fixedValue
+            }
+            if !calSize.height.isWrap {
+                height = finalSize.height.fixedValue
+            }
+//            measure.py_size = CalFixedSize(main: main, cross: cross, direction: regulator.direction).getSize()
+            measure.py_size = CGSize(width: width, height: height)
+            
             return measure.caculate(byParent: regulator, remain: remain)
         }
-        return measure.size
+        return finalSize
     }
 
     private func getCurrentRemainForChildren() -> CGSize {

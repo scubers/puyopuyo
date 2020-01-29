@@ -35,8 +35,9 @@ class FlatCaculator {
 
     /// 计算本身布局属性，可能返回的size 为 .fixed, .ratio, 不可能返回wrap
     func caculate() -> Size {
-//        if !(parent is Regulator) {}
-        Caculator.adaptingEstimateSize(measure: regulator, remain: remain)
+        if !(parent is Regulator) {
+            Caculator.adaptingEstimateSize(measure: regulator, remain: remain)
+        }
 
         // 1.第一次循环，计算正常节点，忽略未激活节点，缓存主轴比例节点
         regulator.enumerateChild { _, m in
@@ -174,25 +175,32 @@ class FlatCaculator {
 
     private func appendAndRegulateNormalChild(_ measure: Measure) {
         caculateChildren.append(measure)
-        // 计算size的具体值
-//        let subSize = measure.caculate(byParent: regulator)
-        let subSize = _getEstimateSize(measure: measure, remain: getCurrentRemainSizeForNormalChildren().getSize())
-        if subSize.width.isWrap || subSize.height.isWrap {
-            fatalError("计算后的尺寸不能是包裹")
-        }
-
         /// 子margin
         let subCalMargin = CalEdges(insets: measure.margin, direction: regulator.direction)
         // 累计margin
         totalFixedMain += subCalMargin.mainFixed
-        // main
-        let subCalSize = CalSize(size: subSize, direction: regulator.direction)
+        
+//        // 计算size的具体值
+//        let subSize = _getEstimateSize(measure: measure, remain: getCurrentRemainSizeForNormalChildren().getSize())
+//        if subSize.width.isWrap || subSize.height.isWrap {
+//            fatalError("计算后的尺寸不能是包裹")
+//        }
+//        // main
+//        let subCalSize = CalSize(size: subSize, direction: regulator.direction)
 
+        let subCalSize = measure.size.getCalSize(by: regulator.direction)
         if subCalSize.main.isRatio {
             // 需要保存起来，最后计算
             ratioMainMeasures.append(measure)
             totalMainRatio += subCalSize.main.ratio
         } else {
+            // 计算size的具体值
+            let subSize = _getEstimateSize(measure: measure, remain: getCurrentRemainSizeForNormalChildren().getSize())
+            if subSize.width.isWrap || subSize.height.isWrap {
+                fatalError("计算后的尺寸不能是包裹")
+            }
+            // main
+            let subCalSize = CalSize(size: subSize, direction: regulator.direction)
             // cross
             var subCrossSize = subCalSize.cross
             if subCalSize.cross.isRatio {
@@ -299,15 +307,66 @@ class FlatCaculator {
     }
 
     private func _getEstimateSize(measure: Measure, remain: CGSize) -> Size {
+//        if measure.size.maybeWrap() {
+//            return measure.caculate(byParent: regulator, remain: remain)
+//        }
+//        return measure.size
+        
+        if measure.size.bothNotWrap() {
+            return measure.size
+        }
+        
+        let calSubSize = measure.size.getCalSize(by: regulator.direction)
+        var finalSize = calSubSize
+        let remainSize = CalFixedSize(cgSize: remain, direction: regulator.direction)
+        let originFixSize = CalFixedSize(cgSize: measure.py_size, direction: regulator.direction)
+
+        if calSubSize.main.isRatio {
+            
+            finalSize.main = .fix(calSubSize.main.getFixValue(relay: remainSize.main, totalRatio: totalMainRatio, ratioFill: false))
+        }
+        
+        if calSubSize.cross.isRatio {
+            finalSize.cross = .fix(calSubSize.cross.getFixValue(relay: remainSize.cross, totalRatio: totalMainRatio, ratioFill: true))
+        }
+        
         if measure.size.maybeWrap() {
+            // 需要往下级计算
+            var main: CGFloat = originFixSize.main
+            var cross: CGFloat = originFixSize.cross
+            if !calSubSize.main.isWrap {
+                main = max(0, (calSubSize.main.ratio / totalMainRatio) * (regFixedSize.main - totalFixedMain))
+            }
+            if !calSubSize.cross.isWrap {
+                cross = finalSize.cross.fixedValue
+            }
+            measure.py_size = CalFixedSize(main: main, cross: cross, direction: regulator.direction).getSize()
+            
             return measure.caculate(byParent: regulator, remain: remain)
         }
-        return measure.size
+        return finalSize.getSize()
+        
+//        let calSize = measure.size.getCalSize(by: regulator.direction)
+//        let remainFixSize = CalFixedSize(cgSize: remain, direction: regulator.direction)
+//        var finalCalSize = CalSize(size: Size(), direction: regulator.direction)
+//
+//        if !calSize.main.isWrap {
+//            finalCalSize.main = .fix(calSize.main.getFixValue(relay: remainFixSize.main, totalRatio: totalMainRatio, ratioFill: false))
+//        }
+//
+//        if !calSize.cross.isWrap {
+//            finalCalSize.cross = .fix(calSize.cross.getFixValue(relay: remainFixSize.cross, totalRatio: totalMainRatio, ratioFill: true))
+//        }
+//
+//        if measure.size.maybeWrap() {
+//            return measure.caculate(byParent: regulator, remain: remain)
+//        }
+//
     }
 
     private func _setNotFormattable() {
+        print("Constraint error!!! Regulator[\(regulator)] Format.\(regulator.format) reset to .leading")
         formattable = false
         regulator.format = .leading
-        print("Constraint error!!! Regulator[\(regulator)] Format.\(regulator.format) reset to .leading")
     }
 }

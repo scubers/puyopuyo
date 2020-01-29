@@ -53,8 +53,9 @@ class FlowCaculator {
     lazy var layoutCalSize = CalSize(size: regulator.size, direction: regulator.direction)
 
     func caculate() -> Size {
-//        if !(parent is Regulator) {}
-        Caculator.adaptingEstimateSize(measure: regulator, remain: remain)
+        if !(parent is Regulator) {
+            Caculator.adaptingEstimateSize(measure: regulator, remain: remain)
+        }
 
         var caculateChildren = [Measure]()
         regulator.enumerateChild { _, m in

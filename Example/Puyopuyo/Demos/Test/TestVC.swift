@@ -34,37 +34,48 @@ class TestVC: BaseVC {
 
     func configTestView() {
         vRoot.attach {
-            HFlow().attach($0) {
-                Label.demo("lskdjfl").attach($0)
-                    .size(50, 50)
-                    .margin(all: 10)
-            }
-            
-            VFlow(count: 0).attach($0) {
-                for i in 0 ..< 9 {
-                    
-                    if i < 3 {
-                        Label.demo(i.description).attach($0)
-                            .height(.ratio(2))
-                    } else if i == 4 {
-                        Label.demo(i.description).attach($0)
-                            .margin(all: 8)
-                            .size(.fill, .ratio(3))
-                    } else {
-                        Label.demo(i.description).attach($0)
-                            .size(.fill, .ratio(CGFloat(i)))
-                    }
+            HBox().attach($0) {
+                Label.demo("1").attach($0)
+                    .width(.ratio(2))
+                VBox().attach($0) {
+                    Label.demo("2").attach($0)
+                        .width(on: $0, { .fix($0.width * 0.5) })
                 }
+                .width(.ratio(5))
             }
-            .space(4)
-            .padding(all: 8)
-            .size(.fill, .fill)
-//            .size(200, 200)
+            .size(.fill, .wrap)
         }
-        .format(.between)
-        .padding(all: 10)
-        .space(10)
-        .animator(Animators.default)
+//        vRoot.attach {
+//            HFlow().attach($0) {
+//                Label.demo("lskdjfl").attach($0)
+//                    .size(50, 50)
+//                    .margin(all: 10)
+//            }
+//
+//            VFlow(count: 0).attach($0) {
+//                for i in 0 ..< 9 {
+//                    if i < 3 {
+//                        Label.demo(i.description).attach($0)
+//                            .height(.ratio(2))
+//                    } else if i == 4 {
+//                        Label.demo(i.description).attach($0)
+//                            .margin(all: 8)
+//                            .size(.fill, .ratio(3))
+//                    } else {
+//                        Label.demo(i.description).attach($0)
+//                            .size(.fill, .ratio(CGFloat(i)))
+//                    }
+//                }
+//            }
+//            .space(4)
+//            .padding(all: 8)
+//            .size(.fill, .fill)
+////            .size(200, 200)
+//        }
+//        .format(.between)
+//        .padding(all: 10)
+//        .space(10)
+//        .animator(Animators.default)
     }
 
     private func test1() {
