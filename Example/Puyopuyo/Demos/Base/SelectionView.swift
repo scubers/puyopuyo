@@ -47,6 +47,7 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
                         return .clear
                     }))
                     .styles([
+                        TapScaleStyle()
                     ])
                     .borderWidth(0.5)
                     .borderColor(Theme.color)

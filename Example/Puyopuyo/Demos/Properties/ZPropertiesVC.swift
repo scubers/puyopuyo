@@ -14,6 +14,7 @@ class ZPropertiesVC: BaseVC {
         DemoScroll(
             builder: {
                 self.alignment().attach($0)
+                self.size().attach($0)
             }
         )
         .attach(vRoot)
@@ -52,6 +53,43 @@ class ZPropertiesVC: BaseVC {
         .attach()
         .onEventProduced(to: self, { _, x in
             alignment.value = x
+        })
+        .view
+    }
+
+    func size() -> UIView {
+        let size = State<SizeDescription>(.ratio(1))
+        return DemoView<SizeDescription>(
+            title: "size",
+            builder: {
+                ZBox().attach($0) {
+                    ZBox().attach($0) {
+                        Label.demo("demo").attach($0)
+                            .alignment(.center)
+                            .size(size, size)
+                            .backgroundColor(Theme.color.withAlphaComponent(0.5))
+                    }
+                    .animator(Animators.default)
+                    .backgroundColor(UIColor.black)
+                    .size(100, 100)
+                }
+                .padding(all: 8)
+                .animator(Animators.default)
+                .size(.fill, 150)
+                .view
+            },
+            selectors: [Selector(desc: ".ratio(1)", value: .ratio(1)),
+                        Selector(desc: ".ratio(0.5)", value: .ratio(0.5)),
+                        Selector(desc: ".ratio(1.5)", value: .ratio(1.5)),
+                        Selector(desc: ".fix(60)", value: .fix(60)),
+                        Selector(desc: ".wrap", value: .wrap),
+                        Selector(desc: ".wrap(add: 10)", value: .wrap(add: 10)),
+                        Selector(desc: ".fill", value: .fill)],
+            desc: "Size 在ZBox中的体现形式"
+        )
+        .attach()
+        .onEventProduced(to: self, { _, x in
+            size.value = x
         })
         .view
     }

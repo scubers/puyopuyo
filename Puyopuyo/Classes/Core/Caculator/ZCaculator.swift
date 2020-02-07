@@ -52,7 +52,8 @@ class ZCaculator {
             let zContainerSize = CGSize(width: max(layoutFixedSize.width - regFixedWidth - (subMargin.left + subMargin.right), 0),
                                         height: max(layoutFixedSize.height - regFixedHeight - (subMargin.top + subMargin.bottom), 0))
             // 计算大小
-            let sizeAfterCaculate = Caculator.caculate(size: subSize, by: zContainerSize)
+            let sizeAfterCaculate = Size(width: .fix(subSize.width.getFixValue(relay: zContainerSize.width, totalRatio: 1, ratioFill: false)),
+                                         height: .fix(subSize.height.getFixValue(relay: zContainerSize.height, totalRatio: 1, ratioFill: false)))
             measure.py_size = CGSize(width: sizeAfterCaculate.width.fixedValue, height: sizeAfterCaculate.height.fixedValue)
             maxSizeWithMargin.width = max(maxSizeWithMargin.width, sizeAfterCaculate.width.fixedValue + subMargin.left + subMargin.right)
             maxSizeWithMargin.height = max(maxSizeWithMargin.height, sizeAfterCaculate.height.fixedValue + subMargin.top + subMargin.bottom)
