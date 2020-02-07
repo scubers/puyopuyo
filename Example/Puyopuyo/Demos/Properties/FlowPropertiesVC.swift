@@ -38,8 +38,8 @@ class FlowPropertiesVC: BaseVC {
             return HBox().attach {
                 UILabel().attach($0)
                     .text(title)
-                SelectionView<T>(values).attach($0)
-                    .size(.fill, .wrap)
+                PlainSelectionView<T>(values).attach($0)
+                    .size(.fill, 40)
                     .onEventProduced(SimpleInput {
                         input.input(value: $0.value)
                     })
