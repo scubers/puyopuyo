@@ -24,7 +24,7 @@ public class ScrollBox<T: Boxable & UIView>: ZBox, Delegatable where T.Regulator
     }
 
     public init(scrollView: BoxGenerator<UIScrollView> = { UIScrollView() },
-                flat: @escaping BoxGenerator<T> = { return T() },
+                flat: @escaping BoxGenerator<T> = { T() },
                 direction: Direction = .y,
                 builder: @escaping BoxBuilder<UIView>) {
         super.init(frame: .zero)
@@ -45,18 +45,28 @@ public class ScrollBox<T: Boxable & UIView>: ZBox, Delegatable where T.Regulator
     }
 }
 
-public class ScrollingBox<Flat: Boxable & UIView>: UIScrollView, Delegatable, Stateful where Flat.RegulatorType: FlatRegulator {
-    
-    public enum ScrollDirection {
-        case x, y, both
-    }
-    
+public enum ScrollDirection {
+    case x, y, both
+}
+
+public protocol ScrollDirectionable {
+    func setScrollDirection(_ direction: ScrollDirection)
+}
+
+public class ScrollingBox<Flat: Boxable & UIView>:
+    UIScrollView,
+    ScrollDirectionable,
+    Delegatable,
+    Stateful where Flat.RegulatorType: FlatRegulator {
     public struct ViewState {
         public var direction: ScrollDirection = .y
+        public init(direction: ScrollDirection = .y) {
+            self.direction = direction
+        }
     }
-    
+
     public var viewState = State(ViewState())
-    
+
     public typealias DelegateType = UIScrollViewDelegate
 
     public var scrollDelegate: RetainWrapper<UIScrollViewDelegate>? {
@@ -85,13 +95,13 @@ public class ScrollingBox<Flat: Boxable & UIView>: UIScrollView, Delegatable, St
             .autoJudgeScroll(true)
         }
         // 绑定方向
-        _ = viewState.safeBind(to: self) { $0.setDirection($1.direction) }
-        
+        _ = viewState.safeBind(to: self) { $0.setScrollDirection($1.direction) }
+
         viewState.value.direction = direction
     }
 
-    func setDirection(_ d: ScrollDirection) {
-        switch d {
+    public func setScrollDirection(_ direction: ScrollDirection) {
+        switch direction {
         case .x:
             flat.attach().size(.wrap, .fill)
         case .y:
@@ -103,5 +113,19 @@ public class ScrollingBox<Flat: Boxable & UIView>: UIScrollView, Delegatable, St
 
     public required init?(coder _: NSCoder) {
         fatalError()
+    }
+}
+
+public extension Puyo where T: ScrollDirectionable {
+    func scrollDirection(_ d: ScrollDirection) -> Self {
+        view.setScrollDirection(d)
+        return self
+    }
+
+    func scrollDirection<O: Outputing>(_ d: O) -> Self where O.OutputType == ScrollDirection {
+        d.safeBind(to: view, id: #function) { v, d in
+            v.setScrollDirection(d)
+        }
+        return self
     }
 }

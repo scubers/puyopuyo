@@ -49,6 +49,9 @@ class TestVC: BaseVC {
                     .width(.ratio(2))
             }
             .size(.fill, .wrap)
+            
+            UITextField().attach($0)
+                .size(.fill, 50)
         }
 //        vRoot.attach {
 //            HFlow().attach($0) {

@@ -48,9 +48,9 @@ class UIViewProertiesVC: BaseVC {
             """
         )
         .attach()
-        .onEventProduced(to: self, { _, x in
+        .onEventProduced(to: self) { _, x in
             aligment.value = x
-        })
+        }
         .view
     }
 
@@ -84,9 +84,9 @@ class UIViewProertiesVC: BaseVC {
             """
         )
         .attach()
-        .onEventProduced(to: self, { _, x in
+        .onEventProduced(to: self) { _, x in
             s.value = x
-        })
+        }
         .view
     }
 
@@ -102,14 +102,14 @@ class UIViewProertiesVC: BaseVC {
                     UIView().attach($0)
                         .size(.fill, .fill)
                         .style(StyleSheet.randomColorStyle)
-                        .margin(margin.asOutput().map({ UIEdgeInsets(top: $0, left: $0, bottom: $0, right: $0) }))
+                        .margin(margin.asOutput().map { UIEdgeInsets(top: $0, left: $0, bottom: $0, right: $0) })
                 }
                 .justifyContent(.center)
                 .size(.fill, 100)
                 .animator(Animators.default)
                 .view
             },
-            selectors: [0, 10, 20, 30, 40].map({ Selector(desc: "\($0)", value: $0) }),
+            selectors: [0, 10, 20, 30, 40].map { Selector(desc: "\($0)", value: $0) },
             desc: "布局系统内，子view的外边局"
         )
         .attach()
