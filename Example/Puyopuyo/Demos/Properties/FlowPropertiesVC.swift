@@ -11,15 +11,6 @@ import UIKit
 
 class FlowPropertiesVC: BaseVC {
     override func configView() {
-//        DemoScroll(
-//            builder: {
-//                self.mixed().attach($0)
-//            }
-//        )
-//        .attach(vRoot)
-//        .size(.fill, .fill)
-//        FlatBox().attach(vRoot) {
-//        }
         HBox().attach(vRoot) {
             self.getMenu().attach($0)
                 .size(.fill, .fill)
@@ -44,7 +35,7 @@ class FlowPropertiesVC: BaseVC {
     let hspace = State<CGFloat>(10)
     let vspace = State<CGFloat>(10)
     let reverse = State<Bool>(false)
-
+    let padding = State<CGFloat>(0)
     let hformat = State<Format>(.leading)
     let vformat = State<Format>(.leading)
 
@@ -131,6 +122,13 @@ class FlowPropertiesVC: BaseVC {
                                    })
                     .attach($0)
 
+                getSelectionView(title: "padding",
+                                 input: self.padding,
+                                 values: [Selector<CGFloat>(desc: "0", value: 0),
+                                          Selector<CGFloat>(desc: "10", value: 10),
+                                          Selector<CGFloat>(desc: "20", value: 20),
+                                          Selector<CGFloat>(desc: "40", value: 30)])
+                    .attach($0)
                 getSelectionView(title: "hSpace",
                                  input: self.hspace,
                                  values: [Selector<CGFloat>(desc: "10", value: 10),
@@ -208,12 +206,10 @@ class FlowPropertiesVC: BaseVC {
             .style(TapScaleStyle())
             .backgroundColor(Util.randomColor())
             .size(width, width)
-            .view
-
-        v.attach()
-            .onTap(to: v) { v, _ in
-                v.removeFromSuperview()
+            .onTap {
+                $0.view?.removeFromSuperview()
             }
+            .view
 
         return v
     }
@@ -232,6 +228,7 @@ class FlowPropertiesVC: BaseVC {
                 .hFormat(self.hformat)
                 .vFormat(self.vformat)
                 .justifyContent(self.content)
+                .padding(self.padding.asOutput().map { UIEdgeInsets(top: $0, left: $0, bottom: $0, right: $0) })
                 .backgroundColor(UIColor.lightGray.withAlphaComponent(0.5))
                 .autoJudgeScroll(true)
         }

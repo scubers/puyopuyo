@@ -11,25 +11,14 @@ import UIKit
 
 class ScrollBoxPropertiesVC: BaseVC {
     override func configView() {
-        ScrollingBox(
-            flat: {
-//                HFlow().attach()
-//                    .arrangeCount(0)
-//                    .hFormat(.between)
-//                    .space(10)
-//                    .padding(all: 5)
-//                    .view
-                VBox()
-            },
-            direction: .y,
-            builder: {
-                for i in 0 ..< 100 {
-                    Label.demo("\(i)").attach($0)
-                        .size(50, 50)
-                }
+        ScrollingBox<VBox> {
+            for i in 0 ..< 100 {
+                Label.demo("\(i)").attach($0)
+                    .size(50, 50)
             }
-        )
+        }
         .attach(vRoot)
+        .scrollDirection(.y)
         .size(.fill, .fill)
         .margin(all: 10)
     }

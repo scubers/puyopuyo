@@ -95,12 +95,17 @@ public class ScrollingBox<Flat: Boxable & UIView>:
             .autoJudgeScroll(true)
         }
         // 绑定方向
-        _ = viewState.safeBind(to: self) { $0.setScrollDirection($1.direction) }
+        _ = viewState.safeBind(to: self) { $0.handleDirection($1.direction) }
 
-        viewState.value.direction = direction
+//        viewState.value.direction = direction
+        setScrollDirection(direction)
     }
 
     public func setScrollDirection(_ direction: ScrollDirection) {
+        viewState.value.direction = direction
+    }
+    
+    func handleDirection(_ direction: ScrollDirection) {
         switch direction {
         case .x:
             flat.attach().size(.wrap, .fill)
@@ -110,7 +115,7 @@ public class ScrollingBox<Flat: Boxable & UIView>:
             flat.attach().size(.wrap, .wrap)
         }
     }
-
+    
     public required init?(coder _: NSCoder) {
         fatalError()
     }

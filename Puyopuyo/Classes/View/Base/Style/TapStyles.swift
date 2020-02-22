@@ -181,12 +181,12 @@ public class TapSelectStyle: BaseGestureStyle {
         self.duration = duration
         normalSheet = normal
         selectedSheet = selected
-        _ = toggle?.outputing({ value in
+        _ = toggle?.outputing { value in
             self.selected = value
             if let view = self.lastView {
                 self.applyStyleSheet(view: view)
             }
-        })
+        }
     }
 
     public override func apply(to gestureStyle: GestureDecorable) {
