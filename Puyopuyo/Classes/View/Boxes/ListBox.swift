@@ -75,11 +75,11 @@ public class ListBox: UITableView,
 
         // 监听tableView变化，动态改变ListBox大小
         py_observing(for: #keyPath(UITableView.contentSize))
-            .safeBind(to: self, { (this, size: CGSize?) in
+            .safeBind(to: self) { (this, size: CGSize?) in
                 if this.wrapContent {
                     this.attach().size(.fill, size?.height ?? 0)
                 }
-            })
+            }
     }
 
     public required init?(coder _: NSCoder) {
@@ -214,9 +214,9 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
         footerGenerator = _footer
         onCellEvent = _event
         diffIdentifier = _diffIdentifier
-        _ = dataSource.outputing({ [weak self] data in
+        _ = dataSource.outputing { [weak self] data in
             self?.reload(with: data)
-        })
+        }
     }
 
     public enum Event {
@@ -340,10 +340,10 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
             dataSource.value = data
             box.beginUpdates()
             if !diff.insert.isEmpty {
-                box.insertRows(at: diff.insert.map({ IndexPath(row: $0.to, section: section) }), with: .automatic)
+                box.insertRows(at: diff.insert.map { IndexPath(row: $0.to, section: section) }, with: .automatic)
             }
             if !diff.delete.isEmpty {
-                box.deleteRows(at: diff.delete.map({ IndexPath(row: $0.from, section: section) }), with: .automatic)
+                box.deleteRows(at: diff.delete.map { IndexPath(row: $0.from, section: section) }, with: .automatic)
             }
             diff.move.forEach { c in
                 box.moveRow(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
@@ -352,7 +352,7 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
 
             if !diff.stay.isEmpty {
                 box.beginUpdates()
-                box.reloadRows(at: diff.stay.map({ IndexPath(row: $0.from, section: section) }), with: .none)
+                box.reloadRows(at: diff.stay.map { IndexPath(row: $0.from, section: section) }, with: .none)
                 box.endUpdates()
             }
         }
@@ -411,7 +411,7 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
             return root.sizeThatFits(targetSize)
         }
     }
-    
+
     deinit {
         print("ListSection deinit!!!")
     }

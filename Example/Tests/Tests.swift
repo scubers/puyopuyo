@@ -32,9 +32,9 @@ class Tests: XCTestCase {
         self.measure() {
             for _ in 0..<300 {
                 // puyo
-//                let cell = ListCell(style: .value1, reuseIdentifier: "1")
+                let cell = ListCell(style: .value1, reuseIdentifier: "1")
                 // tg
-                let cell = ListCell2(style: .value1, reuseIdentifier: "1")
+//                let cell = ListCell2(style: .value1, reuseIdentifier: "1")
                 // autolayout
 //                let cell = ListCell3(style: .value1, reuseIdentifier: "1")
                 cell.viewState.input(value: ListData(name: "slkdjflksdjflkjsdf", text: "来看房来看房龙看房龙蛋飞龙扽静", time: "lskdj"))

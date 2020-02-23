@@ -1,6 +1,7 @@
 
 
 use_frameworks!
+use_modular_headers!
 
 target 'Puyopuyo_Example' do
   pod 'Puyopuyo/TangramKit', :path => '../'

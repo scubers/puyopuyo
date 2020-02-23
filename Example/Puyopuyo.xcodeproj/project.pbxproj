@@ -48,8 +48,8 @@
 		A8D9431622FFF102002E487F /* StatefulVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9431522FFF102002E487F /* StatefulVC.swift */; };
 		A8E53FB322C8E679000B2B6D /* BaseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E53FB222C8E679000B2B6D /* BaseVC.swift */; };
 		A8E53FB522C8E6BB000B2B6D /* MenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E53FB422C8E6BB000B2B6D /* MenuVC.swift */; };
-		B32A3AF0F665183C2C0CAE40 /* Pods_Puyopuyo_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FAF0AFEB3A773E5DF332027 /* Pods_Puyopuyo_Example.framework */; };
-		D2947FDC92B377F1DAE22E16 /* Pods_Puyopuyo_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE759F3A3E98140ACE016D19 /* Pods_Puyopuyo_Tests.framework */; };
+		F57CB0F700D14D2257E5BC98 /* Pods_Puyopuyo_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB7C29DBAEAF1D476E633CC8 /* Pods_Puyopuyo_Tests.framework */; };
+		FCB331E1A7EC2D12730F60EE /* Pods_Puyopuyo_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DA172BC8E94B2D60DDFC77 /* Pods_Puyopuyo_Example.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,8 +64,8 @@
 
 /* Begin PBXFileReference section */
 		029D039CF2FB7AD03311F02E /* Pods-Puyopuyo_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Puyopuyo_Tests.debug.xcconfig"; path = "Target Support Files/Pods-Puyopuyo_Tests/Pods-Puyopuyo_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		093B861024012B64002AC9C6 /* Puyopuyo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Puyopuyo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		09883C4922C5E5FB006CE05A /* StyleTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleTestViewController.swift; sourceTree = "<group>"; };
-		2FAF0AFEB3A773E5DF332027 /* Pods_Puyopuyo_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Puyopuyo_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3324E3ECDF4649B3EFDB8B1A /* Puyopuyo.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Puyopuyo.podspec; path = ../Puyopuyo.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		607FACD01AFB9204008FA782 /* Puyopuyo_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Puyopuyo_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -116,7 +116,8 @@
 		A8E53FB222C8E679000B2B6D /* BaseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseVC.swift; sourceTree = "<group>"; };
 		A8E53FB422C8E6BB000B2B6D /* MenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuVC.swift; sourceTree = "<group>"; };
 		B80C4BDF60E8E994E6351B56 /* Pods-Puyopuyo_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Puyopuyo_Example.debug.xcconfig"; path = "Target Support Files/Pods-Puyopuyo_Example/Pods-Puyopuyo_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		CE759F3A3E98140ACE016D19 /* Pods_Puyopuyo_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Puyopuyo_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BB7C29DBAEAF1D476E633CC8 /* Pods_Puyopuyo_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Puyopuyo_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D0DA172BC8E94B2D60DDFC77 /* Pods_Puyopuyo_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Puyopuyo_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5B8DC7A986335349E2B90E7 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		D8C53925C3060B52FD197F06 /* Pods-Puyopuyo_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Puyopuyo_Tests.release.xcconfig"; path = "Target Support Files/Pods-Puyopuyo_Tests/Pods-Puyopuyo_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		F30339C217EBFE7273144FC5 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
@@ -127,7 +128,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B32A3AF0F665183C2C0CAE40 /* Pods_Puyopuyo_Example.framework in Frameworks */,
+				FCB331E1A7EC2D12730F60EE /* Pods_Puyopuyo_Example.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,7 +136,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D2947FDC92B377F1DAE22E16 /* Pods_Puyopuyo_Tests.framework in Frameworks */,
+				F57CB0F700D14D2257E5BC98 /* Pods_Puyopuyo_Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -360,8 +361,9 @@
 		CF1B3A46E0BA451826B245F4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				2FAF0AFEB3A773E5DF332027 /* Pods_Puyopuyo_Example.framework */,
-				CE759F3A3E98140ACE016D19 /* Pods_Puyopuyo_Tests.framework */,
+				093B861024012B64002AC9C6 /* Puyopuyo.framework */,
+				D0DA172BC8E94B2D60DDFC77 /* Pods_Puyopuyo_Example.framework */,
+				BB7C29DBAEAF1D476E633CC8 /* Pods_Puyopuyo_Tests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -377,7 +379,7 @@
 				607FACCC1AFB9204008FA782 /* Sources */,
 				607FACCD1AFB9204008FA782 /* Frameworks */,
 				607FACCE1AFB9204008FA782 /* Resources */,
-				D8CDAFB3A7C78BDD9133656F /* [CP] Embed Pods Frameworks */,
+				2CD4442C6502CAB5F23EA3A2 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -493,29 +495,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		89F2DE349792D2587F75838D /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Puyopuyo_Tests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		D8CDAFB3A7C78BDD9133656F /* [CP] Embed Pods Frameworks */ = {
+		2CD4442C6502CAB5F23EA3A2 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -537,6 +517,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Puyopuyo_Example/Pods-Puyopuyo_Example-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		89F2DE349792D2587F75838D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Puyopuyo_Tests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -740,12 +742,12 @@
 				INFOPLIST_FILE = Puyopuyo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.Puyopuyo-Example111";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Puyopuyo/Puyopuyo_Example-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -760,11 +762,11 @@
 				INFOPLIST_FILE = Puyopuyo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.Puyopuyo-Example111";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Puyopuyo/Puyopuyo_Example-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
