@@ -205,7 +205,9 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
 
     public var identifier: String
     private var diffIdentifier: ((Data) -> String)?
+    private var selectionStyle: UITableViewCell.SelectionStyle
     public init(identifier: String,
+                selectionStyle: UITableViewCell.SelectionStyle = .default,
                 dataSource: SimpleOutput<[Data]>,
                 _diffIdentifier: ((Data) -> String)? = nil,
                 _cell: @escaping CellGenerator<Data, Cell, CellEvent>,
@@ -217,6 +219,7 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
         headerGenerator = _header
         footerGenerator = _footer
         onCellEvent = _event
+        self.selectionStyle = selectionStyle
         diffIdentifier = _diffIdentifier
         _ = dataSource.outputing { [weak self] data in
             self?.reload(with: data)
@@ -267,6 +270,7 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
                 let data = cell.state.value.1
                 self.onCellEvent(.itemEvent(idx, data, event))
             }
+            cell?.selectionStyle = selectionStyle
         } else {
             cell?.state.value = (indexPath.row, data)
         }

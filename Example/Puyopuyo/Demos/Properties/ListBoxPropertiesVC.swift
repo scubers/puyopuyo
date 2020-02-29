@@ -57,6 +57,7 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
         sections.value = [
             ListSection<String, UIView, Void>(
                 identifier: "1",
+                selectionStyle: .none,
                 dataSource: first.asOutput(),
                 _diffIdentifier: { $0 },
                 _cell: { [weak self] o, _ -> UIView in
@@ -92,6 +93,7 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
 
             ListSection<String, UIView, Void>(
                 identifier: "2",
+                selectionStyle: .gray,
                 dataSource: (0 ..< 10).map { $0.description }.asOutput(),
                 _cell: { [weak self] o, _ -> UIView in
                     guard let self = self else { return UIView() }
