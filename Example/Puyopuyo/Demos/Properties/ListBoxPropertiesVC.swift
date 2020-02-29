@@ -38,16 +38,20 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
         .viewState(sections)
         .setDelegate(self)
         .size(.fill, .fill)
+        .attach {
+            $0.contentInset.top = 0
+        }
+        
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let first = State(([0,1,2]).map({ $0.description }))
+        let first = State([0, 1, 2].map { $0.description })
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
 //            first.value = (0 ..< 16).map({ $0.description })
-            first.value = [0, 4, 2, 6, 1].map({ $0.description })
+            first.value = [0, 4, 2, 6, 1].map { $0.description }
         }
 
         sections.value = [
@@ -62,22 +66,22 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
                 _header: { o, e -> UIView? in
                     HBox().attach {
                         Label.demo("").attach($0)
-                            .text(o.map({ idx, _ in "header: \(idx)" }))
+                            .text(o.map { idx, _ in "header: \(idx)" })
                     }
-                    .onTap({ _ in
+                    .onTap { _ in
                         e.input(value: ())
-                    })
+                    }
                     .padding(all: 10)
                     .view
                 },
                 _footer: { o, e in
                     HBox().attach {
                         Label.demo("").attach($0)
-                            .text(o.map({ idx, _ in "footer: \(idx)" }))
+                            .text(o.map { idx, _ in "footer: \(idx)" })
                     }
-                    .onTap({ _ in
+                    .onTap { _ in
                         e.input(value: ())
-                    })
+                    }
                     .padding(all: 10)
                     .view
                 },
@@ -88,7 +92,7 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
 
             ListSection<String, UIView, Void>(
                 identifier: "2",
-                dataSource: (0 ..< 10).map({ $0.description }).asOutput(),
+                dataSource: (0 ..< 10).map { $0.description }.asOutput(),
                 _cell: { [weak self] o, _ -> UIView in
                     guard let self = self else { return UIView() }
                     return self.getCell(state: o)
@@ -101,7 +105,7 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
         return VFlow(count: 0).attach {
             let v = $0
             _ = state.outputing { idx, s in
-                v.subviews.forEach({ $0.removeFromSuperview() })
+                v.subviews.forEach { $0.removeFromSuperview() }
                 Label.demo(s).attach(v)
                 for i in 1 ... idx + 1 {
                     Label.demo("demo").attach(v)

@@ -64,7 +64,11 @@ public class ListBox: UITableView,
         dataSource = dataSourceProxy
         delegate = delegateProxy
         estimatedRowHeight = 60
+        estimatedSectionHeaderHeight = 10
+        estimatedSectionFooterHeight = 10
         rowHeight = UITableView.automaticDimension
+        sectionHeaderHeight = UITableView.automaticDimension
+        sectionFooterHeight = UITableView.automaticDimension
 
         viewState.safeBind(to: self) { this, sections in
             sections.forEach { s in
@@ -173,15 +177,15 @@ public class ListBox: UITableView,
         delegateProxy.backup?.value?.tableView?(tableView, willDisplay: cell, forRowAt: indexPath)
     }
 
-    public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        (view as? UITableViewHeaderFooterView)?.backgroundView?.backgroundColor = .clear
-        delegateProxy.backup?.value?.tableView?(tableView, willDisplayHeaderView: view, forSection: section)
-    }
-
-    public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-        (view as? UITableViewHeaderFooterView)?.backgroundView?.backgroundColor = .clear
-        delegateProxy.backup?.value?.tableView?(tableView, willDisplayFooterView: view, forSection: section)
-    }
+//    public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+//        (view as? UITableViewHeaderFooterView)?.backgroundView?.backgroundColor = .clear
+//        delegateProxy.backup?.value?.tableView?(tableView, willDisplayHeaderView: view, forSection: section)
+//    }
+//
+//    public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+//        (view as? UITableViewHeaderFooterView)?.backgroundView?.backgroundColor = .clear
+//        delegateProxy.backup?.value?.tableView?(tableView, willDisplayFooterView: view, forSection: section)
+//    }
 }
 
 public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
