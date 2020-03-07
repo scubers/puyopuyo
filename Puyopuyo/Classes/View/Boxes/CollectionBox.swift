@@ -292,7 +292,10 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
 
     public func size(for collectionView: UICollectionView, layout _: UICollectionViewLayout, at indexPath: IndexPath) -> CGSize {
         dummyItemState.value = RecycleContext(index: indexPath.row, size: getLayoutableContentSize(collectionView), data: dataSource.value[indexPath.row], view: collectionView)
-        return dummyItem.sizeThatFits(collectionView.bounds.size)
+        var size = dummyItem.sizeThatFits(collectionView.bounds.size)
+        size.width += (dummyItem.py_measure.margin.left + dummyItem.py_measure.margin.right)
+        size.height += (dummyItem.py_measure.margin.top + dummyItem.py_measure.margin.bottom)
+        return size
     }
 
     public func headerSize(for collectionView: UICollectionView, layout _: UICollectionViewLayout, at section: Int) -> CGSize {

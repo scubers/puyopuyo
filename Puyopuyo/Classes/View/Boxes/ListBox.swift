@@ -35,6 +35,7 @@ public class ListBox: UITableView,
     private var footerView: UIView!
 
     public init(style: UITableView.Style = .plain,
+                separatorStyle: UITableViewCell.SeparatorStyle = .singleLine,
                 sections: [ListBoxSection] = [],
                 header: BoxGenerator<UIView>? = nil,
                 footer: BoxGenerator<UIView>? = nil) {
@@ -59,6 +60,8 @@ public class ListBox: UITableView,
 
         tableHeaderView = headerView
         tableFooterView = footerView
+
+        self.separatorStyle = separatorStyle
 
         viewState.value = sections
         dataSource = dataSourceProxy
@@ -89,7 +92,7 @@ public class ListBox: UITableView,
     public required init?(coder _: NSCoder) {
         fatalError()
     }
-    
+
     private var delegateProxy: DelegateProxy<UITableViewDelegate>! {
         didSet {
             delegate = delegateProxy
@@ -386,7 +389,9 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
         }
 
         override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority _: UILayoutPriority, verticalFittingPriority _: UILayoutPriority) -> CGSize {
-            return root.sizeThatFits(targetSize)
+            var size = root.sizeThatFits(targetSize)
+            size.height += (root.py_measure.margin.top + root.py_measure.margin.bottom)
+            return size
         }
     }
 

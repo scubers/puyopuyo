@@ -18,6 +18,7 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
 
     override func configView() {
         ListBox(
+            separatorStyle: .none,
             header: {
                 VBox().attach {
                     Label.demo("table Header").attach($0)
@@ -62,6 +63,8 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
                 _cell: { [weak self] o, _ -> UIView in
                     guard let self = self else { return UIView() }
                     return self.getCell(state: o)
+                        .attach()
+                        .view
                 },
                 _header: { o, _ -> UIView? in
                     HBox().attach {
@@ -96,7 +99,7 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
                 dataSource: (0 ..< 10).map { $0 }.asOutput(),
                 _cell: { [weak self] o, _ -> UIView in
                     guard let self = self else { return UIView() }
-                    return self.getCell(state: o.map({ ($0, $1.description) }))
+                    return self.getCell(state: o.map { ($0, $1.description) })
                 }
             ),
         ]
