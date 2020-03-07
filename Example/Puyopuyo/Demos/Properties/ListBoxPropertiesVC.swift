@@ -41,7 +41,6 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
         .attach {
             $0.contentInset.top = 0
         }
-        
     }
 
     override func viewDidLoad() {
@@ -55,7 +54,7 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
         }
 
         sections.value = [
-            ListSection<String, UIView, Void>(
+            ListSection<String, UIView, Double>(
                 identifier: "1",
                 selectionStyle: .none,
                 dataSource: first.asOutput(),
@@ -64,24 +63,24 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
                     guard let self = self else { return UIView() }
                     return self.getCell(state: o)
                 },
-                _header: { o, e -> UIView? in
+                _header: { o, _ -> UIView? in
                     HBox().attach {
                         Label.demo("").attach($0)
                             .text(o.map { idx, _ in "header: \(idx)" })
                     }
                     .onTap { _ in
-                        e.input(value: ())
+//                        e.input(value: 1.0)
                     }
                     .padding(all: 10)
                     .view
                 },
-                _footer: { o, e in
+                _footer: { o, _ in
                     HBox().attach {
                         Label.demo("").attach($0)
                             .text(o.map { idx, _ in "footer: \(idx)" })
                     }
                     .onTap { _ in
-                        e.input(value: ())
+//                        e.input(value: ())
                     }
                     .padding(all: 10)
                     .view
@@ -91,13 +90,13 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
                 }
             ),
 
-            ListSection<String, UIView, Void>(
-                identifier: "2",
+            ListSection<Int, UIView, Int>(
+                identifier: "1",
                 selectionStyle: .gray,
-                dataSource: (0 ..< 10).map { $0.description }.asOutput(),
+                dataSource: (0 ..< 10).map { $0 }.asOutput(),
                 _cell: { [weak self] o, _ -> UIView in
                     guard let self = self else { return UIView() }
-                    return self.getCell(state: o)
+                    return self.getCell(state: o.map({ ($0, $1.description) }))
                 }
             ),
         ]

@@ -89,7 +89,7 @@ public class ListBox: UITableView,
     public required init?(coder _: NSCoder) {
         fatalError()
     }
-
+    
     private var delegateProxy: DelegateProxy<UITableViewDelegate>! {
         didSet {
             delegate = delegateProxy
@@ -242,7 +242,7 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
     }
 
     func cellIdentifier() -> String {
-        return identifier
+        return "\(identifier)_\(Data.self)_\(CellEvent.self)"
     }
 
     func headerIdentifier() -> String {
@@ -254,7 +254,7 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
     }
 
     public func cell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
-        let id = identifier
+        let id = cellIdentifier()
         var cell = tableView.dequeueReusableCell(withIdentifier: id) as? ListBoxCell<Data, CellEvent>
         let data = dataSource.value[indexPath.row]
         if cell == nil {
