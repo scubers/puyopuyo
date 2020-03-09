@@ -29,4 +29,11 @@ public class SimpleIO<Value>: Inputing, Outputing {
             self?.inputers.removeAll(where: { $0.uuid == id })
         }
     }
+
+    private var singleUnbinder: Unbinder?
+
+    public func singleOutput(_ block: @escaping (Value) -> Void) {
+        singleUnbinder?.py_unbind()
+        singleUnbinder = outputing(block)
+    }
 }
