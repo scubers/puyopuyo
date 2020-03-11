@@ -43,9 +43,9 @@ public extension ReuseState {
     }
     
     @discardableResult
-    private func create(by key: String, data: Data) -> Node<Data, Event> {
+    func create(by key: String, data: Data) -> Node<Data, Event> {
         let newKey = gen(key: key)
-        let node = Node<Data, Event>(data: data)
+        let node = generateNode(data)
         nodes[newKey] = node
         // 每个事件都绑定到station
         _ = node.eventProducer
@@ -69,7 +69,7 @@ public extension ReuseState {
 
 public extension ReuseState {
     @discardableResult
-    private func create(by object: AnyObject, data: Data) -> Node<Data, Event> {
+    func create(by object: AnyObject, data: Data) -> Node<Data, Event> {
         let key = Unmanaged.passUnretained(object).toOpaque().debugDescription
         return create(by: key, data: data)
     }
