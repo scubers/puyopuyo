@@ -39,11 +39,10 @@ class TestVC: BaseVC {
                     Label.demo("test demo").attach($0)
                     Label.demo("11112222").attach($0)
                 }
-                .format(.between)
-                .size(.fill, .wrap)
+                .size(.wrap, .fill)
             }
-            .size(.fill, .wrap)
-            .margin(horz: 40)
+            .size(.wrap, .fill)
+            .margin(all: 40)
         }
 //        vRoot.attach {
 //            HFlow().attach($0) {

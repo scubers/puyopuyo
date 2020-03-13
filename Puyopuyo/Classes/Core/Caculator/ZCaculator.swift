@@ -114,13 +114,16 @@ class ZCaculator {
         let calSize = measure.size
         var finalSize = calSize
         let originSize = measure.py_size
+        let margin = measure.margin
 
         if calSize.width.isRatio {
-            finalSize.width = .fix(calSize.width.getFixValue(relay: remain.width, totalRatio: 1, ratioFill: false))
+            let relay = remain.width - margin.left - margin.right
+            finalSize.width = .fix(calSize.width.getFixValue(relay: relay, totalRatio: 1, ratioFill: false))
         }
            
         if calSize.height.isRatio {
-            finalSize.height = .fix(calSize.height.getFixValue(relay: remain.height, totalRatio: 1, ratioFill: false))
+            let relay = remain.height - margin.top - margin.bottom
+            finalSize.height = .fix(calSize.height.getFixValue(relay: relay, totalRatio: 1, ratioFill: false))
         }
            
         if measure.size.maybeWrap() {

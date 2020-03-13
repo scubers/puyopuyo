@@ -323,8 +323,8 @@ class FlatCaculator {
         let calMargin = CalEdges(insets: measure.margin, direction: regulator.direction)
 
         if calSubSize.main.isRatio {
-            
-            finalSize.main = .fix(calSubSize.main.getFixValue(relay: remainSize.main, totalRatio: totalMainRatio, ratioFill: false))
+            let relay = remainSize.main - calMargin.mainFixed
+            finalSize.main = .fix(calSubSize.main.getFixValue(relay: relay, totalRatio: totalMainRatio, ratioFill: false))
         }
         
         if calSubSize.cross.isRatio {
