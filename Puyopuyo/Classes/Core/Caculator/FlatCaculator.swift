@@ -320,6 +320,7 @@ class FlatCaculator {
         var finalSize = calSubSize
         let remainSize = CalFixedSize(cgSize: remain, direction: regulator.direction)
         let originFixSize = CalFixedSize(cgSize: measure.py_size, direction: regulator.direction)
+        let calMargin = CalEdges(insets: measure.margin, direction: regulator.direction)
 
         if calSubSize.main.isRatio {
             
@@ -327,7 +328,8 @@ class FlatCaculator {
         }
         
         if calSubSize.cross.isRatio {
-            finalSize.cross = .fix(calSubSize.cross.getFixValue(relay: remainSize.cross, totalRatio: totalMainRatio, ratioFill: true))
+            let relay = remainSize.cross - calMargin.crossFixed
+            finalSize.cross = .fix(calSubSize.cross.getFixValue(relay: relay, totalRatio: totalMainRatio, ratioFill: true))
         }
         
         if measure.size.maybeWrap() {

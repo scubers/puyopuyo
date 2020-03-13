@@ -29,29 +29,21 @@ class TestVC: BaseVC {
 //    var subVC: UIViewController? = FlowBoxMixVC()
 //    var subVC: UIViewController? = VBoxVC()
 //    var subVC: UIViewController? = FlatFormationAligmentVC()
-    
+
     var vv: HFlow!
 
     func configTestView() {
         vRoot.attach {
-            HBox().attach($0) {
-                Label.demo("1").attach($0)
-                    .width(.ratio(2))
-                VBox().attach($0) {
-                    Label.demo("2").attach($0)
-                        .width(on: $0, { .fix($0.width * 0.5) })
-                    Label.demo("2").attach($0)
-                        .width(on: $0, { .fix($0.width * 0.8) })
+            VBox().attach($0) {
+                HBox().attach($0) {
+                    Label.demo("test demo").attach($0)
+                    Label.demo("11112222").attach($0)
                 }
-                .width(.ratio(5))
-                
-                Label.demo("1").attach($0)
-                    .width(.ratio(2))
+                .format(.between)
+                .size(.fill, .wrap)
             }
             .size(.fill, .wrap)
-            
-            UITextField().attach($0)
-                .size(.fill, 50)
+            .margin(horz: 40)
         }
 //        vRoot.attach {
 //            HFlow().attach($0) {
@@ -78,7 +70,7 @@ class TestVC: BaseVC {
 //            .space(4)
 //            .padding(all: 8)
 //            .size(.fill, .fill)
-////            .size(200, 200)
+        ////            .size(200, 200)
 //        }
 //        .format(.between)
 //        .padding(all: 10)
@@ -103,31 +95,31 @@ class TestVC: BaseVC {
                             .size(.fill, .fill)
 
                         let v = $0
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
 //                            self.vRoot.animate(0.2, block: {
                             v.attach().height(200)
 //                            })
-                        })
+                        }
                     }
 
                 let v = ZBox().attach($0) {
                     let total = 10
                     for idx in 0 ..< total {
                         UIView().attach($0)
-                            .width(on: $0, { .fix($0.width * (1 - CGFloat(idx) / CGFloat(total))) })
-                            .height(on: $0, { .fix($0.height * (1 - CGFloat(idx) / CGFloat(total))) })
+                            .width(on: $0) { .fix($0.width * (1 - CGFloat(idx) / CGFloat(total))) }
+                            .height(on: $0) { .fix($0.height * (1 - CGFloat(idx) / CGFloat(total))) }
                     }
                 }
                 .width(.fill)
                 .height(simulate: Simulate.ego.width.multiply(0.5))
 //                    .heightOnSelf({ .fix($0.width * 0.5) })
 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
 //                    v.view.animate(0.25, block: {
 //                        v.heightOnSelf({ .fix($0.width) })
                     v.height(simulate: Simulate.ego.width)
 //                    })
-                })
+                }
             }
     }
 
@@ -139,9 +131,9 @@ class TestVC: BaseVC {
         //        TGFlowLayout(.vert, arrangedCount: 3).attach() { x in
         TGFloatLayout().attach { x in
 
-            let labels = Array(repeating: 1, count: 10).map({ idx in
+            let labels = Array(repeating: 1, count: 10).map { idx in
                 Label("\(idx)")
-            })
+            }
 
             for (idx, label) in labels.enumerated() {
                 label.attach(x)
