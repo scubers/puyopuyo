@@ -185,3 +185,4 @@ extension String: PuyoOptionalType { public typealias PuyoWrappedType = String }
 extension UIColor: PuyoOptionalType { public typealias PuyoWrappedType = UIColor }
 extension UIFont: PuyoOptionalType { public typealias PuyoWrappedType = UIFont }
 extension NSNumber: PuyoOptionalType { public typealias PuyoWrappedType = NSNumber }
+extension UIImage: PuyoOptionalType { public typealias PuyoWrappedType = UIImage }

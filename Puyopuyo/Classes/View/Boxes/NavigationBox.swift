@@ -32,7 +32,6 @@ public class NavigationBox: VBox, Stateful {
                         .alignment(.bottom)
                 }
                 .visibility(self.viewState.asOutput().map({ $0.visible }))
-                .bottomBorder([.color(UIColor.black.withAlphaComponent(0.2)), .thick(0.5)])
                 .width(.fill)
                 .height($0.py_safeArea().map({ SizeDescription.wrap(add: $0.top) }))
                 .backgroundColor(self.viewState.asOutput().map({ $0.backgroundColor }))
