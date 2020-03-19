@@ -1,5 +1,5 @@
 //
-//  ListBox.swift
+//  TableBox.swift
 //  Puyopuyo
 //
 //  Created by Jrwong on 2019/12/22.
@@ -7,8 +7,8 @@
 
 import UIKit
 
-public protocol ListBoxSection: class {
-    var listBox: ListBox? { get set }
+public protocol TableBoxSection: class {
+    var tableBox: TableBox? { get set }
     func numberOfRows() -> Int
     func didSelect(row: Int)
     func cell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell
@@ -18,15 +18,15 @@ public protocol ListBoxSection: class {
 
 /**
  封装TableView的重用机制。
- ListBox的大小不能为包裹，因为内部UITableView需要一个明确的大小。
+ TableBox的大小不能为包裹，因为内部UITableView需要一个明确的大小。
  */
-public class ListBox: UITableView,
+public class TableBox: UITableView,
     Stateful,
     Delegatable,
     DataSourceable,
     UITableViewDelegate,
     UITableViewDataSource {
-    public let viewState = State<[ListBoxSection]>([])
+    public let viewState = State<[TableBoxSection]>([])
     public var wrapContent = false
 
     fileprivate var heightCache = [IndexPath: CGFloat]()
@@ -36,7 +36,7 @@ public class ListBox: UITableView,
 
     public init(style: UITableView.Style = .plain,
                 separatorStyle: UITableViewCell.SeparatorStyle = .singleLine,
-                sections: [ListBoxSection] = [],
+                sections: [TableBoxSection] = [],
                 header: BoxGenerator<UIView>? = nil,
                 footer: BoxGenerator<UIView>? = nil) {
         super.init(frame: .zero, style: style)
@@ -75,12 +75,12 @@ public class ListBox: UITableView,
 
         viewState.safeBind(to: self) { this, sections in
             sections.forEach { s in
-                s.listBox = this
+                s.tableBox = this
             }
             this.reload()
         }
 
-        // 监听tableView变化，动态改变ListBox大小
+        // 监听tableView变化，动态改变TableBox大小
         py_observing(for: #keyPath(UITableView.contentSize))
             .safeBind(to: self) { (this, size: CGSize?) in
                 if this.wrapContent {
@@ -180,28 +180,28 @@ public class ListBox: UITableView,
         delegateProxy.backup?.value?.tableView?(tableView, willDisplay: cell, forRowAt: indexPath)
     }
 
-    public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        (view as? UITableViewHeaderFooterView)?.contentView.backgroundColor = backgroundColor
-        delegateProxy.backup?.value?.tableView?(tableView, willDisplayHeaderView: view, forSection: section)
-    }
-
-    public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-        (view as? UITableViewHeaderFooterView)?.contentView.backgroundColor = backgroundColor
-        delegateProxy.backup?.value?.tableView?(tableView, willDisplayFooterView: view, forSection: section)
-    }
+//    public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+//        (view as? UITableViewHeaderFooterView)?.contentView.backgroundColor = backgroundColor
+//        delegateProxy.backup?.value?.tableView?(tableView, willDisplayHeaderView: view, forSection: section)
+//    }
+//
+//    public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+//        (view as? UITableViewHeaderFooterView)?.contentView.backgroundColor = backgroundColor
+//        delegateProxy.backup?.value?.tableView?(tableView, willDisplayFooterView: view, forSection: section)
+//    }
 }
 
-public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
-    public weak var listBox: ListBox?
+public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
+    public weak var tableBox: TableBox?
 
     public let dataSource = State<[Data]>([])
 
-    public typealias HeaderFooterGenerator<Data, CellEvent> = (SimpleOutput<(Int, Data)>, SimpleInput<CellEvent>) -> UIView?
-    var headerGenerator: HeaderFooterGenerator<[Data], CellEvent>
-    var footerGenerator: HeaderFooterGenerator<[Data], CellEvent>
+    public typealias HeaderFooterGenerator<Data, CellEvent> = (SimpleOutput<Data>, SimpleInput<CellEvent>) -> UIView?
+    var headerGenerator: HeaderFooterGenerator<RecycleContext<[Data], UITableView>, CellEvent>
+    var footerGenerator: HeaderFooterGenerator<RecycleContext<[Data], UITableView>, CellEvent>
 
-    public typealias CellGenerator<Data, Cell, CellEvent> = (SimpleOutput<(Int, Data)>, SimpleInput<CellEvent>) -> Cell
-    var cellGenerator: CellGenerator<Data, Cell, CellEvent>
+    public typealias CellGenerator<Data, Cell, CellEvent> = (SimpleOutput<Data>, SimpleInput<CellEvent>) -> Cell
+    var cellGenerator: CellGenerator<RecycleContext<Data, UITableView>, Cell, CellEvent>
 
     public typealias OnCellEvent<Event> = (Event) -> Void
     var onCellEvent: OnCellEvent<Event>
@@ -213,9 +213,9 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
                 selectionStyle: UITableViewCell.SelectionStyle = .default,
                 dataSource: SimpleOutput<[Data]>,
                 _diffIdentifier: ((Data) -> String)? = nil,
-                _cell: @escaping CellGenerator<Data, Cell, CellEvent>,
-                _header: @escaping HeaderFooterGenerator<[Data], CellEvent> = { _, _ in EmptyView() },
-                _footer: @escaping HeaderFooterGenerator<[Data], CellEvent> = { _, _ in EmptyView() },
+                _cell: @escaping CellGenerator<RecycleContext<Data, UITableView>, Cell, CellEvent>,
+                _header: @escaping HeaderFooterGenerator<RecycleContext<[Data], UITableView>, CellEvent> = { _, _ in EmptyView() },
+                _footer: @escaping HeaderFooterGenerator<RecycleContext<[Data], UITableView>, CellEvent> = { _, _ in EmptyView() },
                 _event: @escaping OnCellEvent<Event> = { _ in }) {
         self.identifier = identifier
         cellGenerator = _cell
@@ -256,51 +256,60 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
         return "\(cellIdentifier())_footer"
     }
 
+    private func getLayoutableContentSize(_ cv: UITableView) -> CGSize {
+        let width = cv.bounds.size.width - cv.contentInset.left - cv.contentInset.right
+        let height = cv.bounds.size.height - cv.contentInset.top - cv.contentInset.bottom
+        return CGSize(width: width, height: height)
+    }
+
     public func cell(for tableView: UITableView, at indexPath: IndexPath) -> UITableViewCell {
         let id = cellIdentifier()
-        var cell = tableView.dequeueReusableCell(withIdentifier: id) as? ListBoxCell<Data, CellEvent>
+        var cell = tableView.dequeueReusableCell(withIdentifier: id) as? TableBoxCell<Data, CellEvent>
         let data = dataSource.value[indexPath.row]
         if cell == nil {
-            let state = State((indexPath.row, data))
+//            let state = State((indexPath.row, data))
+            let state = State(RecycleContext(index: indexPath.row, size: getLayoutableContentSize(tableView), data: data, view: tableView))
             let event = SimpleIO<CellEvent>()
-            cell = ListBoxCell<Data, CellEvent>(id: id,
-                                                root: cellGenerator(state.asOutput(), event.asInput()),
-                                                state: state,
-                                                event: event)
+            cell = TableBoxCell<Data, CellEvent>(id: id,
+                                                 root: cellGenerator(state.asOutput(), event.asInput()),
+                                                 state: state,
+                                                 event: event)
             _ = event.outputing { [weak cell] event in
                 guard let cell = cell else { return }
-                let idx = cell.state.value.0
-                let data = cell.state.value.1
+                let idx = cell.state.value.index
+                let data = cell.state.value.data
                 self.onCellEvent(.itemEvent(idx, data, event))
             }
             cell?.selectionStyle = selectionStyle
         } else {
-            cell?.state.value = (indexPath.row, data)
+//            cell?.state.value = (indexPath.row, data)
+            cell?.state.value = RecycleContext(index: indexPath.row, size: getLayoutableContentSize(tableView), data: data, view: tableView)
         }
         return cell!
     }
 
     public func header(for tableView: UITableView, at section: Int) -> UIView? {
         let id = headerIdentifier()
-        var view = tableView.dequeueReusableHeaderFooterView(withIdentifier: id) as? ListHeaderFooter<[Data], CellEvent>
+        var view = tableView.dequeueReusableHeaderFooterView(withIdentifier: id) as? TableHeaderFooter<[Data], CellEvent>
 
         if view == nil {
-            let state = State((section, dataSource.value))
+            let state = State(RecycleContext(index: section, size: getLayoutableContentSize(tableView), data: dataSource.value, view: tableView))
             let event = SimpleIO<CellEvent>()
             guard let root = headerGenerator(state.asOutput(), event.asInput()) else {
                 return nil
             }
-            view = ListHeaderFooter<[Data], CellEvent>(id: id,
-                                                       root: root,
-                                                       state: state,
-                                                       event: event)
+            view = TableHeaderFooter<[Data], CellEvent>(id: id,
+                                                        root: root,
+                                                        state: state,
+                                                        event: event)
             view?.backgroundView?.backgroundColor = tableView.backgroundColor
             _ = event.outputing { [weak self] e in
                 guard let self = self, let header = view else { return }
-                self.onCellEvent(.headerEvent(header.state.value.0, header.state.value.1, e))
+                self.onCellEvent(.headerEvent(header.state.value.index, header.state.value.data, e))
             }
         } else {
-            view?.state.value = (section, dataSource.value)
+//            view?.state.value = (section, dataSource.value)
+            view?.state.value = RecycleContext(index: section, size: getLayoutableContentSize(tableView), data: dataSource.value, view: tableView)
         }
 
         return view!
@@ -308,43 +317,44 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
 
     public func footer(for tableView: UITableView, at section: Int) -> UIView? {
         let id = footerIdentifier()
-        var view = tableView.dequeueReusableHeaderFooterView(withIdentifier: id) as? ListHeaderFooter<[Data], CellEvent>
+        var view = tableView.dequeueReusableHeaderFooterView(withIdentifier: id) as? TableHeaderFooter<[Data], CellEvent>
 
         if view == nil {
-            let state = State((section, dataSource.value))
+//            let state = State((section, dataSource.value))
+            let state = State(RecycleContext(index: section, size: getLayoutableContentSize(tableView), data: dataSource.value, view: tableView))
             let event = SimpleIO<CellEvent>()
             guard let root = footerGenerator(state.asOutput(), event.asInput()) else {
                 return nil
             }
-            view = ListHeaderFooter<[Data], CellEvent>(id: id,
-                                                       root: root,
-                                                       state: state,
-                                                       event: event)
+            view = TableHeaderFooter<[Data], CellEvent>(id: id,
+                                                        root: root,
+                                                        state: state,
+                                                        event: event)
             view?.backgroundView?.backgroundColor = tableView.backgroundColor
             _ = event.outputing { [weak self] e in
                 guard let self = self, let header = view else { return }
-                self.onCellEvent(.footerEvent(header.state.value.0, header.state.value.1, e))
+                self.onCellEvent(.footerEvent(header.state.value.index, header.state.value.data, e))
             }
         } else {
-            view?.state.value = (section, dataSource.value)
+            view?.state.value = RecycleContext(index: section, size: getLayoutableContentSize(tableView), data: dataSource.value, view: tableView)
         }
 
         return view!
     }
 
     private func reload(with data: [Data]) {
-        guard let box = listBox else {
+        guard let box = tableBox else {
             dataSource.value = data
             return
         }
 
         guard let diffIdentifier = self.diffIdentifier else {
             dataSource.value = data
-            listBox?.reload()
+            tableBox?.reload()
             return
         }
 
-        listBox?.heightCache.removeAll()
+        tableBox?.heightCache.removeAll()
 
         let diff = Diff(src: dataSource.value, dest: data, identifier: diffIdentifier)
         diff.check()
@@ -371,12 +381,12 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
         }
     }
 
-    private class ListBoxCell<Data, E>: UITableViewCell {
+    private class TableBoxCell<Data, E>: UITableViewCell {
         var root: UIView
-        var state: State<(Int, Data)>
+        var state: State<RecycleContext<Data, UITableView>>
         var event: SimpleIO<E>
 
-        required init(id: String, root: UIView, state: State<(Int, Data)>, event: SimpleIO<E>) {
+        required init(id: String, root: UIView, state: State<RecycleContext<Data, UITableView>>, event: SimpleIO<E>) {
             self.root = root
             self.state = state
             self.event = event
@@ -403,12 +413,12 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
         }
     }
 
-    private class ListHeaderFooter<D, E>: UITableViewHeaderFooterView {
+    private class TableHeaderFooter<D, E>: UITableViewHeaderFooterView {
         var root: UIView
-        var state: State<(Int, D)>
+        var state: State<RecycleContext<D, UITableView>>
         var event: SimpleIO<E>
 
-        required init(id: String, root: UIView, state: State<(Int, D)>, event: SimpleIO<E>) {
+        required init(id: String, root: UIView, state: State<RecycleContext<D, UITableView>>, event: SimpleIO<E>) {
             self.root = root
             self.state = state
             self.event = event
@@ -431,15 +441,31 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
     }
 
     deinit {
-        print("ListSection deinit!!!")
+        print("TableSection deinit!!!")
     }
 }
 
-public extension Puyo where T: ListBox {
+public extension Puyo where T: TableBox {
     @discardableResult
     func wrapContent(_: Bool = true) -> Self {
         view.wrapContent = true
         view.py_setNeedsLayout()
         return self
+    }
+}
+
+extension PYProxyChain: UITableViewDelegate, UITableViewDataSource {
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        guard let target = target(with: #selector(UITableViewDataSource.tableView(_:numberOfRowsInSection:))) as? UITableViewDataSource else {
+            return 0
+        }
+        return target.tableView(tableView, numberOfRowsInSection: section)
+    }
+
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let target = target(with: #selector(UITableViewDataSource.tableView(_:numberOfRowsInSection:))) as? UITableViewDataSource else {
+            return UITableViewCell()
+        }
+        return target.tableView(tableView, cellForRowAt: indexPath)
     }
 }

@@ -14,10 +14,10 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
         print(scrollView.contentOffset)
     }
 
-    var sections = State<[ListBoxSection]>([])
+    var sections = State<[TableBoxSection]>([])
 
     override func configView() {
-        ListBox(
+        TableBox(
             separatorStyle: .none,
             header: {
                 VBox().attach {
@@ -55,24 +55,24 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
         }
 
         sections.value = [
-            ListSection<String, UIView, Double>(
+            TableSection<String, UIView, Double>(
                 identifier: "1",
                 selectionStyle: .none,
                 dataSource: first.asOutput(),
                 _diffIdentifier: { $0 },
                 _cell: { [weak self] o, _ -> UIView in
                     guard let self = self else { return UIView() }
-                    return self.getCell(state: o)
+                    return self.getCell(state: o.map { ($0.index, $0.data) })
                         .attach()
                         .view
                 },
                 _header: { o, _ -> UIView? in
                     HBox().attach {
                         Label.demo("").attach($0)
-                            .text(o.map { idx, _ in "header: \(idx)" })
+                            .text(o.map { "header: \($0.index)" })
                     }
+                    .backgroundColor(UIColor.white)
                     .onTap { _ in
-//                        e.input(value: 1.0)
                     }
                     .padding(all: 10)
                     .view
@@ -80,8 +80,9 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
                 _footer: { o, _ in
                     HBox().attach {
                         Label.demo("").attach($0)
-                            .text(o.map { idx, _ in "footer: \(idx)" })
+                            .text(o.map { "footer: \($0.index)" })
                     }
+                    .backgroundColor(UIColor.white)
                     .onTap { _ in
 //                        e.input(value: ())
                     }
@@ -93,13 +94,13 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
                 }
             ),
 
-            ListSection<Int, UIView, Int>(
+            TableSection<Int, UIView, Int>(
                 identifier: "1",
                 selectionStyle: .gray,
                 dataSource: (0 ..< 10).map { $0 }.asOutput(),
                 _cell: { [weak self] o, _ -> UIView in
                     guard let self = self else { return UIView() }
-                    return self.getCell(state: o.map { ($0, $1.description) })
+                    return self.getCell(state: o.map { ($0.index, $0.data.description) })
                 }
             ),
         ]
