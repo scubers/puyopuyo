@@ -180,15 +180,15 @@ public class ListBox: UITableView,
         delegateProxy.backup?.value?.tableView?(tableView, willDisplay: cell, forRowAt: indexPath)
     }
 
-//    public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-//        (view as? UITableViewHeaderFooterView)?.backgroundView?.backgroundColor = .clear
-//        delegateProxy.backup?.value?.tableView?(tableView, willDisplayHeaderView: view, forSection: section)
-//    }
-//
-//    public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-//        (view as? UITableViewHeaderFooterView)?.backgroundView?.backgroundColor = .clear
-//        delegateProxy.backup?.value?.tableView?(tableView, willDisplayFooterView: view, forSection: section)
-//    }
+    public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        (view as? UITableViewHeaderFooterView)?.contentView.backgroundColor = backgroundColor
+        delegateProxy.backup?.value?.tableView?(tableView, willDisplayHeaderView: view, forSection: section)
+    }
+
+    public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
+        (view as? UITableViewHeaderFooterView)?.contentView.backgroundColor = backgroundColor
+        delegateProxy.backup?.value?.tableView?(tableView, willDisplayFooterView: view, forSection: section)
+    }
 }
 
 public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
