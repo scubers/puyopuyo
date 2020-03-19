@@ -32,7 +32,7 @@ class MenuVC: BaseVC {
                         return HBox().attach {
                             Label("").attach($0)
                                 .textAlignment(.left)
-                                .text(o.map({ $1.0 }))
+                                .text(o.map { $1.0 })
                         }
                         .size(.fill, .wrap)
                         .padding(all: padding)
@@ -51,6 +51,9 @@ class MenuVC: BaseVC {
         )
         .attach(vRoot)
         .size(.fill, .fill)
+        .setDelegate(self)
+        
+        navState.value.bodyAvoidNavBar = true
     }
 
     override func viewDidLoad() {
@@ -59,5 +62,17 @@ class MenuVC: BaseVC {
 
     func push(vc: UIViewController) {
         navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
+extension MenuVC: UITableViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        var state = navState.value
+        if scrollView.contentOffset.y > 0 {
+            state.shadowOpacity = Float(min(scrollView.contentOffset.y / 50, 1))
+        } else {
+            state.shadowOpacity = 0
+        }
+        navState.input(value: state)
     }
 }

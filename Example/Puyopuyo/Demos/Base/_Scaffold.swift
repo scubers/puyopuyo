@@ -21,7 +21,7 @@ class _Scaffold: UIView {
             }
             .bottomBorder([.color(UIColor.black.withAlphaComponent(0.2)), .thick(0.5)])
             .width(.fill)
-            .height($0.py_safeArea().map({ SizeDescription.wrap(add: $0.top) }))
+            .height($0.py_safeArea().map { SizeDescription.wrap(add: $0.top) })
 
             body($0).attach($0)
                 .size(.fill, .fill)

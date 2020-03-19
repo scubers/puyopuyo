@@ -35,6 +35,8 @@ class BaseVC: UIViewController {
         .attach(view)
         .size(.fill, .fill)
         .viewState(navState)
+        
+        navState.value.shadowOpacity = 1
     }
 
     override func viewDidLoad() {
