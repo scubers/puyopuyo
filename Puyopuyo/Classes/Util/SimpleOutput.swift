@@ -18,9 +18,9 @@ public struct SimpleOutput<Value>: Outputing {
 
     public init<T: Outputing>(from: T) where T.OutputType == Value {
         action = { (input: SimpleInput<Value>) -> Unbinder in
-            from.outputing({ x in
+            from.outputing { x in
                 input.input(value: x)
-            })
+            }
         }
     }
 
@@ -33,13 +33,13 @@ public struct SimpleOutput<Value>: Outputing {
 
     public static func merge<T: Outputing>(_ outputs: [T]) -> SimpleOutput<Value> where T.OutputType == Value {
         return SimpleOutput<Value> { (i) -> Unbinder in
-            let unbinders = outputs.map({ (o) -> Unbinder in
-                o.outputing({ v in
+            let unbinders = outputs.map { (o) -> Unbinder in
+                o.outputing { v in
                     i.input(value: v)
-                })
-            })
+                }
+            }
             return Unbinders.create {
-                unbinders.forEach({ $0.py_unbind() })
+                unbinders.forEach { $0.py_unbind() }
             }
         }
     }
@@ -55,41 +55,33 @@ extension Outputing {
     }
 }
 
-extension Inputing {
-    public func asInput() -> SimpleInput<InputType> {
-        return SimpleInput { x in
-            self.input(value: x)
+// extension Yo where Base: Outputing {
+public extension SimpleOutput {
+    func some() -> SimpleOutput<OutputType?> {
+        return map { $0 }
+    }
+
+    func bind<T>(_ action: @escaping (OutputType, SimpleInput<T>) -> Void) -> SimpleOutput<T> {
+        return SimpleOutput<T>({ (i) -> Unbinder in
+            self.outputing { v in
+                action(v, i)
+            }
+        })
+    }
+
+    func map<R>(_ block: @escaping (OutputType) -> R) -> SimpleOutput<R> {
+        return bind { $1.input(value: block($0)) }
+    }
+
+    func filter(_ filter: @escaping (OutputType) -> Bool) -> SimpleOutput<OutputType> {
+        return bind { v, i in
+            if filter(v) { i.input(value: v) }
         }
     }
-}
 
-// extension Yo where Base: Outputing {
-extension SimpleOutput {
-    public func some() -> SimpleOutput<OutputType?> {
-        return map({ $0 })
-    }
-
-    public func bind<T>(_ action: @escaping (OutputType, SimpleInput<T>) -> Void) -> SimpleOutput<T> {
-        return SimpleOutput<T>({ (i) -> Unbinder in
-            self.outputing({ v in
-                action(v, i)
-            })
-        })
-    }
-
-    public func map<R>(_ block: @escaping (OutputType) -> R) -> SimpleOutput<R> {
-        return bind({ $1.input(value: block($0)) })
-    }
-
-    public func filter(_ filter: @escaping (OutputType) -> Bool) -> SimpleOutput<OutputType> {
-        return bind({ v, i in
-            if filter(v) { i.input(value: v) }
-        })
-    }
-
-    public func ignore(_ condition: @escaping (OutputType, OutputType) -> Bool) -> SimpleOutput<OutputType> {
+    func ignore(_ condition: @escaping (OutputType, OutputType) -> Bool) -> SimpleOutput<OutputType> {
         var last: OutputType!
-        return bind({ v, i in
+        return bind { v, i in
             guard last != nil else {
                 last = v
                 i.input(value: v)
@@ -100,31 +92,31 @@ extension SimpleOutput {
             if !ignore {
                 i.input(value: v)
             }
-        })
+        }
     }
 
-    public func take(_ count: Int) -> SimpleOutput<OutputType> {
+    func take(_ count: Int) -> SimpleOutput<OutputType> {
         var times: Int = 0
-        return bind({ v, i in
+        return bind { v, i in
             guard times <= count else { return }
             times += 1
             i.input(value: v)
-        })
+        }
     }
 
-    public func skip(_ count: Int) -> SimpleOutput<OutputType> {
+    func skip(_ count: Int) -> SimpleOutput<OutputType> {
         var times = 0
-        return bind({ v, i in
+        return bind { v, i in
             guard times > count else {
                 times += 1
                 return
             }
             i.input(value: v)
-        })
+        }
     }
 
-    public func scheduleOn(_ queue: OperationQueue) -> SimpleOutput<OutputType> {
-        return bind({ v, i in
+    func scheduleOn(_ queue: OperationQueue) -> SimpleOutput<OutputType> {
+        return bind { v, i in
             if OperationQueue.current == queue {
                 i.input(value: v)
             } else {
@@ -132,10 +124,10 @@ extension SimpleOutput {
                     i.input(value: v)
                 }
             }
-        })
+        }
     }
 
-    public func scheduleOnMain() -> SimpleOutput<OutputType> {
+    func scheduleOnMain() -> SimpleOutput<OutputType> {
         return scheduleOn(OperationQueue.main)
     }
 }
@@ -159,19 +151,19 @@ extension Optional: PuyoOptionalType {
 // extension Yo where Base: Outputing, Base.OutputType: PuyoOptionalType {
 extension SimpleOutput where OutputType: PuyoOptionalType {
     public func unwrap(or: OutputType.PuyoWrappedType) -> SimpleOutput<OutputType.PuyoWrappedType> {
-        return bind({ v, i in
+        return bind { v, i in
             if let v = v.puyoWrapValue {
                 i.input(value: v)
             } else {
                 i.input(value: or)
             }
-        })
+        }
     }
 }
 
 extension SimpleOutput where OutputType: Equatable {
     public func distinct() -> SimpleOutput<OutputType> {
-        return ignore({ $0 == $1 })
+        return ignore { $0 == $1 }
     }
 }
 

@@ -19,3 +19,17 @@ public struct SimpleInput<T>: Inputing {
         action = output
     }
 }
+
+public extension Inputing {
+    func asInput() -> SimpleInput<InputType> {
+        return SimpleInput { x in
+            self.input(value: x)
+        }
+    }
+
+    func asInput<T>(_ mapping: @escaping (T) -> InputType) -> SimpleInput<T> {
+        return SimpleInput { x in
+            self.input(value: mapping(x))
+        }
+    }
+}
