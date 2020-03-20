@@ -71,15 +71,15 @@ extension UIGestureRecognizer {
 
 // MARK: - Delegate
 
-class ShouldSimulateOtherGestureDelegate: NSObject, UIGestureRecognizerDelegate, Unbinder {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+public class ShouldSimulateOtherGestureDelegate: NSObject, UIGestureRecognizerDelegate, Unbinder {
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer.view == otherGestureRecognizer.view {
             return true
         }
         return false
     }
 
-    func py_unbind() {}
+    public func py_unbind() {}
 }
 
 // MARK: - TapGestureStyle
