@@ -7,13 +7,13 @@
 
 ## 描述
 
-声明式响应式布局系统。
+一个UIKit的声明式、响应式布局。
 
-也许你觉得这只是一个语法糖，但是，的确，它就是一个语法糖。
+被一个大佬的库和**SwiftUI**所启发。[TangramKit]()[https://github.com/youngsoft/TangramKit](https://github.com/youngsoft/TangramKit)
 
 ## Requirements
 
-swift 4.2
+swift 5.1
 
 ## Installation
 
@@ -26,36 +26,41 @@ pod 'Puyopuyo'
 相对于亲儿子的**SwiftUI**，当然是比较麻烦一点的了。单纯地声明布局，不能实现**View** 和父**View**的关系。所以需要在后面添加一个`attach(superview)`的操作。
 
 ```swift
-VBox().attach($0) {
-    Label("""
-        alignment = left
-        width = .wrap add 20
-        height = 100
-        """).attach($0)
+// 初始化一个view，附着在一个父view上，完成view的构建，并设置其相关属性
+VBox().attach(view) {
+    UILabel().attach($0)
+        .text("i am a text")
         .size(.wrap(add: 20), 100)
-
-    Label("""
-        alignment = right
-        width = .wrap add 50
-        height = 200
-        """).attach($0)
-        .alignment(.right)
-        .size(.wrap(add: 50), 150)
-
-    Label("""
-        alignment = center
-        width = .wrap add 80
-        height = wrap
-        """).attach($0)
-        .alignment(.center)
-        .size(.wrap(add: 80), .wrap)    
-
-    }
-    .space(10)
-    .size(.fill, .wrap)
-    .padding(all: 10)
-    .margin(all: 10)
+    
+    UIButton().attach($0)
+        .text("i am a button")
+        .size(.fill, .wrap)
+}
 ```
+
+一旦我们通过声明布局后，即可以不需要成员变量持有view，所有view也都可以跟随着父视图销毁时同时销毁。
+
+数据流变化：
+
+通过State，进行view和数据之间的绑定操作
+
+```swift
+// 创建一个state
+let textState = State("")
+
+HBox().attach(view) {
+    UILabel().attach($0)
+        .text(textState) // 绑定state
+}
+// state值改变
+textState.input(value: "i am a new text")
+```
+
+
+
+具体详细使用方式可以查看**Demo**使用，或者查看**WIKI**。
+
+拥抱响应式，从此规范数据流，让UI构建更流畅！！！
 
 ## Author
 
