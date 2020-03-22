@@ -1,15 +1,14 @@
 # Puyopuyo
 
-[![CI Status](https://img.shields.io/travis/Jrwong/Puyopuyo.svg?style=flat)](https://travis-ci.org/Jrwong/Puyopuyo)
+[![CI Status](https://img.shields.io/travis/scubers/Puyopuyo.svg?style=flat)](https://travis-ci.org/scubers/Puyopuyo)
 [![Version](https://img.shields.io/cocoapods/v/Puyopuyo.svg?style=flat)](https://cocoapods.org/pods/Puyopuyo)
-[![License](https://img.shields.io/cocoapods/l/Puyopuyo.svg?style=flat)](https://cocoapods.org/pods/Puyopuyo)
 [![Platform](https://img.shields.io/cocoapods/p/Puyopuyo.svg?style=flat)](https://cocoapods.org/pods/Puyopuyo)
 
 ## 描述
 
 一个UIKit的声明式、响应式布局。
 
-被一个大佬的库和**SwiftUI**所启发。[TangramKit]()[https://github.com/youngsoft/TangramKit](https://github.com/youngsoft/TangramKit)
+被一个大佬的库和**SwiftUI**所启发。[TangramKit](https://github.com/youngsoft/TangramKit)
 
 ## Requirements
 
@@ -31,7 +30,7 @@ VBox().attach(view) {
     UILabel().attach($0)
         .text("i am a text")
         .size(.wrap(add: 20), 100)
-    
+
     UIButton().attach($0)
         .text("i am a button")
         .size(.fill, .wrap)
@@ -56,9 +55,7 @@ HBox().attach(view) {
 textState.input(value: "i am a new text")
 ```
 
-
-
-具体详细使用方式可以查看**Demo**使用，或者查看**WIKI**。
+具体详细使用方式可以查看**Demo**使用，或者查看[**WIKI**](https://github.com/scubers/puyopuyo/blob/master/WIKI.md)。
 
 拥抱响应式，从此规范数据流，让UI构建更流畅！！！
 

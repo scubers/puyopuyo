@@ -22,7 +22,7 @@ VBox().attach(view) {
     UILabel().attach($0)
         .text("i am a text")
         .size(.wrap(add: 20), 100)
-    
+
     UIButton().attach($0)
         .text("i am a button")
         .size(.fill, .wrap)
@@ -32,7 +32,7 @@ let textState = State("")
 HBox().attach(view) {
     UILabel().attach($0)
         .text(textState) // 绑定state
-        
+
    UIButton().attach($0)
        .text("i am a button")
        // 绑定UIControl事件
@@ -116,7 +116,7 @@ public class State<Value>: Outputing, Inputing {
 ```swift
 extension Observable: Outputing {
     public typealias OutputType = Element
-    
+
     public func outputing(_ block: @escaping (Element) -> Void) -> Unbinder {
         let d = subscribe(onNext: { value in
             block(value)
@@ -128,13 +128,13 @@ extension Observable: Outputing {
 }
 
 extension PublishSubject: Inputing {
-    
+
     public typealias InputType = Element
-    
+
     public func input(value: Element) {
         onNext(value)
     }
-    
+
 }
 ```
 
@@ -238,7 +238,6 @@ class CustomStyles {
 // 使用
 UILabel().attach($0)
     .styles(CustomStyles.titleStyle())
-
 ```
 
 Style其实只是一个执行接口，并没有规定实现Style的是什么，所以Style也可以用于手势，内部实现的有：
@@ -272,5 +271,3 @@ let value = State<Float>(0)
 UISlider().attach().value(value)
 value.input(value: 0.5)
 ```
-
-
