@@ -41,21 +41,7 @@ VBox().attach(view) {
         .text("i am a button")
         .size(.fill, .wrap)
 }
-// 创建一个State
-let textState = State("")
-HBox().attach(view) {
-    UILabel().attach($0)
-        .text(textState) // 绑定state
 
-   UIButton().attach($0)
-       .text("i am a button")
-       // 绑定UIControl事件
-       .onEvent(.touchUpInside, SimpleInput { sender in
-           print("button clicked !!! ")
-       })                
-}
-// 修改数据源，绑定的Label将自动更新。另外数据和UI没有相互引用。
-textState.input(value: "i am a new text")
 ```
 
 ## 布局Box
@@ -140,17 +126,34 @@ extension Observable: Outputing {
         }
     }
 }
-
 extension PublishSubject: Inputing {
-
     public typealias InputType = Element
-
     public func input(value: Element) {
         onNext(value)
     }
-
 }
 ```
+
+使用
+
+```swift
+// 创建一个State
+let textState = State("")
+HBox().attach(view) {
+     UILabel().attach($0)
+         .text(textState) // 绑定state
+     UIButton().attach($0)
+         .text("i am a button")
+           // 绑定UIControl事件
+         .onEvent(.touchUpInside, SimpleInput { sender in
+            print("button clicked !!! ")
+         })
+ }
+// 修改数据源，绑定的Label将自动更新。另外数据和UI没有相互引用。
+textState.input(value: "i am a new text")
+```
+
+
 
 ## 复杂View的构建方式
 
