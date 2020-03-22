@@ -82,6 +82,7 @@ class CustomView: UIView, Stateful, Eventable {
                     }
                 })
         }
+        .animator(Animators.default)
         state.value.title = "nwe text"
         state.value.count = 99
         
@@ -93,7 +94,15 @@ class CustomView: UIView, Stateful, Eventable {
         
         let value = State<Float>(0)
         UISlider().attach().value(value)
+            .onBoundsChanged(SimpleInput { frame in
+            })
+            .onFrameChanged(SimpleInput { frame in
+            })
+            .onCenterChanged(SimpleInput { frame in
+            })
+            .frame(x: 0, y: 0, w: 100, h: 100)
         value.input(value: 0.5)
+        
     }
 }
 

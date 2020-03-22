@@ -2,6 +2,20 @@
 
 这是一个针对UIKit的声明式，响应式的布局系统。
 
+Demo中几乎涵盖了所有的API使用，如果方便可以下载Demo对照查看。
+
+- [Puyopuyo](#puyopuyo)
+  * [基本特性](#基本特性)
+  * [基本使用](#基本使用)
+  * [布局Box](#布局box)
+  * [数据管理](#数据管理)
+  * [复杂View的构建方式](#复杂View的构建方式)
+  * [Style样式](#Style样式)
+  * [扩展性](#扩展性)
+  * [动画](#动画)
+  * [与其他布局混用](#与其他布局混用)
+  * [获取视图的最终位置](#获取视图的最终位置)
+
 ## 基本特性
 
 - 开发流程：使用声明式的API进行UI构建，并通过响应式的数据绑定方式，确保数据流的走向是：数据 -> View。
@@ -50,19 +64,19 @@ textState.input(value: "i am a new text")
 
 BoxView
 
-|- ZBox
+|------ ZBox
 
-|- FlatBox
+|------ FlatBox
 
-|    |- HBox
+|-------|------ HBox
 
-|    |- VBox
+|-------|------ VBox
 
-|- FlowBox
+|------ FlowBox
 
-|    |- HFlow
+|-------|------ HFlow
 
-|    |- VFlow
+|-------|------ VFlow
 
 Box布局通过Regulator的属性，对Box的布局方式进行设置。
 
@@ -270,4 +284,52 @@ public extension Puyo where T: UISlider {
 let value = State<Float>(0)
 UISlider().attach().value(value)
 value.input(value: 0.5)
+```
+
+## 动画
+
+因为库是基于UIKit的，所以动画必然也是基于UIKit。BoxView提供`animator`属性。在BoxView执行 `layoutSubviews` 时，使用该对象提供的方法进行动画。
+
+```swift
+public protocol Animator {
+    func animate(view: UIView, layouting: @escaping () -> Void)
+}
+
+// 自定义动画
+public struct CustomAnimator: Animator {}
+
+VBox().attach()
+    .animator(Animators.none) // 默认值
+    .animator(Animators.default) // 默认动画
+```
+
+## 与其他布局混用
+
+Box布局的所有布局属性都依赖于`activate = true`，默认也是true。当想和其他布局一同使用，或者不想当前视图被box控制的话，可以设置为false，然后再设置其他布局属性，例如Autolayout的约束。
+
+```swift
+VBox().attach {
+    UILabel().attach($0)
+        // VBox将忽略本视图的计算
+        .activate(false) 
+        // 忽略之后可以直接设置其位置，该API只能用于 activate = false 的时候
+        .frame(x: 0, y: 0, w: 100, h: 100) 
+}
+```
+
+## 获取视图的最终位置
+
+可以通过相关API获取，具体内部实现为**KVO**。
+
+```swift
+UIView().attach()
+    .onBoundsChanged(SimpleInput { bounds in
+        // bounds 
+    })
+    .onFrameChanged(SimpleInput { frame in
+        // frame
+    })
+    .onCenterChanged(SimpleInput { center in
+        // center
+    })
 ```
