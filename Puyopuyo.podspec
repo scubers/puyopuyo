@@ -29,31 +29,36 @@ TODO: Add long description of the pod here.
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '8.0'
-
+  s.swift_version = '5.1'
   
+  s.public_header_files = 'Puyopuyo/Classes/**/*.h'
+  s.source_files = [
+    'Puyopuyo/Classes/Core/**/*.{h,m,swift}',
+    'Puyopuyo/Classes/Util/**/*.{h,m,swift}',
+    'Puyopuyo/Classes/View/**/*.{h,m,swift}'
+  ]
+  # s.subspec 'Util' do |c|
+  #   c.public_header_files = 'Puyopuyo/Classes/Util/**/*.h'
+  #   c.source_files = 'Puyopuyo/Classes/Util/**/*.{h,m,swift}'
+  # end
   
-  s.subspec 'Util' do |c|
-    c.public_header_files = 'Puyopuyo/Classes/Util/**/*.h'
-    c.source_files = 'Puyopuyo/Classes/Util/**/*.{h,m,swift}'
-  end
+  # s.subspec 'Core' do |c|
+  #   c.source_files = 'Puyopuyo/Classes/Core/**/*.{h,m,swift}'
+  #   c.dependency 'Puyopuyo/Util'
+  # end
   
-  s.subspec 'Core' do |c|
-    c.source_files = 'Puyopuyo/Classes/Core/**/*.{h,m,swift}'
-    c.dependency 'Puyopuyo/Util'
-  end
+  # s.subspec 'View' do |c|
+  #   c.source_files = 'Puyopuyo/Classes/View/**/*.{h,m,swift}'
+  #   c.dependency 'Puyopuyo/Core'
+  # end
   
-  s.subspec 'View' do |c|
-    c.source_files = 'Puyopuyo/Classes/View/**/*.{h,m,swift}'
-    c.dependency 'Puyopuyo/Core'
-  end
+  # s.default_subspec = 'View'
   
-  s.default_subspec = 'View'
-  
-  s.subspec 'TangramKit' do |c|
-      c.source_files = 'Puyopuyo/Classes/TangramKit/**/*.{h,m,swift}'
-      c.dependency 'Puyopuyo/View'
-      c.dependency 'TangramKit'
-  end
+  # s.subspec 'TangramKit' do |c|
+  #     c.source_files = 'Puyopuyo/Classes/TangramKit/**/*.{h,m,swift}'
+  #     c.dependency 'Puyopuyo/View'
+  #     c.dependency 'TangramKit'
+  # end
   
   
   # s.resource_bundles = {

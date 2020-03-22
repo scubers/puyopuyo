@@ -25,7 +25,7 @@ class ListVC: BaseVC {
         v.dataSource = self
         v.rowHeight = UITableView.automaticDimension
         v.register(ListCell.self, forCellReuseIdentifier: CellType.puyo.rawValue)
-        v.register(ListCell2.self, forCellReuseIdentifier: CellType.tangramKit.rawValue)
+//        v.register(ListCell2.self, forCellReuseIdentifier: CellType.tangramKit.rawValue)
         v.register(ListCell3.self, forCellReuseIdentifier: CellType.snapKit.rawValue)
         return v
     }()
@@ -176,84 +176,6 @@ class ListCell: BaseCell {
     }
 }
 
-class ListCell2: BaseCell {
-    private var root: TGBaseLayout!
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        root =
-            HLine().attach {
-                UIImageView().attach($0)
-                    .tg_size(30, 30)
-
-                VLine().attach($0) {
-                    HLine().attach($0) {
-                        UILabel().attach($0)
-                            .text(self.name)
-                            .numberOfLines(State(0))
-                            .tg_size(.fill, .fill)
-
-                        UIButton().attach($0)
-                            .text(State("广告"), state: .normal)
-                            .tg_size(80, 25)
-                    }
-                    .tg_size(.fill, 30)
-
-                    UILabel().attach($0)
-                        .text(self.textData)
-                        .tg_size(.fill, .wrap)
-
-                    UIButton().attach($0)
-                        .tg_size(.wrap, 25)
-
-//                Spacer(20).attach($0)
-                    let v = $0
-                    UIView().attach($0)
-                        .tg_size(20, 20)
-                        .attach {
-                            $0.tg_width.equal(v).multiply(0.5)
-                        }
-
-                    HLine().attach($0) {
-                        UILabel().attach($0)
-                            .tg_size(.wrap, .wrap)
-                            .text(self.time)
-                        UILabel().attach($0)
-                            .tg_size(.wrap, .wrap)
-                            .text(self.time)
-                        UILabel().attach($0)
-                            .tg_size(.wrap, .wrap)
-                            .text(self.time)
-                    }
-                    .tg_size(.fill, 30)
-                    .tg_gravity(TGGravity.horz.between)
-
-                    HLine().attach($0) {
-                        UILabel().attach($0)
-                            .text(self.time)
-                            .tg_size(.fill, .fill)
-                        UIButton().attach($0)
-                            .tg_size(50, .fill)
-                    }
-                    .tg_size(.fill, 25)
-                }
-                .tg_size(.fill, .wrap)
-            }
-            .tg_padding(all: 20)
-            .tg_size(.fill, .wrap)
-            .view
-        contentView.addSubview(root)
-        Util.randomViewColor(view: self)
-    }
-
-    required init?(coder _: NSCoder) {
-        fatalError()
-    }
-
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        return root.sizeThatFits(size)
-    }
-}
 
 class ListCell3: BaseCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

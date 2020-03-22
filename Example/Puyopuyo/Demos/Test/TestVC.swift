@@ -126,33 +126,6 @@ class TestVC: BaseVC {
         return true
     }
 
-    private func tk_flowTest() {
-        //        TGFlowLayout(.vert, arrangedCount: 3).attach() { x in
-        TGFloatLayout().attach { x in
-
-            let labels = Array(repeating: 1, count: 10).map { idx in
-                Label("\(idx)")
-            }
-
-            for (idx, label) in labels.enumerated() {
-                label.attach(x)
-                    .text("\(idx)".asOutput().some())
-                    .tg_size(50 + idx * 3, 50 + idx * 3 + 1)
-
-                //                if idx % 3 == 2 && idx != 2 {
-                if idx == 2 {
-                    label.tg_reverseFloat = true
-                    //                    label.attach().tg_size(.fill, 50)
-                }
-            }
-        }
-        .size(.fill, .fill)
-        .tg_gravity(TGGravity.horz.right)
-        .tg_size(.fill, .fill)
-        .activated(State(false))
-        .attach(vRoot)
-    }
-
     override func configView() {
         vRoot.attach {
             if let v = self.subView() {

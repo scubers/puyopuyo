@@ -4,7 +4,8 @@ use_frameworks!
 use_modular_headers!
 
 target 'Puyopuyo_Example' do
-  pod 'Puyopuyo/TangramKit', :path => '../'
+# pod 'Puyopuyo/TangramKit', :path => '../'
+ pod 'Puyopuyo', :path => '../'
   pod 'TangramKit'
   pod 'RxSwift'
   pod 'SnapKit', :inhibit_warnings => true
