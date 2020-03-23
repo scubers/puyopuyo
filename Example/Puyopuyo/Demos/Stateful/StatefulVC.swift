@@ -6,12 +6,11 @@
 //  Copyright © 2019 CocoaPods. All rights reserved.
 //
 
-import UIKit
-import RxSwift
 import Puyopuyo
+import RxSwift
+import UIKit
 
 class StatefulVC: BaseVC, UITextFieldDelegate {
-    
     var text = "text".asOutput().someState()
     var textColor = State<UIColor>(.black)
     lazy var backgroundColor = State<UIColor>(Util.randomColor())
@@ -19,16 +18,15 @@ class StatefulVC: BaseVC, UITextFieldDelegate {
     var height = State<SizeDescription>(.fix(100))
     
     override func configView() {
-        
         UIScrollView().attach(vRoot) {
-            
             VBox().attach($0) {
-                
                 UISwitch().attach($0)
-                    .addWeakBind(to: self, for: .valueChanged, { StatefulVC.valueChanged($0) })
+                    .bind(to: self, event: .valueChanged, binding: { StatefulVC.valueChanged($0) })
                 
                 UIButton(type: .contactAdd).attach($0)
-                    .addWeakAction(to: self, for: [.touchDragInside], { (self, _) in self.valueChanged(UISwitch())})
+                    .bind(to: self, event: .touchDragInside) { this, _ in
+                        this.valueChanged(UISwitch())
+                    }
                 
                 UITextField().attach($0)
                     .placeholder(State("this is a textfiled"))
@@ -61,18 +59,18 @@ class StatefulVC: BaseVC, UITextFieldDelegate {
         .size(.fill, .fill)
     }
     
-    private func valueChanged(_ view: UISwitch) -> Void {
-        change(value: view.isOn)
+    private func valueChanged(_ view: UISwitch) {
+        self.change(value: view.isOn)
     }
     
     private func change(value: Bool) {
 //        UIView.animate(withDuration: 0.2) {
-            self.text.value = "A random string: \(arc4random_uniform(10))"
-            self.width.value = self.randomSize()
-            self.height.value = self.randomSize()
-            self.textColor.value = Util.randomColor()
-            self.backgroundColor.value = Util.randomColor()
-            self.vRoot.layoutIfNeeded()
+        self.text.value = "A random string: \(arc4random_uniform(10))"
+        self.width.value = self.randomSize()
+        self.height.value = self.randomSize()
+        self.textColor.value = Util.randomColor()
+        self.backgroundColor.value = Util.randomColor()
+        self.vRoot.layoutIfNeeded()
 //        }
     }
     

@@ -19,9 +19,9 @@ public extension Puyo where T: UITextField {
     /// 若TextField可能包裹，则每次输入都会重新布局，若非必要，不要设置
     @discardableResult
     func resizeByContent() -> Self {
-        addWeakAction(to: view, for: .editingChanged, { v, _ in
+        bind(to: view, event: .editingChanged) { (v, _) in
             v.py_setNeedsLayoutIfMayBeWrap()
-        })
+        }
         return self
     }
 
@@ -33,17 +33,17 @@ public extension Puyo where T: UITextField {
             v.py_setNeedsLayoutIfMayBeWrap()
         }), for: #function)
 
-        addWeakAction(to: view, for: .editingChanged, { _, v in
+        bind(to: view, event: .editingChanged) { (_, v) in
             text.input(value: _getOptionalType(from: v.text))
-        })
+        }
         return self
     }
 
     @discardableResult
     func texting<S: Inputing>(_ text: S) -> Self where S.InputType: PuyoOptionalType, S.InputType.PuyoWrappedType == String {
-        addWeakAction(to: view, for: .editingChanged, { _, v in
+        bind(to: view, event: .editingChanged) { (_, v) in
             text.input(value: _getOptionalType(from: v.text))
-        })
+        }
         return self
     }
 

@@ -6,19 +6,17 @@
 //  Copyright © 2019 CocoaPods. All rights reserved.
 //
 
-import UIKit
 import Puyopuyo
 import RxSwift
-
+import UIKit
 
 class StyleTestViewController: BaseVC, UIScrollViewDelegate {
-    
     let text = BehaviorSubject(value: "")
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         print(scrollView.contentSize)
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
@@ -43,28 +41,26 @@ class StyleTestViewController: BaseVC, UIScrollViewDelegate {
         let g = Int(color >> 8) & mask
         let b = Int(color) & mask
         
-        let red   = CGFloat(r) / 255.0
+        let red = CGFloat(r) / 255.0
         let green = CGFloat(g) / 255.0
-        let blue  = CGFloat(b) / 255.0
+        let blue = CGFloat(b) / 255.0
         
         return UIColor(red: red, green: green, blue: blue, alpha: 1)
     }
     
     func setupViews() {
-        
         UIScrollView().attach(vRoot) {
             VBox().attach($0) {
-                
                 VBox().attach($0) {
                     UITextField().attach($0)
-                        .addWeakAction(to: self, for: .editingChanged, { (self, v) in
-                            self.text.onNext(v.text ?? "")
+                        .bind(to: self, event: .editingChanged, action: { this, v in
+                            this.text.onNext(v.text ?? "")
                         })
                         .backgroundColor(State(.lightGray).asOutput().some())
                         .size(100, 40)
                     
                     UIView().attach($0)
-                        .backgroundColor(self.text.map({ [weak self] in self?.color(hex: $0)}))
+                        .backgroundColor(self.text.map { [weak self] in self?.color(hex: $0) })
                         .borderWidth(State(1))
                         .borderColor(State(Optional.some(UIColor.blue)))
                         .size(100, 40)
@@ -80,42 +76,41 @@ class StyleTestViewController: BaseVC, UIScrollViewDelegate {
                     self.getDescriptionLabel(text: "Secondary: 12", fontSize: 12).attach($0)
                     self.getDescriptionLabel(text: "Tertiary: 10", fontSize: 10).attach($0)
                     self.getDescriptionLabel(text: "Quaternary: 8", fontSize: 8).attach($0)
-                    }
-                    .space(5)
+                }
+                .space(5)
                 
                 VBox().attach($0) {
-                    
                     HBox().attach($0) {
                         self.getDescriptionLabel(text: "背景色(Background color)").attach($0).size(100, 30)
                         self.getDescriptionLabel(text: "字体色(Text color)").attach($0).size(.wrap, 30)
-                        }
-                        .space(20)
+                    }
+                    .space(20)
                     
                     HBox().attach($0) {
                         self.getColorView(colorString: "#ffffff").attach($0).size(100, 50)
                         self.getDescriptionLabel(text: "Primary", color: "#333333").attach($0)
-                        }
-                        .space(20)
+                    }
+                    .space(20)
                     
                     HBox().attach($0) {
                         self.getColorView(colorString: "#dddddd").attach($0).size(100, 50)
                         self.getDescriptionLabel(text: "Secondary", color: "#555555").attach($0)
-                        }
-                        .space(20)
+                    }
+                    .space(20)
                     
                     HBox().attach($0) {
                         self.getColorView(colorString: "#bbbbbb").attach($0).size(100, 50)
                         self.getDescriptionLabel(text: "Tertiary", color: "#666666").attach($0)
-                        }
-                        .space(20)
+                    }
+                    .space(20)
                     
                     HBox().attach($0) {
                         self.getColorView(colorString: "#999999").attach($0).size(100, 50)
                         self.getDescriptionLabel(text: "Quaternary", color: "#777777").attach($0)
-                        }
-                        .space(20)
                     }
-                    .space(5)
+                    .space(20)
+                }
+                .space(5)
                 
                 VBox().attach($0) {
                     self.getDescriptionLabel(text: "主题色(Theme)").attach($0)
@@ -123,63 +118,62 @@ class StyleTestViewController: BaseVC, UIScrollViewDelegate {
                     HBox().attach($0) {
                         self.getColorView(colorString: "#D03B5C").attach($0).size(100, 50)
                         self.getDescriptionLabel(text: "主题色").attach($0)
-                        }
-                        .space(20)
+                    }
+                    .space(20)
                     
                     HBox().attach($0) {
                         self.getColorView(colorString: "#EE8800").attach($0).size(100, 50)
                         self.getDescriptionLabel(text: "主题描边色").attach($0)
-                        }
-                        .space(20)
+                    }
+                    .space(20)
                     
                     HBox().attach($0) {
                         self.getColorView(colorString: "#FF4444").attach($0).size(100, 50)
                         self.getDescriptionLabel(text: "辅助填充色").attach($0)
-                        }
-                        .space(20)
+                    }
+                    .space(20)
                     
                     HBox().attach($0) {
                         self.getColorView(colorString: "#C9C9C9").attach($0).size(100, 50)
                         self.getDescriptionLabel(text: "边框颜色").attach($0)
-                        }
-                        .space(20)
+                    }
+                    .space(20)
                     
                     HBox().attach($0) {
                         self.getColorView(colorString: "#666B77").attach($0).size(100, 50)
                         self.getDescriptionLabel(text: "导航栏颜色").attach($0)
-                        }
-                        .space(20)
-                    
                     }
-                    .space(5)
-                
-                    self.getMeiyeColors().attach($0)
+                    .space(20)
                 }
-                .padding(top: 10, left: 20, right: 20)
-                .space(20)
-                .width(.ratio(1))
-                .justifyContent(.left)
+                .space(5)
+                
+                self.getMeiyeColors().attach($0)
+            }
+            .padding(top: 10, left: 20, right: 20)
+            .space(20)
+            .width(.ratio(1))
+            .justifyContent(.left)
         }
         .size(.ratio(1), .ratio(1))
     }
     
     func getMeiyeColors() -> UIView {
         return
-            VBox().attach() { x in
-                
-                self.getDescriptionLabel(text: "iOS美业的颜色").attach(x)
-                
-                self.colors.enumerated().forEach { (idx, color) in
-                    HBox().attach(x) {
-                        self.getColorView(colorString: color).attach($0).size(100, 30)
-                        self.getDescriptionLabel(text: color).attach($0)
-                        self.getDescriptionLabel(text: "\(idx)").attach($0)
+            VBox().attach { x in
+                    
+                    self.getDescriptionLabel(text: "iOS美业的颜色").attach(x)
+                    
+                    self.colors.enumerated().forEach { idx, color in
+                        HBox().attach(x) {
+                            self.getColorView(colorString: color).attach($0).size(100, 30)
+                            self.getDescriptionLabel(text: color).attach($0)
+                            self.getDescriptionLabel(text: "\(idx)").attach($0)
+                        }
+                        .space(10)
                     }
-                    .space(10)
                 }
-            }
-            .space(5)
-            .view
+                .space(5)
+                .view
     }
     
     func getColorView(colorString: String) -> UIView {
@@ -224,11 +218,11 @@ class StyleTestViewController: BaseVC, UIScrollViewDelegate {
         "0xF7F7F7",
         "0xF6A623",
         "0x7ED321",
-        "0x21D377",//折扣卡
+        "0x21D377", // 折扣卡
         "0xAAE03C",
-        "0xF76B1C",//次卡
+        "0xF76B1C", // 次卡
         "0xF6BE4E",
-        "0x189CD5",//充值卡
+        "0x189CD5", // 充值卡
         "0x50EDC9",
         "0xEE5959", // 组合卡
         "0xF5A373",
@@ -283,8 +277,6 @@ class StyleTestViewController: BaseVC, UIScrollViewDelegate {
         "0x3488E0",
         "0x23ABE3"
     ]
-
-
 }
 
 extension UIColor {
@@ -305,9 +297,9 @@ extension UIColor {
         let g = Int(color >> 8) & mask
         let b = Int(color) & mask
         
-        let red   = CGFloat(r) / 255.0
+        let red = CGFloat(r) / 255.0
         let green = CGFloat(g) / 255.0
-        let blue  = CGFloat(b) / 255.0
+        let blue = CGFloat(b) / 255.0
         
         self.init(red: red, green: green, blue: blue, alpha: 1)
     }

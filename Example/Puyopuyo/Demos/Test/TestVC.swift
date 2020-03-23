@@ -16,8 +16,8 @@ class NewView: ZBox, Eventable {
     override func buildBody() {
         attach {
             UIButton(type: .contactAdd).attach($0)
-                .onEvent(.touchUpInside, SimpleInput { [weak self] _ in
-                    self?.eventProducer.input(value: "100")
+                .bind(to: self, event: .touchUpInside, action: { (this, _) in
+                    this.emmit("100")
                 })
         }
     }
@@ -38,6 +38,11 @@ class TestVC: BaseVC {
                 HBox().attach($0) {
                     Label.demo("test demo").attach($0)
                     Label.demo("11112222").attach($0)
+                    UIButton().attach($0)
+                    .text("lsjkdflksjdf")
+                        .bind(event: .touchUpInside, input: SimpleInput { _ in
+                            print("----")
+                        })
                 }
                 .size(.wrap, .fill)
             }

@@ -64,8 +64,8 @@ class FlatMixVC: BaseVC {
             UIButton().attach($0)
                 .activated(false)
                 .text("change")
-                .addWeakAction(to: self, for: .touchUpInside, { s, _ in
-                    s.change()
+                .bind(to: self, event: .touchUpInside, action: { (this, _) in
+                    this.change()
                 })
                 .frameY(Simulate($0).height.add(-20))
                 .frame(w: 100, h: 20)

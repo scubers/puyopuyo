@@ -13,9 +13,9 @@ public extension Puyo where T: UISwitch {
         state.safeBind(to: view, id: #function) { v, a in
             v.isOn = a
         }
-        addWeakAction(to: view, for: .valueChanged, { _, v in
+        bind(to: view, event: .valueChanged) { (_, v) in
             state.input(value: v.isOn)
-        })
+        }
         return self
     }
 }

@@ -59,14 +59,12 @@ extension UIView {
         set {
             // hidden
             switch newValue {
-            case .visible: fallthrough
-            case .free: isHidden = false
+            case .visible, .free: isHidden = false
             default: isHidden = true
             }
             // activated
             switch newValue {
-            case .visible: fallthrough
-            case .invisible: py_measure.activated = true
+            case .visible, .invisible: py_measure.activated = true
             default: py_measure.activated = false
             }
         }
@@ -87,53 +85,53 @@ extension UIView {
     public func py_boundsState() -> SimpleOutput<CGRect> {
         return
             py_observing(for: #keyPath(UIView.bounds))
-            .map({ (rect: CGRect?) in rect ?? .zero })
-            .distinct()
+                .map { (rect: CGRect?) in rect ?? .zero }
+                .distinct()
     }
 
     public func py_centerState() -> SimpleOutput<CGPoint> {
         return
             py_observing(for: #keyPath(UIView.center))
-            .map({ (x: CGPoint?) in x ?? .zero })
-            .distinct()
+                .map { (x: CGPoint?) in x ?? .zero }
+                .distinct()
     }
 
     public func py_frameStateByBoundsCenter() -> SimpleOutput<CGRect> {
-        let bounds = py_boundsState().map({ _ in CGRect.zero })
-        let center = py_centerState().map({ _ in CGRect.zero })
+        let bounds = py_boundsState().map { _ in CGRect.zero }
+        let center = py_centerState().map { _ in CGRect.zero }
         return
             SimpleOutput.merge([bounds, center])
-            .map({ [weak self] (_) -> CGRect in
-                guard let self = self else { return .zero }
-                return self.frame
-            })
+                .map { [weak self] (_) -> CGRect in
+                    guard let self = self else { return .zero }
+                    return self.frame
+                }
         // 因为这里是合并，不知道为何不能去重
     }
 
     public func py_frameStateByKVO() -> SimpleOutput<CGRect> {
         return
             py_observing(for: #keyPath(UIView.frame))
-            .map({ (x: CGRect?) in x ?? .zero })
-            .distinct()
+                .map { (x: CGRect?) in x ?? .zero }
+                .distinct()
     }
 
     /// ios11监听safeAreaInsets, ios10及以下，则监听frame变化并且通过转换坐标后得到与statusbar的差距
     public func py_safeArea() -> SimpleOutput<UIEdgeInsets> {
         if #available(iOS 11, *) {
-            return py_observing(for: #keyPath(UIView.safeAreaInsets)).map({ (insets: UIEdgeInsets?) in insets ?? .zero }).distinct()
+            return py_observing(for: #keyPath(UIView.safeAreaInsets)).map { (insets: UIEdgeInsets?) in insets ?? .zero }.distinct()
         } else {
             // ios 11 以下只可能存在statusbar影响的safeArea
             return
                 SimpleOutput.merge([py_frameStateByBoundsCenter(), py_frameStateByKVO()])
-                .map({ [weak self] _ -> UIEdgeInsets in
-                    guard let self = self else { return .zero }
-                    let newRect = self.convert(self.bounds, to: UIApplication.shared.keyWindow)
-                    var inset = UIEdgeInsets.zero
-                    let statusFrame = UIApplication.shared.statusBarFrame
-                    inset.top = min(statusFrame.height, max(0, statusFrame.height - newRect.origin.y))
-                    return inset
-                })
-                .distinct()
+                    .map { [weak self] _ -> UIEdgeInsets in
+                        guard let self = self else { return .zero }
+                        let newRect = self.convert(self.bounds, to: UIApplication.shared.keyWindow)
+                        var inset = UIEdgeInsets.zero
+                        let statusFrame = UIApplication.shared.statusBarFrame
+                        inset.top = min(statusFrame.height, max(0, statusFrame.height - newRect.origin.y))
+                        return inset
+                    }
+                    .distinct()
         }
     }
 }
