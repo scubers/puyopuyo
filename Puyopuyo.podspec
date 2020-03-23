@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Puyopuyo'
-  s.version="0.9.1"
+  s.version="0.9.2"
   s.summary          = 'A reactive layout library for swift.'
 
 # This description is used to generate tags and improve search results.
