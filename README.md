@@ -10,6 +10,8 @@
 
 被一个大佬的库和**SwiftUI**所启发。[TangramKit](https://github.com/youngsoft/TangramKit)
 
+具体详细使用方式可以查看**Demo**使用，或者查看[**WIKI**](https://github.com/scubers/puyopuyo/blob/master/WIKI.md)。
+
 ## Requirements
 
 swift 5.1
@@ -54,8 +56,6 @@ HBox().attach(view) {
 // state值改变
 textState.input(value: "i am a new text")
 ```
-
-具体详细使用方式可以查看**Demo**使用，或者查看[**WIKI**](https://github.com/scubers/puyopuyo/blob/master/WIKI.md)。
 
 拥抱响应式，从此规范数据流，让UI构建更流畅！！！
 
