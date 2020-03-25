@@ -12,15 +12,24 @@ public struct WeakCatcher<T: AnyObject> {
     public init(value: T?) {
         self.value = value
     }
-    
+
     public func execute<Result>(_ action: (T) -> Result, fallback: Result) -> Result {
         if let value = value {
             return action(value)
         }
         return fallback
     }
-    
+
     public func voidExecute(_ action: (T) -> Void) {
         execute(action, fallback: ())
     }
+}
+
+public protocol WeakCatchable {
+    associatedtype Object: AnyObject
+    var catchedWeakObject: Object? { get }
+}
+
+extension WeakCatcher: WeakCatchable {
+    public var catchedWeakObject: T? { value }
 }

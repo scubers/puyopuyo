@@ -68,13 +68,20 @@ class ZCaculator {
             // 垂直方向
             let vertAlignment: Alignment = alignment.hasVertAlignment() ? alignment : justifyContent
 
-            if horzAlignment.contains(.left) {
+            
+            if regulator.size.width.isWrap {
+                // width 包裹，则没有任何偏移，center.x 直接可以计算出来
+                center.x = maxSizeWithMargin.width / 2 + regulator.padding.left + regulator.size.width.add
+            } else if horzAlignment.contains(.left) {
                 center.x = regulator.padding.left + subMargin.left + sizeAfterCaculate.width.fixedValue / 2
             } else if horzAlignment.contains(.right) {
                 center.x = layoutFixedSize.width - (regulator.padding.right + subMargin.right + sizeAfterCaculate.width.fixedValue / 2)
             }
 
-            if vertAlignment.contains(.top) {
+            if regulator.size.height.isWrap {
+                // height 包裹，则没有任何偏移，center.y 直接可以计算出来
+                center.y = maxSizeWithMargin.height / 2 + regulator.padding.top + regulator.size.height.add
+            } else if vertAlignment.contains(.top) {
                 center.y = regulator.padding.top + subMargin.top + sizeAfterCaculate.height.fixedValue / 2
             } else if vertAlignment.contains(.bottom) {
                 center.y = layoutFixedSize.height - (regulator.padding.bottom + subMargin.bottom + sizeAfterCaculate.height.fixedValue / 2)

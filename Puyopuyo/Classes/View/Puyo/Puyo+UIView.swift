@@ -215,13 +215,18 @@ public extension Puyo where T: UIView {
     }
 
     @discardableResult
-    func onTap<Object: AnyObject>(to object: Object, _ action: @escaping (Object, UITapGestureRecognizer) -> Void) -> Self {
+    func onTap<Object: AnyObject>(to object: Object?, _ action: @escaping (Object, UITapGestureRecognizer) -> Void) -> Self {
         view.py_setUnbinder(view.py_setTap(action: { [weak object] tap in
             if let o = object {
                 action(o, tap)
             }
         }), for: UUID().description)
         return self
+    }
+    
+    @discardableResult
+    func onTap<C: WeakCatchable, O: AnyObject>(to catcher: C, _ action: @escaping (O, UITapGestureRecognizer) -> Void) -> Self where C.Object == O {
+        onTap(to: catcher.catchedWeakObject, action)
     }
 
     @discardableResult
