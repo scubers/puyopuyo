@@ -29,7 +29,7 @@ public extension Puyo where T: UIControl {
     }
     
     @discardableResult
-    func bind<O: AnyObject, C: WeakCatchable>(to catcher: C, event: UIControl.Event, unique: Bool = false, action: @escaping (O, T) -> Void) -> Self where C.Object == O {
+    func bind<O, C: WeakCatchable>(to catcher: C, event: UIControl.Event, unique: Bool = false, action: @escaping (O, T) -> Void) -> Self where C.Object == O {
         bind(to: catcher.catchedWeakObject, event: event, action: action)
     }
 
