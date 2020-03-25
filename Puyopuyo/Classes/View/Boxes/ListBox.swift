@@ -295,7 +295,7 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
                                                        state: state,
                                                        event: event)
             view?.backgroundView?.backgroundColor = tableView.backgroundColor
-            _ = event.outputing { [weak self] e in
+            _ = event.outputing { [weak self, weak view] e in
                 guard let self = self, let header = view else { return }
                 self.onCellEvent(.headerEvent(header.state.value.0, header.state.value.1, e))
             }
@@ -321,7 +321,7 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
                                                        state: state,
                                                        event: event)
             view?.backgroundView?.backgroundColor = tableView.backgroundColor
-            _ = event.outputing { [weak self] e in
+            _ = event.outputing { [weak self, weak view] e in
                 guard let self = self, let header = view else { return }
                 self.onCellEvent(.footerEvent(header.state.value.0, header.state.value.1, e))
             }

@@ -303,7 +303,7 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
                                                         state: state,
                                                         event: event)
             view?.backgroundView?.backgroundColor = tableView.backgroundColor
-            _ = event.outputing { [weak self] e in
+            _ = event.outputing { [weak self, weak view] e in
                 guard let self = self, let header = view else { return }
                 self.onCellEvent(.headerEvent(header.state.value.index, header.state.value.data, e))
             }
@@ -331,7 +331,7 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
                                                         state: state,
                                                         event: event)
             view?.backgroundView?.backgroundColor = tableView.backgroundColor
-            _ = event.outputing { [weak self] e in
+            _ = event.outputing { [weak self, weak view] e in
                 guard let self = self, let header = view else { return }
                 self.onCellEvent(.footerEvent(header.state.value.index, header.state.value.data, e))
             }
