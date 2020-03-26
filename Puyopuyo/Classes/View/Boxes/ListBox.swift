@@ -269,14 +269,14 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
                                                 event: event)
         } else {
             cell?.state.value = (indexPath.row, data)
-            cell?.onEvent = { [weak cell, weak self] event in
-                guard let cell = cell, let self = self else { return }
-                let idx = cell.state.value.0
-                let data = cell.state.value.1
-                self.onCellEvent(.itemEvent(idx, data, event))
-            }
-            cell?.selectionStyle = selectionStyle
         }
+        cell?.onEvent = { [weak cell, weak self] event in
+            guard let cell = cell, let self = self else { return }
+            let idx = cell.state.value.0
+            let data = cell.state.value.1
+            self.onCellEvent(.itemEvent(idx, data, event))
+        }
+        cell?.selectionStyle = selectionStyle
         return cell!
     }
 
@@ -296,11 +296,12 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
                                                        event: event)
         } else {
             view?.state.value = (section, dataSource.value)
-            view?.backgroundView?.backgroundColor = tableView.backgroundColor
-            view?.onEvent = { [weak self, weak view] e in
-                guard let self = self, let header = view else { return }
-                self.onCellEvent(.headerEvent(header.state.value.0, header.state.value.1, e))
-            }
+        }
+
+        view?.backgroundView?.backgroundColor = tableView.backgroundColor
+        view?.onEvent = { [weak self, weak view] e in
+            guard let self = self, let header = view else { return }
+            self.onCellEvent(.headerEvent(header.state.value.0, header.state.value.1, e))
         }
 
         return view!
@@ -322,11 +323,11 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
                                                        event: event)
         } else {
             view?.state.value = (section, dataSource.value)
-            view?.backgroundView?.backgroundColor = tableView.backgroundColor
-            view?.onEvent = { [weak self, weak view] e in
-                guard let self = self, let header = view else { return }
-                self.onCellEvent(.footerEvent(header.state.value.0, header.state.value.1, e))
-            }
+        }
+        view?.backgroundView?.backgroundColor = tableView.backgroundColor
+        view?.onEvent = { [weak self, weak view] e in
+            guard let self = self, let header = view else { return }
+            self.onCellEvent(.footerEvent(header.state.value.0, header.state.value.1, e))
         }
 
         return view!

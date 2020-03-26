@@ -275,15 +275,16 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
                                                  state: state,
                                                  event: event)
         } else {
-            cell?.selectionStyle = selectionStyle
             cell?.state.value = RecycleContext(index: indexPath.row, size: getLayoutableContentSize(tableView), data: data, view: tableView)
-            cell?.onEvent = { [weak self, weak cell] event in
-                guard let cell = cell, let self = self else { return }
-                let idx = cell.state.value.index
-                let data = cell.state.value.data
-                self.onCellEvent(.itemEvent(idx, data, event))
-            }
         }
+        cell?.selectionStyle = selectionStyle
+        cell?.onEvent = { [weak self, weak cell] event in
+            guard let cell = cell, let self = self else { return }
+            let idx = cell.state.value.index
+            let data = cell.state.value.data
+            self.onCellEvent(.itemEvent(idx, data, event))
+        }
+
         return cell!
     }
 
@@ -302,12 +303,13 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
                                                         state: state,
                                                         event: event)
         } else {
-            view?.backgroundView?.backgroundColor = tableView.backgroundColor
             view?.state.value = RecycleContext(index: section, size: getLayoutableContentSize(tableView), data: dataSource.value, view: tableView)
-            view?.onEvent = { [weak self, weak view] e in
-                guard let self = self, let header = view else { return }
-                self.onCellEvent(.headerEvent(header.state.value.index, header.state.value.data, e))
-            }
+        }
+
+        view?.backgroundView?.backgroundColor = tableView.backgroundColor
+        view?.onEvent = { [weak self, weak view] e in
+            guard let self = self, let header = view else { return }
+            self.onCellEvent(.headerEvent(header.state.value.index, header.state.value.data, e))
         }
 
         return view!
@@ -329,11 +331,11 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
                                                         event: event)
         } else {
             view?.state.value = RecycleContext(index: section, size: getLayoutableContentSize(tableView), data: dataSource.value, view: tableView)
-            view?.backgroundView?.backgroundColor = tableView.backgroundColor
-            view?.onEvent = { [weak self, weak view] e in
-                guard let self = self, let header = view else { return }
-                self.onCellEvent(.footerEvent(header.state.value.index, header.state.value.data, e))
-            }
+        }
+        view?.backgroundView?.backgroundColor = tableView.backgroundColor
+        view?.onEvent = { [weak self, weak view] e in
+            guard let self = self, let header = view else { return }
+            self.onCellEvent(.footerEvent(header.state.value.index, header.state.value.data, e))
         }
 
         return view!

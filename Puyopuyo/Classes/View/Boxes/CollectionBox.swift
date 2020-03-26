@@ -46,7 +46,7 @@ public class CollectionBox: UICollectionView,
             dataSource = dataSourceProxy
         }
     }
-    
+
     public private(set) var layout: UICollectionViewFlowLayout = CollectionBoxFlowLayout()
 
     fileprivate var sizeCache = [IndexPath: CGSize]()
@@ -184,9 +184,9 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         headerGenerator = _header
         footerGenerator = _footer
         diffIdentifier = _diffIdentifier
-        _ = dataSource.outputing({ [weak self] data in
+        _ = dataSource.outputing { [weak self] data in
             self?.reload(with: data)
-        })
+        }
     }
 
     public enum Event {
@@ -232,12 +232,12 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
             cell.contentView.addSubview(root)
         } else {
             cell.state.value = RecycleContext(index: indexPath.row, size: cell.targetSize, data: data, view: collectionView)
-            cell.onEvent = { [weak cell, weak self] event in
-                guard let self = self, let cell = cell else { return }
-                let idx = cell.state.value.index
-                let data = cell.state.value.data
-                self.onCellEvent(.itemEvent(idx, data, event))
-            }
+        }
+        cell.onEvent = { [weak cell, weak self] event in
+            guard let self = self, let cell = cell else { return }
+            let idx = cell.state.value.index
+            let data = cell.state.value.data
+            self.onCellEvent(.itemEvent(idx, data, event))
         }
         return cell
     }
@@ -262,13 +262,13 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
             view.addSubview(root)
         } else {
             view.state.value = RecycleContext(index: indexPath.section, size: view.targetSize, data: dataSource.value, view: collectionView)
-            view.onEvent = { [weak self, weak view] e in
-                guard let self = self, let view = view else { return }
-                if kind == UICollectionView.elementKindSectionHeader {
-                    self.onCellEvent(.headerEvent(view.state.value.index, view.state.value.data, e))
-                } else {
-                    self.onCellEvent(.footerEvent(view.state.value.index, view.state.value.data, e))
-                }
+        }
+        view.onEvent = { [weak self, weak view] e in
+            guard let self = self, let view = view else { return }
+            if kind == UICollectionView.elementKindSectionHeader {
+                self.onCellEvent(.headerEvent(view.state.value.index, view.state.value.data, e))
+            } else {
+                self.onCellEvent(.footerEvent(view.state.value.index, view.state.value.data, e))
             }
         }
         return view
@@ -281,7 +281,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
     private lazy var dummyHeader: UIView = { self.headerGenerator(self.dummyHeaderState.asOutput(), SimpleIO<CellEvent>().asInput()) ?? EmptyView() }()
     private let dummyFooterState = State<RecycleContext<[Data], UICollectionView>>.unstable()
     private lazy var dummyFooter: UIView = { self.footerGenerator(self.dummyFooterState.asOutput(), SimpleIO<CellEvent>().asInput()) ?? EmptyView() }()
-    
+
     private func getLayoutableContentSize(_ cv: UICollectionView) -> CGSize {
         let width = cv.bounds.size.width - cv.contentInset.left - cv.contentInset.right
         let height = cv.bounds.size.height - cv.contentInset.top - cv.contentInset.bottom
@@ -330,15 +330,15 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
                     box.moveItem(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
                 }
                 if !diff.delete.isEmpty {
-                    box.deleteItems(at: diff.delete.map({ IndexPath(row: $0.from, section: section) }))
+                    box.deleteItems(at: diff.delete.map { IndexPath(row: $0.from, section: section) })
                 }
                 if !diff.insert.isEmpty {
-                    box.insertItems(at: diff.insert.map({ IndexPath(row: $0.to, section: section) }))
+                    box.insertItems(at: diff.insert.map { IndexPath(row: $0.to, section: section) })
                 }
             }, completion: {
                 // 完成编辑后，刷新不动的item
                 if $0, !diff.stay.isEmpty {
-                    box.reloadItems(at: diff.stay.map({ IndexPath(row: $0.from, section: section) }))
+                    box.reloadItems(at: diff.stay.map { IndexPath(row: $0.from, section: section) })
                 }
             })
         }
@@ -349,7 +349,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
             return CGSize(width: 0.1, height: 0.1)
         }
     }
-    
+
     deinit {
         print("CollectionSection deinit!!!")
     }
@@ -358,7 +358,14 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
 private class CollectionBoxCell<D, E>: UICollectionViewCell {
     var root: UIView?
     var state: State<RecycleContext<D, UICollectionView>>!
-    var event: SimpleIO<E>!
+    var event: SimpleIO<E>! {
+        didSet {
+            _ = event.outputing { [weak self] in
+                self?.onEvent($0)
+            }
+        }
+    }
+
     var onEvent: (E) -> Void = { _ in }
 
     var targetSize: CGSize = .zero
@@ -372,7 +379,14 @@ private class CollectionBoxCell<D, E>: UICollectionViewCell {
 private class CollectionBoxSupplementaryView<D, E>: UICollectionReusableView {
     var root: UIView?
     var state: State<RecycleContext<D, UICollectionView>>!
-    var event: SimpleIO<E>!
+    var event: SimpleIO<E>! {
+        didSet {
+            _ = event.outputing { [weak self] in
+                self?.onEvent($0)
+            }
+        }
+    }
+
     var onEvent: (E) -> Void = { _ in }
 
     var targetSize: CGSize = .zero
