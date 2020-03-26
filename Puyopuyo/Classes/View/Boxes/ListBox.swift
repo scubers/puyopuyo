@@ -267,15 +267,15 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
                                                 root: cellGenerator(state.asOutput(), event.asInput()),
                                                 state: state,
                                                 event: event)
-            _ = event.outputing { [weak cell] event in
-                guard let cell = cell else { return }
+        } else {
+            cell?.state.value = (indexPath.row, data)
+            cell?.onEvent = { [weak cell, weak self] event in
+                guard let cell = cell, let self = self else { return }
                 let idx = cell.state.value.0
                 let data = cell.state.value.1
                 self.onCellEvent(.itemEvent(idx, data, event))
             }
             cell?.selectionStyle = selectionStyle
-        } else {
-            cell?.state.value = (indexPath.row, data)
         }
         return cell!
     }
@@ -294,13 +294,13 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
                                                        root: root,
                                                        state: state,
                                                        event: event)
+        } else {
+            view?.state.value = (section, dataSource.value)
             view?.backgroundView?.backgroundColor = tableView.backgroundColor
-            _ = event.outputing { [weak self, weak view] e in
+            view?.onEvent = { [weak self, weak view] e in
                 guard let self = self, let header = view else { return }
                 self.onCellEvent(.headerEvent(header.state.value.0, header.state.value.1, e))
             }
-        } else {
-            view?.state.value = (section, dataSource.value)
         }
 
         return view!
@@ -320,13 +320,13 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
                                                        root: root,
                                                        state: state,
                                                        event: event)
+        } else {
+            view?.state.value = (section, dataSource.value)
             view?.backgroundView?.backgroundColor = tableView.backgroundColor
-            _ = event.outputing { [weak self, weak view] e in
+            view?.onEvent = { [weak self, weak view] e in
                 guard let self = self, let header = view else { return }
                 self.onCellEvent(.footerEvent(header.state.value.0, header.state.value.1, e))
             }
-        } else {
-            view?.state.value = (section, dataSource.value)
         }
 
         return view!
@@ -373,8 +373,9 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
 
     private class ListBoxCell<Data, E>: UITableViewCell {
         var root: UIView
-        var state: State<(Int, Data)>
-        var event: SimpleIO<E>
+        let state: State<(Int, Data)>
+        let event: SimpleIO<E>
+        var onEvent: (E) -> Void = { _ in }
 
         required init(id: String, root: UIView, state: State<(Int, Data)>, event: SimpleIO<E>) {
             self.root = root
@@ -384,6 +385,9 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
             contentView.addSubview(root)
             backgroundColor = .clear
             contentView.backgroundColor = .clear
+            _ = event.outputing { [weak self] in
+                self?.onEvent($0)
+            }
         }
 
         required init?(coder _: NSCoder) {
@@ -405,8 +409,9 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
 
     private class ListHeaderFooter<D, E>: UITableViewHeaderFooterView {
         var root: UIView
-        var state: State<(Int, D)>
-        var event: SimpleIO<E>
+        let state: State<(Int, D)>
+        let event: SimpleIO<E>
+        var onEvent: (E) -> Void = { _ in }
 
         required init(id: String, root: UIView, state: State<(Int, D)>, event: SimpleIO<E>) {
             self.root = root
@@ -419,6 +424,9 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
             let v = UIView()
             v.backgroundColor = .clear
             backgroundView = v
+            _ = event.outputing { [weak self] in
+                self?.onEvent($0)
+            }
         }
 
         required init?(coder _: NSCoder) {

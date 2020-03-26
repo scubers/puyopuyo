@@ -16,7 +16,7 @@ class NewView: ZBox, Eventable {
     override func buildBody() {
         attach {
             UIButton(type: .contactAdd).attach($0)
-                .bind(to: self, event: .touchUpInside, action: { (this, _) in
+                .bind(to: self, event: .touchUpInside, action: { this, _ in
                     this.emmit("100")
                 })
         }

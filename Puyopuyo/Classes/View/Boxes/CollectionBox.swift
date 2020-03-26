@@ -230,15 +230,14 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
             cell.state = state
             cell.event = event
             cell.contentView.addSubview(root)
-            _ = event.outputing { [weak cell, weak self] event in
+        } else {
+            cell.state.value = RecycleContext(index: indexPath.row, size: cell.targetSize, data: data, view: collectionView)
+            cell.onEvent = { [weak cell, weak self] event in
                 guard let self = self, let cell = cell else { return }
                 let idx = cell.state.value.index
                 let data = cell.state.value.data
                 self.onCellEvent(.itemEvent(idx, data, event))
             }
-        } else {
-//            cell.state.value = (indexPath.row, collectionView.bounds.size, data)
-            cell.state.value = RecycleContext(index: indexPath.row, size: cell.targetSize, data: data, view: collectionView)
         }
         return cell
     }
@@ -261,7 +260,9 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
             view.state = state
             view.event = event
             view.addSubview(root)
-            _ = event.outputing { [weak self, weak view] e in
+        } else {
+            view.state.value = RecycleContext(index: indexPath.section, size: view.targetSize, data: dataSource.value, view: collectionView)
+            view.onEvent = { [weak self, weak view] e in
                 guard let self = self, let view = view else { return }
                 if kind == UICollectionView.elementKindSectionHeader {
                     self.onCellEvent(.headerEvent(view.state.value.index, view.state.value.data, e))
@@ -269,9 +270,6 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
                     self.onCellEvent(.footerEvent(view.state.value.index, view.state.value.data, e))
                 }
             }
-        } else {
-//            view.state.value = (indexPath.section, dataSource.value)
-            view.state.value = RecycleContext(index: indexPath.section, size: view.targetSize, data: dataSource.value, view: collectionView)
         }
         return view
     }
@@ -361,6 +359,7 @@ private class CollectionBoxCell<D, E>: UICollectionViewCell {
     var root: UIView?
     var state: State<RecycleContext<D, UICollectionView>>!
     var event: SimpleIO<E>!
+    var onEvent: (E) -> Void = { _ in }
 
     var targetSize: CGSize = .zero
 
@@ -374,6 +373,7 @@ private class CollectionBoxSupplementaryView<D, E>: UICollectionReusableView {
     var root: UIView?
     var state: State<RecycleContext<D, UICollectionView>>!
     var event: SimpleIO<E>!
+    var onEvent: (E) -> Void = { _ in }
 
     var targetSize: CGSize = .zero
 
