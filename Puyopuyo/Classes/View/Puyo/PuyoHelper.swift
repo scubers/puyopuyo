@@ -40,14 +40,14 @@ open class PuyoHelper {
         setNeedsLayout(view)
     }
 
-    open class func padding<T: Boxable & UIView>(for view: T,
-                                                 all: CGFloat? = nil,
-                                                 horz: CGFloat? = nil,
-                                                 vert: CGFloat? = nil,
-                                                 top: CGFloat? = nil,
-                                                 left: CGFloat? = nil,
-                                                 bottom: CGFloat? = nil,
-                                                 right: CGFloat? = nil) {
+    open class func padding<T: Boxable>(for view: T,
+                                        all: CGFloat? = nil,
+                                        horz: CGFloat? = nil,
+                                        vert: CGFloat? = nil,
+                                        top: CGFloat? = nil,
+                                        left: CGFloat? = nil,
+                                        bottom: CGFloat? = nil,
+                                        right: CGFloat? = nil) {
         if let all = all {
             view.regulator.padding = UIEdgeInsets(top: all, left: all, bottom: all, right: all)
         }
@@ -63,7 +63,9 @@ open class PuyoHelper {
         if let left = left { view.regulator.padding.left = left }
         if let bottom = bottom { view.regulator.padding.bottom = bottom }
         if let right = right { view.regulator.padding.right = right }
-        setNeedsLayout(view)
+        if let view = view as? UIView {
+            setNeedsLayout(view)
+        }
     }
 
     open class func alignment(for view: UIView, alignment: Alignment) {

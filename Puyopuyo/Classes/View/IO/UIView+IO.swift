@@ -8,16 +8,10 @@
 import Foundation
 
 public extension SimpleInput {
-    static func keyPathInput<Root: AnyObject, Value>(object: Root, keypath: WritableKeyPath<Root, Value>) -> SimpleInput<Value> {
+    static func keyPath<Root: AnyObject, Value>(object: Root, keypath: WritableKeyPath<Root, Value>) -> SimpleInput<Value> {
         SimpleInput<Value> { [weak object] in
             object?[keyPath: keypath] = $0
         }
-    }
-}
-
-public extension UIView {
-    func py_clipToBounds() -> SimpleInput<Bool> {
-        .keyPathInput(object: self, keypath: \.clipsToBounds)
     }
 }
 
@@ -31,8 +25,14 @@ public extension UIControl {
     }
 }
 
-public extension UIButton {
-    func py_click() -> SimpleOutput<UIButton> {
-        py_event(.touchUpInside).map { $0 as! UIButton }
+public extension Outputing where OutputType: PuyoOptionalType {
+    func mapWrappedValue() -> SimpleOutput<OutputType.PuyoWrappedType?> {
+        asOutput().map { $0.puyoWrapValue }
+    }
+}
+
+public extension Outputing where OutputType: CGFloatable {
+    func mapCGFloat() -> SimpleOutput<CGFloat> {
+        asOutput().map { $0.cgFloatValue }
     }
 }

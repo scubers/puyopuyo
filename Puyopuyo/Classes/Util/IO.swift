@@ -61,6 +61,10 @@ extension Outputing {
         }
     }
 
+    public func send<Input: Inputing>(to inputs: [Input]) -> [Unbinder] where Input.InputType == OutputType {
+        inputs.map { self.send(to: $0) }
+    }
+
     public func setAction<Holder: NSObject>(_ action: OutputAction<Holder, OutputType>) {
         guard let holder = action.holder else { return }
         let unbinder = outputing(action.action)
@@ -104,7 +108,7 @@ public struct Unbinders {
     }
 
     public static func create() -> Unbinder {
-        return UnbinderImpl({})
+        return UnbinderImpl {}
     }
 }
 
