@@ -53,3 +53,7 @@ public protocol ImageDecorable {
 public protocol BgImageDecorable {
     func applyBgImage(_ image: UIImage?, state: UIControl.State)
 }
+
+public protocol PaddingDecorable {
+    func applyPadding(_ padding: UIEdgeInsets)
+}

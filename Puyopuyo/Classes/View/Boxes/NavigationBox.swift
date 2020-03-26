@@ -16,10 +16,10 @@ public class NavigationBox: VBox, Stateful {
         public var backgroundColor: UIColor = .white
         public var animator: Animator = Animators.default
         public var alpha: CGFloat = 1
-        public var shadowOffset = CGSize(width: 0, height: 2)
+        public var shadowOffset = CGSize(width: 0, height: 1)
         public var shadowColor: UIColor? = UIColor.lightGray.withAlphaComponent(0.5)
         public var shadowOpacity: Float = 0
-        public var shadowRadius: CGFloat = 2
+        public var shadowRadius: CGFloat = 0
     }
 
     public var viewState = State(ViewState())
