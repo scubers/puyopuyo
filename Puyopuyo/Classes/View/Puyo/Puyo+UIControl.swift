@@ -21,7 +21,7 @@ public extension Puyo where T: UIControl {
 
     @discardableResult
     func bind<O: AnyObject>(to object: O?, event: UIControl.Event, unique: Bool = false, action: @escaping (O, T) -> Void) -> Self {
-        bind(event: event, unique: unique, input: SimpleInput {
+        bind(event: event, unique: unique, input: SimpleInput { [weak object] in
             if let object = object {
                 action(object, $0)
             }
