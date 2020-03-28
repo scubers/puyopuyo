@@ -8,7 +8,7 @@
 import Foundation
 
 public struct WeakCatcher<T: AnyObject> {
-    weak var value: T?
+    public private(set) weak var value: T?
     public init(value: T?) {
         self.value = value
     }
