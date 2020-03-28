@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - BoxView
 
-public extension Puyo where T: Boxable {
+public extension Puyo where T: Boxable & UIView {
     @discardableResult
     func animator(_ animator: Animator) -> Self {
         view.boxHelper.animator = animator
@@ -148,7 +148,7 @@ public extension Puyo where T: Boxable {
 
 // MARK: - FlatBox
 
-public extension Puyo where T: Boxable, T.RegulatorType: FlatRegulator {
+public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlatRegulator {
     @discardableResult
     func space<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
         view.py_setUnbinder(space.safeBind(view, { v, s in
@@ -202,7 +202,7 @@ public extension Puyo where T: Boxable, T.RegulatorType: FlatRegulator {
 
 // MARK: - FlowBox
 
-public extension Puyo where T: Boxable, T.RegulatorType: FlowRegulator {
+public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlowRegulator {
     @discardableResult
     func arrangeCount<O: Outputing>(_ count: O) -> Self where O.OutputType == Int {
         view.py_setUnbinder(count.safeBind(view, { v, c in

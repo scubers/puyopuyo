@@ -21,64 +21,70 @@ extension UInt64: CGFloatable { public var cgFloatValue: CGFloat { return CGFloa
 extension Double: CGFloatable { public var cgFloatValue: CGFloat { return CGFloat(self) } }
 extension Float: CGFloatable { public var cgFloatValue: CGFloat { return CGFloat(self) } }
 
-public class Puyo<T: UIView> {
+public class Puyo<T: AnyObject> {
     public private(set) var view: T
 
     public init(_ view: T) {
         self.view = view
     }
+}
 
-    func setNeedsLayout() {
-        view.py_setNeedsLayout()
-    }
-
-    @discardableResult
-    public func attach(_ parent: UIView? = nil, _ block: ((T) -> Void)? = nil) -> Puyo<T> {
-        block?(view)
-        parent?.addSubview(view)
-        return self
-    }
-
-    static func ensureInactivate(_ view: UIView, _ msg: String = "") {
-        assert(!view.py_measure.activated, msg)
-    }
-    
+public extension Puyo where T: Unbindable {
     /// 接收一个outputing，并且绑定到view上，持续接收action
     /// - Parameters:
     ///   - state: state description
     ///   - action: action description
     @discardableResult
-    public func on<O: Outputing, R>(_ state: O, _ action: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
-        view.py_setUnbinder(state.safeBind(view, { v, r in
+    func on<O: Outputing, R>(_ state: O, _ action: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
+        view.py_setUnbinder(state.safeBind(view) { v, r in
             action(v, r)
-        }), for: UUID().description)
+        }, for: UUID().description)
         return self
     }
-    
+}
+
+public extension Puyo where T: UIView {
+    func setNeedsLayout() {
+        view.py_setNeedsLayout()
+    }
+
+    static func ensureInactivate(_ view: UIView, _ msg: String = "") {
+        assert(!view.py_measure.activated, msg)
+    }
+
+    @discardableResult
+    func assign(to pointer: UnsafeMutablePointer<T>) -> Self {
+        pointer.pointee = view
+        return self
+    }
+
     /// 接收一个outputing，并且绑定到view上，持续接收action，后，重新布局
     /// - Parameters:
     ///   - state: state description
     ///   - action: action description
     @discardableResult
-    public func viewUpdate<O: Outputing, R>(on state: O, _ action: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
-        return on(state, { v, r in
+    func viewUpdate<O: Outputing, R>(on state: O, _ action: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
+        return on(state) { v, r in
             action(v, r)
             v.py_setNeedsLayout()
-        })
+        }
     }
 
     @discardableResult
-    public func viewUpdate<O: Outputing, R, Object: AnyObject>(on state: O, to object: Object, _ action: @escaping (Object, T, R) -> Void) -> Self where O.OutputType == R {
+    func viewUpdate<O: Outputing, R, Object: AnyObject>(on state: O, to object: Object, _ action: @escaping (Object, T, R) -> Void) -> Self where O.OutputType == R {
         return viewUpdate(on: state) { [weak object] t, r in
             if let o = object {
                 action(o, t, r)
             }
         }
     }
+}
 
+public extension Puyo where T: ViewDisplayable {
     @discardableResult
-    public func assign(to pointer: UnsafeMutablePointer<T>) -> Self {
-        pointer.pointee = view
+    func attach(_ parent: UIView? = nil, _ block: ((T) -> Void)? = nil) -> Puyo<T> {
+        block?(view)
+        parent?.addSubview(view.dislplayView)
         return self
     }
 }
@@ -86,19 +92,33 @@ public class Puyo<T: UIView> {
 public typealias PuyoBlock = (UIView) -> Void
 
 public protocol PuyoAttacher {
-    associatedtype Holder: UIView
-    func attach(_ parent: UIView?, _ block: PuyoBlock?) -> Puyo<Holder>
+    associatedtype Holder: ViewDisplayable
+    func attach(_ parent: ViewDisplayable?, _ block: PuyoBlock?) -> Puyo<Holder>
 }
 
-extension PuyoAttacher where Self: UIView {
+public protocol ViewDisplayable: class {
+    var dislplayView: UIView { get }
+}
+
+extension UIView: ViewDisplayable {
+    public var dislplayView: UIView { self }
+}
+
+extension UIViewController: ViewDisplayable {
+    public var dislplayView: UIView { view }
+}
+
+extension PuyoAttacher where Self: ViewDisplayable {
     @discardableResult
-    public func attach(_ parent: UIView? = nil, _ block: PuyoBlock? = nil) -> Puyo<Self> {
+    public func attach(_ parent: ViewDisplayable? = nil, _ block: PuyoBlock? = nil) -> Puyo<Self> {
         let link = Puyo(self)
-        block?(self)
-        parent?.addSubview(self)
+        block?(dislplayView)
+        parent?.dislplayView.addSubview(dislplayView)
         return link
     }
 }
+
+extension UIViewController: PuyoAttacher {}
 
 extension UIView: PuyoAttacher {
     func py_setNeedsLayout() {

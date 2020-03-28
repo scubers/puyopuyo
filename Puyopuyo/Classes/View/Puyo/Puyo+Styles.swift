@@ -7,7 +7,7 @@
 
 import Foundation
 
-public extension Puyo where T: TintColorDecorable {
+public extension Puyo where T: TintColorDecorable & UIView {
     @discardableResult
     func tintColor<S: Outputing>(_ color: S, state: UIControl.State = .normal) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIColor {
         view.py_setUnbinder(color.safeBind(view) { v, a in
@@ -23,7 +23,7 @@ public extension Puyo where T: TintColorDecorable {
     }
 }
 
-public extension Puyo where T: ImageDecorable {
+public extension Puyo where T: ImageDecorable & UIView {
     @discardableResult
     func image<S: Outputing>(_ image: S, state: UIControl.State = .normal) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIImage {
         view.py_setUnbinder(image.safeBind(view) { v, a in
@@ -44,7 +44,7 @@ public extension Puyo where T: ImageDecorable {
     }
 }
 
-public extension Puyo where T: TextAlignmentDecorable {
+public extension Puyo where T: TextAlignmentDecorable & UIView {
     @discardableResult
     func textAlignment<S: Outputing>(_ alignment: S) -> Self where S.OutputType == NSTextAlignment {
         view.py_setUnbinder(alignment.safeBind(view) { v, a in
@@ -60,7 +60,7 @@ public extension Puyo where T: TextAlignmentDecorable {
     }
 }
 
-public extension Puyo where T: TextLinesDecorable {
+public extension Puyo where T: TextLinesDecorable & UIView {
     @discardableResult
     func numberOfLines<S: Outputing>(_ lines: S) -> Self where S.OutputType == Int {
         view.py_setUnbinder(lines.safeBind(view) { v, a in
@@ -71,7 +71,7 @@ public extension Puyo where T: TextLinesDecorable {
     }
 }
 
-public extension Puyo where T: FontDecorable {
+public extension Puyo where T: FontDecorable & UIView {
     @discardableResult
     func font<S: Outputing>(_ font: S) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIFont {
         view.py_setUnbinder(font.safeBind(view) { v, a in
@@ -92,7 +92,7 @@ public extension Puyo where T: FontDecorable {
     }
 }
 
-public extension Puyo where T: TextColorDecorable {
+public extension Puyo where T: TextColorDecorable & UIView {
     @discardableResult
     func textColor<S: Outputing>(_ color: S, state: UIControl.State = .normal) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIColor {
         view.py_setUnbinder(color.safeBind(view) { v, a in
@@ -102,7 +102,7 @@ public extension Puyo where T: TextColorDecorable {
     }
 }
 
-public extension Puyo where T: TextDecorable {
+public extension Puyo where T: TextDecorable & UIView {
     @discardableResult
     func text<S: Outputing>(_ text: S, state: UIControl.State = .normal) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == String {
         view.py_setUnbinder(text.safeBind(view) { v, a in
@@ -122,7 +122,7 @@ public extension Puyo where T: TextDecorable {
     }
 }
 
-public extension Puyo where T: BgImageDecorable {
+public extension Puyo where T: BgImageDecorable & UIView {
     @discardableResult
     func backgroundImage<S: Outputing>(_ image: S, state: UIControl.State = .normal) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIImage {
         view.py_setUnbinder(image.safeBind(view) { v, a in
@@ -132,7 +132,7 @@ public extension Puyo where T: BgImageDecorable {
     }
 }
 
-public extension Puyo where T: KeyboardTypeDecorable {
+public extension Puyo where T: KeyboardTypeDecorable & UIView {
     @discardableResult
     func keyboardType<S: Outputing>(_ type: S) -> Self where S.OutputType == UIKeyboardType {
         view.py_setUnbinder(type.safeBind(view) { v, a in

@@ -14,6 +14,10 @@ public protocol Unbinder {
     func py_unbind()
 }
 
+public protocol Unbindable {
+    func py_setUnbinder(_ unbiner: Unbinder, for: String)
+}
+
 // MARK: - Outputing, Inputing
 
 /// 输出接口
@@ -33,7 +37,7 @@ extension Outputing {
     /// - Parameters:
     ///   - object: 绑定对象
     ///   - action: action description
-    public func safeBind<Object: AnyObject>(_ object: Object, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
+    public func safeBind<Object: Unbindable & AnyObject>(_ object: Object, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
         return outputing { [weak object] s in
             if let object = object {
                 action(object, s)
@@ -43,7 +47,7 @@ extension Outputing {
 
     /// 对象销毁时则移除绑定
     @discardableResult
-    public func safeBind<Object: NSObject>(to object: Object, id: String = UUID().description, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
+    public func safeBind<Object: Unbindable & AnyObject>(to object: Object, id: String = UUID().description, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
         let unbinder = outputing { [weak object] v in
             if let object = object {
                 action(object, v)
@@ -114,7 +118,7 @@ public struct Unbinders {
 
 // MARK: - NSObject unbinder impl
 
-extension NSObject {
+extension NSObject: Unbindable {
     public func py_setUnbinder(_ unbinder: Unbinder, for key: String) {
         py_unbinderContainer.setUnbinder(unbinder, for: key)
     }
