@@ -52,6 +52,7 @@ public class CollectionBox: UICollectionView,
     fileprivate var sizeCache = [IndexPath: CGSize]()
 
     public init(
+        layout: UICollectionViewFlowLayout = CollectionBoxFlowLayout(),
         direction: UICollectionView.ScrollDirection = .vertical,
         minimumLineSpacing: CGFloat = 0,
         minimumInteritemSpacing: CGFloat = 0,

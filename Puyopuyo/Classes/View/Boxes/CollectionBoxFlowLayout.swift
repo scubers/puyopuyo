@@ -15,12 +15,12 @@ private func belowiOS9() -> Bool {
     return true
 }
 
-protocol CollectionHeaderPinable {
+public protocol CollectionHeaderPinable {
     func setSectionHeaderPin(_ pin: Bool)
 }
 
 extension UICollectionViewFlowLayout: CollectionHeaderPinable {
-    @objc func setSectionHeaderPin(_ pin: Bool) {
+    @objc public func setSectionHeaderPin(_ pin: Bool) {
         if !belowiOS9() {
             if #available(iOS 9.0, *) {
                 sectionHeadersPinToVisibleBounds = pin
@@ -30,10 +30,17 @@ extension UICollectionViewFlowLayout: CollectionHeaderPinable {
 }
 
 /// 负责处理iOS9以下，header悬浮问题
-class CollectionBoxFlowLayout: UICollectionViewFlowLayout {
+public class CollectionBoxFlowLayout: UICollectionViewFlowLayout {
+    public override init() {
+        super.init()
+    }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     var pinHeader = false
-    @objc override func setSectionHeaderPin(_ pin: Bool) {
+    @objc public override func setSectionHeaderPin(_ pin: Bool) {
         if !belowiOS9() {
             super.setSectionHeaderPin(pin)
         } else {
@@ -41,7 +48,7 @@ class CollectionBoxFlowLayout: UICollectionViewFlowLayout {
         }
     }
 
-    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+    public override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         if !belowiOS9() || !pinHeader {
             return super.layoutAttributesForElements(in: rect)
         }
@@ -102,7 +109,7 @@ class CollectionBoxFlowLayout: UICollectionViewFlowLayout {
 
                 var numberOfItemsInSection = 0
                 // 得到当前header所在分区的cell的数量
-                if let number = self.collectionView?.numberOfItems(inSection: section) {
+                if let number = collectionView?.numberOfItems(inSection: section) {
                     numberOfItemsInSection = number
                 }
 
@@ -131,7 +138,7 @@ class CollectionBoxFlowLayout: UICollectionViewFlowLayout {
 
                 // 当前的滑动距离 + 因为导航栏产生的偏移量，默认为64（如果app需求不同，需自己设置）
                 var offset_Y: CGFloat = 0
-                if let y = self.collectionView?.contentOffset.y {
+                if let y = collectionView?.contentOffset.y {
                     offset_Y = y
                 }
 //                offset_Y = offset_Y + naviHeight
@@ -162,7 +169,7 @@ class CollectionBoxFlowLayout: UICollectionViewFlowLayout {
         return attributesArray
     }
 
-    override func shouldInvalidateLayout(forBoundsChange bounds: CGRect) -> Bool {
+    public override func shouldInvalidateLayout(forBoundsChange bounds: CGRect) -> Bool {
         if !belowiOS9() {
             return super.shouldInvalidateLayout(forBoundsChange: bounds)
         }
