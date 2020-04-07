@@ -103,3 +103,50 @@ class Caculator {
         measure.py_size = size
     }
 }
+
+class NewCaculator {
+    static func getChildRemainLength(_ sizeDesc: SizeDescription, currentRemain: CGFloat, totalPadding: CGFloat, totalRatio: CGFloat) -> CGFloat {
+        if sizeDesc.isFixed {
+            // 子布局剩余空间为固有尺寸 - 当前布局内边距
+            return max(0, sizeDesc.fixedValue - totalPadding)
+        } else if sizeDesc.isRatio {
+            // 子布局剩余空间为
+            return max(0, (sizeDesc.ratio / totalRatio) * currentRemain - totalPadding)
+        } else if sizeDesc.isWrap {
+            return max(sizeDesc.min, min(sizeDesc.max, currentRemain)) - totalPadding
+        } else {
+            fatalError()
+        }
+    }
+
+    static func getChildRemainSize(_ size: Size, currentRemain: CGSize, padding: UIEdgeInsets, ratio: CGSize) -> CGSize {
+        let width = getChildRemainLength(size.width, currentRemain: currentRemain.width, totalPadding: padding.getHorzTotal(), totalRatio: ratio.width)
+
+        let height = getChildRemainLength(size.height, currentRemain: currentRemain.height, totalPadding: padding.getVertTotal(), totalRatio: ratio.height)
+
+        return CGSize(width: width, height: height)
+    }
+
+    static func applyMeasure(_ measure: Measure, size: Size, in remain: CGSize, totalRatio: CGSize) {
+        // 把size应用到measure上，只关心剩余空间
+        let margin = measure.margin
+        var finalSize = measure.py_size
+        if !size.width.isWrap {
+            finalSize.width = getNoneWrapLength(size.width, remain: remain.width, margin: margin.getHorzTotal(), ratio: totalRatio.width)
+        }
+        if !size.height.isWrap {
+            finalSize.height = getNoneWrapLength(size.height, remain: remain.height, margin: margin.getVertTotal(), ratio: totalRatio.height)
+        }
+        measure.py_size = finalSize
+    }
+
+    private static func getNoneWrapLength(_ size: SizeDescription, remain: CGFloat, margin: CGFloat, ratio: CGFloat) -> CGFloat {
+        if size.isFixed {
+            return max(0, size.fixedValue)
+        } else if size.isRatio {
+            return max(0, (size.ratio / ratio) * (remain - margin))
+        } else {
+            fatalError()
+        }
+    }
+}

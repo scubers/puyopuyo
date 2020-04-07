@@ -93,9 +93,17 @@ public struct CalEdges {
     }
 }
 
-extension UIEdgeInsets {
-    public func getCalEdges(by direction: Direction) -> CalEdges {
+public extension UIEdgeInsets {
+    func getCalEdges(by direction: Direction) -> CalEdges {
         return CalEdges(insets: self, direction: direction)
+    }
+    
+    func getHorzTotal() -> CGFloat {
+        return left + right
+    }
+    
+    func getVertTotal() -> CGFloat {
+        return top + bottom
     }
 }
 
