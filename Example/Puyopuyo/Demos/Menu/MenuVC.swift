@@ -67,12 +67,12 @@ class MenuVC: BaseVC {
 
 extension MenuVC: UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        var state = navState.value
-        if scrollView.contentOffset.y > 0 {
-            state.shadowOpacity = Float(min(scrollView.contentOffset.y / 50, 1))
-        } else {
-            state.shadowOpacity = 0
-        }
-        navState.input(value: state)
+//        var state = navState.value
+//        if scrollView.contentOffset.y > 0 {
+//            state.shadowOpacity = Float(min(scrollView.contentOffset.y / 50, 1))
+//        } else {
+//            state.shadowOpacity = 0
+//        }
+//        navState.input(value: state)
     }
 }

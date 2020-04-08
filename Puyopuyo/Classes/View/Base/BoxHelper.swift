@@ -34,8 +34,15 @@ public class BoxHelper<R: Regulator> {
             }
         } else {
             // 父视图为普通视图
-            let sizeAfterCaculate = regulator.caculate(byParent: parentMeasure, remain: parentMeasure.py_size)
-            Caculator.adapting(size: sizeAfterCaculate, to: regulator, remain: parentMeasure.py_size)
+            var size = parentMeasure.py_size
+            if regulator.size.width.isWrap {
+                size.width = .greatestFiniteMagnitude
+            }
+            if regulator.size.height.isWrap {
+                size.height = .greatestFiniteMagnitude
+            }
+            let sizeAfterCaculate = regulator.caculate(byParent: parentMeasure, remain: size)
+            Caculator.adapting(size: sizeAfterCaculate, to: regulator, remain: size)
             if isSelfPositionControl {
                 view.center = CGPoint(x: view.bounds.midX + regulator.margin.left, y: view.bounds.midY + regulator.margin.top)
 

@@ -105,48 +105,62 @@ class Caculator {
 }
 
 class NewCaculator {
-    static func getChildRemainLength(_ sizeDesc: SizeDescription, currentRemain: CGFloat, totalPadding: CGFloat, totalRatio: CGFloat) -> CGFloat {
+    struct Ratio {
+        var width: CGFloat?
+        var height: CGFloat?
+    }
+
+    // remain 剩余空间，标记当前view布局的时候，父view给予的剩余空间
+    // margin 当前view布局时候的margin
+    // padding 当前view的padding（如果有）
+    // ratio 当前尺寸计算时，如果desc为ratio时依赖计算的总ratio，若为空，则取desc的ratio值，相当于比例为1
+
+    static func getChildRemainLength(_ sizeDesc: SizeDescription,
+                                     superRemain: CGFloat,
+                                     margin: CGFloat,
+                                     padding: CGFloat,
+                                     ratio: CGFloat?) -> CGFloat {
         if sizeDesc.isFixed {
             // 子布局剩余空间为固有尺寸 - 当前布局内边距
-            return max(0, sizeDesc.fixedValue - totalPadding)
+            return max(0, sizeDesc.fixedValue - padding)
         } else if sizeDesc.isRatio {
             // 子布局剩余空间为
-            return max(0, (sizeDesc.ratio / totalRatio) * currentRemain - totalPadding)
+            let totalRatio = ratio ?? sizeDesc.ratio
+            return max(0, (sizeDesc.ratio / totalRatio) * (superRemain - padding - margin))
         } else if sizeDesc.isWrap {
-            return max(sizeDesc.min, min(sizeDesc.max, currentRemain)) - totalPadding
+            return max(sizeDesc.min, min(sizeDesc.max, max(0, superRemain - padding - margin)))
         } else {
+//            return CGFloat.greatestFiniteMagnitude - padding - margin
             fatalError()
         }
     }
 
-    static func getChildRemainSize(_ size: Size, currentRemain: CGSize, padding: UIEdgeInsets, ratio: CGSize) -> CGSize {
-        let width = getChildRemainLength(size.width, currentRemain: currentRemain.width, totalPadding: padding.getHorzTotal(), totalRatio: ratio.width)
-
-        let height = getChildRemainLength(size.height, currentRemain: currentRemain.height, totalPadding: padding.getVertTotal(), totalRatio: ratio.height)
-
+    static func getChildRemainSize(_ size: Size, superRemain: CGSize, margin: UIEdgeInsets, padding: UIEdgeInsets, ratio: Ratio?) -> CGSize {
+        let width = getChildRemainLength(size.width, superRemain: superRemain.width, margin: margin.getHorzTotal(), padding: padding.getHorzTotal(), ratio: ratio?.width)
+        let height = getChildRemainLength(size.height, superRemain: superRemain.height, margin: margin.getVertTotal(), padding: padding.getVertTotal(), ratio: ratio?.height)
         return CGSize(width: width, height: height)
     }
 
-    static func applyMeasure(_ measure: Measure, size: Size, in remain: CGSize, totalRatio: CGSize) {
-        // 把size应用到measure上，只关心剩余空间
-        let margin = measure.margin
-        var finalSize = measure.py_size
-        if !size.width.isWrap {
-            finalSize.width = getNoneWrapLength(size.width, remain: remain.width, margin: margin.getHorzTotal(), ratio: totalRatio.width)
-        }
-        if !size.height.isWrap {
-            finalSize.height = getNoneWrapLength(size.height, remain: remain.height, margin: margin.getVertTotal(), ratio: totalRatio.height)
-        }
-        measure.py_size = finalSize
-    }
-
-    private static func getNoneWrapLength(_ size: SizeDescription, remain: CGFloat, margin: CGFloat, ratio: CGFloat) -> CGFloat {
-        if size.isFixed {
-            return max(0, size.fixedValue)
-        } else if size.isRatio {
-            return max(0, (size.ratio / ratio) * (remain - margin))
+    static func getLength(_ sizeDesc: SizeDescription, currentRemain: CGFloat, margin: CGFloat, padding: CGFloat, ratio: CGFloat?) -> CGFloat {
+        if sizeDesc.isFixed {
+            return max(0, sizeDesc.fixedValue)
+        } else if sizeDesc.isRatio {
+            let totalRatio = ratio ?? sizeDesc.ratio
+            return max(0, (sizeDesc.ratio / totalRatio) * (currentRemain - margin - padding))
         } else {
             fatalError()
         }
+    }
+
+    static func applyMeasure(_ measure: Measure, size: Size, currentRemain: CGSize, ratio: Ratio?) {
+        // 把size应用到measure上，只关心剩余空间
+        let margin = measure.margin
+        var padding = UIEdgeInsets.zero
+        if let reg = measure as? Regulator {
+            padding = reg.padding
+        }
+        let width = getLength(measure.size.width, currentRemain: currentRemain.width, margin: margin.getHorzTotal(), padding: padding.getHorzTotal(), ratio: ratio?.width)
+        let height = getLength(measure.size.height, currentRemain: currentRemain.height, margin: margin.getVertTotal(), padding: padding.getVertTotal(), ratio: ratio?.height)
+        measure.py_size = CGSize(width: width, height: height)
     }
 }

@@ -48,15 +48,20 @@ class FlowCaculator {
         return regulator.direction
     }
 
-    lazy var layoutFixedSize = CalFixedSize(cgSize: self.regulator.py_size, direction: regulator.direction)
-    lazy var layoutCalPadding = CalEdges(insets: regulator.padding, direction: regulator.direction)
-    lazy var layoutCalSize = CalSize(size: regulator.size, direction: regulator.direction)
+//    lazy var layoutFixedSize = CalFixedSize(cgSize: self.regulator.py_size, direction: regulator.direction)
+    lazy var regRemainCalSize: CalFixedSize = {
+        let size = NewCaculator.getChildRemainSize(self.regulator.size,
+                                                   superRemain: self.remain,
+                                                   margin: self.regulator.margin,
+                                                   padding: self.regulator.padding,
+                                                   ratio: nil)
+        return CalFixedSize(cgSize: size, direction: self.regulator.direction)
+    }()
+
+    lazy var regCalPadding = CalEdges(insets: regulator.padding, direction: regulator.direction)
+    lazy var regCalSize = CalSize(size: regulator.size, direction: regulator.direction)
 
     func caculate() -> Size {
-        if !(parent is Regulator) {
-            Caculator.adaptingEstimateSize(measure: regulator, remain: remain)
-        }
-
         var caculateChildren = [Measure]()
         regulator.enumerateChild { _, m in
             if m.activated {
@@ -74,7 +79,8 @@ class FlowCaculator {
 
         var currentLine = [Measure]()
         var maxCross: CGFloat = 0
-        let totalCross = layoutFixedSize.cross - layoutCalPadding.crossFixed
+//        let totalCross = regRemainCalSize.cross - regCalPadding.crossFixed
+        let totalCross = regRemainCalSize.cross
 
         func getLength(from size: SizeDescription) -> CGFloat {
             assert(!size.isWrap)
@@ -84,7 +90,7 @@ class FlowCaculator {
             return size.fixedValue
         }
 
-        children.enumerated().forEach({ _, m in
+        children.enumerated().forEach { _, m in
             let subCalSize = m.caculate(byParent: Measure(), remain: remain).getCalSize(by: regulator.direction)
             let subCalMargin = CalEdges(insets: m.margin, direction: regulator.direction)
             let subCrossSize = subCalSize.cross
@@ -111,12 +117,12 @@ class FlowCaculator {
             } else { // 内容未超出
                 currentLine.append(m)
             }
-        })
+        }
         if !currentLine.isEmpty {
             virtualLines.append(getVirtualLine(children: currentLine))
         }
         let size = getVirtualRegulator(children: virtualLines).caculate(byParent: parent, remain: remain)
-        virtualLines.forEach({ $0.justifyChildrenWithCenter() })
+        virtualLines.forEach { $0.justifyChildrenWithCenter() }
         return size
     }
 
@@ -163,12 +169,12 @@ private extension FlowCaculator {
         line.alignment = regulator.alignment
 
         var lineCalSize = CalSize(main: .wrap, cross: .wrap, direction: layoutDirection)
-        if !layoutCalSize.cross.isWrap {
+        if !regCalSize.cross.isWrap {
             // 当流式布局为非包裹的时候，内部计算布局优先撑满
             lineCalSize.cross = .fill
         }
 
-        if layoutCalSize.main.isWrap, regulator.stretchRows {
+        if regCalSize.main.isWrap, regulator.stretchRows {
             print("FlowRegulator: \(regulator), cannot stretch rows when main is wrap, reset to false")
             regulator.stretchRows = false
         }
@@ -176,11 +182,11 @@ private extension FlowCaculator {
         if regulator.stretchRows {
             lineCalSize.main = .fill
         }
-        
-        if !layoutCalSize.main.isWrap {
+
+        if !regCalSize.main.isWrap {
             // 找出最大的main
             var maxRatio: CGFloat?
-            children.forEach { (m) in
+            children.forEach { m in
                 let size = m.size.getCalSize(by: layoutDirection)
                 if size.main.isRatio {
                     if let m = maxRatio {
@@ -194,7 +200,7 @@ private extension FlowCaculator {
                 lineCalSize.main = .ratio(max)
             }
         }
-        
+
         line.size = lineCalSize.getSize()
         return line
     }

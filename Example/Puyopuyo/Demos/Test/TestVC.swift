@@ -23,130 +23,60 @@ class NewView: ZBox, Eventable {
     }
 }
 
-class TestVC: BaseVC {
-    var subVC: UIViewController?
-//    var subVC: UIViewController? = StyleVC()
-//    var subVC: UIViewController? = FlowBoxMixVC()
-//    var subVC: UIViewController? = VBoxVC()
-//    var subVC: UIViewController? = FlatFormationAligmentVC()
-
-    var vv: HFlow!
-
-    func configTestView() {
-        vRoot.attach {
-            VBox().attach($0) {
-                HBox().attach($0) {
-                    Label.demo("test demo").attach($0)
-                    Label.demo("11112222").attach($0)
-                    UIButton().attach($0)
-                    .text("lsjkdflksjdf")
-                        .bind(event: .touchUpInside, input: SimpleInput { _ in
-                            print("----")
-                        })
-                }
-                .size(.wrap, .fill)
-            }
-            .size(.wrap, .fill)
-            .margin(all: 40)
-        }
-//        vRoot.attach {
-//            HFlow().attach($0) {
-//                Label.demo("lskdjfl").attach($0)
-//                    .size(50, 50)
-//                    .margin(all: 10)
-//            }
-//
-//            VFlow(count: 0).attach($0) {
-//                for i in 0 ..< 9 {
-//                    if i < 3 {
-//                        Label.demo(i.description).attach($0)
-//                            .height(.ratio(2))
-//                    } else if i == 4 {
-//                        Label.demo(i.description).attach($0)
-//                            .margin(all: 8)
-//                            .size(.fill, .ratio(3))
-//                    } else {
-//                        Label.demo(i.description).attach($0)
-//                            .size(.fill, .ratio(CGFloat(i)))
-//                    }
-//                }
-//            }
-//            .space(4)
-//            .padding(all: 8)
-//            .size(.fill, .fill)
-        ////            .size(200, 200)
-//        }
-//        .format(.between)
-//        .padding(all: 10)
-//        .space(10)
-//        .animator(Animators.default)
+class TestVC: UIViewController {
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 
-    private func test1() {
-        vRoot.attach()
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        navigationController?.navigationBar.isTranslucent = false
+
+        VBox().attach(view) {
+            VFlow(count: 0).attach($0) {
+                for i in 0..<6 {
+                    Label.demo((i + 1).description).attach($0)
+                        .width(.wrap(add: 20))
+                }
+            }
             .space(10)
-            .attach {
-                HBox().attach($0)
-                    .size(.fill, 100)
-                    .margin(all: 10)
-                    .padding(all: 10)
-                    .attach {
-                        Label("正").attach($0)
-                            .height(.fill)
-                            .width(simulate: Simulate.ego.height.multiply(0.5))
-
-                        Label("fill").attach($0)
-                            .size(.fill, .fill)
-
-                        let v = $0
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//                            self.vRoot.animate(0.2, block: {
-                            v.attach().height(200)
-//                            })
-                        }
-                    }
-
-                let v = ZBox().attach($0) {
-                    let total = 10
-                    for idx in 0 ..< total {
-                        UIView().attach($0)
-                            .width(on: $0) { .fix($0.width * (1 - CGFloat(idx) / CGFloat(total))) }
-                            .height(on: $0) { .fix($0.height * (1 - CGFloat(idx) / CGFloat(total))) }
-                    }
-                }
-                .width(.fill)
-                .height(simulate: Simulate.ego.width.multiply(0.5))
-//                    .heightOnSelf({ .fix($0.width * 0.5) })
-
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//                    v.view.animate(0.25, block: {
-//                        v.heightOnSelf({ .fix($0.width) })
-                    v.height(simulate: Simulate.ego.width)
-//                    })
-                }
-            }
-    }
-
-    override func shouldRandomColor() -> Bool {
-        return true
-    }
-
-    override func configView() {
-        vRoot.attach {
-            if let v = self.subView() {
-                self.addChild(self.subVC!)
-                v.attach($0)
-                    .size(.fill, .fill)
-            } else {
-                self.configTestView()
-            }
+            .padding(all: 10)
+            .size(.fill, .wrap)
+//
+//            let margin = State<CGFloat>(0)
+//            DemoView<CGFloat>(
+//                title: "margin",
+//                builder: {
+//                    HBox().attach($0) {
+//                        //                    Label.demo("1").attach($0)
+//                        //                    Label.demo("2").attach($0)
+//                        //                    Label.demo("3").attach($0)
+//                        UIView().attach($0)
+//                            .size(.fill, .fill)
+//                            .style(StyleSheet.randomColorStyle)
+//                            .margin(margin.asOutput().map { UIEdgeInsets(top: $0, left: $0, bottom: $0, right: $0) })
+//                    }
+//                    .justifyContent(.center)
+//                    .size(.fill, 100)
+//                    .animator(Animators.default)
+//                    .view
+//                },
+//                selectors: [0, 10, 20, 30, 40].map { Selector(desc: "\($0)", value: $0) },
+//                desc: "布局系统内，子view的外边局"
+//            )
+//            .attach($0)
+//            .onEventProduced(to: self) { _, x in
+//                margin.value = x
+//            }
         }
-    }
+        .padding(all: 10)
+        .size(.fill, .fill)
+        .margin(all: 40)
 
-    func subView() -> UIView? {
-        if let type = subVC {
-            return type.view
-        }
-        return nil
+        Util.randomViewColor(view: view)
     }
 }
