@@ -302,47 +302,7 @@ class FlatCaculator {
         if measure.size.bothNotWrap() {
             return measure.size
         }
-
-        // 包裹大小，需要计算下级
-        // 获取下级的剩余空间
-        var padding = UIEdgeInsets.zero
-        if let reg = measure as? Regulator {
-            padding = reg.padding
-        }
-        let nextRemain = NewCaculator.getChildRemainSize(measure.size, superRemain: remain, margin: measure.margin, padding: padding, ratio: nil)
-        return measure.caculate(byParent: regulator, remain: nextRemain)
-
-//        let calSubSize = measure.size.getCalSize(by: regulator.direction)
-//        var finalSize = calSubSize
-//        let remainSize = CalFixedSize(cgSize: remain, direction: regulator.direction)
-//        let originFixSize = CalFixedSize(cgSize: measure.py_size, direction: regulator.direction)
-//        let calMargin = CalEdges(insets: measure.margin, direction: regulator.direction)
-//
-//        if calSubSize.main.isRatio {
-//            let relay = remainSize.main - calMargin.mainFixed
-//            finalSize.main = .fix(calSubSize.main.getFixValue(relay: relay, totalRatio: totalMainRatio, ratioFill: false))
-//        }
-//
-//        if calSubSize.cross.isRatio {
-//            let relay = remainSize.cross - calMargin.crossFixed
-//            finalSize.cross = .fix(calSubSize.cross.getFixValue(relay: relay, totalRatio: totalMainRatio, ratioFill: true))
-//        }
-//
-//        if measure.size.maybeWrap() {
-//            // 需要往下级计算
-//            var main: CGFloat = originFixSize.main
-//            var cross: CGFloat = originFixSize.cross
-//            if !calSubSize.main.isWrap {
-//                main = max(0, (calSubSize.main.ratio / totalMainRatio) * (regRemainCalSize.main - totalFixedMain))
-//            }
-//            if !calSubSize.cross.isWrap {
-//                cross = finalSize.cross.fixedValue
-//            }
-//            measure.py_size = CalFixedSize(main: main, cross: cross, direction: regulator.direction).getSize()
-//
-//            return measure.caculate(byParent: regulator, remain: remain)
-//        }
-//        return finalSize.getSize()
+        return measure.caculate(byParent: regulator, remain: remain)
     }
 
     private func _setNotFormattable() {
