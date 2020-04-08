@@ -155,12 +155,13 @@ class NewCaculator {
     static func applyMeasure(_ measure: Measure, size: Size, currentRemain: CGSize, ratio: Ratio?) {
         // 把size应用到measure上，只关心剩余空间
         let margin = measure.margin
-        var padding = UIEdgeInsets.zero
-        if let reg = measure as? Regulator {
-            padding = reg.padding
+        var final = CGSize()
+        if !size.width.isWrap {
+            final.width = getLength(size.width, currentRemain: currentRemain.width, margin: margin.getHorzTotal(), padding: .zero, ratio: ratio?.width)
         }
-        let width = getLength(measure.size.width, currentRemain: currentRemain.width, margin: margin.getHorzTotal(), padding: padding.getHorzTotal(), ratio: ratio?.width)
-        let height = getLength(measure.size.height, currentRemain: currentRemain.height, margin: margin.getVertTotal(), padding: padding.getVertTotal(), ratio: ratio?.height)
-        measure.py_size = CGSize(width: width, height: height)
+        if !size.height.isWrap {
+            final.height = getLength(size.height, currentRemain: currentRemain.height, margin: margin.getVertTotal(), padding: .zero, ratio: ratio?.height)
+        }
+        measure.py_size = final
     }
 }

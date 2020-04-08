@@ -37,31 +37,26 @@ class TestVC: UIViewController {
         navigationController?.navigationBar.isTranslucent = false
 
         VBox().attach(view) {
-            let margin = State<CGFloat>(0)
-            DemoView<CGFloat>(
-                title: "margin",
-                builder: {
-                    HBox().attach($0) {
-                        //                    Label.demo("1").attach($0)
-                        //                    Label.demo("2").attach($0)
-                        //                    Label.demo("3").attach($0)
-                        UIView().attach($0)
-                            .size(.fill, .fill)
-                            .style(StyleSheet.randomColorStyle)
-                            .margin(margin.asOutput().map { UIEdgeInsets(top: $0, left: $0, bottom: $0, right: $0) })
-                    }
-                    .justifyContent(.center)
-                    .size(.fill, 100)
-                    .animator(Animators.default)
-                    .view
-                },
-                selectors: [0, 10, 20, 30, 40].map { Selector(desc: "\($0)", value: $0) },
-                desc: "布局系统内，子view的外边局"
-            )
-            .attach($0)
-            .onEventProduced(to: self) { _, x in
-                margin.value = x
+            ZBox().attach($0) {
+                ZBox().attach($0)
+                    .padding(all: 20)
+                    .size(.fill, 50)
+                
+//                NavBar(title: "\(type(of: self))").attach($0)
+//                    .onEventProduced(to: self) { s, e in
+//                        if e == .tapLeading {
+//                            s.navigationController?.popViewController(animated: true)
+//                        }
+//                }
             }
+            .padding(all: 10)
+            .size(.fill, .wrap)
+//            ZBox().attach($0) {
+//                Label.demo("slkdjfldkjf").attach($0)
+//                    .alignment(.bottom)
+//            }
+//            .padding(all: 10)
+//            .size(.fill, .wrap)
         }
         .padding(all: 16)
         .size(.fill, .fill)

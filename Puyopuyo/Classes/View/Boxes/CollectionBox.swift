@@ -294,7 +294,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         var size = dummyItem.sizeThatFits(collectionView.bounds.size)
         size.width += (dummyItem.py_measure.margin.left + dummyItem.py_measure.margin.right)
         size.height += (dummyItem.py_measure.margin.top + dummyItem.py_measure.margin.bottom)
-        return size
+        return CGSize(width: max(0, size.width), height: max(0, size.height))
     }
 
     public func headerSize(for collectionView: UICollectionView, layout _: UICollectionViewLayout, at section: Int) -> CGSize {

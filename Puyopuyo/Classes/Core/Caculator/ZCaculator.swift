@@ -19,19 +19,18 @@ class ZCaculator {
 
     lazy var regFixedWidth: CGFloat = self.regulator.padding.left + self.regulator.padding.right
     lazy var regFixedHeight: CGFloat = self.regulator.padding.top + self.regulator.padding.bottom
-    lazy var layoutFixedSize = self.regulator.py_size
-//    lazy var layoutCalPadding = CalEdges(insets: layout.padding, direction: layout.direction)
-//    lazy var layoutCalFixedSize = CalFixedSize(cgSize: layout.target?.py_size ?? .zero, direction: layout.direction)
-//    lazy var layoutCalSize = CalSize(size: layout.size, direction: layout.direction)
-//    lazy var totalFixedMain: CGFloat = self.layoutCalPadding.start + self.layoutCalPadding.end
+    lazy var regChildrenRemainSize: CGSize = {
+        NewCaculator.getChildRemainSize(self.regulator.size,
+                                        superRemain: self.remain,
+                                        margin: self.regulator.margin,
+                                        padding: self.regulator.padding,
+                                        ratio: nil)
+    }()
 
     func caculate() -> Size {
         if !(parent is Regulator) {
-            Caculator.adaptingEstimateSize(measure: regulator, remain: remain)
+            NewCaculator.applyMeasure(regulator, size: regulator.size, currentRemain: remain, ratio: .init(width: 1, height: 1))
         }
-
-//        let layoutFixedSize = regulator.py_size
-
         var children = [Measure]()
         regulator.enumerateChild { _, m in
             if m.activated {
@@ -39,27 +38,36 @@ class ZCaculator {
             }
         }
 
-        var maxSizeWithMargin = CGSize.zero
+        var maxSizeWithSubMargin = CGSize.zero
 
         for measure in children {
-//            let subSize = measure.caculate(byParent: regulator)
-            let subSize = _getEstimateSize(measure: measure, remain: getCurrentRemainForChildren())
-            let subMargin = measure.margin
+            let subSize = _getEstimateSize(measure: measure, remain: regChildrenRemainSize)
 
             if subSize.width.isWrap || subSize.height.isWrap {
                 fatalError()
             }
-            let zContainerSize = CGSize(width: max(layoutFixedSize.width - regFixedWidth - (subMargin.left + subMargin.right), 0),
-                                        height: max(layoutFixedSize.height - regFixedHeight - (subMargin.top + subMargin.bottom), 0))
+            
+            NewCaculator.applyMeasure(measure, size: subSize, currentRemain: regChildrenRemainSize, ratio: .init(width: 1, height: 1))
             // 计算大小
-            let sizeAfterCaculate = Size(width: .fix(subSize.width.getFixValue(relay: zContainerSize.width, totalRatio: 1, ratioFill: false)),
-                                         height: .fix(subSize.height.getFixValue(relay: zContainerSize.height, totalRatio: 1, ratioFill: false)))
-            measure.py_size = CGSize(width: sizeAfterCaculate.width.fixedValue, height: sizeAfterCaculate.height.fixedValue)
-            maxSizeWithMargin.width = max(maxSizeWithMargin.width, sizeAfterCaculate.width.fixedValue + subMargin.left + subMargin.right)
-            maxSizeWithMargin.height = max(maxSizeWithMargin.height, sizeAfterCaculate.height.fixedValue + subMargin.top + subMargin.bottom)
+            
+            maxSizeWithSubMargin.width = max(maxSizeWithSubMargin.width, measure.py_size.width)
+            maxSizeWithSubMargin.height = max(maxSizeWithSubMargin.height, measure.py_size.height)
 
+        }
+        
+        var calCenterSize = CGSize(width: regChildrenRemainSize.width + regFixedWidth, height: regChildrenRemainSize.height + regFixedHeight)
+        if regulator.size.width.isWrap {
+            calCenterSize.width = maxSizeWithSubMargin.width  + regFixedWidth + regulator.size.width.add
+        }
+        if regulator.size.height.isWrap {
+            calCenterSize.height = maxSizeWithSubMargin.height + regFixedHeight + regulator.size.height.add
+        }
+        
+        for measure in children {
+            
+            let subMargin = measure.margin
             // 计算中心
-            var center = CGPoint(x: layoutFixedSize.width / 2, y: layoutFixedSize.height / 2)
+            var center = CGPoint(x: calCenterSize.width / 2, y: calCenterSize.height / 2)
             let alignment = measure.alignment
             let justifyContent = regulator.justifyContent
 
@@ -68,27 +76,29 @@ class ZCaculator {
             // 垂直方向
             let vertAlignment: Alignment = alignment.hasVertAlignment() ? alignment : justifyContent
 
+//            if regulator.size.width.isWrap {
+//                // width 包裹，则没有任何偏移，center.x 直接可以计算出来
+//                center.x = maxSizeWithSubMargin.width / 2 + regulator.padding.left + regulator.size.width.add
+//            } else
             
-            if regulator.size.width.isWrap {
-                // width 包裹，则没有任何偏移，center.x 直接可以计算出来
-                center.x = maxSizeWithMargin.width / 2 + regulator.padding.left + regulator.size.width.add
-            } else if horzAlignment.contains(.left) {
-                center.x = regulator.padding.left + subMargin.left + sizeAfterCaculate.width.fixedValue / 2
+            if horzAlignment.contains(.left) {
+                center.x = regulator.padding.left + subMargin.left + measure.py_size.width / 2
             } else if horzAlignment.contains(.right) {
-                center.x = layoutFixedSize.width - (regulator.padding.right + subMargin.right + sizeAfterCaculate.width.fixedValue / 2)
+                center.x = calCenterSize.width - (regulator.padding.right + subMargin.right + measure.py_size.width / 2)
             }
 
-            if regulator.size.height.isWrap {
-                // height 包裹，则没有任何偏移，center.y 直接可以计算出来
-                center.y = maxSizeWithMargin.height / 2 + regulator.padding.top + regulator.size.height.add
-            } else if vertAlignment.contains(.top) {
-                center.y = regulator.padding.top + subMargin.top + sizeAfterCaculate.height.fixedValue / 2
+//            if regulator.size.height.isWrap {
+//                // height 包裹，则没有任何偏移，center.y 直接可以计算出来
+//                center.y = maxSizeWithSubMargin.height / 2 + regulator.padding.top + regulator.size.height.add
+//            } else
+            if vertAlignment.contains(.top) {
+                center.y = regulator.padding.top + subMargin.top + measure.py_size.height / 2
             } else if vertAlignment.contains(.bottom) {
-                center.y = layoutFixedSize.height - (regulator.padding.bottom + subMargin.bottom + sizeAfterCaculate.height.fixedValue / 2)
+                center.y = calCenterSize.height - (regulator.padding.bottom + subMargin.bottom + measure.py_size.height / 2)
             }
 
             measure.py_center = center
-
+            
             if regulator.caculateChildrenImmediately {
                 _ = measure.caculate(byParent: regulator, remain: Caculator.remainSize(with: measure.py_size, margin: measure.margin))
             }
@@ -97,69 +107,21 @@ class ZCaculator {
         // 计算布局自身大小
         var width = regulator.size.width
         if width.isWrap {
-            width = .fix(width.getWrapSize(by: maxSizeWithMargin.width + regulator.padding.left + regulator.padding.right))
+            width = .fix(width.getWrapSize(by: maxSizeWithSubMargin.width + regulator.padding.left + regulator.padding.right))
         }
 
         var height = regulator.size.height
         if height.isWrap {
-            height = .fix(height.getWrapSize(by: maxSizeWithMargin.height + regulator.padding.top + regulator.padding.bottom))
+            height = .fix(height.getWrapSize(by: maxSizeWithSubMargin.height + regulator.padding.top + regulator.padding.bottom))
         }
 
         return Size(width: width, height: height)
     }
 
     private func _getEstimateSize(measure: Measure, remain: CGSize) -> Size {
-//        if measure.size.maybeWrap() {
-//            return measure.caculate(byParent: regulator, remain: remain)
-//        }
-//        return measure.size
-        
         if measure.size.bothNotWrap() {
             return measure.size
         }
-           
-        let calSize = measure.size
-        var finalSize = calSize
-        let originSize = measure.py_size
-        let margin = measure.margin
-
-        if calSize.width.isRatio {
-            let relay = remain.width - margin.left - margin.right
-            finalSize.width = .fix(calSize.width.getFixValue(relay: relay, totalRatio: 1, ratioFill: false))
-        }
-           
-        if calSize.height.isRatio {
-            let relay = remain.height - margin.top - margin.bottom
-            finalSize.height = .fix(calSize.height.getFixValue(relay: relay, totalRatio: 1, ratioFill: false))
-        }
-           
-        if measure.size.maybeWrap() {
-            // 需要往下级计算
-            var width: CGFloat = originSize.width
-            var height: CGFloat = originSize.height
-            if !calSize.width.isWrap {
-                width = finalSize.width.fixedValue
-            }
-            if !calSize.height.isWrap {
-                height = finalSize.height.fixedValue
-            }
-//            measure.py_size = CalFixedSize(main: main, cross: cross, direction: regulator.direction).getSize()
-            measure.py_size = CGSize(width: width, height: height)
-            
-            return measure.caculate(byParent: regulator, remain: remain)
-        }
-        return finalSize
-    }
-
-    private func getCurrentRemainForChildren() -> CGSize {
-        var size = CGSize(width: max(0, layoutFixedSize.width - regFixedWidth),
-                          height: max(0, layoutFixedSize.height - regFixedHeight))
-        if regulator.size.width.isWrap {
-            size.width = .greatestFiniteMagnitude
-        }
-        if regulator.size.height.isWrap {
-            size.height = .greatestFiniteMagnitude
-        }
-        return size
+        return measure.caculate(byParent: regulator, remain: remain)
     }
 }

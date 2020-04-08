@@ -50,6 +50,9 @@ class FlatCaculator {
 
     /// 计算本身布局属性，可能返回的size 为 .fixed, .ratio, 不可能返回wrap
     func caculate() -> Size {
+        if !(parent is Regulator) {
+            NewCaculator.applyMeasure(regulator, size: regulator.size, currentRemain: remain, ratio: .init(width: 1, height: 1))
+        }
         // 1.第一次循环，计算正常节点，忽略未激活节点，缓存主轴比例节点
         regulator.enumerateChild { _, m in
             guard m.activated else { return }
@@ -278,7 +281,7 @@ class FlatCaculator {
         var calCrossSize = regRemainCalSize.cross + regCalPadding.crossFixed
         if regCalSize.cross.isWrap {
             // 如果是包裹，则需要使用当前最大cross进行计算
-            calCrossSize = maxCross
+            calCrossSize = maxCross + regCalPadding.crossFixed
         }
 
         if alignment.isCenter(for: regulator.direction) {
