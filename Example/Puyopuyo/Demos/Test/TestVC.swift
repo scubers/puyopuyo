@@ -37,26 +37,12 @@ class TestVC: UIViewController {
         navigationController?.navigationBar.isTranslucent = false
 
         VBox().attach(view) {
-            ZBox().attach($0) {
+            UIView().attach($0) {
                 ZBox().attach($0)
-                    .padding(all: 20)
-                    .size(.fill, 50)
-                
-//                NavBar(title: "\(type(of: self))").attach($0)
-//                    .onEventProduced(to: self) { s, e in
-//                        if e == .tapLeading {
-//                            s.navigationController?.popViewController(animated: true)
-//                        }
-//                }
+                    .width($0.py_boundsState().map { $0.size.width / 2 })
+                    .height(simulate: Simulate.ego.width)
             }
-            .padding(all: 10)
-            .size(.fill, .wrap)
-//            ZBox().attach($0) {
-//                Label.demo("slkdjfldkjf").attach($0)
-//                    .alignment(.bottom)
-//            }
-//            .padding(all: 10)
-//            .size(.fill, .wrap)
+            .size(.fill, .fill)
         }
         .padding(all: 16)
         .size(.fill, .fill)

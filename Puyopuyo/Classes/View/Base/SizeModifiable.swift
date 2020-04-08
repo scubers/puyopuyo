@@ -97,10 +97,10 @@ extension Simulate: ValueModifiable {
     public func modifyValue() -> SimpleOutput<CGFloat> {
         let transform = self.transform
         let actions = self.actions
-        return
-            view
-            .py_frameStateByBoundsCenter()
-            .map({ actions.reduce(transform($0)) { $1($0) } })
+        let kvo = view.py_frameStateByKVO().distinct().map { CGRect(origin: .zero, size: $0.size) }
+        let bs = view.py_frameStateByBoundsCenter()
+        return SimpleOutput.merge([kvo, bs])
+            .map { actions.reduce(transform($0)) { $1($0) } }
             .distinct()
     }
 }
@@ -116,6 +116,6 @@ extension ValueModifiable {
 
 extension State: ValueModifiable where Value == CGFloat {
     public func modifyValue() -> SimpleOutput<CGFloat> {
-        return asOutput().map({ $0 })
+        return asOutput().map { $0 }
     }
 }
