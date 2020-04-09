@@ -30,7 +30,10 @@ public class BoxHelper<R: Regulator> {
         if isBox(view: view.superview) {
             // 当父视图为布局，并且当前view可能是wrap的情况下，父布局在计算的时候已经帮子布局计算完成，所以不需要再次计算
             if regulator.size.bothNotWrap() {
-                _ = regulator.caculate(byParent: parentMeasure, remain: Caculator.remainSize(with: view.bounds.size, margin: regulator.margin))
+                var size = view.bounds.size
+                size.width += regulator.margin.getHorzTotal()
+                size.height += regulator.margin.getVertTotal()
+                _ = regulator.caculate(byParent: parentMeasure, remain: size)
             }
         } else {
             // 父视图为普通视图
@@ -41,8 +44,10 @@ public class BoxHelper<R: Regulator> {
             if regulator.size.height.isWrap {
                 size.height = regulator.size.height.max
             }
+            // 父视图为非Regulator，需要事先应用一下固有尺寸
+            Caculator.applyMeasure(regulator, size: regulator.size, currentRemain: size, ratio: nil)
             let sizeAfterCaculate = regulator.caculate(byParent: parentMeasure, remain: size)
-            Caculator.adapting(size: sizeAfterCaculate, to: regulator, remain: size)
+            Caculator.applyMeasure(regulator, size: sizeAfterCaculate, currentRemain: size, ratio: nil)
             if isSelfPositionControl {
                 view.center = CGPoint(x: view.bounds.midX + regulator.margin.left, y: view.bounds.midY + regulator.margin.top)
 

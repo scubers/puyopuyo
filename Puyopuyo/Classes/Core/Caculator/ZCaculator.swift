@@ -20,7 +20,7 @@ class ZCaculator {
     lazy var regFixedWidth: CGFloat = self.regulator.padding.left + self.regulator.padding.right
     lazy var regFixedHeight: CGFloat = self.regulator.padding.top + self.regulator.padding.bottom
     lazy var regChildrenRemainSize: CGSize = {
-        NewCaculator.getChildRemainSize(self.regulator.size,
+        Caculator.getChildRemainSize(self.regulator.size,
                                         superRemain: self.remain,
                                         margin: self.regulator.margin,
                                         padding: self.regulator.padding,
@@ -28,9 +28,6 @@ class ZCaculator {
     }()
 
     func caculate() -> Size {
-        if !(parent is Regulator) {
-            NewCaculator.applyMeasure(regulator, size: regulator.size, currentRemain: remain, ratio: .init(width: 1, height: 1))
-        }
         var children = [Measure]()
         regulator.enumerateChild { _, m in
             if m.activated {
@@ -47,7 +44,7 @@ class ZCaculator {
                 fatalError()
             }
             
-            NewCaculator.applyMeasure(measure, size: subSize, currentRemain: regChildrenRemainSize, ratio: .init(width: 1, height: 1))
+            Caculator.applyMeasure(measure, size: subSize, currentRemain: regChildrenRemainSize, ratio: .init(width: 1, height: 1))
             // 计算大小
             
             maxSizeWithSubMargin.width = max(maxSizeWithSubMargin.width, measure.py_size.width)
@@ -76,21 +73,12 @@ class ZCaculator {
             // 垂直方向
             let vertAlignment: Alignment = alignment.hasVertAlignment() ? alignment : justifyContent
 
-//            if regulator.size.width.isWrap {
-//                // width 包裹，则没有任何偏移，center.x 直接可以计算出来
-//                center.x = maxSizeWithSubMargin.width / 2 + regulator.padding.left + regulator.size.width.add
-//            } else
-            
             if horzAlignment.contains(.left) {
                 center.x = regulator.padding.left + subMargin.left + measure.py_size.width / 2
             } else if horzAlignment.contains(.right) {
                 center.x = calCenterSize.width - (regulator.padding.right + subMargin.right + measure.py_size.width / 2)
             }
 
-//            if regulator.size.height.isWrap {
-//                // height 包裹，则没有任何偏移，center.y 直接可以计算出来
-//                center.y = maxSizeWithSubMargin.height / 2 + regulator.padding.top + regulator.size.height.add
-//            } else
             if vertAlignment.contains(.top) {
                 center.y = regulator.padding.top + subMargin.top + measure.py_size.height / 2
             } else if vertAlignment.contains(.bottom) {
@@ -100,7 +88,7 @@ class ZCaculator {
             measure.py_center = center
             
             if regulator.caculateChildrenImmediately {
-                _ = measure.caculate(byParent: regulator, remain: Caculator.remainSize(with: measure.py_size, margin: measure.margin))
+                _ = measure.caculate(byParent: regulator, remain: regChildrenRemainSize)
             }
         }
 

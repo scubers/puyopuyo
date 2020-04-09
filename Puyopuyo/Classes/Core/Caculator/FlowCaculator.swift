@@ -49,7 +49,7 @@ class FlowCaculator {
     }
 
     lazy var regRemainCalSize: CalFixedSize = {
-        let size = NewCaculator.getChildRemainSize(self.regulator.size,
+        let size = Caculator.getChildRemainSize(self.regulator.size,
                                                    superRemain: self.remain,
                                                    margin: self.regulator.margin,
                                                    padding: self.regulator.padding,
@@ -61,9 +61,6 @@ class FlowCaculator {
     lazy var regCalSize = CalSize(size: regulator.size, direction: regulator.direction)
 
     func caculate() -> Size {
-        if !(parent is Regulator) {
-            NewCaculator.applyMeasure(regulator, size: regulator.size, currentRemain: remain, ratio: .init(width: 1, height: 1))
-        }
         var caculateChildren = [Measure]()
         regulator.enumerateChild { _, m in
             if m.activated {

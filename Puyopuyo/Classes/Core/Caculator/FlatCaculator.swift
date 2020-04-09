@@ -19,7 +19,7 @@ class FlatCaculator {
 
     /// 当前剩余尺寸，需要根据属性进行计算，由于当前计算即所有剩余尺寸，所以ratio为比例相同
     lazy var regRemainCalSize: CalFixedSize = {
-        let size = NewCaculator.getChildRemainSize(self.regulator.size,
+        let size = Caculator.getChildRemainSize(self.regulator.size,
                                                    superRemain: self.remain,
                                                    margin: self.regulator.margin,
                                                    padding: self.regulator.padding,
@@ -51,9 +51,6 @@ class FlatCaculator {
 
     /// 计算本身布局属性，可能返回的size 为 .fixed, .ratio, 不可能返回wrap
     func caculate() -> Size {
-//        if !(parent is Regulator) {
-//            NewCaculator.applyMeasure(regulator, size: regulator.size, currentRemain: remain, ratio: .init(width: 1, height: 1))
-//        }
         // 1.第一次循环，计算正常节点，忽略未激活节点，缓存主轴比例节点
         regulator.enumerateChild { _, m in
             guard m.activated else { return }
@@ -134,8 +131,6 @@ class FlatCaculator {
         caculateChildren.append(measure)
         /// 子margin
         let subCalMargin = CalEdges(insets: measure.margin, direction: regDirection)
-        // 累计margin
-//        totalSubMainMargin += subCalMargin.mainFixed
 
         let subCalSize = measure.size.getCalSize(by: regDirection)
         if subCalSize.main.isRatio {
@@ -150,7 +145,7 @@ class FlatCaculator {
                 fatalError("计算后的尺寸不能是包裹")
             }
             // 应用尺寸
-            NewCaculator.applyMeasure(measure, size: subEstimateSize, currentRemain: subRemain, ratio: nil)
+            Caculator.applyMeasure(measure, size: subEstimateSize, currentRemain: subRemain, ratio: nil)
             // 记录最大cross
             let subFixedSize = CalFixedSize(cgSize: measure.py_size, direction: regDirection)
             maxCross = max(subFixedSize.cross + subCalMargin.crossFixed, maxCross)
@@ -158,7 +153,7 @@ class FlatCaculator {
             totalSubMain += (subFixedSize.main + subCalMargin.mainFixed)
 
             if regulator.caculateChildrenImmediately {
-                _ = measure.caculate(byParent: regulator, remain: Caculator.remainSize(with: measure.py_size, margin: measure.margin))
+                _ = measure.caculate(byParent: regulator, remain: subRemain)
             }
         }
     }
@@ -174,13 +169,13 @@ class FlatCaculator {
         // 子节点外边距
         let subCalMargin = CalEdges(insets: measure.margin, direction: regDirection)
         // 应用子节点具体大小
-        NewCaculator.applyMeasure(measure, size: subEstimateSize, currentRemain: subRemain, ratio: nil)
+        Caculator.applyMeasure(measure, size: subEstimateSize, currentRemain: subRemain, ratio: nil)
         // 记录最大cross
         let subFixedSize = CalFixedSize(cgSize: measure.py_size, direction: regDirection)
         maxCross = max(subFixedSize.cross + subCalMargin.crossFixed, maxCross)
 
         if regulator.caculateChildrenImmediately {
-            _ = measure.caculate(byParent: regulator, remain: Caculator.remainSize(with: measure.py_size, margin: measure.margin))
+            _ = measure.caculate(byParent: regulator, remain: subRemain)
         }
     }
 
