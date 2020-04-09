@@ -38,16 +38,17 @@ class TestVC: UIViewController {
 
         ZBox().attach(view) {
             HBox().attach($0) {
-                for i in 0..<1 {
+                for i in 0..<3 {
                     Label.demo((i + 1).description).attach($0)
                         .height(50)
                         .width(50)
+//                        .margin(left: -10)
                 }
             }
             .space(20)
-            .format(.center)
+            .format(.round)
 //            .padding(all: 10)
-            .size(100, .fill)
+            .size(.fill, .fill)
 
 //            VFlow(count: 3).attach($0) {
 //                for i in 0..<10 {

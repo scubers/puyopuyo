@@ -68,22 +68,6 @@ class FlatCaculator {
         }
 
         // 2.准备信息
-        // 2.1 准备总数，插值格式化的比例总额
-        var totalCount = caculateChildren.count
-        if formattable {
-            switch regulator.format {
-            case .center:
-                totalCount += 2
-                totalMainRatio = CGFloat(totalCount - caculateChildren.count)
-            case .round:
-                totalCount = totalCount * 2 + 1
-                totalMainRatio = CGFloat(totalCount - caculateChildren.count)
-            case .between:
-                totalCount = totalCount * 2 - 1
-                totalMainRatio = CGFloat(totalCount - caculateChildren.count)
-            default: break
-            }
-        }
 
         // 2.2 累加space到totalSpace
         totalSpace += max(0, CGFloat(caculateChildren.count - 1) * regulator.space)
@@ -91,37 +75,12 @@ class FlatCaculator {
         // 3. 第二次循环，计算主轴比例节点
         let currentChildren = caculateChildren
         caculateChildren = []
-        caculateChildren.reserveCapacity(totalCount)
+        caculateChildren.reserveCapacity(currentChildren.count)
 
-        // 插入首format
-        if formattable, regulator.format == .center || regulator.format == .round {
-            let m = getPlaceholder()
-            regulateRatioChild(m)
-            caculateChildren.append(m)
-        }
-        if formattable, regulator.format == .between || regulator.format == .round {
-            // 需要插值计算
-            currentChildren.enumerated().forEach { idx, m in
-                caculateChildren.append(m)
-                if idx != currentChildren.count - 1 {
-                    let m = getPlaceholder()
-                    regulateRatioChild(m)
-                    caculateChildren.append(m)
-                }
-            }
-        } else {
-            // 计算正常主轴比例
-            ratioMainMeasures.forEach { regulateRatioChild($0) }
-            caculateChildren.append(contentsOf: currentChildren)
-        }
-
-        // 插入尾format
-        if formattable, regulator.format == .center || regulator.format == .round {
-            let m = getPlaceholder()
-            regulateRatioChild(m)
-            caculateChildren.append(m)
-        }
-
+        // 计算主轴比例
+        ratioMainMeasures.forEach { regulateRatioChild($0) }
+        caculateChildren.append(contentsOf: currentChildren)
+        
         // 4、第三次循环，计算子节点center，若format == .trailing, 则可能出现第四次循环
         let lastEnd = caculateCenter(measures: caculateChildren)
 
@@ -146,29 +105,22 @@ class FlatCaculator {
         return CalSize(main: main, cross: cross, direction: parent.direction).getSize()
     }
 
-    class Placeholder: Measure {}
-//    private lazy var placeholders = [Measure]()
+    private lazy var placeholders = [Measure]()
     private func getPlaceholder() -> Measure {
-//        let m = MeasureFactory.getPlaceholder()
-        let m = Placeholder()
+        let m = MeasureFactory.getPlaceholder()
         let calSize = CalSize(main: .fill, cross: .fix(0), direction: regulator.direction)
         m.size = calSize.getSize()
-//        var edges = m.margin.getCalEdges(by: regulator.direction)
-        // 占位节点需要抵消间距
-//        edges.start = -2 * regulator.space
-//        m.margin = edges.getInsets()
-//        placeholders.append(m)
         return m
     }
 
     deinit {
-//        MeasureFactory.recyclePlaceholders(placeholders)
+        MeasureFactory.recyclePlaceholders(placeholders)
     }
 
     private func getCurrentRemainSizeForNormalChildren() -> CalFixedSize {
         let size = CalFixedSize(main: max(0, regRemainCalSize.main - totalSubMain - totalSpace),
-                            cross: max(0, regRemainCalSize.cross),
-                            direction: regDirection)
+                                cross: max(0, regRemainCalSize.cross),
+                                direction: regDirection)
         return size
     }
 
@@ -226,7 +178,7 @@ class FlatCaculator {
         // 记录最大cross
         let subFixedSize = CalFixedSize(cgSize: measure.py_size, direction: regDirection)
         maxCross = max(subFixedSize.cross + subCalMargin.crossFixed, maxCross)
-        
+
         if regulator.caculateChildrenImmediately {
             _ = measure.caculate(byParent: regulator, remain: Caculator.remainSize(with: measure.py_size, margin: measure.margin))
         }
@@ -239,20 +191,44 @@ class FlatCaculator {
     /// - Returns: 返回最后节点的end(包括最后一个节点的margin.end)
     private func caculateCenter(measures: [Measure]) -> CGFloat {
         var lastEnd: CGFloat = regCalPadding.start
-
         let reversed = regulator.reverse
         for idx in 0 ..< measures.count {
             var index = idx
-            if reversed {
-                index = measures.count - index - 1
+            if reversed { index = measures.count - index - 1 }
+            let m = measures[index]
+            // 计算cross偏移
+            let cross = _caculateCrossOffset(measure: m)
+            // 计算main偏移
+            // 1. 计算之前，需要根据format计算补充间距
+            var delta: CGFloat = 0
+            switch regulator.format {
+            // between 和 main 会忽略space的作用
+            case .between where measures.count > 1 && idx != 0:
+                delta = (regRemainCalSize.main - totalSubMain) / CGFloat(measures.count - 1) - regulator.space
+            case .round:
+                delta = (regRemainCalSize.main - totalSubMain) / CGFloat(measures.count + 1) - (idx == 0 ? 0 : regulator.space)
+            default: break
             }
-            lastEnd = _caculateCenter(measure: measures[index], at: idx, from: lastEnd)
+            let (main, end) = _caculateMainOffset(measure: m, idx: index, lastEnd: lastEnd + delta)
+            // 复制最后lastEnd
+            lastEnd = end
+            // 赋值center
+            m.py_center = CalCenter(main: main, cross: cross, direction: regDirection).getPoint()
+        }
+        
+        // 整体偏移
+        var delta: CGFloat = 0
+        switch regulator.format {
+        case .trailing:
+            delta = regRemainCalSize.main - regCalPadding.end - lastEnd + regCalPadding.mainFixed
+        case .center:
+            delta = regRemainCalSize.main / 2 - (totalSubMain + totalSpace) / 2
+        default: break
         }
 
-        if regulator.format == .trailing {
+        if delta != 0 {
             // 如果格式化为靠后，则需要最后重排一遍
             // 计算最后一个需要移动的距离
-            let delta = regRemainCalSize.main - regCalPadding.end - lastEnd + regCalPadding.mainFixed
             measures.forEach { m in
                 var calCenter = m.py_center.getCalCenter(by: regulator.direction)
                 calCenter.main += delta
@@ -263,17 +239,9 @@ class FlatCaculator {
         return lastEnd
     }
 
-    private func _caculateCenter(measure: Measure, at index: Int, from end: CGFloat) -> CGFloat {
+    private func _caculateCrossOffset(measure: Measure) -> CGFloat {
         let calMargin = CalEdges(insets: measure.margin, direction: regulator.direction)
-        let calSize = CalFixedSize(cgSize: measure.py_size, direction: regulator.direction)
-        
-        // center 占位符需要扣除space
-        let isPlaceholder = measure is Placeholder
-        let space = (index == 0 || isPlaceholder) ? 0 : regulator.space
-        // main = end + 间距 + 自身顶部margin + 自身主轴一半
-        let main = end + space + calMargin.start + calSize.main / 2
-        
-
+        let calFixedSize = CalFixedSize(cgSize: measure.py_size, direction: regulator.direction)
         // cross
         let cross: CGFloat
         let alignment = measure.alignment.contains(.none) ? regulator.justifyContent : measure.alignment
@@ -288,16 +256,21 @@ class FlatCaculator {
             cross = calCrossSize / 2
 
         } else if alignment.isBackward(for: regulator.direction) {
-            cross = calCrossSize - (regCalPadding.backward + calMargin.backward + calSize.cross / 2)
+            cross = calCrossSize - (regCalPadding.backward + calMargin.backward + calFixedSize.cross / 2)
         } else {
             // 若无设置，则默认forward
-            cross = calSize.cross / 2 + regCalPadding.forward + calMargin.forward
+            cross = calFixedSize.cross / 2 + regCalPadding.forward + calMargin.forward
         }
+        return cross
+    }
 
-        let center = CalCenter(main: main, cross: cross, direction: regulator.direction).getPoint()
-        measure.py_center = center
-
-        return main + calSize.main / 2 + calMargin.end
+    private func _caculateMainOffset(measure: Measure, idx: Int, lastEnd: CGFloat) -> (CGFloat, CGFloat) {
+        let calMargin = CalEdges(insets: measure.margin, direction: regulator.direction)
+        let calFixedSize = CalFixedSize(cgSize: measure.py_size, direction: regulator.direction)
+        let space = (idx == 0) ? 0 : regulator.space
+        // main = end + 间距 + 自身顶部margin + 自身主轴一半
+        let main = lastEnd + space + calMargin.start + calFixedSize.main / 2
+        return (main, main + calFixedSize.main / 2 + calMargin.end)
     }
 
     private func _getEstimateSize(measure: Measure, remain: CGSize) -> Size {
