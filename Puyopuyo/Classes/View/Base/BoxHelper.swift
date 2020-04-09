@@ -29,11 +29,9 @@ public class BoxHelper<R: Regulator> {
         // 父视图为布局
         if isBox(view: view.superview) {
             // 当父视图为布局，并且当前view可能是wrap的情况下，父布局在计算的时候已经帮子布局计算完成，所以不需要再次计算
+            //
             if regulator.size.bothNotWrap() {
-                var size = view.bounds.size
-                size.width += regulator.margin.getHorzTotal()
-                size.height += regulator.margin.getVertTotal()
-                _ = regulator.caculate(byParent: parentMeasure, remain: size)
+                _ = regulator.caculate(byParent: parentMeasure, remain: view.bounds.size)
             }
         } else {
             // 父视图为普通视图
