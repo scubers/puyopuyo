@@ -20,10 +20,10 @@ class FlatCaculator {
     /// 当前剩余尺寸，需要根据属性进行计算，由于当前计算即所有剩余尺寸，所以ratio为比例相同
     lazy var regRemainCalSize: CalFixedSize = {
         let size = Caculator.getChildRemainSize(self.regulator.size,
-                                                   superRemain: self.remain,
-                                                   margin: self.regulator.margin,
-                                                   padding: self.regulator.padding,
-                                                   ratio: nil)
+                                                superRemain: self.remain,
+                                                margin: self.regulator.margin,
+                                                padding: self.regulator.padding,
+                                                ratio: nil)
         return CalFixedSize(cgSize: size, direction: self.regulator.direction)
     }()
 
@@ -77,7 +77,7 @@ class FlatCaculator {
         // 计算主轴比例
         ratioMainMeasures.forEach { regulateRatioChild($0) }
         caculateChildren.append(contentsOf: currentChildren)
-        
+
         // 4、第三次循环，计算子节点center，若format == .trailing, 则可能出现第四次循环
         let lastEnd = caculateCenter(measures: caculateChildren)
 
@@ -209,7 +209,7 @@ class FlatCaculator {
             // 赋值center
             m.py_center = CalCenter(main: main, cross: cross, direction: regDirection).getPoint()
         }
-        
+
         // 整体偏移
         var delta: CGFloat = 0
         switch regulator.format {
