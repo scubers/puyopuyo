@@ -52,6 +52,9 @@ class FlatCaculator {
     /// 计算本身布局属性，可能返回的size 为 .fixed, .ratio, 不可能返回wrap
     func caculate() -> Size {
         // 1.第一次循环，计算正常节点，忽略未激活节点，缓存主轴比例节点
+        var wrCount = 0
+        var rwCount = 0
+        var rrCount = 0
         regulator.enumerateChild { _, m in
             guard m.activated else { return }
             let subSize = m.size.getCalSize(by: regulator.direction)
@@ -60,8 +63,23 @@ class FlatCaculator {
                 // 校验是否可format
                 _setNotFormattable()
             }
+            // 准备冲突数据
+            switch subSize.flatCaculatePriority() {
+            case .W_R: wrCount += 1
+            case .R_W: rwCount += 1
+            case .R_R: rrCount += 1
+            default: break
+            }
             // 初步计算，不会计算主轴比例项目
             appendAndRegulateNormalChild(m)
+        }
+        
+        // 校验冲突
+        if wrCount > 0 && rwCount > 0 {
+            assert(false, "wr rw cannot exists at the same time!!!!")
+        }
+        if (wrCount > 0 || rwCount > 0) && rrCount > 0 {
+            assert(false, "rr cannot state with wr or rw!!!!")
         }
 
         // 2.准备信息
@@ -283,38 +301,46 @@ class FlatCaculator {
 }
 
 extension CalSize {
-    // wrOrRw 不能出现两个
-    // 若wrOrRw存在，则不能存在ratioRatio
+    // wr,rw 不能同事存在
+    // wr,rw 若存在，则不能存在 rr
     // 值越低越优先计算
     enum CalPriority: Int {
-        case bothFix = 10
-        case wrapFix = 20
-        case wrOrRw = 30
-        case ratioFix = 40
-        case fixRatio = 50
-        case ratioRatio = 60
+        case F_F = 10
+        
+        case wrapFixMix = 20
+        
+        case W_R = 30
+        case R_W = 40
+        
+        case R_F = 50
+        
+        case F_R = 60
+        
+        case R_R = 70
+        
         case unknown = 9999
     }
     
     func flatCaculatePriority() -> CalPriority {
         // main + cross
         // fix + fix
-        if main.isFixed && cross.isFixed { return .bothFix }
+        if main.isFixed && cross.isFixed { return .F_F }
         // wrap + wrap || wrap + fix || fix + wrap
         if (main.isWrap && cross.isWrap)
             || (main.isWrap && cross.isFixed)
-            || (main.isFixed && cross.isFixed) { return .wrapFix }
+            || (main.isFixed && cross.isFixed) { return .wrapFixMix }
 
-        // wrap + ratio || ratio + wrap, 这两个不能同时出现
-        if (main.isWrap && cross.isRatio)
-            || (main.isRatio && cross.isWrap) { return .wrOrRw }
+        // wrap + ratio
+        if main.isWrap && cross.isRatio { return .W_R }
+        // ratio + wrap
+        if main.isRatio && cross.isWrap { return .R_W }
         
         // ratio + fix
-        if main.isRatio && cross.isFixed { return .ratioFix }
+        if main.isRatio && cross.isFixed { return .R_F }
         // fix + ratio
-        if main.isFixed && cross.isRatio { return .fixRatio }
+        if main.isFixed && cross.isRatio { return .F_R }
         // ratio + ratio
-        if main.isRatio && cross.isRatio { return .ratioRatio }
+        if main.isRatio && cross.isRatio { return .R_R }
 
         return .unknown
     }
