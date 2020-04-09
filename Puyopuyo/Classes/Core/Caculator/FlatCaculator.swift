@@ -73,12 +73,12 @@ class FlatCaculator {
             // 初步计算，不会计算主轴比例项目
             appendAndRegulateNormalChild(m)
         }
-        
+
         // 校验冲突
-        if wrCount > 0 && rwCount > 0 {
+        if wrCount > 0, rwCount > 0 {
             assert(false, "wr rw cannot exists at the same time!!!!")
         }
-        if (wrCount > 0 || rwCount > 0) && rrCount > 0 {
+        if wrCount > 0 || rwCount > 0, rrCount > 0 {
             assert(false, "rr cannot state with wr or rw!!!!")
         }
 
@@ -120,7 +120,63 @@ class FlatCaculator {
         return CalSize(main: main, cross: cross, direction: parent.direction).getSize()
     }
 
+    private func ragulateFixOrWrap(_ measure: Measure) {
+        let subRemain = getCurrentRemainSizeForNormalChildren().getSize()
+        regulateChild(measure, priorities: [.F_F, .wrapFixMix], remain: subRemain, appendCross: !regCalSize.cross.isWrap, appendMain: true)
+    }
+
+    private func regulateW_R(_ measure: Measure) {
+        var subRemain = getCurrentRemainSizeForNormalChildren()
+        subRemain.cross = maxCross
+        regulateChild(measure, priorities: [.W_R], remain: subRemain.getSize(), appendCross: false, appendMain: true)
+    }
+
+    private func regulateR_W(_ measure: Measure) {
+        let subRemain = getCurrentRemainSizeForRatioChildren(measure: measure)
+        regulateChild(measure, priorities: [.R_W], remain: subRemain.getSize(), appendCross: !regCalSize.cross.isWrap, appendMain: false)
+    }
+    
+    private func regulateR_F(_ measure: Measure) {
+        let subRemain = getCurrentRemainSizeForRatioChildren(measure: measure)
+        regulateChild(measure, priorities: [.R_F], remain: subRemain.getSize(), appendCross: !regCalSize.cross.isWrap, appendMain: false)
+    }
+    
+    private func regulateF_R(_ measure: Measure) {
+        let subRemain = getCurrentRemainSizeForNormalChildren()
+        regulateChild(measure, priorities: [.F_R], remain: subRemain.getSize(), appendCross: false, appendMain: true)
+    }
+    
+    private func regulateR_R(_ measure: Measure) {
+        let subRemain = getCurrentRemainSizeForRatioChildren(measure: measure)
+        regulateChild(measure, priorities: [.R_R], remain: subRemain.getSize(), appendCross: false, appendMain: false)
+    }
+
+    private func regulateChild(_ measure: Measure, priorities: [CalSize.CalPriority], remain: CGSize, appendCross: Bool, appendMain: Bool) {
+        let subCalSize = measure.size.getCalSize(by: regDirection)
+        let priority = subCalSize.flatCaculatePriority()
+        guard priorities.contains(priority) else { return }
+        
+        let subRemain = remain.getCalFixedSize(by: regDirection)
+        let subEstimateSize = _getEstimateSize(measure: measure, remain: subRemain.getSize())
+        if subEstimateSize.maybeWrap() {
+            fatalError("计算后的尺寸不能是包裹")
+        }
+        Caculator.applyMeasure(measure, size: subEstimateSize, currentRemain: subRemain.getSize(), ratio: nil)
+        let subFixedSize = CalFixedSize(cgSize: measure.py_size, direction: regDirection)
+        let subCalMargin = measure.margin.getCalEdges(by: regDirection)
+        if appendCross {
+            maxCross = max(subFixedSize.cross + subCalMargin.crossFixed, maxCross)
+        }
+        if appendMain {
+            totalSubMain += (subFixedSize.main + subCalMargin.mainFixed)
+        }
+        if regulator.caculateChildrenImmediately {
+            _ = measure.caculate(byParent: regulator, remain: subRemain.getSize())
+        }
+    }
+
     private lazy var placeholders = [Measure]()
+
     private func getPlaceholder() -> Measure {
         let m = MeasureFactory.getPlaceholder()
         let calSize = CalSize(main: .fill, cross: .fix(0), direction: regulator.direction)
@@ -306,21 +362,21 @@ extension CalSize {
     // 值越低越优先计算
     enum CalPriority: Int {
         case F_F = 10
-        
+
         case wrapFixMix = 20
-        
+
         case W_R = 30
         case R_W = 40
-        
+
         case R_F = 50
-        
+
         case F_R = 60
-        
+
         case R_R = 70
-        
+
         case unknown = 9999
     }
-    
+
     func flatCaculatePriority() -> CalPriority {
         // main + cross
         // fix + fix
@@ -331,16 +387,16 @@ extension CalSize {
             || (main.isFixed && cross.isFixed) { return .wrapFixMix }
 
         // wrap + ratio
-        if main.isWrap && cross.isRatio { return .W_R }
+        if main.isWrap, cross.isRatio { return .W_R }
         // ratio + wrap
-        if main.isRatio && cross.isWrap { return .R_W }
-        
+        if main.isRatio, cross.isWrap { return .R_W }
+
         // ratio + fix
-        if main.isRatio && cross.isFixed { return .R_F }
+        if main.isRatio, cross.isFixed { return .R_F }
         // fix + ratio
-        if main.isFixed && cross.isRatio { return .F_R }
+        if main.isFixed, cross.isRatio { return .F_R }
         // ratio + ratio
-        if main.isRatio && cross.isRatio { return .R_R }
+        if main.isRatio, cross.isRatio { return .R_R }
 
         return .unknown
     }
