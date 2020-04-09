@@ -281,3 +281,41 @@ class FlatCaculator {
         regulator.format = .leading
     }
 }
+
+extension CalSize {
+    // wrOrRw 不能出现两个
+    // 若wrOrRw存在，则不能存在ratioRatio
+    // 值越低越优先计算
+    enum CalPriority: Int {
+        case bothFix = 10
+        case wrapFix = 20
+        case wrOrRw = 30
+        case ratioFix = 40
+        case fixRatio = 50
+        case ratioRatio = 60
+        case unknown = 9999
+    }
+    
+    func flatCaculatePriority() -> CalPriority {
+        // main + cross
+        // fix + fix
+        if main.isFixed && cross.isFixed { return .bothFix }
+        // wrap + wrap || wrap + fix || fix + wrap
+        if (main.isWrap && cross.isWrap)
+            || (main.isWrap && cross.isFixed)
+            || (main.isFixed && cross.isFixed) { return .wrapFix }
+
+        // wrap + ratio || ratio + wrap, 这两个不能同时出现
+        if (main.isWrap && cross.isRatio)
+            || (main.isRatio && cross.isWrap) { return .wrOrRw }
+        
+        // ratio + fix
+        if main.isRatio && cross.isFixed { return .ratioFix }
+        // fix + ratio
+        if main.isFixed && cross.isRatio { return .fixRatio }
+        // ratio + ratio
+        if main.isRatio && cross.isRatio { return .ratioRatio }
+
+        return .unknown
+    }
+}
