@@ -187,10 +187,9 @@ class FlatCaculator {
     private func caculateCenter(measures: [Measure]) -> CGFloat {
         var lastEnd: CGFloat = regCalPadding.start
         let reversed = regulator.reverse
-        for idx in 0 ..< measures.count {
-            var index = idx
-            if reversed { index = measures.count - index - 1 }
-            let m = measures[index]
+        for caculateIndex in 0 ..< measures.count {
+            // 获取计算对象，根据是否反转获取
+            let m = reversed ? measures[measures.count - caculateIndex - 1] : measures[caculateIndex]
             // 计算cross偏移
             let cross = _caculateCrossOffset(measure: m)
             // 计算main偏移
@@ -198,13 +197,13 @@ class FlatCaculator {
             var delta: CGFloat = 0
             switch regulator.format {
             // between 和 main 会忽略space的作用
-            case .between where measures.count > 1 && idx != 0:
+            case .between where measures.count > 1 && caculateIndex != 0:
                 delta = (regRemainCalSize.main - totalSubMain) / CGFloat(measures.count - 1) - regulator.space
             case .round:
-                delta = (regRemainCalSize.main - totalSubMain) / CGFloat(measures.count + 1) - (idx == 0 ? 0 : regulator.space)
+                delta = (regRemainCalSize.main - totalSubMain) / CGFloat(measures.count + 1) - (caculateIndex == 0 ? 0 : regulator.space)
             default: break
             }
-            let (main, end) = _caculateMainOffset(measure: m, idx: index, lastEnd: lastEnd + delta)
+            let (main, end) = _caculateMainOffset(measure: m, idx: caculateIndex, lastEnd: lastEnd + delta)
             // 复制最后lastEnd
             lastEnd = end
             // 赋值center

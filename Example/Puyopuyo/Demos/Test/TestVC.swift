@@ -37,29 +37,16 @@ class TestVC: UIViewController {
         navigationController?.navigationBar.isTranslucent = false
 
         ZBox().attach(view) {
-            HBox().attach($0) {
-                for i in 0..<3 {
+            VFlow(count: 3).attach($0) {
+                for i in 0..<4 {
                     Label.demo((i + 1).description).attach($0)
-                        .height(50)
-                        .width(50)
-//                        .margin(left: -10)
+                        .size(50, 50)
                 }
             }
-            .space(20)
-            .format(.round)
-//            .padding(all: 10)
+            .space(10)
+            .reverse(true)
+            .padding(all: 10)
             .size(.fill, .fill)
-
-//            VFlow(count: 3).attach($0) {
-//                for i in 0..<10 {
-//                    Label.demo((i + 1).description).attach($0)
-//                        .size(50, 50)
-//                }
-//            }
-//            .hSpace(10)
-//            .format(.between)
-//            .padding(all: 10)
-//            .size(.fill, .fill)
         }
         .justifyContent(.top)
         .padding(all: 16)
