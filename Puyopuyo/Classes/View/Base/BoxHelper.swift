@@ -36,10 +36,10 @@ public class BoxHelper<R: Regulator> {
             // 父视图为普通视图
             var size = parentMeasure.py_size
             if regulator.size.width.isWrap {
-                size.width = .greatestFiniteMagnitude
+                size.width = regulator.size.width.max
             }
             if regulator.size.height.isWrap {
-                size.height = .greatestFiniteMagnitude
+                size.height = regulator.size.height.max
             }
             let sizeAfterCaculate = regulator.caculate(byParent: parentMeasure, remain: size)
             Caculator.adapting(size: sizeAfterCaculate, to: regulator, remain: size)

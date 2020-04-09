@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		09761F9224277700006983CB /* WIKIDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09761F9124277700006983CB /* WIKIDemo.swift */; };
 		09883C4A22C5E5FB006CE05A /* StyleTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09883C4922C5E5FB006CE05A /* StyleTestViewController.swift */; };
+		09EA8E52243E1A45003F10D7 /* TGVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EA8E51243E1A45003F10D7 /* TGVC.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
@@ -68,6 +69,7 @@
 		093B861024012B64002AC9C6 /* Puyopuyo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Puyopuyo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		09761F9124277700006983CB /* WIKIDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WIKIDemo.swift; sourceTree = "<group>"; };
 		09883C4922C5E5FB006CE05A /* StyleTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleTestViewController.swift; sourceTree = "<group>"; };
+		09EA8E51243E1A45003F10D7 /* TGVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TGVC.swift; sourceTree = "<group>"; };
 		3324E3ECDF4649B3EFDB8B1A /* Puyopuyo.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Puyopuyo.podspec; path = ../Puyopuyo.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		607FACD01AFB9204008FA782 /* Puyopuyo_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Puyopuyo_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -244,6 +246,7 @@
 			children = (
 				A84626532309574C003A282C /* TestVC.swift */,
 				09761F9124277700006983CB /* WIKIDemo.swift */,
+				09EA8E51243E1A45003F10D7 /* TGVC.swift */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -558,6 +561,7 @@
 				A846265123093E4E003A282C /* FlatMixVC.swift in Sources */,
 				A8BEC490239CD656001FD6BF /* FlatPropertiesVC.swift in Sources */,
 				A8D9430C22FF3937002E487F /* ZBoxVC.swift in Sources */,
+				09EA8E52243E1A45003F10D7 /* TGVC.swift in Sources */,
 				A81CE1492312EE6900E19E6B /* OptionView.swift in Sources */,
 				A86F4381233F9C100008606F /* StyleVC.swift in Sources */,
 				A8D9430722FF3640002E487F /* VBoxVC.swift in Sources */,

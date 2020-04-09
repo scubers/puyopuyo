@@ -34,7 +34,8 @@ class FlatCaculator {
     lazy var regDirection = self.regulator.direction
 
     // 初始化主轴固有长度为 main padding
-    lazy var totalFixedMain = regCalPadding.start + regCalPadding.end
+    var totalSpace: CGFloat = 0
+    var totalSubMain: CGFloat = 0
 
     var maxCross: CGFloat = 0
 
@@ -84,8 +85,8 @@ class FlatCaculator {
             }
         }
 
-        // 2.2 累加space到totalFixedMain
-        totalFixedMain += max(0, CGFloat(caculateChildren.count - 1) * regulator.space)
+        // 2.2 累加space到totalSpace
+        totalSpace += max(0, CGFloat(caculateChildren.count - 1) * regulator.space)
 
         // 3. 第二次循环，计算主轴比例节点
         let currentChildren = caculateChildren
@@ -145,33 +146,35 @@ class FlatCaculator {
         return CalSize(main: main, cross: cross, direction: parent.direction).getSize()
     }
 
-    private lazy var placeholders = [Measure]()
+    class Placeholder: Measure {}
+//    private lazy var placeholders = [Measure]()
     private func getPlaceholder() -> Measure {
-        let m = MeasureFactory.getPlaceholder()
-//        let m = Measure()
+//        let m = MeasureFactory.getPlaceholder()
+        let m = Placeholder()
         let calSize = CalSize(main: .fill, cross: .fix(0), direction: regulator.direction)
         m.size = calSize.getSize()
-        var edges = m.margin.getCalEdges(by: regulator.direction)
+//        var edges = m.margin.getCalEdges(by: regulator.direction)
         // 占位节点需要抵消间距
-        edges.start = -regulator.space
-        m.margin = edges.getInsets()
-        placeholders.append(m)
+//        edges.start = -2 * regulator.space
+//        m.margin = edges.getInsets()
+//        placeholders.append(m)
         return m
     }
 
     deinit {
-        MeasureFactory.recyclePlaceholders(placeholders)
+//        MeasureFactory.recyclePlaceholders(placeholders)
     }
 
     private func getCurrentRemainSizeForNormalChildren() -> CalFixedSize {
-        return CalFixedSize(main: max(0, regRemainCalSize.main - totalFixedMain + regCalPadding.mainFixed),
-                            cross: max(0, regRemainCalSize.cross - regCalPadding.crossFixed + regCalPadding.crossFixed),
+        let size = CalFixedSize(main: max(0, regRemainCalSize.main - totalSubMain - totalSpace),
+                            cross: max(0, regRemainCalSize.cross),
                             direction: regDirection)
+        return size
     }
 
     private func getCurrentRemainSizeForRatioChildren(measure: Measure) -> CalFixedSize {
         let calSize = measure.size.getCalSize(by: regDirection)
-        let mainMax = max(0, (calSize.main.ratio / totalMainRatio) * (regRemainCalSize.main - totalFixedMain + regCalPadding.mainFixed))
+        let mainMax = max(0, (calSize.main.ratio / totalMainRatio) * (regRemainCalSize.main - totalSubMain - totalSpace))
         return CalFixedSize(main: mainMax, cross: max(0, regRemainCalSize.cross), direction: regDirection)
     }
 
@@ -180,7 +183,7 @@ class FlatCaculator {
         /// 子margin
         let subCalMargin = CalEdges(insets: measure.margin, direction: regDirection)
         // 累计margin
-        totalFixedMain += subCalMargin.mainFixed
+//        totalSubMainMargin += subCalMargin.mainFixed
 
         let subCalSize = measure.size.getCalSize(by: regDirection)
         if subCalSize.main.isRatio {
@@ -189,23 +192,18 @@ class FlatCaculator {
             totalMainRatio += subCalSize.main.ratio
         } else {
             // 计算size的具体值
-            let subSize = _getEstimateSize(measure: measure, remain: getCurrentRemainSizeForNormalChildren().getSize())
-            if subSize.width.isWrap || subSize.height.isWrap {
+            let subRemain = getCurrentRemainSizeForNormalChildren().getSize()
+            let subEstimateSize = _getEstimateSize(measure: measure, remain: subRemain)
+            if subEstimateSize.maybeWrap() {
                 fatalError("计算后的尺寸不能是包裹")
             }
-            // main
-            let subCalSize = CalSize(size: subSize, direction: regDirection)
-            // cross
-            var subCrossSize = subCalSize.cross
-            if subCalSize.cross.isRatio {
-                subCrossSize = .fix(max(0, regRemainCalSize.cross - subCalMargin.crossFixed))
-            }
-            // 设置具体size
-            measure.py_size = CalFixedSize(main: subCalSize.main.fixedValue, cross: subCrossSize.fixedValue, direction: regulator.direction).getSize()
+            // 应用尺寸
+            NewCaculator.applyMeasure(measure, size: subEstimateSize, currentRemain: subRemain, ratio: nil)
             // 记录最大cross
-            maxCross = max(subCrossSize.fixedValue + subCalMargin.crossFixed, maxCross)
+            let subFixedSize = CalFixedSize(cgSize: measure.py_size, direction: regDirection)
+            maxCross = max(subFixedSize.cross + subCalMargin.crossFixed, maxCross)
             // 累计main长度
-            totalFixedMain += subCalSize.main.fixedValue
+            totalSubMain += (subFixedSize.main + subCalMargin.mainFixed)
 
             if regulator.caculateChildrenImmediately {
                 _ = measure.caculate(byParent: regulator, remain: Caculator.remainSize(with: measure.py_size, margin: measure.margin))
@@ -214,22 +212,21 @@ class FlatCaculator {
     }
 
     private func regulateRatioChild(_ measure: Measure) {
-        let subSize = _getEstimateSize(measure: measure, remain: getCurrentRemainSizeForRatioChildren(measure: measure).getSize())
-        let calSize = CalSize(size: subSize, direction: regulator.direction)
-        let calMargin = CalEdges(insets: measure.margin, direction: regulator.direction)
-        // cross
-        var subCrossSize = calSize.cross
-
-        if subCrossSize.isRatio {
-//            let ratio = subCrossSize.ratio
-//            subCrossSize = .fix(max(0, (regFixedSize.cross - (regCalPadding.crossFixed + calMargin.crossFixed)) * ratio))
-            // 次轴的ratio为全部占满，因为只有一个
-            subCrossSize = .fix(max(0, regRemainCalSize.cross - calMargin.crossFixed))
+        // 子节点剩余
+        let subRemain = getCurrentRemainSizeForRatioChildren(measure: measure).getSize()
+        // 子节点预计算尺寸（不会是wrap）
+        let subEstimateSize = _getEstimateSize(measure: measure, remain: subRemain)
+        if subEstimateSize.maybeWrap() {
+            fatalError("计算后的尺寸不能是包裹")
         }
-        // main
-        let subMainSize = SizeDescription.fix(max(0, (calSize.main.ratio / totalMainRatio) * (regRemainCalSize.main - totalFixedMain + regCalPadding.mainFixed)))
-        measure.py_size = CalFixedSize(main: subMainSize.fixedValue, cross: subCrossSize.fixedValue, direction: regulator.direction).getSize()
-        maxCross = max(subCrossSize.fixedValue + calMargin.crossFixed, maxCross)
+        // 子节点外边距
+        let subCalMargin = CalEdges(insets: measure.margin, direction: regDirection)
+        // 应用子节点具体大小
+        NewCaculator.applyMeasure(measure, size: subEstimateSize, currentRemain: subRemain, ratio: nil)
+        // 记录最大cross
+        let subFixedSize = CalFixedSize(cgSize: measure.py_size, direction: regDirection)
+        maxCross = max(subFixedSize.cross + subCalMargin.crossFixed, maxCross)
+        
         if regulator.caculateChildrenImmediately {
             _ = measure.caculate(byParent: regulator, remain: Caculator.remainSize(with: measure.py_size, margin: measure.margin))
         }
@@ -269,10 +266,13 @@ class FlatCaculator {
     private func _caculateCenter(measure: Measure, at index: Int, from end: CGFloat) -> CGFloat {
         let calMargin = CalEdges(insets: measure.margin, direction: regulator.direction)
         let calSize = CalFixedSize(cgSize: measure.py_size, direction: regulator.direction)
-        let space = (index == 0) ? 0 : regulator.space
-
+        
+        // center 占位符需要扣除space
+        let isPlaceholder = measure is Placeholder
+        let space = (index == 0 || isPlaceholder) ? 0 : regulator.space
         // main = end + 间距 + 自身顶部margin + 自身主轴一半
         let main = end + space + calMargin.start + calSize.main / 2
+        
 
         // cross
         let cross: CGFloat

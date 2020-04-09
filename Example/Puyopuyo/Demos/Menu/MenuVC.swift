@@ -17,6 +17,7 @@ class MenuVC: BaseVC {
                     identifier: "menu",
                     dataSource: State([
                         ("Test", TestVC.self),
+                        ("TGVC", TGVC.self),
                         ("UIView Properties", UIViewProertiesVC.self),
                         ("FlatBox Properties", FlatPropertiesVC.self),
                         ("FlowBox Properties", FlowPropertiesVC.self),

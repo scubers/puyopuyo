@@ -36,14 +36,31 @@ class TestVC: UIViewController {
         super.viewDidLoad()
         navigationController?.navigationBar.isTranslucent = false
 
-        VBox().attach(view) {
-            UIView().attach($0) {
-                ZBox().attach($0)
-                    .width($0.py_boundsState().map { $0.size.width / 2 })
-                    .height(simulate: Simulate.ego.width)
+        ZBox().attach(view) {
+            HBox().attach($0) {
+                for i in 0..<1 {
+                    Label.demo((i + 1).description).attach($0)
+                        .height(50)
+                        .width(50)
+                }
             }
-            .size(.fill, .fill)
+            .space(20)
+            .format(.center)
+//            .padding(all: 10)
+            .size(100, .fill)
+
+//            VFlow(count: 3).attach($0) {
+//                for i in 0..<10 {
+//                    Label.demo((i + 1).description).attach($0)
+//                        .size(50, 50)
+//                }
+//            }
+//            .hSpace(10)
+//            .format(.between)
+//            .padding(all: 10)
+//            .size(.fill, .fill)
         }
+        .justifyContent(.top)
         .padding(all: 16)
         .size(.fill, .fill)
 
