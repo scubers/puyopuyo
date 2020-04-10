@@ -38,13 +38,17 @@ class TestVC: UIViewController {
 
         ZBox().attach(view) {
             VBox().attach($0) {
-                Label.demo("fill").attach($0)
-                    .size(.fill, .wrap)
-
-                Label.demo("100").attach($0)
-                    .size(.wrap, .fill)
+                VBox().attach($0) {
+                    Label.demo("sldkfjlsdjflsdsldkfjlsdjflsdsldkfjlsdjflsdsldkfjlsdjflsd").attach($0)
+                        .width(.fill)
+                    
+                    Label.demo("lskdjf").attach($0)
+                        .width(.wrap)
+                }
+                .padding(all: 10)
+                .size(.wrap, .wrap)
             }
-            .size(.wrap, .wrap)
+            .size(.fill, .fill)
         }
         .justifyContent(.top)
         .padding(all: 16)

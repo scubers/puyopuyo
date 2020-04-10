@@ -7,6 +7,43 @@
 
 import Foundation
 
+/**
+ =============== 线性布局计算逻辑 ===============
+ -- 预处理 --
+ 1. 若布局非包裹cross，则最大cross由剩余空间cross确定(maxCross)
+ 
+ -- 第一次循环 --
+ 1. 筛选activate = true 的子节点
+ 2. 校验是否可以format
+ 3. 判断主轴冲突(布局主轴为包裹，则子节点主轴不能由ratio)
+ 4. 累加主轴比例总和 (totalMainRatio)
+ 5. 累加固定尺寸(F_R, R_F)
+ 6. 保存需要计算的子节点
+
+ -- 校验冲突 --
+ 1. 若布局可能包裹，则 w_r, r_w 不能同时存在
+
+ -- 第二次循环 --
+ 1. 根据子节点的size的计算优先级进行排序
+
+ -- 第三次循环 --
+ 1. 计算子节点的大小
+
+ -- 第四次循环 --
+ 1. 计算根据format(.between, .leading, .round)计算center值
+
+ -- 可能存在的第五次循环 --
+ 1. 若format值 == .trailing || .center,则需要第五次循环计算format的偏移量
+
+ =============== 线性布局子节点计算逻辑说明 ===============
+ 1. 子节点Size(width,height) 会根据direction来转换为 CalSize(main,cross)来进行计算
+    main为direction主轴方向，cross为垂直于main的次轴方向。
+ 2. Size会有三种描述 (fix, ratio, wrap), 对应宽高的组合，则有 9 种搭配方式: (main|cross)
+    (f_f),(w_w, w_f, f_w),(w_r, r_w),(r_f, f_r),(r_r)
+    对应的计算顺序参考枚举 @see CalPriority，枚举值越小，优先计算
+    具体计算逻辑参考 @see FlatCaculator.regulateChild(_:)
+
+ */
 class FlatCaculator {
     let regulator: FlatRegulator
     let parent: Measure
@@ -18,7 +55,7 @@ class FlatCaculator {
     }
 
     /// 当前剩余尺寸，需要根据属性进行计算，由于当前计算即所有剩余尺寸，所以ratio为比例相同
-    lazy var regRemainCalSize: CalFixedSize = {
+    lazy var regChildrenRemainCalSize: CalFixedSize = {
         let size = Caculator.getChildRemainSize(self.regulator.size,
                                                 superRemain: self.remain,
                                                 margin: self.regulator.margin,
@@ -51,48 +88,49 @@ class FlatCaculator {
 
     /// 计算本身布局属性，可能返回的size 为 .fixed, .ratio, 不可能返回wrap
     func caculate() -> Size {
-        // 1.第一次循环，计算正常节点，忽略未激活节点，缓存主轴比例节点
+        
         var wrCount = 0
         var rwCount = 0
         
+        // 处理非包裹cross时的masCross
         if regCalSize.cross.isRatio {
-            maxCross = regRemainCalSize.cross
+            maxCross = regChildrenRemainCalSize.cross
         } else if regCalSize.cross.isFixed {
             maxCross = regCalSize.cross.fixedValue - regCalMargin.crossFixed
         }
-        
+
+        // 第一次循环
         regulator.enumerateChild { _, m in
             guard m.activated else { return }
             let subCalSize = m.size.getCalSize(by: regDirection)
             let subCalMargin = m.margin.getCalEdges(by: regDirection)
 
+            // 校验是否可format
             if (subCalSize.main.isRatio && formattable || regCalSize.main.isWrap) && regulator.format != .leading {
-                // 校验是否可format
                 _setNotFormattable()
             }
-            
+
             // 判断主轴包裹冲突
             if regCalSize.main.isWrap && subCalSize.main.isRatio {
                 Caculator.constraintConflict(crash: true, "parent wrap cannot contains ratio children!!!!!")
             }
-            
+
             // 准备冲突数据
             switch subCalSize.flatCaculatePriority() {
             case .W_R: wrCount += 1
             case .R_W: rwCount += 1
-//            case .R_R: rrCount += 1
             case .F_R: totalSubMain += subCalSize.main.fixedValue + subCalMargin.mainFixed
             case .R_F: if regCalSize.cross.isWrap { maxCross = max(maxCross, subCalSize.cross.fixedValue + subCalMargin.crossFixed) }
             default: break
             }
             // 统计主轴比例总和
             totalMainRatio += subCalSize.main.ratio
-
+            // 添加计算子节点
             caculateChildren.append(m)
         }
 
-        // 校验冲突
-        if wrCount > 0, rwCount > 0 {
+        // 校验冲突，若布局可能包裹，则不能存在 wrrw
+        if regulator.size.maybeWrap(), wrCount > 0, rwCount > 0 {
             Caculator.constraintConflict(crash: true, "wr rw cannot exists at the same time!!!!")
         }
 
@@ -203,16 +241,16 @@ class FlatCaculator {
     }
 
     private func getCurrentRemainSizeForNormalChildren() -> CalFixedSize {
-        let size = CalFixedSize(main: max(0, regRemainCalSize.main - totalSubMain - totalSpace),
-                                cross: max(0, regRemainCalSize.cross),
+        let size = CalFixedSize(main: max(0, regChildrenRemainCalSize.main - totalSubMain - totalSpace),
+                                cross: max(0, regChildrenRemainCalSize.cross),
                                 direction: regDirection)
         return size
     }
 
     private func getCurrentRemainSizeForRatioChildren(measure: Measure) -> CalFixedSize {
         let calSize = measure.size.getCalSize(by: regDirection)
-        let mainMax = max(0, (calSize.main.ratio / totalMainRatio) * (regRemainCalSize.main - totalSubMain - totalSpace))
-        return CalFixedSize(main: mainMax, cross: max(0, regRemainCalSize.cross), direction: regDirection)
+        let mainMax = max(0, (calSize.main.ratio / totalMainRatio) * (regChildrenRemainCalSize.main - totalSubMain - totalSpace))
+        return CalFixedSize(main: mainMax, cross: max(0, regChildrenRemainCalSize.cross), direction: regDirection)
     }
 
     private func appendAndRegulateNormalChild(_ measure: Measure) {
@@ -286,9 +324,9 @@ class FlatCaculator {
             switch regulator.format {
             // between 和 main 会忽略space的作用
             case .between where measures.count > 1 && caculateIndex != 0:
-                delta = (regRemainCalSize.main - totalSubMain) / CGFloat(measures.count - 1) - regulator.space
+                delta = (regChildrenRemainCalSize.main - totalSubMain) / CGFloat(measures.count - 1) - regulator.space
             case .round:
-                delta = (regRemainCalSize.main - totalSubMain) / CGFloat(measures.count + 1) - (caculateIndex == 0 ? 0 : regulator.space)
+                delta = (regChildrenRemainCalSize.main - totalSubMain) / CGFloat(measures.count + 1) - (caculateIndex == 0 ? 0 : regulator.space)
             default: break
             }
             let (main, end) = _caculateMainOffset(measure: m, idx: caculateIndex, lastEnd: lastEnd + delta)
@@ -302,9 +340,9 @@ class FlatCaculator {
         var delta: CGFloat = 0
         switch regulator.format {
         case .trailing:
-            delta = regRemainCalSize.main - regCalPadding.end - lastEnd + regCalPadding.mainFixed
+            delta = regChildrenRemainCalSize.main - regCalPadding.end - lastEnd + regCalPadding.mainFixed
         case .center:
-            delta = regRemainCalSize.main / 2 - (totalSubMain + totalSpace) / 2
+            delta = regChildrenRemainCalSize.main / 2 - (totalSubMain + totalSpace) / 2
         default: break
         }
 
@@ -328,7 +366,7 @@ class FlatCaculator {
         let cross: CGFloat
         let alignment = measure.alignment.contains(.none) ? regulator.justifyContent : measure.alignment
 
-        var calCrossSize = regRemainCalSize.cross + regCalPadding.crossFixed
+        var calCrossSize = regChildrenRemainCalSize.cross + regCalPadding.crossFixed
         if regCalSize.cross.isWrap {
             // 如果是包裹，则需要使用当前最大cross进行计算
             calCrossSize = maxCross + regCalPadding.crossFixed
@@ -371,8 +409,6 @@ class FlatCaculator {
 }
 
 extension CalSize {
-    // wr,rw 不能同事存在
-    // wr,rw 若存在，则不能存在 rr
     // 值越低越优先计算
     enum CalPriority: Int {
         case F_F = 10
