@@ -101,4 +101,13 @@ class Caculator {
         let fixedSize = Caculator.caculate(size: sizeAfterCalulate, by: size)
         return CGSize(width: fixedSize.width.fixedValue, height: fixedSize.height.fixedValue)
     }
+    
+    static func constraintConflict(crash: Bool, _ msg: String) {
+        let message = "Constraint conflict: \(msg)"
+        if crash {
+            fatalError(message)
+        } else {
+            print(message)
+        }
+    }
 }

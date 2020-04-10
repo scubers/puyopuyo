@@ -54,47 +54,60 @@ class FlatCaculator {
         // 1.第一次循环，计算正常节点，忽略未激活节点，缓存主轴比例节点
         var wrCount = 0
         var rwCount = 0
-        var rrCount = 0
+        
+        if regCalSize.cross.isRatio {
+            maxCross = regRemainCalSize.cross
+        } else if regCalSize.cross.isFixed {
+            maxCross = regCalSize.cross.fixedValue - regCalMargin.crossFixed
+        }
+        
         regulator.enumerateChild { _, m in
             guard m.activated else { return }
-            let subSize = m.size.getCalSize(by: regulator.direction)
+            let subCalSize = m.size.getCalSize(by: regDirection)
+            let subCalMargin = m.margin.getCalEdges(by: regDirection)
 
-            if (subSize.main.isRatio && formattable || regCalSize.main.isWrap) && regulator.format != .leading {
+            if (subCalSize.main.isRatio && formattable || regCalSize.main.isWrap) && regulator.format != .leading {
                 // 校验是否可format
                 _setNotFormattable()
             }
+            
+            // 判断主轴包裹冲突
+            if regCalSize.main.isWrap && subCalSize.main.isRatio {
+                Caculator.constraintConflict(crash: true, "parent wrap cannot contains ratio children!!!!!")
+            }
+            
             // 准备冲突数据
-            switch subSize.flatCaculatePriority() {
+            switch subCalSize.flatCaculatePriority() {
             case .W_R: wrCount += 1
             case .R_W: rwCount += 1
-            case .R_R: rrCount += 1
+//            case .R_R: rrCount += 1
+            case .F_R: totalSubMain += subCalSize.main.fixedValue + subCalMargin.mainFixed
+            case .R_F: if regCalSize.cross.isWrap { maxCross = max(maxCross, subCalSize.cross.fixedValue + subCalMargin.crossFixed) }
             default: break
             }
-            // 初步计算，不会计算主轴比例项目
-            appendAndRegulateNormalChild(m)
+            // 统计主轴比例总和
+            totalMainRatio += subCalSize.main.ratio
+
+            caculateChildren.append(m)
         }
 
         // 校验冲突
         if wrCount > 0, rwCount > 0 {
-            assert(false, "wr rw cannot exists at the same time!!!!")
-        }
-        if wrCount > 0 || rwCount > 0, rrCount > 0 {
-            assert(false, "rr cannot state with wr or rw!!!!")
+            Caculator.constraintConflict(crash: true, "wr rw cannot exists at the same time!!!!")
         }
 
         // 2.准备信息
-
         // 2.2 累加space到totalSpace
         totalSpace += max(0, CGFloat(caculateChildren.count - 1) * regulator.space)
 
-        // 3. 第二次循环，计算主轴比例节点
-        let currentChildren = caculateChildren
-        caculateChildren = []
-        caculateChildren.reserveCapacity(currentChildren.count)
-
-        // 计算主轴比例
-        ratioMainMeasures.forEach { regulateRatioChild($0) }
-        caculateChildren.append(contentsOf: currentChildren)
+        // 排序
+        caculateChildren
+            .sorted {
+                let p0 = $0.size.getCalSize(by: regDirection).flatCaculatePriority()
+                let p1 = $1.size.getCalSize(by: regDirection).flatCaculatePriority()
+                return p0.rawValue < p1.rawValue
+            }
+            .forEach { regulateChild($0) }
 
         // 4、第三次循环，计算子节点center，若format == .trailing, 则可能出现第四次循环
         let lastEnd = caculateCenter(measures: caculateChildren)
@@ -120,42 +133,43 @@ class FlatCaculator {
         return CalSize(main: main, cross: cross, direction: parent.direction).getSize()
     }
 
-    private func ragulateFixOrWrap(_ measure: Measure) {
-        let subRemain = getCurrentRemainSizeForNormalChildren().getSize()
-        regulateChild(measure, priorities: [.F_F, .wrapFixMix], remain: subRemain, appendCross: !regCalSize.cross.isWrap, appendMain: true)
-    }
+    private func regulateChild(_ measure: Measure) {
+        let priority = measure.size.getCalSize(by: regDirection).flatCaculatePriority()
+        switch priority {
+        case .F_F, .wrapFixMix:
+            let subRemain = getCurrentRemainSizeForNormalChildren().getSize()
+            regulateChild(measure, priorities: [.F_F, .wrapFixMix], remain: subRemain, appendCross: regCalSize.cross.isWrap, appendMain: true)
 
-    private func regulateW_R(_ measure: Measure) {
-        var subRemain = getCurrentRemainSizeForNormalChildren()
-        subRemain.cross = maxCross
-        regulateChild(measure, priorities: [.W_R], remain: subRemain.getSize(), appendCross: false, appendMain: true)
-    }
+        case .W_R:
+            var subRemain = getCurrentRemainSizeForNormalChildren()
+            subRemain.cross = maxCross
+            regulateChild(measure, priorities: [.W_R], remain: subRemain.getSize(), appendCross: false, appendMain: true)
 
-    private func regulateR_W(_ measure: Measure) {
-        let subRemain = getCurrentRemainSizeForRatioChildren(measure: measure)
-        regulateChild(measure, priorities: [.R_W], remain: subRemain.getSize(), appendCross: !regCalSize.cross.isWrap, appendMain: false)
-    }
-    
-    private func regulateR_F(_ measure: Measure) {
-        let subRemain = getCurrentRemainSizeForRatioChildren(measure: measure)
-        regulateChild(measure, priorities: [.R_F], remain: subRemain.getSize(), appendCross: !regCalSize.cross.isWrap, appendMain: false)
-    }
-    
-    private func regulateF_R(_ measure: Measure) {
-        let subRemain = getCurrentRemainSizeForNormalChildren()
-        regulateChild(measure, priorities: [.F_R], remain: subRemain.getSize(), appendCross: false, appendMain: true)
-    }
-    
-    private func regulateR_R(_ measure: Measure) {
-        let subRemain = getCurrentRemainSizeForRatioChildren(measure: measure)
-        regulateChild(measure, priorities: [.R_R], remain: subRemain.getSize(), appendCross: false, appendMain: false)
+        case .R_W:
+            let subRemain = getCurrentRemainSizeForRatioChildren(measure: measure)
+            regulateChild(measure, priorities: [.R_W], remain: subRemain.getSize(), appendCross: regCalSize.cross.isWrap, appendMain: false)
+
+        case .R_F:
+            let subRemain = getCurrentRemainSizeForRatioChildren(measure: measure)
+            regulateChild(measure, priorities: [.R_F], remain: subRemain.getSize(), appendCross: false, appendMain: false)
+
+        case .F_R:
+            let subRemain = getCurrentRemainSizeForNormalChildren()
+            regulateChild(measure, priorities: [.F_R], remain: subRemain.getSize(), appendCross: false, appendMain: true)
+
+        case .R_R:
+            let subRemain = getCurrentRemainSizeForRatioChildren(measure: measure)
+            regulateChild(measure, priorities: [.R_R], remain: subRemain.getSize(), appendCross: false, appendMain: false)
+
+        default: break
+        }
     }
 
     private func regulateChild(_ measure: Measure, priorities: [CalSize.CalPriority], remain: CGSize, appendCross: Bool, appendMain: Bool) {
         let subCalSize = measure.size.getCalSize(by: regDirection)
         let priority = subCalSize.flatCaculatePriority()
         guard priorities.contains(priority) else { return }
-        
+
         let subRemain = remain.getCalFixedSize(by: regDirection)
         let subEstimateSize = _getEstimateSize(measure: measure, remain: subRemain.getSize())
         if subEstimateSize.maybeWrap() {
@@ -350,7 +364,7 @@ class FlatCaculator {
     }
 
     private func _setNotFormattable() {
-        print("Constraint error!!! Regulator[\(regulator)] Format.\(regulator.format) reset to .leading")
+        Caculator.constraintConflict(crash: false, "Regulator[\(regulator)] Format.\(regulator.format) reset to .leading")
         formattable = false
         regulator.format = .leading
     }
