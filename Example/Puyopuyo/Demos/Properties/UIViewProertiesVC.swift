@@ -14,7 +14,8 @@ class UIViewProertiesVC: BaseVC {
         DemoScroll(
             builder: {
                 self.alignment().attach($0)
-                self.size().attach($0)
+                self.crossSize().attach($0)
+                self.mainSize().attach($0)
                 self.margin().attach($0)
             }
         )
@@ -23,15 +24,21 @@ class UIViewProertiesVC: BaseVC {
     }
 
     func alignment() -> UIView {
-        let aligment = State<Alignment>(.center)
+        let a = State(Alignment.top)
         return DemoView<Alignment>(
-            title: "UIView.AlignmentSelf: 3",
+            title: "Aligment",
             builder: {
                 HBox().attach($0) {
-                    Label.demo("1").attach($0)
-                    Label.demo("2").attach($0)
-                    Label.demo("3").attach($0)
-                        .alignment(aligment)
+                    Label.demo("top").attach($0)
+                        .alignment(.top)
+                    Label.demo("center").attach($0)
+                        .alignment(.center)
+                    Label.demo("bottom").attach($0)
+                        .alignment(.bottom)
+
+                    Label.demo("change").attach($0)
+                        .alignment(a)
+                        .text(a.asOutput().map { "\($0)" })
                 }
                 .space(2)
                 .padding(all: 10)
@@ -48,27 +55,41 @@ class UIViewProertiesVC: BaseVC {
             """
         )
         .attach()
-        .onEventProduced(to: self) { _, x in
-            aligment.value = x
+        .onEventProduced(to: self) {
+            a.input(value: $1)
         }
         .view
     }
 
-    func size() -> UIView {
+    func crossSize() -> UIView {
         let s = State<SizeDescription>(.wrap)
         return DemoView<SizeDescription>(
-            title: "size",
+            title: "cross size",
             builder: {
-                HBox().attach($0) {
-                    Label.demo("1").attach($0)
-                        .size(s, s)
-                    Label.demo("2").attach($0)
-                        .size(40, 40)
+                VBox().attach($0) {
+                    Label.demo(".fix(100)").attach($0)
+                        .width(.fix(100))
+                        .height(30)
+                    Label.demo(".ratio(1)").attach($0)
+                        .width(.ratio(1))
+                        .height(30)
+                    Label.demo(".wrap()").attach($0)
+                        .width(.wrap)
+                        .height(30)
+                    Label.demo(".wrap(add: 10)").attach($0)
+                        .width(.wrap(add: 10))
+                        .height(30)
+                    Label.demo(".wrap(add: 10, min: 20, max: 100)").attach($0)
+                        .width(.wrap(add: 10, min: 20, max: 100))
+
+                    Label.demo("change").attach($0)
+                        .width(s)
+                        .text(s.asOutput().map { "\($0)" })
+                        .height(30)
                 }
-                .space(2)
+                .space(8)
                 .padding(all: 10)
-                .justifyContent(.center)
-                .size(.fill, 60)
+                .size(.fill, .wrap)
                 .animator(Animators.default)
                 .view
             },
@@ -78,9 +99,50 @@ class UIViewProertiesVC: BaseVC {
                         Selector(desc: ".ratio(1)", value: .ratio(1)),
                         Selector(desc: ".ratio(0.5)", value: .ratio(0.5))],
             desc: """
-            控制自身view的大小
-            ratio: 占主轴上剩余空间的比重（ratio / 主轴上的ratio之和）
-            占次轴上占满
+            """
+        )
+        .attach()
+        .onEventProduced(to: self) { _, x in
+            s.value = x
+        }
+        .view
+    }
+
+    func mainSize() -> UIView {
+        let s = State<SizeDescription>(.wrap)
+        return DemoView<SizeDescription>(
+            title: "main size",
+            builder: {
+                VBox().attach($0) {
+                    Label.demo(".fix(100)").attach($0)
+                        .height(.fix(50))
+                    Label.demo(".ratio(1)").attach($0)
+                        .height(.ratio(1))
+                    Label.demo(".ratio(2)").attach($0)
+                        .height(.ratio(2))
+
+                    Label.demo(".wrap()").attach($0)
+
+                    Label.demo(".wrap(add: 10)").attach($0)
+                        .height(.wrap(add: 10))
+                    Label.demo(".wrap(add: 10, min: 40, max: 50)").attach($0)
+                        .height(.wrap(add: 10, min: 40, max: 50))
+
+                    Label.demo("change").attach($0)
+                        .height(s)
+                }
+                .space(8)
+                .padding(all: 10)
+                .size(.fill, 400)
+                .animator(Animators.default)
+                .view
+            },
+            selectors: [Selector(desc: ".wrap", value: .wrap),
+                        Selector(desc: ".wrap(add(10))", value: .wrap(add: 10)),
+                        Selector(desc: ".fix(50)", value: .fix(50)),
+                        Selector(desc: ".ratio(1)", value: .ratio(1)),
+                        Selector(desc: ".ratio(0.5)", value: .ratio(0.5))],
+            desc: """
             """
         )
         .attach()
@@ -96,9 +158,6 @@ class UIViewProertiesVC: BaseVC {
             title: "margin",
             builder: {
                 HBox().attach($0) {
-//                    Label.demo("1").attach($0)
-//                    Label.demo("2").attach($0)
-//                    Label.demo("3").attach($0)
                     UIView().attach($0)
                         .size(.fill, .fill)
                         .style(StyleSheet.randomColorStyle)

@@ -11,7 +11,7 @@ import Foundation
  =============== 线性布局计算逻辑 ===============
  -- 预处理 --
  1. 若布局非包裹cross，则最大cross由剩余空间cross确定(maxCross)
- 
+
  -- 第一次循环 --
  1. 筛选activate = true 的子节点
  2. 校验是否可以format
@@ -88,10 +88,9 @@ class FlatCaculator {
 
     /// 计算本身布局属性，可能返回的size 为 .fixed, .ratio, 不可能返回wrap
     func caculate() -> Size {
-        
         var wrCount = 0
         var rwCount = 0
-        
+
         // 处理非包裹cross时的masCross
         if regCalSize.cross.isRatio {
             maxCross = regChildrenRemainCalSize.cross
@@ -114,7 +113,7 @@ class FlatCaculator {
             if regCalSize.main.isWrap && subCalSize.main.isRatio {
                 Caculator.constraintConflict(crash: true, "parent wrap cannot contains ratio children!!!!!")
             }
-            
+
             // 判断W_R优先级冲突
             if regulator.size.maybeWrap(), subCalSize.main.isWrap, subCalSize.main.priority > 0 {
                 // 警告包裹布局内，(W_R) 节点的wrap priority 不生效，先不打印警告
@@ -146,7 +145,7 @@ class FlatCaculator {
 
         // 根据优先级计算
         sortedChildren(caculateChildren).forEach { regulateChild($0) }
-        
+
         // 4、第三次循环，计算子节点center，若format == .trailing, 则可能出现第四次循环
         let lastEnd = caculateCenter(measures: caculateChildren)
 
@@ -199,7 +198,7 @@ class FlatCaculator {
             let subRemain = getCurrentRemainSizeForRatioChildren(measure: measure)
             regulateChild(measure, priorities: [.R_R], remain: subRemain.getSize(), appendCross: false, appendMain: false)
 
-        default: break
+        case .unknown: break
         }
     }
 
@@ -358,15 +357,15 @@ class FlatCaculator {
 
         return lastEnd
     }
-    
+
     private func sortedChildren(_ children: [Measure]) -> [Measure] {
         return children.sorted {
             let size0 = $0.size.getCalSize(by: regDirection)
             let size1 = $1.size.getCalSize(by: regDirection)
-            
+
             let p0 = size0.flatCaculatePriority()
             let p1 = size1.flatCaculatePriority()
-            
+
             if regulator.size.bothNotWrap(), p0.isWrapPrioritable(), p1.isWrapPrioritable() {
                 // 布局为非包裹的优先级
                 return size0.main.priority > size1.main.priority
@@ -431,7 +430,8 @@ class FlatCaculator {
 extension CalSize {
     // 值越低越优先计算
     enum CalPriority: Int {
-        
+        case F_F = 10
+
         case wrapFixMix = 20
         case W_R = 30
         case R_W = 40
@@ -440,15 +440,13 @@ extension CalSize {
         case F_R = 60
 
         case R_R = 70
-        case F_F = 80
 
         case unknown = 9999
-        
+
         func isWrapPrioritable() -> Bool {
             return rawValue >= CalPriority.wrapFixMix.rawValue && rawValue <= CalPriority.W_R.rawValue
         }
     }
-    
 
     func flatCaculatePriority() -> CalPriority {
         // main + cross
@@ -457,7 +455,7 @@ extension CalSize {
         // wrap + wrap || wrap + fix || fix + wrap
         if (main.isWrap && cross.isWrap)
             || (main.isWrap && cross.isFixed)
-            || (main.isFixed && cross.isFixed) { return .wrapFixMix }
+            || (main.isFixed && cross.isWrap) { return .wrapFixMix }
 
         // wrap + ratio
         if main.isWrap, cross.isRatio { return .W_R }

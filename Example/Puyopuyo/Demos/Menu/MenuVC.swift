@@ -37,7 +37,6 @@ class MenuVC: BaseVC {
                         }
                         .size(.fill, .wrap)
                         .padding(all: padding)
-//                        .bottomBorder([.color(Theme.dividerColor), .thick(0.5), .lead(padding), .trail(padding)])
                         .view
                     },
                     _event: { [weak self] e in

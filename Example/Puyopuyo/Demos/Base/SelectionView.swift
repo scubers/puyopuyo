@@ -48,7 +48,7 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
                     .styles([
                         TapScaleStyle(),
                     ])
-                    .borderWidth(0.5)
+                    .borderWidth(Util.pixel(1))
                     .borderColor(Theme.color)
                     .cornerRadius(4)
                     .textColor(UIColor.black, state: .normal)
@@ -104,7 +104,7 @@ class PlainSelectionView<T: Equatable>: ZBox, Eventable, Stateful {
                         .styles([
                             TapScaleStyle(),
                         ])
-                        .borderWidth(0.5)
+                        .borderWidth(Util.pixel(1))
                         .borderColor(Theme.color)
                         .cornerRadius(4)
                         .textColor(UIColor.black, state: .normal)

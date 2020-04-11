@@ -22,6 +22,10 @@ class FlowPropertiesVC: BaseVC {
         self.step.safeBind(to: self) { this, _ in
             this.reset()
         }
+
+        _ = self.blockFix.safeBind(self) { this, _ in
+            this.reset()
+        }
     }
 
     func reset() {
@@ -47,6 +51,8 @@ class FlowPropertiesVC: BaseVC {
 
     let step = State(2)
 
+    let blockFix = State(true)
+
     func getMenu() -> UIView {
         func getSelectionView<T: Equatable, I: Inputing>(title: String, input: I, values: [Selector<T>]) -> UIView where I.InputType == T {
             return HBox().attach {
@@ -60,7 +66,7 @@ class FlowPropertiesVC: BaseVC {
             }
             .space(8)
             .padding(horz: 4)
-            .borders([.thick(0.5), .color(Theme.dividerColor)])
+            .borders([.thick(Util.pixel(1)), .color(Theme.dividerColor)])
             .justifyContent(.center)
             .width(.fill)
             .view
@@ -82,6 +88,18 @@ class FlowPropertiesVC: BaseVC {
                             .style(TapScaleStyle())
                             .onTap(to: self) { this, _ in
                                 this.adding.input(value: ())
+                            }
+
+                        Label.demo("block fix").attach($0)
+                            .style(TapScaleStyle())
+                            .onTap(to: self) { this, _ in
+                                this.blockFix.input(value: true)
+                            }
+
+                        Label.demo("block wrap").attach($0)
+                            .style(TapScaleStyle())
+                            .onTap(to: self) { this, _ in
+                                this.blockFix.input(value: false)
                             }
                     }
                     .space(10)
@@ -205,7 +223,8 @@ class FlowPropertiesVC: BaseVC {
         let v = Label.demo("\(idx + 1)").attach()
             .style(TapScaleStyle())
             .backgroundColor(Util.randomColor())
-            .size(width, width)
+            .width(self.blockFix.value ? SizeDescription.fix(width) : .wrap(add: width))
+            .height(self.blockFix.value ? SizeDescription.fix(width) : .wrap(add: width))
             .onTap {
                 $0.view?.removeFromSuperview()
             }

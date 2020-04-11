@@ -56,7 +56,7 @@ class VBoxVC: BaseVC {
                     .space(10)
                     .justifyContent(.center)
                     .size(.fill, .wrap)
-                    .borders([.thick(1), .color(.purple), .dash(3, 3)])
+                    .borders([.thick(Util.pixel(1)), .color(.purple), .dash(3, 3)])
                     .styleSheet(.mainButton)
                 
                 

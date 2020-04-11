@@ -61,7 +61,7 @@ class StyleTestViewController: BaseVC, UIScrollViewDelegate {
                     
                     UIView().attach($0)
                         .backgroundColor(self.text.map { [weak self] in self?.color(hex: $0) })
-                        .borderWidth(State(1))
+                        .borderWidth(Util.pixel(1))
                         .borderColor(State(Optional.some(UIColor.blue)))
                         .size(100, 40)
                 }

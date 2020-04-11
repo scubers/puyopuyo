@@ -46,6 +46,12 @@ struct Util {
         if flag { block() }
     }
     
+    static func pixel(_ pixcel: CGFloat) -> CGFloat {
+        return pixcel / UIScreen.main.scale
+    }
+    
+    
+    
 }
 
 class FPSView: ZBox {

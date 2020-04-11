@@ -92,7 +92,7 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
         if isRatio {
             return "ratio: \(ratio)"
         } else if isWrap {
-            return "wrap(add: \(add), min: \(min), max: \(max == .greatestFiniteMagnitude ? "inf" : max.description))"
+            return "wrap(add: \(add), min: \(min), max: \(max == .greatestFiniteMagnitude ? "inf" : max.description), priority: \(priority)"
         } else {
             return "fix: \(fixedValue)"
         }

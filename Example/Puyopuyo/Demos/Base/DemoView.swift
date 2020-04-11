@@ -34,7 +34,7 @@ class DemoView<T: Equatable>: VBox, Eventable {
             builder($0).attach($0)
             
             SelectionView(self.selectors).attach($0)
-                .topBorder([.color(UIColor.black.withAlphaComponent(0.2)), .thick(0.5)])
+                .topBorder([.color(UIColor.black.withAlphaComponent(0.2)), .thick(Util.pixel(1))])
                 .size(.fill, .wrap)
                 .visibility(self.selectors.count > 0 ? .visible : .gone)
                 .onEventProduced(to: self) { (self, s) in
@@ -52,7 +52,7 @@ class DemoView<T: Equatable>: VBox, Eventable {
         }
         .animator(Animators.default)
         .size(.fill, .wrap)
-        .borderWidth(0.5)
+        .borderWidth(Util.pixel(1))
         .borderColor(UIColor.lightGray)
         .cornerRadius(4)
     }
