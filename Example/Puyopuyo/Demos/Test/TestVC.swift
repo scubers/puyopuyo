@@ -36,21 +36,32 @@ class TestVC: UIViewController {
         super.viewDidLoad()
         navigationController?.navigationBar.isTranslucent = false
 
-        ZBox().attach(view) {
-            VBox().attach($0) {
-                VBox().attach($0) {
-                    Label.demo("sldkfjlsdjflsdsldkfjlsdjflsdsldkfjlsdjflsdsldkfjlsdjflsd").attach($0)
-                        .width(.fill)
-                    
-                    Label.demo("lskdjf").attach($0)
-                        .width(.wrap)
-                }
-                .padding(all: 10)
-                .size(.wrap, .wrap)
+        let text = State("")
+
+        VBox().attach(view) {
+            HBox().attach($0) {
+                Label.demo("sldkfjlsdjflsdsldkfjlsdjflsdsldkfjlsdjflsdsldkfjlsdjflsd").attach($0)
+                    .width(.wrap(priority: 5))
+                    .text(text)
+
+                Label.demo("我是最弱的").attach($0)
+                    .height(10)
+                
+                Label.demo("我是最强的").attach($0)
+                    .width(.wrap(priority: 10))
+                
+                Label.demo("我是次强的").attach($0)
+                    .width(.wrap(priority: 1))
             }
-            .size(.fill, .fill)
+            .padding(all: 10)
+            .space(20)
+            .width(.fill)
+
+            UITextField().attach($0)
+                .size(.fill, 20)
+                .texting(text.asInput())
         }
-        .justifyContent(.top)
+        .space(10)
         .padding(all: 16)
         .size(.fill, .fill)
 

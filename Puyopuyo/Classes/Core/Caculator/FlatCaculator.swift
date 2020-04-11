@@ -114,6 +114,12 @@ class FlatCaculator {
             if regCalSize.main.isWrap && subCalSize.main.isRatio {
                 Caculator.constraintConflict(crash: true, "parent wrap cannot contains ratio children!!!!!")
             }
+            
+            // 判断W_R优先级冲突
+            if regulator.size.maybeWrap(), subCalSize.main.isWrap, subCalSize.main.priority > 0 {
+                // 警告包裹布局内，(W_R) 节点的wrap priority 不生效，先不打印警告
+//                Caculator.constraintConflict(crash: false, "In wrap regulator, child node which size is (W_R)'s wrap priority will not work!!!!")
+            }
 
             // 准备冲突数据
             switch subCalSize.flatCaculatePriority() {
@@ -138,17 +144,9 @@ class FlatCaculator {
         // 2.2 累加space到totalSpace
         totalSpace += max(0, CGFloat(caculateChildren.count - 1) * regulator.space)
 
-        caculateChildren
-            // 排序
-            .sorted {
-                let p0 = $0.size.getCalSize(by: regDirection).flatCaculatePriority()
-                let p1 = $1.size.getCalSize(by: regDirection).flatCaculatePriority()
-                return p0.rawValue < p1.rawValue
-            }
-            // 计算大小
-            .forEach { regulateChild($0) }
-        // TODO: 压缩根据优先级压缩main wrap
-
+        // 根据优先级计算
+        sortedChildren(caculateChildren).forEach { regulateChild($0) }
+        
         // 4、第三次循环，计算子节点center，若format == .trailing, 则可能出现第四次循环
         let lastEnd = caculateCenter(measures: caculateChildren)
 
@@ -360,6 +358,26 @@ class FlatCaculator {
 
         return lastEnd
     }
+    
+    private func sortedChildren(_ children: [Measure]) -> [Measure] {
+        return children.sorted {
+            let size0 = $0.size.getCalSize(by: regDirection)
+            let size1 = $1.size.getCalSize(by: regDirection)
+            
+            let p0 = size0.flatCaculatePriority()
+            let p1 = size1.flatCaculatePriority()
+            
+            if regulator.size.bothNotWrap(), p0.isWrapPrioritable(), p1.isWrapPrioritable() {
+                // 布局为非包裹的优先级
+                return size0.main.priority > size1.main.priority
+            } else if regulator.size.maybeWrap(), p0 != .W_R, p1 != .W_R {
+                // 布局为包裹的优先级
+                return size0.main.priority > size1.main.priority
+            }
+            // 否则则使用默认优先级
+            return p0.rawValue < p1.rawValue
+        }
+    }
 
     private func _caculateCrossOffset(measure: Measure) -> CGFloat {
         let calMargin = CalEdges(insets: measure.margin, direction: regulator.direction)
@@ -413,21 +431,24 @@ class FlatCaculator {
 extension CalSize {
     // 值越低越优先计算
     enum CalPriority: Int {
-        case F_F = 10
-
+        
         case wrapFixMix = 20
-
         case W_R = 30
         case R_W = 40
 
         case R_F = 50
-
         case F_R = 60
 
         case R_R = 70
+        case F_F = 80
 
         case unknown = 9999
+        
+        func isWrapPrioritable() -> Bool {
+            return rawValue >= CalPriority.wrapFixMix.rawValue && rawValue <= CalPriority.W_R.rawValue
+        }
     }
+    
 
     func flatCaculatePriority() -> CalPriority {
         // main + cross

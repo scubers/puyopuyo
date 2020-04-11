@@ -46,17 +46,18 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
     public let add: CGFloat
     public let min: CGFloat
     public let max: CGFloat
+    public let priority: CGFloat
 
     public static func fix(_ value: CGFloat) -> SizeDescription {
-        return SizeDescription(sizeType: .fixed, fixedValue: value, ratio: 0, add: 0, min: 0, max: 0)
+        return SizeDescription(sizeType: .fixed, fixedValue: value, ratio: 0, add: 0, min: 0, max: 0, priority: 0)
     }
 
     public static func ratio(_ value: CGFloat) -> SizeDescription {
-        return SizeDescription(sizeType: .ratio, fixedValue: 0, ratio: value, add: 0, min: 0, max: .greatestFiniteMagnitude)
+        return SizeDescription(sizeType: .ratio, fixedValue: 0, ratio: value, add: 0, min: 0, max: .greatestFiniteMagnitude, priority: 0)
     }
 
-    public static func wrap(add: CGFloat = 0, min: CGFloat = 0, max: CGFloat = .greatestFiniteMagnitude) -> SizeDescription {
-        return SizeDescription(sizeType: .wrap, fixedValue: 0, ratio: 0, add: add, min: min, max: max)
+    public static func wrap(add: CGFloat = 0, min: CGFloat = 0, max: CGFloat = .greatestFiniteMagnitude, priority: CGFloat = 0) -> SizeDescription {
+        return SizeDescription(sizeType: .wrap, fixedValue: 0, ratio: 0, add: add, min: min, max: max, priority: priority)
     }
 
     public static var wrap: SizeDescription {
