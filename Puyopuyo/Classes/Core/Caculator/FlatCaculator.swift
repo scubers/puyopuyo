@@ -96,7 +96,7 @@ class FlatCaculator {
         if regCalSize.cross.isRatio {
             maxCross = regChildrenRemainCalSize.cross
         } else if regCalSize.cross.isFixed {
-            maxCross = regCalSize.cross.fixedValue - regCalMargin.crossFixed
+            maxCross = regCalSize.cross.fixedValue - regCalPadding.crossFixed
         }
 
         // 第一次循环
@@ -138,14 +138,16 @@ class FlatCaculator {
         // 2.2 累加space到totalSpace
         totalSpace += max(0, CGFloat(caculateChildren.count - 1) * regulator.space)
 
-        // 排序
         caculateChildren
+            // 排序
             .sorted {
                 let p0 = $0.size.getCalSize(by: regDirection).flatCaculatePriority()
                 let p1 = $1.size.getCalSize(by: regDirection).flatCaculatePriority()
                 return p0.rawValue < p1.rawValue
             }
+            // 计算大小
             .forEach { regulateChild($0) }
+        // TODO: 压缩根据优先级压缩main wrap
 
         // 4、第三次循环，计算子节点center，若format == .trailing, 则可能出现第四次循环
         let lastEnd = caculateCenter(measures: caculateChildren)
