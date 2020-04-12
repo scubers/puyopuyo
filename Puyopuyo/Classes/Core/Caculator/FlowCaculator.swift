@@ -185,7 +185,7 @@ private extension FlowCaculator {
         if !regCalSize.main.isWrap {
             // 找出最大的main
             var maxRatio: CGFloat?
-            var maxPriority: CGFloat?
+            var maxPriority: Double?
             children.forEach { m in
                 let size = m.size.getCalSize(by: layoutDirection)
                 if size.main.isRatio {
