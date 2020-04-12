@@ -67,6 +67,23 @@ class Caculator {
         measure.py_size = final
     }
 
+    static func getSize(_ regulator: Regulator, currentRemain: CGSize, wrapContentSize: CGSize) -> CGSize {
+        let margin = regulator.margin
+        let size = regulator.size
+        var final = CGSize()
+        if size.width.isWrap {
+            final.width = regulator.size.width.getWrapSize(by: wrapContentSize.width + regulator.padding.left + regulator.padding.right)
+        } else {
+            final.width = getLength(size.width, currentRemain: currentRemain.width, margin: margin.getHorzTotal(), padding: .zero, ratio: nil)
+        }
+        if size.height.isWrap {
+            final.height = regulator.size.height.getWrapSize(by: wrapContentSize.height + regulator.padding.top + regulator.padding.bottom)
+        } else {
+            final.height = getLength(size.height, currentRemain: currentRemain.height, margin: margin.getVertTotal(), padding: .zero, ratio: nil)
+        }
+        return final
+    }
+
     /// 计算非wrap的size
     static func caculate(size: Size, by cgSize: CGSize) -> Size {
         let width = caculateFix(size.width, by: cgSize.width)

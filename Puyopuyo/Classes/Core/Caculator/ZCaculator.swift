@@ -50,14 +50,7 @@ class ZCaculator {
                 maxSizeWithSubMargin.height = max(maxSizeWithSubMargin.height, measure.py_size.height + measure.margin.getVertTotal())
             }
         }
-
-        var containerSize = regChildrenRemainSize
-        if regulator.size.width.isWrap {
-            containerSize.width = regulator.size.width.getWrapSize(by: maxSizeWithSubMargin.width + regulator.padding.left + regulator.padding.right)
-        }
-        if regulator.size.height.isWrap {
-            containerSize.height = regulator.size.height.getWrapSize(by: maxSizeWithSubMargin.height + regulator.padding.top + regulator.padding.bottom)
-        }
+        let containerSize = Caculator.getSize(regulator, currentRemain: remain, wrapContentSize: maxSizeWithSubMargin)
 
         for measure in children {
             // 计算中心
@@ -70,15 +63,29 @@ class ZCaculator {
         // 计算布局自身大小
         var width = regulator.size.width
         if width.isWrap {
-            width = .fix(width.getWrapSize(by: maxSizeWithSubMargin.width + regulator.padding.left + regulator.padding.right))
+            width = .fix(containerSize.width)
         }
 
         var height = regulator.size.height
         if height.isWrap {
-            height = .fix(height.getWrapSize(by: maxSizeWithSubMargin.height + regulator.padding.top + regulator.padding.bottom))
+            height = .fix(containerSize.height)
         }
 
         return Size(width: width, height: height)
+    }
+
+    private func _getWidthIfWrap() -> CGFloat? {
+        if regulator.size.width.isWrap {
+            return regulator.size.width.getWrapSize(by: maxSizeWithSubMargin.width + regulator.padding.left + regulator.padding.right)
+        }
+        return nil
+    }
+
+    private func _getHeightIfWrap() -> CGFloat? {
+        if regulator.size.height.isWrap {
+            return regulator.size.height.getWrapSize(by: maxSizeWithSubMargin.height + regulator.padding.top + regulator.padding.bottom)
+        }
+        return nil
     }
 
     private func checkSizeConflict(_ measure: Measure) {
