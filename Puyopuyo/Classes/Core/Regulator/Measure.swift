@@ -133,8 +133,12 @@ public class Measure: Measurable, MeasureTargetable, Hashable {
 
     /// 计算节点偏移
     public var alignment: Alignment = .none
-    public var widthAligmentRatio: CGFloat = 1
-    public var heightAligmentRatio: CGFloat = 1
+    public var alignmentRatio: CGSize = .init(width: 1, height: 1) {
+        didSet {
+            alignmentRatio.width = max(0, min(2, alignmentRatio.width))
+            alignmentRatio.height = max(0, min(2, alignmentRatio.height))
+        }
+    }
 
     /// 计算节点大小描述
     public var size = Size(width: .wrap, height: .wrap)

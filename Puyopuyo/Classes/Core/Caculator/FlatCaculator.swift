@@ -137,7 +137,7 @@ class FlatCaculator {
 
         // 校验冲突，若布局可能包裹，则不能存在 wrrw
         if regulator.size.maybeWrap(), wrCount > 0, rwCount > 0 {
-            Caculator.constraintConflict(crash: true, "wr rw cannot exists at the same time!!!!")
+            Caculator.constraintConflict(crash: false, "[\(regulator.getRealTarget())] children's size contains [W_R, R_W], this should cause some unexceptable result !!!!")
         }
 
         // 2.准备信息

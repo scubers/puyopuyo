@@ -40,11 +40,11 @@ class TestVC: UIViewController {
             HBox().attach($0) {
                 Label.demo("top").attach($0)
                     .alignment(.top)
+                    .alignmentRatio(height: 1.5)
                 Label.demo("center").attach($0)
                     .alignment(.center)
-                    .attach {
-                        $0.py_measure.heightAligmentRatio = 0.5
-                    }
+                    .alignmentRatio(height: 1.5)
+                
                 Label.demo("bottom").attach($0)
                     .alignment(.bottom)
 

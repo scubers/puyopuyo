@@ -13,16 +13,16 @@ public extension Puyo where T: UIView {
     @discardableResult
     func size<O: Outputing>(_ w: O?, _ h: O?) -> Self where O.OutputType: SizeDescriptible {
         if let x = w {
-            x.safeBind(to: view, id: "\(#function)_width", { v, a in
+            x.safeBind(to: view, id: "\(#function)_width") { v, a in
                 v.py_measure.size.width = a.sizeDescription
                 v.py_setNeedsLayout()
-            })
+            }
         }
         if let x = h {
-            x.safeBind(to: view, id: "\(#function)_height", { v, a in
+            x.safeBind(to: view, id: "\(#function)_height") { v, a in
                 v.py_measure.size.height = a.sizeDescription
                 v.py_setNeedsLayout()
-            })
+            }
         }
         return self
     }
@@ -80,12 +80,12 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func width(simulate modifiable: ValueModifiable) -> Self {
-        return width(modifiable.checkSelfSimulate(view).modifyValue().map({ SizeDescription.fix($0) }))
+        return width(modifiable.checkSelfSimulate(view).modifyValue().map { SizeDescription.fix($0) })
     }
 
     @discardableResult
     func height(simulate modifiable: ValueModifiable) -> Self {
-        return height(modifiable.checkSelfSimulate(view).modifyValue().map({ SizeDescription.fix($0) }))
+        return height(modifiable.checkSelfSimulate(view).modifyValue().map { SizeDescription.fix($0) })
     }
 }
 
@@ -107,39 +107,39 @@ extension Puyo where T: UIView {
     @discardableResult
     public func margin<S: Outputing>(all: S? = nil, horz: S? = nil, vert: S? = nil, top: S? = nil, left: S? = nil, bottom: S? = nil, right: S? = nil) -> Self where S.OutputType: CGFloatable {
         if let s = all {
-            view.py_setUnbinder(s.safeBind(view, { v, a in
+            view.py_setUnbinder(s.safeBind(view) { v, a in
                 PuyoHelper.margin(for: v, all: a.cgFloatValue)
-            }), for: "\(#function)_all")
+            }, for: "\(#function)_all")
         }
         if let s = top {
-            view.py_setUnbinder(s.safeBind(view, { v, a in
+            view.py_setUnbinder(s.safeBind(view) { v, a in
                 PuyoHelper.margin(for: v, top: a.cgFloatValue)
-            }), for: "\(#function)_top")
+            }, for: "\(#function)_top")
         }
         if let s = horz {
-            view.py_setUnbinder(s.safeBind(view, { v, a in
+            view.py_setUnbinder(s.safeBind(view) { v, a in
                 PuyoHelper.margin(for: v, horz: a.cgFloatValue)
-            }), for: "\(#function)_horz")
+            }, for: "\(#function)_horz")
         }
         if let s = vert {
-            view.py_setUnbinder(s.safeBind(view, { v, a in
+            view.py_setUnbinder(s.safeBind(view) { v, a in
                 PuyoHelper.margin(for: v, vert: a.cgFloatValue)
-            }), for: "\(#function)_vert")
+            }, for: "\(#function)_vert")
         }
         if let s = left {
-            view.py_setUnbinder(s.safeBind(view, { v, a in
+            view.py_setUnbinder(s.safeBind(view) { v, a in
                 PuyoHelper.margin(for: v, left: a.cgFloatValue)
-            }), for: "\(#function)_left")
+            }, for: "\(#function)_left")
         }
         if let s = bottom {
-            view.py_setUnbinder(s.safeBind(view, { v, a in
+            view.py_setUnbinder(s.safeBind(view) { v, a in
                 PuyoHelper.margin(for: v, bottom: a.cgFloatValue)
-            }), for: "\(#function)_bottom")
+            }, for: "\(#function)_bottom")
         }
         if let s = right {
-            view.py_setUnbinder(s.safeBind(view, { v, a in
+            view.py_setUnbinder(s.safeBind(view) { v, a in
                 PuyoHelper.margin(for: v, right: a.cgFloatValue)
-            }), for: "\(#function)_right")
+            }, for: "\(#function)_right")
         }
         return self
     }
@@ -196,18 +196,33 @@ extension Puyo where T: UIView {
 
 // MARK: - Alignment ext
 
-extension Puyo where T: UIView {
+public extension Puyo where T: UIView {
     @discardableResult
-    public func alignment(_ alignment: Alignment) -> Self {
+    func alignment(_ alignment: Alignment) -> Self {
         PuyoHelper.alignment(for: view, alignment: alignment)
         return self
     }
 
     @discardableResult
-    public func alignment<S: Outputing>(_ alignment: S) -> Self where S.OutputType == Alignment {
-        view.py_setUnbinder(alignment.safeBind(view, { v, a in
+    func alignment<S: Outputing>(_ alignment: S) -> Self where S.OutputType == Alignment {
+        view.py_setUnbinder(alignment.safeBind(view) { v, a in
             PuyoHelper.alignment(for: v, alignment: a)
-        }), for: #function)
+        }, for: #function)
+        return self
+    }
+
+    @discardableResult
+    func alignmentRatio<O: Outputing>(width: O? = nil, height: O? = nil) -> Self where O.OutputType: CGFloatable {
+        if let o = width {
+            o.safeBind(to: view, id: "\(#function)_width") { v, a in
+                v.py_measure.alignmentRatio.width = a.cgFloatValue
+            }
+        }
+        if let o = height {
+            o.safeBind(to: view, id: "\(#function)_height") { v, a in
+                v.py_measure.alignmentRatio.height = a.cgFloatValue
+            }
+        }
         return self
     }
 }
@@ -224,10 +239,10 @@ extension Puyo where T: UIView {
 
     @discardableResult
     public func visibility<S: Outputing>(_ visibility: S) -> Self where S.OutputType == Visibility {
-        view.py_setUnbinder(visibility.safeBind(view, { v, a in
+        view.py_setUnbinder(visibility.safeBind(view) { v, a in
             v.py_visibility = a
             v.py_setNeedsLayout()
-        }), for: #function)
+        }, for: #function)
         return self
     }
 }
@@ -237,10 +252,10 @@ extension Puyo where T: UIView {
 extension Puyo where T: UIView {
     @discardableResult
     public func activated<S: Outputing>(_ activated: S) -> Self where S.OutputType == Bool {
-        view.py_setUnbinder(activated.safeBind(view, { v, a in
+        view.py_setUnbinder(activated.safeBind(view) { v, a in
             v.py_measure.activated = a
             v.py_setNeedsLayout()
-        }), for: #function)
+        }, for: #function)
         return self
     }
 }

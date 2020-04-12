@@ -102,7 +102,7 @@ class Caculator {
     }
 
     static func constraintConflict(crash: Bool, _ msg: String) {
-        let message = "Constraint conflict: \(msg)"
+        let message = "[Puyopuyo] Constraint conflict: \(msg)"
         if crash {
             fatalError(message)
         } else {
@@ -117,20 +117,30 @@ class Caculator {
                                              parentSize: CGSize) -> CGFloat {
         let parentCalSize = parentSize.getCalFixedSize(by: direction)
         let parentCalPadding = parentPadding.getCalEdges(by: direction)
-        
+
         let subCalMargin = measure.margin.getCalEdges(by: direction)
         let subFixedSize = measure.py_size.getCalFixedSize(by: direction)
 
-        let crossAligmentRatio = direction == .x ? measure.heightAligmentRatio : measure.widthAligmentRatio
+        let crossAligmentRatio = direction == .x ? measure.alignmentRatio.height : measure.alignmentRatio.width
 
         let subCrossAligment: Alignment = measure.alignment.hasCrossAligment(for: direction) ? measure.alignment : justifyContent
 
         var position = ((parentCalSize.cross - parentCalPadding.crossFixed - subFixedSize.cross) / 2) * crossAligmentRatio + parentCalPadding.forward + subFixedSize.cross / 2
 
+        func alignmentConflictCheck() {
+            #if DEBUG
+            if crossAligmentRatio != 1 {
+                constraintConflict(crash: false, "[\(measure.getRealTarget())]'s Alignment ratio can only activate when alignment == *center")
+            }
+            #endif
+        }
+
         if subCrossAligment.isForward(for: direction) {
             position = parentCalPadding.forward + subCalMargin.forward + subFixedSize.cross / 2
+            alignmentConflictCheck()
         } else if subCrossAligment.isBackward(for: direction) {
             position = parentCalSize.cross - (parentCalPadding.backward + subCalMargin.backward + subFixedSize.cross / 2)
+            alignmentConflictCheck()
         }
 
         return position
