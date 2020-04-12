@@ -18,19 +18,19 @@ public struct Alignment: OptionSet, CustomStringConvertible, Outputing {
     public typealias OutputType = Alignment
     public var description: String {
         let all = [Alignment.top, .left, .bottom, .right, .horzCenter, .vertCenter]
-        let contain = all.filter({ self.contains($0) })
+        let contain = all.filter { self.contains($0) }
         return
             contain.map { x -> String in
-                switch x {
-                case .top: return "top"
-                case .left: return "left"
-                case .bottom: return "bottom"
-                case .right: return "right"
-                case .vertCenter: return "vertCenter"
-                case .horzCenter: return "horzCenter"
-                default: return ""
-                }
-            }.joined(separator: ",")
+                    switch x {
+                    case .top: return "top"
+                    case .left: return "left"
+                    case .bottom: return "bottom"
+                    case .right: return "right"
+                    case .vertCenter: return "vertCenter"
+                    case .horzCenter: return "horzCenter"
+                    default: return ""
+                    }
+                }.joined(separator: ",")
     }
 
     public init(rawValue: Int) {
@@ -61,15 +61,23 @@ public struct Alignment: OptionSet, CustomStringConvertible, Outputing {
     public func hasHorzAlignment() -> Bool {
         return
             contains(.left)
-            || contains(.right)
-            || contains(.horzCenter)
+                || contains(.right)
+                || contains(.horzCenter)
     }
 
     public func hasVertAlignment() -> Bool {
         return
             contains(.top)
-            || contains(.bottom)
-            || contains(.vertCenter)
+                || contains(.bottom)
+                || contains(.vertCenter)
+    }
+
+    public func hasMainAligment(for direction: Direction) -> Bool {
+        direction == .y ? hasVertAlignment() : hasHorzAlignment()
+    }
+
+    public func hasCrossAligment(for direction: Direction) -> Bool {
+        direction == .x ? hasVertAlignment() : hasHorzAlignment()
     }
 
     public func isCenter(for direction: Direction) -> Bool {
@@ -101,10 +109,10 @@ public class Measure: Measurable, MeasureTargetable, Hashable {
     }
 
     public func hash(into _: inout Hasher) {}
-    
+
     /// 虚拟目标计算节点
     var virtualTarget = VirtualTarget()
-    
+
     /// 真实计算节点
     private weak var target: MeasureTargetable?
 
@@ -119,16 +127,18 @@ public class Measure: Measurable, MeasureTargetable, Hashable {
             assert(type(of: self) != Measure.self)
         }
     }
-    
+
     /// 计算节点外边距
     public var margin = UIEdgeInsets.zero
-    
+
     /// 计算节点偏移
     public var alignment: Alignment = .none
-    
+    public var widthAligmentRatio: CGFloat = 1
+    public var heightAligmentRatio: CGFloat = 1
+
     /// 计算节点大小描述
     public var size = Size(width: .wrap, height: .wrap)
-    
+
     /// 是否激活本节点
     public var activated = true
 

@@ -33,7 +33,6 @@ class Caculator {
         } else if sizeDesc.isWrap {
             return max(sizeDesc.min, min(sizeDesc.max, max(0, superRemain - padding - margin)))
         } else {
-//            return CGFloat.greatestFiniteMagnitude - padding - margin
             fatalError()
         }
     }
