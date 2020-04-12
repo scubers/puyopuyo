@@ -360,23 +360,31 @@ class FlatCaculator {
     }
 
     private func sortedChildren(_ children: [Measure]) -> [Measure] {
-        return children.sorted {
+        let sorted = children.sorted {
             let size0 = $0.size.getCalSize(by: regDirection)
             let size1 = $1.size.getCalSize(by: regDirection)
 
             let p0 = size0.flatCaculatePriority()
             let p1 = size1.flatCaculatePriority()
 
-            if regulator.size.bothNotWrap(), p0.isWrapPrioritable(), p1.isWrapPrioritable() {
+            if regulator.size.bothNotWrap(),
+                p0.isWrapPrioritable(),
+                p1.isWrapPrioritable() {
                 // 布局为非包裹的优先级
                 return size0.main.priority > size1.main.priority
-            } else if regulator.size.maybeWrap(), p0 != .W_R, p1 != .W_R {
+            } else if
+                regulator.size.maybeWrap(),
+                p0.isWrapPrioritable(),
+                p1.isWrapPrioritable(),
+                p0 != .W_R,
+                p1 != .W_R {
                 // 布局为包裹的优先级
                 return size0.main.priority > size1.main.priority
             }
             // 否则则使用默认优先级
             return p0.rawValue < p1.rawValue
         }
+        return sorted
     }
 
     private func _caculateCrossOffset(measure: Measure) -> CGFloat {
