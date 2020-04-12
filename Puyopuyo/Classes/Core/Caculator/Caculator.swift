@@ -100,7 +100,7 @@ class Caculator {
         let fixedSize = Caculator.caculate(size: sizeAfterCalulate, by: size)
         return CGSize(width: fixedSize.width.fixedValue, height: fixedSize.height.fixedValue)
     }
-    
+
     static func constraintConflict(crash: Bool, _ msg: String) {
         let message = "Constraint conflict: \(msg)"
         if crash {
@@ -108,5 +108,31 @@ class Caculator {
         } else {
             print(message)
         }
+    }
+
+    static func caculateCrossAlignmentOffset(_ measure: Measure,
+                                             direction: Direction,
+                                             justifyContent: Alignment,
+                                             parentPadding: UIEdgeInsets,
+                                             parentSize: CGSize) -> CGFloat {
+        let parentCalSize = parentSize.getCalFixedSize(by: direction)
+        let parentCalPadding = parentPadding.getCalEdges(by: direction)
+        
+        let subCalMargin = measure.margin.getCalEdges(by: direction)
+        let subFixedSize = measure.py_size.getCalFixedSize(by: direction)
+
+        let crossAligmentRatio = direction == .x ? measure.heightAligmentRatio : measure.widthAligmentRatio
+
+        let subCrossAligment: Alignment = measure.alignment.hasCrossAligment(for: direction) ? measure.alignment : justifyContent
+
+        var position = ((parentCalSize.cross - parentCalPadding.crossFixed - subFixedSize.cross) / 2) * crossAligmentRatio + parentCalPadding.forward + subFixedSize.cross / 2
+
+        if subCrossAligment.isForward(for: direction) {
+            position = parentCalPadding.forward + subCalMargin.forward + subFixedSize.cross / 2
+        } else if subCrossAligment.isBackward(for: direction) {
+            position = parentCalSize.cross - (parentCalPadding.backward + subCalMargin.backward + subFixedSize.cross / 2)
+        }
+
+        return position
     }
 }

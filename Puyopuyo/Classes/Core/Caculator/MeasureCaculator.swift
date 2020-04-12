@@ -25,7 +25,9 @@ class MeasureCaculator {
         var widthSize = measure.size.width
         var heightSize = measure.size.height
         
-        let maxSize = CGSize(width: min(parentCGSize.width, widthSize.max), height: min(parentCGSize.height, heightSize.max))
+        var maxSize = CGSize(width: min(parentCGSize.width, widthSize.max), height: min(parentCGSize.height, heightSize.max))
+        if widthSize.isFixed { maxSize.width = widthSize.fixedValue }
+        if heightSize.isFixed { maxSize.height = heightSize.fixedValue }
         
         if measure.size.isWrap() {
             let wrappedSize = measure.py_sizeThatFits(maxSize)

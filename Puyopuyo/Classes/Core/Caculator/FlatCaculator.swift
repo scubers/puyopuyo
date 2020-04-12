@@ -176,28 +176,28 @@ class FlatCaculator {
         switch priority {
         case .F_F, .wrapFixMix:
             let subRemain = getCurrentRemainSizeForNormalChildren().getSize()
-            regulateChild(measure, priorities: [.F_F, .wrapFixMix], remain: subRemain, appendCross: regCalSize.cross.isWrap, appendMain: true)
+            regulateChild(measure, priorities: [priority], remain: subRemain, appendCross: regCalSize.cross.isWrap, appendMain: true)
 
         case .W_R:
             var subRemain = getCurrentRemainSizeForNormalChildren()
             subRemain.cross = maxCross
-            regulateChild(measure, priorities: [.W_R], remain: subRemain.getSize(), appendCross: false, appendMain: true)
+            regulateChild(measure, priorities: [priority], remain: subRemain.getSize(), appendCross: false, appendMain: true)
 
         case .R_W:
             let subRemain = getCurrentRemainSizeForRatioChildren(measure: measure)
-            regulateChild(measure, priorities: [.R_W], remain: subRemain.getSize(), appendCross: regCalSize.cross.isWrap, appendMain: false)
+            regulateChild(measure, priorities: [priority], remain: subRemain.getSize(), appendCross: regCalSize.cross.isWrap, appendMain: false)
 
         case .R_F:
             let subRemain = getCurrentRemainSizeForRatioChildren(measure: measure)
-            regulateChild(measure, priorities: [.R_F], remain: subRemain.getSize(), appendCross: false, appendMain: false)
+            regulateChild(measure, priorities: [priority], remain: subRemain.getSize(), appendCross: false, appendMain: false)
 
         case .F_R:
             let subRemain = getCurrentRemainSizeForNormalChildren()
-            regulateChild(measure, priorities: [.F_R], remain: subRemain.getSize(), appendCross: false, appendMain: true)
+            regulateChild(measure, priorities: [priority], remain: subRemain.getSize(), appendCross: false, appendMain: true)
 
         case .R_R:
             let subRemain = getCurrentRemainSizeForRatioChildren(measure: measure)
-            regulateChild(measure, priorities: [.R_R], remain: subRemain.getSize(), appendCross: false, appendMain: false)
+            regulateChild(measure, priorities: [priority], remain: subRemain.getSize(), appendCross: false, appendMain: false)
 
         case .unknown: break
         }
@@ -389,11 +389,11 @@ class FlatCaculator {
         var calCrossSize = regChildrenRemainCalSize.cross + regCalPadding.crossFixed
         if regCalSize.cross.isWrap {
             // 如果是包裹，则需要使用当前最大cross进行计算
-            calCrossSize = maxCross + regCalPadding.crossFixed
+            calCrossSize = regCalSize.cross.getWrapSize(by: maxCross + regCalPadding.crossFixed)
         }
 
         if alignment.isCenter(for: regulator.direction) {
-            cross = calCrossSize / 2
+            cross = (calCrossSize - regCalPadding.crossFixed) / 2 + regCalPadding.start
 
         } else if alignment.isBackward(for: regulator.direction) {
             cross = calCrossSize - (regCalPadding.backward + calMargin.backward + calFixedSize.cross / 2)
@@ -401,7 +401,8 @@ class FlatCaculator {
             // 若无设置，则默认forward
             cross = calFixedSize.cross / 2 + regCalPadding.forward + calMargin.forward
         }
-        return cross
+        let remainSize = CalFixedSize(main: 0, cross: calCrossSize, direction: regDirection).getSize()
+        return Caculator.caculateCrossAlignmentOffset(measure, direction: regDirection, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: remainSize)
     }
 
     private func _caculateMainOffset(measure: Measure, idx: Int, lastEnd: CGFloat) -> (CGFloat, CGFloat) {

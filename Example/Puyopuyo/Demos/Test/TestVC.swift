@@ -37,27 +37,39 @@ class TestVC: UIViewController {
         navigationController?.navigationBar.isTranslucent = false
 
         VBox().attach(view) {
-            VBox().attach($0) {
-                Label.demo(".fix(100)").attach($0)
-                    .width(.fix(100))
-                    .height(30)
-                Label.demo(".ratio(1)").attach($0)
-                    .width(.ratio(1))
-                    .height(30)
-                Label.demo(".wrap()").attach($0)
-                    .width(.wrap)
-                    .height(30)
-                Label.demo(".wrap(add: 10)").attach($0)
-                    .width(.wrap(add: 10))
-                    .height(30)
-                Label.demo(".wrap(add: 10, min: 20, max: 50)").attach($0)
-                    .width(.wrap(add: 10, min: 20, max: 100))
-                    .height(30)
+            HBox().attach($0) {
+                Label.demo("top").attach($0)
+                    .alignment(.top)
+                Label.demo("center").attach($0)
+                    .alignment(.center)
+                    .attach {
+                        $0.py_measure.heightAligmentRatio = 0.5
+                    }
+                Label.demo("bottom").attach($0)
+                    .alignment(.bottom)
+
+                Label.demo("\(Alignment.center)").attach($0)
+                    .alignment(.center)
             }
             .space(2)
-            .padding(all: 10)
-            .size(.fill, .wrap)
+            .padding(all: 10, bottom: 20)
+            .justifyContent(.center)
+            .size(.fill, 100)
             .animator(Animators.default)
+
+//            HBox().attach($0) {
+//                Label.demo("slkdjflskjdflskj").attach($0)
+//                    .size(40, .wrap(add: 30))
+//
+//                Label.demo("1").attach($0)
+//                    .alignment(.top)
+//                Label.demo("2").attach($0)
+//                    .alignment(.center)
+//                Label.demo("3").attach($0)
+//                    .alignment(.bottom)
+//            }
+//            .height(.wrap(add: 50))
+//            .space(4)
         }
         .space(10)
         .padding(all: 16)

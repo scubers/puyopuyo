@@ -43,7 +43,7 @@ class UIViewProertiesVC: BaseVC {
                 .space(2)
                 .padding(all: 10)
                 .justifyContent(.center)
-                .size(.fill, 60)
+                .size(.fill, 80)
                 .animator(Animators.default)
                 .view
             },

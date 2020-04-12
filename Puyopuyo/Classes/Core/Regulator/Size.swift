@@ -49,7 +49,7 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
     public let priority: CGFloat
 
     public static func fix(_ value: CGFloat) -> SizeDescription {
-        return SizeDescription(sizeType: .fixed, fixedValue: value, ratio: 0, add: 0, min: 0, max: 0, priority: 0)
+        return SizeDescription(sizeType: .fixed, fixedValue: value, ratio: 0, add: 0, min: 0, max: .greatestFiniteMagnitude, priority: 0)
     }
 
     public static func ratio(_ value: CGFloat) -> SizeDescription {
