@@ -40,25 +40,21 @@ class FlowCaculator {
     let regulator: FlowRegulator
     let parent: Measure
     let remain: CGSize
-    var arrange: Int {
-        return regulator.arrange
-    }
+    var arrange: Int { regulator.arrange }
 
-    var layoutDirection: Direction {
-        return regulator.direction
-    }
+    var layoutDirection: Direction { regulator.direction }
 
     lazy var regRemainCalSize: CalFixedSize = {
         let size = Caculator.getChildRemainSize(self.regulator.size,
-                                                   superRemain: self.remain,
-                                                   margin: self.regulator.margin,
-                                                   padding: self.regulator.padding,
-                                                   ratio: nil)
+                                                superRemain: self.remain,
+                                                margin: self.regulator.margin,
+                                                padding: self.regulator.padding,
+                                                ratio: nil)
         return CalFixedSize(cgSize: size, direction: self.regulator.direction)
     }()
 
-    lazy var regCalPadding = CalEdges(insets: regulator.padding, direction: regulator.direction)
-    lazy var regCalSize = CalSize(size: regulator.size, direction: regulator.direction)
+    var regCalPadding: CalEdges { CalEdges(insets: regulator.padding, direction: regulator.direction) }
+    var regCalSize: CalSize { CalSize(size: regulator.size, direction: regulator.direction) }
 
     func caculate() -> Size {
         var caculateChildren = [Measure]()

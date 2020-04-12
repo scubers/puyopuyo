@@ -65,11 +65,11 @@ class FlatCaculator {
         return CalFixedSize(cgSize: size, direction: self.regulator.direction)
     }()
 
-    lazy var regCalMargin = CalEdges(insets: regulator.margin, direction: regulator.direction)
-    lazy var regCalPadding = CalEdges(insets: regulator.padding, direction: regulator.direction)
-    lazy var regCalSize = CalSize(size: regulator.size, direction: regulator.direction)
+    var regCalMargin: CalEdges { CalEdges(insets: regulator.margin, direction: regulator.direction) }
+    var regCalPadding: CalEdges { CalEdges(insets: regulator.padding, direction: regulator.direction) }
+    var regCalSize: CalSize { CalSize(size: regulator.size, direction: regulator.direction) }
 
-    lazy var regDirection = self.regulator.direction
+    var regDirection: Direction { regulator.direction }
 
     // 初始化主轴固有长度为 main padding
     var totalSpace: CGFloat = 0
