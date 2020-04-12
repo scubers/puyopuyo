@@ -51,6 +51,22 @@ class ZCaculator {
             }
         }
 
+        var containerSize = regChildrenRemainSize
+        if regulator.size.width.isWrap {
+            containerSize.width = regulator.size.width.getWrapSize(by: maxSizeWithSubMargin.width + regulator.padding.left + regulator.padding.right)
+        }
+        if regulator.size.height.isWrap {
+            containerSize.height = regulator.size.height.getWrapSize(by: maxSizeWithSubMargin.height + regulator.padding.top + regulator.padding.bottom)
+        }
+
+        for measure in children {
+            // 计算中心
+            measure.py_center = _caculateCenter(measure, containerSize: containerSize)
+            if regulator.caculateChildrenImmediately {
+                _ = measure.caculate(byParent: regulator, remain: regChildrenRemainSize)
+            }
+        }
+
         // 计算布局自身大小
         var width = regulator.size.width
         if width.isWrap {
@@ -60,14 +76,6 @@ class ZCaculator {
         var height = regulator.size.height
         if height.isWrap {
             height = .fix(height.getWrapSize(by: maxSizeWithSubMargin.height + regulator.padding.top + regulator.padding.bottom))
-        }
-
-        for measure in children {
-            // 计算中心
-            measure.py_center = _caculateCenter(measure, containerSize: regulator.py_size)
-            if regulator.caculateChildrenImmediately {
-                _ = measure.caculate(byParent: regulator, remain: regChildrenRemainSize)
-            }
         }
 
         return Size(width: width, height: height)
