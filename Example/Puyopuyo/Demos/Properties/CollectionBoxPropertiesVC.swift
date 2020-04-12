@@ -11,11 +11,11 @@ import UIKit
 
 class CollectionBoxPropertiesVC: BaseVC {
     override func configView() {
-        let state1 = State((0 ..< 5).map({ $0.description }))
-        let state2 = State((0 ..< 100).map({ $0.description }))
+        let state1 = State((0 ..< 5).map { $0.description })
+        let state2 = State((0 ..< 100).map { $0.description })
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
 //            state.input(value: [])
-            state1.input(value: [1, 2, 3, 4, 0].map({ $0.description }))
+            state1.input(value: [1, 2, 3, 4, 0].map { $0.description })
 //            state2.input(value: [0, 1, 6, 7, 4, 3, 9].map({ $0.description }))
         }
         CollectionBox(
@@ -26,9 +26,9 @@ class CollectionBoxPropertiesVC: BaseVC {
                     dataSource: state1.asOutput(),
                     _diffIdentifier: { $0 },
                     _cell: { o, _ in
-                        HBox().attach() {
+                        HBox().attach {
                             Label.demo("").attach($0)
-                                .text(o.map({ $0.data }))
+                                .text(o.map { $0.data })
                                 .height(50)
                                 .width(50)
                         }
@@ -37,7 +37,13 @@ class CollectionBoxPropertiesVC: BaseVC {
                         .width(.fill)
                         .view
                     },
+                    _cellUpdater: { _, _, ctx in
+                        print("----------------\(ctx.index)")
+                    },
                     _event: {
+                        print($0)
+                    },
+                    _onEvent: {
                         print($0)
                     }
                 ),
@@ -46,9 +52,9 @@ class CollectionBoxPropertiesVC: BaseVC {
                     dataSource: state2.asOutput(),
                     _diffIdentifier: { $0 },
                     _cell: { o, _ in
-                        HBox().attach() {
+                        HBox().attach {
                             Label.demo("").attach($0)
-                                .text(o.map({ $0.data }))
+                                .text(o.map { $0.data })
                                 .height(50)
                                 .width(50)
                         }
@@ -83,9 +89,9 @@ class CollectionBoxPropertiesVC: BaseVC {
                     dataSource: state2.asOutput(),
                     _diffIdentifier: { $0 },
                     _cell: { o, _ in
-                        HBox().attach() {
+                        HBox().attach {
                             Label.demo("").attach($0)
-                                .text(o.map({ $0.data }))
+                                .text(o.map { $0.data })
                                 .height(50)
                                 .width(50)
                         }

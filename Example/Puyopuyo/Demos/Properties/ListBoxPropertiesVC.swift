@@ -66,6 +66,9 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
                         .attach()
                         .view
                 },
+                _cellUpdater: { _, _, ctx in
+                    print(ctx.index)
+                },
                 _header: { o, _ -> UIView? in
                     HBox().attach {
                         Label.demo("").attach($0)
@@ -91,6 +94,9 @@ class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
                 },
                 _event: {
                     print($0)
+                },
+                _onEvent: { ctx in
+                    print(ctx)
                 }
             ),
 

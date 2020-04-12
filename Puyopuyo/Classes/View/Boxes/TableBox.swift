@@ -203,8 +203,14 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
     public typealias CellGenerator<Data, Cell, CellEvent> = (SimpleOutput<Data>, SimpleInput<CellEvent>) -> Cell
     var cellGenerator: CellGenerator<RecycleContext<Data, UITableView>, Cell, CellEvent>
 
+    public typealias CellUpdater<Data, Cell> = (UITableViewCell, Cell, RecycleContext<Data, UITableView>) -> Void
+    var cellUpdater: CellUpdater<Data, Cell>
+
     public typealias OnCellEvent<Event> = (Event) -> Void
     var onCellEvent: OnCellEvent<Event>
+
+    public typealias OnBoxEvent = (EventContext) -> Void
+    var onBoxEvent: OnBoxEvent
 
     public var identifier: String
     private var diffIdentifier: ((Data) -> String)?
@@ -214,14 +220,18 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
                 dataSource: SimpleOutput<[Data]>,
                 _diffIdentifier: ((Data) -> String)? = nil,
                 _cell: @escaping CellGenerator<RecycleContext<Data, UITableView>, Cell, CellEvent>,
+                _cellUpdater: @escaping CellUpdater<Data, Cell> = { _, _, _ in },
                 _header: @escaping HeaderFooterGenerator<RecycleContext<[Data], UITableView>, CellEvent> = { _, _ in EmptyView() },
                 _footer: @escaping HeaderFooterGenerator<RecycleContext<[Data], UITableView>, CellEvent> = { _, _ in EmptyView() },
-                _event: @escaping OnCellEvent<Event> = { _ in }) {
+                _event: @escaping OnCellEvent<Event> = { _ in },
+                _onEvent: @escaping OnBoxEvent = { _ in }) {
         self.identifier = identifier
         cellGenerator = _cell
+        cellUpdater = _cellUpdater
         headerGenerator = _header
         footerGenerator = _footer
         onCellEvent = _event
+        onBoxEvent = _onEvent
         self.selectionStyle = selectionStyle
         diffIdentifier = _diffIdentifier
         _ = dataSource.outputing { [weak self] data in
@@ -236,11 +246,24 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
         case itemEvent(Int, Data, CellEvent)
     }
 
+    public struct EventContext {
+        public enum Event {
+            case didSelect
+            case headerEvent
+            case footerEvent
+            case itemEvent(CellEvent)
+        }
+
+        public var event: Event
+        public var recycleCtx: RecycleContext<Data, UITableView>
+    }
+
     public func numberOfRows() -> Int {
         return dataSource.value.count
     }
 
     public func didSelect(row: Int) {
+        trigger(event: .didSelect, idx: row)
         onCellEvent(.didSelect(row, dataSource.value[row]))
     }
 
@@ -256,6 +279,16 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
         return "\(cellIdentifier())_footer"
     }
 
+    func trigger(event: EventContext.Event, idx: Int) {
+        guard let ctx = getEventContext(event: event, index: idx) else { return }
+        onBoxEvent(ctx)
+    }
+
+    func getEventContext(event: EventContext.Event, index: Int) -> EventContext? {
+        guard let tv = tableBox else { return nil }
+        return EventContext(event: event, recycleCtx: .init(index: index, size: getLayoutableContentSize(tv), data: dataSource.value[index], view: tableBox))
+    }
+
     private func getLayoutableContentSize(_ cv: UITableView) -> CGSize {
         let width = cv.bounds.size.width - cv.contentInset.left - cv.contentInset.right
         let height = cv.bounds.size.height - cv.contentInset.top - cv.contentInset.bottom
@@ -266,23 +299,30 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
         let id = cellIdentifier()
         var cell = tableView.dequeueReusableCell(withIdentifier: id) as? TableBoxCell<Data, CellEvent>
         let data = dataSource.value[indexPath.row]
+        let ctx = RecycleContext(index: indexPath.row, size: getLayoutableContentSize(tableView), data: data, view: tableView)
         if cell == nil {
-//            let state = State((indexPath.row, data))
-            let state = State(RecycleContext(index: indexPath.row, size: getLayoutableContentSize(tableView), data: data, view: tableView))
+            let state = State(ctx)
             let event = SimpleIO<CellEvent>()
             cell = TableBoxCell<Data, CellEvent>(id: id,
                                                  root: cellGenerator(state.asOutput(), event.asInput()),
                                                  state: state,
                                                  event: event)
         } else {
-            cell?.state.value = RecycleContext(index: indexPath.row, size: getLayoutableContentSize(tableView), data: data, view: tableView)
+            cell?.state.value = ctx
         }
         cell?.selectionStyle = selectionStyle
         cell?.onEvent = { [weak self, weak cell] event in
             guard let cell = cell, let self = self else { return }
             let idx = cell.state.value.index
             let data = cell.state.value.data
+            if let ctx = self.getEventContext(event: .itemEvent(event), index: idx) {
+                self.onBoxEvent(ctx)
+            }
             self.onCellEvent(.itemEvent(idx, data, event))
+        }
+
+        if let cell = cell, let view = cell.root as? Cell {
+            cellUpdater(cell, view, ctx)
         }
 
         return cell!
@@ -309,6 +349,7 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
         view?.backgroundView?.backgroundColor = tableView.backgroundColor
         view?.onEvent = { [weak self, weak view] e in
             guard let self = self, let header = view else { return }
+            self.trigger(event: .headerEvent, idx: header.state.value.index)
             self.onCellEvent(.headerEvent(header.state.value.index, header.state.value.data, e))
         }
 
@@ -335,6 +376,7 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
         view?.backgroundView?.backgroundColor = tableView.backgroundColor
         view?.onEvent = { [weak self, weak view] e in
             guard let self = self, let header = view else { return }
+            self.trigger(event: .footerEvent, idx: header.state.value.index)
             self.onCellEvent(.footerEvent(header.state.value.index, header.state.value.data, e))
         }
 

@@ -167,8 +167,14 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
     public typealias CellGenerator<Data, Cell, CellEvent> = (SimpleOutput<RecycleContext<Data, UICollectionView>>, SimpleInput<CellEvent>) -> Cell
     var cellGenerator: CellGenerator<Data, Cell, CellEvent>
 
+    public typealias CellUpdater<Data, Cell> = (UICollectionViewCell, Cell, RecycleContext<Data, UICollectionView>) -> Void
+    var cellUpdater: CellUpdater<Data, Cell>
+
     public typealias OnCellEvent<Event> = (Event) -> Void
     var onCellEvent: OnCellEvent<Event>
+
+    public typealias OnBoxEvent = (EventContext) -> Void
+    var onBoxEvent: OnBoxEvent
 
     public var identifier: String
     private var diffIdentifier: ((Data) -> String)?
@@ -176,12 +182,16 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
                 dataSource: SimpleOutput<[Data]>,
                 _diffIdentifier: ((Data) -> String)? = nil,
                 _cell: @escaping CellGenerator<Data, Cell, CellEvent>,
+                _cellUpdater: @escaping CellUpdater<Data, Cell> = { _, _, _ in },
                 _header: @escaping HeaderFooterGenerator<RecycleContext<[Data], UICollectionView>, CellEvent> = { _, _ in EmptyView() },
                 _footer: @escaping HeaderFooterGenerator<RecycleContext<[Data], UICollectionView>, CellEvent> = { _, _ in EmptyView() },
-                _event: @escaping OnCellEvent<Event> = { _ in }) {
+                _event: @escaping OnCellEvent<Event> = { _ in },
+                _onEvent: @escaping OnBoxEvent = { _ in }) {
         self.identifier = identifier
         cellGenerator = _cell
+        cellUpdater = _cellUpdater
         onCellEvent = _event
+        onBoxEvent = _onEvent
         headerGenerator = _header
         footerGenerator = _footer
         diffIdentifier = _diffIdentifier
@@ -195,6 +205,18 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         case headerEvent(Int, [Data], CellEvent)
         case footerEvent(Int, [Data], CellEvent)
         case itemEvent(Int, Data, CellEvent)
+    }
+
+    public struct EventContext {
+        public enum Event {
+            case didSelect
+            case headerEvent
+            case footerEvent
+            case itemEvent(CellEvent)
+        }
+
+        public var event: Event
+        public var recycleCtx: RecycleContext<Data, UICollectionView>
     }
 
     public func cellIdentifier() -> String {
@@ -214,6 +236,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
     }
 
     public func didSelect(item: Int) {
+        trigger(event: .didSelect, idx: item)
         onCellEvent(.didSelect(item, dataSource.value[item]))
     }
 
@@ -223,8 +246,9 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         }
         cell.targetSize = getLayoutableContentSize(collectionView)
         let data = dataSource.value[indexPath.row]
+        let ctx = RecycleContext(index: indexPath.row, size: cell.targetSize, data: data, view: collectionView)
         if cell.root == nil {
-            let state = State(RecycleContext(index: indexPath.row, size: cell.targetSize, data: data, view: collectionView))
+            let state = State(ctx)
             let event = SimpleIO<CellEvent>()
             let root = cellGenerator(state.asOutput(), event.asInput())
             cell.root = root
@@ -232,13 +256,18 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
             cell.event = event
             cell.contentView.addSubview(root)
         } else {
-            cell.state.value = RecycleContext(index: indexPath.row, size: cell.targetSize, data: data, view: collectionView)
+            cell.state.value = ctx
         }
         cell.onEvent = { [weak cell, weak self] event in
             guard let self = self, let cell = cell else { return }
             let idx = cell.state.value.index
             let data = cell.state.value.data
+            self.trigger(event: .itemEvent(event), idx: idx)
             self.onCellEvent(.itemEvent(idx, data, event))
+        }
+//        cellUpdater(cell, )
+        if let view = cell.root as? Cell {
+            cellUpdater(cell, view, ctx)
         }
         return cell
     }
@@ -266,10 +295,14 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         }
         view.onEvent = { [weak self, weak view] e in
             guard let self = self, let view = view else { return }
+            let idx = view.state.value.index
+            let data = view.state.value.data
             if kind == UICollectionView.elementKindSectionHeader {
-                self.onCellEvent(.headerEvent(view.state.value.index, view.state.value.data, e))
+                self.trigger(event: .headerEvent, idx: idx)
+                self.onCellEvent(.headerEvent(idx, data, e))
             } else {
-                self.onCellEvent(.footerEvent(view.state.value.index, view.state.value.data, e))
+                self.trigger(event: .footerEvent, idx: idx)
+                self.onCellEvent(.footerEvent(idx, data, e))
             }
         }
         return view
@@ -282,6 +315,16 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
     private lazy var dummyHeader: UIView = { self.headerGenerator(self.dummyHeaderState.asOutput(), SimpleIO<CellEvent>().asInput()) ?? EmptyView() }()
     private let dummyFooterState = State<RecycleContext<[Data], UICollectionView>>.unstable()
     private lazy var dummyFooter: UIView = { self.footerGenerator(self.dummyFooterState.asOutput(), SimpleIO<CellEvent>().asInput()) ?? EmptyView() }()
+
+    func trigger(event: EventContext.Event, idx: Int) {
+        guard let ctx = getEventContext(event: event, index: idx) else { return }
+        onBoxEvent(ctx)
+    }
+
+    func getEventContext(event: EventContext.Event, index: Int) -> EventContext? {
+        guard let tv = collectionBox else { return nil }
+        return EventContext(event: event, recycleCtx: .init(index: index, size: getLayoutableContentSize(tv), data: dataSource.value[index], view: tv))
+    }
 
     private func getLayoutableContentSize(_ cv: UICollectionView) -> CGSize {
         let width = cv.bounds.size.width - cv.contentInset.left - cv.contentInset.right

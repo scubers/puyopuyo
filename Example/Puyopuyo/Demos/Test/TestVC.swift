@@ -37,19 +37,14 @@ class TestVC: UIViewController {
         navigationController?.navigationBar.isTranslucent = false
 
         VBox().attach(view) {
-            ZBox().attach($0) {
+//            ZBox().attach($0) {
                 ZBox().attach($0) {
-                    ZBox().attach($0) {
-                        Label.demo("demo").attach($0)
-                    }
-                    .size(.fill, .fill)
-                    .padding(all: 10)
+                    Label.demo("demo").attach($0)
                 }
-                .size(.fill, .fill)
-                .padding(all: 10)
-            }
-            .size(.fill, .fill)
-            .padding(all: 10)
+                .size(100, 100)
+//                .padding(all: 10)
+//            }
+//            .size(.fill, .fill)
 
 //            HBox().attach($0) {
 //                Label.demo("slkdjflskjdflskj").attach($0)
