@@ -216,11 +216,13 @@ public extension Puyo where T: UIView {
         if let o = width {
             o.safeBind(to: view, id: "\(#function)_width") { v, a in
                 v.py_measure.alignmentRatio.width = a.cgFloatValue
+                v.py_setNeedsLayout()
             }
         }
         if let o = height {
             o.safeBind(to: view, id: "\(#function)_height") { v, a in
                 v.py_measure.alignmentRatio.height = a.cgFloatValue
+                v.py_setNeedsLayout()
             }
         }
         return self

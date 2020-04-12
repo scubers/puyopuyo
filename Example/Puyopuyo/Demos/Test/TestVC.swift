@@ -37,25 +37,19 @@ class TestVC: UIViewController {
         navigationController?.navigationBar.isTranslucent = false
 
         VBox().attach(view) {
-            HBox().attach($0) {
-                Label.demo("top").attach($0)
-                    .alignment(.top)
-                    .alignmentRatio(height: 1.5)
-                Label.demo("center").attach($0)
-                    .alignment(.center)
-                    .alignmentRatio(height: 1.5)
-                
-                Label.demo("bottom").attach($0)
-                    .alignment(.bottom)
-
-                Label.demo("\(Alignment.center)").attach($0)
-                    .alignment(.center)
+            ZBox().attach($0) {
+                ZBox().attach($0) {
+                    ZBox().attach($0) {
+                        Label.demo("demo").attach($0)
+                    }
+                    .size(.fill, .fill)
+                    .padding(all: 10)
+                }
+                .size(.fill, .fill)
+                .padding(all: 10)
             }
-            .space(2)
-            .padding(all: 10, bottom: 20)
-            .justifyContent(.center)
-            .size(.fill, 100)
-            .animator(Animators.default)
+            .size(.fill, .fill)
+            .padding(all: 10)
 
 //            HBox().attach($0) {
 //                Label.demo("slkdjflskjdflskj").attach($0)

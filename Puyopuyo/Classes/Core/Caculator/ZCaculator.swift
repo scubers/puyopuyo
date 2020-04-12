@@ -31,24 +31,24 @@ class ZCaculator {
 
     func caculate() -> Size {
         var children = [Measure]()
-        regulator.enumerateChild { _, m in
-            if m.activated {
-                children.append(m)
+        regulator.enumerateChild { _, measure in
+            if measure.activated {
+                children.append(measure)
+
+                checkSizeConflict(measure)
+
+                let subSize = _getEstimateSize(measure: measure, remain: regChildrenRemainSize)
+
+                if subSize.width.isWrap || subSize.height.isWrap {
+                    fatalError()
+                }
+
+                Caculator.applyMeasure(measure, size: subSize, currentRemain: regChildrenRemainSize, ratio: .init(width: 1, height: 1))
+                // 计算大小
+
+                maxSizeWithSubMargin.width = max(maxSizeWithSubMargin.width, measure.py_size.width + measure.margin.getHorzTotal())
+                maxSizeWithSubMargin.height = max(maxSizeWithSubMargin.height, measure.py_size.height + measure.margin.getVertTotal())
             }
-        }
-
-        for measure in children {
-            let subSize = _getEstimateSize(measure: measure, remain: regChildrenRemainSize)
-
-            if subSize.width.isWrap || subSize.height.isWrap {
-                fatalError()
-            }
-
-            Caculator.applyMeasure(measure, size: subSize, currentRemain: regChildrenRemainSize, ratio: .init(width: 1, height: 1))
-            // 计算大小
-
-            maxSizeWithSubMargin.width = max(maxSizeWithSubMargin.width, measure.py_size.width + measure.margin.getHorzTotal())
-            maxSizeWithSubMargin.height = max(maxSizeWithSubMargin.height, measure.py_size.height + measure.margin.getVertTotal())
         }
 
         // 计算布局自身大小
@@ -71,6 +71,17 @@ class ZCaculator {
         }
 
         return Size(width: width, height: height)
+    }
+
+    private func checkSizeConflict(_ measure: Measure) {
+        #if DEBUG
+        if regulator.size.width.isWrap && measure.size.width.isRatio {
+            Caculator.constraintConflict(crash: false, "[\(regulator.getRealTarget())] - [\(measure.getRealTarget())] - width (p: wrap, c: ratio) conflict !!!!")
+        }
+        if regulator.size.height.isWrap && measure.size.height.isRatio {
+            Caculator.constraintConflict(crash: false, "[\(regulator.getRealTarget())] - [\(measure.getRealTarget())] - height (p: wrap, c: ratio) conflict !!!!")
+        }
+        #endif
     }
 
     private func _caculateCenter(_ measure: Measure, containerSize: CGSize) -> CGPoint {

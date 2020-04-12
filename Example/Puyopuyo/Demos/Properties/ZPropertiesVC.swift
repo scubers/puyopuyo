@@ -9,88 +9,195 @@
 import Puyopuyo
 import UIKit
 
-class ZPropertiesVC: BaseVC {
+class ZPropertiesVC: BaseVC, UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        becomeFirstResponder()
+    }
+
     override func configView() {
-        DemoScroll(
-            builder: {
-                self.alignment().attach($0)
-                self.size().attach($0)
-            }
-        )
-        .attach(vRoot)
+        HBox().attach(vRoot) {
+            self.getMenu().attach($0).size(.fill, .fill)
+            self.getZBox().attach($0).size(.fill, .fill)
+        }
         .size(.fill, .fill)
     }
 
-    func alignment() -> UIView {
-        let alignment = State<Alignment>(.center)
-        return DemoView<Alignment>(
-            title: "alignment",
-            builder: {
-                ZBox().attach($0) {
-                    Label.demo("demo").attach($0)
-                        .alignment(alignment)
+    let text = State("demo")
+
+    let width = State<SizeDescription>(.fill)
+    let height = State<SizeDescription>(.fill)
+    let alignmentVert = State<Alignment>(.center)
+    let alignmentHorz = State<Alignment>(.center)
+
+    let alignmentVertRatio = State<CGFloat>(1)
+    let alignmentHorzRatio = State<CGFloat>(1)
+
+    let marginTop = State<CGFloat>(0)
+    let marginLeft = State<CGFloat>(0)
+    let marginBottom = State<CGFloat>(0)
+    let marginRight = State<CGFloat>(0)
+
+    let paddingTop = State<CGFloat>(0)
+    let paddingLeft = State<CGFloat>(0)
+    let paddingBottom = State<CGFloat>(0)
+    let paddingRight = State<CGFloat>(0)
+
+    func getMenu() -> UIView {
+        func getSelectionView<T: Equatable, I: Inputing>(title: String, input: I, values: [Selector<T>]) -> UIView where I.InputType == T {
+            return HBox().attach {
+                UILabel().attach($0)
+                    .text(title)
+                PlainSelectionView<T>(values).attach($0)
+                    .size(.fill, 50)
+                    .onEventProduced(SimpleInput {
+                        input.input(value: $0.value)
+                    })
+            }
+            .space(8)
+            .padding(horz: 4)
+            .borders([.thick(Util.pixel(1)), .color(Theme.dividerColor)])
+            .justifyContent(.center)
+            .width(.fill)
+            .view
+        }
+
+        return ScrollingBox<VBox> {
+            $0.attach {
+                Label("请横屏使用\nChange to landscape").attach($0)
+                    .textAlignment(.left)
+                    .numberOfLines(0)
+
+                HBox().attach($0) {
+                    UILabel().attach($0)
+                        .text("input:")
+                    UITextField().attach($0)
+                        .size(.fill, .fill)
+                        .onText(self.text)
                 }
-                .padding(all: 8)
-                .animator(Animators.default)
-                .size(.fill, 100)
-                .view
-            },
-            selectors: [Selector(desc: "left", value: .left),
-                        Selector(desc: "right", value: .right),
-                        Selector(desc: "top", value: .top),
-                        Selector(desc: "bottom", value: .bottom),
-                        Selector(desc: "center", value: .center),
-                        Selector(desc: "top,left", value: [.top, .left]),
-                        Selector(desc: "top,right", value: [.top, .right]),
-                        Selector(desc: "top,horzCenter", value: [.top, .horzCenter]),
-                        Selector(desc: "bottom,left", value: [.bottom, .left]),
-                        Selector(desc: "bottom,right", value: [.bottom, .right]),
-                        Selector(desc: "bottom,horzCenter", value: [.bottom, .horzCenter]),
-                        Selector(desc: "left,vertCenter", value: [.left, .vertCenter]),
-                        Selector(desc: "right,vertCenter", value: [.right, .vertCenter])],
-            desc: "单个item在ZBox中的布局"
-        )
+                .justifyContent(.center)
+                .size(.fill, 30)
+
+                getSelectionView(title: "Width",
+                                 input: self.width,
+                                 values: [Selector<SizeDescription>(desc: ".fill", value: .fill),
+                                          Selector<SizeDescription>(desc: ".fix(100)", value: .fix(100)),
+                                          Selector<SizeDescription>(desc: ".wrap", value: .wrap)])
+                    .attach($0)
+                getSelectionView(title: "Height",
+                                 input: self.height,
+                                 values: [Selector<SizeDescription>(desc: ".fill", value: .fill),
+                                          Selector<SizeDescription>(desc: ".fix(100)", value: .fix(100)),
+                                          Selector<SizeDescription>(desc: ".wrap", value: .wrap)])
+                    .attach($0)
+
+                getSelectionView(title: "H alignment",
+                                 input: self.alignmentHorz,
+                                 values: Alignment.horzAlignments().map {
+                                     Selector(desc: "\($0)", value: $0)
+                                 })
+                    .attach($0)
+                let ratios: [CGFloat] = [0, 0.5, 1, 1.5, 2]
+                getSelectionView(title: "H aligment ratio",
+                                 input: self.alignmentHorzRatio,
+                                 values: ratios.map {
+                                     Selector<CGFloat>(desc: "\($0)", value: $0)
+                                 })
+                    .attach($0)
+
+                getSelectionView(title: "V alignment",
+                                 input: self.alignmentVert,
+                                 values: Alignment.vertAlignments().map {
+                                     Selector(desc: "\($0)", value: $0)
+                                 })
+                    .attach($0)
+                getSelectionView(title: "V aligment ratio",
+                                 input: self.alignmentVertRatio,
+                                 values: ratios.map {
+                                     Selector<CGFloat>(desc: "\($0)", value: $0)
+                             })
+                    .attach($0)
+
+                let insets: [CGFloat] = [0, 10, 20, 30, 40]
+                getSelectionView(title: "MarginTop",
+                                 input: self.marginTop,
+                                 values: insets.map {
+                                     Selector<CGFloat>(desc: "\($0)", value: $0)
+                             })
+                    .attach($0)
+                getSelectionView(title: "MarginLeft",
+                                 input: self.marginLeft,
+                                 values: insets.map {
+                                     Selector<CGFloat>(desc: "\($0)", value: $0)
+                             })
+                    .attach($0)
+                getSelectionView(title: "MarginBottom",
+                                 input: self.marginBottom,
+                                 values: insets.map {
+                                     Selector<CGFloat>(desc: "\($0)", value: $0)
+                             })
+                    .attach($0)
+                getSelectionView(title: "MarginRight",
+                                 input: self.marginRight,
+                                 values: insets.map {
+                                     Selector<CGFloat>(desc: "\($0)", value: $0)
+                             })
+                    .attach($0)
+                getSelectionView(title: "PaddingTop",
+                                 input: self.paddingTop,
+                                 values: insets.map {
+                                     Selector<CGFloat>(desc: "\($0)", value: $0)
+                             })
+                    .attach($0)
+                getSelectionView(title: "PaddingLeft",
+                                 input: self.paddingLeft,
+                                 values: insets.map {
+                                     Selector<CGFloat>(desc: "\($0)", value: $0)
+                             })
+                    .attach($0)
+                getSelectionView(title: "PaddingBottom",
+                                 input: self.paddingBottom,
+                                 values: insets.map {
+                                     Selector<CGFloat>(desc: "\($0)", value: $0)
+                         })
+                    .attach($0)
+                getSelectionView(title: "PaddingRight",
+                                 input: self.paddingRight,
+                                 values: insets.map {
+                                     Selector<CGFloat>(desc: "\($0)", value: $0)
+                         })
+                    .attach($0)
+            }
+            .padding(all: 4)
+        }
         .attach()
-        .onEventProduced(to: self, { _, x in
-            alignment.value = x
-        })
+        .setDelegate(self)
         .view
     }
 
-    func size() -> UIView {
-        let size = State<SizeDescription>(.ratio(1))
-        return DemoView<SizeDescription>(
-            title: "size",
-            builder: {
+    func getZBox() -> UIView {
+        let alignment = SimpleOutput.merge([alignmentVert.asOutput(), alignmentHorz.asOutput()]).map { [weak self] a -> Alignment in
+            guard let self = self else { return a }
+            return self.alignmentVert.value.union(self.alignmentHorz.value)
+        }
+
+        return
+            ZBox().attach {
                 ZBox().attach($0) {
-                    ZBox().attach($0) {
-                        Label.demo("demo").attach($0)
-                            .alignment(.center)
-                            .size(size, size)
-                            .backgroundColor(Theme.color.withAlphaComponent(0.5))
-                    }
-                    .animator(Animators.default)
-                    .backgroundColor(UIColor.black)
-                    .size(100, 100)
+                    Label.demo("").attach($0)
+                        .text(self.text)
+                        .alignment(alignment)
+                        .alignmentRatio(width: self.alignmentHorzRatio, height: self.alignmentVertRatio)
+                        .size(self.width, self.height)
+                        .margin(top: self.marginTop, left: self.marginLeft, bottom: self.marginBottom, right: self.marginRight)
                 }
-                .padding(all: 8)
+                .borders([.color(UIColor.lightGray), .thick(Util.pixel(1))])
                 .animator(Animators.default)
-                .size(.fill, 150)
-                .view
-            },
-            selectors: [Selector(desc: ".ratio(1)", value: .ratio(1)),
-                        Selector(desc: ".ratio(0.5)", value: .ratio(0.5)),
-                        Selector(desc: ".ratio(1.5)", value: .ratio(1.5)),
-                        Selector(desc: ".fix(60)", value: .fix(60)),
-                        Selector(desc: ".wrap", value: .wrap),
-                        Selector(desc: ".wrap(add: 10)", value: .wrap(add: 10)),
-                        Selector(desc: ".fill", value: .fill)],
-            desc: "Size 在ZBox中的体现形式"
-        )
-        .attach()
-        .onEventProduced(to: self, { _, x in
-            size.value = x
-        })
-        .view
+                .size(.fill, .fill)
+                .padding(top: self.paddingTop, left: self.paddingLeft, bottom: self.paddingBottom, right: self.paddingRight)
+            }
+            .attach { Util.randomViewColor(view: $0) }
+            .padding(all: 16)
+            .animator(Animators.default)
+            .view
     }
 }

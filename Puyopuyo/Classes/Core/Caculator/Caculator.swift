@@ -125,7 +125,7 @@ class Caculator {
 
         let subCrossAligment: Alignment = measure.alignment.hasCrossAligment(for: direction) ? measure.alignment : justifyContent
 
-        var position = ((parentCalSize.cross - parentCalPadding.crossFixed - subFixedSize.cross) / 2) * crossAligmentRatio + parentCalPadding.forward + subFixedSize.cross / 2
+        var position = ((parentCalSize.cross - parentCalPadding.crossFixed - subFixedSize.cross - subCalMargin.crossFixed) / 2) * crossAligmentRatio + parentCalPadding.forward + subFixedSize.cross / 2 + subCalMargin.forward
 
         func alignmentConflictCheck() {
             #if DEBUG

@@ -77,4 +77,6 @@ class BaseVC: UIViewController {
     deinit {
         print("\(self) deinit!!!")
     }
+    
+    override var canBecomeFirstResponder: Bool { true }
 }
