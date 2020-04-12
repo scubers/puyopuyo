@@ -13,10 +13,10 @@ class AdvanceVC: BaseVC {
     override func configView() {
         DemoScroll(
             builder: {
+                self.wrapPriority().attach($0)
+                self.numberPad().attach($0)
                 self.superviewRatio().attach($0)
                 self.widthEqualToHeight().attach($0)
-                self.numberPad().attach($0)
-                self.wrapPriority().attach($0)
             }
         )
         .attach(vRoot)
