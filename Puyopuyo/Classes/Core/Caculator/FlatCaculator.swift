@@ -380,13 +380,8 @@ class FlatCaculator {
     }
 
     private func _caculateCrossOffset(measure: Measure) -> CGFloat {
-        var calCrossSize = regChildrenRemainCalSize.cross + regCalPadding.crossFixed
-        if regCalSize.cross.isWrap {
-            // 如果是包裹，则需要使用当前最大cross进行计算
-            calCrossSize = regCalSize.cross.getWrapSize(by: maxCross + regCalPadding.crossFixed)
-        }
-        let remainSize = CalFixedSize(main: 0, cross: calCrossSize, direction: regDirection).getSize()
-        return Caculator.caculateCrossAlignmentOffset(measure, direction: regDirection, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: remainSize)
+        let parentSize = Caculator.getSize(regulator, currentRemain: remain, wrapContentSize: CalFixedSize(main: 0, cross: maxCross, direction: regDirection).getSize())
+        return Caculator.caculateCrossAlignmentOffset(measure, direction: regDirection, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: parentSize)
     }
 
     private func _caculateMainOffset(measure: Measure, idx: Int, lastEnd: CGFloat) -> (CGFloat, CGFloat) {
