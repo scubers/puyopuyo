@@ -14,7 +14,7 @@ class Theme {
     static let dividerColor = UIColor.black.withAlphaComponent(0.2)
 }
 
-class BaseVC: UIViewController {
+class BaseVC: UIViewController, UIScrollViewDelegate {
     var navState = State(NavigationBox.ViewState())
 
     override func loadView() {
@@ -79,4 +79,8 @@ class BaseVC: UIViewController {
     }
     
     override var canBecomeFirstResponder: Bool { true }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        becomeFirstResponder()
+    }
 }

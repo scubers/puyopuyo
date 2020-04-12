@@ -10,12 +10,8 @@ import Puyopuyo
 import RxSwift
 import UIKit
 
-class StyleTestViewController: BaseVC, UIScrollViewDelegate {
+class StyleTestViewController: BaseVC {
     let text = BehaviorSubject(value: "")
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print(scrollView.contentSize)
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -20,6 +20,9 @@ class AdvanceVC: BaseVC {
             }
         )
         .attach(vRoot)
+        .attach {
+            $0.delegate = self
+        }
         .size(.fill, .fill)
     }
 
@@ -110,7 +113,7 @@ class AdvanceVC: BaseVC {
                         Label.demo("Will be compressed").attach($0)
                             .width(.wrap(priority: 1))
                             .height(.wrap(max: 20))
-                        
+
                         Label.demo("Will not compress").attach($0)
                             .width(.wrap(priority: 3))
                             .height(.wrap(max: 20))

@@ -9,10 +9,7 @@
 import Puyopuyo
 import UIKit
 
-class ZPropertiesVC: BaseVC, UIScrollViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        becomeFirstResponder()
-    }
+class ZPropertiesVC: BaseVC {
 
     override func configView() {
         HBox().attach(vRoot) {

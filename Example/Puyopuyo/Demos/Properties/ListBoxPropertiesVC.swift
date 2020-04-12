@@ -10,9 +10,6 @@ import Puyopuyo
 import UIKit
 
 class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print(scrollView.contentOffset)
-    }
 
     var sections = State<[TableBoxSection]>([])
 
