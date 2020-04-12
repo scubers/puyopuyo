@@ -52,7 +52,8 @@ class ZCaculator {
 
         }
         
-        var calCenterSize = CGSize(width: regChildrenRemainSize.width + regFixedWidth, height: regChildrenRemainSize.height + regFixedHeight)
+//        var calCenterSize = CGSize(width: regChildrenRemainSize.width + regFixedWidth, height: regChildrenRemainSize.height + regFixedHeight)
+        var calCenterSize = regChildrenRemainSize
         if regulator.size.width.isWrap {
             calCenterSize.width = maxSizeWithSubMargin.width  + regFixedWidth + regulator.size.width.add
         }
@@ -64,7 +65,7 @@ class ZCaculator {
             
             let subMargin = measure.margin
             // 计算中心
-            var center = CGPoint(x: calCenterSize.width / 2, y: calCenterSize.height / 2)
+            var center = CGPoint(x: calCenterSize.width / 2 + regulator.padding.left, y: calCenterSize.height / 2 + regulator.padding.top)
             let alignment = measure.alignment
             let justifyContent = regulator.justifyContent
 

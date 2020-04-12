@@ -42,6 +42,7 @@ import Foundation
     (f_f),(w_w, w_f, f_w),(w_r, r_w),(r_f, f_r),(r_r)
     对应的计算顺序参考枚举 @see CalPriority，枚举值越小，优先计算
     具体计算逻辑参考 @see FlatCaculator.regulateChild(_:)
+ 3. 包裹尺寸计算时候会根据优先级进行排序，但是若布局为包裹，子节点有个特殊包裹(w_r)不会.wrap(priority:)影响
 
  */
 class FlatCaculator {
