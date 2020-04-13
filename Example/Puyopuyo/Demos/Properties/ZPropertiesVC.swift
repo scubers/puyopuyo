@@ -183,7 +183,7 @@ class ZPropertiesVC: BaseVC {
                     Label.demo("").attach($0)
                         .text(self.text)
                         .alignment(alignment)
-                        .alignmentRatio(width: self.alignmentHorzRatio, height: self.alignmentVertRatio)
+                        .alignmentRatio(horz: self.alignmentHorzRatio, vert: self.alignmentVertRatio)
                         .size(self.width, self.height)
                         .margin(top: self.marginTop, left: self.marginLeft, bottom: self.marginBottom, right: self.marginRight)
                 }

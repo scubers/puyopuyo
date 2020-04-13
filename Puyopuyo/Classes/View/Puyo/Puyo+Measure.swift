@@ -212,15 +212,15 @@ public extension Puyo where T: UIView {
     }
 
     @discardableResult
-    func alignmentRatio<O: Outputing>(width: O? = nil, height: O? = nil) -> Self where O.OutputType: CGFloatable {
-        if let o = width {
-            o.safeBind(to: view, id: "\(#function)_width") { v, a in
+    func alignmentRatio<O: Outputing>(horz: O? = nil, vert: O? = nil) -> Self where O.OutputType: CGFloatable {
+        if let o = horz {
+            o.safeBind(to: view, id: "\(#function)_horz") { v, a in
                 v.py_measure.alignmentRatio.width = a.cgFloatValue
                 v.py_setNeedsLayout()
             }
         }
-        if let o = height {
-            o.safeBind(to: view, id: "\(#function)_height") { v, a in
+        if let o = vert {
+            o.safeBind(to: view, id: "\(#function)_vert") { v, a in
                 v.py_measure.alignmentRatio.height = a.cgFloatValue
                 v.py_setNeedsLayout()
             }
