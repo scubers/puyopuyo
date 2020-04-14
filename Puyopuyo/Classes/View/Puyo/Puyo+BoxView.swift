@@ -109,8 +109,15 @@ public extension Puyo where T: Boxable & UIView {
     }
 
     @discardableResult
-    func isSelfPositionControl(_ control: Bool) -> Self {
-        view.boxHelper.isSelfPositionControl = control
+    func isCenterControl(_ control: Bool) -> Self {
+        view.boxHelper.isCenterControl = control
+        setNeedsLayout()
+        return self
+    }
+    
+    @discardableResult
+    func isSizeControl(_ control: Bool) -> Self {
+        view.boxHelper.isSizeControl = control
         setNeedsLayout()
         return self
     }

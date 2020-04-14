@@ -24,15 +24,15 @@ class TGVC: UIViewController {
         navigationController?.navigationBar.isTranslucent = false
 
 //        wrapFill()
-//        wrapOver()
-        wrapFillConflict()
+        wrapOver()
+//        wrapFillConflict()
 
         Util.randomViewColor(view: view)
     }
     
     func wrapFillConflict() {
         let root = TGLinearLayout(.vert)
-        root.tg_size(width: .fill, height: .fill)
+        root.tg_size(width: .wrap, height: .wrap)
         view.addSubview(root)
 
         let layout = TGLinearLayout(.vert)
@@ -57,14 +57,19 @@ class TGVC: UIViewController {
         view.addSubview(root)
 
         let layout = TGLinearLayout(.vert)
-        layout.tg_size(width: 100, height: 100)
+        layout.tg_size(width: .wrap, height: .wrap)
         layout.tg_space = 10
+        layout.tg_useFrame = true
         root.addSubview(layout)
         
         let v1 = Label.demo("lsdkflskdjflkjsd")
         v1.tg_size(width: .wrap, height: .wrap)
-        v1.tg_width.equal(layout)
+//        v1.tg_width.equal(layout)
         layout.addSubview(v1)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            layout.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
+        }
         
 //        let v2 = UIView()
 //        v2.tg_size(width: .fill, height: 30)

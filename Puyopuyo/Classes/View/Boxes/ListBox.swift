@@ -48,13 +48,13 @@ public class ListBox: UITableView,
             header?().attach($0)
         }
         .size(.fill, .wrap)
-        .isSelfPositionControl(false)
+        .isCenterControl(false)
         .view
 
         footerView = ZBox().attach {
             footer?().attach($0)
         }
-        .isSelfPositionControl(false)
+        .isCenterControl(false)
         .size(.fill, .wrap)
         .view
 

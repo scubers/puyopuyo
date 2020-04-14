@@ -10,10 +10,15 @@ import UIKit
 public class BoxHelper<R: Regulator> {
     public var isScrollViewControl = false
 
-    public var isSelfPositionControl = true
+    @available(*, deprecated)
+    public var isSelfPositionControl: Bool {
+        get { isCenterControl }
+        set { isCenterControl = newValue }
+    }
 
-    public var isSelfSizeControl = true
-
+    public var isCenterControl = true
+    public var isSizeControl = true
+    
     public var animator: Animator = Animators.none
 
     public func layoutSubviews(view: UIView, regulator: R) {
@@ -38,8 +43,7 @@ public class BoxHelper<R: Regulator> {
                 _ = regulator.caculate(byParent: parentMeasure, remain: remain)
             }
         } else {
-            
-            if isSelfSizeControl {
+            if isSizeControl {
                 // 父视图为普通视图
                 var size = parentMeasure.py_size
                 if regulator.size.width.isWrap {
@@ -57,7 +61,7 @@ public class BoxHelper<R: Regulator> {
                 regulator.size = .init(width: .fill, height: .fill)
                 _ = regulator.caculate(byParent: parentMeasure, remain: view.bounds.size)
             }
-            if isSelfPositionControl {
+            if isCenterControl {
                 view.center = CGPoint(x: view.bounds.midX + regulator.margin.left, y: view.bounds.midY + regulator.margin.top)
             }
             if isScrollViewControl, let superview = view.superview as? UIScrollView {
@@ -72,8 +76,7 @@ public class BoxHelper<R: Regulator> {
     private var positionControlUnbinder: Unbinder?
     public func didMoveToSuperview(view: UIView, regulator: R) {
         positionControlUnbinder?.py_unbind()
-        if isSelfPositionControl, let spv = view.superview, !isBox(view: spv) {
-            spv.py_frameStateByKVO()
+        if isCenterControl, let spv = view.superview, !isBox(view: spv) {
             let frame = spv
                 .py_observing(for: #keyPath(UIView.frame), id: "\(view.description)\(#function)frame")
                 .map { (f: CGRect?) in f?.size ?? .zero }
