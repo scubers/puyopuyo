@@ -12,6 +12,8 @@ public class BoxHelper<R: Regulator> {
 
     public var isSelfPositionControl = true
 
+    public var isSelfSizeControl = true
+
     public var animator: Animator = Animators.none
 
     public func layoutSubviews(view: UIView, regulator: R) {
@@ -36,24 +38,30 @@ public class BoxHelper<R: Regulator> {
                 _ = regulator.caculate(byParent: parentMeasure, remain: remain)
             }
         } else {
-            // 父视图为普通视图
-            var size = parentMeasure.py_size
-            if regulator.size.width.isWrap {
-                size.width = regulator.size.width.max
+            
+            if isSelfSizeControl {
+                // 父视图为普通视图
+                var size = parentMeasure.py_size
+                if regulator.size.width.isWrap {
+                    size.width = regulator.size.width.max
+                }
+                if regulator.size.height.isWrap {
+                    size.height = regulator.size.height.max
+                }
+                // 父视图为非Regulator，需要事先应用一下固有尺寸
+                Caculator.applyMeasure(regulator, size: regulator.size, currentRemain: size, ratio: nil)
+                let sizeAfterCaculate = regulator.caculate(byParent: parentMeasure, remain: size)
+                Caculator.applyMeasure(regulator, size: sizeAfterCaculate, currentRemain: size, ratio: nil)
+            } else {
+                Caculator.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
+                regulator.size = .init(width: .fill, height: .fill)
+                _ = regulator.caculate(byParent: parentMeasure, remain: view.bounds.size)
             }
-            if regulator.size.height.isWrap {
-                size.height = regulator.size.height.max
-            }
-            // 父视图为非Regulator，需要事先应用一下固有尺寸
-            Caculator.applyMeasure(regulator, size: regulator.size, currentRemain: size, ratio: nil)
-            let sizeAfterCaculate = regulator.caculate(byParent: parentMeasure, remain: size)
-            Caculator.applyMeasure(regulator, size: sizeAfterCaculate, currentRemain: size, ratio: nil)
             if isSelfPositionControl {
                 view.center = CGPoint(x: view.bounds.midX + regulator.margin.left, y: view.bounds.midY + regulator.margin.top)
-
-                if isScrollViewControl, let superview = view.superview as? UIScrollView {
-                    control(scrollView: superview, by: view, regulator: regulator)
-                }
+            }
+            if isScrollViewControl, let superview = view.superview as? UIScrollView {
+                control(scrollView: superview, by: view, regulator: regulator)
             }
         }
 
