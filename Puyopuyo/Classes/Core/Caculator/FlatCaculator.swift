@@ -99,6 +99,7 @@ class FlatCaculator {
             maxCross = regCalSize.cross.fixedValue - regCalPadding.crossFixed
         }
 
+        var unRegulatable = false
         // 第一次循环
         regulator.enumerateChild { _, m in
             guard m.activated else { return }
@@ -113,6 +114,8 @@ class FlatCaculator {
             // 判断主轴包裹冲突
             if regCalSize.main.isWrap && subCalSize.main.isRatio {
                 Caculator.constraintConflict(crash: false, "parent wrap cannot contains ratio children!!!!!")
+                unRegulatable = true
+                
             }
 
             // 判断W_R优先级冲突
@@ -133,6 +136,11 @@ class FlatCaculator {
             totalMainRatio += subCalSize.main.ratio
             // 添加计算子节点
             caculateChildren.append(m)
+        }
+        
+        if unRegulatable {
+            Caculator.constraintConflict(crash: false, "Current regulator cannot regulated!!!!")
+            return Size()
         }
 
         // 校验冲突，若布局可能包裹，则不能存在 wrrw
