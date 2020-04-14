@@ -36,16 +36,15 @@ class TestVC: UIViewController {
         super.viewDidLoad()
         navigationController?.navigationBar.isTranslucent = false
 
-        VBox().attach(view) {
-            HBox().attach($0) {
-                Label.demo("demo").attach($0)
-                    .size(100, .fill)
-                Label.demo("v1.1.1").attach($0)
+        ZBox().attach(view) {
+            VBox().attach($0) {
+                Label.demo("lskdjfl").attach($0)
                     .size(.fill, .fill)
+                    .margin(left: 20)
             }
             .size(.fill, .fill)
+            .margin(left: 30)
         }
-        .space(10)
         .padding(all: 16)
         .size(.fill, .fill)
 
