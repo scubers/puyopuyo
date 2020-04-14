@@ -112,7 +112,7 @@ class FlatCaculator {
 
             // 判断主轴包裹冲突
             if regCalSize.main.isWrap && subCalSize.main.isRatio {
-                Caculator.constraintConflict(crash: true, "parent wrap cannot contains ratio children!!!!!")
+                Caculator.constraintConflict(crash: false, "parent wrap cannot contains ratio children!!!!!")
             }
 
             // 判断W_R优先级冲突
