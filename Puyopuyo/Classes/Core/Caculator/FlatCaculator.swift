@@ -193,7 +193,7 @@ class FlatCaculator {
 
         case .F_R:
             let subRemain = getCurrentRemainSizeForNormalChildren()
-            regulateChild(measure, priorities: [priority], remain: subRemain.getSize(), appendCross: false, appendMain: true)
+            regulateChild(measure, priorities: [priority], remain: subRemain.getSize(), appendCross: false, appendMain: false)
 
         case .R_R:
             let subRemain = getCurrentRemainSizeForRatioChildren(measure: measure)

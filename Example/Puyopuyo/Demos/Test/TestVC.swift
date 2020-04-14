@@ -39,10 +39,11 @@ class TestVC: UIViewController {
         VBox().attach(view) {
             HBox().attach($0) {
                 Label.demo("demo").attach($0)
-                    .size(.fill, .wrap)
+                    .size(100, .fill)
                 Label.demo("v1.1.1").attach($0)
+                    .size(.fill, .fill)
             }
-            .size(.fill, .wrap)
+            .size(.fill, .fill)
         }
         .space(10)
         .padding(all: 16)
