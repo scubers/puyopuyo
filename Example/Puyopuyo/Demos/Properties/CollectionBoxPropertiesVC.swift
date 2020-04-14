@@ -19,11 +19,16 @@ class CollectionBoxPropertiesVC: BaseVC {
 //            state2.input(value: [0, 1, 6, 7, 4, 3, 9].map({ $0.description }))
         }
         CollectionBox(
+            minimumLineSpacing: 50,
+            minimumInteritemSpacing: 50,
             pinHeader: true,
             sections: [
                 CollectionSection<String, UIView, Void>(
                     identifier: "1",
                     dataSource: state1.asOutput(),
+                    minLineSpacing: 10,
+                    minInteractSpacing: 20,
+                    insets: UIEdgeInsets(top: 20, left: 0, bottom: 20, right: 40).asOutput(),
                     _diffIdentifier: { $0 },
                     _cell: { o, _ in
                         HBox().attach {
@@ -50,6 +55,9 @@ class CollectionBoxPropertiesVC: BaseVC {
                 CollectionSection<String, UIView, Void>(
                     identifier: "2",
                     dataSource: state2.asOutput(),
+                    minLineSpacing: 20,
+                    minInteractSpacing: 30,
+                    insets: UIEdgeInsets(top: 10, left: 50, bottom: 10, right: 10).asOutput(),
                     _diffIdentifier: { $0 },
                     _cell: { o, _ in
                         HBox().attach {

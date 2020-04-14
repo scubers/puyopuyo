@@ -14,9 +14,15 @@ public protocol CollectionBoxSection: class {
     func supplementaryType(for kind: String) -> AnyClass
     func numberOfItems() -> Int
     func didSelect(item: Int)
+
     func cell(for collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionViewCell
     func view(for collectionView: UICollectionView, supplementary kind: String, at indexPath: IndexPath) -> UICollectionReusableView
+
     func size(for collectionView: UICollectionView, layout: UICollectionViewLayout, at indexPath: IndexPath) -> CGSize
+    func insets(for collectionView: UICollectionView, layout: UICollectionViewLayout, at section: Int) -> UIEdgeInsets
+    func lineSpacing(for collectionView: UICollectionView, layout: UICollectionViewLayout, at section: Int) -> CGFloat
+    func interactSpacing(for collectionView: UICollectionView, layout: UICollectionViewLayout, at section: Int) -> CGFloat
+
     func headerSize(for collectionView: UICollectionView, layout: UICollectionViewLayout, at section: Int) -> CGSize
     func footerSize(for collectionView: UICollectionView, layout: UICollectionViewLayout, at section: Int) -> CGSize
 }
@@ -50,6 +56,9 @@ public class CollectionBox: UICollectionView,
     public private(set) var layout: UICollectionViewFlowLayout = CollectionBoxFlowLayout()
 
     fileprivate var sizeCache = [IndexPath: CGSize]()
+    
+    public var lineSpacing: CGFloat = 0
+    public var interactSpacing: CGFloat = 0
 
     public init(
         layout: UICollectionViewFlowLayout = CollectionBoxFlowLayout(),
@@ -64,6 +73,9 @@ public class CollectionBox: UICollectionView,
         layout.minimumInteritemSpacing = minimumInteritemSpacing
         layout.setSectionHeaderPin(pinHeader)
         super.init(frame: .zero, collectionViewLayout: layout)
+        
+        lineSpacing = minimumLineSpacing
+        interactSpacing = minimumInteritemSpacing
 
         viewState.value = sections
 
@@ -146,6 +158,18 @@ public class CollectionBox: UICollectionView,
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         return viewState.value[section].footerSize(for: collectionView, layout: collectionViewLayout, at: section)
     }
+
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        viewState.value[section].insets(for: collectionView, layout: collectionViewLayout, at: section)
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        viewState.value[section].lineSpacing(for: collectionView, layout: collectionViewLayout, at: section)
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        viewState.value[section].interactSpacing(for: collectionView, layout: collectionViewLayout, at: section)
+    }
 }
 
 public struct RecycleContext<T, View: UIView> {
@@ -159,6 +183,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
     public weak var collectionBox: CollectionBox?
 
     public let dataSource = State<[Data]>([])
+    public let insets = State(UIEdgeInsets.zero)
 
     public typealias HeaderFooterGenerator<Data, CellEvent> = (SimpleOutput<Data>, SimpleInput<CellEvent>) -> UIView?
     var headerGenerator: HeaderFooterGenerator<RecycleContext<[Data], UICollectionView>, CellEvent>
@@ -175,11 +200,17 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
 
     public typealias OnBoxEvent = (EventContext) -> Void
     var onBoxEvent: OnBoxEvent
+    
+    public var minLineSpacing: CGFloat?
+    public var minInteractSpacing: CGFloat?
 
     public var identifier: String
     private var diffIdentifier: ((Data) -> String)?
     public init(identifier: String,
                 dataSource: SimpleOutput<[Data]>,
+                minLineSpacing: CGFloat? = nil,
+                minInteractSpacing: CGFloat? = nil,
+                insets: SimpleOutput<UIEdgeInsets> = UIEdgeInsets.zero.asOutput(),
                 _diffIdentifier: ((Data) -> String)? = nil,
                 _cell: @escaping CellGenerator<Data, Cell, CellEvent>,
                 _cellUpdater: @escaping CellUpdater<Data, Cell> = { _, _, _ in },
@@ -195,9 +226,13 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         headerGenerator = _header
         footerGenerator = _footer
         diffIdentifier = _diffIdentifier
+        self.minLineSpacing = minLineSpacing
+        self.minInteractSpacing = minInteractSpacing
         _ = dataSource.outputing { [weak self] data in
             self?.reload(with: data)
         }
+
+        _ = insets.send(to: self.insets)
     }
 
     public enum Event {
@@ -327,27 +362,39 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
     }
 
     private func getLayoutableContentSize(_ cv: UICollectionView) -> CGSize {
-        let width = cv.bounds.size.width - cv.contentInset.left - cv.contentInset.right
-        let height = cv.bounds.size.height - cv.contentInset.top - cv.contentInset.bottom
-        return CGSize(width: width, height: height)
+        let width = cv.bounds.size.width - cv.contentInset.getHorzTotal() - insets.value.getHorzTotal()
+        let height = cv.bounds.size.height - cv.contentInset.getVertTotal() - insets.value.getVertTotal()
+        return CGSize(width: max(0, width), height: max(0, height))
     }
 
     public func size(for collectionView: UICollectionView, layout _: UICollectionViewLayout, at indexPath: IndexPath) -> CGSize {
         dummyItemState.value = RecycleContext(index: indexPath.row, size: getLayoutableContentSize(collectionView), data: dataSource.value[indexPath.row], view: collectionView)
-        var size = dummyItem.sizeThatFits(collectionView.bounds.size)
-        size.width += (dummyItem.py_measure.margin.left + dummyItem.py_measure.margin.right)
-        size.height += (dummyItem.py_measure.margin.top + dummyItem.py_measure.margin.bottom)
+        var size = dummyItem.sizeThatFits(getLayoutableContentSize(collectionView))
+        size.width += dummyItem.py_measure.margin.getHorzTotal()
+        size.height += dummyItem.py_measure.margin.getVertTotal()
         return CGSize(width: max(0, size.width), height: max(0, size.height))
     }
 
+    public func insets(for _: UICollectionView, layout _: UICollectionViewLayout, at _: Int) -> UIEdgeInsets {
+        insets.value
+    }
+    
+    public func lineSpacing(for collectionView: UICollectionView, layout: UICollectionViewLayout, at section: Int) -> CGFloat {
+        minLineSpacing ?? collectionBox?.lineSpacing ?? 0
+    }
+    
+    public func interactSpacing(for collectionView: UICollectionView, layout: UICollectionViewLayout, at section: Int) -> CGFloat {
+        minInteractSpacing ?? collectionBox?.interactSpacing ?? 0
+    }
+    
     public func headerSize(for collectionView: UICollectionView, layout _: UICollectionViewLayout, at section: Int) -> CGSize {
         dummyHeaderState.value = RecycleContext(index: section, size: getLayoutableContentSize(collectionView), data: dataSource.value, view: collectionView)
-        return dummyHeader.sizeThatFits(collectionView.bounds.size)
+        return dummyHeader.sizeThatFits(getLayoutableContentSize(collectionView))
     }
 
     public func footerSize(for collectionView: UICollectionView, layout _: UICollectionViewLayout, at section: Int) -> CGSize {
         dummyFooterState.value = RecycleContext(index: section, size: getLayoutableContentSize(collectionView), data: dataSource.value, view: collectionView)
-        return dummyFooter.sizeThatFits(collectionView.bounds.size)
+        return dummyFooter.sizeThatFits(getLayoutableContentSize(collectionView))
     }
 
     private func reload(with data: [Data]) {
