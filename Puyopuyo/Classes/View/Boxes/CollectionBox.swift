@@ -56,7 +56,7 @@ public class CollectionBox: UICollectionView,
     public private(set) var layout: UICollectionViewFlowLayout = CollectionBoxFlowLayout()
 
     fileprivate var sizeCache = [IndexPath: CGSize]()
-    
+
     public var lineSpacing: CGFloat = 0
     public var interactSpacing: CGFloat = 0
 
@@ -73,7 +73,7 @@ public class CollectionBox: UICollectionView,
         layout.minimumInteritemSpacing = minimumInteritemSpacing
         layout.setSectionHeaderPin(pinHeader)
         super.init(frame: .zero, collectionViewLayout: layout)
-        
+
         lineSpacing = minimumLineSpacing
         interactSpacing = minimumInteritemSpacing
 
@@ -162,11 +162,11 @@ public class CollectionBox: UICollectionView,
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         viewState.value[section].insets(for: collectionView, layout: collectionViewLayout, at: section)
     }
-    
+
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         viewState.value[section].lineSpacing(for: collectionView, layout: collectionViewLayout, at: section)
     }
-    
+
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         viewState.value[section].interactSpacing(for: collectionView, layout: collectionViewLayout, at: section)
     }
@@ -201,6 +201,9 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
     public typealias OnBoxEvent = (EventContext) -> Void
     var onBoxEvent: OnBoxEvent
     
+    public typealias ItemSize = (Data, CGSize) -> CGSize?
+    var itemSizeBlock: ItemSize
+
     public var minLineSpacing: CGFloat?
     public var minInteractSpacing: CGFloat?
 
@@ -211,6 +214,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
                 minLineSpacing: CGFloat? = nil,
                 minInteractSpacing: CGFloat? = nil,
                 insets: SimpleOutput<UIEdgeInsets> = UIEdgeInsets.zero.asOutput(),
+                _itemSize: @escaping ItemSize = { _, _ in nil },
                 _diffIdentifier: ((Data) -> String)? = nil,
                 _cell: @escaping CellGenerator<Data, Cell, CellEvent>,
                 _cellUpdater: @escaping CellUpdater<Data, Cell> = { _, _, _ in },
@@ -228,6 +232,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         diffIdentifier = _diffIdentifier
         self.minLineSpacing = minLineSpacing
         self.minInteractSpacing = minInteractSpacing
+        self.itemSizeBlock = _itemSize
         _ = dataSource.outputing { [weak self] data in
             self?.reload(with: data)
         }
@@ -368,8 +373,12 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
     }
 
     public func size(for collectionView: UICollectionView, layout _: UICollectionViewLayout, at indexPath: IndexPath) -> CGSize {
+        let layoutContentSize = getLayoutableContentSize(collectionView)
+        if let size = itemSizeBlock(dataSource.value[indexPath.row], layoutContentSize) {
+            return size
+        }
         dummyItemState.value = RecycleContext(index: indexPath.row, size: getLayoutableContentSize(collectionView), data: dataSource.value[indexPath.row], view: collectionView)
-        var size = dummyItem.sizeThatFits(getLayoutableContentSize(collectionView))
+        var size = dummyItem.sizeThatFits(layoutContentSize)
         size.width += dummyItem.py_measure.margin.getHorzTotal()
         size.height += dummyItem.py_measure.margin.getVertTotal()
         return CGSize(width: max(0, size.width), height: max(0, size.height))
@@ -378,15 +387,15 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
     public func insets(for _: UICollectionView, layout _: UICollectionViewLayout, at _: Int) -> UIEdgeInsets {
         insets.value
     }
-    
-    public func lineSpacing(for collectionView: UICollectionView, layout: UICollectionViewLayout, at section: Int) -> CGFloat {
+
+    public func lineSpacing(for _: UICollectionView, layout _: UICollectionViewLayout, at _: Int) -> CGFloat {
         minLineSpacing ?? collectionBox?.lineSpacing ?? 0
     }
-    
-    public func interactSpacing(for collectionView: UICollectionView, layout: UICollectionViewLayout, at section: Int) -> CGFloat {
+
+    public func interactSpacing(for _: UICollectionView, layout _: UICollectionViewLayout, at _: Int) -> CGFloat {
         minInteractSpacing ?? collectionBox?.interactSpacing ?? 0
     }
-    
+
     public func headerSize(for collectionView: UICollectionView, layout _: UICollectionViewLayout, at section: Int) -> CGSize {
         dummyHeaderState.value = RecycleContext(index: section, size: getLayoutableContentSize(collectionView), data: dataSource.value, view: collectionView)
         return dummyHeader.sizeThatFits(getLayoutableContentSize(collectionView))
@@ -501,5 +510,15 @@ extension PYProxyChain: UICollectionViewDelegate, UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         return target.collectionView(collectionView, cellForItemAt: indexPath)
+    }
+}
+
+public extension Puyo where T: CollectionBox {
+    @discardableResult
+    func reload<O: Outputing>(_ when: O) -> Self where O.OutputType: Any {
+        when.safeBind(to: view) { v, _ in
+            v.reloadData()
+        }
+        return self
     }
 }

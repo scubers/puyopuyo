@@ -501,6 +501,14 @@ public extension Puyo where T: TableBox {
         view.py_setNeedsLayout()
         return self
     }
+
+    @discardableResult
+    func reload<O: Outputing>(_ when: O) -> Self where O.OutputType: Any {
+        when.safeBind(to: view) { v, _ in
+            v.reloadData()
+        }
+        return self
+    }
 }
 
 extension PYProxyChain: UITableViewDelegate, UITableViewDataSource {
