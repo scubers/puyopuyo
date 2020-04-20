@@ -8,9 +8,9 @@
 import UIKit
 
 private func belowiOS9() -> Bool {
-//    if #available(iOS 9.0, *) {
-//        return false
-//    }
+    if #available(iOS 9.0, *) {
+        return false
+    }
     // 先测试，所有都使用自定义layout控制header悬浮
     return true
 }

@@ -17,8 +17,9 @@ public protocol CollectionBoxSection: class {
 
     func cell(for collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionViewCell
     func view(for collectionView: UICollectionView, supplementary kind: String, at indexPath: IndexPath) -> UICollectionReusableView
+    func willDisplay(cell: UICollectionViewCell, in collectionView: UICollectionView, at indexPath: IndexPath)
 
-    func size(for collectionView: UICollectionView, layout: UICollectionViewLayout, at indexPath: IndexPath) -> CGSize
+//    func size(for collectionView: UICollectionView, layout: UICollectionViewLayout, at indexPath: IndexPath) -> CGSize
     func insets(for collectionView: UICollectionView, layout: UICollectionViewLayout, at section: Int) -> UIEdgeInsets
     func lineSpacing(for collectionView: UICollectionView, layout: UICollectionViewLayout, at section: Int) -> CGFloat
     func interactSpacing(for collectionView: UICollectionView, layout: UICollectionViewLayout, at section: Int) -> CGFloat
@@ -72,6 +73,12 @@ public class CollectionBox: UICollectionView,
         layout.minimumLineSpacing = minimumLineSpacing
         layout.minimumInteritemSpacing = minimumInteritemSpacing
         layout.setSectionHeaderPin(pinHeader)
+        
+        if #available(iOS 10.0, *) {
+            layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        } else {
+            layout.estimatedItemSize = .init(width: 10, height: 10)
+        }
         super.init(frame: .zero, collectionViewLayout: layout)
 
         lineSpacing = minimumLineSpacing
@@ -132,7 +139,12 @@ public class CollectionBox: UICollectionView,
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         return viewState.value[indexPath.section].cell(for: collectionView, at: indexPath)
     }
-
+    
+    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        viewState.value[indexPath.section].willDisplay(cell: cell, in: collectionView, at: indexPath)
+        delegateProxy.backup?.value?.collectionView?(collectionView, willDisplay: cell, forItemAt: indexPath)
+    }
+    
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         viewState.value[indexPath.section].didSelect(item: indexPath.row)
         delegateProxy.backup?.value?.collectionView?(collectionView, didSelectItemAt: indexPath)
@@ -140,15 +152,6 @@ public class CollectionBox: UICollectionView,
 
     public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         return viewState.value[indexPath.section].view(for: collectionView, supplementary: kind, at: indexPath)
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        if let size = sizeCache[indexPath] {
-            return size
-        }
-        let size = viewState.value[indexPath.section].size(for: collectionView, layout: collectionViewLayout, at: indexPath)
-        sizeCache[indexPath] = size
-        return size
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
@@ -184,6 +187,8 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
 
     public let dataSource = State<[Data]>([])
     public let insets = State(UIEdgeInsets.zero)
+    
+    private var cachedSize = [IndexPath: CGSize]()
 
     public typealias HeaderFooterGenerator<Data, CellEvent> = (SimpleOutput<Data>, SimpleInput<CellEvent>) -> UIView?
     var headerGenerator: HeaderFooterGenerator<RecycleContext<[Data], UICollectionView>, CellEvent>
@@ -234,6 +239,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         self.minInteractSpacing = minInteractSpacing
         self.itemSizeBlock = _itemSize
         _ = dataSource.outputing { [weak self] data in
+            self?.cachedSize.removeAll()
             self?.reload(with: data)
         }
 
@@ -279,6 +285,10 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         trigger(event: .didSelect, idx: item)
         onCellEvent(.didSelect(item, dataSource.value[item]))
     }
+    
+    public func willDisplay(cell: UICollectionViewCell, in collectionView: UICollectionView, at indexPath: IndexPath) {
+//        cachedSize[indexPath] = cell.contentView.bounds.size
+    }
 
     public func cell(for collectionView: UICollectionView, at indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier(), for: indexPath) as? CollectionBoxCell<Data, CellEvent> else {
@@ -305,7 +315,13 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
             self.trigger(event: .itemEvent(event), idx: idx)
             self.onCellEvent(.itemEvent(idx, data, event))
         }
-//        cellUpdater(cell, )
+        if let fixedSize = itemSizeBlock(data, cell.targetSize) {
+            cell.cachedSize = fixedSize
+        } else if let cachedSize = cachedSize[indexPath] {
+            cell.cachedSize = cachedSize
+        } else {
+            cell.cachedSize = nil
+        }
         if let view = cell.root as? Cell {
             cellUpdater(cell, view, ctx)
         }
@@ -372,17 +388,17 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         return CGSize(width: max(0, width), height: max(0, height))
     }
 
-    public func size(for collectionView: UICollectionView, layout _: UICollectionViewLayout, at indexPath: IndexPath) -> CGSize {
-        let layoutContentSize = getLayoutableContentSize(collectionView)
-        if let size = itemSizeBlock(dataSource.value[indexPath.row], layoutContentSize) {
-            return size
-        }
-        dummyItemState.value = RecycleContext(index: indexPath.row, size: getLayoutableContentSize(collectionView), data: dataSource.value[indexPath.row], view: collectionView)
-        var size = dummyItem.sizeThatFits(layoutContentSize)
-        size.width += dummyItem.py_measure.margin.getHorzTotal()
-        size.height += dummyItem.py_measure.margin.getVertTotal()
-        return CGSize(width: max(0, size.width), height: max(0, size.height))
-    }
+//    public func size(for collectionView: UICollectionView, layout _: UICollectionViewLayout, at indexPath: IndexPath) -> CGSize {
+//        let layoutContentSize = getLayoutableContentSize(collectionView)
+//        if let size = itemSizeBlock(dataSource.value[indexPath.row], layoutContentSize) {
+//            return size
+//        }
+//        dummyItemState.value = RecycleContext(index: indexPath.row, size: getLayoutableContentSize(collectionView), data: dataSource.value[indexPath.row], view: collectionView)
+//        var size = dummyItem.sizeThatFits(layoutContentSize)
+//        size.width += dummyItem.py_measure.margin.getHorzTotal()
+//        size.height += dummyItem.py_measure.margin.getVertTotal()
+//        return CGSize(width: max(0, size.width), height: max(0, size.height))
+//    }
 
     public func insets(for _: UICollectionView, layout _: UICollectionViewLayout, at _: Int) -> UIEdgeInsets {
         insets.value
@@ -469,8 +485,10 @@ private class CollectionBoxCell<D, E>: UICollectionViewCell {
     var onEvent: (E) -> Void = { _ in }
 
     var targetSize: CGSize = .zero
+    var cachedSize: CGSize?
 
     override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority _: UILayoutPriority, verticalFittingPriority _: UILayoutPriority) -> CGSize {
+        if let cached = cachedSize { return cached }
         let size = self.targetSize == .zero ? targetSize : self.targetSize
         return root?.sizeThatFits(size) ?? .zero
     }
