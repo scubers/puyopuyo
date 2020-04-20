@@ -73,12 +73,7 @@ public class CollectionBox: UICollectionView,
         layout.minimumLineSpacing = minimumLineSpacing
         layout.minimumInteritemSpacing = minimumInteritemSpacing
         layout.setSectionHeaderPin(pinHeader)
-        
-        if #available(iOS 10.0, *) {
-            layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        } else {
-            layout.estimatedItemSize = .init(width: 10, height: 10)
-        }
+        layout.estimatedItemSize = .init(width: 1, height: 1)
         super.init(frame: .zero, collectionViewLayout: layout)
 
         lineSpacing = minimumLineSpacing
