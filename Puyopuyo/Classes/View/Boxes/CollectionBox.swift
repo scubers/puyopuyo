@@ -56,8 +56,6 @@ public class CollectionBox: UICollectionView,
 
     public private(set) var layout: UICollectionViewFlowLayout = CollectionBoxFlowLayout()
 
-    fileprivate var sizeCache = [IndexPath: CGSize]()
-
     public var lineSpacing: CGFloat = 0
     public var interactSpacing: CGFloat = 0
 
@@ -103,7 +101,6 @@ public class CollectionBox: UICollectionView,
     }
 
     public override func reloadData() {
-        sizeCache.removeAll()
         super.reloadData()
     }
 
@@ -312,8 +309,6 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         }
         if let fixedSize = itemSizeBlock(data, cell.targetSize) {
             cell.cachedSize = fixedSize
-        } else if let cachedSize = cachedSize[indexPath] {
-            cell.cachedSize = cachedSize
         } else {
             cell.cachedSize = nil
         }
@@ -325,11 +320,10 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
 
     public func view(for collectionView: UICollectionView, supplementary kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: supplementaryIdentifier(for: kind), for: indexPath) as! CollectionBoxSupplementaryView<[Data], CellEvent>
-//        view.targetSize = collectionView.bounds.size
         view.targetSize = getLayoutableContentSize(collectionView)
+        let ctx = RecycleContext(index: indexPath.section, size: view.targetSize, data: dataSource.value, view: collectionView)
         if view.root == nil {
-//            let state = State((indexPath.section, dataSource.value))
-            let state = State(RecycleContext(index: indexPath.section, size: view.targetSize, data: dataSource.value, view: collectionView))
+            let state = State(ctx)
             let event = SimpleIO<CellEvent>()
             var root: UIView
             if kind == UICollectionView.elementKindSectionHeader {
@@ -342,7 +336,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
             view.event = event
             view.addSubview(root)
         } else {
-            view.state.value = RecycleContext(index: indexPath.section, size: view.targetSize, data: dataSource.value, view: collectionView)
+            view.state.value = ctx
         }
         view.onEvent = { [weak self, weak view] e in
             guard let self = self, let view = view else { return }
@@ -429,8 +423,6 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
             return
         }
         // 需要做diff运算
-        // 清空cache
-        box.sizeCache.removeAll()
 
         let diff = Diff(src: dataSource.value, dest: data, identifier: diffIdentifier)
         diff.check()
