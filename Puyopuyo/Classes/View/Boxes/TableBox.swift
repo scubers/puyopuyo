@@ -215,6 +215,7 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
     public var identifier: String
     private var diffIdentifier: ((Data) -> String)?
     private var selectionStyle: UITableViewCell.SelectionStyle
+    private var dataIds = [String]()
     public init(identifier: String,
                 selectionStyle: UITableViewCell.SelectionStyle = .default,
                 dataSource: SimpleOutput<[Data]>,
@@ -396,12 +397,15 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
         }
 
         tableBox?.heightCache.removeAll()
+        
+        let newDataIds = data.map { diffIdentifier($0) }
 
-        let diff = Diff(src: dataSource.value, dest: data, identifier: diffIdentifier)
+        let diff = Diff(src: dataIds, dest: newDataIds, identifier: { $0 })
         diff.check()
 
         if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
             dataSource.value = data
+            dataIds = newDataIds
             box.beginUpdates()
             if !diff.insert.isEmpty {
                 box.insertRows(at: diff.insert.map { IndexPath(row: $0.to, section: section) }, with: .automatic)
@@ -413,12 +417,6 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
                 box.moveRow(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
             }
             box.endUpdates()
-
-            if !diff.stay.isEmpty {
-                box.beginUpdates()
-                box.reloadRows(at: diff.stay.map { IndexPath(row: $0.from, section: section) }, with: .none)
-                box.endUpdates()
-            }
         }
     }
 

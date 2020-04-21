@@ -131,12 +131,12 @@ public class CollectionBox: UICollectionView,
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         return viewState.value[indexPath.section].cell(for: collectionView, at: indexPath)
     }
-    
+
     public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         viewState.value[indexPath.section].willDisplay(cell: cell, in: collectionView, at: indexPath)
         delegateProxy.backup?.value?.collectionView?(collectionView, willDisplay: cell, forItemAt: indexPath)
     }
-    
+
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         viewState.value[indexPath.section].didSelect(item: indexPath.row)
         delegateProxy.backup?.value?.collectionView?(collectionView, didSelectItemAt: indexPath)
@@ -179,7 +179,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
 
     public let dataSource = State<[Data]>([])
     public let insets = State(UIEdgeInsets.zero)
-    
+
     private var cachedSize = [IndexPath: CGSize]()
 
     public typealias HeaderFooterGenerator<Data, CellEvent> = (SimpleOutput<Data>, SimpleInput<CellEvent>) -> UIView?
@@ -197,7 +197,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
 
     public typealias OnBoxEvent = (EventContext) -> Void
     var onBoxEvent: OnBoxEvent
-    
+
     public typealias ItemSize = (Data, CGSize) -> CGSize?
     var itemSizeBlock: ItemSize
 
@@ -206,6 +206,8 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
 
     public var identifier: String
     private var diffIdentifier: ((Data) -> String)?
+    private var dataIds = [String]()
+
     public init(identifier: String,
                 dataSource: SimpleOutput<[Data]>,
                 minLineSpacing: CGFloat? = nil,
@@ -229,7 +231,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         diffIdentifier = _diffIdentifier
         self.minLineSpacing = minLineSpacing
         self.minInteractSpacing = minInteractSpacing
-        self.itemSizeBlock = _itemSize
+        itemSizeBlock = _itemSize
         _ = dataSource.outputing { [weak self] data in
             self?.cachedSize.removeAll()
             self?.reload(with: data)
@@ -277,8 +279,8 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         trigger(event: .didSelect, idx: item)
         onCellEvent(.didSelect(item, dataSource.value[item]))
     }
-    
-    public func willDisplay(cell: UICollectionViewCell, in collectionView: UICollectionView, at indexPath: IndexPath) {
+
+    public func willDisplay(cell _: UICollectionViewCell, in _: UICollectionView, at _: IndexPath) {
 //        cachedSize[indexPath] = cell.contentView.bounds.size
     }
 
@@ -422,12 +424,14 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
             box.reloadData()
             return
         }
+        let newDataIds = data.map { diffIdentifier($0) }
         // 需要做diff运算
 
-        let diff = Diff(src: dataSource.value, dest: data, identifier: diffIdentifier)
+        let diff = Diff(src: dataIds, dest: newDataIds, identifier: { $0 })
         diff.check()
         if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
             dataSource.value = data
+            dataIds = newDataIds
             box.performBatchUpdates({
                 diff.move.forEach { c in
                     box.moveItem(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
@@ -438,12 +442,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
                 if !diff.insert.isEmpty {
                     box.insertItems(at: diff.insert.map { IndexPath(row: $0.to, section: section) })
                 }
-            }, completion: {
-                // 完成编辑后，刷新不动的item
-                if $0, !diff.stay.isEmpty {
-                    box.reloadItems(at: diff.stay.map { IndexPath(row: $0.from, section: section) })
-                }
-            })
+            }, completion: nil)
         }
     }
 
