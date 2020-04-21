@@ -412,15 +412,23 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         dummyFooterState.value = RecycleContext(index: section, size: getLayoutableContentSize(collectionView), data: dataSource.value, view: collectionView)
         return dummyFooter.sizeThatFits(getLayoutableContentSize(collectionView))
     }
+    
+    private func setDataIds(_ data: [Data]) {
+        if let diffing = diffIdentifier {
+            dataIds = data.map { diffing($0) }
+        }
+    }
 
     private func reload(with data: [Data]) {
         guard let box = collectionBox else {
             dataSource.value = data
+            setDataIds(data)
             return
         }
         // 不做diff运算
         guard let diffIdentifier = self.diffIdentifier else {
             dataSource.value = data
+            setDataIds(data)
             box.reloadData()
             return
         }

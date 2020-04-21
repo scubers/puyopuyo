@@ -383,15 +383,23 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
 
         return view!
     }
+    
+    private func setDataIds(_ data: [Data]) {
+        if let diffing = diffIdentifier {
+            dataIds = data.map { diffing($0) }
+        }
+    }
 
     private func reload(with data: [Data]) {
         guard let box = tableBox else {
             dataSource.value = data
+            setDataIds(data)
             return
         }
 
         guard let diffIdentifier = self.diffIdentifier else {
             dataSource.value = data
+            setDataIds(data)
             tableBox?.reload()
             return
         }
@@ -406,17 +414,26 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
         if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
             dataSource.value = data
             dataIds = newDataIds
-            box.beginUpdates()
-            if !diff.insert.isEmpty {
-                box.insertRows(at: diff.insert.map { IndexPath(row: $0.to, section: section) }, with: .automatic)
+            func animations() {
+                diff.move.forEach { c in
+                    box.moveRow(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
+                }
+                if !diff.delete.isEmpty {
+                    box.deleteRows(at: diff.delete.map { IndexPath(row: $0.from, section: section) }, with: .automatic)
+                }
+                if !diff.insert.isEmpty {
+                    box.insertRows(at: diff.insert.map { IndexPath(row: $0.to, section: section) }, with: .automatic)
+                }
             }
-            if !diff.delete.isEmpty {
-                box.deleteRows(at: diff.delete.map { IndexPath(row: $0.from, section: section) }, with: .automatic)
+            if #available(iOS 11.0, *) {
+                box.performBatchUpdates({
+                    animations()
+                }, completion: nil)
+            } else {
+                box.beginUpdates()
+                animations()
+                box.endUpdates()
             }
-            diff.move.forEach { c in
-                box.moveRow(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
-            }
-            box.endUpdates()
         }
     }
 
