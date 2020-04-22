@@ -537,6 +537,15 @@ public extension Puyo where T: EstimateCollectionBox {
 }
 
 public class CollectionBox: EstimateCollectionBox {
+    public override init(layout: UICollectionViewFlowLayout = CollectionBoxFlowLayout(), direction: UICollectionView.ScrollDirection = .vertical, minimumLineSpacing: CGFloat = 0, minimumInteritemSpacing: CGFloat = 0, pinHeader: Bool = false, sections: [CollectionBoxSection] = []) {
+        super.init(layout: layout, direction: direction, minimumLineSpacing: minimumLineSpacing, minimumInteritemSpacing: minimumInteritemSpacing, pinHeader: pinHeader, sections: sections)
+        layout.estimatedItemSize = .zero
+    }
+
+    public required init?(coder _: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         viewState.value[indexPath.section].size(for: collectionView, layout: collectionViewLayout, at: indexPath)
     }
