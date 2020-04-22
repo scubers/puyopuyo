@@ -313,8 +313,9 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
         }
         cell?.selectionStyle = selectionStyle
         cell?.onEvent = { [weak self, weak cell] event in
-            guard let cell = cell, let self = self else { return }
-            let idx = cell.state.value.index
+            guard let cell = cell, let self = self, let index = self.tableBox?.indexPath(for: cell) else { return }
+//            let idx = cell.state.value.index
+            let idx = index.row
             let data = cell.state.value.data
             if let ctx = self.getEventContext(event: .itemEvent(event), index: idx) {
                 self.onBoxEvent(ctx)

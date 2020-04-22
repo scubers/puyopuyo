@@ -303,8 +303,9 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
             cell.state.value = ctx
         }
         cell.onEvent = { [weak cell, weak self] event in
-            guard let self = self, let cell = cell else { return }
-            let idx = cell.state.value.index
+            guard let self = self, let cell = cell, let index = self.collectionBox?.indexPath(for: cell) else { return }
+//            let idx = cell.state.value.index
+            let idx = index.item
             let data = cell.state.value.data
             self.trigger(event: .itemEvent(event), idx: idx)
             self.onCellEvent(.itemEvent(idx, data, event))
