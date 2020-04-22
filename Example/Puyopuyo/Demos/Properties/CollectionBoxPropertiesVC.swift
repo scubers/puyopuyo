@@ -18,7 +18,7 @@ class CollectionBoxPropertiesVC: BaseVC {
             state1.input(value: [1, 2, 3, 4, 0].map { $0.description })
 //            state2.input(value: [0, 1, 6, 7, 4, 3, 9].map({ $0.description }))
         }
-        CollectionBox(
+        EstimateCollectionBox(
             minimumLineSpacing: 50,
             minimumInteritemSpacing: 50,
             pinHeader: true,

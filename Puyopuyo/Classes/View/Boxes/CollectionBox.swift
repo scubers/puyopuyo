@@ -8,7 +8,7 @@
 import UIKit
 
 public protocol CollectionBoxSection: class {
-    var collectionBox: CollectionBox? { get set }
+    var collectionBox: EstimateCollectionBox? { get set }
     func cellIdentifier() -> String
     func cellType() -> AnyClass
     func supplementaryType(for kind: String) -> AnyClass
@@ -19,7 +19,7 @@ public protocol CollectionBoxSection: class {
     func view(for collectionView: UICollectionView, supplementary kind: String, at indexPath: IndexPath) -> UICollectionReusableView
     func willDisplay(cell: UICollectionViewCell, in collectionView: UICollectionView, at indexPath: IndexPath)
 
-//    func size(for collectionView: UICollectionView, layout: UICollectionViewLayout, at indexPath: IndexPath) -> CGSize
+    func size(for collectionView: UICollectionView, layout: UICollectionViewLayout, at indexPath: IndexPath) -> CGSize
     func insets(for collectionView: UICollectionView, layout: UICollectionViewLayout, at section: Int) -> UIEdgeInsets
     func lineSpacing(for collectionView: UICollectionView, layout: UICollectionViewLayout, at section: Int) -> CGFloat
     func interactSpacing(for collectionView: UICollectionView, layout: UICollectionViewLayout, at section: Int) -> CGFloat
@@ -34,7 +34,7 @@ public extension CollectionBoxSection {
     }
 }
 
-public class CollectionBox: UICollectionView,
+public class EstimateCollectionBox: UICollectionView,
     Stateful,
     Delegatable,
     DataSourceable,
@@ -175,7 +175,7 @@ public struct RecycleContext<T, View: UIView> {
 }
 
 public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSection {
-    public weak var collectionBox: CollectionBox?
+    public weak var collectionBox: EstimateCollectionBox?
 
     public let dataSource = State<[Data]>([])
     public let insets = State(UIEdgeInsets.zero)
@@ -380,17 +380,17 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         return CGSize(width: max(0, width), height: max(0, height))
     }
 
-//    public func size(for collectionView: UICollectionView, layout _: UICollectionViewLayout, at indexPath: IndexPath) -> CGSize {
-//        let layoutContentSize = getLayoutableContentSize(collectionView)
-//        if let size = itemSizeBlock(dataSource.value[indexPath.row], layoutContentSize) {
-//            return size
-//        }
-//        dummyItemState.value = RecycleContext(index: indexPath.row, size: getLayoutableContentSize(collectionView), data: dataSource.value[indexPath.row], view: collectionView)
-//        var size = dummyItem.sizeThatFits(layoutContentSize)
-//        size.width += dummyItem.py_measure.margin.getHorzTotal()
-//        size.height += dummyItem.py_measure.margin.getVertTotal()
-//        return CGSize(width: max(0, size.width), height: max(0, size.height))
-//    }
+    public func size(for collectionView: UICollectionView, layout _: UICollectionViewLayout, at indexPath: IndexPath) -> CGSize {
+        let layoutContentSize = getLayoutableContentSize(collectionView)
+        if let size = itemSizeBlock(dataSource.value[indexPath.row], layoutContentSize) {
+            return size
+        }
+        dummyItemState.value = RecycleContext(index: indexPath.row, size: getLayoutableContentSize(collectionView), data: dataSource.value[indexPath.row], view: collectionView)
+        var size = dummyItem.sizeThatFits(layoutContentSize)
+        size.width += dummyItem.py_measure.margin.getHorzTotal()
+        size.height += dummyItem.py_measure.margin.getVertTotal()
+        return CGSize(width: max(0, size.width), height: max(0, size.height))
+    }
 
     public func insets(for _: UICollectionView, layout _: UICollectionViewLayout, at _: Int) -> UIEdgeInsets {
         insets.value
@@ -413,7 +413,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         dummyFooterState.value = RecycleContext(index: section, size: getLayoutableContentSize(collectionView), data: dataSource.value, view: collectionView)
         return dummyFooter.sizeThatFits(getLayoutableContentSize(collectionView))
     }
-    
+
     private func setDataIds(_ data: [Data]) {
         if let diffing = diffIdentifier {
             dataIds = data.map { diffing($0) }
@@ -526,12 +526,18 @@ extension PYProxyChain: UICollectionViewDelegate, UICollectionViewDataSource {
     }
 }
 
-public extension Puyo where T: CollectionBox {
+public extension Puyo where T: EstimateCollectionBox {
     @discardableResult
     func reload<O: Outputing>(_ when: O) -> Self where O.OutputType: Any {
         when.safeBind(to: view) { v, _ in
             v.reloadData()
         }
         return self
+    }
+}
+
+public class CollectionBox: EstimateCollectionBox {
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        viewState.value[indexPath.section].size(for: collectionView, layout: collectionViewLayout, at: indexPath)
     }
 }
