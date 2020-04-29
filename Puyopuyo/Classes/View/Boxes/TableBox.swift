@@ -410,7 +410,7 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
             return
         }
 
-        tableBox?.heightCache.removeAll()
+        box.heightCache.removeAll()
 
         let newDataIds = data.map { diffIdentifier($0) }
 
@@ -420,14 +420,14 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
         if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
             setDataSource(data)
             func animations() {
-                diff.move.forEach { c in
-                    box.moveRow(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
-                }
                 if !diff.delete.isEmpty {
                     box.deleteRows(at: diff.delete.map { IndexPath(row: $0.from, section: section) }, with: .automatic)
                 }
                 if !diff.insert.isEmpty {
                     box.insertRows(at: diff.insert.map { IndexPath(row: $0.to, section: section) }, with: .automatic)
+                }
+                diff.move.forEach { c in
+                    box.moveRow(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
                 }
             }
             if #available(iOS 11.0, *) {
