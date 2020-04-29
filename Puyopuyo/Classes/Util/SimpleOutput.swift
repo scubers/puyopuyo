@@ -99,6 +99,16 @@ public extension SimpleOutput {
         }
     }
 
+    func distinct<R>(by keyPath: KeyPath<OutputType, R>) -> SimpleOutput<OutputType> where R: Equatable {
+        ignore {
+            $0[keyPath: keyPath] == $1[keyPath: keyPath]
+        }
+    }
+
+    func distinctMap<R>(_ kp: KeyPath<OutputType, R>) -> SimpleOutput<R> where R: Equatable {
+        distinct(by: kp).map(kp)
+    }
+
     func take(_ count: Int) -> SimpleOutput<OutputType> {
         var times: Int = 0
         return bind { v, i in
@@ -137,7 +147,6 @@ public extension SimpleOutput {
 }
 
 public extension SimpleOutput where OutputType: PuyoOptionalType {
-    
     func map<R>(_ keyPath: KeyPath<OutputType.PuyoWrappedType, R>, _ default: R) -> SimpleOutput<R?> {
         bind {
             if let v = $0.puyoWrapValue {
@@ -147,7 +156,6 @@ public extension SimpleOutput where OutputType: PuyoOptionalType {
             }
         }
     }
-    
 }
 
 public protocol PuyoOptionalType {

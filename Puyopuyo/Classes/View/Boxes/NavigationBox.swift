@@ -35,16 +35,16 @@ open class NavigationBox: VBox, Stateful {
                         .width(.fill)
                         .alignment(.bottom)
                 }
-                .visibility(self.viewState.asOutput().map { $0.visible })
+                .visibility(self._state.distinctMap(\.visible))
                 .width(.fill)
                 .height($0.py_safeArea().map { SizeDescription.wrap(add: $0.top) })
-                .backgroundColor(self.viewState.asOutput().map { $0.backgroundColor })
-                .margin(self.viewState.asOutput().map { (s) -> UIEdgeInsets in
-                    .init(top: s.navOffset.y, left: s.navOffset.x, bottom: 0, right: 0)
+                .backgroundColor(self._state.distinctMap(\.backgroundColor))
+                .margin(self._state.distinctMap(\.navOffset).map { (s) -> UIEdgeInsets in
+                    .init(top: s.y, left: s.x, bottom: 0, right: 0)
                 })
-                .alpha(self.viewState.asOutput().map { $0.alpha })
+                .alpha(self._state.distinctMap(\.alpha))
                 .alignment(.top)
-                .viewUpdate(on: self.viewState) { v, s in
+                .viewUpdate(on: self._state) { v, s in
                     v.layer.shadowOffset = s.shadowOffset
                     v.layer.shadowOpacity = s.shadowOpacity
                     v.layer.shadowRadius = s.shadowRadius
@@ -54,7 +54,7 @@ open class NavigationBox: VBox, Stateful {
 
             let output = SimpleOutput.merge([
                 nav.py_boundsState(),
-                self.viewState.asOutput().map { _ in .zero },
+                self._state.map { _ in .zero },
             ])
 
             body().attach($0)
@@ -69,7 +69,7 @@ open class NavigationBox: VBox, Stateful {
             nav.attach($0)
         }
         .reverse(true)
-        .animator(viewState.asOutput().map { $0.animator })
+        .animator(_state.map { $0.animator })
         .justifyContent(.center)
         .size(.fill, .fill)
     }
