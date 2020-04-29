@@ -73,6 +73,10 @@ public extension SimpleOutput {
         return bind { $1.input(value: block($0)) }
     }
 
+    func map<R>(_ keyPath: KeyPath<OutputType, R>) -> SimpleOutput<R> {
+        bind { $1.input(value: $0[keyPath: keyPath]) }
+    }
+
     func filter(_ filter: @escaping (OutputType) -> Bool) -> SimpleOutput<OutputType> {
         return bind { v, i in
             if filter(v) { i.input(value: v) }
@@ -130,6 +134,20 @@ public extension SimpleOutput {
     func scheduleOnMain() -> SimpleOutput<OutputType> {
         return scheduleOn(OperationQueue.main)
     }
+}
+
+public extension SimpleOutput where OutputType: PuyoOptionalType {
+    
+    func map<R>(_ keyPath: KeyPath<OutputType.PuyoWrappedType, R>, _ default: R) -> SimpleOutput<R?> {
+        bind {
+            if let v = $0.puyoWrapValue {
+                $1.input(value: v[keyPath: keyPath])
+            } else {
+                $1.input(value: `default`)
+            }
+        }
+    }
+    
 }
 
 public protocol PuyoOptionalType {
