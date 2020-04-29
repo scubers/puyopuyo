@@ -10,17 +10,21 @@ import Puyopuyo
 import UIKit
 
 class NavigationBoxPropertiesVC: BaseVC {
-    private var navHeight = State<SizeDescription>(.fix(44))
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let height = min(44, max(0, 44 - scrollView.contentOffset.y))
+        navHeight.input(value: .fix(height))
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         NavigationBox(
             navBar: {
                 NavBar(title: "Nav Bar").attach()
-                    .height(self.navHeight)
-                    .onEventProduced(to: self, { s, _ in
+                    .height(self.navHeight.asOutput().distinct())
+                    .onEventProduced(to: self) { s, _ in
                         s.navigationController?.popViewController(animated: true)
-                    })
+                    }
                     .view
             }, body: {
                 DemoScroll(
@@ -30,8 +34,16 @@ class NavigationBoxPropertiesVC: BaseVC {
                         self.visible().attach($0)
                         self.alpha().attach($0)
                         self.avoid().attach($0)
+                        
+                        UIView().attach($0)
+                            .size(.fill, 200)
                     }
                 )
+                .attach()
+                .attach {
+                    $0.delegate = self
+                }
+                .view
             }
         )
         .attach(vRoot)
@@ -66,9 +78,9 @@ class NavigationBoxPropertiesVC: BaseVC {
             ]
         )
         .attach()
-        .onEventProduced(to: self, { s, x in
+        .onEventProduced(to: self) { s, x in
             s.navState.value.backgroundColor = x
-        })
+        }
         .view
     }
 
@@ -87,9 +99,9 @@ class NavigationBoxPropertiesVC: BaseVC {
             ]
         )
         .attach()
-        .onEventProduced(to: self, { s, x in
+        .onEventProduced(to: self) { s, x in
             s.navHeight.value = x
-        })
+        }
         .view
     }
 
@@ -105,15 +117,15 @@ class NavigationBoxPropertiesVC: BaseVC {
             ]
         )
         .attach()
-        .onEventProduced(to: self, { s, x in
+        .onEventProduced(to: self) { s, x in
             s.navState.value.bodyAvoidNavBar = x
-        })
+        }
         .view
     }
 
     func alpha() -> UIView {
         return DemoView<CGFloat>(
-            title: "nav height",
+            title: "alpha",
             builder: {
                 UIView().attach($0).view
             },
@@ -126,9 +138,9 @@ class NavigationBoxPropertiesVC: BaseVC {
             ]
         )
         .attach()
-        .onEventProduced(to: self, { s, x in
+        .onEventProduced(to: self) { s, x in
             s.navState.value.alpha = x
-        })
+        }
         .view
     }
 
@@ -145,9 +157,9 @@ class NavigationBoxPropertiesVC: BaseVC {
             ]
         )
         .attach()
-        .onEventProduced(to: self, { s, x in
+        .onEventProduced(to: self) { s, x in
             s.navState.value.visible = x
-        })
+        }
         .view
     }
 }

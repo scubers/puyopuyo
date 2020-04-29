@@ -16,12 +16,14 @@ class Theme {
 
 class BaseVC: UIViewController, UIScrollViewDelegate {
     var navState = State(NavigationBox.ViewState())
+    var navHeight = State<SizeDescription>(.fix(44))
 
     override func loadView() {
         super.loadView()
         NavigationBox(
             navBar: {
                 NavBar(title: "\(type(of: self))").attach()
+                    .height(self.navHeight)
                     .onEventProduced(to: self, { s, e in
                         if e == .tapLeading {
                             s.navigationController?.popViewController(animated: true)
