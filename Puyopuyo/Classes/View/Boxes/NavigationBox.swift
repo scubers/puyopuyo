@@ -7,7 +7,7 @@
 
 import UIKit
 
-public class NavigationBox: VBox, Stateful {
+open class NavigationBox: VBox, Stateful {
     public struct ViewState {
         public init() {}
         public var visible: Visibility = .visible
