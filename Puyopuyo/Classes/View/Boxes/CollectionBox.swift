@@ -461,9 +461,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         }
     }
 
-    deinit {
-        print("CollectionSection deinit!!!")
-    }
+    deinit {}
 }
 
 private class CollectionBoxCell<D, E>: UICollectionViewCell {

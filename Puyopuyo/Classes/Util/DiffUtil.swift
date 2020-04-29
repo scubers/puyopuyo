@@ -87,3 +87,10 @@ public class Diff<T>: CustomStringConvertible {
         """
     }
 }
+
+public extension Unmanaged where Instance: AnyObject {
+    static func getIdentifier(_ object: Instance, config: (Instance) -> String) -> String {
+        let addr = Unmanaged.passUnretained(object).toOpaque().debugDescription
+        return "\(addr)_\(config(object))"
+    }
+}

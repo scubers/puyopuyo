@@ -384,7 +384,7 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
 
         return view!
     }
-    
+
     private func setDataIds(_ data: [Data]) {
         if let diffing = diffIdentifier {
             dataIds = data.map { diffing($0) }
@@ -406,7 +406,7 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
         }
 
         tableBox?.heightCache.removeAll()
-        
+
         let newDataIds = data.map { diffIdentifier($0) }
 
         let diff = Diff(src: dataIds, dest: newDataIds, identifier: { $0 })
@@ -505,9 +505,7 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
         }
     }
 
-    deinit {
-        print("TableSection deinit!!!")
-    }
+    deinit {}
 }
 
 public extension Puyo where T: TableBox {
