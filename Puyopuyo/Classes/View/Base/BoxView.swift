@@ -17,6 +17,9 @@ public protocol Stateful {
 
 public extension Stateful {
     var _state: SimpleOutput<StateType> { viewState.asOutput() }
+    func _state<R>(_ kp: KeyPath<StateType, R>) -> SimpleOutput<R> {
+        _state.map(kp)
+    }
 }
 
 @available(*, deprecated, message: "use Eventable")
