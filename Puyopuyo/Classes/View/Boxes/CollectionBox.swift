@@ -426,11 +426,19 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
     }
 
     private func reload(with data: [Data]) {
-        // iOS低版本当bounds == zero 进行 增量更新的时候，会出现崩溃，高版本会警告
-        guard let box = collectionBox, box.bounds != .zero else {
+        // box 还没赋值时，只更新数据源
+        guard let box = collectionBox else {
             setDataSource(data)
             return
         }
+        
+        // iOS低版本当bounds == zero 进行 增量更新的时候，会出现崩溃，高版本会警告
+        guard box.bounds != .zero else {
+            setDataSource(data)
+            box.reloadData()
+            return
+        }
+        
         // 不做diff运算
         guard let diffIdentifier = self.diffIdentifier else {
             setDataSource(data)

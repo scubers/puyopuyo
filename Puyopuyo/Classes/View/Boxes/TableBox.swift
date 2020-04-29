@@ -393,14 +393,20 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
     }
 
     private func reload(with data: [Data]) {
-        guard let box = tableBox, box.bounds != .zero else {
+        guard let box = tableBox else {
             setDataSource(data)
+            return
+        }
+        
+        guard box.bounds != .zero else {
+            setDataSource(data)
+            box.reload()
             return
         }
 
         guard let diffIdentifier = self.diffIdentifier else {
             setDataSource(data)
-            tableBox?.reload()
+            box.reload()
             return
         }
 
