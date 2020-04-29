@@ -74,6 +74,11 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable {
         buildBody()
     }
 
+    open override func addSubview(_ view: UIView) {
+        super.addSubview(view)
+        boxHelper.setNeedsLayout(view: view, regulator: regulator)
+    }
+
     open override func setNeedsLayout() {
         super.setNeedsLayout()
         boxHelper.setNeedsLayout(view: self, regulator: regulator)
