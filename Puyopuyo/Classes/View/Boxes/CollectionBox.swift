@@ -419,17 +419,21 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
             dataIds = data.map { diffing($0) }
         }
     }
+    
+    private func setDataSource(_ data: [Data]) {
+        dataSource.value = data
+        setDataIds(data)
+    }
 
     private func reload(with data: [Data]) {
-        guard let box = collectionBox else {
-            dataSource.value = data
-            setDataIds(data)
+        // iOS低版本当bounds == zero 进行 增量更新的时候，会出现崩溃，高版本会警告
+        guard let box = collectionBox, box.bounds != .zero else {
+            setDataSource(data)
             return
         }
         // 不做diff运算
         guard let diffIdentifier = self.diffIdentifier else {
-            dataSource.value = data
-            setDataIds(data)
+            setDataSource(data)
             box.reloadData()
             return
         }
@@ -439,17 +443,16 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         let diff = Diff(src: dataIds, dest: newDataIds, identifier: { $0 })
         diff.check()
         if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
-            dataSource.value = data
-            dataIds = newDataIds
+            setDataSource(data)
             box.performBatchUpdates({
-                diff.move.forEach { c in
-                    box.moveItem(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
-                }
                 if !diff.delete.isEmpty {
                     box.deleteItems(at: diff.delete.map { IndexPath(row: $0.from, section: section) })
                 }
                 if !diff.insert.isEmpty {
                     box.insertItems(at: diff.insert.map { IndexPath(row: $0.to, section: section) })
+                }
+                diff.move.forEach { c in
+                    box.moveItem(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
                 }
             }, completion: nil)
         }

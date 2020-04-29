@@ -385,22 +385,21 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
         return view!
     }
 
-    private func setDataIds(_ data: [Data]) {
+    private func setDataSource(_ data: [Data]) {
+        dataSource.value = data
         if let diffing = diffIdentifier {
             dataIds = data.map { diffing($0) }
         }
     }
 
     private func reload(with data: [Data]) {
-        guard let box = tableBox else {
-            dataSource.value = data
-            setDataIds(data)
+        guard let box = tableBox, box.bounds != .zero else {
+            setDataSource(data)
             return
         }
 
         guard let diffIdentifier = self.diffIdentifier else {
-            dataSource.value = data
-            setDataIds(data)
+            setDataSource(data)
             tableBox?.reload()
             return
         }
@@ -413,8 +412,7 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
         diff.check()
 
         if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
-            dataSource.value = data
-            dataIds = newDataIds
+            setDataSource(data)
             func animations() {
                 diff.move.forEach { c in
                     box.moveRow(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
