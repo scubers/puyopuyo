@@ -9,8 +9,37 @@
 import Puyopuyo
 import UIKit
 
-class TableBoxPropertiesVC: BaseVC, UITableViewDelegate {
+class TableBoxPropertiesVC: BaseVC, UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        0
+    }
 
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        UITableViewCell()
+    }
+
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        true
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        [
+            UITableViewRowAction(style: .normal, title: "1", handler: { _, _ in
+
+            }),
+            UITableViewRowAction(style: .default, title: "2", handler: { _, _ in
+
+            }),
+            UITableViewRowAction(style: .destructive, title: "3", handler: { _, _ in
+
+            }),
+        ]
+    }
+    
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        true
+    }
+    
     var sections = State<[TableBoxSection]>([])
 
     override func configView() {
@@ -35,9 +64,10 @@ class TableBoxPropertiesVC: BaseVC, UITableViewDelegate {
         .backgroundColor(UIColor.clear)
         .viewState(sections)
         .setDelegate(self)
+        .setDataSource(self)
         .size(.fill, .fill)
-        .attach {
-            $0.contentInset.top = 0
+        .attach { v in
+            v.contentInset.top = 0
         }
     }
 
