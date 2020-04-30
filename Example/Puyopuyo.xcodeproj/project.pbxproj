@@ -15,7 +15,7 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
-		A8035A8223AE93BA00F8D613 /* ListBoxPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8035A8123AE93BA00F8D613 /* ListBoxPropertiesVC.swift */; };
+		A8035A8223AE93BA00F8D613 /* TableBoxPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8035A8123AE93BA00F8D613 /* TableBoxPropertiesVC.swift */; };
 		A81CE13C2310509B00E19E6B /* HBoxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81CE13B2310509B00E19E6B /* HBoxVC.swift */; };
 		A81CE143231280EE00E19E6B /* FlowBoxMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81CE142231280EE00E19E6B /* FlowBoxMenu.swift */; };
 		A81CE1452312811400E19E6B /* FlowBoxMixVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81CE1442312811400E19E6B /* FlowBoxMixVC.swift */; };
@@ -82,7 +82,7 @@
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		77FB953E25BC3D91DC89F5C7 /* Pods-Puyopuyo_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Puyopuyo_Example.release.xcconfig"; path = "Target Support Files/Pods-Puyopuyo_Example/Pods-Puyopuyo_Example.release.xcconfig"; sourceTree = "<group>"; };
-		A8035A8123AE93BA00F8D613 /* ListBoxPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListBoxPropertiesVC.swift; sourceTree = "<group>"; };
+		A8035A8123AE93BA00F8D613 /* TableBoxPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableBoxPropertiesVC.swift; sourceTree = "<group>"; };
 		A81CE13B2310509B00E19E6B /* HBoxVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HBoxVC.swift; sourceTree = "<group>"; };
 		A81CE142231280EE00E19E6B /* FlowBoxMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowBoxMenu.swift; sourceTree = "<group>"; };
 		A81CE1442312811400E19E6B /* FlowBoxMixVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowBoxMixVC.swift; sourceTree = "<group>"; };
@@ -279,7 +279,7 @@
 				A84E5CC0239EB5AC0091D39B /* ZPropertiesVC.swift */,
 				A8969BD623A629E000104403 /* ScrollBoxPropertiesVC.swift */,
 				A8969BE223A67EAC00104403 /* NavigationBoxPropertiesVC.swift */,
-				A8035A8123AE93BA00F8D613 /* ListBoxPropertiesVC.swift */,
+				A8035A8123AE93BA00F8D613 /* TableBoxPropertiesVC.swift */,
 				A8BB377B23AFD55000A88012 /* CollectionBoxPropertiesVC.swift */,
 			);
 			path = Properties;
@@ -578,7 +578,7 @@
 				A81CE143231280EE00E19E6B /* FlowBoxMenu.swift in Sources */,
 				A8841064234B3DA60002B9EB /* BaseStyles.swift in Sources */,
 				A8E53FB522C8E6BB000B2B6D /* MenuVC.swift in Sources */,
-				A8035A8223AE93BA00F8D613 /* ListBoxPropertiesVC.swift in Sources */,
+				A8035A8223AE93BA00F8D613 /* TableBoxPropertiesVC.swift in Sources */,
 				A897FCDE230AFBD80061029E /* Util.swift in Sources */,
 				A897FCDC230AF7630061029E /* ListVC.swift in Sources */,
 				A86F437F233F60370008606F /* Styles.swift in Sources */,

@@ -11,9 +11,9 @@ import UIKit
 
 class MenuVC: BaseVC {
     override func configView() {
-        ListBox(
+        TableBox(
             sections: [
-                ListSection<(String, UIViewController.Type), UIView, Void>(
+                TableSection<(String, UIViewController.Type), UIView, Void>(
                     identifier: "menu",
                     dataSource: State([
                         ("Test", TestVC.self),
@@ -24,7 +24,7 @@ class MenuVC: BaseVC {
                         ("ZBox Properties", ZPropertiesVC.self),
                         ("ScrollingBox Properties", ScrollBoxPropertiesVC.self),
                         ("NavigationBox Properties", NavigationBoxPropertiesVC.self),
-                        ("ListBox Properties", ListBoxPropertiesVC.self),
+                        ("TableBox Properties", TableBoxPropertiesVC.self),
                         ("CollectionBox Properties", CollectionBoxPropertiesVC.self),
                         ("Advance Usage", AdvanceVC.self),
                     ]).asOutput(),
@@ -33,7 +33,7 @@ class MenuVC: BaseVC {
                         return HBox().attach {
                             Label("").attach($0)
                                 .textAlignment(.left)
-                                .text(o.map { $1.0 })
+                                .text(o.map { $0.data.0 })
                         }
                         .size(.fill, .wrap)
                         .padding(all: padding)
@@ -52,7 +52,7 @@ class MenuVC: BaseVC {
         .attach(vRoot)
         .size(.fill, .fill)
         .setDelegate(self)
-        
+
         navState.value.bodyAvoidNavBar = true
     }
 
@@ -65,5 +65,4 @@ class MenuVC: BaseVC {
     }
 }
 
-extension MenuVC: UITableViewDelegate {
-}
+extension MenuVC: UITableViewDelegate {}

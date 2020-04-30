@@ -8,7 +8,7 @@
 import UIKit
 
 public protocol CollectionBoxSection: class {
-    var collectionBox: EstimateCollectionBox? { get set }
+    var collectionBox: CollectionBox? { get set }
     func cellIdentifier() -> String
     func cellType() -> AnyClass
     func supplementaryType(for kind: String) -> AnyClass
@@ -34,7 +34,7 @@ public extension CollectionBoxSection {
     }
 }
 
-public class EstimateCollectionBox: UICollectionView,
+public class CollectionBox: UICollectionView,
     Stateful,
     Delegatable,
     DataSourceable,
@@ -54,14 +54,22 @@ public class EstimateCollectionBox: UICollectionView,
         }
     }
 
-    public private(set) var layout: UICollectionViewFlowLayout = CollectionBoxFlowLayout()
+    public private(set) var layout: UICollectionViewFlowLayout
 
     public var lineSpacing: CGFloat = 0
     public var interactSpacing: CGFloat = 0
 
+    public override func responds(to aSelector: Selector!) -> Bool {
+        if layout.estimatedItemSize != .zero, aSelector == #selector(collectionView(_:layout:sizeForItemAt:)) {
+            return false
+        }
+        return super.responds(to: aSelector)
+    }
+
     public init(
         layout: UICollectionViewFlowLayout = CollectionBoxFlowLayout(),
         direction: UICollectionView.ScrollDirection = .vertical,
+        estimatedSize: CGSize = .zero,
         minimumLineSpacing: CGFloat = 0,
         minimumInteritemSpacing: CGFloat = 0,
         pinHeader: Bool = false,
@@ -71,7 +79,8 @@ public class EstimateCollectionBox: UICollectionView,
         layout.minimumLineSpacing = minimumLineSpacing
         layout.minimumInteritemSpacing = minimumInteritemSpacing
         layout.setSectionHeaderPin(pinHeader)
-        layout.estimatedItemSize = .init(width: 1, height: 1)
+        layout.estimatedItemSize = estimatedSize
+        self.layout = layout
         super.init(frame: .zero, collectionViewLayout: layout)
 
         lineSpacing = minimumLineSpacing
@@ -146,6 +155,10 @@ public class EstimateCollectionBox: UICollectionView,
         return viewState.value[indexPath.section].view(for: collectionView, supplementary: kind, at: indexPath)
     }
 
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        viewState.value[indexPath.section].size(for: collectionView, layout: collectionViewLayout, at: indexPath)
+    }
+
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return viewState.value[section].headerSize(for: collectionView, layout: collectionViewLayout, at: section)
     }
@@ -175,7 +188,7 @@ public struct RecycleContext<T, View: UIView> {
 }
 
 public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSection {
-    public weak var collectionBox: EstimateCollectionBox?
+    public weak var collectionBox: CollectionBox?
 
     public let dataSource = State<[Data]>([])
     public let insets = State(UIEdgeInsets.zero)
@@ -419,7 +432,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
             dataIds = data.map { diffing($0) }
         }
     }
-    
+
     private func setDataSource(_ data: [Data]) {
         dataSource.value = data
         setDataIds(data)
@@ -431,14 +444,14 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
             setDataSource(data)
             return
         }
-        
+
         // iOS低版本当bounds == zero 进行 增量更新的时候，会出现崩溃，高版本会警告
         guard box.bounds != .zero else {
             setDataSource(data)
             box.reloadData()
             return
         }
-        
+
         // 不做diff运算
         guard let diffIdentifier = self.diffIdentifier else {
             setDataSource(data)
@@ -535,27 +548,12 @@ extension PYProxyChain: UICollectionViewDelegate, UICollectionViewDataSource {
     }
 }
 
-public extension Puyo where T: EstimateCollectionBox {
+public extension Puyo where T: CollectionBox {
     @discardableResult
     func reload<O: Outputing>(_ when: O) -> Self where O.OutputType: Any {
         when.safeBind(to: view) { v, _ in
             v.reloadData()
         }
         return self
-    }
-}
-
-public class CollectionBox: EstimateCollectionBox {
-    public override init(layout: UICollectionViewFlowLayout = CollectionBoxFlowLayout(), direction: UICollectionView.ScrollDirection = .vertical, minimumLineSpacing: CGFloat = 0, minimumInteritemSpacing: CGFloat = 0, pinHeader: Bool = false, sections: [CollectionBoxSection] = []) {
-        super.init(layout: layout, direction: direction, minimumLineSpacing: minimumLineSpacing, minimumInteritemSpacing: minimumInteritemSpacing, pinHeader: pinHeader, sections: sections)
-        layout.estimatedItemSize = .zero
-    }
-
-    public required init?(coder _: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        viewState.value[indexPath.section].size(for: collectionView, layout: collectionViewLayout, at: indexPath)
     }
 }

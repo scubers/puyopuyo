@@ -9,7 +9,7 @@
 import Puyopuyo
 import UIKit
 
-class ListBoxPropertiesVC: BaseVC, UITableViewDelegate {
+class TableBoxPropertiesVC: BaseVC, UITableViewDelegate {
 
     var sections = State<[TableBoxSection]>([])
 
