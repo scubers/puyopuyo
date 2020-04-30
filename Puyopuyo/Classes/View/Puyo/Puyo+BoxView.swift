@@ -313,7 +313,7 @@ public extension Puyo where T: Delegatable {
 
 public extension Puyo where T: DataSourceable {
     @discardableResult
-    func setDelegate(_ dataSource: T.DataSourceType, retained: Bool = false) -> Self {
+    func setDataSource(_ dataSource: T.DataSourceType, retained: Bool = false) -> Self {
         view.setDataSource(dataSource, retained: retained)
         return self
     }
