@@ -488,7 +488,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
     deinit {}
 }
 
-private class CollectionBoxCell<D, E>: UICollectionViewCell {
+class CollectionBoxCell<D, E>: UICollectionViewCell {
     var root: UIView?
     var state: State<RecycleContext<D, UICollectionView>>!
     var event: SimpleIO<E>! {
@@ -511,7 +511,7 @@ private class CollectionBoxCell<D, E>: UICollectionViewCell {
     }
 }
 
-private class CollectionBoxSupplementaryView<D, E>: UICollectionReusableView {
+class CollectionBoxSupplementaryView<D, E>: UICollectionReusableView {
     var root: UIView?
     var state: State<RecycleContext<D, UICollectionView>>!
     var event: SimpleIO<E>! {

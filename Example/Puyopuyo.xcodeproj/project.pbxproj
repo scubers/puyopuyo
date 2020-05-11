@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		09761F9224277700006983CB /* WIKIDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09761F9124277700006983CB /* WIKIDemo.swift */; };
+		0982C1A02469AF730070F104 /* RecycleBoxPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */; };
 		09883C4A22C5E5FB006CE05A /* StyleTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09883C4922C5E5FB006CE05A /* StyleTestViewController.swift */; };
 		09EA8E52243E1A45003F10D7 /* TGVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EA8E51243E1A45003F10D7 /* TGVC.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
@@ -69,6 +70,7 @@
 		093B861024012B64002AC9C6 /* Puyopuyo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Puyopuyo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		09761F9124277700006983CB /* WIKIDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WIKIDemo.swift; sourceTree = "<group>"; };
 		097B22AE2441F6290043B0A5 /* Puyopuyo_Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Puyopuyo_Example.entitlements; sourceTree = "<group>"; };
+		0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecycleBoxPropertiesVC.swift; sourceTree = "<group>"; };
 		09883C4922C5E5FB006CE05A /* StyleTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleTestViewController.swift; sourceTree = "<group>"; };
 		09EA8E51243E1A45003F10D7 /* TGVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TGVC.swift; sourceTree = "<group>"; };
 		3324E3ECDF4649B3EFDB8B1A /* Puyopuyo.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Puyopuyo.podspec; path = ../Puyopuyo.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
@@ -281,6 +283,7 @@
 				A8969BE223A67EAC00104403 /* NavigationBoxPropertiesVC.swift */,
 				A8035A8123AE93BA00F8D613 /* TableBoxPropertiesVC.swift */,
 				A8BB377B23AFD55000A88012 /* CollectionBoxPropertiesVC.swift */,
+				0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */,
 			);
 			path = Properties;
 			sourceTree = "<group>";
@@ -576,6 +579,7 @@
 				A81CE1452312811400E19E6B /* FlowBoxMixVC.swift in Sources */,
 				A8E53FB322C8E679000B2B6D /* BaseVC.swift in Sources */,
 				A81CE143231280EE00E19E6B /* FlowBoxMenu.swift in Sources */,
+				0982C1A02469AF730070F104 /* RecycleBoxPropertiesVC.swift in Sources */,
 				A8841064234B3DA60002B9EB /* BaseStyles.swift in Sources */,
 				A8E53FB522C8E6BB000B2B6D /* MenuVC.swift in Sources */,
 				A8035A8223AE93BA00F8D613 /* TableBoxPropertiesVC.swift in Sources */,

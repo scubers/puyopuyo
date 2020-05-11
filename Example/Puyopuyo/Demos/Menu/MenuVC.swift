@@ -24,6 +24,7 @@ class MenuVC: BaseVC {
                         ("ZBox Properties", ZPropertiesVC.self),
                         ("ScrollingBox Properties", ScrollBoxPropertiesVC.self),
                         ("NavigationBox Properties", NavigationBoxPropertiesVC.self),
+                        ("RecycleBox Properties", RecycleBoxPropertiesVC.self),
                         ("TableBox Properties", TableBoxPropertiesVC.self),
                         ("CollectionBox Properties", CollectionBoxPropertiesVC.self),
                         ("Advance Usage", AdvanceVC.self),
