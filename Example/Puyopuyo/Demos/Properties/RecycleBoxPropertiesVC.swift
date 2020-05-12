@@ -63,6 +63,9 @@ class RecycleBoxPropertiesVC: BaseVC {
                     .padding(all: 10)
                     .borders([.color(Theme.dividerColor)])
                     .view
+                },
+                _didSelect: {
+                    print($0)
                 }
             )
         }
