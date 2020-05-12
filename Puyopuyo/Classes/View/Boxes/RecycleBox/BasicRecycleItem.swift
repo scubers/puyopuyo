@@ -46,12 +46,12 @@ public class BasicRecycleItem<Data, Event>: IRecycleItem {
     }
     
     public func getItemIdentifier() -> String {
-        "\(NSStringFromClass(type(of: self)))_\(NSStringFromClass(getItemViewType()))_\(id)"
+        "\(type(of: self))_\(getItemViewType())_\(id)"
     }
     
     private lazy var address = Unmanaged.passUnretained(self).toOpaque().debugDescription
     public func getDiff() -> String {
-        differ?(data) ?? address
+        differ?(data) ?? (address + "\(data)")
     }
     
     public func didSelect() {}
@@ -110,7 +110,6 @@ public class BasicRecycleItem<Data, Event>: IRecycleItem {
             }
             let (cell, root) = _getCell()
             section.recycleBox?.caculatItems[getItemIdentifier()] = cell
-//            cell.removeFromSuperview()
             section.recycleBox?.flowLayout.invalidateLayout()
             return (cell, root)
         }()

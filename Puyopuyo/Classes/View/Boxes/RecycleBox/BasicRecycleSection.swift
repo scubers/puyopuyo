@@ -17,7 +17,6 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
         lineSpacing: CGFloat? = nil,
         itemSpacing: CGFloat? = nil,
         data: Data,
-        enableDiff: Bool = false,
         items: SimpleOutput<[IRecycleItem]> = [].asOutput(),
         _header: RecycleViewGenerator<RecycleContext<Data, UICollectionView>, Event>? = nil,
         _footer: RecycleViewGenerator<RecycleContext<Data, UICollectionView>, Event>? = nil,
@@ -31,7 +30,6 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
         footerGen = _footer
         sectionEvent = _event
         self.data = data
-        self.enableDiff = enableDiff
         items.safeBind(to: bag) { [weak self] _, items in
             self?.reload(items: items)
         }
@@ -48,7 +46,6 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
     private var headerGen: RecycleViewGenerator<RecycleContext<Data, UICollectionView>, Event>?
     private var footerGen: RecycleViewGenerator<RecycleContext<Data, UICollectionView>, Event>?
     private var sectionEvent: ((Data, Event) -> Void)?
-    private var enableDiff = false
     
     // MARK: - private
     
@@ -76,7 +73,7 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
             return
         }
         
-        guard enableDiff else {
+        guard box.enableDiff else {
             setDataSource(items)
             box.reloadData()
             return
@@ -115,7 +112,7 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
     }
     
     public func getSectionId(kind: String? = nil) -> String {
-        "\(NSStringFromClass(type(of: self)))_\(id ?? "")_\(kind ?? "")"
+        "\(type(of: self))_\(id ?? "")_\(kind ?? "")"
     }
     
     // MARK: - IRecycleSection methods

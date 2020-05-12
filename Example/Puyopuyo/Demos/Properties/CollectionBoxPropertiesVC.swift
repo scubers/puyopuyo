@@ -67,9 +67,11 @@ class CollectionBoxPropertiesVC: BaseVC {
                         HBox().attach {
                             Label.demo("").attach($0)
                                 .text(o.map { $0.data })
-                                .height(50)
-                                .width(50)
+                                .height(simulate: Simulate.ego.width)
+//                                .height(50)
+//                                .width(50)
                         }
+
                         .padding(all: 8)
                         .view
                     },

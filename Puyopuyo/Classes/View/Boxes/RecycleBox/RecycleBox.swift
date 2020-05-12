@@ -99,6 +99,7 @@ open class RecycleBox: UICollectionView,
         itemSpacing: CGFloat = 0,
         estimatedSize: CGSize = .zero,
         sectionInset: UIEdgeInsets = .zero,
+        enableDiff: Bool = false,
         sections: SimpleOutput<[IRecycleSection]> = [].asOutput()
     ) {
         flowLayout = layout
@@ -106,10 +107,11 @@ open class RecycleBox: UICollectionView,
         layout.minimumLineSpacing = lineSpacing
         layout.setSectionHeaderPin(pinHeader)
         layout.sectionInset = sectionInset
-//        layout.estimatedItemSize = .init(width: 1, height: 1)
+        layout.estimatedItemSize = estimatedSize
         
         super.init(frame: .zero, collectionViewLayout: layout)
         
+        self.enableDiff = enableDiff
         delegateProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
         dataSourceProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
         backgroundColor = .clear
@@ -130,7 +132,7 @@ open class RecycleBox: UICollectionView,
     }
     
     open override func responds(to aSelector: Selector!) -> Bool {
-        if aSelector == #selector(collectionView(_:layout:sizeForItemAt:)) && flowLayout.estimatedItemSize != .zero {
+        if aSelector == #selector(collectionView(_:layout:sizeForItemAt:)), flowLayout.estimatedItemSize != .zero {
             return false
         }
         return super.responds(to: aSelector)
@@ -151,6 +153,7 @@ open class RecycleBox: UICollectionView,
     
     public var lineSpacing: CGFloat = 0
     public var itemSpacing: CGFloat = 0
+    var enableDiff = false
     
     private var delegateProxy: DelegateProxy<UICollectionViewDelegateFlowLayout>! {
         didSet {
@@ -258,9 +261,8 @@ extension RecycleBox {
     
     func registerItem(_ item: IRecycleItem) {
         if registeredItems[item.getItemIdentifier()] == nil {
-            self.register(item.getItemViewType(), forCellWithReuseIdentifier: item.getItemIdentifier())
+            register(item.getItemViewType(), forCellWithReuseIdentifier: item.getItemIdentifier())
             registeredItems[item.getItemIdentifier()] = 1
         }
-
     }
 }

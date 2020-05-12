@@ -507,7 +507,8 @@ class CollectionBoxCell<D, E>: UICollectionViewCell {
     override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority _: UILayoutPriority, verticalFittingPriority _: UILayoutPriority) -> CGSize {
         if let cached = cachedSize { return cached }
         let size = self.targetSize == .zero ? targetSize : self.targetSize
-        return root?.sizeThatFits(size) ?? .zero
+        let final = root?.sizeThatFits(size) ?? .zero
+        return final
     }
 }
 
