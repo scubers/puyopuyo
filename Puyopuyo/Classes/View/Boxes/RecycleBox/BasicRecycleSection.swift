@@ -11,7 +11,6 @@ import Foundation
 public typealias RecycleViewGenerator<D, E> = (SimpleOutput<D>, SimpleInput<E>) -> UIView?
 
 public class BasicRecycleSection<Data, Event>: IRecycleSection {
-    
     public typealias Context = RecycleContext<Data, UICollectionView>
     public init(
         id: String? = nil,
@@ -56,12 +55,13 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
     private func setRecycleItems(_ items: [IRecycleItem]) {
         recycleItems.value = items
         dataIds = items.map { i -> String in
-            i.recycleSection = self
-            return i.getDiff()
+            i.getDiff()
         }
     }
     
     private func reload(items: [IRecycleItem]) {
+        // 赋值section
+        items.forEach { $0.recycleSection = self }
         // box 还没赋值时，只更新数据源
         guard let box = recycleBox else {
             setRecycleItems(items)
@@ -82,8 +82,7 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
         }
         
         let newDataIds = items.map { i -> String in
-            i.recycleSection = self
-            return i.getDiff()
+            i.getDiff()
         }
         // 需要做diff运算
         
@@ -151,6 +150,31 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
         guard let view = recycleBox?.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: getSectionId(kind: kind), for: IndexPath(row: 0, section: index)) as? CollectionBoxSupplementaryView<Data, Event> else {
             fatalError()
         }
+        configSupplementaryView(view, kind: kind)
+        return (view, view.root)
+    }
+    
+    public func supplementaryViewSize(for kind: String) -> CGSize {
+        let (view, rootView): (CollectionBoxSupplementaryView<Data, Event>, UIView?) = {
+            let id = supplementaryIdentifier(for: kind)
+            if let view = recycleBox?.caculatSupplementaries[id] as? CollectionBoxSupplementaryView<Data, Event> {
+                return (view, view.root)
+            }
+            let view = CollectionBoxSupplementaryView<Data, Event>()
+            configSupplementaryView(view, kind: kind)
+            recycleBox?.caculatSupplementaries[id] = view
+            return (view, view.root)
+        }()
+        guard let root = rootView else { return .zero }
+        let layoutContentSize = getLayoutableContentSize()
+        view.state.value = RecycleContext<Data, UICollectionView>(index: index, size: layoutContentSize, data: data, view: recycleBox)
+        var size = root.sizeThatFits(layoutContentSize)
+        size.width += root.py_measure.margin.getHorzTotal()
+        size.height += root.py_measure.margin.getVertTotal()
+        return CGSize(width: max(0, size.width), height: max(0, size.height))
+    }
+    
+    private func configSupplementaryView(_ view: CollectionBoxSupplementaryView<Data, Event>, kind: String) {
         let size = getLayoutableContentSize()
         view.targetSize = size
         let ctx = RecycleContext<Data, UICollectionView>(index: index, size: size, data: data, view: recycleBox)
@@ -174,26 +198,6 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
         } else {
             view.state.value = ctx
         }
-        return (view, view.root)
-    }
-    
-    public func supplementaryViewSize(for kind: String) -> CGSize {
-        let (view, rootView): (CollectionBoxSupplementaryView<Data, Event>, UIView?) = {
-            let id = supplementaryIdentifier(for: kind)
-            if let cell = recycleBox?.caculatSupplementaries[id] as? CollectionBoxSupplementaryView<Data, Event> {
-                return (cell, cell.root)
-            }
-            let (cell, root) = _getSupplementaryView(for: kind)
-            recycleBox?.caculatSupplementaries[id] = cell
-            return (cell, root)
-        }()
-        guard let root = rootView else { return .zero }
-        let layoutContentSize = getLayoutableContentSize()
-        view.state.value = RecycleContext<Data, UICollectionView>(index: index, size: layoutContentSize, data: data, view: recycleBox)
-        var size = root.sizeThatFits(layoutContentSize)
-        size.width += root.py_measure.margin.getHorzTotal()
-        size.height += root.py_measure.margin.getVertTotal()
-        return CGSize(width: max(0, size.width), height: max(0, size.height))
     }
     
     public func getSectionInsets() -> UIEdgeInsets? {

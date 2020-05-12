@@ -108,6 +108,7 @@ open class RecycleBox: UICollectionView,
         layout.setSectionHeaderPin(pinHeader)
         layout.sectionInset = sectionInset
         layout.estimatedItemSize = estimatedSize
+        layout.scrollDirection = direction
         
         super.init(frame: .zero, collectionViewLayout: layout)
         
@@ -132,6 +133,7 @@ open class RecycleBox: UICollectionView,
     }
     
     open override func responds(to aSelector: Selector!) -> Bool {
+        // 判断是否使用自动计算大小
         if aSelector == #selector(collectionView(_:layout:sizeForItemAt:)), flowLayout.estimatedItemSize != .zero {
             return false
         }

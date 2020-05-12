@@ -75,6 +75,35 @@ public class BasicRecycleItem<Data, Event>: IRecycleItem {
             let cell = section.recycleBox?.dequeueReusableCell(withReuseIdentifier: getItemIdentifier(), for: indexPath) as? CollectionBoxCell<Data, Event> else {
             fatalError()
         }
+        configCell(cell)
+        return (cell, cell.root)
+    }
+    
+    public func getItemSize() -> CGSize {
+        guard let section = recycleSection else {
+            return .zero
+        }
+        let (cell, rootView): (CollectionBoxCell<Data, Event>, UIView?) = {
+            if let cell = section.recycleBox?.caculatItems[getItemIdentifier()] as? CollectionBoxCell<Data, Event> {
+                return (cell, cell.root)
+            }
+            let cell = CollectionBoxCell<Data, Event>()
+            configCell(cell)
+            section.recycleBox?.caculatItems[getItemIdentifier()] = cell
+            return (cell, cell.root)
+        }()
+        guard let root = rootView else { return .zero }
+        
+        let layoutContentSize = section.getLayoutableContentSize()
+        cell.state.value = RecycleContext<Data, UICollectionView>(index: indexPath.row, size: layoutContentSize, data: data, view: section.recycleBox)
+        var size = root.sizeThatFits(layoutContentSize)
+        size.width += root.py_measure.margin.getHorzTotal()
+        size.height += root.py_measure.margin.getVertTotal()
+        return CGSize(width: max(0, size.width), height: max(0, size.height))
+    }
+    
+    private func configCell(_ cell: CollectionBoxCell<Data, Event>) {
+        guard let section = recycleSection else { return }
         let size = section.getLayoutableContentSize()
         cell.targetSize = size
         let ctx = RecycleContext<Data, UICollectionView>(index: indexPath.row, size: size, data: data, view: section.recycleBox)
@@ -91,29 +120,5 @@ public class BasicRecycleItem<Data, Event>: IRecycleItem {
         } else {
             cell.state.value = ctx
         }
-        return (cell, cell.root)
-    }
-    
-    public func getItemSize() -> CGSize {
-        guard let section = recycleSection else {
-            return .zero
-        }
-        let (cell, rootView): (CollectionBoxCell<Data, Event>, UIView?) = {
-            if let cell = section.recycleBox?.caculatItems[getItemIdentifier()] as? CollectionBoxCell<Data, Event> {
-                return (cell, cell.root!)
-            }
-            let (cell, root) = _getCell()
-            section.recycleBox?.caculatItems[getItemIdentifier()] = cell
-            section.recycleBox?.flowLayout.invalidateLayout()
-            return (cell, root)
-        }()
-        guard let root = rootView else { return .zero }
-        
-        let layoutContentSize = section.getLayoutableContentSize()
-        cell.state.value = RecycleContext<Data, UICollectionView>(index: indexPath.row, size: layoutContentSize, data: data, view: section.recycleBox)
-        var size = root.sizeThatFits(layoutContentSize)
-        size.width += root.py_measure.margin.getHorzTotal()
-        size.height += root.py_measure.margin.getVertTotal()
-        return CGSize(width: max(0, size.width), height: max(0, size.height))
     }
 }

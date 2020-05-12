@@ -38,6 +38,7 @@ public class RecycleSection<Section, Data, SectionEvent, ItemEvent>: BasicRecycl
 }
 
 public typealias ListRecycleSection<Data, ItemEvent> = RecycleSection<Void, Data, Void, ItemEvent>
+public typealias PureRecycleSection<Data> = RecycleSection<Void, Data, Void, Void>
 
 public extension RecycleSection where Section == Void, SectionEvent == Void {
     convenience init(

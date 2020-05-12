@@ -493,8 +493,8 @@ class CollectionBoxCell<D, E>: UICollectionViewCell {
     var state: State<RecycleContext<D, UICollectionView>>!
     var event: SimpleIO<E>! {
         didSet {
-            _ = event.outputing { [weak self] in
-                self?.onEvent($0)
+            event.safeBind(to: self) { this, e in
+                this.onEvent(e)
             }
         }
     }
