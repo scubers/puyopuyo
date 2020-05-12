@@ -15,7 +15,7 @@ import Foundation
  -- 第一次循环 --
  1. 筛选activate = true 的子节点
  2. 校验是否可以format
- 3. 判断主轴冲突(布局主轴为包裹，则子节点主轴不能由ratio)
+ 3. 判断主轴冲突(布局主轴为包裹，则子节点主轴不能有ratio)
  4. 累加主轴比例总和 (totalMainRatio)
  5. 累加固定尺寸(F_R, R_F)
  6. 保存需要计算的子节点
