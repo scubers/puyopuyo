@@ -53,8 +53,8 @@ public extension IRecycleSection {
     func getLayoutableContentSize() -> CGSize {
         guard let cv = recycleBox else { return .zero }
         let inset = getSectionInsets() ?? recycleBox?.flowLayout.sectionInset ?? .zero
-        let width = cv.bounds.size.width - inset.getHorzTotal() - inset.getHorzTotal()
-        let height = cv.bounds.size.height - inset.getVertTotal() - inset.getVertTotal()
+        let width = cv.bounds.size.width - cv.contentInset.getHorzTotal() - inset.getHorzTotal()
+        let height = cv.bounds.size.height - cv.contentInset.getVertTotal() - inset.getVertTotal()
         return CGSize(width: max(0, width), height: max(0, height))
     }
 }

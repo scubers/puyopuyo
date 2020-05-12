@@ -58,19 +58,13 @@ public class BasicRecycleItem<Data, Event>: IRecycleItem {
     
     public func getCell() -> UICollectionViewCell {
         let (cell, _) = _getCell()
-        cell.onEvent = { [weak cell, weak self] e in
-            guard
-                let self = self,
-                let cell = cell,
-                let section = self.recycleSection,
-                let index = section.recycleBox?.indexPath(for: cell) else { return }
-            let idx = index.item
-            let data = cell.state.value.data
-            self.triggerEvent(ctx: .init(index: idx,
-                                         size: section.getLayoutableContentSize(),
-                                         data: data,
-                                         view: section.recycleBox),
-                              event: e)
+        let box = recycleSection?.recycleBox
+        cell.onEvent = { [weak cell, weak box] e in
+            guard let box = box, let cell = cell else { return }
+            guard let idx = box.indexPath(for: cell) else { return }
+            guard let item = box.getItem(idx) as? BasicRecycleItem<Data, Event> else { return }
+            guard let section = item.recycleSection else { return }
+            item.triggerEvent(ctx: .init(index: idx.item, size: section.getLayoutableContentSize(), data: item.data, view: box), event: e)
         }
         return cell
     }
