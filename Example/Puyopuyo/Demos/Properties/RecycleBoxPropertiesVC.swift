@@ -17,6 +17,7 @@ class RecycleBoxPropertiesVC: BaseVC {
             RecycleBox(
                 pinHeader: true,
                 estimatedSize: .init(width: 1, height: 1),
+                sectionInset: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
                 enableDiff: true,
                 sections: self.sections.asOutput()
             )
@@ -110,6 +111,22 @@ class RecycleBoxPropertiesVC: BaseVC {
                         }
                     ),
                 ].asOutput()
+            ),
+            ListRecycleSection<Int, Void>(
+                id: "lskdjfdd",
+                itemSpacing: 10,
+                list: (0..<10).map { $0 }.asOutput(),
+                _cell: { o, _ in
+                    VBox().attach {
+                        Label.demo("").attach($0)
+                            .text(o.map { $0.data.description })
+                        Label.demo("").attach($0)
+                            .text(o.map { $0.data.description })
+                        Label.demo("").attach($0)
+                            .text(o.map { $0.data.description })
+                    }
+                    .view
+                }
             ),
             BasicRecycleSection<String, Void>(
                 id: "sldkjf",

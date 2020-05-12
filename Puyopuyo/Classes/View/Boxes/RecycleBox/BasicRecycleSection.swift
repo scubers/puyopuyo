@@ -11,6 +11,8 @@ import Foundation
 public typealias RecycleViewGenerator<D, E> = (SimpleOutput<D>, SimpleInput<E>) -> UIView?
 
 public class BasicRecycleSection<Data, Event>: IRecycleSection {
+    
+    public typealias Context = RecycleContext<Data, UICollectionView>
     public init(
         id: String? = nil,
         insets: UIEdgeInsets? = nil,
@@ -20,7 +22,7 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
         items: SimpleOutput<[IRecycleItem]> = [].asOutput(),
         _header: RecycleViewGenerator<RecycleContext<Data, UICollectionView>, Event>? = nil,
         _footer: RecycleViewGenerator<RecycleContext<Data, UICollectionView>, Event>? = nil,
-        _event: ((Data, Event) -> Void)? = nil
+        _event: ((Event, Context) -> Void)? = nil
     ) {
         self.id = id
         sectionInsets = insets
@@ -36,7 +38,7 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
     }
     
     private let bag = NSObject()
-    public let dataSource = State<[IRecycleItem]>([])
+    public let recycleItems = State<[IRecycleItem]>([])
     public var sectionInsets: UIEdgeInsets?
     public var lineSpacing: CGFloat?
     public var itemSpacing: CGFloat?
@@ -45,14 +47,14 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
     private let id: String?
     private var headerGen: RecycleViewGenerator<RecycleContext<Data, UICollectionView>, Event>?
     private var footerGen: RecycleViewGenerator<RecycleContext<Data, UICollectionView>, Event>?
-    private var sectionEvent: ((Data, Event) -> Void)?
+    private var sectionEvent: ((Event, Context) -> Void)?
     
     // MARK: - private
     
     private var dataIds = [String]()
     
-    private func setDataSource(_ items: [IRecycleItem]) {
-        dataSource.value = items
+    private func setRecycleItems(_ items: [IRecycleItem]) {
+        recycleItems.value = items
         dataIds = items.map { i -> String in
             i.recycleSection = self
             return i.getDiff()
@@ -62,19 +64,19 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
     private func reload(items: [IRecycleItem]) {
         // box 还没赋值时，只更新数据源
         guard let box = recycleBox else {
-            setDataSource(items)
+            setRecycleItems(items)
             return
         }
         
         // iOS低版本当bounds == zero 进行 增量更新的时候，会出现崩溃，高版本会警告
         guard box.bounds != .zero else {
-            setDataSource(items)
+            setRecycleItems(items)
             box.reloadData()
             return
         }
         
         guard box.enableDiff else {
-            setDataSource(items)
+            setRecycleItems(items)
             box.reloadData()
             return
         }
@@ -88,7 +90,7 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
         let diff = Diff(src: dataIds, dest: newDataIds, identifier: { $0 })
         diff.check()
         if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
-            dataSource.value = items
+            recycleItems.value = items
             dataIds = newDataIds
             box.performBatchUpdates({
                 if !diff.delete.isEmpty {
@@ -105,8 +107,8 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
     }
     
     func getItem(_ index: Int) -> IRecycleItem? {
-        if index < dataSource.value.count {
-            return dataSource.value[index]
+        if index < recycleItems.value.count {
+            return recycleItems.value[index]
         }
         return nil
     }
@@ -122,7 +124,7 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
     public var index: Int = 0
     
     public func getItems() -> [IRecycleItem] {
-        return dataSource.value
+        return recycleItems.value
     }
     
     public func supplementaryViewType(for kind: String) -> AnyClass {
@@ -136,9 +138,10 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
     public func supplementaryView(for kind: String) -> UICollectionReusableView {
         let (view, _) = _getSupplementaryView(for: kind)
         view.onEvent = { [weak self, weak view] e in
-            guard let self = self, let view = view else { return }
+            guard let self = self, let view = view, let section = self.currentIndex() else { return }
             let data = view.state.value.data
-            self.sectionEvent?(data, e)
+            let ctx = RecycleContext<Data, UICollectionView>(index: section, size: self.getLayoutableContentSize(), data: data, view: self.recycleBox)
+            self.sectionEvent?(e, ctx)
         }
         
         return view
