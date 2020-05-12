@@ -129,6 +129,9 @@ class RecycleBoxPropertiesVC: BaseVC {
                             .text(o.map { $0.data.description })
                     }
                     .view
+                },
+                _didSelect: {
+                    print($0)
                 }
             ),
             BasicRecycleSection<String, Void>(

@@ -126,8 +126,8 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
         return recycleItems.value
     }
     
-    public func supplementaryViewType(for kind: String) -> AnyClass {
-        CollectionBoxSupplementaryView<Data, Event>.self
+    public func supplementaryViewType(for _: String) -> AnyClass {
+        RecycleBoxSupplementaryView<Data, Event>.self
     }
     
     public func supplementaryIdentifier(for kind: String) -> String {
@@ -136,18 +136,15 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
     
     public func supplementaryView(for kind: String) -> UICollectionReusableView {
         let (view, _) = _getSupplementaryView(for: kind)
-        view.onEvent = { [weak self, weak view] e in
-            guard let self = self, let view = view, let section = self.currentIndex() else { return }
-            let data = view.state.value.data
-            let ctx = RecycleContext<Data, UICollectionView>(index: section, size: self.getLayoutableContentSize(), data: data, view: self.recycleBox)
-            self.sectionEvent?(e, ctx)
+        view.onEvent = { [weak self] e in
+            self?.with { self?.sectionEvent?(e, $0) }
         }
         
         return view
     }
     
-    private func _getSupplementaryView(for kind: String) -> (CollectionBoxSupplementaryView<Data, Event>, UIView?) {
-        guard let view = recycleBox?.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: getSectionId(kind: kind), for: IndexPath(row: 0, section: index)) as? CollectionBoxSupplementaryView<Data, Event> else {
+    private func _getSupplementaryView(for kind: String) -> (RecycleBoxSupplementaryView<Data, Event>, UIView?) {
+        guard let view = recycleBox?.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: getSectionId(kind: kind), for: IndexPath(row: 0, section: index)) as? RecycleBoxSupplementaryView<Data, Event> else {
             fatalError()
         }
         configSupplementaryView(view, kind: kind)
@@ -155,33 +152,32 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
     }
     
     public func supplementaryViewSize(for kind: String) -> CGSize {
-        let (view, rootView): (CollectionBoxSupplementaryView<Data, Event>, UIView?) = {
+        let (view, rootView): (RecycleBoxSupplementaryView<Data, Event>, UIView?) = {
             let id = supplementaryIdentifier(for: kind)
-            if let view = recycleBox?.caculatSupplementaries[id] as? CollectionBoxSupplementaryView<Data, Event> {
+            if let view = recycleBox?.caculatSupplementaries[id] as? RecycleBoxSupplementaryView<Data, Event> {
                 return (view, view.root)
             }
-            let view = CollectionBoxSupplementaryView<Data, Event>()
+            let view = RecycleBoxSupplementaryView<Data, Event>()
             configSupplementaryView(view, kind: kind)
             recycleBox?.caculatSupplementaries[id] = view
             return (view, view.root)
         }()
         guard let root = rootView else { return .zero }
         let layoutContentSize = getLayoutableContentSize()
-        view.state.value = RecycleContext<Data, UICollectionView>(index: index, size: layoutContentSize, data: data, view: recycleBox)
+        with { view.state.input(value: $0) }
         var size = root.sizeThatFits(layoutContentSize)
         size.width += root.py_measure.margin.getHorzTotal()
         size.height += root.py_measure.margin.getVertTotal()
         return CGSize(width: max(0, size.width), height: max(0, size.height))
     }
     
-    private func configSupplementaryView(_ view: CollectionBoxSupplementaryView<Data, Event>, kind: String) {
+    private func configSupplementaryView(_ view: RecycleBoxSupplementaryView<Data, Event>, kind: String) {
         let size = getLayoutableContentSize()
         view.targetSize = size
-        let ctx = RecycleContext<Data, UICollectionView>(index: index, size: size, data: data, view: recycleBox)
         if view.root == nil {
             var root: UIView?
-            let state = State(ctx)
-            let event = SimpleIO<Event>()
+            let state = view.state
+            let event = view.event
             switch kind {
             case UICollectionView.elementKindSectionHeader where headerGen != nil:
                 root = headerGen!(state.asOutput(), event.asInput())
@@ -189,15 +185,16 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
                 root = footerGen!(state.asOutput(), event.asInput())
             default: break
             }
-            view.state = state
-            view.event = event
             view.root = root
             if let root = root {
                 view.addSubview(root)
             }
-        } else {
-            view.state.value = ctx
         }
+        with { view.state.input(value: $0) }
+    }
+    
+    private func with(_ block: (Context) -> Void) {
+        block(.init(index: index, size: getLayoutableContentSize(), data: data, view: recycleBox))
     }
     
     public func getSectionInsets() -> UIEdgeInsets? {
@@ -210,5 +207,30 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
     
     public func getMinimumItemSpacing() -> CGFloat? {
         itemSpacing
+    }
+}
+
+private class RecycleBoxSupplementaryView<D, E>: UICollectionReusableView {
+    var root: UIView?
+    let state = SimpleIO<RecycleContext<D, UICollectionView>>()
+    let event = SimpleIO<E>()
+    
+    var onEvent: (E) -> Void = { _ in }
+    var targetSize: CGSize = .zero
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        event.safeBind(to: self) { this, e in
+            this.onEvent(e)
+        }
+    }
+    
+    required init?(coder _: NSCoder) {
+        fatalError()
+    }
+    
+    override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority _: UILayoutPriority, verticalFittingPriority _: UILayoutPriority) -> CGSize {
+        let size = self.targetSize == .zero ? targetSize : self.targetSize
+        return root?.sizeThatFits(size) ?? .zero
     }
 }
