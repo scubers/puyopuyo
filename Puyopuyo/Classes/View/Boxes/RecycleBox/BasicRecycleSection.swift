@@ -137,7 +137,7 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
     public func supplementaryView(for kind: String) -> UICollectionReusableView {
         let (view, _) = _getSupplementaryView(for: kind)
         view.onEvent = { [weak self] e in
-            self?.with { self?.sectionEvent?(e, $0) }
+            self?.withContext { self?.sectionEvent?(e, $0) }
         }
         
         return view
@@ -164,7 +164,7 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
         }()
         guard let root = rootView else { return .zero }
         let layoutContentSize = getLayoutableContentSize()
-        with { view.state.input(value: $0) }
+        withContext { view.state.input(value: $0) }
         var size = root.sizeThatFits(layoutContentSize)
         size.width += root.py_measure.margin.getHorzTotal()
         size.height += root.py_measure.margin.getVertTotal()
@@ -172,8 +172,7 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
     }
     
     private func configSupplementaryView(_ view: RecycleBoxSupplementaryView<Data, Event>, kind: String) {
-        let size = getLayoutableContentSize()
-        view.targetSize = size
+        view.targetSize = getLayoutableContentSize()
         if view.root == nil {
             var root: UIView?
             let state = view.state
@@ -190,10 +189,10 @@ public class BasicRecycleSection<Data, Event>: IRecycleSection {
                 view.addSubview(root)
             }
         }
-        with { view.state.input(value: $0) }
+        withContext { view.state.input(value: $0) }
     }
     
-    private func with(_ block: (Context) -> Void) {
+    private func withContext(_ block: (Context) -> Void) {
         block(.init(index: index, size: getLayoutableContentSize(), data: data, view: recycleBox))
     }
     

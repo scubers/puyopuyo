@@ -58,12 +58,12 @@ public class BasicRecycleItem<Data, Event>: IRecycleItem {
     }
     
     public func didSelect() {
-        with {
+        withContext {
             self._didSelect?($0)
         }
     }
     
-    private func with(context block: (Context) -> Void) {
+    private func withContext(_ block: (Context) -> Void) {
         if let section = recycleSection {
             block(.init(index: indexPath.item, size: section.getLayoutableContentSize(), data: data, view: section.recycleBox))
         }
@@ -77,7 +77,7 @@ public class BasicRecycleItem<Data, Event>: IRecycleItem {
             guard let idx = box.indexPath(for: cell) else { return }
             guard let item = box.getItem(idx) as? BasicRecycleItem<Data, Event> else { return }
             guard let _ = item.recycleSection else { return }
-            item.with {
+            item.withContext {
                 item.triggerEvent(ctx: $0, event: e)
             }
         }
