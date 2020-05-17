@@ -36,18 +36,45 @@ class TestVC: UIViewController {
         super.viewDidLoad()
         navigationController?.navigationBar.isTranslucent = false
 
-        ZBox().attach(view) {
-            VBox().attach($0) {
-                Label.demo("lskdjfl").attach($0)
-                    .size(.fill, .fill)
-                    .margin(left: 20)
-            }
-            .size(.fill, .fill)
-            .margin(left: 30)
-        }
-        .padding(all: 16)
-        .size(.fill, .fill)
+        VBox().attach(view) {
+            HBox().attach($0) {
+                UIImageView().attach($0)
+                    .size(80, 80)
+                    .backgroundColor(Util.randomColor())
+                    .cornerRadius(6)
 
-        Util.randomViewColor(view: view)
+                VBox().attach($0) {
+                    UILabel().attach($0)
+                        .text("name")
+
+                    UILabel().attach($0)
+                        .text("description")
+                }
+                .format(.center)
+                .width(.fill)
+                .space(10)
+            }
+            .space(10)
+            .padding(all: 16)
+            .width(.fill)
+            .cornerRadius(6)
+            .backgroundColor(UIColor.white)
+        }
+        .space(10)
+        .padding(all: 20)
+        .size(.fill, .fill)
+        view.backgroundColor = .white
+//        Util.randomViewColor(view: view)
+    }
+
+    func build() {
+        attach {
+            UIView().attach($0) {
+                UILabel().attach($0)
+                    .text("测试Label")
+                UIButton().attach($0)
+                    .text("测试Button", state: .normal)
+            }
+        }
     }
 }

@@ -23,6 +23,10 @@ public struct WeakCatcher<T: AnyObject> {
     public func voidExecute(_ action: (T) -> Void) {
         execute(action, fallback: ())
     }
+    
+    public static func `catch`(_ object: T, block: (WeakCatcher<T>) -> Void) {
+        block(WeakCatcher(value: object))
+    }
 }
 
 public protocol WeakCatchable {

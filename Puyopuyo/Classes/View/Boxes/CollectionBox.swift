@@ -181,6 +181,8 @@ public class CollectionBox: UICollectionView,
 }
 
 public struct RecycleContext<T, View: UIView> {
+    /// only work for recyclebox
+    public var indexPath = IndexPath()
     public var index: Int = 0
     public var size: CGSize = .zero
     public var data: T

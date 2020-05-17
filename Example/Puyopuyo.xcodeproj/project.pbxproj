@@ -11,6 +11,7 @@
 		0982C1A02469AF730070F104 /* RecycleBoxPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */; };
 		09883C4A22C5E5FB006CE05A /* StyleTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09883C4922C5E5FB006CE05A /* StyleTestViewController.swift */; };
 		09EA8E52243E1A45003F10D7 /* TGVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EA8E51243E1A45003F10D7 /* TGVC.swift */; };
+		09F6FF172471A1F300F97053 /* ListBoxPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F6FF162471A1F300F97053 /* ListBoxPropertiesVC.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
@@ -73,6 +74,7 @@
 		0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecycleBoxPropertiesVC.swift; sourceTree = "<group>"; };
 		09883C4922C5E5FB006CE05A /* StyleTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleTestViewController.swift; sourceTree = "<group>"; };
 		09EA8E51243E1A45003F10D7 /* TGVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TGVC.swift; sourceTree = "<group>"; };
+		09F6FF162471A1F300F97053 /* ListBoxPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListBoxPropertiesVC.swift; sourceTree = "<group>"; };
 		3324E3ECDF4649B3EFDB8B1A /* Puyopuyo.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Puyopuyo.podspec; path = ../Puyopuyo.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		607FACD01AFB9204008FA782 /* Puyopuyo_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Puyopuyo_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -284,6 +286,7 @@
 				A8035A8123AE93BA00F8D613 /* TableBoxPropertiesVC.swift */,
 				A8BB377B23AFD55000A88012 /* CollectionBoxPropertiesVC.swift */,
 				0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */,
+				09F6FF162471A1F300F97053 /* ListBoxPropertiesVC.swift */,
 			);
 			path = Properties;
 			sourceTree = "<group>";
@@ -591,6 +594,7 @@
 				A8D9431622FFF102002E487F /* StatefulVC.swift in Sources */,
 				A8969BE323A67EAC00104403 /* NavigationBoxPropertiesVC.swift in Sources */,
 				A8D9430922FF3694002E487F /* Label.swift in Sources */,
+				09F6FF172471A1F300F97053 /* ListBoxPropertiesVC.swift in Sources */,
 				A8BCEEB62399620F002DB739 /* UIViewProertiesVC.swift in Sources */,
 				A8BEC492239CDB6B001FD6BF /* FlowPropertiesVC.swift in Sources */,
 				A84626542309574C003A282C /* TestVC.swift in Sources */,

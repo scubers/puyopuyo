@@ -7,8 +7,7 @@
 
 import Foundation
 
-public class RecycleSection<Section, Data, SectionEvent, ItemEvent>: BasicRecycleSection<Section, SectionEvent> {
-    public typealias SectionContext = RecycleContext<Section, UICollectionView>
+public class RecycleSection<Section, Data>: BasicRecycleSection<Section> {
     public typealias ItemContext = RecycleContext<Data, UICollectionView>
 
     public init(
@@ -19,24 +18,23 @@ public class RecycleSection<Section, Data, SectionEvent, ItemEvent>: BasicRecycl
         sectionData: Section,
         list: SimpleOutput<[Data]>,
         differ: ((Data) -> String)? = nil,
-        _cell: @escaping RecycleViewGenerator<ItemContext, ItemEvent>,
-        _header: RecycleViewGenerator<SectionContext, SectionEvent>? = nil,
-        _footer: RecycleViewGenerator<SectionContext, SectionEvent>? = nil,
-        _sectionEvent: ((SectionEvent, SectionContext) -> Void)? = nil,
-        _itemEvent: ((ItemEvent, ItemContext) -> Void)? = nil,
+        _cell: @escaping RecycleViewGenerator<Data>,
+        _cellConfig: ((UICollectionViewCell) -> Void)? = nil,
+        _header: RecycleViewGenerator<Section>? = nil,
+        _footer: RecycleViewGenerator<Section>? = nil,
         _didSelect: ((ItemContext) -> Void)? = nil
     ) {
         let state = State([IRecycleItem]())
-        super.init(id: id, insets: insets, lineSpacing: lineSpacing, itemSpacing: itemSpacing, data: sectionData, items: state.asOutput(), _header: _header, _footer: _footer, _event: _sectionEvent)
+        super.init(id: id, insets: insets, lineSpacing: lineSpacing, itemSpacing: itemSpacing, data: sectionData, items: state.asOutput(), _header: _header, _footer: _footer)
 
         _ = list.map { datas in
             datas.map { data in
-                BasicRecycleItem<Data, ItemEvent>(
+                BasicRecycleItem<Data>(
                     id: "\(self.getSectionId())_buildin_item",
                     data: data,
                     differ: differ,
                     _cell: _cell,
-                    _event: _itemEvent,
+                    _cellConfig: _cellConfig,
                     _didSelect: _didSelect
                 )
             }
@@ -45,10 +43,9 @@ public class RecycleSection<Section, Data, SectionEvent, ItemEvent>: BasicRecycl
     }
 }
 
-public typealias ListRecycleSection<Data, ItemEvent> = RecycleSection<Void, Data, Void, ItemEvent>
-public typealias PureRecycleSection<Data> = RecycleSection<Void, Data, Void, Void>
+public typealias ListRecycleSection<Data> = RecycleSection<Void, Data>
 
-public extension RecycleSection where Section == Void, SectionEvent == Void {
+public extension RecycleSection where Section == Void {
     convenience init(
         id: String,
         insets: UIEdgeInsets? = nil,
@@ -56,10 +53,10 @@ public extension RecycleSection where Section == Void, SectionEvent == Void {
         itemSpacing: CGFloat? = nil,
         list: SimpleOutput<[Data]>,
         differ: ((Data) -> String)? = nil,
-        _cell: @escaping RecycleViewGenerator<ItemContext, ItemEvent>,
-        _header: RecycleViewGenerator<SectionContext, SectionEvent>? = nil,
-        _footer: RecycleViewGenerator<SectionContext, SectionEvent>? = nil,
-        _itemEvent: ((ItemEvent, ItemContext) -> Void)? = nil,
+        _cell: @escaping RecycleViewGenerator<Data>,
+        _cellConfig: ((UICollectionViewCell) -> Void)? = nil,
+        _header: RecycleViewGenerator<Section>? = nil,
+        _footer: RecycleViewGenerator<Section>? = nil,
         _didSelect: ((ItemContext) -> Void)? = nil
     ) {
         self.init(
@@ -71,10 +68,9 @@ public extension RecycleSection where Section == Void, SectionEvent == Void {
             list: list,
             differ: differ,
             _cell: _cell,
+            _cellConfig: _cellConfig,
             _header: _header,
             _footer: _footer,
-            _sectionEvent: nil,
-            _itemEvent: _itemEvent,
             _didSelect: _didSelect
         )
     }

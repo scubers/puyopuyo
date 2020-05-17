@@ -301,6 +301,14 @@ public extension Puyo where T: Stateful {
         _ = output.send(to: view.viewState)
         return self
     }
+    
+    @discardableResult
+    func stateChange<O: Outputing, R, V>(_ output: O, to kp: WritableKeyPath<R, V>) -> Self where O.OutputType == V, R == T.StateType {
+        _ = output.outputing {
+            self.view.viewState.value[keyPath: kp] = $0
+        }
+        return self
+    }
 }
 
 public extension Puyo where T: Delegatable {

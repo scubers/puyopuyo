@@ -21,7 +21,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Puyopuyo: 7e551ff3303935b8f24abfb74b5f31317bc16af3
+  Puyopuyo: 63048fea771cf7d503feeaa025e21e4257c9ace8
   RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   TangramKit: 15ccb6480f0e32c284f0a076542a607226e158dd

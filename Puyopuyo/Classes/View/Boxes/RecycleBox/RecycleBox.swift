@@ -223,7 +223,7 @@ open class RecycleBox: UICollectionView,
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        getSection(section).getMinimumItemSpacing() ?? flowLayout.minimumLineSpacing
+        getSection(section).getMinimumLineSpacing() ?? flowLayout.minimumLineSpacing
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
