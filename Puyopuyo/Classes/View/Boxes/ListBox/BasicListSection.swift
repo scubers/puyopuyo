@@ -139,47 +139,37 @@ public class BasicListSection<Data>: IListSection {
         "\(getSectionId())_footer"
     }
     
-    private var dataIds = [String]()
-    
-    private func setRecycleItems(_ rows: [IListRow]) {
+    private func setListRows(_ rows: [IListRow]) {
         rowsState.value = rows
-        dataIds = rows.map { i -> String in
-            i.getDiff()
-        }
+        // 赋值section
+        rows.forEach { $0.listSection = self }
     }
     
     private func reload(rows: [IListRow]) {
-        // 赋值section
-        rows.forEach { $0.listSection = self }
         // box 还没赋值时，只更新数据源
         guard let box = listBox else {
-            setRecycleItems(rows)
+            setListRows(rows)
             return
         }
         
         // iOS低版本当bounds == zero 进行 增量更新的时候，会出现崩溃，高版本会警告
         guard box.bounds != .zero else {
-            setRecycleItems(rows)
+            setListRows(rows)
             box.reloadData()
             return
         }
         
         guard box.enableDiff else {
-            setRecycleItems(rows)
+            setListRows(rows)
             box.reloadData()
             return
         }
         
-        let newDataIds = rows.map { i -> String in
-            i.getDiff()
-        }
         // 需要做diff运算
-        
-        let diff = Diff(src: dataIds, dest: newDataIds, identifier: { $0 })
+        let diff = Diff(src: rowsState.value, dest: rows, identifier: { $0.getDiff() })
         diff.check()
         if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
-            rowsState.value = rows
-            dataIds = newDataIds
+            setListRows(rows)
             func animations() {
                 if !diff.delete.isEmpty {
                     box.deleteRows(at: diff.delete.map { IndexPath(row: $0.from, section: section) }, with: .automatic)

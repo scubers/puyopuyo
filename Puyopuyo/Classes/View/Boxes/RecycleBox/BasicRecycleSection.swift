@@ -57,18 +57,13 @@ public class BasicRecycleSection<Data>: IRecycleSection {
     
     // MARK: - private
     
-    private var dataIds = [String]()
-    
     private func setRecycleItems(_ items: [IRecycleItem]) {
         recycleItems.value = items
-        dataIds = items.map { i -> String in
-            i.getDiff()
-        }
+        items.forEach { $0.recycleSection = self }
     }
     
     private func reload(items: [IRecycleItem]) {
         // 赋值section
-        items.forEach { $0.recycleSection = self }
         // box 还没赋值时，只更新数据源
         guard let box = recycleBox else {
             setRecycleItems(items)
@@ -88,16 +83,12 @@ public class BasicRecycleSection<Data>: IRecycleSection {
             return
         }
         
-        let newDataIds = items.map { i -> String in
-            i.getDiff()
-        }
         // 需要做diff运算
         
-        let diff = Diff(src: dataIds, dest: newDataIds, identifier: { $0 })
+        let diff = Diff(src: recycleItems.value, dest: items, identifier: { $0.getDiff() })
         diff.check()
         if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
-            recycleItems.value = items
-            dataIds = newDataIds
+            setRecycleItems(items)
             box.performBatchUpdates({
                 if !diff.delete.isEmpty {
                     box.deleteItems(at: diff.delete.map { IndexPath(row: $0.from, section: section) })
