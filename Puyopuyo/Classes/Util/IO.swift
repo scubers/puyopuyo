@@ -117,12 +117,8 @@ class UnbinderImpl: NSObject, Unbinder {
 
 public struct Unbinders {
     private init() {}
-    public static func create(_ block: @escaping () -> Void) -> Unbinder {
+    public static func create(_ block: @escaping () -> Void = {}) -> Unbinder {
         return UnbinderImpl(block)
-    }
-
-    public static func create() -> Unbinder {
-        return UnbinderImpl {}
     }
 }
 
@@ -142,7 +138,7 @@ extension NSObject: UnbinderBag {
     private var py_unbinderContainer: UnbinderContainer {
         var container = objc_getAssociatedObject(self, &NSObject.puyopuyo_unbinderContainerKey)
         if container == nil {
-            container = UnbinderContainer(name: NSStringFromClass(type(of: self)), address: "")
+            container = UnbinderContainer()
             objc_setAssociatedObject(self, &NSObject.puyopuyo_unbinderContainerKey, container, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         return container as! UnbinderContainer
@@ -150,13 +146,6 @@ extension NSObject: UnbinderBag {
 
     private class UnbinderContainer: NSObject {
         private var unbinders = [String: Unbinder]()
-        private var name: String = ""
-        private var address: String = ""
-        convenience init(name: String, address: String) {
-            self.init()
-            self.name = name
-            self.address = address
-        }
 
         func setUnbinder(_ unbinder: Unbinder, for key: String) {
             let old = unbinders[key]
@@ -169,9 +158,6 @@ extension NSObject: UnbinderBag {
         }
 
         deinit {
-            #if DEV
-                print("container for \(name) deallcating!!")
-            #endif
             unbinders.forEach { _, unbinder in
                 unbinder.py_unbind()
             }
@@ -209,3 +195,4 @@ extension UIControl.State: Outputing { public typealias OutputType = UIControl.S
 extension UIControl.Event: Outputing { public typealias OutputType = UIControl.Event }
 extension UIView.ContentMode: Outputing { public typealias OutputType = UIView.ContentMode }
 extension NSTextAlignment: Outputing { public typealias OutputType = NSTextAlignment }
+extension UIKeyboardType: Outputing { public typealias OutputType = UIKeyboardType }
