@@ -44,7 +44,7 @@ public class BasicRecycleSection<Data>: IRecycleSection {
         }
     }
     
-    private let bag = NSObject()
+    let bag = NSObject()
     public let recycleItems = State<[IRecycleItem]>([])
     public var sectionInsets: UIEdgeInsets?
     public var lineSpacing: CGFloat?

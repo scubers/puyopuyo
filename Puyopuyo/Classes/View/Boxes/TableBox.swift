@@ -196,6 +196,8 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
 
     public let dataSource = State<[Data]>([])
 
+    private let object = NSObject()
+
     public typealias HeaderFooterGenerator<Data, CellEvent> = (SimpleOutput<Data>, SimpleInput<CellEvent>) -> UIView?
     var headerGenerator: HeaderFooterGenerator<RecycleContext<[Data], UITableView>, CellEvent>
     var footerGenerator: HeaderFooterGenerator<RecycleContext<[Data], UITableView>, CellEvent>
@@ -235,9 +237,12 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
         onBoxEvent = _onEvent
         self.selectionStyle = selectionStyle
         diffIdentifier = _diffIdentifier
-        _ = dataSource.outputing { [weak self] data in
+        dataSource.safeBind(to: object) { [weak self] _, data in
             self?.reload(with: data)
         }
+//        _ = dataSource.outputing { [weak self] data in
+//            self?.reload(with: data)
+//        }
     }
 
     public enum Event {
@@ -397,7 +402,7 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
             setDataSource(data)
             return
         }
-        
+
         guard box.bounds != .zero else {
             setDataSource(data)
             box.reload()

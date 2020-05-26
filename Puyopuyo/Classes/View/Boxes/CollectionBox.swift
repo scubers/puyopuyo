@@ -223,6 +223,8 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
     private var diffIdentifier: ((Data) -> String)?
     private var dataIds = [String]()
 
+    private let object = NSObject()
+
     public init(identifier: String,
                 dataSource: SimpleOutput<[Data]>,
                 minLineSpacing: CGFloat? = nil,
@@ -247,12 +249,14 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         self.minLineSpacing = minLineSpacing
         self.minInteractSpacing = minInteractSpacing
         itemSizeBlock = _itemSize
-        _ = dataSource.outputing { [weak self] data in
+        dataSource.safeBind(to: object) { [weak self] _, data in
             self?.cachedSize.removeAll()
             self?.reload(with: data)
         }
 
-        _ = insets.send(to: self.insets)
+        insets.safeBind(to: object) { [weak self] _, insets in
+            self?.insets.value = insets
+        }
     }
 
     public enum Event {
