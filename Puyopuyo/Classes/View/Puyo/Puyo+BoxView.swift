@@ -303,22 +303,32 @@ public extension Puyo where T: Eventable {
 
 public extension Puyo where T: Stateful {
     @discardableResult
+    func viewState<O: Outputing>(_ output: O, unbindable: UnbinderBag) -> Self where O.OutputType == T.StateType {
+        output.send(to: view.viewState).unbind(by: unbindable)
+        return self
+    }
+    
+    @discardableResult
+    func stateChange<O: Outputing, R, V>(_ output: O, to kp: WritableKeyPath<R, V>, unbindable: UnbinderBag) -> Self where O.OutputType == V, R == T.StateType {
+        output.outputing {
+            self.view.viewState.value[keyPath: kp] = $0
+        }.unbind(by: unbindable)
+        return self
+    }
+}
+
+public extension Puyo where T: Stateful, T: NSObject {
+    @discardableResult
     func viewState<O: Outputing>(_ output: O) -> Self where O.OutputType == T.StateType {
-        let unbinder = output.send(to: view.viewState)
-        if let v = view as? NSObject {
-            v.py_setUnbinder(unbinder, for: UUID().description)
-        }
+        output.send(to: view.viewState).unbind(by: view)
         return self
     }
     
     @discardableResult
     func stateChange<O: Outputing, R, V>(_ output: O, to kp: WritableKeyPath<R, V>) -> Self where O.OutputType == V, R == T.StateType {
-        let unbinder = output.outputing {
+        output.outputing {
             self.view.viewState.value[keyPath: kp] = $0
-        }
-        if let v = view as? NSObject {
-            v.py_setUnbinder(unbinder, for: UUID().description)
-        }
+        }.unbind(by: view)
         return self
     }
 }

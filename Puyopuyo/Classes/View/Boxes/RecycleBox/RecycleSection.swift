@@ -28,8 +28,8 @@ public class RecycleSection<Section, Data>: BasicRecycleSection<Section> {
         super.init(id: id, insets: insets, lineSpacing: lineSpacing, itemSpacing: itemSpacing, data: sectionData, items: state.asOutput(), _header: _header, _footer: _footer)
 
         let itemId = "\(self.getSectionId())_buildin_item"
-        list.safeBind(to: bag) { [weak self] (_, datas) in
-            let items = datas.map { data in
+        list.map {
+            $0.map { data in
                 BasicRecycleItem<Data>(
                     id: itemId,
                     data: data,
@@ -39,9 +39,9 @@ public class RecycleSection<Section, Data>: BasicRecycleSection<Section> {
                     _didSelect: _didSelect
                 )
             }
-            state.value = items
         }
-        
+        .send(to: state)
+        .unbind(by: bag)
     }
 }
 

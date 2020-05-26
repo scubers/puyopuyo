@@ -23,7 +23,7 @@ public class ListSection<Section, Data>: BasicListSection<Section> {
                 _didSelect: ((RecycleContext<Data, UITableView>) -> Void)? = nil) {
         let state = SimpleIO<[IListRow]>()
         super.init(id: id, headerHeight: headerHeight, footerHeight: footerHeight, data: data, rows: state.asOutput(), _header: _header, _footer: _footer)
-        _ = dataSource
+        dataSource
             .map { datas -> [IListRow] in
                 datas.map {
                     BasicListRow<Data>(
@@ -39,6 +39,7 @@ public class ListSection<Section, Data>: BasicListSection<Section> {
                 }
             }
             .send(to: state)
+            .unbind(by: bag)
     }
 }
 

@@ -39,7 +39,7 @@ public class BasicListSection<Data>: IListSection {
         }
     }
     
-    private let bag = NSObject()
+    let bag = NSObject()
     private var headerGen: ListViewGenerator<Data>?
     private var footerGen: ListViewGenerator<Data>?
     private var id: String

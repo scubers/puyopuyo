@@ -29,7 +29,7 @@ public class Puyo<T: AnyObject> {
     }
 }
 
-public extension Puyo where T: Unbindable {
+public extension Puyo where T: UnbinderBag {
     /// 接收一个outputing，并且绑定到view上，持续接收action
     /// - Parameters:
     ///   - state: state description

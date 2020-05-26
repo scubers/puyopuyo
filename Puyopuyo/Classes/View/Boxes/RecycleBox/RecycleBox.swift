@@ -119,9 +119,9 @@ open class RecycleBox: UICollectionView,
         delegate = delegateProxy
         dataSource = dataSourceProxy
         
-        _ = sections.send(to: viewState)
+        sections.send(to: viewState).unbind(by: self)
         
-        _ = viewState.safeBind(to: self) { this, s in
+        viewState.safeBind(to: self) { this, s in
             // 注册view类型
             this.prepareSection(s)
             this.reload(sections: s)
