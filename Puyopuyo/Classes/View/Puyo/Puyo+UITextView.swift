@@ -10,7 +10,7 @@ import Foundation
 public extension Puyo where T: UITextView {
     @discardableResult
     func onText<S: Outputing & Inputing>(_ text: S) -> Self where S.OutputType: PuyoOptionalType, S.InputType == S.OutputType, S.OutputType.PuyoWrappedType == String {
-        view.py_setUnbinder(text.safeBind(view, { v, a in
+        view.py_setUnbinder(text.catchObject(view, { v, a in
             guard a.puyoWrapValue != v.text else { return }
             v.text = a.puyoWrapValue
             v.py_setNeedsLayoutIfMayBeWrap()

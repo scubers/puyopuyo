@@ -129,7 +129,7 @@ public class ListBox: UITableView,
         self.sectionFooterHeight = sectionFooterHeight
 
         _ = sections.send(to: viewState)
-        _ = viewState.safeBind(self) { (this, s) in
+        _ = viewState.catchObject(self) { (this, s) in
             this.prepareSections(s)
             this.reloadSections(s)
         }

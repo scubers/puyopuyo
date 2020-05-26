@@ -10,7 +10,7 @@ import Foundation
 public extension Puyo where T: UITextField {
     @discardableResult
     func textDelegate<S: Outputing>(_ delegate: S) -> Self where S.OutputType == UITextFieldDelegate? {
-        view.py_setUnbinder(delegate.safeBind(view, { v, s in
+        view.py_setUnbinder(delegate.catchObject(view, { v, s in
             v.delegate = s
         }), for: #function)
         return self
@@ -27,7 +27,7 @@ public extension Puyo where T: UITextField {
 
     @discardableResult
     func onText<S: Outputing & Inputing>(_ text: S) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == String, S.InputType == S.OutputType {
-        view.py_setUnbinder(text.safeBind(view, { v, a in
+        view.py_setUnbinder(text.catchObject(view, { v, a in
             guard a.puyoWrapValue != v.text else { return }
             v.text = a.puyoWrapValue
             v.py_setNeedsLayoutIfMayBeWrap()
@@ -49,7 +49,7 @@ public extension Puyo where T: UITextField {
 
     @discardableResult
     func placeholder<S: Outputing>(_ text: S) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == String {
-        view.py_setUnbinder(text.safeBind(view, { v, a in
+        view.py_setUnbinder(text.catchObject(view, { v, a in
             v.placeholder = a.puyoWrapValue
         }), for: #function)
         return self

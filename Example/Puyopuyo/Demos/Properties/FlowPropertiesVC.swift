@@ -23,9 +23,9 @@ class FlowPropertiesVC: BaseVC {
             this.reset()
         }
 
-        _ = self.blockFix.safeBind(self) { this, _ in
-            this.reset()
-        }
+//        self.blockFix.safeBind(to: self) { this, _ in
+//            this.reset()
+//        }
     }
 
     func reset() {

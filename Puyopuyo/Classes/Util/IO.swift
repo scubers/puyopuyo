@@ -14,6 +14,12 @@ public protocol Unbinder {
     func py_unbind()
 }
 
+public extension Unbinder {
+    func unbind(by: Unbindable, id: String = UUID().description) {
+        by.py_setUnbinder(self, for: id)
+    }
+}
+
 public protocol Unbindable {
     func py_setUnbinder(_ unbiner: Unbinder, for: String)
 }
@@ -37,7 +43,7 @@ extension Outputing {
     /// - Parameters:
     ///   - object: 绑定对象
     ///   - action: action description
-    public func safeBind<Object: Unbindable & AnyObject>(_ object: Object, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
+    func catchObject<Object: Unbindable & AnyObject>(_ object: Object, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
         return outputing { [weak object] s in
             if let object = object {
                 action(object, s)
