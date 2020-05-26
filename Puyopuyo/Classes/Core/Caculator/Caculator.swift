@@ -31,7 +31,8 @@ class Caculator {
             let totalRatio = ratio ?? sizeDesc.ratio
             return max(0, (sizeDesc.ratio / totalRatio) * (superRemain - padding - margin))
         } else if sizeDesc.isWrap {
-            return max(sizeDesc.min, min(sizeDesc.max, max(0, superRemain - padding - margin)))
+            // 若存在最大值max，需要和最终算出的剩余空间取个最小值
+            return max(sizeDesc.min, max(0, min(sizeDesc.max - padding, superRemain - padding - margin)))
         } else {
             fatalError()
         }

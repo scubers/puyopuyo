@@ -73,8 +73,8 @@ class FlatCaculator {
 
     // 初始化主轴固有长度为 main padding
     var totalSpace: CGFloat = 0
-//    var totalSubMain: CGFloat = 0
-    lazy var totalSubMain: CGFloat = self.regCalPadding.mainFixed
+    // 不包含布局的padding
+    var totalSubMain: CGFloat = 0
 
     var maxCross: CGFloat = 0
 
