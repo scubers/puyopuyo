@@ -37,34 +37,20 @@ class TestVC: UIViewController {
         navigationController?.navigationBar.isTranslucent = false
 
         VBox().attach(view) {
-            HBox().attach($0) {
-                UIImageView().attach($0)
-                    .size(80, 80)
-                    .backgroundColor(Util.randomColor())
-                    .cornerRadius(6)
-
-                VBox().attach($0) {
-                    UILabel().attach($0)
-                        .text("name")
-
-                    UILabel().attach($0)
-                        .text("description")
-                }
-                .format(.center)
-                .width(.fill)
-                .space(10)
+            VBox().attach($0) {
+                Label.demo("sldkfjldkjf").attach($0)
+                    .size(.fill, 25)
+                Label.demo("slkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsf").attach($0)
+                    .width(.fill)
             }
-            .space(10)
-            .padding(all: 16)
-            .width(.fill)
-            .cornerRadius(6)
-            .backgroundColor(UIColor.white)
+            .size(.fill, .wrap(max: 100))
+            .padding(all: 20)
         }
         .space(10)
         .padding(all: 20)
         .size(.fill, .fill)
         view.backgroundColor = .white
-//        Util.randomViewColor(view: view)
+        Util.randomViewColor(view: view)
     }
 
     func build() {
