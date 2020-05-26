@@ -240,9 +240,6 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
         dataSource.safeBind(to: object) { [weak self] _, data in
             self?.reload(with: data)
         }
-//        _ = dataSource.outputing { [weak self] data in
-//            self?.reload(with: data)
-//        }
     }
 
     public enum Event {
@@ -461,8 +458,8 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
             contentView.addSubview(root)
             backgroundColor = .clear
             contentView.backgroundColor = .clear
-            _ = event.outputing { [weak self] in
-                self?.onEvent($0)
+            event.safeBind(to: self) { (this, e) in
+                this.onEvent(e)
             }
         }
 
@@ -500,8 +497,8 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
             let v = UIView()
             v.backgroundColor = .clear
             backgroundView = v
-            _ = event.outputing { [weak self] in
-                self?.onEvent($0)
+            event.safeBind(to: self) { (this, e) in
+                this.onEvent(e)
             }
         }
 

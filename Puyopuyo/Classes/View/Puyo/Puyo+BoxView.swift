@@ -280,16 +280,22 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlowRegulator 
 public extension Puyo where T: Eventable {
     @discardableResult
     func onEventProduced<I: Inputing>(_ input: I) -> Self where I.InputType == T.EventType {
-        _ = view.eventProducer.send(to: input)
+        let unbinder = view.eventProducer.send(to: input)
+        if let v = view as? NSObject {
+            v.py_setUnbinder(unbinder, for: UUID().description)
+        }
         return self
     }
 
     @discardableResult
     func onEventProduced<Object: AnyObject>(to: Object, _ action: @escaping (Object, T.EventType) -> Void) -> Self {
-        _ = view.eventProducer.outputing { [weak to] event in
+        let unbinder = view.eventProducer.outputing { [weak to] event in
             if let to = to {
                 action(to, event)
             }
+        }
+        if let v = view as? NSObject {
+            v.py_setUnbinder(unbinder, for: UUID().description)
         }
         return self
     }
@@ -298,14 +304,20 @@ public extension Puyo where T: Eventable {
 public extension Puyo where T: Stateful {
     @discardableResult
     func viewState<O: Outputing>(_ output: O) -> Self where O.OutputType == T.StateType {
-        _ = output.send(to: view.viewState)
+        let unbinder = output.send(to: view.viewState)
+        if let v = view as? NSObject {
+            v.py_setUnbinder(unbinder, for: UUID().description)
+        }
         return self
     }
     
     @discardableResult
     func stateChange<O: Outputing, R, V>(_ output: O, to kp: WritableKeyPath<R, V>) -> Self where O.OutputType == V, R == T.StateType {
-        _ = output.outputing {
+        let unbinder = output.outputing {
             self.view.viewState.value[keyPath: kp] = $0
+        }
+        if let v = view as? NSObject {
+            v.py_setUnbinder(unbinder, for: UUID().description)
         }
         return self
     }
