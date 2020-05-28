@@ -59,7 +59,7 @@ public class BasicRecycleSection<Data>: IRecycleSection {
     
     private func setRecycleItems(_ items: [IRecycleItem]) {
         recycleItems.value = items
-        items.forEach { $0.section = self }
+//        items.forEach { $0.section = self }
     }
     
     private func reload(items: [IRecycleItem]) {

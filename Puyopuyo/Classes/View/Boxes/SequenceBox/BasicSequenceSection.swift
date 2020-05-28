@@ -141,8 +141,6 @@ public class BasicSequenceSection<Data>: ISequenceSection {
     
     private func setSequenceItems(_ items: [ISequenceItem]) {
         rowsState.value = items
-        // 赋值section
-        items.forEach { $0.section = self }
     }
     
     private func reload(rows: [ISequenceItem]) {
