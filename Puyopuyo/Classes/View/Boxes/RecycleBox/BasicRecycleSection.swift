@@ -59,13 +59,13 @@ public class BasicRecycleSection<Data>: IRecycleSection {
     
     private func setRecycleItems(_ items: [IRecycleItem]) {
         recycleItems.value = items
-        items.forEach { $0.recycleSection = self }
+        items.forEach { $0.section = self }
     }
     
     private func reload(items: [IRecycleItem]) {
         // 赋值section
         // box 还没赋值时，只更新数据源
-        guard let box = recycleBox else {
+        guard let box = box else {
             setRecycleItems(items)
             return
         }
@@ -116,7 +116,7 @@ public class BasicRecycleSection<Data>: IRecycleSection {
     
     // MARK: - IRecycleSection methods
     
-    public weak var recycleBox: RecycleBox?
+    public weak var box: RecycleBox?
     
     public var index: Int = 0
     
@@ -138,7 +138,7 @@ public class BasicRecycleSection<Data>: IRecycleSection {
     }
     
     private func _getSupplementaryView(for kind: String) -> (RecycleBoxSupplementaryView<Data>, UIView?) {
-        guard let view = recycleBox?.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: getSectionId(kind: kind), for: IndexPath(row: 0, section: index)) as? RecycleBoxSupplementaryView<Data> else {
+        guard let view = box?.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: getSectionId(kind: kind), for: IndexPath(row: 0, section: index)) as? RecycleBoxSupplementaryView<Data> else {
             fatalError()
         }
         configSupplementaryView(view, kind: kind)
@@ -148,12 +148,12 @@ public class BasicRecycleSection<Data>: IRecycleSection {
     public func supplementaryViewSize(for kind: String) -> CGSize {
         let (view, rootView): (RecycleBoxSupplementaryView<Data>, UIView?) = {
             let id = supplementaryIdentifier(for: kind)
-            if let view = recycleBox?.caculatSupplementaries[id] as? RecycleBoxSupplementaryView<Data> {
+            if let view = box?.caculatSupplementaries[id] as? RecycleBoxSupplementaryView<Data> {
                 return (view, view.root)
             }
             let view = RecycleBoxSupplementaryView<Data>()
             configSupplementaryView(view, kind: kind)
-            recycleBox?.caculatSupplementaries[id] = view
+            box?.caculatSupplementaries[id] = view
             return (view, view.root)
         }()
         guard let root = rootView else { return .zero }
@@ -170,7 +170,7 @@ public class BasicRecycleSection<Data>: IRecycleSection {
         if view.root == nil {
             var root: UIView?
             let state = view.state
-            let box = recycleBox
+            let box = self.box
             let holder = RecycleContextHolder { [weak box, weak view] () -> RecycleContext<Data, UICollectionView>? in
                 if let view = view,
                     let idx = box?.visibleSupplementaryViews(ofKind: kind).firstIndex(where: { $0 === view }),
@@ -200,7 +200,7 @@ public class BasicRecycleSection<Data>: IRecycleSection {
     }
     
     private func getContext() -> RecycleContext<Data, UICollectionView> {
-        .init(indexPath: IndexPath(item: 0, section: index), index: index, size: getLayoutableContentSize(), data: data, view: recycleBox)
+        .init(indexPath: IndexPath(item: 0, section: index), index: index, size: getLayoutableContentSize(), data: data, view: box)
     }
     
     public func getSectionInsets() -> UIEdgeInsets? {

@@ -35,7 +35,7 @@ public class BasicRecycleItem<Data>: IRecycleItem {
     
     // MARK: - IRecycleItem methods
     
-    public weak var recycleSection: IRecycleSection?
+    public weak var section: IRecycleSection?
     
     public var indexPath: IndexPath = IndexPath()
     
@@ -65,8 +65,8 @@ public class BasicRecycleItem<Data>: IRecycleItem {
     }
     
     private func getContext() -> RecycleContext<Data, UICollectionView>? {
-        if let section = recycleSection {
-            return .init(indexPath: indexPath, index: indexPath.item, size: section.getLayoutableContentSize(), data: data, view: section.recycleBox)
+        if let section = section {
+            return .init(indexPath: indexPath, index: indexPath.item, size: section.getLayoutableContentSize(), data: data, view: section.box)
         }
         return nil
     }
@@ -77,9 +77,9 @@ public class BasicRecycleItem<Data>: IRecycleItem {
     }
     
     private func _getCell() -> (RecycleBoxCell<Data>, UIView?) {
-        recycleSection?.recycleBox?.registerItem(self)
-        guard let section = recycleSection,
-            let cell = section.recycleBox?.dequeueReusableCell(withReuseIdentifier: getItemIdentifier(), for: indexPath) as? RecycleBoxCell<Data> else {
+        section?.box?.registerItem(self)
+        guard let section = section,
+            let cell = section.box?.dequeueReusableCell(withReuseIdentifier: getItemIdentifier(), for: indexPath) as? RecycleBoxCell<Data> else {
             fatalError()
         }
         configCell(cell)
@@ -87,22 +87,22 @@ public class BasicRecycleItem<Data>: IRecycleItem {
     }
     
     public func getItemSize() -> CGSize {
-        guard let section = recycleSection else {
+        guard let section = section else {
             return .zero
         }
         let (cell, rootView): (RecycleBoxCell<Data>, UIView?) = {
-            if let cell = section.recycleBox?.caculatItems[getItemIdentifier()] as? RecycleBoxCell<Data> {
+            if let cell = section.box?.caculatItems[getItemIdentifier()] as? RecycleBoxCell<Data> {
                 return (cell, cell.root)
             }
             let cell = RecycleBoxCell<Data>()
             configCell(cell)
-            section.recycleBox?.caculatItems[getItemIdentifier()] = cell
+            section.box?.caculatItems[getItemIdentifier()] = cell
             return (cell, cell.root)
         }()
         guard let root = rootView else { return .zero }
         
         let layoutContentSize = section.getLayoutableContentSize()
-        cell.state.input(value: RecycleContext<Data, UICollectionView>(index: indexPath.row, size: layoutContentSize, data: data, view: section.recycleBox))
+        cell.state.input(value: RecycleContext<Data, UICollectionView>(index: indexPath.row, size: layoutContentSize, data: data, view: section.box))
         var size = root.sizeThatFits(layoutContentSize)
         size.width += root.py_measure.margin.getHorzTotal()
         size.height += root.py_measure.margin.getVertTotal()
@@ -110,12 +110,12 @@ public class BasicRecycleItem<Data>: IRecycleItem {
     }
     
     private func configCell(_ cell: RecycleBoxCell<Data>) {
-        guard let section = recycleSection else { return }
+        guard let section = section else { return }
         let size = section.getLayoutableContentSize()
         cell.targetSize = size
-        let ctx = RecycleContext<Data, UICollectionView>(index: indexPath.row, size: size, data: data, view: section.recycleBox)
+        let ctx = RecycleContext<Data, UICollectionView>(index: indexPath.row, size: size, data: data, view: section.box)
         if cell.root == nil {
-            let box = section.recycleBox
+            let box = section.box
             let holder = RecycleContextHolder { [weak box, weak cell] () -> RecycleContext<Data, UICollectionView>? in
                 if let cell = cell,
                     let idx = box?.indexPath(for: cell),

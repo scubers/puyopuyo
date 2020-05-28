@@ -9,7 +9,7 @@ import Foundation
 
 public protocol IRecycleSection: class {
     // should be weak reference
-    var recycleBox: RecycleBox? { get set }
+    var box: RecycleBox? { get set }
     
     var index: Int { get set }
     
@@ -44,15 +44,15 @@ public extension IRecycleSection {
     }
     
     func currentIndex() -> Int? {
-        if let sections = recycleBox?.sections {
+        if let sections = box?.sections {
             return sections.firstIndex(where: { $0 === self })
         }
         return nil
     }
     
     func getLayoutableContentSize() -> CGSize {
-        guard let cv = recycleBox else { return .zero }
-        let inset = getSectionInsets() ?? recycleBox?.flowLayout.sectionInset ?? .zero
+        guard let cv = box else { return .zero }
+        let inset = getSectionInsets() ?? box?.flowLayout.sectionInset ?? .zero
         let width = cv.bounds.size.width - cv.contentInset.getHorzTotal() - inset.getHorzTotal()
         let height = cv.bounds.size.height - cv.contentInset.getVertTotal() - inset.getVertTotal()
         return CGSize(width: max(0, width), height: max(0, height))
@@ -61,7 +61,7 @@ public extension IRecycleSection {
 
 public protocol IRecycleItem: class {
     // should be weak reference
-    var recycleSection: IRecycleSection? { get set }
+    var section: IRecycleSection? { get set }
     
     var indexPath: IndexPath { get set }
     
@@ -80,7 +80,7 @@ public protocol IRecycleItem: class {
 
 public extension IRecycleItem {
     func currentIndex() -> Int? {
-        return recycleSection?.getItems().firstIndex(where: { $0 === self })
+        return section?.getItems().firstIndex(where: { $0 === self })
     }
 }
 
@@ -233,12 +233,15 @@ open class RecycleBox: UICollectionView,
     func getSection(_ index: Int) -> IRecycleSection {
         let section = sections[index]
         section.index = index
+        section.box = self
         return section
     }
     
     func getItem(_ indexPath: IndexPath) -> IRecycleItem {
-        let item = sections[indexPath.section].getItems()[indexPath.row]
+        let section = getSection(indexPath.section)
+        let item = section.getItems()[indexPath.row]
         item.indexPath = indexPath
+        item.section = section
         return item
     }
 }
@@ -251,7 +254,7 @@ extension RecycleBox {
     }
     
     func registerSection(_ section: IRecycleSection) {
-        section.recycleBox = self
+        section.box = self
         [UICollectionView.elementKindSectionHeader, UICollectionView.elementKindSectionFooter].forEach { kind in
             let id = section.supplementaryIdentifier(for: kind)
             if registeredSupplementaries["\(kind)_\(id)"] == nil {
