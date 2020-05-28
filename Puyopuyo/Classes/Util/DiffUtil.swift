@@ -73,11 +73,11 @@ public class Diff<T>: CustomStringConvertible {
         map[identifier(value)] = r
         return r
     }
-    
+
     public func isDifferent() -> Bool {
         return !insert.isEmpty || !move.isEmpty || !delete.isEmpty
     }
-    
+
     public var description: String {
         return """
         [diff] src: \(src), dest: \(dest)
@@ -89,7 +89,7 @@ public class Diff<T>: CustomStringConvertible {
 }
 
 public extension Unmanaged where Instance: AnyObject {
-    static func getIdentifier(_ object: Instance, config: (Instance) -> String) -> String {
+    static func getIdentifier(_ object: Instance, config: (Instance) -> String = { _ in "" }) -> String {
         let addr = Unmanaged.passUnretained(object).toOpaque().debugDescription
         return "\(addr)_\(config(object))"
     }
