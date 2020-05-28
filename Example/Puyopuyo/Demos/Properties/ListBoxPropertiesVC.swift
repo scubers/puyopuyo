@@ -10,11 +10,10 @@ import Foundation
 import Puyopuyo
 
 class ListBoxPropertiesVC: BaseVC {
-    /*
-    let sections = State<[IListSection]>([])
+    let sections = State<[ISequenceSection]>([])
     override func configView() {
         vRoot.attach {
-            ListBox(
+            SequenceBox(
                 separatorStyle: .none,
                 estimatedRowHeight: 10,
                 estimatedHeaderHeight: 10,
@@ -29,11 +28,11 @@ class ListBoxPropertiesVC: BaseVC {
 
     func reload() {
         sections.value = [
-            BasicListSection<Int>(
+            BasicSequenceSection<Int>(
                 id: "sldkjf",
                 data: 1,
                 rows: (0..<5).map {
-                    BasicListRow<Int>(
+                    BasicSequenceItem<Int>(
                         id: "sf98hsdf",
                         data: $0,
                         _cell: { o, _ in
@@ -56,7 +55,7 @@ class ListBoxPropertiesVC: BaseVC {
                     .view
                 }
             ),
-            PureListSection<Int>(
+            DataSequenceSection<Int>(
                 id: "pure",
                 dataSource: (0..<5).map { $0 }.asOutput(),
                 _cell: { o, _ in
@@ -84,5 +83,4 @@ class ListBoxPropertiesVC: BaseVC {
             )
         ]
     }
- */
 }
