@@ -10,6 +10,7 @@ import Foundation
 import Puyopuyo
 
 class ListBoxPropertiesVC: BaseVC {
+    /*
     let sections = State<[IListSection]>([])
     override func configView() {
         vRoot.attach {
@@ -83,4 +84,5 @@ class ListBoxPropertiesVC: BaseVC {
             )
         ]
     }
+ */
 }
