@@ -9,7 +9,7 @@
 import Foundation
 import Puyopuyo
 
-class ListBoxPropertiesVC: BaseVC {
+class SequenceBoxPropertiesVC: BaseVC {
     let sections = State<[ISequenceSection]>([])
     override func configView() {
         vRoot.attach {

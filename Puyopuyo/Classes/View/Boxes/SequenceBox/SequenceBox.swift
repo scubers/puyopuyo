@@ -225,6 +225,12 @@ public class SequenceBox: UITableView,
         getRow(at: indexPath).getEstimatedRowHeight() ?? estimatedRowHeight
     }
     
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        getRow(at: indexPath).didSelect()
+        tableView.deselectRow(at: indexPath, animated: true)
+        delegateProxy.backup?.value?.tableView?(tableView, didSelectRowAt: indexPath)
+    }
+    
     public func getSection(at index: Int) -> ISequenceSection {
         let s = sections[index]
         s.index = index

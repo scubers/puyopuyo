@@ -11,11 +11,11 @@ import UIKit
 
 class MenuVC: BaseVC {
     override func configView() {
-        TableBox(
+        SequenceBox(
             sections: [
-                TableSection<(String, UIViewController.Type), UIView, Void>(
-                    identifier: "menu",
-                    dataSource: State([
+                DataSequenceSection<(String, UIViewController.Type)>(
+                    id: "1",
+                    dataSource: [
                         ("Test", TestVC.self),
                         ("TGVC", TGVC.self),
                         ("UIView Properties", UIViewProertiesVC.self),
@@ -25,35 +25,73 @@ class MenuVC: BaseVC {
                         ("ScrollingBox Properties", ScrollBoxPropertiesVC.self),
                         ("NavigationBox Properties", NavigationBoxPropertiesVC.self),
                         ("RecycleBox Properties", RecycleBoxPropertiesVC.self),
-                        ("ListBox Properties", ListBoxPropertiesVC.self),
+                        ("SequenceBox Properties", SequenceBoxPropertiesVC.self),
                         ("TableBox Properties", TableBoxPropertiesVC.self),
                         ("CollectionBox Properties", CollectionBoxPropertiesVC.self),
                         ("Advance Usage", AdvanceVC.self),
-                    ]).asOutput(),
+                    ].asOutput(),
                     _cell: { o, _ in
-                        let padding: CGFloat = 16
-                        return HBox().attach {
+                        HBox().attach {
                             Label("").attach($0)
                                 .textAlignment(.left)
                                 .text(o.map { $0.data.0 })
                         }
                         .size(.fill, .wrap)
-                        .padding(all: padding)
+                        .padding(all: 16)
                         .view
                     },
-                    _event: { [weak self] e in
-                        switch e {
-                        case let .didSelect(_, (_, vc)):
-                            self?.push(vc: vc.init())
-                        default: break
-                        }
+                    _didSelect: { [weak self] c in
+                        self?.push(vc: c.data.1.init())
                     }
                 ),
-            ]
+            ].asOutput()
         )
         .attach(vRoot)
         .size(.fill, .fill)
         .setDelegate(self)
+//        TableBox(
+//            sections: [
+//                TableSection<(String, UIViewController.Type), UIView, Void>(
+//                    identifier: "menu",
+//                    dataSource: State([
+//                        ("Test", TestVC.self),
+//                        ("TGVC", TGVC.self),
+//                        ("UIView Properties", UIViewProertiesVC.self),
+//                        ("FlatBox Properties", FlatPropertiesVC.self),
+//                        ("FlowBox Properties", FlowPropertiesVC.self),
+//                        ("ZBox Properties", ZPropertiesVC.self),
+//                        ("ScrollingBox Properties", ScrollBoxPropertiesVC.self),
+//                        ("NavigationBox Properties", NavigationBoxPropertiesVC.self),
+//                        ("RecycleBox Properties", RecycleBoxPropertiesVC.self),
+//                        ("SequenceBox Properties", SequenceBoxPropertiesVC.self),
+//                        ("TableBox Properties", TableBoxPropertiesVC.self),
+//                        ("CollectionBox Properties", CollectionBoxPropertiesVC.self),
+//                        ("Advance Usage", AdvanceVC.self),
+//                    ]).asOutput(),
+//                    _cell: { o, _ in
+//                        let padding: CGFloat = 16
+//                        return HBox().attach {
+//                            Label("").attach($0)
+//                                .textAlignment(.left)
+//                                .text(o.map { $0.data.0 })
+//                        }
+//                        .size(.fill, .wrap)
+//                        .padding(all: padding)
+//                        .view
+//                    },
+//                    _event: { [weak self] e in
+//                        switch e {
+//                        case let .didSelect(_, (_, vc)):
+//                            self?.push(vc: vc.init())
+//                        default: break
+//                        }
+//                    }
+//                ),
+//            ]
+//        )
+//        .attach(vRoot)
+//        .size(.fill, .fill)
+//        .setDelegate(self)
 
         navState.value.bodyAvoidNavBar = true
     }

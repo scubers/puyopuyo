@@ -14,8 +14,8 @@ public class SequenceSection<Section, Data>: BasicSequenceSection<Section> {
                 headerHeight: CGFloat? = nil,
                 footerHeight: CGFloat? = nil,
                 data: Section,
+                dataSource: SimpleOutput<[Data]>,
                 differ: ((Data) -> String)? = nil,
-                dataSource: SimpleOutput<[Data]> = [].asOutput(),
                 _cell: @escaping SequenceViewGenerator<Data>,
                 _cellConfig: ((UITableViewCell) -> Void)? = nil,
                 _header: SequenceViewGenerator<Section>? = nil,
@@ -27,7 +27,7 @@ public class SequenceSection<Section, Data>: BasicSequenceSection<Section> {
             .map { datas -> [ISequenceItem] in
                 datas.map {
                     BasicSequenceItem<Data>(
-                        id: "\(id)_buildin_row",
+                        id: "\(id)_buildin_item",
                         selectionStyle: selectionStyle,
                         rowHeight: rowHeight,
                         data: $0,
@@ -51,8 +51,8 @@ public extension SequenceSection where Section == Void {
                      rowHeight: CGFloat? = nil,
                      headerHeight: CGFloat? = nil,
                      footerHeight: CGFloat? = nil,
+                     dataSource: SimpleOutput<[Data]>,
                      differ: ((Data) -> String)? = nil,
-                     dataSource: SimpleOutput<[Data]> = [].asOutput(),
                      _cell: @escaping SequenceViewGenerator<Data>,
                      _cellConfig: ((UITableViewCell) -> Void)? = nil,
                      _header: SequenceViewGenerator<Section>? = nil,
@@ -65,8 +65,8 @@ public extension SequenceSection where Section == Void {
             headerHeight: headerHeight,
             footerHeight: footerHeight,
             data: (),
-            differ: differ,
             dataSource: dataSource,
+            differ: differ,
             _cell: _cell,
             _cellConfig: _cellConfig,
             _header: _header,
