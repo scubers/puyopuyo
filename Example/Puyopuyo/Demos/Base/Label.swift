@@ -32,7 +32,7 @@ class Label: UILabel {
     static func demo(_ title: String) -> Label {
         let l = self.title(title)
         l.layer.borderColor = Theme.color.cgColor
-        l.layer.borderWidth = 1 / UIScreen.main.scale
+        l.layer.borderWidth = Util.pixel(1)
         l.attach().width(.wrap(add: 10))
         return l
     }

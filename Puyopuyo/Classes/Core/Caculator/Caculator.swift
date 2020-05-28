@@ -58,14 +58,18 @@ class Caculator {
     static func applyMeasure(_ measure: Measure, size: Size, currentRemain: CGSize, ratio: Ratio?) {
         // 把size应用到measure上，只关心剩余空间
         let margin = measure.margin
-        var final = CGSize()
         if !size.width.isWrap {
-            final.width = getLength(size.width, currentRemain: currentRemain.width, margin: margin.getHorzTotal(), padding: .zero, ratio: ratio?.width)
+            let width = getLength(size.width, currentRemain: currentRemain.width, margin: margin.getHorzTotal(), padding: .zero, ratio: ratio?.width)
+            if width != measure.py_size.width {
+                measure.py_size.width = width
+            }
         }
         if !size.height.isWrap {
-            final.height = getLength(size.height, currentRemain: currentRemain.height, margin: margin.getVertTotal(), padding: .zero, ratio: ratio?.height)
+            let height = getLength(size.height, currentRemain: currentRemain.height, margin: margin.getVertTotal(), padding: .zero, ratio: ratio?.height)
+            if height != measure.py_size.height {
+                measure.py_size.height = height
+            }
         }
-        measure.py_size = final
     }
 
     static func getSize(_ regulator: Regulator, currentRemain: CGSize, wrapContentSize: CGSize) -> CGSize {
