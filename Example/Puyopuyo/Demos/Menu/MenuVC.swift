@@ -14,7 +14,6 @@ class MenuVC: BaseVC {
         SequenceBox(
             sections: [
                 DataSequenceSection<(String, UIViewController.Type)>(
-                    id: "1",
                     dataSource: [
                         ("Test", TestVC.self),
                         ("TGVC", TGVC.self),

@@ -10,14 +10,17 @@ import Foundation
 public class BasicRecycleItem<Data>: IRecycleItem {
     public typealias Context = RecycleContext<Data, UICollectionView>
     public init(
-        id: String,
+        id: String? = nil,
         data: Data,
         differ: ((Data) -> String)? = nil,
         _cell: @escaping RecycleViewGenerator<Data>,
         _cellConfig: ((UICollectionViewCell) -> Void)? = nil,
-        _didSelect: ((Context) -> Void)? = nil
+        _didSelect: ((Context) -> Void)? = nil,
+        function: StaticString = #function,
+        line: Int = #line,
+        column: Int = #column
     ) {
-        self.id = id
+        self.id = id ?? "\(line)\(column)\(function)"
         self.data = data
         self.cellGen = _cell
         self.differ = differ

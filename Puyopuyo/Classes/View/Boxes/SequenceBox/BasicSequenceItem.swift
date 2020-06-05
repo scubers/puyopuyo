@@ -11,7 +11,7 @@ public class BasicSequenceItem<Data>: ISequenceItem {
     
     public typealias Context = RecycleContext<Data, UITableView>
     public init(
-        id: String,
+        id: String? = nil,
         selectionStyle: UITableViewCell.SelectionStyle = .default,
         rowHeight: CGFloat? = nil,
         estimatedRowHeight: CGFloat? = nil,
@@ -19,9 +19,12 @@ public class BasicSequenceItem<Data>: ISequenceItem {
         differ: ((Data) -> String)? = nil,
         _cell: @escaping SequenceViewGenerator<Data>,
         _cellConfig: ((UITableViewCell) -> Void)? = nil,
-        _didSelect: ((Context) -> Void)? = nil
+        _didSelect: ((Context) -> Void)? = nil,
+        function: StaticString = #function,
+        line: Int = #line,
+        column: Int = #column
     ) {
-        self.id = id
+        self.id = id ?? "\(line)\(column)\(function)"
         self.data = data
         self.cellGen = _cell
         self.differ = differ

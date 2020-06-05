@@ -31,7 +31,7 @@ class RecycleBoxPropertiesVC: BaseVC {
     func getSmallItems(start: Int = 0, count: Int) -> [IRecycleItem] {
         (start..<start + count).map { v -> IRecycleItem in
             BasicRecycleItem<Int>(
-                id: "1",
+//                id: "1",
                 data: v,
                 differ: { $0.description },
                 _cell: { o, i in
@@ -54,7 +54,7 @@ class RecycleBoxPropertiesVC: BaseVC {
     func getBigItems(start: Int = 0, count: Int) -> [IRecycleItem] {
         (start..<start + count).map { v -> IRecycleItem in
             BasicRecycleItem<Int>(
-                id: "2",
+//                id: "2",
                 data: v,
                 differ: { $0.description },
                 _cell: { o, i in
@@ -83,7 +83,7 @@ class RecycleBoxPropertiesVC: BaseVC {
 
         let sections1 = (0..<10).map { (idx) -> IRecycleSection in
             RecycleSection<Int, Int>(
-                id: "slkdjfl",
+//                id: "slkdjfl",
                 sectionData: idx,
                 list: (0..<(idx * 5)).map { $0 * 10 }.asOutput(),
                 _cell: { o, _ in
@@ -119,7 +119,7 @@ class RecycleBoxPropertiesVC: BaseVC {
                 data: "header1",
                 items: [
                     BasicRecycleItem<Int>(
-                        id: "a",
+//                        id: "a",
                         data: 1,
                         _cell: { o, _ in
                             HBox().attach {
@@ -132,7 +132,7 @@ class RecycleBoxPropertiesVC: BaseVC {
                         }
                     ),
                     BasicRecycleItem<Int>(
-                        id: "b",
+//                        id: "b",
                         data: 2,
                         _cell: { o, _ in
                             VBox().attach {
@@ -146,8 +146,8 @@ class RecycleBoxPropertiesVC: BaseVC {
                     ),
                 ].asOutput()
             ),
-            ListRecycleSection<Int>(
-                id: "lskdjfdd",
+            DataRecycleSection<Int>(
+//                id: "lskdjfdd",
                 itemSpacing: 10,
                 list: (0..<10).map { $0 }.asOutput(),
                 _cell: { o, i in
@@ -179,7 +179,7 @@ class RecycleBoxPropertiesVC: BaseVC {
                 }
             ),
             BasicRecycleSection<String>(
-                id: "sldkjf",
+//                id: "sldkjf",
                 insets: UIEdgeInsets(top: 10, left: 20, bottom: 30, right: 40),
                 data: "header",
                 items: section1Rows.asOutput(),

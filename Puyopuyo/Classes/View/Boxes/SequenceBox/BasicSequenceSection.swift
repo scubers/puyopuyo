@@ -19,16 +19,21 @@ public struct SequenceContextHolder<D> {
 public typealias SequenceViewGenerator<D> = (SimpleOutput<RecycleContext<D, UITableView>>, SequenceContextHolder<D>) -> UIView?
 
 public class BasicSequenceSection<Data>: ISequenceSection {
-    public init(id: String,
-                headerHeight: CGFloat? = nil,
-                estimatedHeaderHeight _: CGFloat? = nil,
-                footerHeight: CGFloat? = nil,
-                estimatedFooterHeight _: CGFloat? = nil,
-                data: Data,
-                rows: SimpleOutput<[ISequenceItem]> = [].asOutput(),
-                _header: SequenceViewGenerator<Data>? = nil,
-                _footer: SequenceViewGenerator<Data>? = nil) {
-        self.id = id
+    public init(
+        id: String? = nil,
+        headerHeight: CGFloat? = nil,
+        estimatedHeaderHeight _: CGFloat? = nil,
+        footerHeight: CGFloat? = nil,
+        estimatedFooterHeight _: CGFloat? = nil,
+        data: Data,
+        rows: SimpleOutput<[ISequenceItem]> = [].asOutput(),
+        _header: SequenceViewGenerator<Data>? = nil,
+        _footer: SequenceViewGenerator<Data>? = nil,
+        function: StaticString = #function,
+        line: Int = #line,
+        column: Int = #column
+    ) {
+        self.id = id ?? "\(line)\(column)\(function)"
         self.headerGen = _header
         self.footerGen = _footer
         self.data = data
@@ -127,7 +132,7 @@ public class BasicSequenceSection<Data>: ISequenceSection {
         return (view!, view!.root)
     }
     
-    private func getSectionId() -> String {
+    func getSectionId() -> String {
         "\(type(of: self))_\(id)"
     }
     

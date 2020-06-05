@@ -30,9 +30,12 @@ public class BasicRecycleSection<Data>: IRecycleSection {
         data: Data,
         items: SimpleOutput<[IRecycleItem]> = [].asOutput(),
         _header: RecycleViewGenerator<Data>? = nil,
-        _footer: RecycleViewGenerator<Data>? = nil
+        _footer: RecycleViewGenerator<Data>? = nil,
+        function: StaticString = #function,
+        line: Int = #line,
+        column: Int = #column
     ) {
-        self.id = id
+        self.id = id ?? "\(line)\(column)\(function)"
         sectionInsets = insets
         self.lineSpacing = lineSpacing
         self.itemSpacing = itemSpacing
