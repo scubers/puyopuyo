@@ -177,6 +177,9 @@ extension CGPoint: Outputing { public typealias OutputType = CGPoint }
 extension CGSize: Outputing { public typealias OutputType = CGSize }
 extension Array: Outputing { public typealias OutputType = Array }
 extension Dictionary: Outputing { public typealias OutputType = Dictionary }
+extension Date: Outputing { public typealias OutputType = Date }
+extension URL: Outputing { public typealias OutputType = URL }
+extension Data: Outputing { public typealias OutputType = Data }
 
 extension Int: Outputing { public typealias OutputType = Int }
 extension CGFloat: Outputing { public typealias OutputType = CGFloat }
