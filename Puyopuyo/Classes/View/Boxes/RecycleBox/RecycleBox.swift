@@ -126,6 +126,12 @@ open class RecycleBox: UICollectionView,
             this.prepareSection(s)
             this.reload(sections: s)
         }
+        
+        py_boundsState().distinctMap(\.size).safeBind(to: self) { (this, _) in
+            DispatchQueue.main.async {
+                this.flowLayout.invalidateLayout()
+            }
+        }
     }
     
     public required init?(coder: NSCoder) {
