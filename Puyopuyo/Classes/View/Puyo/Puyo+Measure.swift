@@ -227,6 +227,14 @@ public extension Puyo where T: UIView {
         }
         return self
     }
+    
+    @discardableResult
+    func flowEnding(_ flowEnding: Bool) -> Self {
+        view.py_measure.flowEnding = flowEnding
+        setNeedsLayout()
+        return self
+    }
+
 }
 
 // MARK: - Visibility

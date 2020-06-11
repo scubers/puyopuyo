@@ -11,10 +11,12 @@ import UIKit
 
 class MenuVC: BaseVC {
     override func configView() {
-        SequenceBox(
+        RecycleBox(
             sections: [
-                DataSequenceSection<(String, UIViewController.Type)>(
-                    dataSource: [
+                DataRecycleSection<(String, UIViewController.Type)>(
+                    insets: UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16),
+                    lineSpacing: 16,
+                    list: [
                         ("Test", TestVC.self),
                         ("TGVC", TGVC.self),
                         ("UIView Properties", UIViewProertiesVC.self),
@@ -37,6 +39,8 @@ class MenuVC: BaseVC {
                         }
                         .size(.fill, .wrap)
                         .padding(all: 16)
+                        .cornerRadius(8)
+                        .backgroundColor(UIColor.white)
                         .view
                     },
                     _didSelect: { [weak self] c in
@@ -47,50 +51,7 @@ class MenuVC: BaseVC {
         )
         .attach(vRoot)
         .size(.fill, .fill)
-        .setDelegate(self)
-//        TableBox(
-//            sections: [
-//                TableSection<(String, UIViewController.Type), UIView, Void>(
-//                    identifier: "menu",
-//                    dataSource: State([
-//                        ("Test", TestVC.self),
-//                        ("TGVC", TGVC.self),
-//                        ("UIView Properties", UIViewProertiesVC.self),
-//                        ("FlatBox Properties", FlatPropertiesVC.self),
-//                        ("FlowBox Properties", FlowPropertiesVC.self),
-//                        ("ZBox Properties", ZPropertiesVC.self),
-//                        ("ScrollingBox Properties", ScrollBoxPropertiesVC.self),
-//                        ("NavigationBox Properties", NavigationBoxPropertiesVC.self),
-//                        ("RecycleBox Properties", RecycleBoxPropertiesVC.self),
-//                        ("SequenceBox Properties", SequenceBoxPropertiesVC.self),
-//                        ("TableBox Properties", TableBoxPropertiesVC.self),
-//                        ("CollectionBox Properties", CollectionBoxPropertiesVC.self),
-//                        ("Advance Usage", AdvanceVC.self),
-//                    ]).asOutput(),
-//                    _cell: { o, _ in
-//                        let padding: CGFloat = 16
-//                        return HBox().attach {
-//                            Label("").attach($0)
-//                                .textAlignment(.left)
-//                                .text(o.map { $0.data.0 })
-//                        }
-//                        .size(.fill, .wrap)
-//                        .padding(all: padding)
-//                        .view
-//                    },
-//                    _event: { [weak self] e in
-//                        switch e {
-//                        case let .didSelect(_, (_, vc)):
-//                            self?.push(vc: vc.init())
-//                        default: break
-//                        }
-//                    }
-//                ),
-//            ]
-//        )
-//        .attach(vRoot)
-//        .size(.fill, .fill)
-//        .setDelegate(self)
+        .backgroundColor(UIColor.lightGray.withAlphaComponent(0.5))
 
         navState.value.bodyAvoidNavBar = true
     }

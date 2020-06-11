@@ -112,6 +112,12 @@ class FlowCaculator {
             } else { // 内容未超出
                 currentLine.append(m)
             }
+            // 主动换行
+            if m.flowEnding {
+                virtualLines.append(getVirtualLine(children: currentLine))
+                currentLine = []
+                maxCross = 0
+            }
         }
         if !currentLine.isEmpty {
             virtualLines.append(getVirtualLine(children: currentLine))

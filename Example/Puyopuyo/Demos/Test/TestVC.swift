@@ -37,14 +37,19 @@ class TestVC: UIViewController {
         navigationController?.navigationBar.isTranslucent = false
 
         VBox().attach(view) {
-            VBox().attach($0) {
-                Label.demo("sldkfjldkjf").attach($0)
-                    .size(.fill, 25)
-                Label.demo("slkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsfslkdjflakjdsf").attach($0)
-                    .width(.fill)
+            VFlow(count: 0).attach($0) {
+                for idx in 0..<20 {
+                    UIView().attach($0)
+                        .size(50, 50)
+                        .attach {
+                            if idx == 1 {
+                                $0.attach().flowEnding(true)
+                            }
+                    }
+                }
             }
-            .size(.fill, .wrap(max: 100))
-            .padding(all: 20)
+            .space(10)
+            .size(.fill, .fill)
         }
         .space(10)
         .padding(all: 20)

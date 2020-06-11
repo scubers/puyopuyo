@@ -15,7 +15,7 @@ public struct SimpleInput<T>: Inputing {
     }
 
     private var action: (T) -> Void
-    public init(_ output: @escaping (T) -> Void) {
+    public init(_ output: @escaping (T) -> Void = {_ in }) {
         action = output
     }
 }

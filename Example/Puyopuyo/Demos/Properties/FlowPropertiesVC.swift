@@ -73,7 +73,7 @@ class FlowPropertiesVC: BaseVC {
         }
         return ScrollingBox<VBox> {
             $0.attach {
-                Label("请横屏使用\nChange to landscape").attach($0)
+                Label("请横屏使用\nChange to landscape\n double click(remove) or click(when arrange = 0)").attach($0)
                     .textAlignment(.left)
                     .numberOfLines(0)
 
@@ -221,12 +221,24 @@ class FlowPropertiesVC: BaseVC {
         let base: CGFloat = 40
         let width = base + CGFloat(self.step.value * idx)
         let v = Label.demo("\(idx + 1)").attach()
-            .style(TapScaleStyle())
             .backgroundColor(Util.randomColor())
             .width(self.blockFix.value ? SizeDescription.fix(width) : .wrap(add: width))
             .height(self.blockFix.value ? SizeDescription.fix(width) : .wrap(add: width))
-            .onTap {
-                $0.view?.removeFromSuperview()
+            .attach { v in
+                let doubleTap = UITapGestureRecognizer()
+                doubleTap.numberOfTapsRequired = 2
+                doubleTap.py_addAction {
+                    $0.view?.removeFromSuperview()
+                }
+                v.addGestureRecognizer(doubleTap)
+
+                let tap = UITapGestureRecognizer()
+                tap.require(toFail: doubleTap)
+                tap.py_addAction { g in
+                    guard let v = g.view else { return }
+                    v.attach().flowEnding(!v.py_measure.flowEnding)
+                }
+                v.addGestureRecognizer(tap)
             }
             .view
 

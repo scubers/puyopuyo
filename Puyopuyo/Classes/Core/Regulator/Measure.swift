@@ -142,6 +142,9 @@ public class Measure: Measurable, MeasureTargetable, Hashable {
 
     /// 计算节点大小描述
     public var size = Size(width: .wrap, height: .wrap)
+    
+    /// 只有在flowbox中生效
+    public var flowEnding = false
 
     /// 是否激活本节点
     public var activated = true
