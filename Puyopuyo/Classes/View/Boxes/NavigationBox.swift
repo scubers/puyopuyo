@@ -24,8 +24,8 @@ open class NavigationBox: VBox, Stateful {
 
     public var viewState = State(ViewState())
 
-    public init(navBar: @escaping BoxGenerator<UIView>,
-                body: @escaping BoxGenerator<UIView>) {
+    public init(navBar: BoxGenerator<UIView>,
+                body: BoxGenerator<UIView>) {
         super.init(frame: .zero)
 
         attach {
