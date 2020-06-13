@@ -20,6 +20,8 @@ public extension Stateful {
     func _state<R>(_ kp: KeyPath<StateType, R>) -> SimpleOutput<R> {
         _state.map(kp)
     }
+
+    var binding: StateBinding<StateType> { .init(output: viewState.asOutput()) }
 }
 
 @available(*, deprecated, message: "use Eventable")

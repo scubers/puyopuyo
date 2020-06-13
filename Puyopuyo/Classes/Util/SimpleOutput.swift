@@ -174,25 +174,6 @@ extension Optional: PuyoOptionalType {
     }
 }
 
-// extension Yo where Base: Outputing, Base.OutputType: PuyoOptionalType {
-extension SimpleOutput where OutputType: PuyoOptionalType {
-    public func unwrap(or: OutputType.PuyoWrappedType) -> SimpleOutput<OutputType.PuyoWrappedType> {
-        return bind { v, i in
-            if let v = v.puyoWrapValue {
-                i.input(value: v)
-            } else {
-                i.input(value: or)
-            }
-        }
-    }
-}
-
-extension SimpleOutput where OutputType: Equatable {
-    public func distinct() -> SimpleOutput<OutputType> {
-        return ignore { $0 == $1 }
-    }
-}
-
 extension PuyoOptionalType where PuyoWrappedType == Self {
     public var puyoWrapValue: PuyoWrappedType? {
         return Optional.some(self)
@@ -204,3 +185,95 @@ extension UIColor: PuyoOptionalType { public typealias PuyoWrappedType = UIColor
 extension UIFont: PuyoOptionalType { public typealias PuyoWrappedType = UIFont }
 extension NSNumber: PuyoOptionalType { public typealias PuyoWrappedType = NSNumber }
 extension UIImage: PuyoOptionalType { public typealias PuyoWrappedType = UIImage }
+
+public extension Outputing {
+    func some() -> SimpleOutput<OutputType?> {
+        return mapTo { $0 }
+    }
+
+    func _bind<T>(action: @escaping (OutputType, SimpleInput<T>) -> Void) -> SimpleOutput<T> {
+        return SimpleOutput<T>({ (i) -> Unbinder in
+            self.outputing { v in
+                action(v, i)
+            }
+        })
+    }
+
+    func mapTo<R>(_ block: @escaping (OutputType) -> R) -> SimpleOutput<R> {
+        return _bind { $1.input(value: block($0)) }
+    }
+
+    func mapTo<R>(_ keyPath: KeyPath<OutputType, R>) -> SimpleOutput<R> {
+        _bind { $1.input(value: $0[keyPath: keyPath]) }
+    }
+
+    func filterBy(_ filter: @escaping (OutputType) -> Bool) -> SimpleOutput<OutputType> {
+        return _bind { v, i in
+            if filter(v) { i.input(value: v) }
+        }
+    }
+
+    func ignoreBy(_ condition: @escaping (OutputType, OutputType) -> Bool) -> SimpleOutput<OutputType> {
+        var last: OutputType!
+        return _bind { v, i in
+            guard last != nil else {
+                last = v
+                i.input(value: v)
+                return
+            }
+            let ignore = condition(last, v)
+            last = v
+            if !ignore {
+                i.input(value: v)
+            }
+        }
+    }
+
+    func distinct<R>(by keyPath: KeyPath<OutputType, R>) -> SimpleOutput<OutputType> where R: Equatable {
+        ignoreBy {
+            $0[keyPath: keyPath] == $1[keyPath: keyPath]
+        }
+    }
+
+    func distinctMap<R>(_ kp: KeyPath<OutputType, R>) -> SimpleOutput<R> where R: Equatable {
+        distinct(by: kp).map(kp)
+    }
+
+    func takeCount(_ count: Int) -> SimpleOutput<OutputType> {
+        var times: Int = 0
+        return _bind { v, i in
+            guard times <= count else { return }
+            times += 1
+            i.input(value: v)
+        }
+    }
+
+    func skipCount(_ count: Int) -> SimpleOutput<OutputType> {
+        var times = 0
+        return _bind { v, i in
+            guard times > count else {
+                times += 1
+                return
+            }
+            i.input(value: v)
+        }
+    }
+}
+
+extension Outputing where OutputType: PuyoOptionalType {
+    public func unwrap(or: OutputType.PuyoWrappedType) -> SimpleOutput<OutputType.PuyoWrappedType> {
+        return _bind { v, i in
+            if let v = v.puyoWrapValue {
+                i.input(value: v)
+            } else {
+                i.input(value: or)
+            }
+        }
+    }
+}
+
+extension Outputing where OutputType: Equatable {
+    public func distinct() -> SimpleOutput<OutputType> {
+        return ignoreBy { $0 == $1 }
+    }
+}

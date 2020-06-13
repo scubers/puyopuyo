@@ -15,6 +15,10 @@ public class State<Value>: Outputing, Inputing {
     public init(_ value: Value) {
         _value = value
     }
+    
+    public init(value: Value) {
+        _value = value
+    }
 
     fileprivate init() {}
 
@@ -62,4 +66,76 @@ public class State<Value>: Outputing, Inputing {
         singleUnbinder?.py_unbind()
         singleUnbinder = outputing(block)
     }
+
+    public func setState(_ state: (inout Value) -> Void) {
+        var v = value
+        state(&v)
+        value = v
+    }
+
+    public var binding: StateBinding<Value> { StateBinding(output: asOutput()) }
+}
+
+@propertyWrapper public struct PState<Value>: Outputing, Inputing {
+    private let state: State<Value>
+    public init(wrappedValue value: Value) {
+        state = State(value)
+    }
+
+    public func outputing(_ block: @escaping (Value) -> Void) -> Unbinder {
+        state.outputing(block)
+    }
+    public func input(value: Value) {
+        state.input(value: value)
+    }
+
+    public var wrappedValue: Value {
+        get { fatalError() }
+        set { state.value = newValue }
+    }
+
+    public var projectedValue: StateBinding<Value> { StateBinding(output: state.asOutput()) }
+
+    public func setState(_ block: (inout Value) -> Void) {
+        state.setState(block)
+    }
+}
+
+@dynamicMemberLookup public struct StateBinding<Value>: Outputing {
+    public typealias OutputType = Value
+    var output: SimpleOutput<Value>
+    public subscript<Subject>(dynamicMember member: KeyPath<Value, Subject>) -> StateBinding<Subject> {
+        StateBinding<Subject>(output: output.map(member))
+    }
+
+    public func outputing(_ block: @escaping (OutputType) -> Void) -> Unbinder {
+        output.outputing(block)
+    }
+}
+
+public extension StateBinding where Value: PuyoOptionalType {
+    subscript<Subject>(dynamicMember member: KeyPath<Value.PuyoWrappedType, Subject>) -> StateBinding<Subject?> {
+        StateBinding<Subject?>(
+            output: output.map {
+                if let v = $0.puyoWrapValue {
+                    return v[keyPath: member]
+                } else {
+                    return nil
+                }
+            }
+        )
+    }
+}
+
+public extension PuyoOptionalType {
+    subscript<Subject>(dynamicMember member: KeyPath<PuyoWrappedType, Subject>) -> Subject? {
+        if let v = puyoWrapValue {
+            return v[keyPath: member]
+        }
+        return nil
+    }
+}
+
+public extension Outputing {
+    var binding: StateBinding<OutputType> { .init(output: asOutput()) }
 }

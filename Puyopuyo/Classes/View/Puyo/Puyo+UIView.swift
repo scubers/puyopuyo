@@ -65,25 +65,25 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func alpha<S: Outputing>(_ alpha: S) -> Self where S.OutputType == CGFloat {
-        view.py_setUnbinder(alpha.catchObject(view, { v, a in
+        view.py_setUnbinder(alpha.catchObject(view) { v, a in
             v.alpha = a
-        }), for: #function)
+        }, for: #function)
         return self
     }
 
     @discardableResult
     func userInteractionEnabled<S: Outputing>(_ enabled: S) -> Self where S.OutputType == Bool {
-        view.py_setUnbinder(enabled.catchObject(view, { v, a in
+        view.py_setUnbinder(enabled.catchObject(view) { v, a in
             v.isUserInteractionEnabled = a
-        }), for: #function)
+        }, for: #function)
         return self
     }
 
     @discardableResult
     func frame<S: Outputing>(_ frame: S) -> Self where S.OutputType == CGRect {
-        view.py_setUnbinder(frame.catchObject(view, { v, a in
+        view.py_setUnbinder(frame.catchObject(view) { v, a in
             v.frame = a
-        }), for: #function)
+        }, for: #function)
         return self
     }
 
@@ -98,18 +98,18 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func bounds<S: Outputing>(_ frame: S) -> Self where S.OutputType == CGRect {
-        view.py_setUnbinder(frame.catchObject(view, { v, a in
+        view.py_setUnbinder(frame.catchObject(view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             v.bounds = a
-        }), for: #function)
+        }, for: #function)
         return self
     }
 
     @discardableResult
     func center<S: Outputing>(_ point: S) -> Self where S.OutputType == CGPoint {
-        view.py_setUnbinder(point.catchObject(view, { v, a in
+        view.py_setUnbinder(point.catchObject(view) { v, a in
             v.center = a
-        }), for: #function)
+        }, for: #function)
         return self
     }
 
@@ -134,83 +134,83 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func frameX(_ x: ValueModifiable) -> Self {
-        view.py_setUnbinder(x.checkSelfSimulate(view).modifyValue().catchObject(view, { v, a in
+        view.py_setUnbinder(x.checkSelfSimulate(view).modifyValue().catchObject(view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             v.frame.origin.x = a
-        }), for: #function)
+        }, for: #function)
         return self
     }
 
     @discardableResult
     func frameY(_ y: ValueModifiable) -> Self {
-        view.py_setUnbinder(y.checkSelfSimulate(view).modifyValue().catchObject(view, { v, a in
+        view.py_setUnbinder(y.checkSelfSimulate(view).modifyValue().catchObject(view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             v.frame.origin.y = a
-        }), for: #function)
+        }, for: #function)
         return self
     }
 
     @discardableResult
     func frameWidth(_ width: ValueModifiable) -> Self {
-        view.py_setUnbinder(width.checkSelfSimulate(view).modifyValue().catchObject(view, { v, a in
+        view.py_setUnbinder(width.checkSelfSimulate(view).modifyValue().catchObject(view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             v.frame.size.width = max(0, a)
-        }), for: #function)
+        }, for: #function)
         return self
     }
 
     @discardableResult
     func frameHeight(_ width: ValueModifiable) -> Self {
-        view.py_setUnbinder(width.checkSelfSimulate(view).modifyValue().catchObject(view, { v, a in
+        view.py_setUnbinder(width.checkSelfSimulate(view).modifyValue().catchObject(view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             v.frame.size.height = max(0, a)
-        }), for: #function)
+        }, for: #function)
         return self
     }
 
     @discardableResult
     func top(_ top: ValueModifiable) -> Self {
-        view.py_setUnbinder(top.modifyValue().catchObject(view, { v, a in
+        view.py_setUnbinder(top.modifyValue().catchObject(view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
             f.origin.y = a
             f.size.height = max(0, v.frame.maxY - a)
             v.frame = f
-        }), for: #function)
+        }, for: #function)
         return self
     }
 
     @discardableResult
     func left(_ left: ValueModifiable) -> Self {
-        view.py_setUnbinder(left.modifyValue().catchObject(view, { v, a in
+        view.py_setUnbinder(left.modifyValue().catchObject(view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
             f.origin.x = a
             f.size.width = max(0, v.frame.maxX - a)
             v.frame = f
-        }), for: #function)
+        }, for: #function)
         return self
     }
 
     @discardableResult
     func bottom(_ bottom: ValueModifiable) -> Self {
-        view.py_setUnbinder(bottom.modifyValue().catchObject(view, { v, a in
+        view.py_setUnbinder(bottom.modifyValue().catchObject(view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
             f.size.height = max(0, a - v.frame.origin.y)
             v.frame = f
-        }), for: #function)
+        }, for: #function)
         return self
     }
 
     @discardableResult
     func right(_ right: ValueModifiable) -> Self {
-        view.py_setUnbinder(right.modifyValue().catchObject(view, { v, a in
+        view.py_setUnbinder(right.modifyValue().catchObject(view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
             f.size.width = max(0, a - v.frame.origin.x)
             v.frame = f
-        }), for: #function)
+        }, for: #function)
         return self
     }
 
@@ -223,7 +223,7 @@ public extension Puyo where T: UIView {
         }), for: UUID().description)
         return self
     }
-    
+
     @discardableResult
     func onTap<C: WeakCatchable, O>(to catcher: C, _ action: @escaping (O, UITapGestureRecognizer) -> Void) -> Self where C.Object == O {
         onTap(to: catcher.catchedWeakObject, action)
@@ -233,6 +233,14 @@ public extension Puyo where T: UIView {
     func onTap(_ action: @escaping (UITapGestureRecognizer) -> Void) -> Self {
         view.py_setUnbinder(view.py_setTap(action: { tap in
             action(tap)
+        }), for: UUID().description)
+        return self
+    }
+
+    @discardableResult
+    func onTap(_ action: @escaping () -> Void) -> Self {
+        view.py_setUnbinder(view.py_setTap(action: { _ in
+            action()
         }), for: UUID().description)
         return self
     }
