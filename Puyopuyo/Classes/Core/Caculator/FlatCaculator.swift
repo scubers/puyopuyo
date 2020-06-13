@@ -114,7 +114,7 @@ class FlatCaculator {
 
             // 判断主轴包裹冲突
             if regCalSize.main.isWrap && subCalSize.main.isRatio {
-                Caculator.constraintConflict(crash: false, "parent wrap cannot contains ratio children!!!!!")
+                Caculator.constraintConflict(crash: false, "parent wrap cannot contain main ratio children!!!!!")
                 unRegulatable = true
                 
             }
@@ -140,7 +140,7 @@ class FlatCaculator {
         }
         
         if unRegulatable {
-            Caculator.constraintConflict(crash: false, "Current regulator cannot regulated!!!!")
+            Caculator.constraintConflict(crash: false, "Current regulator[\(self.regulator)] cannot regulated!!!!")
             return Size()
         }
 
