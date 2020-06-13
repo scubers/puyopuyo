@@ -95,8 +95,8 @@ public struct OutputAction<Holder: NSObject, Value> {
     }
 }
 
-extension Outputing where OutputType == Self {
-    public func outputing(_ block: @escaping (OutputType) -> Void) -> Unbinder {
+public extension Outputing where OutputType == Self {
+    func outputing(_ block: @escaping (OutputType) -> Void) -> Unbinder {
         block(self)
         return Unbinders.create()
     }

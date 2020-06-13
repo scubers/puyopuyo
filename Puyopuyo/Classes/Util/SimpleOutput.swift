@@ -45,8 +45,8 @@ public struct SimpleOutput<Value>: Outputing {
     }
 }
 
-extension Outputing {
-    public func asOutput() -> SimpleOutput<OutputType> {
+public extension Outputing {
+    func asOutput() -> SimpleOutput<OutputType> {
         return SimpleOutput { (i) -> Unbinder in
             self.outputing { v in
                 i.input(value: v)
