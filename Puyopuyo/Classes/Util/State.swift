@@ -7,8 +7,6 @@
 
 import Foundation
 
-public typealias _St = State
-
 public class State<Value>: Outputing, Inputing {
     public typealias OutputType = Value
 
@@ -21,12 +19,8 @@ public class State<Value>: Outputing, Inputing {
     fileprivate init() {}
 
     public var value: Value {
-        set {
-            _value = newValue
-        }
-        get {
-            return _value
-        }
+        set { _value = newValue }
+        get { return _value }
     }
 
     private var _value: Value! {
@@ -67,24 +61,5 @@ public class State<Value>: Outputing, Inputing {
     public func singleOutput(_ block: @escaping (Value) -> Void) {
         singleUnbinder?.py_unbind()
         singleUnbinder = outputing(block)
-    }
-}
-
-// extension Yo where Base: Outputing {
-extension SimpleOutput {
-    public func state() -> State<OutputType> {
-        let new = State<OutputType>()
-        _ = outputing({ v in
-            new.input(value: v)
-        })
-        return new
-    }
-
-    public func someState() -> State<OutputType?> {
-        let new = State<OutputType?>()
-        _ = outputing({ v in
-            new.input(value: v)
-        })
-        return new
     }
 }

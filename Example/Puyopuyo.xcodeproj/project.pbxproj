@@ -19,8 +19,6 @@
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		A8035A8223AE93BA00F8D613 /* TableBoxPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8035A8123AE93BA00F8D613 /* TableBoxPropertiesVC.swift */; };
 		A81CE13C2310509B00E19E6B /* HBoxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81CE13B2310509B00E19E6B /* HBoxVC.swift */; };
-		A81CE143231280EE00E19E6B /* FlowBoxMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81CE142231280EE00E19E6B /* FlowBoxMenu.swift */; };
-		A81CE1452312811400E19E6B /* FlowBoxMixVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81CE1442312811400E19E6B /* FlowBoxMixVC.swift */; };
 		A81CE1492312EE6900E19E6B /* OptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81CE1482312EE6900E19E6B /* OptionView.swift */; };
 		A846265123093E4E003A282C /* FlatMixVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A846265023093E4E003A282C /* FlatMixVC.swift */; };
 		A84626542309574C003A282C /* TestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84626532309574C003A282C /* TestVC.swift */; };
@@ -49,7 +47,6 @@
 		A8D9430E22FFEB00002E487F /* ZBoxMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9430D22FFEB00002E487F /* ZBoxMenu.swift */; };
 		A8D9431022FFEBE7002E487F /* FlatBoxMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9430F22FFEBE7002E487F /* FlatBoxMenu.swift */; };
 		A8D9431222FFEC45002E487F /* ZBoxSizeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9431122FFEC45002E487F /* ZBoxSizeVC.swift */; };
-		A8D9431622FFF102002E487F /* StatefulVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9431522FFF102002E487F /* StatefulVC.swift */; };
 		A8E53FB322C8E679000B2B6D /* BaseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E53FB222C8E679000B2B6D /* BaseVC.swift */; };
 		A8E53FB522C8E6BB000B2B6D /* MenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E53FB422C8E6BB000B2B6D /* MenuVC.swift */; };
 		F57CB0F700D14D2257E5BC98 /* Pods_Puyopuyo_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB7C29DBAEAF1D476E633CC8 /* Pods_Puyopuyo_Tests.framework */; };
@@ -88,8 +85,6 @@
 		77FB953E25BC3D91DC89F5C7 /* Pods-Puyopuyo_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Puyopuyo_Example.release.xcconfig"; path = "Target Support Files/Pods-Puyopuyo_Example/Pods-Puyopuyo_Example.release.xcconfig"; sourceTree = "<group>"; };
 		A8035A8123AE93BA00F8D613 /* TableBoxPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableBoxPropertiesVC.swift; sourceTree = "<group>"; };
 		A81CE13B2310509B00E19E6B /* HBoxVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HBoxVC.swift; sourceTree = "<group>"; };
-		A81CE142231280EE00E19E6B /* FlowBoxMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowBoxMenu.swift; sourceTree = "<group>"; };
-		A81CE1442312811400E19E6B /* FlowBoxMixVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowBoxMixVC.swift; sourceTree = "<group>"; };
 		A81CE1482312EE6900E19E6B /* OptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionView.swift; sourceTree = "<group>"; };
 		A846265023093E4E003A282C /* FlatMixVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlatMixVC.swift; sourceTree = "<group>"; };
 		A84626532309574C003A282C /* TestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVC.swift; sourceTree = "<group>"; };
@@ -121,7 +116,6 @@
 		A8D9430D22FFEB00002E487F /* ZBoxMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZBoxMenu.swift; sourceTree = "<group>"; };
 		A8D9430F22FFEBE7002E487F /* FlatBoxMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlatBoxMenu.swift; sourceTree = "<group>"; };
 		A8D9431122FFEC45002E487F /* ZBoxSizeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZBoxSizeVC.swift; sourceTree = "<group>"; };
-		A8D9431522FFF102002E487F /* StatefulVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatefulVC.swift; sourceTree = "<group>"; };
 		A8E53FB222C8E679000B2B6D /* BaseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseVC.swift; sourceTree = "<group>"; };
 		A8E53FB422C8E6BB000B2B6D /* MenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuVC.swift; sourceTree = "<group>"; };
 		B80C4BDF60E8E994E6351B56 /* Pods-Puyopuyo_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Puyopuyo_Example.debug.xcconfig"; path = "Target Support Files/Pods-Puyopuyo_Example/Pods-Puyopuyo_Example.debug.xcconfig"; sourceTree = "<group>"; };
@@ -238,15 +232,6 @@
 			name = "Podspec Metadata";
 			sourceTree = "<group>";
 		};
-		A81CE13D231063E200E19E6B /* FlowBox */ = {
-			isa = PBXGroup;
-			children = (
-				A81CE142231280EE00E19E6B /* FlowBoxMenu.swift */,
-				A81CE1442312811400E19E6B /* FlowBoxMixVC.swift */,
-			);
-			path = FlowBox;
-			sourceTree = "<group>";
-		};
 		A846265223095743003A282C /* Test */ = {
 			isa = PBXGroup;
 			children = (
@@ -306,9 +291,7 @@
 				A8BCEEB4239961F6002DB739 /* Properties */,
 				A8841062234B3D9B0002B9EB /* BaseStyles */,
 				A86F437D233F60290008606F /* Styles */,
-				A81CE13D231063E200E19E6B /* FlowBox */,
 				A846265223095743003A282C /* Test */,
-				A8D9431322FFF0EB002E487F /* Stateful */,
 				A8D9430A22FF391C002E487F /* ZBox */,
 				A8D9430522FF362B002E487F /* FlatBox */,
 				A8D9430422FF3623002E487F /* Base */,
@@ -362,14 +345,6 @@
 				A8D9431122FFEC45002E487F /* ZBoxSizeVC.swift */,
 			);
 			path = ZBox;
-			sourceTree = "<group>";
-		};
-		A8D9431322FFF0EB002E487F /* Stateful */ = {
-			isa = PBXGroup;
-			children = (
-				A8D9431522FFF102002E487F /* StatefulVC.swift */,
-			);
-			path = Stateful;
 			sourceTree = "<group>";
 		};
 		CF1B3A46E0BA451826B245F4 /* Frameworks */ = {
@@ -579,9 +554,7 @@
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				A86F4378233F45730008606F /* StylesViewController.m in Sources */,
 				A84E5CC1239EB5AC0091D39B /* ZPropertiesVC.swift in Sources */,
-				A81CE1452312811400E19E6B /* FlowBoxMixVC.swift in Sources */,
 				A8E53FB322C8E679000B2B6D /* BaseVC.swift in Sources */,
-				A81CE143231280EE00E19E6B /* FlowBoxMenu.swift in Sources */,
 				0982C1A02469AF730070F104 /* RecycleBoxPropertiesVC.swift in Sources */,
 				A8841064234B3DA60002B9EB /* BaseStyles.swift in Sources */,
 				A8E53FB522C8E6BB000B2B6D /* MenuVC.swift in Sources */,
@@ -591,7 +564,6 @@
 				A86F437F233F60370008606F /* Styles.swift in Sources */,
 				A8D9430E22FFEB00002E487F /* ZBoxMenu.swift in Sources */,
 				A8969BD723A629E000104403 /* ScrollBoxPropertiesVC.swift in Sources */,
-				A8D9431622FFF102002E487F /* StatefulVC.swift in Sources */,
 				A8969BE323A67EAC00104403 /* NavigationBoxPropertiesVC.swift in Sources */,
 				A8D9430922FF3694002E487F /* Label.swift in Sources */,
 				09F6FF172471A1F300F97053 /* SequenceBoxPropertiesVC.swift in Sources */,
