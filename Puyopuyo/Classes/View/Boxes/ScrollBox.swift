@@ -81,9 +81,9 @@ public class ScrollingBox<Flat: Boxable & UIView>:
 
     public private(set) var flat: Flat
 
-    public init(flat: @escaping BoxGenerator<Flat> = { Flat() },
+    public init(flat: BoxGenerator<Flat> = { Flat() },
                 direction: ScrollDirection = .y,
-                builder: @escaping BoxBuilder<Flat>) {
+                builder: BoxBuilder<Flat>) {
         self.flat = flat()
         super.init(frame: .zero)
 
