@@ -87,15 +87,16 @@ extension ControllerBuilder {
     func afterBuild(with context: () -> Controller) {}
 }
 
+/// 存在的意义只是因为iOS13以下不支持 some 关键字
 protocol BuilderCoordinator {
-    func build(_ context: @autoclosure () -> Any)
+    func build(_ context: UIViewController)
 }
 
 extension BuilderCoordinator where Self: ControllerBuilder {
-    func build(_ context: @autoclosure () -> Any) {
-        prepareBuild(with: { context() as! Controller })
-        build(with: { context() as! Controller })
-        afterBuild(with: { context() as! Controller })
+    func build(_ context: UIViewController) {
+        prepareBuild(with: { context as! Controller })
+        build(with: { context as! Controller })
+        afterBuild(with: { context as! Controller })
     }
 }
 
@@ -112,44 +113,33 @@ class SubVC: ParentVC {
     override var coordinator: BuilderCoordinator? { Builder(viewController: self) }
     struct Builder: ControllerBuilder, BuilderCoordinator {
         weak var viewController: SubVC?
+        
+        let view = UIView()
 
-        class Person {
-            var name: String?
-            var wallet: Wallet?
-            var party: Party?
-        }
-
-        class Wallet {
-            var amount: String?
-        }
-
-        struct Party {
-            var version: String?
-            var person: Person?
-        }
-
-//        let sections = State([IRecycleSection]())
-        var sections = State(value: [IRecycleSection]())
-        var person = State(Person())
+        let sections = State(value: [IRecycleSection]())
         func build(with context: () -> SubVC) {
             context().attach {
                 VBox().attach($0) {
                     RecycleBox(
-                        sections: self.sections.asOutput()
+                        sections: sections.asOutput()
                     )
                     .attach($0)
                     .size(.fill, .fill)
                     Label.demo("").attach($0)
-                        .text(self.sections.binding.count.description)
+                        .text(sections.binding.count.description)
                 }
                 .backgroundColor(Util.randomColor())
-                .onTap { self.finish() }
+                .onTap(finish)
                 .size(.fill, .fill)
             }
         }
 
         func afterBuild(with context: () -> SubVC) {
             reload()
+            sections.outputing { _ in
+                print(self)
+            }
+            .unbind(by: context())
         }
 
         func finish() {
