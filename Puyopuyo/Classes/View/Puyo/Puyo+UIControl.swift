@@ -9,14 +9,24 @@ import Foundation
 
 public extension Puyo where T: UIControl {
     @discardableResult
-    func bind<I: Inputing>(event: UIControl.Event, unique: Bool = false, input: I) -> Self where I.InputType == T {
+    func bind(event: UIControl.Event, unique: Bool = false, action: @escaping (T) -> Void) -> Self {
         let unbinder = view.py_addAction(for: event) { control in
-            input.input(value: control as! T)
+            action(control as! T)
         }
         if unique {
             view.py_setUnbinder(unbinder, for: "py_control_unique_action_\(event)")
         }
         return self
+    }
+
+    @discardableResult
+    func bind(event: UIControl.Event, unique: Bool = false, action: @escaping () -> Void) -> Self {
+        bind(event: event, unique: unique, action: { _ in action() })
+    }
+
+    @discardableResult
+    func bind<I: Inputing>(event: UIControl.Event, unique: Bool = false, input: I) -> Self where I.InputType == T {
+        bind(event: event, unique: unique) { input.input(value: $0) }
     }
 
     @discardableResult
@@ -27,7 +37,7 @@ public extension Puyo where T: UIControl {
             }
         })
     }
-    
+
     @discardableResult
     func bind<O, C: WeakCatchable>(to catcher: C, event: UIControl.Event, unique: Bool = false, action: @escaping (O, T) -> Void) -> Self where C.Object == O {
         bind(to: catcher.catchedWeakObject, event: event, action: action)

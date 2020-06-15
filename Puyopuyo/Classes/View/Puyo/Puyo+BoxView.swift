@@ -331,6 +331,12 @@ public extension Puyo where T: Stateful, T: NSObject {
         }.unbind(by: view)
         return self
     }
+    
+    @discardableResult
+    func setState(_ action: (inout T.StateType) -> Void) -> Self {
+        view.viewState.setState(action)
+        return self
+    }
 }
 
 public extension Puyo where T: Delegatable {
