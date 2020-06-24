@@ -18,4 +18,12 @@ public extension Puyo where T: UISwitch {
         }
         return self
     }
+    
+    @discardableResult
+    func isOnValue<S: Outputing>(_ state: S) -> Self where S.OutputType == Bool {
+        state.safeBind(to: view, id: #function) { v, a in
+            v.isOn = a
+        }
+        return self
+    }
 }

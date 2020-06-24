@@ -419,7 +419,7 @@ class FlatCaculator {
     }
 
     private func _setNotFormattable() {
-        Caculator.constraintConflict(crash: false, "Regulator[\(regulator)] Format.\(regulator.format) reset to .leading")
+//        Caculator.constraintConflict(crash: false, "Regulator[\(regulator)] Format.\(regulator.format) reset to .leading")
         formattable = false
         regulator.format = .leading
     }
