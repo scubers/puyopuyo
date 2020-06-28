@@ -80,7 +80,7 @@ public class State<Value>: Outputing, Inputing {
     }
 
     public var wrappedValue: Value {
-        get { fatalError() }
+        get { state.value }
         set { state.value = newValue }
     }
 

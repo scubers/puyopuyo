@@ -23,7 +23,23 @@ class NewView: ZBox, Eventable {
     }
 }
 
+class Person {
+    var name: String?
+    var age = 1
+}
+
+class Store: AbstractStateStoreObject {
+    @ChangeNotifier var person = Person()
+
+    @ChangeNotifier var name: String? = "abc"
+    var age: Int = 0
+
+    func aaa() {}
+}
+
 class TestVC: UIViewController {
+    @StateStore var store = Store()
+    
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
@@ -34,6 +50,22 @@ class TestVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        store.onStoreChanged().safeBind(to: self) { _, s in
+            print(s)
+        }
+        
+        $store.person.name
+        
+        $store.person.name.safeBind(to: self) { (this, s) in
+            print(s ?? "")
+        }
+
+        store.name = "1"
+        store.age = 10
+        store.$person.trigger { $0.name = "100" }
+        
+
         navigationController?.navigationBar.isTranslucent = false
 
         VBox().attach(view) {
@@ -113,7 +145,7 @@ class SubVC: ParentVC {
     override var coordinator: BuilderCoordinator? { Builder(viewController: self) }
     struct Builder: ControllerBuilder, BuilderCoordinator {
         weak var viewController: SubVC?
-        
+
         let view = UIView()
 
         let sections = State(value: [IRecycleSection]())

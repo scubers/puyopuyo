@@ -120,6 +120,10 @@ public struct Unbinders {
     public static func create(_ block: @escaping () -> Void = {}) -> Unbinder {
         return UnbinderImpl(block)
     }
+    
+    public static func createBag() -> UnbinderBag {
+        NSObject()
+    }
 }
 
 // MARK: - NSObject unbinder impl
