@@ -39,6 +39,8 @@ class Store: AbstractStateStoreObject {
 
 class TestVC: UIViewController {
     @StateStore var store = Store()
+    @GlobalStore var store1: Store
+    
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(false, animated: animated)
@@ -50,12 +52,13 @@ class TestVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        store1.onStoreChanged().safeBind(to: self) { _, s in
+            print(s)
+        }
         store.onStoreChanged().safeBind(to: self) { _, s in
             print(s)
         }
-        
-        $store.person.name
         
         $store.person.name.safeBind(to: self) { (this, s) in
             print(s ?? "")
@@ -142,6 +145,14 @@ class ParentVC: UIViewController {
 }
 
 class SubVC: ParentVC {
+    
+    @GlobalStore var store: Store
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        store.name = "100"
+    }
+    
     override var coordinator: BuilderCoordinator? { Builder(viewController: self) }
     struct Builder: ControllerBuilder, BuilderCoordinator {
         weak var viewController: SubVC?

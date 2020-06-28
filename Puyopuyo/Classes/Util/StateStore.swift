@@ -8,7 +8,10 @@
 import Foundation
 import SwiftUI
 
+// MARK: - StateStore
+
 public protocol StateStoreObject: AnyObject {
+    init()
     associatedtype StoreOutputing: Outputing & Inputing where StoreOutputing.OutputType == (), StoreOutputing.InputType == StoreOutputing.OutputType
 
     var _changeOutput: StoreOutputing { get }
@@ -29,7 +32,7 @@ public extension StateStoreObject {
 }
 
 open class AbstractStateStoreObject: StateStoreObject {
-    public init() {}
+    public required init() {}
     public var _changeOutput = SimpleIO<Void>()
     public var _unbinderBag: UnbinderBag = Unbinders.createBag()
     deinit {
@@ -56,7 +59,7 @@ public struct ChangeNotifier<Value>: ChangeHandler {
             notifier.input(value: ())
         }
     }
-    
+
     public struct ObjectTrigger {
         var object: Value
         var after: () -> Void
@@ -65,6 +68,7 @@ public struct ChangeNotifier<Value>: ChangeHandler {
             after()
         }
     }
+
     public var projectedValue: ObjectTrigger {
         ObjectTrigger(object: wrappedValue) {
             self.notifier.input(value: ())
@@ -77,7 +81,7 @@ public struct ChangeNotifier<Value>: ChangeHandler {
 public struct StateStore<ObjectType> where ObjectType: StateStoreObject {
     var storeObject: ObjectType
     public init(wrappedValue: ObjectType) {
-        self.storeObject = wrappedValue
+        storeObject = wrappedValue
         let m = Mirror(reflecting: wrappedValue)
         m.children.forEach { c in
             if let value = c.value as? ChangeHandler {
@@ -86,6 +90,71 @@ public struct StateStore<ObjectType> where ObjectType: StateStoreObject {
                 }.unbind(by: storeObject._unbinderBag)
             }
         }
+    }
+
+    public var wrappedValue: ObjectType {
+        storeObject
+    }
+
+    public var projectedValue: StateBinding<ObjectType> {
+        StateBinding(output: storeObject.onStoreChanged())
+    }
+
+    public subscript<U>(dynamicMember member: ReferenceWritableKeyPath<ObjectType, U>) -> StateBinding<U> {
+        StateBinding<U>(output: storeObject.onStoreChanged().mapTo(member))
+    }
+}
+
+// MARK: - GlobalStore
+
+class _GlobalStore {
+    static let shared = _GlobalStore()
+    private init() {}
+    class Holder {
+        weak var object: AnyObject?
+        init(obj: AnyObject) {
+            object = obj
+        }
+    }
+
+    private var map = [String: Holder]()
+
+    func get<T: StateStoreObject>(id: String, or: () -> T) -> T {
+        sync {
+            if let obj = map[id]?.object as? T {
+                return obj
+            }
+            let obj = or()
+            let holder = Holder(obj: obj)
+            map[id] = holder
+            return obj
+        }
+    }
+
+    private func sync<R>(_ action: () -> R) -> R {
+        objc_sync_enter(self)
+        defer { objc_sync_exit(self) }
+        return action()
+    }
+}
+
+@propertyWrapper
+@dynamicMemberLookup
+public struct GlobalStore<ObjectType> where ObjectType: StateStoreObject {
+    private var storeObject: ObjectType
+    public init() {
+        storeObject = _GlobalStore.shared.get(id: "\(ObjectType.self)", or: {
+            let obj = ObjectType()
+            let m = Mirror(reflecting: obj)
+            m.children.forEach { c in
+                if let value = c.value as? ChangeHandler {
+                    value.didChange.outputing { [weak obj] in
+                        obj?.trigger()
+                    }.unbind(by: obj._unbinderBag)
+                }
+            }
+            return obj
+        })
     }
 
     public var wrappedValue: ObjectType {
