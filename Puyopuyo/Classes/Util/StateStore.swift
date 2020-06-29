@@ -47,7 +47,7 @@ protocol ChangeHandler {
 }
 
 @propertyWrapper
-public struct ChangeNotifier<Value>: ChangeHandler {
+public class ChangeNotifier<Value>: ChangeHandler {
     private var notifier = SimpleIO<Void>()
     var didChange: SimpleOutput<Void> { notifier.asOutput() }
     public init(wrappedValue: Value) {
@@ -70,7 +70,8 @@ public struct ChangeNotifier<Value>: ChangeHandler {
     }
 
     public var projectedValue: ObjectTrigger {
-        ObjectTrigger(object: wrappedValue) {
+        ObjectTrigger(object: wrappedValue) { [weak self] in
+            guard let self = self else { return }
             self.notifier.input(value: ())
         }
     }
@@ -100,7 +101,7 @@ public struct StateStore<ObjectType> where ObjectType: StateStoreObject {
         StateBinding(output: storeObject.onStoreChanged())
     }
 
-    public subscript<U>(dynamicMember member: ReferenceWritableKeyPath<ObjectType, U>) -> StateBinding<U> {
+    public subscript<U>(dynamicMember member: KeyPath<ObjectType, U>) -> StateBinding<U> {
         StateBinding<U>(output: storeObject.onStoreChanged().mapTo(member))
     }
 }
@@ -165,7 +166,7 @@ public struct GlobalStore<ObjectType> where ObjectType: StateStoreObject {
         StateBinding(output: storeObject.onStoreChanged())
     }
 
-    public subscript<U>(dynamicMember member: ReferenceWritableKeyPath<ObjectType, U>) -> StateBinding<U> {
+    public subscript<U>(dynamicMember member: KeyPath<ObjectType, U>) -> StateBinding<U> {
         StateBinding<U>(output: storeObject.onStoreChanged().mapTo(member))
     }
 }

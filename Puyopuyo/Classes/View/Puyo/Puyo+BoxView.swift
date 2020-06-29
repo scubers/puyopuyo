@@ -310,8 +310,8 @@ public extension Puyo where T: Stateful {
     
     @discardableResult
     func stateChange<O: Outputing, R, V>(_ output: O, to kp: WritableKeyPath<R, V>, unbindable: UnbinderBag) -> Self where O.OutputType == V, R == T.StateType {
-        output.outputing {
-            self.view.viewState.value[keyPath: kp] = $0
+        output.outputing { [weak view] in
+            view?.viewState.value[keyPath: kp] = $0
         }.unbind(by: unbindable)
         return self
     }
@@ -326,8 +326,8 @@ public extension Puyo where T: Stateful, T: NSObject {
     
     @discardableResult
     func stateChange<O: Outputing, R, V>(_ output: O, to kp: WritableKeyPath<R, V>) -> Self where O.OutputType == V, R == T.StateType {
-        output.outputing {
-            self.view.viewState.value[keyPath: kp] = $0
+        output.outputing { [weak view] in
+            view?.viewState.value[keyPath: kp] = $0
         }.unbind(by: view)
         return self
     }
