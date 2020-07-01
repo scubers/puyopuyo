@@ -43,6 +43,13 @@ public struct SimpleOutput<Value>: Outputing {
             }
         }
     }
+
+    public static func just(_ value: Value) -> SimpleOutput<Value> {
+        .init {
+            $0.input(value: value)
+            return Unbinders.create()
+        }
+    }
 }
 
 public extension Outputing {
