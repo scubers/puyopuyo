@@ -478,9 +478,14 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
                 if !diff.insert.isEmpty {
                     box.insertItems(at: diff.insert.map { IndexPath(row: $0.to, section: section) })
                 }
-                diff.move.forEach { c in
-                    box.moveItem(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
+                if #available(iOS 14, *) {
+                    
+                } else {
+                    diff.move.forEach { c in
+                        box.moveItem(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
+                    }
                 }
+                
             }, completion: nil)
         }
     }
