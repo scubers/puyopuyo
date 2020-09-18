@@ -21,7 +21,14 @@
     return self;
 }
 
+- (BOOL)isPrivateMethod:(SEL)selector {
+    return [NSStringFromSelector(selector) hasPrefix:@"_"];
+}
+
 - (BOOL)respondsToSelector:(SEL)aSelector {
+    if ([self isPrivateMethod:aSelector]) {
+        return NO;
+    }
     PYTarget *target = [self targetWithSelector:aSelector];
     return target != nil;
 }
