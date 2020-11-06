@@ -44,7 +44,7 @@ public struct SimpleOutput<Value>: Outputing {
         }
     }
 
-    public static func just(_ value: Value) -> SimpleOutput<Value> {
+    public static func only(_ value: Value) -> SimpleOutput<Value> {
         .init {
             $0.input(value: value)
             return Unbinders.create()
@@ -230,7 +230,7 @@ public extension Outputing {
     func skipCount(_ count: Int) -> SimpleOutput<OutputType> {
         var times = 0
         return _bind { v, i in
-            guard times > count else {
+            guard times >= count else {
                 times += 1
                 return
             }
