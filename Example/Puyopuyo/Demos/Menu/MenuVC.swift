@@ -30,6 +30,7 @@ class MenuVC: BaseVC {
                         ("TableBox Properties", TableBoxPropertiesVC.self),
                         ("CollectionBox Properties", CollectionBoxPropertiesVC.self),
                         ("Advance Usage", AdvanceVC.self),
+                        ("Compare demo", CompareDemoVC.self),
                     ].asOutput(),
                     _cell: { o, _ in
                         HBox().attach {

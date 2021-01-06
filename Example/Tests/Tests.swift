@@ -1,11 +1,9 @@
-import XCTest
 import Puyopuyo
-import TangramKit
 import SnapKit
-
+import TangramKit
+import XCTest
 
 class Tests: XCTestCase {
-    
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -19,8 +17,8 @@ class Tests: XCTestCase {
     func testExample() {
         // This is an example of a functional test case.
 //        XCTAssert(true, "Pass")
-        let diff = Diff(src: [0,1,2].map({ $0.description }),
-                        dest: [2,0,4,6,1].map({ $0.description }))
+        let diff = Diff(src: [0, 1, 2].map { $0.description },
+                        dest: [2, 0, 4, 6, 1].map { $0.description })
         diff.check()
         print("insert: \(diff.insert)")
         print("delete: \(diff.delete)")
@@ -29,23 +27,27 @@ class Tests: XCTestCase {
     
     func testPerformanceExample() {
         // This is an example of a performance test case.
-        self.measure() {
-            for _ in 0..<300 {
+        self.measure {
+            for _ in 0 ..< 1 {
                 // puyo
-                let cell = ListCell(style: .value1, reuseIdentifier: "1")
+//                let cell = ListCell(style: .value1, reuseIdentifier: "1")
                 // tg
 //                let cell = ListCell2(style: .value1, reuseIdentifier: "1")
                 // autolayout
 //                let cell = ListCell3(style: .value1, reuseIdentifier: "1")
+                
+                let count = 50
+                let cell = TestPuyoView(count: count)
+//                let cell = TestAutoLayout(count: count)
                 cell.viewState.input(value: ListData(name: "slkdjflksdjflkjsdf", text: "来看房来看房龙看房龙蛋飞龙扽静", time: "lskdj"))
                 _ = cell.sizeThatFits(CGSize(width: 320, height: 0))
 //                _ = cell.systemLayoutSizeFitting(CGSize(width: 320, height: 0))
             }
         }
     }
-    
 }
-struct Util {
+
+enum Util {
     static func randomColor() -> UIColor {
         let red = CGFloat(arc4random()%256)/255.0
         let green = CGFloat(arc4random()%256)/255.0
@@ -54,9 +56,8 @@ struct Util {
         return c
     }
     
-    
     static func randomViewColor(view: UIView) {
-        view.subviews.forEach { (v) in
+        view.subviews.forEach { v in
             v.backgroundColor = self.randomColor()
             self.randomViewColor(view: v)
         }
@@ -68,7 +69,6 @@ struct Util {
     }
 }
 
-
 struct ListData {
     var name: String?
     var text: String?
@@ -77,26 +77,79 @@ struct ListData {
 
 class BaseCell: UITableViewCell, Stateful {
     typealias StateType = ListData?
-    var viewState: State<ListData?> = State<ListData?>(nil)
+    var viewState = State<ListData?>(nil)
     
     var name: SimpleOutput<String?> {
-        return viewState.asOutput().map({ $0?.name })
+        return self.viewState.asOutput().map { $0?.name }
     }
+
     var textData: SimpleOutput<String?> {
-        return viewState.asOutput().map({ $0?.text })
+        return self.viewState.asOutput().map { $0?.text }
     }
+
     var time: SimpleOutput<String?> {
-        return viewState.asOutput().map({ $0?.time })
+        return self.viewState.asOutput().map { $0?.time }
+    }
+}
+
+class TestPuyoView: BaseCell {
+    init(count: Int) {
+        super.init(style: .default, reuseIdentifier: "slkdfjlskdjfl")
+        for i in 0 ..< count {
+            contentView.attach {
+                UILabel().attach($0)
+                    .text("slkdjflskjdflksdjflksdjf\(i)")
+            }
+        }
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+}
+
+class TestAutoLayout: BaseCell {
+    init(count: Int) {
+        super.init(style: .default, reuseIdentifier: "slkdfjlskdjfl")
+        for i in 0 ..< count {
+            var last: UILabel?
+            contentView.attach {
+                let v = UILabel().attach($0)
+                    .text("slkdjflskjdflksdjflksdjf\(i)")
+                    .view
+                
+                v.snp.makeConstraints { (m) in
+                    if let last = last {
+                        m.top.equalTo(last.snp.bottom)
+                    } else {
+                        m.top.equalToSuperview()
+                    }
+                    
+                    if i == count - 1 {
+                        m.bottom.equalToSuperview()
+                    }
+                }
+                
+                
+                
+                last = v
+            }
+        }
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError()
     }
 }
 
 class ListCell: BaseCell {
-    
     private var root: UIView!
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        root =
+        self.root =
             HBox().attach(contentView) {
                 UIImageView().attach($0)
                     .size(30, 30)
@@ -110,8 +163,8 @@ class ListCell: BaseCell {
                         UIButton().attach($0)
                             .text(State("广告"))
                             .size(80, 25)
-                        }
-                        .size(.fill, 30)
+                    }
+                    .size(.fill, 30)
                     
                     UILabel().attach($0)
                         .text(self.textData)
@@ -122,7 +175,7 @@ class ListCell: BaseCell {
                         .size(.wrap, 25)
                     
                     Spacer(20).attach($0)
-                        .width(on: $0, { .fix($0.width * 0.5) })
+                        .width(on: $0) { .fix($0.width * 0.5) }
                     
                     HBox().attach($0) {
                         UILabel().attach($0)
@@ -131,9 +184,9 @@ class ListCell: BaseCell {
                             .text(self.time)
                         UILabel().attach($0)
                             .text(self.time)
-                        }
-                        .format(.between)
-                        .size(.fill, 30)
+                    }
+                    .format(.between)
+                    .size(.fill, 30)
                     
                     HBox().attach($0) {
                         UILabel().attach($0)
@@ -141,44 +194,42 @@ class ListCell: BaseCell {
                             .size(.fill, .fill)
                         UIButton().attach($0)
                             .size(50, .fill)
-                        }
-                        .size(.fill, 25)
-                    
                     }
-                    .size(.fill, .wrap)
-                
-                
+                    .size(.fill, 25)
                 }
-                .padding(all: 20)
                 .size(.fill, .wrap)
-                .view
+            }
+            .padding(all: 20)
+            .size(.fill, .wrap)
+            .view
         
         Util.randomViewColor(view: self)
     }
+
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
     
     override func sizeThatFits(_ size: CGSize) -> CGSize {
-        return root.sizeThatFits(size)
+        return self.root.sizeThatFits(size)
     }
 }
 
 class ListCell3: BaseCell {
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         let img = UIImageView()
         contentView.addSubview(img)
-        img.snp.makeConstraints { (m) in
+        img.snp.makeConstraints { m in
             m.width.height.equalTo(40)
             m.top.left.equalToSuperview().inset(20)
         }
         
         let container = UIView()
         contentView.addSubview(container)
-        container.snp.makeConstraints { (m) in
+        container.snp.makeConstraints { m in
             m.left.equalTo(img.snp.right)
             m.top.right.bottom.equalToSuperview()
         }
@@ -186,7 +237,7 @@ class ListCell3: BaseCell {
         let name = UILabel()
         container.addSubview(name)
         Puyo(name).text(self.name)
-        name.snp.makeConstraints { (m) in
+        name.snp.makeConstraints { m in
             m.left.equalToSuperview()
             m.top.equalToSuperview().inset(20)
             m.height.equalTo(25)
@@ -194,7 +245,7 @@ class ListCell3: BaseCell {
         
         let ad = UIButton()
         container.addSubview(ad)
-        ad.snp.makeConstraints { (m) in
+        ad.snp.makeConstraints { m in
             m.top.right.equalToSuperview()
         }
         
@@ -202,21 +253,21 @@ class ListCell3: BaseCell {
         container.addSubview(text)
         text.sizeToFit()
         text.attach().text(self.textData)
-        text.snp.makeConstraints { (m) in
+        text.snp.makeConstraints { m in
             m.left.right.equalToSuperview()
             m.top.equalTo(name.snp.bottom)
         }
         
         let download = UIButton()
         container.addSubview(download)
-        download.snp.makeConstraints { (m) in
+        download.snp.makeConstraints { m in
             m.top.equalTo(text.snp.bottom)
             m.height.equalTo(25)
         }
         
         let space = UILabel()
         container.addSubview(space)
-        space.snp.makeConstraints { (m) in
+        space.snp.makeConstraints { m in
             m.height.equalTo(20)
             m.width.equalToSuperview().multipliedBy(0.5)
             m.top.equalTo(download.snp.bottom)
@@ -224,7 +275,7 @@ class ListCell3: BaseCell {
         
         let spread = UIView()
         container.addSubview(spread)
-        spread.snp.makeConstraints { (m) in
+        spread.snp.makeConstraints { m in
             m.left.right.equalToSuperview()
             m.height.equalTo(30)
             m.top.equalTo(space.snp.bottom)
@@ -240,17 +291,17 @@ class ListCell3: BaseCell {
         spread.addSubview(v2)
         spread.addSubview(v3)
         
-        v1.snp.makeConstraints { (m) in
+        v1.snp.makeConstraints { m in
             m.top.bottom.equalToSuperview()
             m.left.equalToSuperview()
             m.width.equalToSuperview().multipliedBy(0.3)
         }
-        v2.snp.makeConstraints { (m) in
+        v2.snp.makeConstraints { m in
             m.top.bottom.equalToSuperview()
             m.center.equalToSuperview()
             m.width.equalToSuperview().multipliedBy(0.3)
         }
-        v3.snp.makeConstraints { (m) in
+        v3.snp.makeConstraints { m in
             m.top.bottom.equalToSuperview()
             m.right.equalToSuperview()
             m.width.equalToSuperview().multipliedBy(0.3)
@@ -259,7 +310,7 @@ class ListCell3: BaseCell {
         let time = UILabel()
         container.addSubview(time)
         time.attach().text(self.time)
-        time.snp.makeConstraints { (m) in
+        time.snp.makeConstraints { m in
             m.left.equalToSuperview()
             m.bottom.equalToSuperview().inset(20)
             m.height.equalTo(25)
@@ -268,14 +319,15 @@ class ListCell3: BaseCell {
         
         let more = UIButton()
         container.addSubview(more)
-        more.snp.makeConstraints { (m) in
+        more.snp.makeConstraints { m in
             m.right.bottom.equalToSuperview()
             m.centerY.equalTo(time)
         }
         
         Util.randomViewColor(view: contentView)
-        
     }
+
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
