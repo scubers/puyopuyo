@@ -181,9 +181,10 @@ public class BasicRecycleSection<Data>: IRecycleSection {
             let box = self.box
             let holder = RecycleContextHolder { [weak box, weak view] () -> RecycleContext<Data, UICollectionView>? in
                 if let view = view,
-                    let idx = box?.visibleSupplementaryViews(ofKind: kind).firstIndex(where: { $0 === view }),
-                    let indexPathes = box?.indexPathsForVisibleSupplementaryElements(ofKind: kind),
-                    let section = box?.getSection(indexPathes[idx].section) as? BasicRecycleSection<Data> {
+                   let idx = box?.visibleSupplementaryViews(ofKind: kind).firstIndex(where: { $0 === view }),
+                   let indexPathes = box?.indexPathsForVisibleSupplementaryElements(ofKind: kind),
+                   let section = box?.getSection(indexPathes[idx].section) as? BasicRecycleSection<Data>
+                {
                     return section.getContext()
                 }
                 return nil

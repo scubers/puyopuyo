@@ -39,7 +39,8 @@ public class CollectionBox: UICollectionView,
     Delegatable,
     DataSourceable,
     UICollectionViewDelegateFlowLayout,
-    UICollectionViewDataSource {
+    UICollectionViewDataSource
+{
     public let viewState = State<[CollectionBoxSection]>([])
 
     private var delegateProxy: DelegateProxy<UICollectionViewDelegateFlowLayout>! {
@@ -59,22 +60,21 @@ public class CollectionBox: UICollectionView,
     public var lineSpacing: CGFloat = 0
     public var interactSpacing: CGFloat = 0
 
-    public override func responds(to aSelector: Selector!) -> Bool {
+    override public func responds(to aSelector: Selector!) -> Bool {
         if layout.estimatedItemSize != .zero, aSelector == #selector(collectionView(_:layout:sizeForItemAt:)) {
             return false
         }
         return super.responds(to: aSelector)
     }
 
-    public init(
-        layout: UICollectionViewFlowLayout = CollectionBoxFlowLayout(),
-        direction: UICollectionView.ScrollDirection = .vertical,
-        estimatedSize: CGSize = .zero,
-        minimumLineSpacing: CGFloat = 0,
-        minimumInteritemSpacing: CGFloat = 0,
-        pinHeader: Bool = false,
-        sections: [CollectionBoxSection] = []
-    ) {
+    public init(layout: UICollectionViewFlowLayout = CollectionBoxFlowLayout(),
+                direction: UICollectionView.ScrollDirection = .vertical,
+                estimatedSize: CGSize = .zero,
+                minimumLineSpacing: CGFloat = 0,
+                minimumInteritemSpacing: CGFloat = 0,
+                pinHeader: Bool = false,
+                sections: [CollectionBoxSection] = [])
+    {
         layout.scrollDirection = direction
         layout.minimumLineSpacing = minimumLineSpacing
         layout.minimumInteritemSpacing = minimumInteritemSpacing
@@ -109,10 +109,11 @@ public class CollectionBox: UICollectionView,
         }
     }
 
-    public override func reloadData() {
+    override public func reloadData() {
         super.reloadData()
     }
 
+    @available(*, unavailable)
     public required init?(coder _: NSCoder) {
         fatalError()
     }
@@ -237,7 +238,8 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
                 _header: @escaping HeaderFooterGenerator<RecycleContext<[Data], UICollectionView>, CellEvent> = { _, _ in EmptyView() },
                 _footer: @escaping HeaderFooterGenerator<RecycleContext<[Data], UICollectionView>, CellEvent> = { _, _ in EmptyView() },
                 _event: @escaping OnCellEvent<Event> = { _ in },
-                _onEvent: @escaping OnBoxEvent = { _ in }) {
+                _onEvent: @escaping OnBoxEvent = { _ in })
+    {
         self.identifier = identifier
         cellGenerator = _cell
         cellUpdater = _cellUpdater
@@ -485,13 +487,13 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
                         box.moveItem(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
                     }
                 }
-                
+
             }, completion: nil)
         }
     }
 
     public class EmptyView: UIView {
-        public override func sizeThatFits(_: CGSize) -> CGSize {
+        override public func sizeThatFits(_: CGSize) -> CGSize {
             return CGSize(width: 0.1, height: 0.1)
         }
     }
