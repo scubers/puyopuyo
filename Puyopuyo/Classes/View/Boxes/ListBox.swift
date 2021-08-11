@@ -7,7 +7,7 @@
 
 import UIKit
 
-public protocol ListBoxSection: class {
+public protocol ListBoxSection: AnyObject {
     var listBox: ListBox? { get set }
     func numberOfRows() -> Int
     func didSelect(row: Int)

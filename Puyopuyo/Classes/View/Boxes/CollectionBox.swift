@@ -7,7 +7,7 @@
 
 import UIKit
 
-public protocol CollectionBoxSection: class {
+public protocol CollectionBoxSection: AnyObject {
     var collectionBox: CollectionBox? { get set }
     func cellIdentifier() -> String
     func cellType() -> AnyClass

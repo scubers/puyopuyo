@@ -7,7 +7,7 @@
 
 import UIKit
 
-public protocol ISequenceSection: class {
+public protocol ISequenceSection: AnyObject {
     // should be weak reference
     var box: SequenceBox? { get set }
 
@@ -55,7 +55,7 @@ public extension ISequenceSection {
     }
 }
 
-public protocol ISequenceItem: class {
+public protocol ISequenceItem: AnyObject {
     // should be weak reference
     var section: ISequenceSection? { get set }
 

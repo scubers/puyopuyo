@@ -96,7 +96,7 @@ public protocol PuyoAttacher {
     func attach(_ parent: ViewDisplayable?, _ block: PuyoBlock) -> Puyo<Holder>
 }
 
-public protocol ViewDisplayable: class {
+public protocol ViewDisplayable: AnyObject {
     var dislplayView: UIView { get }
 }
 

@@ -16,7 +16,7 @@ public protocol Measurable {
     func caculate(byParent parent: Measure, remain size: CGSize) -> Size
 }
 
-public protocol MeasureTargetable: class {
+public protocol MeasureTargetable: AnyObject {
     var py_size: CGSize { get set }
     
     var py_center: CGPoint { get set }

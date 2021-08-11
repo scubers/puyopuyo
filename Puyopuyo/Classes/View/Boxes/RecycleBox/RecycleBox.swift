@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol IRecycleSection: class {
+public protocol IRecycleSection: AnyObject {
     // should be weak reference
     var box: RecycleBox? { get set }
     
@@ -59,7 +59,7 @@ public extension IRecycleSection {
     }
 }
 
-public protocol IRecycleItem: class {
+public protocol IRecycleItem: AnyObject {
     // should be weak reference
     var section: IRecycleSection? { get set }
     

@@ -7,7 +7,7 @@
 
 import UIKit
 
-public protocol TableBoxSection: class {
+public protocol TableBoxSection: AnyObject {
     var tableBox: TableBox? { get set }
     func numberOfRows() -> Int
     func didSelect(row: Int)
