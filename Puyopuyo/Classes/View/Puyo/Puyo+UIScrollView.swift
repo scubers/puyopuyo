@@ -10,58 +10,37 @@ import Foundation
 public extension Puyo where T: UIScrollView {
     @discardableResult
     func bounces<O: Outputing>(_ value: O) -> Self where O.OutputType == Bool {
-        value.safeBind(to: view, id: #function) { v, a in
-            v.bounces = a
-        }
-        return self
+        keyPath(\T.bounces, value)
     }
 
     @discardableResult
     func alwaysVertBounds<O: Outputing>(_ value: O) -> Self where O.OutputType == Bool {
-        value.safeBind(to: view, id: #function) { v, a in
-            v.alwaysBounceVertical = a
-        }
-        return self
+        keyPath(\T.alwaysBounceVertical, value)
     }
 
     @discardableResult
     func alwaysHorzBounds<O: Outputing>(_ value: O) -> Self where O.OutputType == Bool {
-        value.safeBind(to: view, id: #function) { v, a in
-            v.alwaysBounceHorizontal = a
-        }
-        return self
+        keyPath(\T.alwaysBounceHorizontal, value)
     }
 
     @discardableResult
     func scrollEnabled<O: Outputing>(_ value: O) -> Self where O.OutputType == Bool {
-        value.safeBind(to: view, id: #function) { v, a in
-            v.isScrollEnabled = a
-        }
-        return self
+        keyPath(\T.isScrollEnabled, value)
     }
 
     @discardableResult
     func showHorzIndicator<O: Outputing>(_ value: O) -> Self where O.OutputType == Bool {
-        value.safeBind(to: view, id: #function) { v, a in
-            v.showsHorizontalScrollIndicator = a
-        }
-        return self
+        keyPath(\T.showsHorizontalScrollIndicator, value)
     }
 
     @discardableResult
     func showVertIndicator<O: Outputing>(_ value: O) -> Self where O.OutputType == Bool {
-        value.safeBind(to: view, id: #function) { v, a in
-            v.showsVerticalScrollIndicator = a
-        }
-        return self
+        keyPath(\T.showsVerticalScrollIndicator, value)
     }
 
     @discardableResult
     func pagingEnabled<O: Outputing>(_ value: O) -> Self where O.OutputType == Bool {
-        value.safeBind(to: view, id: #function) { v, a in
-            v.isPagingEnabled = a
-        }
-        return self
+        keyPath(\T.isPagingEnabled, value)
     }
 
     @discardableResult
@@ -93,9 +72,8 @@ public extension Puyo where T: UIScrollView {
         view.py_observing(for: #keyPath(UIScrollView.contentOffset))
             .map { (x: CGPoint?) in x ?? .zero }
             .distinct()
-            .safeBind(to: view) {
-                input.input(value: $1)
-            }
+            .send(to: input)
+            .unbind(by: view)
         return self
     }
 
@@ -104,9 +82,8 @@ public extension Puyo where T: UIScrollView {
         view.py_observing(for: #keyPath(UIScrollView.contentOffset))
             .map { (x: CGSize?) in x ?? .zero }
             .distinct()
-            .safeBind(to: view) {
-                input.input(value: $1)
-            }
+            .send(to: input)
+            .unbind(by: view)
         return self
     }
 

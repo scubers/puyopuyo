@@ -10,20 +10,14 @@ import Foundation
 public extension Puyo where T: UISwitch {
     @discardableResult
     func isOn<S: Outputing & Inputing>(_ state: S) -> Self where S.OutputType == S.InputType, S.InputType == Bool {
-        state.safeBind(to: view, id: #function) { v, a in
-            v.isOn = a
-        }
-        bind(to: view, event: .valueChanged) { (_, v) in
-            state.input(value: v.isOn)
-        }
-        return self
+        keyPath(\T.isOn, state.distinct())
+            .bind(to: view, event: .valueChanged) { _, v in
+                state.input(value: v.isOn)
+            }
     }
-    
+
     @discardableResult
     func isOnValue<S: Outputing>(_ state: S) -> Self where S.OutputType == Bool {
-        state.safeBind(to: view, id: #function) { v, a in
-            v.isOn = a
-        }
-        return self
+        keyPath(\T.isOn, state)
     }
 }
