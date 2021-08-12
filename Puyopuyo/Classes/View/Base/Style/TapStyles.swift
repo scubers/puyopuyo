@@ -149,6 +149,10 @@ public class TapScaleStyle: BaseGestureStyle {
         override func touchesEnded(_: Set<UITouch>, with _: UIEvent) {
             dismissAnimate()
         }
+        
+        override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+            dismissAnimate()
+        }
 
         private func startAnimate() {
             guard let view = view else { return }

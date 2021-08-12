@@ -6,16 +6,15 @@
 //  Copyright © 2019 CocoaPods. All rights reserved.
 //
 
-import UIKit
 import Puyopuyo
+import UIKit
 
 class DemoScroll: UIScrollView {
-
 //    var builder: (UIView) -> Void
-    init(builder: @escaping (UIView) -> Void, box: @escaping (FlatBox) -> Void = {_ in}) {
+    init(builder: (UIView) -> Void, box: (FlatBox) -> Void = { _ in }) {
 //        self.builder = builder
         super.init(frame: .zero)
-        
+
         attach()
             .flatBox(.y)
             .padding(all: 16)
@@ -24,10 +23,11 @@ class DemoScroll: UIScrollView {
             .attach {
                 box($0)
                 _ = builder($0)
-        }
+            }
     }
+
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError()
     }
-
 }

@@ -31,7 +31,12 @@ class DemoView<T: Equatable>: VBox, Eventable {
                 .textAlignment(.center)
                 .backgroundColor(UIColor.black.withAlphaComponent(0.2))
             
-            builder($0).attach($0)
+            ZBox().attach($0) {
+                builder($0).attach($0)
+            }
+            .backgroundColor(Theme.card)
+            .width(.fill)
+            
             
             SelectionView(self.selectors).attach($0)
                 .topBorder([.color(UIColor.black.withAlphaComponent(0.2)), .thick(Util.pixel(1))])
@@ -41,8 +46,8 @@ class DemoView<T: Equatable>: VBox, Eventable {
                     self.eventProducer.input(value: s.value)
                 }
             
-            Spacer().attach($0).size(.fill, 0.5)
-                .backgroundColor(UIColor.black.withAlphaComponent(0.2))
+            Spacer().attach($0).size(.fill, Util.pixel(1))
+                .backgroundColor(Theme.dividerColor)
             
             Label(self.desc).attach($0)
                 .textAlignment(.left)
@@ -52,9 +57,9 @@ class DemoView<T: Equatable>: VBox, Eventable {
         }
         .animator(Animators.default)
         .size(.fill, .wrap)
-        .borderWidth(Util.pixel(1))
-        .borderColor(UIColor.lightGray)
-        .cornerRadius(4)
+        .backgroundColor(Theme.card)
+        .style(ShadowStyle())
+//        .cornerRadius(4)
     }
     
     required init?(coder aDecoder: NSCoder) {

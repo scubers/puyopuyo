@@ -10,7 +10,12 @@ import Puyopuyo
 import UIKit
 
 class Theme {
-    static let color = UIColor.systemPink
+    static let accentColor = UIColor(hexString: "237cff")
+    static let antiAccentColor = UIColor.white
+
+    static let background = UIColor(hexString: "eeeeee")
+    static let card = UIColor(hexString: "ffffff")
+
     static let dividerColor = UIColor.black.withAlphaComponent(0.2)
 }
 
@@ -24,30 +29,32 @@ class BaseVC: UIViewController, UIScrollViewDelegate {
             navBar: {
                 NavBar(title: "\(type(of: self))").attach()
                     .height(self.navHeight)
-                    .onEventProduced(to: self, { s, e in
+                    .onEventProduced(to: self) { s, e in
                         if e == .tapLeading {
                             s.navigationController?.popViewController(animated: true)
                         }
-                    })
+                    }
                     .view
             }, body: {
-                self.vRoot
+                self.vRoot.attach()
+//                    .backgroundColor(Theme.background)
+                    .view
             }
         )
         .attach(view)
         .size(.fill, .fill)
         .viewState(navState)
-        
+
         navState.value.shadowOpacity = 1
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        automaticallyAdjustsScrollViewInsets = false
+
         navigationController?.navigationBar.isTranslucent = false
-        view.backgroundColor = .white
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "back", style: .plain, target: self, action: #selector(BaseVC.back))
-//        vRoot.attach(view).size(.ratio(1), .ratio(1))
+        view.backgroundColor = Theme.background
+
         configView()
         if shouldRandomColor() {
             Util.randomViewColor(view: view)
@@ -63,7 +70,7 @@ class BaseVC: UIViewController, UIScrollViewDelegate {
         return false
     }
 
-    var vRoot: VBox = VBox()
+    var vRoot = VBox()
 
     @objc func back() {
         navigationController?.popViewController(animated: true)
@@ -79,9 +86,9 @@ class BaseVC: UIViewController, UIScrollViewDelegate {
     deinit {
         print("\(self) deinit!!!")
     }
-    
+
     override var canBecomeFirstResponder: Bool { true }
-    
+
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         becomeFirstResponder()
     }

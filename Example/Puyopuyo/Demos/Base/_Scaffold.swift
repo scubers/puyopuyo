@@ -29,6 +29,7 @@ class _Scaffold: UIView {
         .size(.fill, .fill)
     }
 
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError()
     }
@@ -46,7 +47,8 @@ class NavBar: ZBox, Eventable {
     init(title: @escaping ViewBuilder,
          leading: ViewBuilder? = nil,
          tailing: ViewBuilder? = nil,
-         navHeight: State<CGFloat> = State(44)) {
+         navHeight: State<CGFloat> = State(44))
+    {
         super.init(frame: .zero)
         attach {
             VBox().attach($0) {
@@ -85,15 +87,19 @@ class NavBar: ZBox, Eventable {
             title: {
                 Label(title).attach($0).view
             }, leading: {
-                UIButton().attach($0)
-                    .text("<-  ")
-                    .textColor(UIColor.black)
-                    .userInteractionEnabled(false)
+                UIImageView(image: UIImage(systemName: "arrow.backward.circle.fill")).attach($0)
+                    .userInteractionEnabled(true)
                     .view
+//                UIButton().attach($0)
+//                    .text("<-  ")
+//                    .textColor(UIColor.black)
+//                    .userInteractionEnabled(false)
+//                    .view
             }
         )
     }
 
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError()
     }

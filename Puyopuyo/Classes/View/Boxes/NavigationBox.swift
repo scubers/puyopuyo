@@ -38,13 +38,13 @@ open class NavigationBox: VBox, Stateful {
                 .visibility(self.binding.visible.distinct())
                 .width(.fill)
                 .height($0.py_safeArea().map { SizeDescription.wrap(add: $0.top) })
-                .backgroundColor(self.binding.backgroundColor)
-                .margin(self._state.distinctMap(\.navOffset).map { (s) -> UIEdgeInsets in
+                .backgroundColor(binding.backgroundColor)
+                .margin(_state.distinctMap(\.navOffset).map { (s) -> UIEdgeInsets in
                     .init(top: s.y, left: s.x, bottom: 0, right: 0)
                 })
-                .alpha(self.binding.alpha.distinct())
+                .alpha(binding.alpha.distinct())
                 .alignment(.top)
-                .viewUpdate(on: self._state) { v, s in
+                .viewUpdate(on: _state) { v, s in
                     v.layer.shadowOffset = s.shadowOffset
                     v.layer.shadowOpacity = s.shadowOpacity
                     v.layer.shadowRadius = s.shadowRadius

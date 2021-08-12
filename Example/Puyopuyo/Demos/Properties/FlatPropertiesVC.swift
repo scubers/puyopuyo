@@ -13,13 +13,13 @@ class FlatPropertiesVC: BaseVC {
     override func configView() {
         DemoScroll(
             builder: {
-                self.direction().attach($0)
-                self.format().attach($0)
-                self.justifyContent().attach($0)
-                self.activate().attach($0)
-                self.space().attach($0)
-                self.reverse().attach($0)
-                self.padding().attach($0)
+                direction().attach($0)
+                format().attach($0)
+                justifyContent().attach($0)
+                activate().attach($0)
+                space().attach($0)
+                reverse().attach($0)
+                padding().attach($0)
             }
         )
         .attach(vRoot)
@@ -51,12 +51,12 @@ class FlatPropertiesVC: BaseVC {
             """
         )
         .attach()
-        .onEventProduced(to: self, { _, x in
+        .onEventProduced(to: self) { _, x in
             justifyContent.value = x
-        })
+        }
         .view
     }
-    
+
     func activate() -> UIView {
         let justifyContent = State<Alignment>(.top)
         return DemoView<Alignment>(
@@ -84,9 +84,9 @@ class FlatPropertiesVC: BaseVC {
             """
         )
         .attach()
-        .onEventProduced(to: self, { _, x in
+        .onEventProduced(to: self) { _, x in
             justifyContent.value = x
-        })
+        }
         .view
     }
 
@@ -116,9 +116,9 @@ class FlatPropertiesVC: BaseVC {
             desc: "布局主轴上的格式"
         )
         .attach()
-        .onEventProduced(to: self, { _, x in
+        .onEventProduced(to: self) { _, x in
             format.value = x
-        })
+        }
         .view
     }
 
@@ -148,9 +148,9 @@ class FlatPropertiesVC: BaseVC {
             """
         )
         .attach()
-        .onEventProduced(to: self, { _, x in
+        .onEventProduced(to: self) { _, x in
             direction.value = x
-        })
+        }
         .view
     }
 
@@ -167,19 +167,19 @@ class FlatPropertiesVC: BaseVC {
                         .size(.fill, .fill)
                         .style(StyleSheet.randomColorStyle)
                 }
-                .padding(padding.asOutput().map({ UIEdgeInsets(top: $0, left: $0, bottom: $0, right: $0) }))
+                .padding(padding.asOutput().map { UIEdgeInsets(top: $0, left: $0, bottom: $0, right: $0) })
                 .justifyContent(.center)
                 .size(.fill, 100)
                 .animator(Animators.default)
                 .view
             },
-            selectors: [0, 10, 20, 30, 40].map({ Selector(desc: "\($0)", value: $0) }),
+            selectors: [0, 10, 20, 30, 40].map { Selector(desc: "\($0)", value: $0) },
             desc: "Box布局系统的内边距"
         )
         .attach()
-        .onEventProduced(to: self, { _, x in
+        .onEventProduced(to: self) { _, x in
             padding.value = x
-        })
+        }
         .view
     }
 
@@ -208,9 +208,9 @@ class FlatPropertiesVC: BaseVC {
             desc: "布局系统子view间距"
         )
         .attach()
-        .onEventProduced(to: self, { _, x in
+        .onEventProduced(to: self) { _, x in
             space.value = x
-        })
+        }
         .view
     }
 
@@ -237,9 +237,9 @@ class FlatPropertiesVC: BaseVC {
             desc: "布局系统是否逆向布局"
         )
         .attach()
-        .onEventProduced(to: self, { _, x in
+        .onEventProduced(to: self) { _, x in
             reverse.value = x
-        })
+        }
         .view
     }
 

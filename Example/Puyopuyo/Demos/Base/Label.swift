@@ -6,8 +6,8 @@
 //  Copyright © 2019 CocoaPods. All rights reserved.
 //
 
-import UIKit
 import Puyopuyo
+import UIKit
 
 extension StyleSheet {
     static var randomColorStyle: Style {
@@ -24,19 +24,22 @@ class Label: UILabel {
         textAlignment = .center
         isUserInteractionEnabled = true
     }
-    
+
     static func title(_ title: String) -> Label {
         return Label(title)
     }
-    
+
     static func demo(_ title: String) -> Label {
         let l = self.title(title)
-        l.layer.borderColor = Theme.color.cgColor
-        l.layer.borderWidth = Util.pixel(1)
+//        l.layer.borderColor = Theme.color.cgColor
+//        l.layer.borderWidth = Util.pixel(1)
         l.attach().width(.wrap(add: 10))
+            .textColor(Theme.antiAccentColor)
+            .backgroundColor(Theme.accentColor)
+
         return l
     }
-    
+
     deinit {
         print("label deinit..(\(self.text ?? ""))")
     }

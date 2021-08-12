@@ -41,7 +41,7 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
                     })
                     .backgroundColor(self.viewState.asOutput().map({ (e) -> UIColor in
                         if let e = e, e.value == x.value {
-                            return Theme.color
+                            return Theme.accentColor
                         }
                         return .clear
                     }))
@@ -49,7 +49,7 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
                         TapScaleStyle(),
                     ])
                     .borderWidth(Util.pixel(1))
-                    .borderColor(Theme.color)
+                    .borderColor(Theme.accentColor)
                     .cornerRadius(4)
                     .textColor(UIColor.black, state: .normal)
                     .width(.wrap(add: 6))
@@ -97,7 +97,7 @@ class PlainSelectionView<T: Equatable>: ZBox, Eventable, Stateful {
                         })
                         .backgroundColor(self.viewState.asOutput().map({ (e) -> UIColor in
                             if let e = e, e.value == x.value {
-                                return Theme.color
+                                return Theme.accentColor
                             }
                             return .clear
                         }))
@@ -105,7 +105,7 @@ class PlainSelectionView<T: Equatable>: ZBox, Eventable, Stateful {
                             TapScaleStyle(),
                         ])
                         .borderWidth(Util.pixel(1))
-                        .borderColor(Theme.color)
+                        .borderColor(Theme.accentColor)
                         .cornerRadius(4)
                         .textColor(UIColor.black, state: .normal)
                         .width(.wrap(add: 6))
