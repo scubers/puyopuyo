@@ -25,6 +25,7 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
         super.init(frame: .zero)
     }
 
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError()
     }
@@ -34,24 +35,27 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
             self.selection.enumerated().forEach { [weak self] arg in
                 guard let self = self else { return }
                 let (_, x) = arg
-                UIButton().attach(v)
-                    .onTap(to: self, { this, _ in
+
+                UIButton(type: .roundedRect).attach(v)
+                    .onTap(to: self) { this, _ in
                         this.eventProducer.input(value: x)
                         this.viewState.value = x
-                    })
-                    .backgroundColor(self.viewState.asOutput().map({ (e) -> UIColor in
+                    }
+                    .viewUpdate(on: binding) { btn, e in
                         if let e = e, e.value == x.value {
-                            return Theme.accentColor
+                            btn.backgroundColor = Theme.accentColor
+                            btn.isSelected = true
+                        } else {
+                            btn.backgroundColor = .clear
+                            btn.isSelected = false
                         }
-                        return .clear
-                    }))
-                    .styles([
-                        TapScaleStyle(),
-                    ])
+                    }
+                    .styles([TapScaleStyle(), TapRippleStyle()])
                     .borderWidth(Util.pixel(1))
                     .borderColor(Theme.accentColor)
                     .cornerRadius(4)
                     .textColor(UIColor.black, state: .normal)
+                    .textColor(Theme.antiAccentColor, state: .selected)
                     .width(.wrap(add: 6))
                     .text(x.desc, state: .normal)
             }
@@ -73,6 +77,7 @@ class PlainSelectionView<T: Equatable>: ZBox, Eventable, Stateful {
         super.init(frame: .zero)
     }
 
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError()
     }
@@ -91,16 +96,16 @@ class PlainSelectionView<T: Equatable>: ZBox, Eventable, Stateful {
                     guard let self = self else { return }
 //                    v.subviews.forEach({ $0.removeFromSuperview() })
                     UIButton().attach(v)
-                        .onTap(to: self, { this, _ in
+                        .onTap(to: self) { this, _ in
                             this.eventProducer.input(value: x)
                             this.viewState.value = x
-                        })
-                        .backgroundColor(self.viewState.asOutput().map({ (e) -> UIColor in
+                        }
+                        .backgroundColor(self.viewState.asOutput().map { e -> UIColor in
                             if let e = e, e.value == x.value {
                                 return Theme.accentColor
                             }
                             return .clear
-                        }))
+                        })
                         .styles([
                             TapScaleStyle(),
                         ])

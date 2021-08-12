@@ -23,11 +23,13 @@ class BaseVC: UIViewController, UIScrollViewDelegate {
     var navState = State(NavigationBox.ViewState())
     var navHeight = State<SizeDescription>(.fix(44))
 
+    var navTitle: String? { nil }
+
     override func loadView() {
         super.loadView()
         NavigationBox(
             navBar: {
-                NavBar(title: "\(type(of: self))").attach()
+                NavBar(title: navTitle ?? "\(type(of: self))").attach()
                     .height(self.navHeight)
                     .onEventProduced(to: self) { s, e in
                         if e == .tapLeading {
@@ -36,9 +38,13 @@ class BaseVC: UIViewController, UIScrollViewDelegate {
                     }
                     .view
             }, body: {
-                self.vRoot.attach()
-//                    .backgroundColor(Theme.background)
-                    .view
+                ZBox().attach {
+                    self.vRoot.attach($0)
+                        .padding($0.py_safeArea())
+                        .size(.fill, .fill)
+                        
+                }
+                .view
             }
         )
         .attach(view)

@@ -24,6 +24,6 @@ class ScrollBoxPropertiesVC: BaseVC {
     }
 
     override func shouldRandomColor() -> Bool {
-        true
+        false
     }
 }

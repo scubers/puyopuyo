@@ -36,6 +36,7 @@ class Label: UILabel {
         l.attach().width(.wrap(add: 10))
             .textColor(Theme.antiAccentColor)
             .backgroundColor(Theme.accentColor)
+            .cornerRadius(4)
 
         return l
     }

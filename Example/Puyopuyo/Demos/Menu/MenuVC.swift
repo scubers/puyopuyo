@@ -10,6 +10,9 @@ import Puyopuyo
 import UIKit
 
 class MenuVC: BaseVC {
+    override var navTitle: String? {
+        "MENU"
+    }
     override func configView() {
         RecycleBox(
             sections: [
@@ -17,8 +20,6 @@ class MenuVC: BaseVC {
                     insets: UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16),
                     lineSpacing: 16,
                     list: [
-                        //                        ("Test", TestVC.self),
-//                        ("TGVC", TGVC.self),
                         ("UIView Properties", { UIViewProertiesVC() }),
                         ("FlatBox Properties", { FlatPropertiesVC() }),
                         ("FlowBox Properties", { FlowPropertiesVC() }),
@@ -30,7 +31,6 @@ class MenuVC: BaseVC {
                         ("TableBox Properties", { TableBoxPropertiesVC() }),
                         ("CollectionBox Properties", { CollectionBoxPropertiesVC() }),
                         ("Advance Usage", { AdvanceVC() }),
-                        ("Compare demo", { CompareDemoVC() }),
                     ].asOutput(),
                     _cell: { [weak self] o, i in
                         HBox().attach {
