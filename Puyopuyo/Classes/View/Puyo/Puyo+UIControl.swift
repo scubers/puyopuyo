@@ -9,6 +9,30 @@ import Foundation
 
 public extension Puyo where T: UIControl {
     @discardableResult
+    func isSelected<S: Outputing>(_ isSelected: S) -> Self where S.OutputType == Bool {
+        view.py_setUnbinder(isSelected.catchObject(view) { v, a in
+            v.isSelected = a
+        }, for: #function)
+        return self
+    }
+
+    @discardableResult
+    func isEnabled<S: Outputing>(_ isEnabled: S) -> Self where S.OutputType == Bool {
+        view.py_setUnbinder(isEnabled.catchObject(view) { v, a in
+            v.isEnabled = a
+        }, for: #function)
+        return self
+    }
+
+    @discardableResult
+    func isHighlighted<S: Outputing>(_ isHighlighted: S) -> Self where S.OutputType == Bool {
+        view.py_setUnbinder(isHighlighted.catchObject(view) { v, a in
+            v.isHighlighted = a
+        }, for: #function)
+        return self
+    }
+
+    @discardableResult
     func bind(event: UIControl.Event, unique: Bool = false, action: @escaping (T) -> Void) -> Self {
         let unbinder = view.py_addAction(for: event) { control in
             action(control as! T)

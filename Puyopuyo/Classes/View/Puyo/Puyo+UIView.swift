@@ -7,21 +7,25 @@
 
 import Foundation
 
+public extension Puyo where T: UnbinderBag {
+    @discardableResult
+    func keyPath<S: Outputing>(_ keyPath: ReferenceWritableKeyPath<T, S.OutputType>, _ output: S) -> Self {
+        output.safeBind(to: view, id: "\(#function) | \(type(of: keyPath))") { v, a in
+            v[keyPath: keyPath] = a
+        }
+        return self
+    }
+}
+
 public extension Puyo where T: UIView {
     @discardableResult
     func backgroundColor<S: Outputing>(_ color: S) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIColor {
-        color.safeBind(to: view, id: #function) { v, a in
-            v.backgroundColor = a.puyoWrapValue
-        }
-        return self
+        keyPath(\.backgroundColor, color.mapTo(\.puyoWrapValue))
     }
 
     @discardableResult
     func contentMode<S: Outputing>(_ mode: S) -> Self where S.OutputType == UIView.ContentMode {
-        mode.safeBind(to: view, id: #function) { v, a in
-            v.contentMode = a
-        }
-        return self
+        keyPath(\.contentMode, mode)
     }
 
     @discardableResult
@@ -32,59 +36,38 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func clipToBounds<S: Outputing>(_ clip: S) -> Self where S.OutputType == Bool {
-        clip.safeBind(to: view, id: #function) { v, a in
-            v.clipsToBounds = a
-        }
-        return self
+        keyPath(\T.clipsToBounds, clip)
     }
 
     @discardableResult
     func cornerRadius<S: Outputing>(_ radius: S) -> Self where S.OutputType: CGFloatable {
-        radius.safeBind(to: view, id: #function) { v, a in
-            v.layer.cornerRadius = a.cgFloatValue
-            v.clipsToBounds = true
-        }
-        return self
+        keyPath(\T.layer.cornerRadius, radius.mapTo(\.cgFloatValue))
+            .clipToBounds(true)
     }
 
     @discardableResult
     func borderWidth<S: Outputing>(_ width: S) -> Self where S.OutputType: CGFloatable {
-        width.safeBind(to: view, id: #function) { v, a in
-            v.layer.borderWidth = a.cgFloatValue
-        }
-        return self
+        keyPath(\T.layer.borderWidth, width.mapTo(\.cgFloatValue))
     }
 
     @discardableResult
     func borderColor<S: Outputing>(_ color: S) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIColor {
-        color.safeBind(to: view, id: #function) { v, a in
-            v.layer.borderColor = a.puyoWrapValue?.cgColor
-        }
-        return self
+        keyPath(\T.layer.borderColor, color.mapTo(\.puyoWrapValue).map(\.?.cgColor))
     }
 
     @discardableResult
     func alpha<S: Outputing>(_ alpha: S) -> Self where S.OutputType == CGFloat {
-        view.py_setUnbinder(alpha.catchObject(view) { v, a in
-            v.alpha = a
-        }, for: #function)
-        return self
+        keyPath(\T.alpha, alpha)
     }
 
     @discardableResult
     func userInteractionEnabled<S: Outputing>(_ enabled: S) -> Self where S.OutputType == Bool {
-        view.py_setUnbinder(enabled.catchObject(view) { v, a in
-            v.isUserInteractionEnabled = a
-        }, for: #function)
-        return self
+        keyPath(\T.isUserInteractionEnabled, enabled)
     }
 
     @discardableResult
     func frame<S: Outputing>(_ frame: S) -> Self where S.OutputType == CGRect {
-        view.py_setUnbinder(frame.catchObject(view) { v, a in
-            v.frame = a
-        }, for: #function)
-        return self
+        keyPath(\T.frame, frame)
     }
 
     @discardableResult
@@ -98,37 +81,34 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func bounds<S: Outputing>(_ frame: S) -> Self where S.OutputType == CGRect {
-        view.py_setUnbinder(frame.catchObject(view) { v, a in
+        frame.safeBind(to: view, id: #function) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             v.bounds = a
-        }, for: #function)
+        }.unbind(by: view)
         return self
     }
 
     @discardableResult
     func center<S: Outputing>(_ point: S) -> Self where S.OutputType == CGPoint {
-        view.py_setUnbinder(point.catchObject(view) { v, a in
-            v.center = a
-        }, for: #function)
-        return self
+        keyPath(\T.center, point)
     }
 
     @discardableResult
     func onBoundsChanged<O: Inputing>(_ bounds: O) -> Self where O.InputType == CGRect {
-        _ = view.py_boundsState().send(to: bounds)
+        view.py_boundsState().send(to: bounds).unbind(by: view)
         return self
     }
 
     @discardableResult
     func onCenterChanged<O: Inputing>(_ center: O) -> Self where O.InputType == CGPoint {
-        _ = view.py_centerState().send(to: center)
+        view.py_centerState().send(to: center).unbind(by: view)
         return self
     }
 
     @discardableResult
     func onFrameChanged<O: Inputing>(_ frame: O) -> Self where O.InputType == CGRect {
-        _ = view.py_frameStateByBoundsCenter().send(to: frame)
-        _ = view.py_frameStateByKVO().send(to: frame)
+        view.py_frameStateByBoundsCenter().send(to: frame).unbind(by: view)
+        view.py_frameStateByKVO().send(to: frame).unbind(by: view)
         return self
     }
 
@@ -276,8 +256,8 @@ public extension Puyo where T: UIView {
     }
 }
 
-extension UIView {
-    public func py_setTap(action: @escaping (UITapGestureRecognizer) -> Void) -> Unbinder {
+public extension UIView {
+    func py_setTap(action: @escaping (UITapGestureRecognizer) -> Void) -> Unbinder {
         let tap = UITapGestureRecognizer()
         let unbinder = tap.py_addAction { g in
             action(g as! UITapGestureRecognizer)

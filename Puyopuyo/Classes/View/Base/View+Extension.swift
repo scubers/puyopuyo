@@ -54,8 +54,8 @@ extension UIView: MeasureTargetable {
 
 // MARK: - UIView ext methods
 
-extension UIView {
-    public var py_visibility: Visibility {
+public extension UIView {
+    var py_visibility: Visibility {
         set {
             // hidden
             switch newValue {
@@ -78,37 +78,37 @@ extension UIView {
         }
     }
 
-    public func py_mayBeWrap() -> Bool {
+    func py_mayBeWrap() -> Bool {
         return py_measure.size.maybeWrap()
     }
 
-    public func py_boundsState() -> SimpleOutput<CGRect> {
+    func py_boundsState() -> SimpleOutput<CGRect> {
         return
             py_observing(for: #keyPath(UIView.bounds))
                 .map { (rect: CGRect?) in rect ?? .zero }
                 .distinct()
     }
 
-    public func py_centerState() -> SimpleOutput<CGPoint> {
+    func py_centerState() -> SimpleOutput<CGPoint> {
         return
             py_observing(for: #keyPath(UIView.center))
                 .map { (x: CGPoint?) in x ?? .zero }
                 .distinct()
     }
 
-    public func py_frameStateByBoundsCenter() -> SimpleOutput<CGRect> {
+    func py_frameStateByBoundsCenter() -> SimpleOutput<CGRect> {
         let bounds = py_boundsState().map { _ in CGRect.zero }
         let center = py_centerState().map { _ in CGRect.zero }
         return
             SimpleOutput.merge([bounds, center])
-                .map { [weak self] (_) -> CGRect in
+                .map { [weak self] _ -> CGRect in
                     guard let self = self else { return .zero }
                     return self.frame
                 }
         // 因为这里是合并，不知道为何不能去重
     }
 
-    public func py_frameStateByKVO() -> SimpleOutput<CGRect> {
+    func py_frameStateByKVO() -> SimpleOutput<CGRect> {
         return
             py_observing(for: #keyPath(UIView.frame))
                 .map { (x: CGRect?) in x ?? .zero }
@@ -116,7 +116,7 @@ extension UIView {
     }
 
     /// ios11监听safeAreaInsets, ios10及以下，则监听frame变化并且通过转换坐标后得到与statusbar的差距
-    public func py_safeArea() -> SimpleOutput<UIEdgeInsets> {
+    func py_safeArea() -> SimpleOutput<UIEdgeInsets> {
         if #available(iOS 11, *) {
             return py_observing(for: #keyPath(UIView.safeAreaInsets)).map { (insets: UIEdgeInsets?) in insets ?? .zero }.distinct()
         } else {
