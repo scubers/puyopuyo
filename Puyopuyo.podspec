@@ -33,9 +33,7 @@ Pod::Spec.new do |s|
   
   s.public_header_files = 'Puyopuyo/Classes/**/*.h'
   s.source_files = [
-    'Puyopuyo/Classes/Core/**/*.{h,m,swift}',
-    'Puyopuyo/Classes/Util/**/*.{h,m,swift}',
-    'Puyopuyo/Classes/View/**/*.{h,m,swift}'
+    'Puyopuyo/Classes/**/*.{h,m,swift}',
   ]
   # s.subspec 'Util' do |c|
   #   c.public_header_files = 'Puyopuyo/Classes/Util/**/*.h'
