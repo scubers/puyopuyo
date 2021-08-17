@@ -12,10 +12,6 @@ public protocol OptionalableValueType {
     var optionalValue: Wrap? { get }
 }
 
-func _getOptionalType<T: OptionalableValueType, R>(from: String?) -> T where T.Wrap == R {
-    return from as! T
-}
-
 extension Optional: OptionalableValueType {
     public typealias Wrap = Wrapped
     public var optionalValue: Wrapped? {

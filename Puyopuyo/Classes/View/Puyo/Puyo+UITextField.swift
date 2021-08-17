@@ -31,7 +31,7 @@ public extension Puyo where T: UITextField {
         }, for: #function)
 
         bind(to: view, event: .editingChanged) { _, v in
-            text.input(value: _getOptionalType(from: v.text))
+            text.input(value: v.text as! S.InputType)
         }
         return self
     }
@@ -39,7 +39,7 @@ public extension Puyo where T: UITextField {
     @discardableResult
     func texting<S: Inputing>(_ text: S) -> Self where S.InputType: OptionalableValueType, S.InputType.Wrap == String {
         bind(to: view, event: .editingChanged) { _, v in
-            text.input(value: _getOptionalType(from: v.text))
+            text.input(value: v.text as! S.InputType)
         }
         return self
     }
