@@ -15,7 +15,7 @@ public protocol Disposable {
 }
 
 public extension Disposable {
-    func unbind(by: DisposableBag, id: String = UUID().description) {
+    func dispose(by: DisposableBag, id: String = UUID().description) {
         by.addDisposable(self, for: id)
     }
 }
@@ -47,8 +47,8 @@ public extension Outputing {
     /// - Parameters:
     ///   - object: 绑定对象
     ///   - action: action description
-    internal func catchObject<Object: DisposableBag & AnyObject>(_ object: Object, _ action: @escaping (Object, OutputType) -> Void) -> Disposable {
-        return outputing { [weak object] s in
+    func catchObject<Object: DisposableBag & AnyObject>(_ object: Object, _ action: @escaping (Object, OutputType) -> Void) -> Disposable {
+        outputing { [weak object] s in
             if let object = object {
                 action(object, s)
             }
@@ -70,28 +70,11 @@ public extension Outputing {
     /// 输出接口绑定到指定输入接口
     /// - Parameter input: input description
     func send<Input: Inputing>(to input: Input) -> Disposable where Input.InputType == OutputType {
-        return outputing { v in
-            input.input(value: v)
-        }
+        outputing(input.input(value:))
     }
 
     func send<Input: Inputing>(to inputs: [Input]) -> [Disposable] where Input.InputType == OutputType {
-        inputs.map { self.send(to: $0) }
-    }
-
-    func setAction<Holder: NSObject>(_ action: OutputAction<Holder, OutputType>) {
-        guard let holder = action.holder else { return }
-        let Disposable = outputing(action.action)
-        holder.addDisposable(Disposable, for: "\(#function)_setActionToHolderKey")
-    }
-}
-
-public struct OutputAction<Holder: NSObject, Value> {
-    public var holder: Holder?
-    public var action: (Value) -> Void
-    public init(_ holder: Holder?, _ action: @escaping (Value) -> Void) {
-        self.holder = holder
-        self.action = action
+        inputs.map { send(to: $0) }
     }
 }
 
@@ -99,19 +82,6 @@ public extension Outputing where OutputType == Self {
     func outputing(_ block: @escaping (OutputType) -> Void) -> Disposable {
         block(self)
         return Disposables.create()
-    }
-}
-
-class DisposableImpl: NSObject, Disposable {
-    private var block: () -> Void
-
-    init(_ block: @escaping () -> Void) {
-        self.block = block
-    }
-
-    func dispose() {
-        block()
-        block = {}
     }
 }
 
@@ -123,6 +93,19 @@ public struct Disposables {
 
     public static func createBag() -> DisposableBag {
         NSObject()
+    }
+    
+    private class DisposableImpl: NSObject, Disposable {
+        private var block: () -> Void
+
+        init(_ block: @escaping () -> Void) {
+            self.block = block
+        }
+
+        func dispose() {
+            block()
+            block = {}
+        }
     }
 }
 

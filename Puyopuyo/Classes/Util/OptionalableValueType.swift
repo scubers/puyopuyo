@@ -12,6 +12,8 @@ public protocol OptionalableValueType {
     var optionalValue: Wrap? { get }
 }
 
+// MARK: - Extensions
+
 extension Optional: OptionalableValueType {
     public typealias Wrap = Wrapped
     public var optionalValue: Wrapped? {
@@ -22,6 +24,15 @@ extension Optional: OptionalableValueType {
 public extension OptionalableValueType where Wrap == Self {
     var optionalValue: Wrap? {
         return Optional.some(self)
+    }
+}
+
+public extension OptionalableValueType {
+    subscript<Subject>(dynamicMember member: KeyPath<Wrap, Subject>) -> Subject? {
+        if let v = optionalValue {
+            return v[keyPath: member]
+        }
+        return nil
     }
 }
 

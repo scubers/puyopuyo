@@ -21,7 +21,7 @@ class TableBoxPropertiesVC: BaseVC, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         true
     }
-    
+
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         [
             UITableViewRowAction(style: .normal, title: "1", handler: { _, _ in
@@ -35,11 +35,11 @@ class TableBoxPropertiesVC: BaseVC, UITableViewDelegate, UITableViewDataSource {
             }),
         ]
     }
-    
+
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
         true
     }
-    
+
     var sections = State<[TableBoxSection]>([])
 
     override func configView() {
@@ -74,7 +74,7 @@ class TableBoxPropertiesVC: BaseVC, UITableViewDelegate, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let first = State([0, 1, 2].map { $0.description })
+        let first = State<[String]>([0, 1, 2].map { $0.description })
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
 //            first.value = (0 ..< 16).map({ $0.description })

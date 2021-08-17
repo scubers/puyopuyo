@@ -73,7 +73,7 @@ public extension Puyo where T: UIScrollView {
             .map { (x: CGPoint?) in x ?? .zero }
             .distinct()
             .send(to: input)
-            .unbind(by: view)
+            .dispose(by: view)
         return self
     }
 
@@ -83,7 +83,7 @@ public extension Puyo where T: UIScrollView {
             .map { (x: CGSize?) in x ?? .zero }
             .distinct()
             .send(to: input)
-            .unbind(by: view)
+            .dispose(by: view)
         return self
     }
 

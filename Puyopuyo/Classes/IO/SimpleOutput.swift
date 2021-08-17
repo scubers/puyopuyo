@@ -32,8 +32,8 @@ public struct SimpleOutput<Value>: Outputing {
     }
 
     public static func merge<T: Outputing>(_ outputs: [T]) -> SimpleOutput<Value> where T.OutputType == Value {
-        return SimpleOutput<Value> { (i) -> Disposable in
-            let disposables = outputs.map { (o) -> Disposable in
+        return SimpleOutput<Value> { i -> Disposable in
+            let disposables = outputs.map { o -> Disposable in
                 o.outputing { v in
                     i.input(value: v)
                 }
@@ -54,7 +54,7 @@ public struct SimpleOutput<Value>: Outputing {
 
 public extension Outputing {
     func asOutput() -> SimpleOutput<OutputType> {
-        return SimpleOutput { (i) -> Disposable in
+        return SimpleOutput { i -> Disposable in
             self.outputing { v in
                 i.input(value: v)
             }
@@ -62,14 +62,13 @@ public extension Outputing {
     }
 }
 
-// extension Yo where Base: Outputing {
-public extension SimpleOutput {
+public extension Outputing {
     func some() -> SimpleOutput<OutputType?> {
         return map { $0 }
     }
 
     func bind<T>(_ action: @escaping (OutputType, SimpleInput<T>) -> Void) -> SimpleOutput<T> {
-        return SimpleOutput<T>({ (i) -> Disposable in
+        return SimpleOutput<T>({ i -> Disposable in
             self.outputing { v in
                 action(v, i)
             }
@@ -137,7 +136,7 @@ public extension SimpleOutput {
     }
 
     func scheduleOn(_ queue: OperationQueue) -> SimpleOutput<OutputType> {
-        return bind { v, i in
+        bind { v, i in
             if OperationQueue.current == queue {
                 i.input(value: v)
             } else {
@@ -149,11 +148,11 @@ public extension SimpleOutput {
     }
 
     func scheduleOnMain() -> SimpleOutput<OutputType> {
-        return scheduleOn(OperationQueue.main)
+        scheduleOn(OperationQueue.main)
     }
 }
 
-public extension SimpleOutput where OutputType: OptionalableValueType {
+public extension Outputing where OutputType: OptionalableValueType {
     func map<R>(_ keyPath: KeyPath<OutputType.Wrap, R>, _ default: R) -> SimpleOutput<R?> {
         bind {
             if let v = $0.optionalValue {
@@ -165,83 +164,9 @@ public extension SimpleOutput where OutputType: OptionalableValueType {
     }
 }
 
-public extension Outputing {
-    func some() -> SimpleOutput<OutputType?> {
-        return mapTo { $0 }
-    }
-
-    func _bind<T>(action: @escaping (OutputType, SimpleInput<T>) -> Void) -> SimpleOutput<T> {
-        return SimpleOutput<T>({ (i) -> Disposable in
-            self.outputing { v in
-                action(v, i)
-            }
-        })
-    }
-
-    func mapTo<R>(_ block: @escaping (OutputType) -> R) -> SimpleOutput<R> {
-        return _bind { $1.input(value: block($0)) }
-    }
-
-    func mapTo<R>(_ keyPath: KeyPath<OutputType, R>) -> SimpleOutput<R> {
-        _bind { $1.input(value: $0[keyPath: keyPath]) }
-    }
-
-    func filterBy(_ filter: @escaping (OutputType) -> Bool) -> SimpleOutput<OutputType> {
-        return _bind { v, i in
-            if filter(v) { i.input(value: v) }
-        }
-    }
-
-    func ignoreBy(_ condition: @escaping (OutputType, OutputType) -> Bool) -> SimpleOutput<OutputType> {
-        var last: OutputType!
-        return _bind { v, i in
-            guard last != nil else {
-                last = v
-                i.input(value: v)
-                return
-            }
-            let ignore = condition(last, v)
-            last = v
-            if !ignore {
-                i.input(value: v)
-            }
-        }
-    }
-
-    func distinct<R>(by keyPath: KeyPath<OutputType, R>) -> SimpleOutput<OutputType> where R: Equatable {
-        ignoreBy {
-            $0[keyPath: keyPath] == $1[keyPath: keyPath]
-        }
-    }
-
-    func distinctMap<R>(_ kp: KeyPath<OutputType, R>) -> SimpleOutput<R> where R: Equatable {
-        distinct(by: kp).map(kp)
-    }
-
-    func takeCount(_ count: Int) -> SimpleOutput<OutputType> {
-        var times: Int = 0
-        return _bind { v, i in
-            guard times <= count else { return }
-            times += 1
-            i.input(value: v)
-        }
-    }
-
-    func skipCount(_ count: Int) -> SimpleOutput<OutputType> {
-        var times = 0
-        return _bind { v, i in
-            guard times >= count else {
-                times += 1
-                return
-            }
-            i.input(value: v)
-        }
-    }
-}
-
-extension Outputing where OutputType: OptionalableValueType {
-    public func unwrap(or: OutputType.Wrap) -> SimpleOutput<OutputType.Wrap> {
-        return _bind { v, i in
+public extension Outputing where OutputType: OptionalableValueType {
+    func unwrap(or: OutputType.Wrap) -> SimpleOutput<OutputType.Wrap> {
+        return bind { v, i in
             if let v = v.optionalValue {
                 i.input(value: v)
             } else {
@@ -251,8 +176,8 @@ extension Outputing where OutputType: OptionalableValueType {
     }
 }
 
-extension Outputing where OutputType: Equatable {
-    public func distinct() -> SimpleOutput<OutputType> {
-        return ignoreBy { $0 == $1 }
+public extension Outputing where OutputType: Equatable {
+    func distinct() -> SimpleOutput<OutputType> {
+        return ignore { $0 == $1 }
     }
 }

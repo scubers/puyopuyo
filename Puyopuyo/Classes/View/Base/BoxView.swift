@@ -42,7 +42,7 @@ public protocol Animator {
     func animate(view: UIView, layouting: @escaping () -> Void)
 }
 
-public struct Animators {
+public enum Animators {
     /// no animation
     public static let none: Animator = NonAnimator()
 
@@ -69,7 +69,7 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable {
         return py_measure as! RegulatorType
     }
 
-    public override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         buildBody()
     }
@@ -79,28 +79,28 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable {
         buildBody()
     }
 
-    open override func addSubview(_ view: UIView) {
+    override open func addSubview(_ view: UIView) {
         super.addSubview(view)
         boxHelper.setNeedsLayout(view: view, regulator: regulator)
     }
 
-    open override func setNeedsLayout() {
+    override open func setNeedsLayout() {
         super.setNeedsLayout()
         boxHelper.setNeedsLayout(view: self, regulator: regulator)
     }
 
-    open override func layoutSubviews() {
+    override open func layoutSubviews() {
         super.layoutSubviews()
         boxHelper.layoutSubviews(view: self, regulator: regulator)
     }
 
-    open override func sizeThatFits(_ size: CGSize) -> CGSize {
+    override open func sizeThatFits(_ size: CGSize) -> CGSize {
         return boxHelper.sizeThatFits(size, regulator: regulator)
     }
 
     open func buildBody() {}
 
-    open override func didMoveToSuperview() {
+    override open func didMoveToSuperview() {
         super.didMoveToSuperview()
         boxHelper.didMoveToSuperview(view: self, regulator: regulator)
     }

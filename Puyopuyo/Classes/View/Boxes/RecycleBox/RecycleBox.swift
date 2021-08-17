@@ -119,7 +119,7 @@ open class RecycleBox: UICollectionView,
         delegate = delegateProxy
         dataSource = dataSourceProxy
         
-        sections.send(to: viewState).unbind(by: self)
+        sections.send(to: viewState).dispose(by: self)
         
         viewState.safeBind(to: self) { this, s in
             // 注册view类型

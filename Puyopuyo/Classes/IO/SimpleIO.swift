@@ -25,7 +25,7 @@ public class SimpleIO<Value>: Inputing, Outputing {
         let inputer = SimpleInput(block)
         inputers.append(inputer)
         let id = inputer.uuid
-        return DisposableImpl { [weak self] in
+        return Disposables.create { [weak self] in
             self?.inputers.removeAll(where: { $0.uuid == id })
         }
     }

@@ -302,7 +302,7 @@ public extension Puyo where T: Eventable {
 public extension Puyo where T: Stateful {
     @discardableResult
     func viewState<O: Outputing>(_ output: O, unbindable: DisposableBag) -> Self where O.OutputType == T.StateType {
-        output.send(to: view.viewState).unbind(by: unbindable)
+        output.send(to: view.viewState).dispose(by: unbindable)
         return self
     }
 
@@ -310,7 +310,7 @@ public extension Puyo where T: Stateful {
     func stateChange<O: Outputing, R, V>(_ output: O, to kp: WritableKeyPath<R, V>, unbindable: DisposableBag) -> Self where O.OutputType == V, R == T.StateType {
         output.outputing { [weak view] in
             view?.viewState.value[keyPath: kp] = $0
-        }.unbind(by: unbindable)
+        }.dispose(by: unbindable)
         return self
     }
 }
@@ -318,7 +318,7 @@ public extension Puyo where T: Stateful {
 public extension Puyo where T: Stateful, T: NSObject {
     @discardableResult
     func viewState<O: Outputing>(_ output: O) -> Self where O.OutputType == T.StateType {
-        output.send(to: view.viewState).unbind(by: view)
+        output.send(to: view.viewState).dispose(by: view)
         return self
     }
 
@@ -326,7 +326,7 @@ public extension Puyo where T: Stateful, T: NSObject {
     func stateChange<O: Outputing, R, V>(_ output: O, to kp: WritableKeyPath<R, V>) -> Self where O.OutputType == V, R == T.StateType {
         output.outputing { [weak view] in
             view?.viewState.value[keyPath: kp] = $0
-        }.unbind(by: view)
+        }.dispose(by: view)
         return self
     }
 

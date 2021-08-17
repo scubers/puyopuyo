@@ -20,7 +20,7 @@ public extension Puyo where T: DisposableBag {
 public extension Puyo where T: UIView {
     @discardableResult
     func backgroundColor<S: Outputing>(_ color: S) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIColor {
-        keyPath(\.backgroundColor, color.mapTo(\.optionalValue))
+        keyPath(\.backgroundColor, color.map(\.optionalValue))
     }
 
     @discardableResult
@@ -41,18 +41,18 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func cornerRadius<S: Outputing>(_ radius: S) -> Self where S.OutputType: CGFloatable {
-        keyPath(\T.layer.cornerRadius, radius.mapTo(\.cgFloatValue))
+        keyPath(\T.layer.cornerRadius, radius.map(\.cgFloatValue))
             .clipToBounds(true)
     }
 
     @discardableResult
     func borderWidth<S: Outputing>(_ width: S) -> Self where S.OutputType: CGFloatable {
-        keyPath(\T.layer.borderWidth, width.mapTo(\.cgFloatValue))
+        keyPath(\T.layer.borderWidth, width.map(\.cgFloatValue))
     }
 
     @discardableResult
     func borderColor<S: Outputing>(_ color: S) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIColor {
-        keyPath(\T.layer.borderColor, color.mapTo(\.optionalValue).map(\.?.cgColor))
+        keyPath(\T.layer.borderColor, color.map(\.optionalValue).map(\.?.cgColor))
     }
 
     @discardableResult
@@ -84,7 +84,7 @@ public extension Puyo where T: UIView {
         frame.safeBind(to: view, id: #function) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             v.bounds = a
-        }.unbind(by: view)
+        }.dispose(by: view)
         return self
     }
 
@@ -95,20 +95,20 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func onBoundsChanged<O: Inputing>(_ bounds: O) -> Self where O.InputType == CGRect {
-        view.py_boundsState().send(to: bounds).unbind(by: view)
+        view.py_boundsState().send(to: bounds).dispose(by: view)
         return self
     }
 
     @discardableResult
     func onCenterChanged<O: Inputing>(_ center: O) -> Self where O.InputType == CGPoint {
-        view.py_centerState().send(to: center).unbind(by: view)
+        view.py_centerState().send(to: center).dispose(by: view)
         return self
     }
 
     @discardableResult
     func onFrameChanged<O: Inputing>(_ frame: O) -> Self where O.InputType == CGRect {
-        view.py_frameStateByBoundsCenter().send(to: frame).unbind(by: view)
-        view.py_frameStateByKVO().send(to: frame).unbind(by: view)
+        view.py_frameStateByBoundsCenter().send(to: frame).dispose(by: view)
+        view.py_frameStateByKVO().send(to: frame).dispose(by: view)
         return self
     }
 

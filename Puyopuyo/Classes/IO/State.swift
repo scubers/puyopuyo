@@ -43,7 +43,7 @@ public class State<Value>: Outputing, Inputing {
         let inputer = SimpleInput(block)
         inputers.append(inputer)
         let id = inputer.uuid
-        return DisposableImpl { [weak self] in
+        return Disposables.create { [weak self] in
             self?.inputers.removeAll(where: { $0.uuid == id })
         }
     }
@@ -64,34 +64,8 @@ public class State<Value>: Outputing, Inputing {
     public var binding: StateBinding<Value> { StateBinding(output: asOutput()) }
 }
 
-// MARK: - PState
-@propertyWrapper public struct PState<Value>: Outputing, Inputing {
-    private let state: State<Value>
-    public init(wrappedValue value: Value) {
-        state = State(value)
-    }
-
-    public func outputing(_ block: @escaping (Value) -> Void) -> Disposable {
-        state.outputing(block)
-    }
-
-    public func input(value: Value) {
-        state.input(value: value)
-    }
-
-    public var wrappedValue: Value {
-        get { state.value }
-        set { state.value = newValue }
-    }
-
-    public var projectedValue: StateBinding<Value> { StateBinding(output: state.asOutput()) }
-
-    public func setState(_ block: (inout Value) -> Void) {
-        state.setState(block)
-    }
-}
-
 // MARK: - StateBinding
+
 @dynamicMemberLookup public struct StateBinding<Value>: Outputing {
     public typealias OutputType = Value
     var output: SimpleOutput<Value>
@@ -116,19 +90,4 @@ public extension StateBinding where Value: OptionalableValueType {
             }
         )
     }
-}
-
-// MARK: - Extensions
-
-public extension OptionalableValueType {
-    subscript<Subject>(dynamicMember member: KeyPath<Wrap, Subject>) -> Subject? {
-        if let v = optionalValue {
-            return v[keyPath: member]
-        }
-        return nil
-    }
-}
-
-public extension Outputing {
-    var binding: StateBinding<OutputType> { .init(output: asOutput()) }
 }

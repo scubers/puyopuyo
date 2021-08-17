@@ -49,7 +49,7 @@ public class SequenceSection<Section, Data>: BasicSequenceSection<Section> {
                 }
             }
             .send(to: state)
-            .unbind(by: bag)
+            .dispose(by: bag)
     }
 }
 
