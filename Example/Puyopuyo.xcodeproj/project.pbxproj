@@ -22,7 +22,6 @@
 		A81CE13C2310509B00E19E6B /* HBoxVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81CE13B2310509B00E19E6B /* HBoxVC.swift */; };
 		A81CE1492312EE6900E19E6B /* OptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81CE1482312EE6900E19E6B /* OptionView.swift */; };
 		A846265123093E4E003A282C /* FlatMixVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A846265023093E4E003A282C /* FlatMixVC.swift */; };
-		A84626542309574C003A282C /* TestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84626532309574C003A282C /* TestVC.swift */; };
 		A84E5CC1239EB5AC0091D39B /* ZPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84E5CC0239EB5AC0091D39B /* ZPropertiesVC.swift */; };
 		A8698302239CF98E00B3D514 /* _Scaffold.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8698301239CF98E00B3D514 /* _Scaffold.swift */; };
 		A86F4378233F45730008606F /* StylesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A86F4377233F45730008606F /* StylesViewController.m */; };
@@ -90,7 +89,6 @@
 		A81CE13B2310509B00E19E6B /* HBoxVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HBoxVC.swift; sourceTree = "<group>"; };
 		A81CE1482312EE6900E19E6B /* OptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionView.swift; sourceTree = "<group>"; };
 		A846265023093E4E003A282C /* FlatMixVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlatMixVC.swift; sourceTree = "<group>"; };
-		A84626532309574C003A282C /* TestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVC.swift; sourceTree = "<group>"; };
 		A84E5CC0239EB5AC0091D39B /* ZPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZPropertiesVC.swift; sourceTree = "<group>"; };
 		A8698301239CF98E00B3D514 /* _Scaffold.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _Scaffold.swift; sourceTree = "<group>"; };
 		A86F4375233F45730008606F /* Puyopuyo_Example-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Puyopuyo_Example-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -239,7 +237,6 @@
 		A846265223095743003A282C /* Test */ = {
 			isa = PBXGroup;
 			children = (
-				A84626532309574C003A282C /* TestVC.swift */,
 				09761F9124277700006983CB /* WIKIDemo.swift */,
 				09EA8E51243E1A45003F10D7 /* TGVC.swift */,
 				F7BE67C125A43E350075C39B /* CompareDemoVC.swift */,
@@ -577,7 +574,6 @@
 				09F6FF172471A1F300F97053 /* SequenceBoxPropertiesVC.swift in Sources */,
 				A8BCEEB62399620F002DB739 /* UIViewProertiesVC.swift in Sources */,
 				A8BEC492239CDB6B001FD6BF /* FlowPropertiesVC.swift in Sources */,
-				A84626542309574C003A282C /* TestVC.swift in Sources */,
 				A81CE13C2310509B00E19E6B /* HBoxVC.swift in Sources */,
 				A8C045C423A9424B00B2C5CA /* ss.m in Sources */,
 				A8BCEEB823996424002DB739 /* SelectionView.swift in Sources */,
