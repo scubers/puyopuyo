@@ -7,7 +7,7 @@
 
 import Foundation
 
-class PuyoTarget<T>: NSObject, Unbinder {
+class PuyoTarget<T>: NSObject, Disposable {
     var action: (T) -> Void
     init(_ action: @escaping (T) -> Void) {
         self.action = action
@@ -19,31 +19,31 @@ class PuyoTarget<T>: NSObject, Unbinder {
         }
     }
 
-    func py_unbind() {}
+    func dispose() {}
 }
 
 extension UIControl {
     @discardableResult
-    public func py_addAction(for event: UIControl.Event, _ block: @escaping (UIControl) -> Void) -> Unbinder {
+    public func py_addAction(for event: UIControl.Event, _ block: @escaping (UIControl) -> Void) -> Disposable {
         let target = PuyoTarget<UIControl>(block)
         addTarget(target, action: #selector(PuyoTarget<UIControl>.targetAction(_:)), for: event)
-        let unbinder = Unbinders.create {
+        let Disposable = Disposables.create {
             self.removeTarget(target, action: #selector(PuyoTarget<UIControl>.targetAction(_:)), for: event)
         }
-        py_setUnbinder(target, for: "\(target)")
-        return unbinder
+        addDisposable(target, for: "\(target)")
+        return Disposable
     }
 }
 
 extension UIGestureRecognizer {
     @discardableResult
-    public func py_addAction(_ block: @escaping (UIGestureRecognizer) -> Void) -> Unbinder {
+    public func py_addAction(_ block: @escaping (UIGestureRecognizer) -> Void) -> Disposable {
         let target = PuyoTarget<UIGestureRecognizer>(block)
         addTarget(target, action: #selector(PuyoTarget<UIGestureRecognizer>.targetAction(_:)))
-        let unbinder = Unbinders.create {
+        let Disposable = Disposables.create {
             self.removeTarget(target, action: #selector(PuyoTarget<UIGestureRecognizer>.targetAction(_:)))
         }
-        py_setUnbinder(target, for: "\(target)")
-        return unbinder
+        addDisposable(target, for: "\(target)")
+        return Disposable
     }
 }

@@ -10,7 +10,7 @@ import Foundation
 public extension Puyo where T: UIControl {
     @discardableResult
     func isSelected<S: Outputing>(_ isSelected: S) -> Self where S.OutputType == Bool {
-        view.py_setUnbinder(isSelected.catchObject(view) { v, a in
+        view.addDisposable(isSelected.catchObject(view) { v, a in
             v.isSelected = a
         }, for: #function)
         return self
@@ -18,7 +18,7 @@ public extension Puyo where T: UIControl {
 
     @discardableResult
     func isEnabled<S: Outputing>(_ isEnabled: S) -> Self where S.OutputType == Bool {
-        view.py_setUnbinder(isEnabled.catchObject(view) { v, a in
+        view.addDisposable(isEnabled.catchObject(view) { v, a in
             v.isEnabled = a
         }, for: #function)
         return self
@@ -26,7 +26,7 @@ public extension Puyo where T: UIControl {
 
     @discardableResult
     func isHighlighted<S: Outputing>(_ isHighlighted: S) -> Self where S.OutputType == Bool {
-        view.py_setUnbinder(isHighlighted.catchObject(view) { v, a in
+        view.addDisposable(isHighlighted.catchObject(view) { v, a in
             v.isHighlighted = a
         }, for: #function)
         return self
@@ -34,11 +34,11 @@ public extension Puyo where T: UIControl {
 
     @discardableResult
     func bind(event: UIControl.Event, unique: Bool = false, action: @escaping (T) -> Void) -> Self {
-        let unbinder = view.py_addAction(for: event) { control in
+        let Disposable = view.py_addAction(for: event) { control in
             action(control as! T)
         }
         if unique {
-            view.py_setUnbinder(unbinder, for: "py_control_unique_action_\(event)")
+            view.addDisposable(Disposable, for: "py_control_unique_action_\(event)")
         }
         return self
     }

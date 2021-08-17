@@ -29,14 +29,14 @@ public class Puyo<T: AnyObject> {
     }
 }
 
-public extension Puyo where T: UnbinderBag {
+public extension Puyo where T: DisposableBag {
     /// 接收一个outputing，并且绑定到view上，持续接收action
     /// - Parameters:
     ///   - state: state description
     ///   - action: action description
     @discardableResult
     func on<O: Outputing, R>(_ state: O, _ action: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
-        view.py_setUnbinder(state.catchObject(view) { v, r in
+        view.addDisposable(state.catchObject(view) { v, r in
             action(v, r)
         }, for: UUID().description)
         return self

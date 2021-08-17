@@ -121,7 +121,7 @@ public class ScrollingBox<Flat: Boxable & UIView>:
     }
 }
 
-public extension Puyo where T: ScrollDirectionable & UnbinderBag {
+public extension Puyo where T: ScrollDirectionable & DisposableBag {
     func scrollDirection(_ d: ScrollDirection) -> Self {
         view.setScrollDirection(d)
         return self

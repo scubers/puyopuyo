@@ -37,37 +37,37 @@ public extension Puyo where T: Boxable & UIView {
     @discardableResult
     func padding<S: Outputing>(all: S? = nil, horz: S? = nil, vert: S? = nil, top: S? = nil, left: S? = nil, bottom: S? = nil, right: S? = nil) -> Self where S.OutputType: CGFloatable {
         if let s = all {
-            view.py_setUnbinder(s.catchObject(view) { v, a in
+            view.addDisposable(s.catchObject(view) { v, a in
                 PuyoHelper.padding(for: v, all: a.cgFloatValue)
             }, for: "\(#function)_all")
         }
         if let s = top {
-            view.py_setUnbinder(s.catchObject(view) { v, a in
+            view.addDisposable(s.catchObject(view) { v, a in
                 PuyoHelper.padding(for: v, top: a.cgFloatValue)
             }, for: "\(#function)_top")
         }
         if let s = horz {
-            view.py_setUnbinder(s.catchObject(view) { v, a in
+            view.addDisposable(s.catchObject(view) { v, a in
                 PuyoHelper.padding(for: v, horz: a.cgFloatValue)
             }, for: "\(#function)_horz")
         }
         if let s = vert {
-            view.py_setUnbinder(s.catchObject(view) { v, a in
+            view.addDisposable(s.catchObject(view) { v, a in
                 PuyoHelper.padding(for: v, vert: a.cgFloatValue)
             }, for: "\(#function)_vert")
         }
         if let s = left {
-            view.py_setUnbinder(s.catchObject(view) { v, a in
+            view.addDisposable(s.catchObject(view) { v, a in
                 PuyoHelper.padding(for: v, left: a.cgFloatValue)
             }, for: "\(#function)_left")
         }
         if let s = bottom {
-            view.py_setUnbinder(s.catchObject(view) { v, a in
+            view.addDisposable(s.catchObject(view) { v, a in
                 PuyoHelper.padding(for: v, bottom: a.cgFloatValue)
             }, for: "\(#function)_bottom")
         }
         if let s = right {
-            view.py_setUnbinder(s.catchObject(view) { v, a in
+            view.addDisposable(s.catchObject(view) { v, a in
                 PuyoHelper.padding(for: v, right: a.cgFloatValue)
             }, for: "\(#function)_right")
         }
@@ -76,7 +76,7 @@ public extension Puyo where T: Boxable & UIView {
 
     @discardableResult
     func padding<O: Outputing>(_ padding: O) -> Self where O.OutputType == UIEdgeInsets {
-        view.py_setUnbinder(padding.catchObject(view) { v, i in
+        view.addDisposable(padding.catchObject(view) { v, i in
             v.regulator.padding = i
             v.py_setNeedsLayout()
         }, for: #function)
@@ -92,7 +92,7 @@ public extension Puyo where T: Boxable & UIView {
 
     @discardableResult
     func justifyContent<O: Outputing>(_ alignment: O) -> Self where O.OutputType == Alignment {
-        view.py_setUnbinder(alignment.catchObject(view) { v, a in
+        view.addDisposable(alignment.catchObject(view) { v, a in
             v.regulator.justifyContent = a
             v.py_setNeedsLayout()
         }, for: #function)
@@ -156,7 +156,7 @@ public extension Puyo where T: Boxable & UIView {
 public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlatRegulator {
     @discardableResult
     func space<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
-        view.py_setUnbinder(space.catchObject(view) { v, s in
+        view.addDisposable(space.catchObject(view) { v, s in
             v.regulator.space = s.cgFloatValue
             v.py_setNeedsLayout()
         }, for: #function)
@@ -172,7 +172,7 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlatRegulator 
 
     @discardableResult
     func format<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
-        view.py_setUnbinder(formation.catchObject(view) { v, f in
+        view.addDisposable(formation.catchObject(view) { v, f in
             v.regulator.format = f
             v.py_setNeedsLayout()
         }, for: #function)
@@ -188,7 +188,7 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlatRegulator 
 
     @discardableResult
     func direction<O: Outputing>(_ direction: O) -> Self where O.OutputType == Direction {
-        view.py_setUnbinder(direction.catchObject(view) { v, d in
+        view.addDisposable(direction.catchObject(view) { v, d in
             v.regulator.direction = d
             v.py_setNeedsLayout()
         }, for: #function)
@@ -197,7 +197,7 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlatRegulator 
 
     @discardableResult
     func reverse<O: Outputing>(_ reverse: O) -> Self where O.OutputType == Bool {
-        view.py_setUnbinder(reverse.catchObject(view) { v, r in
+        view.addDisposable(reverse.catchObject(view) { v, r in
             v.regulator.reverse = r
             v.py_setNeedsLayout()
         }, for: #function)
@@ -210,7 +210,7 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlatRegulator 
 public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlowRegulator {
     @discardableResult
     func arrangeCount<O: Outputing>(_ count: O) -> Self where O.OutputType == Int {
-        view.py_setUnbinder(count.catchObject(view) { v, c in
+        view.addDisposable(count.catchObject(view) { v, c in
             v.regulator.arrange = c
             v.py_setNeedsLayout()
         }, for: #function)
@@ -219,7 +219,7 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlowRegulator 
 
     @discardableResult
     func hSpace<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
-        view.py_setUnbinder(space.catchObject(view) { v, s in
+        view.addDisposable(space.catchObject(view) { v, s in
             v.regulator.hSpace = s.cgFloatValue
             v.py_setNeedsLayout()
         }, for: #function)
@@ -228,7 +228,7 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlowRegulator 
 
     @discardableResult
     func vSpace<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
-        view.py_setUnbinder(space.catchObject(view) { v, s in
+        view.addDisposable(space.catchObject(view) { v, s in
             v.regulator.vSpace = s.cgFloatValue
             v.py_setNeedsLayout()
         }, for: #function)
@@ -237,7 +237,7 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlowRegulator 
 
     @discardableResult
     func hFormat<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
-        view.py_setUnbinder(formation.catchObject(view) { v, f in
+        view.addDisposable(formation.catchObject(view) { v, f in
             v.regulator.hFormat = f
             v.py_setNeedsLayout()
         }, for: #function)
@@ -258,7 +258,7 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlowRegulator 
 
     @discardableResult
     func vFormat<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
-        view.py_setUnbinder(formation.catchObject(view) { v, f in
+        view.addDisposable(formation.catchObject(view) { v, f in
             v.regulator.vFormat = f
             v.py_setNeedsLayout()
         }, for: #function)
@@ -278,22 +278,22 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlowRegulator 
 public extension Puyo where T: Eventable {
     @discardableResult
     func onEventProduced<I: Inputing>(_ input: I) -> Self where I.InputType == T.EventType {
-        let unbinder = view.eventProducer.send(to: input)
+        let Disposable = view.eventProducer.send(to: input)
         if let v = view as? NSObject {
-            v.py_setUnbinder(unbinder, for: UUID().description)
+            v.addDisposable(Disposable, for: UUID().description)
         }
         return self
     }
 
     @discardableResult
     func onEventProduced<Object: AnyObject>(to: Object, _ action: @escaping (Object, T.EventType) -> Void) -> Self {
-        let unbinder = view.eventProducer.outputing { [weak to] event in
+        let Disposable = view.eventProducer.outputing { [weak to] event in
             if let to = to {
                 action(to, event)
             }
         }
-        if let v = view as? UnbinderBag {
-            v.py_setUnbinder(unbinder, for: UUID().description)
+        if let v = view as? DisposableBag {
+            v.addDisposable(Disposable, for: UUID().description)
         }
         return self
     }
@@ -301,13 +301,13 @@ public extension Puyo where T: Eventable {
 
 public extension Puyo where T: Stateful {
     @discardableResult
-    func viewState<O: Outputing>(_ output: O, unbindable: UnbinderBag) -> Self where O.OutputType == T.StateType {
+    func viewState<O: Outputing>(_ output: O, unbindable: DisposableBag) -> Self where O.OutputType == T.StateType {
         output.send(to: view.viewState).unbind(by: unbindable)
         return self
     }
 
     @discardableResult
-    func stateChange<O: Outputing, R, V>(_ output: O, to kp: WritableKeyPath<R, V>, unbindable: UnbinderBag) -> Self where O.OutputType == V, R == T.StateType {
+    func stateChange<O: Outputing, R, V>(_ output: O, to kp: WritableKeyPath<R, V>, unbindable: DisposableBag) -> Self where O.OutputType == V, R == T.StateType {
         output.outputing { [weak view] in
             view?.viewState.value[keyPath: kp] = $0
         }.unbind(by: unbindable)

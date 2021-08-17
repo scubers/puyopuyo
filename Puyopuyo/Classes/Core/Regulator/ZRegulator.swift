@@ -37,7 +37,7 @@ extension Simulate {
 }
 
 public class CRegulator: Regulator {
-    private var unbinders = [String: Unbinder]()
+    private var Disposables = [String: Disposable]()
 
     public override var py_size: CGSize {
         didSet {
@@ -57,26 +57,26 @@ public class CRegulator: Regulator {
         return CGRect(x: py_center.x - py_size.width / 2, y: py_center.y - py_size.height / 2, width: py_size.width, height: py_size.height)
     }
 
-    private func set(_ unbinder: Unbinder?, by key: String) {
-        unbinders.removeValue(forKey: key)?.py_unbind()
-        unbinders[key] = unbinder
+    private func set(_ Disposable: Disposable?, by key: String) {
+        Disposables.removeValue(forKey: key)?.dispose()
+        Disposables[key] = Disposable
     }
 
     public var width: Simulate? {
         didSet {
-            let unbinder = width?.adapt().outputing({ [weak self] value in
+            let Disposable = width?.adapt().outputing({ [weak self] value in
                 self?.py_size.width = value
             })
-            set(unbinder, by: "width")
+            set(Disposable, by: "width")
         }
     }
 
     public var height: Simulate? {
         didSet {
-            let unbinder = height?.adapt().outputing({ [weak self] value in
+            let Disposable = height?.adapt().outputing({ [weak self] value in
                 self?.py_size.height = value
             })
-            set(unbinder, by: "height")
+            set(Disposable, by: "height")
         }
     }
 

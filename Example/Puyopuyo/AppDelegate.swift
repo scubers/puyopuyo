@@ -61,11 +61,11 @@ import RxSwift
 extension Observable: Outputing {
     public typealias OutputType = Element
     
-    public func outputing(_ block: @escaping (Element) -> Void) -> Unbinder {
+    public func outputing(_ block: @escaping (Element) -> Void) -> Puyopuyo.Disposable {
         let d = subscribe(onNext: { value in
             block(value)
         })
-        return Unbinders.create {
+        return Disposables.create {
             d.dispose()
         }
     }

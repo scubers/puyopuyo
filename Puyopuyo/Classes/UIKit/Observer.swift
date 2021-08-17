@@ -36,20 +36,20 @@ class _Observer<Value>: NSObject {
 extension NSObject {
     
     public func py_observing<Value: Equatable>(for keyPath: String, id: String = UUID().description) -> SimpleOutput<Value?> {
-        return SimpleOutput<Value?> { (i) -> Unbinder in
+        return SimpleOutput<Value?> { (i) -> Disposable in
             var lastValue: Value?
             let observer = _Observer<Value>(key: keyPath) { rect in
                 guard rect != lastValue else { return }
                 lastValue = rect
                 i.input(value: rect)
             }
-            let unbinder = Unbinders.create { [unowned(unsafe) self] in
+            let Disposable = Disposables.create { [unowned(unsafe) self] in
                 self.removeObserver(observer, forKeyPath: keyPath)
-//                self.py_removeUnbinder(for: id)?.py_unbind()
+//                self.py_removeDisposable(for: id)?.dispose()
             }
             self.addObserver(observer, forKeyPath: keyPath, options: [.new, .initial], context: nil)
-            self.py_setUnbinder(unbinder, for: id)
-            return unbinder
+            self.addDisposable(Disposable, for: id)
+            return Disposable
         }
         .distinct()
         

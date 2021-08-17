@@ -10,21 +10,21 @@ import Foundation
 public struct SimpleOutput<Value>: Outputing {
     public typealias OutputType = Value
 
-    private var action: (SimpleInput<Value>) -> Unbinder
+    private var action: (SimpleInput<Value>) -> Disposable
 
-    public init(_ block: @escaping (SimpleInput<Value>) -> Unbinder) {
+    public init(_ block: @escaping (SimpleInput<Value>) -> Disposable) {
         action = block
     }
 
     public init<T: Outputing>(from: T) where T.OutputType == Value {
-        action = { (input: SimpleInput<Value>) -> Unbinder in
+        action = { (input: SimpleInput<Value>) -> Disposable in
             from.outputing { x in
                 input.input(value: x)
             }
         }
     }
 
-    public func outputing(_ block: @escaping (Value) -> Void) -> Unbinder {
+    public func outputing(_ block: @escaping (Value) -> Void) -> Disposable {
         let input = SimpleInput<Value> { x in
             block(x)
         }
@@ -32,14 +32,14 @@ public struct SimpleOutput<Value>: Outputing {
     }
 
     public static func merge<T: Outputing>(_ outputs: [T]) -> SimpleOutput<Value> where T.OutputType == Value {
-        return SimpleOutput<Value> { (i) -> Unbinder in
-            let unbinders = outputs.map { (o) -> Unbinder in
+        return SimpleOutput<Value> { (i) -> Disposable in
+            let disposables = outputs.map { (o) -> Disposable in
                 o.outputing { v in
                     i.input(value: v)
                 }
             }
-            return Unbinders.create {
-                unbinders.forEach { $0.py_unbind() }
+            return Disposables.create {
+                disposables.forEach { $0.dispose() }
             }
         }
     }
@@ -47,14 +47,14 @@ public struct SimpleOutput<Value>: Outputing {
     public static func only(_ value: Value) -> SimpleOutput<Value> {
         .init {
             $0.input(value: value)
-            return Unbinders.create()
+            return Disposables.create()
         }
     }
 }
 
 public extension Outputing {
     func asOutput() -> SimpleOutput<OutputType> {
-        return SimpleOutput { (i) -> Unbinder in
+        return SimpleOutput { (i) -> Disposable in
             self.outputing { v in
                 i.input(value: v)
             }
@@ -69,7 +69,7 @@ public extension SimpleOutput {
     }
 
     func bind<T>(_ action: @escaping (OutputType, SimpleInput<T>) -> Void) -> SimpleOutput<T> {
-        return SimpleOutput<T>({ (i) -> Unbinder in
+        return SimpleOutput<T>({ (i) -> Disposable in
             self.outputing { v in
                 action(v, i)
             }
@@ -171,7 +171,7 @@ public extension Outputing {
     }
 
     func _bind<T>(action: @escaping (OutputType, SimpleInput<T>) -> Void) -> SimpleOutput<T> {
-        return SimpleOutput<T>({ (i) -> Unbinder in
+        return SimpleOutput<T>({ (i) -> Disposable in
             self.outputing { v in
                 action(v, i)
             }

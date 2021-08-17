@@ -21,19 +21,19 @@ public class SimpleIO<Value>: Inputing, Outputing {
         }
     }
 
-    public func outputing(_ block: @escaping (Value) -> Void) -> Unbinder {
+    public func outputing(_ block: @escaping (Value) -> Void) -> Disposable {
         let inputer = SimpleInput(block)
         inputers.append(inputer)
         let id = inputer.uuid
-        return UnbinderImpl { [weak self] in
+        return DisposableImpl { [weak self] in
             self?.inputers.removeAll(where: { $0.uuid == id })
         }
     }
 
-    private var singleUnbinder: Unbinder?
+    private var singleDisposable: Disposable?
 
     public func singleOutput(_ block: @escaping (Value) -> Void) {
-        singleUnbinder?.py_unbind()
-        singleUnbinder = outputing(block)
+        singleDisposable?.dispose()
+        singleDisposable = outputing(block)
     }
 }

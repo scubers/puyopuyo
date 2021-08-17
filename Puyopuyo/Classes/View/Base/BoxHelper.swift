@@ -73,9 +73,9 @@ public class BoxHelper<R: Regulator> {
         _updatingBorders(view: view)
     }
 
-    private var positionControlUnbinder: Unbinder?
+    private var positionControlDisposable: Disposable?
     public func didMoveToSuperview(view: UIView, regulator: R) {
-        positionControlUnbinder?.py_unbind()
+        positionControlDisposable?.dispose()
         if isCenterControl, let spv = view.superview, !isBox(view: spv) {
             let frame = spv
                 .py_observing(for: #keyPath(UIView.frame), id: "\(view.description)\(#function)frame")
@@ -85,7 +85,7 @@ public class BoxHelper<R: Regulator> {
                 .py_observing(for: #keyPath(UIView.bounds), id: "\(view.description)\(#function)bounds")
                 .map { (f: CGRect?) in f?.size ?? .zero }
 
-            positionControlUnbinder =
+            positionControlDisposable =
                 SimpleOutput
                     .merge([frame, bounds])
                     .distinct()

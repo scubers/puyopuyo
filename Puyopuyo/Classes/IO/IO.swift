@@ -7,25 +7,25 @@
 
 import Foundation
 
-// MARK: - Unbinder
+// MARK: - Disposable
 
 /// 解绑器
-public protocol Unbinder {
-    func py_unbind()
+public protocol Disposable {
+    func dispose()
 }
 
-public extension Unbinder {
-    func unbind(by: UnbinderBag, id: String = UUID().description) {
-        by.py_setUnbinder(self, for: id)
+public extension Disposable {
+    func unbind(by: DisposableBag, id: String = UUID().description) {
+        by.addDisposable(self, for: id)
     }
 }
 
-public protocol UnbinderBag {
-    func py_setUnbinder(_ unbiner: Unbinder, for: String)
+public protocol DisposableBag {
+    func addDisposable(_ unbiner: Disposable, for: String)
 }
 
-public struct UnbinderBags {
-    public static func create() -> UnbinderBag { NSObject() }
+public enum DisposableBags {
+    public static func create() -> DisposableBag { NSObject() }
 }
 
 // MARK: - Outputing, Inputing
@@ -33,7 +33,7 @@ public struct UnbinderBags {
 /// 输出接口
 public protocol Outputing {
     associatedtype OutputType
-    func outputing(_ block: @escaping (OutputType) -> Void) -> Unbinder
+    func outputing(_ block: @escaping (OutputType) -> Void) -> Disposable
 }
 
 /// 输入接口
@@ -42,12 +42,12 @@ public protocol Inputing {
     func input(value: InputType)
 }
 
-extension Outputing {
+public extension Outputing {
     /// 将输出接口绑定到对象Object中，并持续接收outputing值
     /// - Parameters:
     ///   - object: 绑定对象
     ///   - action: action description
-    func catchObject<Object: UnbinderBag & AnyObject>(_ object: Object, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
+    internal func catchObject<Object: DisposableBag & AnyObject>(_ object: Object, _ action: @escaping (Object, OutputType) -> Void) -> Disposable {
         return outputing { [weak object] s in
             if let object = object {
                 action(object, s)
@@ -57,32 +57,32 @@ extension Outputing {
 
     /// 对象销毁时则移除绑定
     @discardableResult
-    public func safeBind<Object: UnbinderBag & AnyObject>(to object: Object, id: String = UUID().description, _ action: @escaping (Object, OutputType) -> Void) -> Unbinder {
-        let unbinder = outputing { [weak object] v in
+    func safeBind<Object: DisposableBag & AnyObject>(to object: Object, id: String = UUID().description, _ action: @escaping (Object, OutputType) -> Void) -> Disposable {
+        let Disposable = outputing { [weak object] v in
             if let object = object {
                 action(object, v)
             }
         }
-        object.py_setUnbinder(unbinder, for: id)
-        return unbinder
+        object.addDisposable(Disposable, for: id)
+        return Disposable
     }
 
     /// 输出接口绑定到指定输入接口
     /// - Parameter input: input description
-    public func send<Input: Inputing>(to input: Input) -> Unbinder where Input.InputType == OutputType {
+    func send<Input: Inputing>(to input: Input) -> Disposable where Input.InputType == OutputType {
         return outputing { v in
             input.input(value: v)
         }
     }
 
-    public func send<Input: Inputing>(to inputs: [Input]) -> [Unbinder] where Input.InputType == OutputType {
+    func send<Input: Inputing>(to inputs: [Input]) -> [Disposable] where Input.InputType == OutputType {
         inputs.map { self.send(to: $0) }
     }
 
-    public func setAction<Holder: NSObject>(_ action: OutputAction<Holder, OutputType>) {
+    func setAction<Holder: NSObject>(_ action: OutputAction<Holder, OutputType>) {
         guard let holder = action.holder else { return }
-        let unbinder = outputing(action.action)
-        holder.py_setUnbinder(unbinder, for: "\(#function)_setActionToHolderKey")
+        let Disposable = outputing(action.action)
+        holder.addDisposable(Disposable, for: "\(#function)_setActionToHolderKey")
     }
 }
 
@@ -96,74 +96,74 @@ public struct OutputAction<Holder: NSObject, Value> {
 }
 
 public extension Outputing where OutputType == Self {
-    func outputing(_ block: @escaping (OutputType) -> Void) -> Unbinder {
+    func outputing(_ block: @escaping (OutputType) -> Void) -> Disposable {
         block(self)
-        return Unbinders.create()
+        return Disposables.create()
     }
 }
 
-class UnbinderImpl: NSObject, Unbinder {
+class DisposableImpl: NSObject, Disposable {
     private var block: () -> Void
 
     init(_ block: @escaping () -> Void) {
         self.block = block
     }
 
-    func py_unbind() {
+    func dispose() {
         block()
         block = {}
     }
 }
 
-public struct Unbinders {
+public struct Disposables {
     private init() {}
-    public static func create(_ block: @escaping () -> Void = {}) -> Unbinder {
-        return UnbinderImpl(block)
+    public static func create(_ block: @escaping () -> Void = {}) -> Disposable {
+        return DisposableImpl(block)
     }
-    
-    public static func createBag() -> UnbinderBag {
+
+    public static func createBag() -> DisposableBag {
         NSObject()
     }
 }
 
-// MARK: - NSObject unbinder impl
+// MARK: - NSObject Disposable impl
 
-extension NSObject: UnbinderBag {
-    public func py_setUnbinder(_ unbinder: Unbinder, for key: String) {
-        py_unbinderContainer.setUnbinder(unbinder, for: key)
+extension NSObject: DisposableBag {
+    public func addDisposable(_ Disposable: Disposable, for key: String) {
+        py_DisposableContainer.setDisposable(Disposable, for: key)
     }
 
     @discardableResult
-    public func py_removeUnbinder(for key: String) -> Unbinder? {
-        return py_unbinderContainer.removeUnbinder(for: key)
+    private func py_removeDisposable(for key: String) -> Disposable? {
+        return py_DisposableContainer.removeDisposable(for: key)
     }
 
-    private static var puyopuyo_unbinderContainerKey = "puyoUnbinder"
-    private var py_unbinderContainer: UnbinderContainer {
-        var container = objc_getAssociatedObject(self, &NSObject.puyopuyo_unbinderContainerKey)
+    private static var puyopuyo_DisposableContainerKey = "puyoDisposable"
+    private var py_DisposableContainer: DisposableContainer {
+        var container = objc_getAssociatedObject(self, &NSObject.puyopuyo_DisposableContainerKey)
         if container == nil {
-            container = UnbinderContainer()
-            objc_setAssociatedObject(self, &NSObject.puyopuyo_unbinderContainerKey, container, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            container = DisposableContainer()
+            objc_setAssociatedObject(self, &NSObject.puyopuyo_DisposableContainerKey, container, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
-        return container as! UnbinderContainer
+        return container as! DisposableContainer
     }
 
-    private class UnbinderContainer: NSObject {
-        private var unbinders = [String: Unbinder]()
+    private class DisposableContainer: NSObject {
+        private var Disposables = [String: Disposable]()
 
-        func setUnbinder(_ unbinder: Unbinder, for key: String) {
-            let old = unbinders[key]
-            old?.py_unbind()
-            unbinders[key] = unbinder
+        func setDisposable(_ Disposable: Disposable, for key: String) {
+            let old = Disposables[key]
+            old?.dispose()
+            Disposables[key] = Disposable
         }
 
-        func removeUnbinder(for key: String) -> Unbinder? {
-            return unbinders.removeValue(forKey: key)
+        func removeDisposable(for key: String) -> Disposable? {
+            return Disposables.removeValue(forKey: key)
         }
 
         deinit {
-            unbinders.forEach { _, unbinder in
-                unbinder.py_unbind()
+            Disposables.forEach { _, Disposable in
+                Disposable.dispose()
             }
         }
     }

@@ -36,23 +36,23 @@ public class State<Value>: Outputing, Inputing {
 
     public func input(value: State<Value>.InputType) { _value = value }
 
-    public func outputing(_ block: @escaping (State<Value>.OutputType) -> Void) -> Unbinder {
+    public func outputing(_ block: @escaping (State<Value>.OutputType) -> Void) -> Disposable {
         if let value = _value {
             block(value)
         }
         let inputer = SimpleInput(block)
         inputers.append(inputer)
         let id = inputer.uuid
-        return UnbinderImpl { [weak self] in
+        return DisposableImpl { [weak self] in
             self?.inputers.removeAll(where: { $0.uuid == id })
         }
     }
 
-    private var singleUnbinder: Unbinder?
+    private var singleDisposable: Disposable?
 
     public func singleOutput(_ block: @escaping (Value) -> Void) {
-        singleUnbinder?.py_unbind()
-        singleUnbinder = outputing(block)
+        singleDisposable?.dispose()
+        singleDisposable = outputing(block)
     }
 
     public func setState(_ state: (inout Value) -> Void) {
@@ -71,7 +71,7 @@ public class State<Value>: Outputing, Inputing {
         state = State(value)
     }
 
-    public func outputing(_ block: @escaping (Value) -> Void) -> Unbinder {
+    public func outputing(_ block: @escaping (Value) -> Void) -> Disposable {
         state.outputing(block)
     }
 
@@ -99,7 +99,7 @@ public class State<Value>: Outputing, Inputing {
         StateBinding<Subject>(output: output.map(member))
     }
 
-    public func outputing(_ block: @escaping (OutputType) -> Void) -> Unbinder {
+    public func outputing(_ block: @escaping (OutputType) -> Void) -> Disposable {
         output.outputing(block)
     }
 }

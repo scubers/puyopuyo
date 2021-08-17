@@ -24,8 +24,8 @@ public class RetainWrapper<Wrapped: AnyObject> {
     }
 }
 
-extension RetainWrapper: Unbinder {
-    public func py_unbind() {}
+extension RetainWrapper: Disposable {
+    public func dispose() {}
 }
 
 public class ProxyChain<Delegate: AnyObject>: PYProxyChain {
