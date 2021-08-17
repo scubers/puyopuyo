@@ -104,11 +104,11 @@ public class State<Value>: Outputing, Inputing {
     }
 }
 
-public extension StateBinding where Value: PuyoOptionalType {
-    subscript<Subject>(dynamicMember member: KeyPath<Value.PuyoWrappedType, Subject>) -> StateBinding<Subject?> {
+public extension StateBinding where Value: OptionalableValueType {
+    subscript<Subject>(dynamicMember member: KeyPath<Value.Wrap, Subject>) -> StateBinding<Subject?> {
         StateBinding<Subject?>(
             output: output.map {
-                if let v = $0.puyoWrapValue {
+                if let v = $0.optionalValue {
                     return v[keyPath: member]
                 } else {
                     return nil
@@ -120,9 +120,9 @@ public extension StateBinding where Value: PuyoOptionalType {
 
 // MARK: - Extensions
 
-public extension PuyoOptionalType {
-    subscript<Subject>(dynamicMember member: KeyPath<PuyoWrappedType, Subject>) -> Subject? {
-        if let v = puyoWrapValue {
+public extension OptionalableValueType {
+    subscript<Subject>(dynamicMember member: KeyPath<Wrap, Subject>) -> Subject? {
+        if let v = optionalValue {
             return v[keyPath: member]
         }
         return nil

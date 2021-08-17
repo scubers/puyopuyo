@@ -1,5 +1,5 @@
 //
-//  PuyoOptionalType.swift
+//  OptionalableValueType.swift
 //  Puyopuyo
 //
 //  Created by 王俊仁 on 2020/6/13.
@@ -7,34 +7,33 @@
 
 import Foundation
 
-public protocol PuyoOptionalType {
-    associatedtype PuyoWrappedType
-    var puyoWrapValue: PuyoWrappedType? { get }
+public protocol OptionalableValueType {
+    associatedtype Wrap
+    var optionalValue: Wrap? { get }
 }
 
-func _getOptionalType<T: PuyoOptionalType, R>(from: String?) -> T where T.PuyoWrappedType == R {
+func _getOptionalType<T: OptionalableValueType, R>(from: String?) -> T where T.Wrap == R {
     return from as! T
 }
 
-extension Optional: PuyoOptionalType {
-    public typealias PuyoWrappedType = Wrapped
-    public var puyoWrapValue: Wrapped? {
+extension Optional: OptionalableValueType {
+    public typealias Wrap = Wrapped
+    public var optionalValue: Wrapped? {
         return self
     }
 }
 
-extension PuyoOptionalType where PuyoWrappedType == Self {
-    public var puyoWrapValue: PuyoWrappedType? {
+public extension OptionalableValueType where Wrap == Self {
+    var optionalValue: Wrap? {
         return Optional.some(self)
     }
 }
 
-extension String: PuyoOptionalType { public typealias PuyoWrappedType = String }
-extension UIColor: PuyoOptionalType { public typealias PuyoWrappedType = UIColor }
-extension UIFont: PuyoOptionalType { public typealias PuyoWrappedType = UIFont }
-extension NSNumber: PuyoOptionalType { public typealias PuyoWrappedType = NSNumber }
-extension UIImage: PuyoOptionalType { public typealias PuyoWrappedType = UIImage }
-extension Date: PuyoOptionalType { public typealias PuyoWrappedType = Date }
-extension Data: PuyoOptionalType { public typealias PuyoWrappedType = Data }
-extension URL: PuyoOptionalType { public typealias PuyoWrappedType = URL }
-
+extension String: OptionalableValueType { public typealias Wrap = String }
+extension UIColor: OptionalableValueType { public typealias Wrap = UIColor }
+extension UIFont: OptionalableValueType { public typealias Wrap = UIFont }
+extension NSNumber: OptionalableValueType { public typealias Wrap = NSNumber }
+extension UIImage: OptionalableValueType { public typealias Wrap = UIImage }
+extension Date: OptionalableValueType { public typealias Wrap = Date }
+extension Data: OptionalableValueType { public typealias Wrap = Data }
+extension URL: OptionalableValueType { public typealias Wrap = URL }

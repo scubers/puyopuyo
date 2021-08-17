@@ -153,10 +153,10 @@ public extension SimpleOutput {
     }
 }
 
-public extension SimpleOutput where OutputType: PuyoOptionalType {
-    func map<R>(_ keyPath: KeyPath<OutputType.PuyoWrappedType, R>, _ default: R) -> SimpleOutput<R?> {
+public extension SimpleOutput where OutputType: OptionalableValueType {
+    func map<R>(_ keyPath: KeyPath<OutputType.Wrap, R>, _ default: R) -> SimpleOutput<R?> {
         bind {
-            if let v = $0.puyoWrapValue {
+            if let v = $0.optionalValue {
                 $1.input(value: v[keyPath: keyPath])
             } else {
                 $1.input(value: `default`)
@@ -239,10 +239,10 @@ public extension Outputing {
     }
 }
 
-extension Outputing where OutputType: PuyoOptionalType {
-    public func unwrap(or: OutputType.PuyoWrappedType) -> SimpleOutput<OutputType.PuyoWrappedType> {
+extension Outputing where OutputType: OptionalableValueType {
+    public func unwrap(or: OutputType.Wrap) -> SimpleOutput<OutputType.Wrap> {
         return _bind { v, i in
-            if let v = v.puyoWrapValue {
+            if let v = v.optionalValue {
                 i.input(value: v)
             } else {
                 i.input(value: or)

@@ -19,8 +19,8 @@ public extension Puyo where T: UnbinderBag {
 
 public extension Puyo where T: UIView {
     @discardableResult
-    func backgroundColor<S: Outputing>(_ color: S) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIColor {
-        keyPath(\.backgroundColor, color.mapTo(\.puyoWrapValue))
+    func backgroundColor<S: Outputing>(_ color: S) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIColor {
+        keyPath(\.backgroundColor, color.mapTo(\.optionalValue))
     }
 
     @discardableResult
@@ -51,8 +51,8 @@ public extension Puyo where T: UIView {
     }
 
     @discardableResult
-    func borderColor<S: Outputing>(_ color: S) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIColor {
-        keyPath(\T.layer.borderColor, color.mapTo(\.puyoWrapValue).map(\.?.cgColor))
+    func borderColor<S: Outputing>(_ color: S) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIColor {
+        keyPath(\T.layer.borderColor, color.mapTo(\.optionalValue).map(\.?.cgColor))
     }
 
     @discardableResult

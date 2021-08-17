@@ -9,9 +9,9 @@ import Foundation
 
 public extension Puyo where T: TintColorDecorable & UIView {
     @discardableResult
-    func tintColor<S: Outputing>(_ color: S, state: UIControl.State = .normal) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIColor {
+    func tintColor<S: Outputing>(_ color: S, state: UIControl.State = .normal) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIColor {
         view.py_setUnbinder(color.catchObject(view) { v, a in
-            v.applyTintColor(a.puyoWrapValue, state: state)
+            v.applyTintColor(a.optionalValue, state: state)
         }, for: "\(#function)_\(state)")
         return self
     }
@@ -25,21 +25,21 @@ public extension Puyo where T: TintColorDecorable & UIView {
 
 public extension Puyo where T: ImageDecorable & UIView {
     @discardableResult
-    func image<S: Outputing>(_ image: S, state: UIControl.State = .normal) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIImage {
+    func image<S: Outputing>(_ image: S, state: UIControl.State = .normal) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIImage {
         view.py_setUnbinder(image.catchObject(view) { v, a in
-            v.applyImage(a.puyoWrapValue, state: state)
+            v.applyImage(a.optionalValue, state: state)
         }, for: #function + "\(state)")
         return self
     }
 
     @discardableResult
-    func renderingImage<S: Outputing>(_ image: S, mode: UIImage.RenderingMode = .alwaysTemplate, state: UIControl.State = .normal) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIImage {
-        self.image(image.asOutput().map { $0.puyoWrapValue?.withRenderingMode(mode) },
+    func renderingImage<S: Outputing>(_ image: S, mode: UIImage.RenderingMode = .alwaysTemplate, state: UIControl.State = .normal) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIImage {
+        self.image(image.asOutput().map { $0.optionalValue?.withRenderingMode(mode) },
                    state: state)
     }
 
     @discardableResult
-    func templatedImage<S: Outputing>(_ image: S, state: UIControl.State = .normal) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIImage {
+    func templatedImage<S: Outputing>(_ image: S, state: UIControl.State = .normal) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIImage {
         renderingImage(image, mode: .alwaysTemplate, state: state)
     }
 }
@@ -73,9 +73,9 @@ public extension Puyo where T: TextLinesDecorable & UIView {
 
 public extension Puyo where T: FontDecorable & UIView {
     @discardableResult
-    func font<S: Outputing>(_ font: S) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIFont {
+    func font<S: Outputing>(_ font: S) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIFont {
         view.py_setUnbinder(font.catchObject(view) { v, a in
-            v.applyFont(a.puyoWrapValue)
+            v.applyFont(a.optionalValue)
             v.py_setNeedsLayoutIfMayBeWrap()
         }, for: #function)
         return self
@@ -94,9 +94,9 @@ public extension Puyo where T: FontDecorable & UIView {
 
 public extension Puyo where T: TextColorDecorable & UIView {
     @discardableResult
-    func textColor<S: Outputing>(_ color: S, state: UIControl.State = .normal) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIColor {
+    func textColor<S: Outputing>(_ color: S, state: UIControl.State = .normal) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIColor {
         view.py_setUnbinder(color.catchObject(view) { v, a in
-            v.applyTextColor(a.puyoWrapValue, state: state)
+            v.applyTextColor(a.optionalValue, state: state)
         }, for: #function + "\(state)")
         return self
     }
@@ -104,18 +104,18 @@ public extension Puyo where T: TextColorDecorable & UIView {
 
 public extension Puyo where T: TextDecorable & UIView {
     @discardableResult
-    func text<S: Outputing>(_ text: S, state: UIControl.State = .normal) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == String {
+    func text<S: Outputing>(_ text: S, state: UIControl.State = .normal) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == String {
         view.py_setUnbinder(text.catchObject(view) { v, a in
-            v.applyText(a.puyoWrapValue, state: state)
+            v.applyText(a.optionalValue, state: state)
             v.py_setNeedsLayoutIfMayBeWrap()
         }, for: #function + "\(state)")
         return self
     }
 
     @discardableResult
-    func attrText<S: Outputing>(_ text: S, state: UIControl.State = .normal) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == NSAttributedString {
+    func attrText<S: Outputing>(_ text: S, state: UIControl.State = .normal) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == NSAttributedString {
         view.py_setUnbinder(text.catchObject(view) { v, a in
-            v.applyAttrText(a.puyoWrapValue, state: state)
+            v.applyAttrText(a.optionalValue, state: state)
             v.py_setNeedsLayoutIfMayBeWrap()
         }, for: #function + "\(state)")
         return self
@@ -124,9 +124,9 @@ public extension Puyo where T: TextDecorable & UIView {
 
 public extension Puyo where T: BgImageDecorable & UIView {
     @discardableResult
-    func backgroundImage<S: Outputing>(_ image: S, state: UIControl.State = .normal) -> Self where S.OutputType: PuyoOptionalType, S.OutputType.PuyoWrappedType == UIImage {
+    func backgroundImage<S: Outputing>(_ image: S, state: UIControl.State = .normal) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIImage {
         view.py_setUnbinder(image.catchObject(view) { v, a in
-            v.applyBgImage(a.puyoWrapValue, state: state)
+            v.applyBgImage(a.optionalValue, state: state)
         }, for: "\(#function)_\(state)")
         return self
     }

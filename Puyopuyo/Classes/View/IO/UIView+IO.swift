@@ -25,9 +25,9 @@ public extension UIControl {
     }
 }
 
-public extension Outputing where OutputType: PuyoOptionalType {
-    func mapWrappedValue() -> SimpleOutput<OutputType.PuyoWrappedType?> {
-        asOutput().map { $0.puyoWrapValue }
+public extension Outputing where OutputType: OptionalableValueType {
+    func mapWrappedValue() -> SimpleOutput<OutputType.Wrap?> {
+        asOutput().map { $0.optionalValue }
     }
 }
 
