@@ -13,22 +13,22 @@ public struct SimpleInput<T>: Inputing {
         action(value)
     }
 
-    private var action: (T) -> Void
-    public init(_ output: @escaping (T) -> Void = {_ in }) {
-        action = output
+    private let action: (T) -> Void
+    public init(_ action: @escaping (T) -> Void) {
+        self.action = action
     }
 }
 
 public extension Inputing {
     func asInput() -> SimpleInput<InputType> {
-        return SimpleInput { x in
-            self.input(value: x)
+        SimpleInput {
+            self.input(value: $0)
         }
     }
 
     func asInput<T>(_ mapping: @escaping (T) -> InputType) -> SimpleInput<T> {
-        return SimpleInput { x in
-            self.input(value: mapping(x))
+        SimpleInput {
+            self.input(value: mapping($0))
         }
     }
 }
