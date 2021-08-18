@@ -7,24 +7,18 @@
 
 import Foundation
 
-@available(*, deprecated, message: "use Stateful")
-public typealias StatefulView = Stateful
-
 public protocol Stateful {
     associatedtype StateType
     var viewState: State<StateType> { get }
 }
 
 public extension Stateful {
-    var state: SimpleOutput<StateType> { viewState.asOutput() }
+    var output: SimpleOutput<StateType> { viewState.asOutput() }
 
-    func bind<R>(_ kp: KeyPath<StateType, R>) -> SimpleOutput<R> {
-        state.map(kp)
+    func bind<R>(_ keyPath: KeyPath<StateType, R>) -> SimpleOutput<R> {
+        output.map(keyPath)
     }
 }
-
-@available(*, deprecated, message: "use Eventable")
-public typealias EventableView = Eventable
 
 public protocol Eventable {
     associatedtype EventType

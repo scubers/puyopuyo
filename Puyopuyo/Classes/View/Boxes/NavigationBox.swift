@@ -45,7 +45,7 @@ open class NavigationBox: VBox, Stateful {
                 })
                 .alpha(bind(\.alpha).distinct())
                 .alignment(.top)
-                .viewUpdate(on: state) { v, s in
+                .viewUpdate(on: output) { v, s in
                     v.layer.shadowOffset = s.shadowOffset
                     v.layer.shadowOpacity = s.shadowOpacity
                     v.layer.shadowRadius = s.shadowRadius
@@ -55,7 +55,7 @@ open class NavigationBox: VBox, Stateful {
 
             let output = SimpleOutput.merge([
                 nav.py_boundsState(),
-                self.state.map { _ in .zero },
+                self.output.map { _ in .zero },
             ])
 
             body().attach($0)

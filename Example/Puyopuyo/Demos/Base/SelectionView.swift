@@ -41,7 +41,7 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
                         this.eventProducer.input(value: x)
                         this.viewState.value = x
                     }
-                    .viewUpdate(on: state) { btn, e in
+                    .viewUpdate(on: output) { btn, e in
                         if let e = e, e.value == x.value {
                             btn.backgroundColor = Theme.accentColor
                             btn.isSelected = true
