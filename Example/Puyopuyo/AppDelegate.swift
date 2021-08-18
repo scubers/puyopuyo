@@ -6,26 +6,32 @@
 //  Copyright (c) 2019 Jrwong. All rights reserved.
 //
 
-import UIKit
 import Puyopuyo
+import UIKit
 
-class NavController: UINavigationController {
+class NavController: UINavigationController {}
+
+class Person {
+    var name: String?
+    var cat: Cat?
+}
+
+class Cat {
+    var name: String?
+    var age: Int = 1
 }
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
         UIImageView.appearance().tintColor = Theme.accentColor
-        
+
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.rootViewController = NavController(rootViewController: MenuVC())
         window?.makeKeyAndVisible()
-        
+
         return true
     }
 
@@ -50,8 +56,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-
 }
 
 import Foundation
@@ -60,7 +64,7 @@ import RxSwift
 
 extension Observable: Outputing {
     public typealias OutputType = Element
-    
+
     public func outputing(_ block: @escaping (Element) -> Void) -> Puyopuyo.Disposable {
         let d = subscribe(onNext: { value in
             block(value)
@@ -72,20 +76,18 @@ extension Observable: Outputing {
 }
 
 extension PublishSubject: Inputing {
-    
     public typealias InputType = Element
-    
+
     public func input(value: Element) {
         onNext(value)
     }
-    
 }
 
 extension BehaviorSubject: Inputing {
     public typealias ValueType = Element
-    
+
     public typealias InputType = Element
-    
+
     public func input(value: Element) {
         onNext(value)
     }

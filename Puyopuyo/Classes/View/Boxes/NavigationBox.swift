@@ -25,7 +25,8 @@ open class NavigationBox: VBox, Stateful {
     public var viewState = State(ViewState())
 
     public init(navBar: BoxGenerator<UIView>,
-                body: BoxGenerator<UIView>) {
+                body: BoxGenerator<UIView>)
+    {
         super.init(frame: .zero)
 
         attach {
@@ -35,16 +36,16 @@ open class NavigationBox: VBox, Stateful {
                         .width(.fill)
                         .alignment(.bottom)
                 }
-                .visibility(self.binding.visible.distinct())
+                .visibility(bind(\.visible).distinct())
                 .width(.fill)
                 .height($0.py_safeArea().map { SizeDescription.wrap(add: $0.top) })
-                .backgroundColor(binding.backgroundColor)
-                .margin(_state.distinctMap(\.navOffset).map { (s) -> UIEdgeInsets in
+                .backgroundColor(bind(\.backgroundColor))
+                .margin(bind(\.navOffset).distinct().map { s -> UIEdgeInsets in
                     .init(top: s.y, left: s.x, bottom: 0, right: 0)
                 })
-                .alpha(binding.alpha.distinct())
+                .alpha(bind(\.alpha).distinct())
                 .alignment(.top)
-                .viewUpdate(on: _state) { v, s in
+                .viewUpdate(on: state) { v, s in
                     v.layer.shadowOffset = s.shadowOffset
                     v.layer.shadowOpacity = s.shadowOpacity
                     v.layer.shadowRadius = s.shadowRadius
@@ -54,12 +55,12 @@ open class NavigationBox: VBox, Stateful {
 
             let output = SimpleOutput.merge([
                 nav.py_boundsState(),
-                self._state.map { _ in .zero },
+                self.state.map { _ in .zero },
             ])
 
             body().attach($0)
                 .size(.fill, .fill)
-                .margin(output.map { [weak self, weak nav] (_) -> UIEdgeInsets in
+                .margin(output.map { [weak self, weak nav] _ -> UIEdgeInsets in
                     guard let self = self, let nav = nav else { return .zero }
                     if self.viewState.value.bodyAvoidNavBar { return .zero }
                     return .init(top: -nav.bounds.height, left: 0, bottom: 0, right: 0)
@@ -69,11 +70,12 @@ open class NavigationBox: VBox, Stateful {
             nav.attach($0)
         }
         .reverse(true)
-        .animator(_state.map { $0.animator })
+        .animator(bind(\.animator))
         .justifyContent(.center)
         .size(.fill, .fill)
     }
 
+    @available(*, unavailable)
     public required init?(coder _: NSCoder) {
         fatalError()
     }

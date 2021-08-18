@@ -54,9 +54,9 @@ class CustomView: UIView, Stateful, Eventable {
         attach {
             VBox().attach($0) {
                 UILabel().attach($0)
-                    .text(self._state.map { $0.title })
+                    .text(bind(\.title))
                 UILabel().attach($0)
-                    .text(self._state.map { $0.count.description })
+                    .text(bind(\.count.description))
 
                 UIButton().attach($0)
                     .onTap(to: self) { this, _ in

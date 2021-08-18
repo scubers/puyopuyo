@@ -60,13 +60,11 @@ public class State<Value>: Outputing, Inputing {
         state(&v)
         value = v
     }
-
-    public var binding: StateBinding<Value> { StateBinding(output: asOutput()) }
 }
 
 // MARK: - StateBinding
 
-@dynamicMemberLookup public struct StateBinding<Value>: Outputing {
+@dynamicMemberLookup private struct StateBinding<Value>: Outputing {
     public typealias OutputType = Value
     var output: SimpleOutput<Value>
     public subscript<Subject>(dynamicMember member: KeyPath<Value, Subject>) -> StateBinding<Subject> {
@@ -78,14 +76,15 @@ public class State<Value>: Outputing, Inputing {
     }
 }
 
-public extension StateBinding where Value: OptionalableValueType {
-    subscript<Subject>(dynamicMember member: KeyPath<Value.Wrap, Subject>) -> StateBinding<Subject?> {
-        StateBinding<Subject?>(
+private extension StateBinding where Value: OptionalableValueType {
+    subscript<Subject: OptionalableValueType>(dynamicMember member: KeyPath<Value.Wrap, Subject>) -> StateBinding<Subject> {
+        StateBinding<Subject>(
             output: output.map {
                 if let v = $0.optionalValue {
                     return v[keyPath: member]
                 } else {
-                    return nil
+                    let v: Any? = nil
+                    return v as! Subject
                 }
             }
         )
