@@ -54,21 +54,19 @@ public struct SimpleOutput<Value>: Outputing {
 
 public extension Outputing {
     func asOutput() -> SimpleOutput<OutputType> {
-        return SimpleOutput { i -> Disposable in
+        SimpleOutput { i -> Disposable in
             self.outputing { v in
                 i.input(value: v)
             }
         }
     }
-}
 
-public extension Outputing {
     func some() -> SimpleOutput<OutputType?> {
-        return map { $0 }
+        map { $0 }
     }
 
     func bind<T>(_ action: @escaping (OutputType, SimpleInput<T>) -> Void) -> SimpleOutput<T> {
-        return SimpleOutput<T>({ i -> Disposable in
+        SimpleOutput<T>({ i -> Disposable in
             self.outputing { v in
                 action(v, i)
             }
@@ -76,7 +74,7 @@ public extension Outputing {
     }
 
     func map<R>(_ block: @escaping (OutputType) -> R) -> SimpleOutput<R> {
-        return bind { $1.input(value: block($0)) }
+        bind { $1.input(value: block($0)) }
     }
 
     func map<R>(_ keyPath: KeyPath<OutputType, R>) -> SimpleOutput<R> {
@@ -84,7 +82,7 @@ public extension Outputing {
     }
 
     func filter(_ filter: @escaping (OutputType) -> Bool) -> SimpleOutput<OutputType> {
-        return bind { v, i in
+        bind { v, i in
             if filter(v) { i.input(value: v) }
         }
     }
@@ -103,16 +101,6 @@ public extension Outputing {
                 i.input(value: v)
             }
         }
-    }
-
-    func distinct<R>(by keyPath: KeyPath<OutputType, R>) -> SimpleOutput<OutputType> where R: Equatable {
-        ignore {
-            $0[keyPath: keyPath] == $1[keyPath: keyPath]
-        }
-    }
-
-    func distinctMap<R>(_ kp: KeyPath<OutputType, R>) -> SimpleOutput<R> where R: Equatable {
-        distinct(by: kp).map(kp)
     }
 
     func take(_ count: Int) -> SimpleOutput<OutputType> {
@@ -166,7 +154,7 @@ public extension Outputing where OutputType: OptionalableValueType {
 
 public extension Outputing where OutputType: OptionalableValueType {
     func unwrap(or: OutputType.Wrap) -> SimpleOutput<OutputType.Wrap> {
-        return bind { v, i in
+        bind { v, i in
             if let v = v.optionalValue {
                 i.input(value: v)
             } else {
@@ -178,6 +166,6 @@ public extension Outputing where OutputType: OptionalableValueType {
 
 public extension Outputing where OutputType: Equatable {
     func distinct() -> SimpleOutput<OutputType> {
-        return ignore { $0 == $1 }
+        ignore { $0 == $1 }
     }
 }

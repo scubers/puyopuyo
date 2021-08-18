@@ -27,7 +27,6 @@ public class SimpleIO<Value>: Inputing, Outputing {
     }
 
     public func outputing(_ block: @escaping (Value) -> Void) -> Disposable {
-//        let inputer = SimpleInput(block)
         let listener = Listener<Value>(input: SimpleInput(block))
         inputers.append(listener)
         let id = listener.uuid.description

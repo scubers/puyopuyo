@@ -34,9 +34,9 @@ public class State<Value>: Outputing, Inputing {
 
     public func resend() { input(value: value) }
 
-    public func input(value: State<Value>.InputType) { _value = value }
+    public func input(value: InputType) { _value = value }
 
-    public func outputing(_ block: @escaping (State<Value>.OutputType) -> Void) -> Disposable {
+    public func outputing(_ block: @escaping (OutputType) -> Void) -> Disposable {
         if let value = _value {
             block(value)
         }

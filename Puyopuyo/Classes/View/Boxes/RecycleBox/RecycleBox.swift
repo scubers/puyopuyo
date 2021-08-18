@@ -89,7 +89,8 @@ open class RecycleBox: UICollectionView,
     Delegatable,
     DataSourceable,
     UICollectionViewDelegateFlowLayout,
-    UICollectionViewDataSource {
+    UICollectionViewDataSource
+{
     // contruct method
     public init(
         layout: UICollectionViewFlowLayout = CollectionBoxFlowLayout(),
@@ -127,18 +128,19 @@ open class RecycleBox: UICollectionView,
             this.reload(sections: s)
         }
         
-        py_boundsState().distinctMap(\.size).safeBind(to: self) { (this, _) in
+        py_boundsState().map(\.size).distinct().safeBind(to: self) { this, _ in
             DispatchQueue.main.async {
                 this.flowLayout.invalidateLayout()
             }
         }
     }
     
+    @available(*, unavailable)
     public required init?(coder: NSCoder) {
         fatalError()
     }
     
-    open override func responds(to aSelector: Selector!) -> Bool {
+    override open func responds(to aSelector: Selector!) -> Bool {
         // 判断是否使用自动计算大小
         if aSelector == #selector(collectionView(_:layout:sizeForItemAt:)), flowLayout.estimatedItemSize != .zero {
             return false
