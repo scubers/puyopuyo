@@ -50,6 +50,10 @@ extension UIView: MeasureTargetable {
     public func py_sizeThatFits(_ size: CGSize) -> CGSize {
         return sizeThatFits(size)
     }
+
+    public func py_setNeedsRelayout() {
+        setNeedsLayout()
+    }
 }
 
 // MARK: - UIView ext methods
@@ -145,9 +149,5 @@ public extension Bool {
     /// return if visible or invisible
     func py_visibleOrNot() -> Visibility {
         return self ? .visible : .invisible
-    }
-
-    func py_toggled() -> Bool {
-        return !self
     }
 }

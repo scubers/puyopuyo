@@ -18,11 +18,12 @@ public protocol Measurable {
 
 public protocol MeasureTargetable: AnyObject {
     var py_size: CGSize { get set }
-    
+
     var py_center: CGPoint { get set }
 
     func py_enumerateChild(_ block: (Int, Measure) -> Void)
 
     func py_sizeThatFits(_ size: CGSize) -> CGSize
-    
+
+    func py_setNeedsRelayout()
 }

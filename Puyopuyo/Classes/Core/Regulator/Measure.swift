@@ -21,16 +21,16 @@ public struct Alignment: OptionSet, CustomStringConvertible, Outputing {
         let contain = all.filter { self.contains($0) }
         return
             contain.map { x -> String in
-                    switch x {
-                    case .top: return "top"
-                    case .left: return "left"
-                    case .bottom: return "bottom"
-                    case .right: return "right"
-                    case .vertCenter: return "vertCenter"
-                    case .horzCenter: return "horzCenter"
-                    default: return ""
-                    }
-                }.joined(separator: ",")
+                switch x {
+                case .top: return "top"
+                case .left: return "left"
+                case .bottom: return "bottom"
+                case .right: return "right"
+                case .vertCenter: return "vertCenter"
+                case .horzCenter: return "horzCenter"
+                default: return ""
+                }
+            }.joined(separator: ",")
     }
 
     public init(rawValue: Int) {
@@ -142,7 +142,7 @@ public class Measure: Measurable, MeasureTargetable, Hashable {
 
     /// 计算节点大小描述
     public var size = Size(width: .wrap, height: .wrap)
-    
+
     /// 只有在flowbox中生效
     public var flowEnding = false
 
@@ -187,6 +187,8 @@ public class Measure: Measurable, MeasureTargetable, Hashable {
         }
         return virtualTarget
     }
+
+    public func py_setNeedsRelayout() {}
 }
 
 class VirtualTarget: MeasureTargetable {
@@ -205,4 +207,6 @@ class VirtualTarget: MeasureTargetable {
     }
 
     var children = [Measure]()
+
+    func py_setNeedsRelayout() {}
 }
