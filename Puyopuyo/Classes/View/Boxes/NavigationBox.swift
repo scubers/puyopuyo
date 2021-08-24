@@ -40,8 +40,8 @@ open class NavigationBox: VBox, Stateful {
                 .width(.fill)
                 .height($0.py_safeArea().map { SizeDescription.wrap(add: $0.top) })
                 .backgroundColor(bind(\.backgroundColor))
-                .margin(bind(\.navOffset).distinct().map { s -> UIEdgeInsets in
-                    .init(top: s.y, left: s.x, bottom: 0, right: 0)
+                .margin(bind(\.navOffset).distinct().map { s in
+                    UIEdgeInsets(top: s.y, left: s.x, bottom: 0, right: 0)
                 })
                 .alpha(bind(\.alpha).distinct())
                 .alignment(.top)
