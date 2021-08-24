@@ -265,7 +265,7 @@ public extension Puyo where T: SequenceBox {
     @discardableResult
     func wrapContent(_ wrap: Bool = true) -> Self {
         view.wrapContent = wrap
-        view.py_setNeedsLayout()
+        view.py_setNeedsRelayout()
         return self
     }
 }

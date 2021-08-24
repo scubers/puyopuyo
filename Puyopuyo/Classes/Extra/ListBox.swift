@@ -448,7 +448,7 @@ public extension Puyo where T: ListBox {
     @discardableResult
     func wrapContent(_: Bool = true) -> Self {
         view.wrapContent = true
-        view.py_setNeedsLayout()
+        view.py_setNeedsRelayout()
         return self
     }
 }

@@ -79,6 +79,6 @@ open class PuyoHelper {
     }
 
     public class func setNeedsLayout(_ view: UIView) {
-        view.py_setNeedsLayout()
+        view.py_setNeedsRelayout()
     }
 }

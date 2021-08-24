@@ -43,7 +43,7 @@ public extension Puyo where T: DisposableBag {
 
 public extension Puyo where T: UIView {
     func setNeedsLayout() {
-        view.py_setNeedsLayout()
+        view.py_setNeedsRelayout()
     }
 
     static func ensureInactivate(_ view: UIView, _ msg: String = "") {
@@ -64,7 +64,7 @@ public extension Puyo where T: UIView {
     func viewUpdate<O: Outputing, R>(on state: O, _ action: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
         return on(state) { v, r in
             action(v, r)
-            v.py_setNeedsLayout()
+            v.py_setNeedsRelayout()
         }
     }
 
@@ -119,16 +119,9 @@ public extension PuyoAttacher where Self: ViewDisplayable {
 extension UIViewController: PuyoAttacher {}
 
 extension UIView: PuyoAttacher {
-    func py_setNeedsLayout() {
-        setNeedsLayout()
-        if let superview = superview, BoxUtil.isBox(superview) {
-            superview.setNeedsLayout()
-        }
-    }
-
     func py_setNeedsLayoutIfMayBeWrap() {
         if py_measure.size.maybeWrap() {
-            py_setNeedsLayout()
+            py_setNeedsRelayout()
         }
     }
 }

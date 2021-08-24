@@ -15,13 +15,13 @@ public extension Puyo where T: UIView {
         if let x = w {
             x.safeBind(to: view, id: "\(#function)_width") { v, a in
                 v.py_measure.size.width = a.sizeDescription
-                v.py_setNeedsLayout()
+                v.py_setNeedsRelayout()
             }
         }
         if let x = h {
             x.safeBind(to: view, id: "\(#function)_height") { v, a in
                 v.py_measure.size.height = a.sizeDescription
-                v.py_setNeedsLayout()
+                v.py_setNeedsRelayout()
             }
         }
         return self
@@ -216,13 +216,13 @@ public extension Puyo where T: UIView {
         if let o = horz {
             o.safeBind(to: view, id: "\(#function)_horz") { v, a in
                 v.py_measure.alignmentRatio.width = a.cgFloatValue
-                v.py_setNeedsLayout()
+                v.py_setNeedsRelayout()
             }
         }
         if let o = vert {
             o.safeBind(to: view, id: "\(#function)_vert") { v, a in
                 v.py_measure.alignmentRatio.height = a.cgFloatValue
-                v.py_setNeedsLayout()
+                v.py_setNeedsRelayout()
             }
         }
         return self
@@ -243,7 +243,7 @@ extension Puyo where T: UIView {
     @discardableResult
     public func visibility(_ visibility: Visibility) -> Self {
         view.py_visibility = visibility
-        view.py_setNeedsLayout()
+        view.py_setNeedsRelayout()
         return self
     }
 
@@ -251,7 +251,7 @@ extension Puyo where T: UIView {
     public func visibility<S: Outputing>(_ visibility: S) -> Self where S.OutputType == Visibility {
         view.addDisposable(visibility.catchObject(view) { v, a in
             v.py_visibility = a
-            v.py_setNeedsLayout()
+            v.py_setNeedsRelayout()
         }, for: #function)
         return self
     }
@@ -264,7 +264,7 @@ extension Puyo where T: UIView {
     public func activated<S: Outputing>(_ activated: S) -> Self where S.OutputType == Bool {
         view.addDisposable(activated.catchObject(view) { v, a in
             v.py_measure.activated = a
-            v.py_setNeedsLayout()
+            v.py_setNeedsRelayout()
         }, for: #function)
         return self
     }

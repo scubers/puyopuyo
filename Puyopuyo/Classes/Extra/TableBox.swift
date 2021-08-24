@@ -518,7 +518,7 @@ public extension Puyo where T: TableBox {
     @discardableResult
     func wrapContent(_: Bool = true) -> Self {
         view.wrapContent = true
-        view.py_setNeedsLayout()
+        view.py_setNeedsRelayout()
         return self
     }
 

@@ -22,7 +22,8 @@ class Caculator {
                                      superRemain: CGFloat,
                                      margin: CGFloat,
                                      padding: CGFloat,
-                                     ratio: CGFloat?) -> CGFloat {
+                                     ratio: CGFloat?) -> CGFloat
+    {
         if sizeDesc.isFixed {
             // 子布局剩余空间为固有尺寸 - 当前布局内边距
             return max(0, sizeDesc.fixedValue - padding)
@@ -136,7 +137,8 @@ class Caculator {
                                              direction: Direction,
                                              justifyContent: Alignment,
                                              parentPadding: UIEdgeInsets,
-                                             parentSize: CGSize) -> CGFloat {
+                                             parentSize: CGSize) -> CGFloat
+    {
         let parentCalSize = parentSize.getCalFixedSize(by: direction)
         let parentCalPadding = parentPadding.getCalEdges(by: direction)
 

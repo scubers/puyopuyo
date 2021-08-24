@@ -10,7 +10,6 @@ import Puyopuyo
 import UIKit
 
 class ZPropertiesVC: BaseVC {
-
     override func configView() {
         HBox().attach(vRoot) {
             self.getMenu().attach($0).size(.fill, .fill)
@@ -111,7 +110,7 @@ class ZPropertiesVC: BaseVC {
                                  input: self.alignmentVertRatio,
                                  values: ratios.map {
                                      Selector<CGFloat>(desc: "\($0)", value: $0)
-                             })
+                                 })
                     .attach($0)
 
                 let insets: [CGFloat] = [0, 10, 20, 30, 40]
@@ -119,49 +118,49 @@ class ZPropertiesVC: BaseVC {
                                  input: self.marginTop,
                                  values: insets.map {
                                      Selector<CGFloat>(desc: "\($0)", value: $0)
-                             })
+                                 })
                     .attach($0)
                 getSelectionView(title: "MarginLeft",
                                  input: self.marginLeft,
                                  values: insets.map {
                                      Selector<CGFloat>(desc: "\($0)", value: $0)
-                             })
+                                 })
                     .attach($0)
                 getSelectionView(title: "MarginBottom",
                                  input: self.marginBottom,
                                  values: insets.map {
                                      Selector<CGFloat>(desc: "\($0)", value: $0)
-                             })
+                                 })
                     .attach($0)
                 getSelectionView(title: "MarginRight",
                                  input: self.marginRight,
                                  values: insets.map {
                                      Selector<CGFloat>(desc: "\($0)", value: $0)
-                             })
+                                 })
                     .attach($0)
                 getSelectionView(title: "PaddingTop",
                                  input: self.paddingTop,
                                  values: insets.map {
                                      Selector<CGFloat>(desc: "\($0)", value: $0)
-                             })
+                                 })
                     .attach($0)
                 getSelectionView(title: "PaddingLeft",
                                  input: self.paddingLeft,
                                  values: insets.map {
                                      Selector<CGFloat>(desc: "\($0)", value: $0)
-                             })
+                                 })
                     .attach($0)
                 getSelectionView(title: "PaddingBottom",
                                  input: self.paddingBottom,
                                  values: insets.map {
                                      Selector<CGFloat>(desc: "\($0)", value: $0)
-                         })
+                                 })
                     .attach($0)
                 getSelectionView(title: "PaddingRight",
                                  input: self.paddingRight,
                                  values: insets.map {
                                      Selector<CGFloat>(desc: "\($0)", value: $0)
-                         })
+                                 })
                     .attach($0)
             }
             .padding(all: 4)
@@ -181,16 +180,16 @@ class ZPropertiesVC: BaseVC {
             ZBox().attach {
                 ZBox().attach($0) {
                     Label.demo("").attach($0)
-                        .text(self.text)
+                        .text(text)
                         .alignment(alignment)
-                        .alignmentRatio(horz: self.alignmentHorzRatio, vert: self.alignmentVertRatio)
-                        .size(self.width, self.height)
-                        .margin(top: self.marginTop, left: self.marginLeft, bottom: self.marginBottom, right: self.marginRight)
+                        .alignmentRatio(horz: alignmentHorzRatio, vert: alignmentVertRatio)
+                        .size(width, height)
+                        .margin(top: marginTop, left: marginLeft, bottom: marginBottom, right: marginRight)
                 }
+                .padding(top: paddingTop, left: paddingLeft, bottom: paddingBottom, right: paddingRight)
                 .borders([.color(UIColor.lightGray), .thick(Util.pixel(1))])
                 .animator(Animators.default)
                 .size(.fill, .fill)
-                .padding(top: self.paddingTop, left: self.paddingLeft, bottom: self.paddingBottom, right: self.paddingRight)
             }
             .attach { Util.randomViewColor(view: $0) }
             .padding(all: 16)

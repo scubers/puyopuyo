@@ -15,13 +15,31 @@ public class FlatRegulator: Regulator {
     }
     
     /// 间隔
-    public var space: CGFloat = 0
+    public var space: CGFloat = 0 {
+        didSet {
+            if oldValue != space {
+                py_setNeedsRelayout()
+            }
+        }
+    }
     
     /// 主轴格式
-    public var format: Format = .leading
+    public var format: Format = .leading {
+        didSet {
+            if oldValue != format {
+                py_setNeedsRelayout()
+            }
+        }
+    }
     
     /// 是否根据子节点进行反向遍历布局
-    public var reverse = false
+    public var reverse = false {
+        didSet {
+            if oldValue != reverse {
+                py_setNeedsRelayout()
+            }
+        }
+    }
 
     public override func caculate(byParent parent: Measure, remain size: CGSize) -> Size {
         return FlatCaculator(self, parent: parent, remain: size).caculate()

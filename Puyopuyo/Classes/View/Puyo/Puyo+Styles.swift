@@ -65,7 +65,7 @@ public extension Puyo where T: TextLinesDecorable & UIView {
     func numberOfLines<S: Outputing>(_ lines: S) -> Self where S.OutputType == Int {
         view.addDisposable(lines.catchObject(view) { v, a in
             v.applyNumberOfLine(a)
-            v.py_setNeedsLayout()
+            v.py_setNeedsRelayout()
         }, for: #function)
         return self
     }

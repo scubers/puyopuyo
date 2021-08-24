@@ -78,7 +78,7 @@ public extension Puyo where T: Boxable & UIView {
     func padding<O: Outputing>(_ padding: O) -> Self where O.OutputType == UIEdgeInsets {
         view.addDisposable(padding.catchObject(view) { v, i in
             v.regulator.padding = i
-            v.py_setNeedsLayout()
+            v.py_setNeedsRelayout()
         }, for: #function)
         return self
     }
@@ -94,7 +94,7 @@ public extension Puyo where T: Boxable & UIView {
     func justifyContent<O: Outputing>(_ alignment: O) -> Self where O.OutputType == Alignment {
         view.addDisposable(alignment.catchObject(view) { v, a in
             v.regulator.justifyContent = a
-            v.py_setNeedsLayout()
+            v.py_setNeedsRelayout()
         }, for: #function)
         return self
     }
@@ -158,7 +158,7 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlatRegulator 
     func space<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
         view.addDisposable(space.catchObject(view) { v, s in
             v.regulator.space = s.cgFloatValue
-            v.py_setNeedsLayout()
+            v.py_setNeedsRelayout()
         }, for: #function)
         return self
     }
@@ -174,7 +174,7 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlatRegulator 
     func format<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
         view.addDisposable(formation.catchObject(view) { v, f in
             v.regulator.format = f
-            v.py_setNeedsLayout()
+            v.py_setNeedsRelayout()
         }, for: #function)
         return self
     }
@@ -190,7 +190,7 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlatRegulator 
     func direction<O: Outputing>(_ direction: O) -> Self where O.OutputType == Direction {
         view.addDisposable(direction.catchObject(view) { v, d in
             v.regulator.direction = d
-            v.py_setNeedsLayout()
+            v.py_setNeedsRelayout()
         }, for: #function)
         return self
     }
@@ -199,7 +199,7 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlatRegulator 
     func reverse<O: Outputing>(_ reverse: O) -> Self where O.OutputType == Bool {
         view.addDisposable(reverse.catchObject(view) { v, r in
             v.regulator.reverse = r
-            v.py_setNeedsLayout()
+            v.py_setNeedsRelayout()
         }, for: #function)
         return self
     }
@@ -212,7 +212,7 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlowRegulator 
     func arrangeCount<O: Outputing>(_ count: O) -> Self where O.OutputType == Int {
         view.addDisposable(count.catchObject(view) { v, c in
             v.regulator.arrange = c
-            v.py_setNeedsLayout()
+            v.py_setNeedsRelayout()
         }, for: #function)
         return self
     }
@@ -221,7 +221,7 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlowRegulator 
     func hSpace<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
         view.addDisposable(space.catchObject(view) { v, s in
             v.regulator.hSpace = s.cgFloatValue
-            v.py_setNeedsLayout()
+            v.py_setNeedsRelayout()
         }, for: #function)
         return self
     }
@@ -230,7 +230,7 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlowRegulator 
     func vSpace<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
         view.addDisposable(space.catchObject(view) { v, s in
             v.regulator.vSpace = s.cgFloatValue
-            v.py_setNeedsLayout()
+            v.py_setNeedsRelayout()
         }, for: #function)
         return self
     }
@@ -239,7 +239,7 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlowRegulator 
     func hFormat<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
         view.addDisposable(formation.catchObject(view) { v, f in
             v.regulator.hFormat = f
-            v.py_setNeedsLayout()
+            v.py_setNeedsRelayout()
         }, for: #function)
         return self
     }
@@ -260,7 +260,7 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlowRegulator 
     func vFormat<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
         view.addDisposable(formation.catchObject(view) { v, f in
             v.regulator.vFormat = f
-            v.py_setNeedsLayout()
+            v.py_setNeedsRelayout()
         }, for: #function)
         return self
     }
@@ -269,7 +269,7 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlowRegulator 
     func stretchRows<O: Outputing>(_ stretch: O) -> Self where O.OutputType == Bool {
         stretch.safeBind(to: view, id: #function) { v, a in
             v.regulator.stretchRows = a
-            v.py_setNeedsLayout()
+            v.py_setNeedsRelayout()
         }
         return self
     }

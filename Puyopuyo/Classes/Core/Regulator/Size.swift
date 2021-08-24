@@ -100,9 +100,13 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
 }
 
 /// 描述一个测量宽高
-public struct Size {
+public struct Size: Equatable {
     public var width: SizeDescription
     public var height: SizeDescription
+
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        return lhs.width == rhs.width && lhs.height == rhs.height
+    }
 
     public init(width: SizeDescription = .zero, height: SizeDescription = .zero) {
         self.width = width
@@ -149,7 +153,6 @@ public struct Size {
 }
 
 extension SizeDescription {
-    
     /// 根据参数计算size最后的CGFloat值
     /// - Parameters:
     ///   - relay: relay 依赖计算的具体值

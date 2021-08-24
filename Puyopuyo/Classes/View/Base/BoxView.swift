@@ -77,14 +77,19 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable {
         boxHelper.setNeedsLayout(view: view, regulator: regulator)
     }
 
+    private var initializing = true
+
     override open func setNeedsLayout() {
-        super.setNeedsLayout()
-        boxHelper.setNeedsLayout(view: self, regulator: regulator)
+        if !initializing {
+            super.setNeedsLayout()
+            boxHelper.setNeedsLayout(view: self, regulator: regulator)
+        }
     }
 
     override open func layoutSubviews() {
         super.layoutSubviews()
         boxHelper.layoutSubviews(view: self, regulator: regulator)
+        initializing = false
     }
 
     override open func sizeThatFits(_ size: CGSize) -> CGSize {

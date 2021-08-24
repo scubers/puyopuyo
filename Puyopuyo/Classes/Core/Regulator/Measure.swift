@@ -126,28 +126,65 @@ public class Measure: Measurable, MeasureTargetable, Hashable {
             // 普通节点不能更改方向属性
             assert(type(of: self) != Measure.self)
         }
+        didSet {
+            if oldValue != direction {
+                py_setNeedsRelayout()
+            }
+        }
     }
 
     /// 计算节点外边距
-    public var margin = UIEdgeInsets.zero
+    public var margin = UIEdgeInsets.zero {
+        didSet {
+            if oldValue != margin {
+                py_setNeedsRelayout()
+            }
+        }
+    }
 
     /// 计算节点偏移
-    public var alignment: Alignment = .none
+    public var alignment: Alignment = .none {
+        didSet {
+            if oldValue != alignment {
+                py_setNeedsRelayout()
+            }
+        }
+    }
+
     public var alignmentRatio: CGSize = .init(width: 1, height: 1) {
         didSet {
             alignmentRatio.width = max(0, min(2, alignmentRatio.width))
             alignmentRatio.height = max(0, min(2, alignmentRatio.height))
+            py_setNeedsRelayout()
         }
     }
 
     /// 计算节点大小描述
-    public var size = Size(width: .wrap, height: .wrap)
+    public var size = Size(width: .wrap, height: .wrap) {
+        didSet {
+            if oldValue != size {
+                py_setNeedsRelayout()
+            }
+        }
+    }
 
     /// 只有在flowbox中生效
-    public var flowEnding = false
+    public var flowEnding = false {
+        didSet {
+            if oldValue != flowEnding {
+                py_setNeedsRelayout()
+            }
+        }
+    }
 
     /// 是否激活本节点
-    public var activated = true
+    public var activated = true {
+        didSet {
+            if oldValue != activated {
+                py_setNeedsRelayout()
+            }
+        }
+    }
 
     public func caculate(byParent parent: Measure, remain size: CGSize) -> Size {
         return MeasureCaculator.caculate(measure: self, byParent: parent, remain: size)
@@ -188,7 +225,9 @@ public class Measure: Measurable, MeasureTargetable, Hashable {
         return virtualTarget
     }
 
-    public func py_setNeedsRelayout() {}
+    public func py_setNeedsRelayout() {
+        getRealTarget().py_setNeedsRelayout()
+    }
 }
 
 class VirtualTarget: MeasureTargetable {
