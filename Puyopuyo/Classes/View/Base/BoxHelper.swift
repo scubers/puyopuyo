@@ -40,7 +40,7 @@ public class BoxHelper<R: Regulator> {
             if regulator.size.bothNotWrap() {
                 let remain = CGSize(width: view.bounds.width + regulator.margin.getHorzTotal(),
                                     height: view.bounds.height + regulator.margin.getVertTotal())
-                _ = regulator.caculate(byParent: parentMeasure, remain: remain)
+                _ = regulator.calculate(byParent: parentMeasure, remain: remain)
             }
         } else {
             if isSizeControl {
@@ -53,13 +53,13 @@ public class BoxHelper<R: Regulator> {
                     size.height = regulator.size.height.max
                 }
                 // 父视图为非Regulator，需要事先应用一下固有尺寸
-                Caculator.applyMeasure(regulator, size: regulator.size, currentRemain: size, ratio: nil)
-                let sizeAfterCaculate = regulator.caculate(byParent: parentMeasure, remain: size)
-                Caculator.applyMeasure(regulator, size: sizeAfterCaculate, currentRemain: size, ratio: nil)
+                Calculator.applyMeasure(regulator, size: regulator.size, currentRemain: size, ratio: nil)
+                let sizeAftercalculate = regulator.calculate(byParent: parentMeasure, remain: size)
+                Calculator.applyMeasure(regulator, size: sizeAftercalculate, currentRemain: size, ratio: nil)
             } else {
-                Caculator.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
+                Calculator.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
                 regulator.size = .init(width: .fill, height: .fill)
-                _ = regulator.caculate(byParent: parentMeasure, remain: view.bounds.size)
+                _ = regulator.calculate(byParent: parentMeasure, remain: view.bounds.size)
             }
             if isCenterControl {
                 view.center = CGPoint(x: view.bounds.midX + regulator.margin.left, y: view.bounds.midY + regulator.margin.top)
@@ -112,7 +112,7 @@ public class BoxHelper<R: Regulator> {
     }
 
     public func sizeThatFits(_ size: CGSize, regulator: R) -> CGSize {
-        return Caculator.sizeThatFit(size: size, to: regulator)
+        return Calculator.sizeThatFit(size: size, to: regulator)
     }
 
     public func control(scrollView: UIScrollView?, by view: UIView, regulator: R) {

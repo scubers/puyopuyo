@@ -48,9 +48,9 @@ public class Regulator: Measure {
     }
 
     /// 标记是否在本局过程中，立刻计算子节点
-    public var caculateChildrenImmediately = false {
+    public var calculateChildrenImmediately = false {
         didSet {
-            if oldValue != caculateChildrenImmediately {
+            if oldValue != calculateChildrenImmediately {
                 py_setNeedsRelayout()
             }
         }

@@ -1,5 +1,5 @@
 //
-//  FlowCaculator.swift
+//  FlowCalculator.swift
 //  Puyopuyo
 //
 //  Created by Jrwong on 2019/8/20.
@@ -10,7 +10,7 @@ import Foundation
 private class VirtualFlatRegulator: FlatRegulator {
     override init(target: MeasureTargetable? = nil, children: [Measure] = []) {
         super.init(target: target, children: children)
-        caculateChildrenImmediately = true
+        calculateChildrenImmediately = true
     }
 
     func justifyChildrenWithCenter() {
@@ -30,7 +30,7 @@ private class VirtualFlatRegulator: FlatRegulator {
     }
 }
 
-class FlowCaculator {
+class FlowCalculator {
     init(_ regulator: FlowRegulator, parent: Measure, remain: CGSize) {
         self.regulator = regulator
         self.parent = parent
@@ -45,7 +45,7 @@ class FlowCaculator {
     var layoutDirection: Direction { regulator.direction }
 
     lazy var regRemainCalSize: CalFixedSize = {
-        let size = Caculator.getChildRemainSize(self.regulator.size,
+        let size = Calculator.getChildRemainSize(self.regulator.size,
                                                 superRemain: self.remain,
                                                 margin: self.regulator.margin,
                                                 padding: self.regulator.padding,
@@ -56,20 +56,20 @@ class FlowCaculator {
     var regCalPadding: CalEdges { CalEdges(insets: regulator.padding, direction: regulator.direction) }
     var regCalSize: CalSize { CalSize(size: regulator.size, direction: regulator.direction) }
 
-    func caculate() -> Size {
-        var caculateChildren = [Measure]()
+    func calculate() -> Size {
+        var calculateChildren = [Measure]()
         regulator.enumerateChild { _, m in
             if m.activated {
-                caculateChildren.append(m)
+                calculateChildren.append(m)
             }
         }
         if regulator.arrange > 0 {
-            return _caculateByFixedCount(available: caculateChildren)
+            return _calculateByFixedCount(available: calculateChildren)
         }
-        return _caculateByContent(available: caculateChildren)
+        return _calculateByContent(available: calculateChildren)
     }
 
-    private func _caculateByContent(available children: [Measure]) -> Size {
+    private func _calculateByContent(available children: [Measure]) -> Size {
         var virtualLines = [VirtualFlatRegulator]()
 
         var currentLine = [Measure]()
@@ -86,7 +86,7 @@ class FlowCaculator {
         }
 
         children.enumerated().forEach { _, m in
-            let subCalSize = m.caculate(byParent: Measure(), remain: remain).getCalSize(by: regulator.direction)
+            let subCalSize = m.calculate(byParent: Measure(), remain: remain).getCalSize(by: regulator.direction)
             let subCalMargin = CalEdges(insets: m.margin, direction: regulator.direction)
             let subCrossSize = subCalSize.cross
 
@@ -122,12 +122,12 @@ class FlowCaculator {
         if !currentLine.isEmpty {
             virtualLines.append(getVirtualLine(children: currentLine))
         }
-        let size = getVirtualRegulator(children: virtualLines).caculate(byParent: parent, remain: remain)
+        let size = getVirtualRegulator(children: virtualLines).calculate(byParent: parent, remain: remain)
         virtualLines.forEach { $0.justifyChildrenWithCenter() }
         return size
     }
 
-    private func _caculateByFixedCount(available children: [Measure]) -> Size {
+    private func _calculateByFixedCount(available children: [Measure]) -> Size {
         let line = getLine(from: children)
 
         var fakeLines = [VirtualFlatRegulator]()
@@ -138,13 +138,13 @@ class FlowCaculator {
         }
 
         let virtualRegulator = getVirtualRegulator(children: fakeLines)
-        let size = virtualRegulator.caculate(byParent: parent, remain: remain)
+        let size = virtualRegulator.calculate(byParent: parent, remain: remain)
         fakeLines.forEach { $0.justifyChildrenWithCenter() }
         return size
     }
 }
 
-private extension FlowCaculator {
+private extension FlowCalculator {
     func getVirtualRegulator(children: [Measure]) -> VirtualFlatRegulator {
         let outside = VirtualFlatRegulator(target: nil, children: children)
         outside.justifyContent = regulator.justifyContent

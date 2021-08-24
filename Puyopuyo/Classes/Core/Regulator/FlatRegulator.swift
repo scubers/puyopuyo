@@ -41,7 +41,7 @@ public class FlatRegulator: Regulator {
         }
     }
 
-    public override func caculate(byParent parent: Measure, remain size: CGSize) -> Size {
-        return FlatCaculator(self, parent: parent, remain: size).caculate()
+    public override func calculate(byParent parent: Measure, remain size: CGSize) -> Size {
+        return FlatCalculator(self, parent: parent, remain: size).calculate()
     }
 }

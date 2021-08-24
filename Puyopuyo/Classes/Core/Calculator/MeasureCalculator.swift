@@ -1,5 +1,5 @@
 //
-//  MeasureCaculator.swift
+//  MeasureCalculator.swift
 //  Puyopuyo
 //
 //  Created by Jrwong on 2019/6/29.
@@ -7,8 +7,8 @@
 
 import Foundation
 
-class MeasureCaculator {
-    static func caculate(measure: Measure, byParent _: Measure, remain size: CGSize) -> Size {
+class MeasureCalculator {
+    static func calculate(measure: Measure, byParent _: Measure, remain size: CGSize) -> Size {
         if !measure.activated {
             return Size()
         }

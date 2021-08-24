@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Caculator {
+class Calculator {
     struct Ratio {
         var width: CGFloat?
         var height: CGFloat?
@@ -91,13 +91,13 @@ class Caculator {
     }
 
     /// 计算非wrap的size
-    static func caculate(size: Size, by cgSize: CGSize) -> Size {
-        let width = caculateFix(size.width, by: cgSize.width)
-        let height = caculateFix(size.height, by: cgSize.height)
+    static func calculate(size: Size, by cgSize: CGSize) -> Size {
+        let width = calculateFix(size.width, by: cgSize.width)
+        let height = calculateFix(size.height, by: cgSize.height)
         return Size(width: width, height: height)
     }
 
-    static func caculateFix(_ size: SizeDescription, by relayLength: CGFloat) -> SizeDescription {
+    static func calculateFix(_ size: SizeDescription, by relayLength: CGFloat) -> SizeDescription {
         guard !size.isWrap else {
             fatalError("不能计算包裹尺寸")
         }
@@ -118,9 +118,9 @@ class Caculator {
         if remain.width == 0 { remain.width = .greatestFiniteMagnitude }
         if remain.height == 0 { remain.height = .greatestFiniteMagnitude }
         // 父视图为非Regulator，需要事先应用一下固有尺寸
-        Caculator.applyMeasure(measure, size: measure.size, currentRemain: remain, ratio: nil)
-        let sizeAfterCalulate = measure.caculate(byParent: temp, remain: remain)
-        let fixedSize = Caculator.caculate(size: sizeAfterCalulate, by: size)
+        Calculator.applyMeasure(measure, size: measure.size, currentRemain: remain, ratio: nil)
+        let sizeAfterCalulate = measure.calculate(byParent: temp, remain: remain)
+        let fixedSize = Calculator.calculate(size: sizeAfterCalulate, by: size)
         return CGSize(width: fixedSize.width.fixedValue, height: fixedSize.height.fixedValue)
     }
 
@@ -133,7 +133,7 @@ class Caculator {
         }
     }
 
-    static func caculateCrossAlignmentOffset(_ measure: Measure,
+    static func calculateCrossAlignmentOffset(_ measure: Measure,
                                              direction: Direction,
                                              justifyContent: Alignment,
                                              parentPadding: UIEdgeInsets,

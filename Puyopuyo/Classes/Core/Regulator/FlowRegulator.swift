@@ -76,7 +76,7 @@ public class FlowRegulator: FlatRegulator {
         }
     }
 
-    override public func caculate(byParent parent: Measure, remain size: CGSize) -> Size {
-        return FlowCaculator(self, parent: parent, remain: size).caculate()
+    override public func calculate(byParent parent: Measure, remain size: CGSize) -> Size {
+        return FlowCalculator(self, parent: parent, remain: size).calculate()
     }
 }
