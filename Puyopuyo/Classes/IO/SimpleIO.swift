@@ -12,9 +12,10 @@ struct Listener<Value> {
     let input: SimpleInput<Value>
 }
 
-public class SimpleIO<Value>: Inputing, Outputing {
+public class SimpleIO<Value>: Inputing, Outputing, UniqueOutputable {
     public typealias InputType = Value
     public typealias OutputType = Value
+    public var uniqueDisposable: Disposable?
 
     private var inputers = [Listener<Value>]()
 
@@ -33,12 +34,5 @@ public class SimpleIO<Value>: Inputing, Outputing {
         return Disposables.create { [weak self] in
             self?.inputers.removeAll(where: { $0.uuid.description == id })
         }
-    }
-
-    private var singleDisposable: Disposable?
-
-    public func singleOutput(_ block: @escaping (Value) -> Void) {
-        singleDisposable?.dispose()
-        singleDisposable = outputing(block)
     }
 }

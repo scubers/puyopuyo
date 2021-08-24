@@ -275,6 +275,8 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlowRegulator 
     }
 }
 
+// MARK: - Statful & Eventable
+
 public extension Puyo where T: Eventable {
     @discardableResult
     func onEventProduced<I: Inputing>(_ input: I) -> Self where I.InputType == T.EventType {
@@ -305,14 +307,6 @@ public extension Puyo where T: Stateful {
         output.send(to: view.viewState).dispose(by: unbindable)
         return self
     }
-
-    @discardableResult
-    func stateChange<O: Outputing, R, V>(_ output: O, to kp: WritableKeyPath<R, V>, unbindable: DisposableBag) -> Self where O.OutputType == V, R == T.StateType {
-        output.outputing { [weak view] in
-            view?.viewState.value[keyPath: kp] = $0
-        }.dispose(by: unbindable)
-        return self
-    }
 }
 
 public extension Puyo where T: Stateful, T: NSObject {
@@ -321,21 +315,9 @@ public extension Puyo where T: Stateful, T: NSObject {
         output.send(to: view.viewState).dispose(by: view)
         return self
     }
-
-    @discardableResult
-    func stateChange<O: Outputing, R, V>(_ output: O, to kp: WritableKeyPath<R, V>) -> Self where O.OutputType == V, R == T.StateType {
-        output.outputing { [weak view] in
-            view?.viewState.value[keyPath: kp] = $0
-        }.dispose(by: view)
-        return self
-    }
-
-    @discardableResult
-    func setState(_ action: (inout T.StateType) -> Void) -> Self {
-        view.viewState.setState(action)
-        return self
-    }
 }
+
+// MARK: - Delegatable & DataSourceable
 
 public extension Puyo where T: Delegatable {
     @discardableResult

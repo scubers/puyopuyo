@@ -7,7 +7,9 @@
 
 import Foundation
 
-public class State<Value>: Outputing, Inputing {
+public class State<Value>: Outputing, Inputing, UniqueOutputable {
+    public var uniqueDisposable: Disposable?
+
     public typealias OutputType = Value
 
     public typealias InputType = Value
@@ -46,18 +48,5 @@ public class State<Value>: Outputing, Inputing {
         return Disposables.create { [weak self] in
             self?.inputers.removeAll(where: { $0.uuid.description == id })
         }
-    }
-
-    private var singleDisposable: Disposable?
-
-    public func singleOutput(_ block: @escaping (Value) -> Void) {
-        singleDisposable?.dispose()
-        singleDisposable = outputing(block)
-    }
-
-    public func setState(_ state: (inout Value) -> Void) {
-        var v = value
-        state(&v)
-        resend()
     }
 }
