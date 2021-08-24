@@ -13,10 +13,10 @@ class UIViewProertiesVC: BaseVC {
     override func configView() {
         DemoScroll(
             builder: {
-                self.alignment().attach($0)
-                self.crossSize().attach($0)
-                self.mainSize().attach($0)
-                self.margin().attach($0)
+                alignment().attach($0)
+                crossSize().attach($0)
+                mainSize().attach($0)
+                margin().attach($0)
             }
         )
         .attach(vRoot)
