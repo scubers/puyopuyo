@@ -19,7 +19,7 @@ public class ReuseState<Data, Event> {
     }
 
     private let _eventing = SimpleIO<Context<Data>>()
-    public var eventing: SimpleOutput<Context<Data>> { _eventing.asOutput() }
+    public var eventing: Outputs<Context<Data>> { _eventing.asOutput() }
 
     public class Node<Data, Event>: Eventable {
         public let state: State<Data>

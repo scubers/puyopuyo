@@ -16,7 +16,7 @@ public struct SequenceContextHolder<D> {
     }
 }
 
-public typealias SequenceViewGenerator<D> = (SimpleOutput<RecycleContext<D, UITableView>>, SequenceContextHolder<D>) -> UIView?
+public typealias SequenceViewGenerator<D> = (Outputs<RecycleContext<D, UITableView>>, SequenceContextHolder<D>) -> UIView?
 
 public class BasicSequenceSection<Data>: ISequenceSection {
     public init(
@@ -26,7 +26,7 @@ public class BasicSequenceSection<Data>: ISequenceSection {
         footerHeight: CGFloat? = nil,
         estimatedFooterHeight _: CGFloat? = nil,
         data: Data,
-        rows: SimpleOutput<[ISequenceItem]> = [].asOutput(),
+        rows: Outputs<[ISequenceItem]> = [].asOutput(),
         _header: SequenceViewGenerator<Data>? = nil,
         _footer: SequenceViewGenerator<Data>? = nil,
         function: StaticString = #function,

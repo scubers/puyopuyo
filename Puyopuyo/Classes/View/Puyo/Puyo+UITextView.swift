@@ -16,7 +16,7 @@ public extension Puyo where T: UITextView {
             v.py_setNeedsLayoutIfMayBeWrap()
         }, for: "\(#function)_output")
 
-        let output = SimpleOutput<String?> { input -> Disposable in
+        let output = Outputs<String?> { input -> Disposable in
             let obj = NotificationCenter.default.addObserver(forName: UITextView.textDidChangeNotification, object: self.view, queue: OperationQueue.main) { noti in
                 if let tv = noti.object as? UITextView {
                     input.input(value: tv.text)
@@ -36,7 +36,7 @@ public extension Puyo where T: UITextView {
 
     @discardableResult
     func textChange<S: Inputing>(_ text: S) -> Self where S.InputType == String? {
-        let output = SimpleOutput<String?> { input -> Disposable in
+        let output = Outputs<String?> { input -> Disposable in
             let obj = NotificationCenter.default.addObserver(forName: UITextView.textDidChangeNotification, object: self.view, queue: OperationQueue.main) { noti in
                 if let tv = noti.object as? UITextView {
                     input.input(value: tv.text)
@@ -55,7 +55,7 @@ public extension Puyo where T: UITextView {
     }
 
     func onEndEditing<I: Inputing>(_ input: I) -> Self where I.InputType == String? {
-        let output = SimpleOutput<String?> { input -> Disposable in
+        let output = Outputs<String?> { input -> Disposable in
             let obj = NotificationCenter.default.addObserver(forName: UITextView.textDidEndEditingNotification, object: self.view, queue: OperationQueue.main) { noti in
                 if let tv = noti.object as? UITextView {
                     input.input(value: tv.text)

@@ -42,7 +42,7 @@ public class State<Value>: Outputing, Inputing, UniqueOutputable {
         if let value = _value {
             block(value)
         }
-        let listener = Listener<Value>(input: SimpleInput(block))
+        let listener = Listener<Value>(input: Inputs(block))
         inputers.append(listener)
         let id = listener.uuid.description
         return Disposables.create { [weak self] in

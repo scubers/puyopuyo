@@ -9,7 +9,7 @@ import Foundation
 
 struct Listener<Value> {
     let uuid = UUID()
-    let input: SimpleInput<Value>
+    let input: Inputs<Value>
 }
 
 public class SimpleIO<Value>: Inputing, Outputing, UniqueOutputable {
@@ -28,7 +28,7 @@ public class SimpleIO<Value>: Inputing, Outputing, UniqueOutputable {
     }
 
     public func outputing(_ block: @escaping (Value) -> Void) -> Disposable {
-        let listener = Listener<Value>(input: SimpleInput(block))
+        let listener = Listener<Value>(input: Inputs(block))
         inputers.append(listener)
         let id = listener.uuid.description
         return Disposables.create { [weak self] in

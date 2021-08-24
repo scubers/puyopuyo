@@ -55,7 +55,7 @@ public extension Puyo where T: UIControl {
 
     @discardableResult
     func bind<O: AnyObject>(to object: O?, event: UIControl.Event, unique: Bool = false, action: @escaping (O, T) -> Void) -> Self {
-        bind(event: event, unique: unique, input: SimpleInput { [weak object] in
+        bind(event: event, unique: unique, input: Inputs { [weak object] in
             if let object = object {
                 action(object, $0)
             }
@@ -100,6 +100,6 @@ public extension Puyo where T: UIControl {
     @discardableResult
     @available(*, deprecated, message: "use bind(event:unique:action)")
     func addAction(for event: UIControl.Event, _ action: @escaping (T) -> Void, unique: Bool = false) -> Self {
-        bind(event: event, unique: unique, input: SimpleInput { action($0) })
+        bind(event: event, unique: unique, input: Inputs { action($0) })
     }
 }

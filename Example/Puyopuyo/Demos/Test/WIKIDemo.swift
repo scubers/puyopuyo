@@ -29,7 +29,7 @@ class Demo {
 
             UIButton().attach($0)
                 .text("i am a button")
-                .onEvent(.touchUpInside, SimpleInput { _ in
+                .onEvent(.touchUpInside, Inputs { _ in
                     print("button clicked !!! ")
                 })
         }
@@ -75,7 +75,7 @@ class CustomView: UIView, Stateful, Eventable {
         VBox().attach {
             CustomView().attach($0)
                 .viewState(state)
-                .onEventProduced(SimpleInput { event in
+                .onEventProduced(Inputs { event in
                     switch event {
                     case .onClick:
                         print("clicked~~~")
@@ -94,11 +94,11 @@ class CustomView: UIView, Stateful, Eventable {
         
         let value = State<Float>(0)
         UISlider().attach().value(value)
-            .onBoundsChanged(SimpleInput { frame in
+            .onBoundsChanged(Inputs { frame in
             })
-            .onFrameChanged(SimpleInput { frame in
+            .onFrameChanged(Inputs { frame in
             })
-            .onCenterChanged(SimpleInput { frame in
+            .onCenterChanged(Inputs { frame in
             })
             .frame(x: 0, y: 0, w: 100, h: 100)
         value.input(value: 0.5)

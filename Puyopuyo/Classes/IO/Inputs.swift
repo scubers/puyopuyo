@@ -7,9 +7,10 @@
 
 import Foundation
 
-public struct SimpleInput<T>: Inputing {
+public typealias SimpleInput = Inputs
+public struct Inputs<T>: Inputing {
     public typealias InputType = T
-    public func input(value: SimpleInput<T>.InputType) {
+    public func input(value: Inputs<T>.InputType) {
         action(value)
     }
 
@@ -20,14 +21,14 @@ public struct SimpleInput<T>: Inputing {
 }
 
 public extension Inputing {
-    func asInput() -> SimpleInput<InputType> {
-        SimpleInput {
+    func asInput() -> Inputs<InputType> {
+        Inputs {
             self.input(value: $0)
         }
     }
 
-    func asInput<T>(_ mapping: @escaping (T) -> InputType) -> SimpleInput<T> {
-        SimpleInput {
+    func asInput<T>(_ mapping: @escaping (T) -> InputType) -> Inputs<T> {
+        Inputs {
             self.input(value: mapping($0))
         }
     }

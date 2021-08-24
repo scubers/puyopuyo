@@ -196,11 +196,11 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
 
     public let dataSource = State<[Data]>([])
 
-    public typealias HeaderFooterGenerator<Data, CellEvent> = (SimpleOutput<(Int, Data)>, SimpleInput<CellEvent>) -> UIView?
+    public typealias HeaderFooterGenerator<Data, CellEvent> = (Outputs<(Int, Data)>, Inputs<CellEvent>) -> UIView?
     var headerGenerator: HeaderFooterGenerator<[Data], CellEvent>
     var footerGenerator: HeaderFooterGenerator<[Data], CellEvent>
 
-    public typealias CellGenerator<Data, Cell, CellEvent> = (SimpleOutput<(Int, Data)>, SimpleInput<CellEvent>) -> Cell
+    public typealias CellGenerator<Data, Cell, CellEvent> = (Outputs<(Int, Data)>, Inputs<CellEvent>) -> Cell
     var cellGenerator: CellGenerator<Data, Cell, CellEvent>
 
     public typealias OnCellEvent<Event> = (Event) -> Void
@@ -211,7 +211,7 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
     private var selectionStyle: UITableViewCell.SelectionStyle
     public init(identifier: String,
                 selectionStyle: UITableViewCell.SelectionStyle = .default,
-                dataSource: SimpleOutput<[Data]>,
+                dataSource: Outputs<[Data]>,
                 _diffIdentifier: ((Data) -> String)? = nil,
                 _cell: @escaping CellGenerator<Data, Cell, CellEvent>,
                 _header: @escaping HeaderFooterGenerator<[Data], CellEvent> = { _, _ in EmptyView() },

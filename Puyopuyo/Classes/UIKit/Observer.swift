@@ -35,8 +35,8 @@ class _Observer<Value>: NSObject {
 
 extension NSObject {
     
-    public func py_observing<Value: Equatable>(for keyPath: String, id: String = UUID().description) -> SimpleOutput<Value?> {
-        return SimpleOutput<Value?> { (i) -> Disposable in
+    public func py_observing<Value: Equatable>(for keyPath: String, id: String = UUID().description) -> Outputs<Value?> {
+        return Outputs<Value?> { (i) -> Disposable in
             var lastValue: Value?
             let observer = _Observer<Value>(key: keyPath) { rect in
                 guard rect != lastValue else { return }

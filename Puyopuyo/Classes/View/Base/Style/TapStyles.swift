@@ -179,7 +179,7 @@ public class TapSelectStyle: BaseGestureStyle {
     var selectedSheet: StyleSheet?
     var selected = false
     weak var lastView: Decorable?
-    public init(normal: StyleSheet, selected: StyleSheet? = nil, toggle: SimpleOutput<Bool>? = nil, animated: Bool = true, duration: TimeInterval = 0.2) {
+    public init(normal: StyleSheet, selected: StyleSheet? = nil, toggle: Outputs<Bool>? = nil, animated: Bool = true, duration: TimeInterval = 0.2) {
         super.init(identifier: "TapSelectStyle")
         self.animated = animated
         self.duration = duration

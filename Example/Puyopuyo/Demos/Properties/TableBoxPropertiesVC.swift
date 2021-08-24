@@ -139,7 +139,7 @@ class TableBoxPropertiesVC: BaseVC, UITableViewDelegate, UITableViewDataSource {
         ]
     }
 
-    func getCell(state: SimpleOutput<(Int, String)>) -> UIView {
+    func getCell(state: Outputs<(Int, String)>) -> UIView {
         return VFlow(count: 0).attach {
             let v = $0
             _ = state.outputing { idx, s in

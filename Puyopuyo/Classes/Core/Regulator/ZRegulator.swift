@@ -14,21 +14,21 @@ public class ZRegulator: Regulator {
 }
 
 public protocol Resizable {
-    func resizing() -> SimpleOutput<CGRect>
+    func resizing() -> Outputs<CGRect>
 }
 
 extension UIView: Resizable {
-    public func resizing() -> SimpleOutput<CGRect> {
+    public func resizing() -> Outputs<CGRect> {
         return py_frameStateByKVO()
     }
 }
 
 extension Simulate {
-    func adapt() -> SimpleOutput<CGFloat> {
+    func adapt() -> Outputs<CGFloat> {
         let transform = self.transform
         let actions = self.actions
         return
-            SimpleOutput
+            Outputs
             .merge([view.py_frameStateByKVO(), view.py_frameStateByBoundsCenter()])
             .distinct()
             .map({ actions.reduce(transform($0)) { $1($0) } })

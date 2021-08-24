@@ -90,7 +90,7 @@ public class SequenceBox: UITableView,
                 sectionFooterHeight: CGFloat = UITableView.automaticDimension,
                 estimatedFooterHeight: CGFloat = 0,
                 enableDiff: Bool = false,
-                sections: SimpleOutput<[ISequenceSection]> = [].asOutput(),
+                sections: Outputs<[ISequenceSection]> = [].asOutput(),
                 header: BoxGenerator<UIView>? = nil,
                 footer: BoxGenerator<UIView>? = nil) {
         super.init(frame: .zero, style: style)

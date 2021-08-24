@@ -18,7 +18,7 @@ public struct RecycleContextHolder<D> {
     }
 }
 
-public typealias RecycleViewGenerator<D> = (SimpleOutput<RecycleContext<D, UICollectionView>>, RecycleContextHolder<D>) -> UIView?
+public typealias RecycleViewGenerator<D> = (Outputs<RecycleContext<D, UICollectionView>>, RecycleContextHolder<D>) -> UIView?
 
 public class BasicRecycleSection<Data>: IRecycleSection {
     public typealias Context = RecycleContext<Data, UICollectionView>
@@ -28,7 +28,7 @@ public class BasicRecycleSection<Data>: IRecycleSection {
         lineSpacing: CGFloat? = nil,
         itemSpacing: CGFloat? = nil,
         data: Data,
-        items: SimpleOutput<[IRecycleItem]> = [].asOutput(),
+        items: Outputs<[IRecycleItem]> = [].asOutput(),
         _header: RecycleViewGenerator<Data>? = nil,
         _footer: RecycleViewGenerator<Data>? = nil,
         function: StaticString = #function,

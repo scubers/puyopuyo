@@ -22,7 +22,7 @@ class OptionView<T>: ZBox {
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.tap))
         addGestureRecognizer(tap)
         
-        let text: SimpleOutput<String?> = receiver.asOutput().map({ "\(prefix): \($0)"})
+        let text: Outputs<String?> = receiver.asOutput().map({ "\(prefix): \($0)"})
         attach() {
             Label().attach($0)
                 .text(text)

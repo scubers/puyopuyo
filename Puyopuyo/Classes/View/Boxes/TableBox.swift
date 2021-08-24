@@ -198,11 +198,11 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
 
     private let object = NSObject()
 
-    public typealias HeaderFooterGenerator<Data, CellEvent> = (SimpleOutput<Data>, SimpleInput<CellEvent>) -> UIView?
+    public typealias HeaderFooterGenerator<Data, CellEvent> = (Outputs<Data>, Inputs<CellEvent>) -> UIView?
     var headerGenerator: HeaderFooterGenerator<RecycleContext<[Data], UITableView>, CellEvent>
     var footerGenerator: HeaderFooterGenerator<RecycleContext<[Data], UITableView>, CellEvent>
 
-    public typealias CellGenerator<Data, Cell, CellEvent> = (SimpleOutput<Data>, SimpleInput<CellEvent>) -> Cell
+    public typealias CellGenerator<Data, Cell, CellEvent> = (Outputs<Data>, Inputs<CellEvent>) -> Cell
     var cellGenerator: CellGenerator<RecycleContext<Data, UITableView>, Cell, CellEvent>
 
     public typealias CellUpdater<Data, Cell> = (UITableViewCell, Cell, RecycleContext<Data, UITableView>) -> Void
@@ -220,7 +220,7 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
     private var dataIds = [String]()
     public init(identifier: String,
                 selectionStyle: UITableViewCell.SelectionStyle = .default,
-                dataSource: SimpleOutput<[Data]>,
+                dataSource: Outputs<[Data]>,
                 _diffIdentifier: ((Data) -> String)? = nil,
                 _cell: @escaping CellGenerator<RecycleContext<Data, UITableView>, Cell, CellEvent>,
                 _cellUpdater: @escaping CellUpdater<Data, Cell> = { _, _, _ in },

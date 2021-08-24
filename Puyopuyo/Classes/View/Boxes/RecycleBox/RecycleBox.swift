@@ -101,7 +101,7 @@ open class RecycleBox: UICollectionView,
         estimatedSize: CGSize = .zero,
         sectionInset: UIEdgeInsets = .zero,
         enableDiff: Bool = false,
-        sections: SimpleOutput<[IRecycleSection]> = [].asOutput()
+        sections: Outputs<[IRecycleSection]> = [].asOutput()
     ) {
         flowLayout = layout
         layout.minimumInteritemSpacing = itemSpacing

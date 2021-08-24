@@ -86,7 +86,7 @@ public class BoxHelper<R: Regulator> {
                 .map { (f: CGRect?) in f?.size ?? .zero }
 
             positionControlDisposable =
-                SimpleOutput
+                Outputs
                     .merge([frame, bounds])
                     .distinct()
                     .outputing { [weak self] _ in

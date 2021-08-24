@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol ValueModifiable {
-    func modifyValue() -> SimpleOutput<CGFloat>
+    func modifyValue() -> Outputs<CGFloat>
 }
 
 public struct Simulate {
@@ -94,12 +94,12 @@ extension Simulate: ValueModifiable {
         return s
     }
 
-    public func modifyValue() -> SimpleOutput<CGFloat> {
+    public func modifyValue() -> Outputs<CGFloat> {
         let transform = self.transform
         let actions = self.actions
         let kvo = view.py_frameStateByKVO().distinct().map { CGRect(origin: .zero, size: $0.size) }
         let bs = view.py_frameStateByBoundsCenter()
-        return SimpleOutput.merge([kvo, bs])
+        return Outputs.merge([kvo, bs])
             .map { actions.reduce(transform($0)) { $1($0) } }
             .distinct()
     }
@@ -115,7 +115,7 @@ extension ValueModifiable {
 }
 
 extension State: ValueModifiable where Value == CGFloat {
-    public func modifyValue() -> SimpleOutput<CGFloat> {
+    public func modifyValue() -> Outputs<CGFloat> {
         return asOutput().map { $0 }
     }
 }

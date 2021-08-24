@@ -198,11 +198,11 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
 
     private var cachedSize = [IndexPath: CGSize]()
 
-    public typealias HeaderFooterGenerator<Data, CellEvent> = (SimpleOutput<Data>, SimpleInput<CellEvent>) -> UIView?
+    public typealias HeaderFooterGenerator<Data, CellEvent> = (Outputs<Data>, Inputs<CellEvent>) -> UIView?
     var headerGenerator: HeaderFooterGenerator<RecycleContext<[Data], UICollectionView>, CellEvent>
     var footerGenerator: HeaderFooterGenerator<RecycleContext<[Data], UICollectionView>, CellEvent>
 
-    public typealias CellGenerator<Data, Cell, CellEvent> = (SimpleOutput<RecycleContext<Data, UICollectionView>>, SimpleInput<CellEvent>) -> Cell
+    public typealias CellGenerator<Data, Cell, CellEvent> = (Outputs<RecycleContext<Data, UICollectionView>>, Inputs<CellEvent>) -> Cell
     var cellGenerator: CellGenerator<Data, Cell, CellEvent>
 
     public typealias CellUpdater<Data, Cell> = (UICollectionViewCell, Cell, RecycleContext<Data, UICollectionView>) -> Void
@@ -227,10 +227,10 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
     private let object = NSObject()
 
     public init(identifier: String,
-                dataSource: SimpleOutput<[Data]>,
+                dataSource: Outputs<[Data]>,
                 minLineSpacing: CGFloat? = nil,
                 minInteractSpacing: CGFloat? = nil,
-                insets: SimpleOutput<UIEdgeInsets> = UIEdgeInsets.zero.asOutput(),
+                insets: Outputs<UIEdgeInsets> = UIEdgeInsets.zero.asOutput(),
                 _itemSize: @escaping ItemSize = { _, _ in nil },
                 _diffIdentifier: ((Data) -> String)? = nil,
                 _cell: @escaping CellGenerator<Data, Cell, CellEvent>,

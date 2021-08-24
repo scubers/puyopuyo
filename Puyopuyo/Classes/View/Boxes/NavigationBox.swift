@@ -53,7 +53,7 @@ open class NavigationBox: VBox, Stateful {
                 }
                 .view
 
-            let output = SimpleOutput.merge([
+            let output = Outputs.merge([
                 nav.py_boundsState(),
                 self.output.map { _ in .zero },
             ])

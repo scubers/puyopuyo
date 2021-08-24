@@ -60,7 +60,7 @@ class FlowPropertiesVC: BaseVC {
                     .text(title)
                 PlainSelectionView<T>(values).attach($0)
                     .size(.fill, 50)
-                    .onEventProduced(SimpleInput {
+                    .onEventProduced(Inputs {
                         input.input(value: $0.value)
                     })
             }

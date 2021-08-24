@@ -13,9 +13,9 @@ public protocol Stateful {
 }
 
 public extension Stateful {
-    var output: SimpleOutput<StateType> { viewState.asOutput() }
+    var output: Outputs<StateType> { viewState.asOutput() }
 
-    func bind<R>(_ keyPath: KeyPath<StateType, R>) -> SimpleOutput<R> {
+    func bind<R>(_ keyPath: KeyPath<StateType, R>) -> Outputs<R> {
         output.map(keyPath)
     }
 }

@@ -46,7 +46,7 @@ class ZPropertiesVC: BaseVC {
                     .text(title)
                 PlainSelectionView<T>(values).attach($0)
                     .size(.fill, 50)
-                    .onEventProduced(SimpleInput {
+                    .onEventProduced(Inputs {
                         input.input(value: $0.value)
                     })
             }
@@ -172,7 +172,7 @@ class ZPropertiesVC: BaseVC {
     }
 
     func getZBox() -> UIView {
-        let alignment = SimpleOutput.merge([alignmentVert.asOutput(), alignmentHorz.asOutput()]).map { [weak self] a -> Alignment in
+        let alignment = Outputs.merge([alignmentVert.asOutput(), alignmentHorz.asOutput()]).map { [weak self] a -> Alignment in
             guard let self = self else { return a }
             return self.alignmentVert.value.union(self.alignmentHorz.value)
         }

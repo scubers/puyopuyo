@@ -79,15 +79,15 @@ class BaseCell: UITableViewCell, Stateful {
     typealias StateType = ListData?
     var viewState = State<ListData?>(nil)
     
-    var name: SimpleOutput<String?> {
+    var name: Outputs<String?> {
         return self.viewState.asOutput().map { $0?.name }
     }
 
-    var textData: SimpleOutput<String?> {
+    var textData: Outputs<String?> {
         return self.viewState.asOutput().map { $0?.text }
     }
 
-    var time: SimpleOutput<String?> {
+    var time: Outputs<String?> {
         return self.viewState.asOutput().map { $0?.time }
     }
 }

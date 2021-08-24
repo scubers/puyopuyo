@@ -7,17 +7,17 @@
 
 import Foundation
 
-public extension SimpleInput {
-    static func keyPath<Root: AnyObject, Value>(object: Root, keypath: WritableKeyPath<Root, Value>) -> SimpleInput<Value> {
-        SimpleInput<Value> { [weak object] in
+public extension Inputs {
+    static func keyPath<Root: AnyObject, Value>(object: Root, keypath: WritableKeyPath<Root, Value>) -> Inputs<Value> {
+        Inputs<Value> { [weak object] in
             object?[keyPath: keypath] = $0
         }
     }
 }
 
 public extension UIControl {
-    func py_event(_ event: UIControl.Event) -> SimpleOutput<UIControl> {
-        SimpleOutput { i in
+    func py_event(_ event: UIControl.Event) -> Outputs<UIControl> {
+        Outputs { i in
             self.py_addAction(for: event) {
                 i.input(value: $0)
             }
@@ -26,13 +26,13 @@ public extension UIControl {
 }
 
 public extension Outputing where OutputType: OptionalableValueType {
-    func mapWrappedValue() -> SimpleOutput<OutputType.Wrap?> {
+    func mapWrappedValue() -> Outputs<OutputType.Wrap?> {
         asOutput().map { $0.optionalValue }
     }
 }
 
 public extension Outputing where OutputType: CGFloatable {
-    func mapCGFloat() -> SimpleOutput<CGFloat> {
+    func mapCGFloat() -> Outputs<CGFloat> {
         asOutput().map { $0.cgFloatValue }
     }
 }
