@@ -7,7 +7,7 @@
 
 import Foundation
 
-class PuyoTarget<T>: NSObject, Disposable {
+private class PuyoTarget<T>: NSObject, Disposable {
     var action: (T) -> Void
     init(_ action: @escaping (T) -> Void) {
         self.action = action
@@ -22,28 +22,41 @@ class PuyoTarget<T>: NSObject, Disposable {
     func dispose() {}
 }
 
-extension UIControl {
+public extension UIControl {
     @discardableResult
-    public func py_addAction(for event: UIControl.Event, _ block: @escaping (UIControl) -> Void) -> Disposable {
+    func py_addAction(for event: UIControl.Event, _ block: @escaping (UIControl) -> Void) -> Disposable {
         let target = PuyoTarget<UIControl>(block)
         addTarget(target, action: #selector(PuyoTarget<UIControl>.targetAction(_:)), for: event)
         let Disposable = Disposables.create {
             self.removeTarget(target, action: #selector(PuyoTarget<UIControl>.targetAction(_:)), for: event)
         }
-        addDisposable(target, for: "\(target)")
+        addDisposable(target, for: UUID().description)
         return Disposable
     }
 }
 
-extension UIGestureRecognizer {
+public extension UIGestureRecognizer {
     @discardableResult
-    public func py_addAction(_ block: @escaping (UIGestureRecognizer) -> Void) -> Disposable {
+    func py_addAction(_ block: @escaping (UIGestureRecognizer) -> Void) -> Disposable {
         let target = PuyoTarget<UIGestureRecognizer>(block)
         addTarget(target, action: #selector(PuyoTarget<UIGestureRecognizer>.targetAction(_:)))
         let Disposable = Disposables.create {
             self.removeTarget(target, action: #selector(PuyoTarget<UIGestureRecognizer>.targetAction(_:)))
         }
-        addDisposable(target, for: "\(target)")
+        addDisposable(target, for: UUID().description)
+        return Disposable
+    }
+}
+
+public extension UIView {
+    @discardableResult
+    func py_setTap(action: @escaping (UITapGestureRecognizer) -> Void) -> Disposable {
+        let tap = UITapGestureRecognizer()
+        let Disposable = tap.py_addAction { g in
+            action(g as! UITapGestureRecognizer)
+        }
+        addGestureRecognizer(tap)
+        addDisposable(Disposable, for: #function)
         return Disposable
     }
 }

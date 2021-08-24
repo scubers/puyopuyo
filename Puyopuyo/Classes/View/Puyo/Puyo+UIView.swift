@@ -255,15 +255,3 @@ public extension Puyo where T: UIView {
         return styles([style])
     }
 }
-
-public extension UIView {
-    func py_setTap(action: @escaping (UITapGestureRecognizer) -> Void) -> Disposable {
-        let tap = UITapGestureRecognizer()
-        let Disposable = tap.py_addAction { g in
-            action(g as! UITapGestureRecognizer)
-        }
-        addGestureRecognizer(tap)
-        addDisposable(Disposable, for: #function)
-        return Disposable
-    }
-}

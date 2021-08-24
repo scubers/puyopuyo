@@ -109,49 +109,6 @@ public struct Disposables {
     }
 }
 
-// MARK: - NSObject Disposable impl
-
-extension NSObject: DisposableBag {
-    public func addDisposable(_ Disposable: Disposable, for key: String) {
-        py_DisposableContainer.setDisposable(Disposable, for: key)
-    }
-
-    @discardableResult
-    private func py_removeDisposable(for key: String) -> Disposable? {
-        return py_DisposableContainer.removeDisposable(for: key)
-    }
-
-    private static var puyopuyo_DisposableContainerKey = "puyoDisposable"
-    private var py_DisposableContainer: DisposableContainer {
-        var container = objc_getAssociatedObject(self, &NSObject.puyopuyo_DisposableContainerKey)
-        if container == nil {
-            container = DisposableContainer()
-            objc_setAssociatedObject(self, &NSObject.puyopuyo_DisposableContainerKey, container, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-        return container as! DisposableContainer
-    }
-
-    private class DisposableContainer: NSObject {
-        private var Disposables = [String: Disposable]()
-
-        func setDisposable(_ Disposable: Disposable, for key: String) {
-            let old = Disposables[key]
-            old?.dispose()
-            Disposables[key] = Disposable
-        }
-
-        func removeDisposable(for key: String) -> Disposable? {
-            return Disposables.removeValue(forKey: key)
-        }
-
-        deinit {
-            Disposables.forEach { _, Disposable in
-                Disposable.dispose()
-            }
-        }
-    }
-}
-
 // MARK: - Default impls
 
 extension Optional: Outputing { public typealias OutputType = Wrapped? }
