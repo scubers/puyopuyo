@@ -36,9 +36,7 @@ public extension Puyo where T: DisposableBag {
     ///   - action: action description
     @discardableResult
     func on<O: Outputing, R>(_ state: O, _ action: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
-        view.addDisposable(state.catchObject(view) { v, r in
-            action(v, r)
-        }, for: UUID().description)
+        state.safeBind(to: view, action)
         return self
     }
 }
@@ -89,11 +87,11 @@ public extension Puyo where T: ViewDisplayable {
     }
 }
 
-public typealias PuyoBlock = (UIView) -> Void
+public typealias PuyoBuilder = (UIView) -> Void
 
 public protocol PuyoAttacher {
     associatedtype Holder: ViewDisplayable
-    func attach(_ parent: ViewDisplayable?, _ block: PuyoBlock) -> Puyo<Holder>
+    func attach(_ parent: ViewDisplayable?, _ block: PuyoBuilder) -> Puyo<Holder>
 }
 
 public protocol ViewDisplayable: AnyObject {
@@ -108,9 +106,9 @@ extension UIViewController: ViewDisplayable {
     public var dislplayView: UIView { view }
 }
 
-extension PuyoAttacher where Self: ViewDisplayable {
+public extension PuyoAttacher where Self: ViewDisplayable {
     @discardableResult
-    public func attach(_ parent: ViewDisplayable? = nil, _ block: PuyoBlock = { _ in }) -> Puyo<Self> {
+    func attach(_ parent: ViewDisplayable? = nil, _ block: PuyoBuilder = { _ in }) -> Puyo<Self> {
         let link = Puyo(self)
         block(dislplayView)
         parent?.dislplayView.addSubview(dislplayView)
