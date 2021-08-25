@@ -22,7 +22,7 @@ public class TapRippleStyle: BaseGestureStyle {
         let tap = UITapGestureRecognizer()
         let delegate = ShouldSimulateOtherGestureDelegate()
         tap.delegate = delegate
-        tap.addDisposable(delegate, for: "\(styleIdentifier)_delegate")
+        tap.addDisposer(delegate, for: "\(styleIdentifier)_delegate")
         tap.py_addAction { self.animate($0) }
         return tap
     }
@@ -74,7 +74,7 @@ public class TapCoverStyle: BaseGestureStyle {
         let gesture = Gesture(color: color)
         let delegate = ShouldSimulateOtherGestureDelegate()
         gesture.delegate = delegate
-        gesture.addDisposable(delegate, for: "\(styleIdentifier)_delegate")
+        gesture.addDisposer(delegate, for: "\(styleIdentifier)_delegate")
         return gesture
     }
 
@@ -132,7 +132,7 @@ public class TapScaleStyle: BaseGestureStyle {
         tap.scale = scale
         let d = ShouldSimulateOtherGestureDelegate()
         tap.delegate = d
-        tap.addDisposable(d, for: "\(styleIdentifier)_delegate")
+        tap.addDisposer(d, for: "\(styleIdentifier)_delegate")
         return tap
     }
 
@@ -203,7 +203,7 @@ public class TapSelectStyle: BaseGestureStyle {
         let tap = UITapGestureRecognizer()
         let d = ShouldSimulateOtherGestureDelegate()
         tap.delegate = d
-        tap.addDisposable(d, for: styleIdentifier + "_delegate")
+        tap.addDisposer(d, for: styleIdentifier + "_delegate")
         let duration = self.duration
         let animated = self.animated
         tap.py_addAction { g in

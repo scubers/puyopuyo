@@ -20,7 +20,7 @@ public extension Puyo where T: DisposableBag {
 public extension Puyo where T: UIView {
     @discardableResult
     func backgroundColor<S: Outputing>(_ color: S) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIColor {
-        keyPath(\.backgroundColor, color.map(\.optionalValue))
+        keyPath(\.backgroundColor, color.asOutput().map(\.optionalValue))
     }
 
     @discardableResult
@@ -41,18 +41,18 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func cornerRadius<S: Outputing>(_ radius: S) -> Self where S.OutputType: CGFloatable {
-        keyPath(\T.layer.cornerRadius, radius.map(\.cgFloatValue))
+        keyPath(\T.layer.cornerRadius, radius.asOutput().map(\.cgFloatValue))
             .clipToBounds(true)
     }
 
     @discardableResult
     func borderWidth<S: Outputing>(_ width: S) -> Self where S.OutputType: CGFloatable {
-        keyPath(\T.layer.borderWidth, width.map(\.cgFloatValue))
+        keyPath(\T.layer.borderWidth, width.asOutput().map(\.cgFloatValue))
     }
 
     @discardableResult
     func borderColor<S: Outputing>(_ color: S) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIColor {
-        keyPath(\T.layer.borderColor, color.map(\.optionalValue).map(\.?.cgColor))
+        keyPath(\T.layer.borderColor, color.asOutput().map(\.optionalValue).map(\.?.cgColor))
     }
 
     @discardableResult
@@ -114,7 +114,7 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func frameX(_ x: ValueModifiable) -> Self {
-        view.addDisposable(x.checkSelfSimulate(view).modifyValue().catchObject(view) { v, a in
+        view.addDisposer(x.checkSelfSimulate(view).modifyValue().catchObject(view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             v.frame.origin.x = a
         }, for: #function)
@@ -123,7 +123,7 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func frameY(_ y: ValueModifiable) -> Self {
-        view.addDisposable(y.checkSelfSimulate(view).modifyValue().catchObject(view) { v, a in
+        view.addDisposer(y.checkSelfSimulate(view).modifyValue().catchObject(view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             v.frame.origin.y = a
         }, for: #function)
@@ -132,7 +132,7 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func frameWidth(_ width: ValueModifiable) -> Self {
-        view.addDisposable(width.checkSelfSimulate(view).modifyValue().catchObject(view) { v, a in
+        view.addDisposer(width.checkSelfSimulate(view).modifyValue().catchObject(view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             v.frame.size.width = max(0, a)
         }, for: #function)
@@ -141,7 +141,7 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func frameHeight(_ width: ValueModifiable) -> Self {
-        view.addDisposable(width.checkSelfSimulate(view).modifyValue().catchObject(view) { v, a in
+        view.addDisposer(width.checkSelfSimulate(view).modifyValue().catchObject(view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             v.frame.size.height = max(0, a)
         }, for: #function)
@@ -150,7 +150,7 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func top(_ top: ValueModifiable) -> Self {
-        view.addDisposable(top.modifyValue().catchObject(view) { v, a in
+        view.addDisposer(top.modifyValue().catchObject(view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
             f.origin.y = a
@@ -162,7 +162,7 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func left(_ left: ValueModifiable) -> Self {
-        view.addDisposable(left.modifyValue().catchObject(view) { v, a in
+        view.addDisposer(left.modifyValue().catchObject(view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
             f.origin.x = a
@@ -174,7 +174,7 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func bottom(_ bottom: ValueModifiable) -> Self {
-        view.addDisposable(bottom.modifyValue().catchObject(view) { v, a in
+        view.addDisposer(bottom.modifyValue().catchObject(view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
             f.size.height = max(0, a - v.frame.origin.y)
@@ -185,7 +185,7 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func right(_ right: ValueModifiable) -> Self {
-        view.addDisposable(right.modifyValue().catchObject(view) { v, a in
+        view.addDisposer(right.modifyValue().catchObject(view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
             f.size.width = max(0, a - v.frame.origin.x)
@@ -196,7 +196,7 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func onTap<Object: AnyObject>(to object: Object?, _ action: @escaping (Object, UITapGestureRecognizer) -> Void) -> Self {
-        view.addDisposable(view.py_setTap(action: { [weak object] tap in
+        view.addDisposer(view.py_setTap(action: { [weak object] tap in
             if let o = object {
                 action(o, tap)
             }
@@ -211,7 +211,7 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func onTap(_ action: @escaping (UITapGestureRecognizer) -> Void) -> Self {
-        view.addDisposable(view.py_setTap(action: { tap in
+        view.addDisposer(view.py_setTap(action: { tap in
             action(tap)
         }), for: UUID().description)
         return self
@@ -219,7 +219,7 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func onTap(_ action: @escaping () -> Void) -> Self {
-        view.addDisposable(view.py_setTap(action: { _ in
+        view.addDisposer(view.py_setTap(action: { _ in
             action()
         }), for: UUID().description)
         return self

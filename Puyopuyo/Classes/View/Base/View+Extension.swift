@@ -153,4 +153,6 @@ public extension Bool {
     func py_visibleOrNot() -> Visibility {
         return self ? .visible : .invisible
     }
+
+    func py_toggled() -> Bool { !self }
 }

@@ -8,8 +8,8 @@
 import Foundation
 
 extension NSObject: DisposableBag {
-    func py_observing<Value: Equatable>(for keyPath: String, id: String = UUID().description) -> Outputs<Value?> {
-        return Outputs<Value?> { i -> Disposable in
+    public func py_observing<Value: Equatable>(for keyPath: String, id: String = UUID().description) -> Outputs<Value?> {
+        return Outputs<Value?> { i -> Disposer in
             var lastValue: Value?
             let observer = _Observer<Value>(key: keyPath) { rect in
                 guard rect != lastValue else { return }
@@ -20,7 +20,7 @@ extension NSObject: DisposableBag {
                 self.removeObserver(observer, forKeyPath: keyPath)
             }
             self.addObserver(observer, forKeyPath: keyPath, options: [.new, .initial], context: nil)
-            self.addDisposable(Disposable, for: id)
+            self.addDisposer(Disposable, for: id)
             return Disposable
         }
         .distinct()
@@ -30,12 +30,12 @@ extension NSObject: DisposableBag {
         return "\(Unmanaged.passRetained(self).toOpaque())"
     }
 
-    public func addDisposable(_ Disposable: Disposable, for key: String) {
+    public func addDisposer(_ Disposable: Disposer, for key: String) {
         py_DisposableContainer.setDisposable(Disposable, for: key)
     }
 
     @discardableResult
-    private func py_removeDisposable(for key: String) -> Disposable? {
+    private func py_removeDisposable(for key: String) -> Disposer? {
         return py_DisposableContainer.removeDisposable(for: key)
     }
 
@@ -50,15 +50,15 @@ extension NSObject: DisposableBag {
     }
 
     private class DisposableContainer: NSObject {
-        private var Disposables = [String: Disposable]()
+        private var Disposables = [String: Disposer]()
 
-        func setDisposable(_ Disposable: Disposable, for key: String) {
+        func setDisposable(_ Disposable: Disposer, for key: String) {
             let old = Disposables[key]
             old?.dispose()
             Disposables[key] = Disposable
         }
 
-        func removeDisposable(for key: String) -> Disposable? {
+        func removeDisposable(for key: String) -> Disposer? {
             return Disposables.removeValue(forKey: key)
         }
 

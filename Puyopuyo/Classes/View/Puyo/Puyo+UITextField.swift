@@ -10,7 +10,7 @@ import Foundation
 public extension Puyo where T: UITextField {
     @discardableResult
     func textDelegate<S: Outputing>(_ delegate: S) -> Self where S.OutputType == UITextFieldDelegate? {
-        keyPath(\T.delegate, delegate.map(\.optionalValue))
+        keyPath(\T.delegate, delegate.asOutput().map(\.optionalValue))
     }
 
     /// 若TextField可能包裹，则每次输入都会重新布局，若非必要，不要设置
@@ -24,7 +24,7 @@ public extension Puyo where T: UITextField {
 
     @discardableResult
     func onText<S: Outputing & Inputing>(_ text: S) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == String, S.InputType == S.OutputType {
-        view.addDisposable(text.catchObject(view) { v, a in
+        view.addDisposer(text.catchObject(view) { v, a in
             guard a.optionalValue != v.text else { return }
             v.text = a.optionalValue
             v.py_setNeedsLayoutIfMayBeWrap()
@@ -46,7 +46,7 @@ public extension Puyo where T: UITextField {
 
     @discardableResult
     func placeholder<S: Outputing>(_ text: S) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == String {
-        keyPath(\T.placeholder, text.map(\.optionalValue))
+        keyPath(\T.placeholder, text.asOutput().map(\.optionalValue))
     }
 
     @discardableResult

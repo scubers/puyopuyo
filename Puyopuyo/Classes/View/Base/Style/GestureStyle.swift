@@ -71,7 +71,7 @@ extension UIGestureRecognizer {
 
 // MARK: - Delegate
 
-public class ShouldSimulateOtherGestureDelegate: NSObject, UIGestureRecognizerDelegate, Disposable {
+public class ShouldSimulateOtherGestureDelegate: NSObject, UIGestureRecognizerDelegate, Disposer {
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer.view == otherGestureRecognizer.view {
             return true

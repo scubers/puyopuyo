@@ -73,7 +73,7 @@ public class BoxHelper<R: Regulator> {
         _updatingBorders(view: view)
     }
 
-    private var positionControlDisposable: Disposable?
+    private var positionControlDisposable: Disposer?
     public func didMoveToSuperview(view: UIView, regulator: R) {
         positionControlDisposable?.dispose()
         if isCenterControl, let spv = view.superview, !isBox(view: spv) {

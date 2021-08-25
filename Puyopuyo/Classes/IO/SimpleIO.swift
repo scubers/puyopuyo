@@ -15,7 +15,7 @@ struct Listener<Value> {
 public class SimpleIO<Value>: Inputing, Outputing, UniqueOutputable {
     public typealias InputType = Value
     public typealias OutputType = Value
-    public var uniqueDisposable: Disposable?
+    public var uniqueDisposable: Disposer?
 
     private var inputers = [Listener<Value>]()
 
@@ -27,7 +27,7 @@ public class SimpleIO<Value>: Inputing, Outputing, UniqueOutputable {
         }
     }
 
-    public func outputing(_ block: @escaping (Value) -> Void) -> Disposable {
+    public func outputing(_ block: @escaping (Value) -> Void) -> Disposer {
         let listener = Listener<Value>(input: Inputs(block))
         inputers.append(listener)
         let id = listener.uuid.description

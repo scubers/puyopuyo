@@ -9,23 +9,20 @@ import Foundation
 
 // MARK: - Disposable
 
+public typealias Unbinder = Disposer
 /// 解绑器
-public protocol Disposable {
+public protocol Disposer {
     func dispose()
 }
 
-public extension Disposable {
+public extension Disposer {
     func dispose(by: DisposableBag, id: String = UUID().description) {
-        by.addDisposable(self, for: id)
+        by.addDisposer(self, for: id)
     }
 }
 
 public protocol DisposableBag {
-    func addDisposable(_ unbiner: Disposable, for: String)
-}
-
-public enum DisposableBags {
-    public static func create() -> DisposableBag { NSObject() }
+    func addDisposer(_ disposer: Disposer, for: String)
 }
 
 // MARK: - Outputing, Inputing
@@ -33,7 +30,7 @@ public enum DisposableBags {
 /// 输出接口
 public protocol Outputing {
     associatedtype OutputType
-    func outputing(_ block: @escaping (OutputType) -> Void) -> Disposable
+    func outputing(_ block: @escaping (OutputType) -> Void) -> Disposer
 }
 
 /// 输入接口
@@ -47,7 +44,7 @@ public extension Outputing {
     /// - Parameters:
     ///   - object: 绑定对象
     ///   - action: action description
-    func catchObject<Object: DisposableBag & AnyObject>(_ object: Object, _ action: @escaping (Object, OutputType) -> Void) -> Disposable {
+    func catchObject<Object: DisposableBag & AnyObject>(_ object: Object, _ action: @escaping (Object, OutputType) -> Void) -> Disposer {
         outputing { [weak object] s in
             if let object = object {
                 action(object, s)
@@ -57,45 +54,46 @@ public extension Outputing {
 
     /// 对象销毁时则移除绑定
     @discardableResult
-    func safeBind<Object: DisposableBag & AnyObject>(to object: Object, id: String = UUID().description, _ action: @escaping (Object, OutputType) -> Void) -> Disposable {
-        let Disposable = outputing { [weak object] v in
+    func safeBind<Object: DisposableBag & AnyObject>(to object: Object, id: String = UUID().description, _ action: @escaping (Object, OutputType) -> Void) -> Disposer {
+        let disposer = outputing { [weak object] v in
             if let object = object {
                 action(object, v)
             }
         }
-        object.addDisposable(Disposable, for: id)
-        return Disposable
+        object.addDisposer(disposer, for: id)
+        return disposer
     }
 
     /// 输出接口绑定到指定输入接口
     /// - Parameter input: input description
-    func send<Input: Inputing>(to input: Input) -> Disposable where Input.InputType == OutputType {
+    func send<Input: Inputing>(to input: Input) -> Disposer where Input.InputType == OutputType {
         outputing(input.input(value:))
     }
 
-    func send<Input: Inputing>(to inputs: [Input]) -> [Disposable] where Input.InputType == OutputType {
+    func send<Input: Inputing>(to inputs: [Input]) -> [Disposer] where Input.InputType == OutputType {
         inputs.map { send(to: $0) }
     }
 }
 
 public extension Outputing where OutputType == Self {
-    func outputing(_ block: @escaping (OutputType) -> Void) -> Disposable {
+    func outputing(_ block: @escaping (OutputType) -> Void) -> Disposer {
         block(self)
         return Disposables.create()
     }
 }
 
+public typealias Unbinders = Disposables
 public struct Disposables {
     private init() {}
-    public static func create(_ block: @escaping () -> Void = {}) -> Disposable {
+    public static func create(_ block: @escaping () -> Void = {}) -> Disposer {
         return DisposableImpl(block)
     }
 
     public static func createBag() -> DisposableBag {
         NSObject()
     }
-    
-    private class DisposableImpl: NSObject, Disposable {
+
+    private class DisposableImpl: NSObject, Disposer {
         private var block: () -> Void
 
         init(_ block: @escaping () -> Void) {

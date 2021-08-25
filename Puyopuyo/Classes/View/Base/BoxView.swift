@@ -7,6 +7,9 @@
 
 import Foundation
 
+@available(*, deprecated, message: "@see Stateful")
+public typealias StatefulView = Stateful
+
 public protocol Stateful {
     associatedtype StateType
     var viewState: State<StateType> { get }
@@ -18,8 +21,12 @@ public extension Stateful {
     func bind<R>(_ keyPath: KeyPath<StateType, R>) -> Outputs<R> {
         output.map(keyPath)
     }
+
+    var _state: Outputs<StateType> { output }
 }
 
+@available(*, deprecated, message: "@see Eventable")
+public typealias EventableView = Eventable
 public protocol Eventable {
     associatedtype EventType
     var eventProducer: SimpleIO<EventType> { get }

@@ -107,37 +107,37 @@ extension Puyo where T: UIView {
     @discardableResult
     public func margin<S: Outputing>(all: S? = nil, horz: S? = nil, vert: S? = nil, top: S? = nil, left: S? = nil, bottom: S? = nil, right: S? = nil) -> Self where S.OutputType: CGFloatable {
         if let s = all {
-            view.addDisposable(s.catchObject(view) { v, a in
+            view.addDisposer(s.catchObject(view) { v, a in
                 PuyoHelper.margin(for: v, all: a.cgFloatValue)
             }, for: "\(#function)_all")
         }
         if let s = top {
-            view.addDisposable(s.catchObject(view) { v, a in
+            view.addDisposer(s.catchObject(view) { v, a in
                 PuyoHelper.margin(for: v, top: a.cgFloatValue)
             }, for: "\(#function)_top")
         }
         if let s = horz {
-            view.addDisposable(s.catchObject(view) { v, a in
+            view.addDisposer(s.catchObject(view) { v, a in
                 PuyoHelper.margin(for: v, horz: a.cgFloatValue)
             }, for: "\(#function)_horz")
         }
         if let s = vert {
-            view.addDisposable(s.catchObject(view) { v, a in
+            view.addDisposer(s.catchObject(view) { v, a in
                 PuyoHelper.margin(for: v, vert: a.cgFloatValue)
             }, for: "\(#function)_vert")
         }
         if let s = left {
-            view.addDisposable(s.catchObject(view) { v, a in
+            view.addDisposer(s.catchObject(view) { v, a in
                 PuyoHelper.margin(for: v, left: a.cgFloatValue)
             }, for: "\(#function)_left")
         }
         if let s = bottom {
-            view.addDisposable(s.catchObject(view) { v, a in
+            view.addDisposer(s.catchObject(view) { v, a in
                 PuyoHelper.margin(for: v, bottom: a.cgFloatValue)
             }, for: "\(#function)_bottom")
         }
         if let s = right {
-            view.addDisposable(s.catchObject(view) { v, a in
+            view.addDisposer(s.catchObject(view) { v, a in
                 PuyoHelper.margin(for: v, right: a.cgFloatValue)
             }, for: "\(#function)_right")
         }
@@ -149,7 +149,7 @@ extension Puyo where T: UIView {
         let Disposable = margin.catchObject(view) { v, m in
             PuyoHelper.margin(for: v, all: nil, top: m.top, left: m.left, bottom: m.bottom, right: m.right)
         }
-        view.addDisposable(Disposable, for: #function)
+        view.addDisposer(Disposable, for: #function)
         return self
     }
 
@@ -205,7 +205,7 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func alignment<S: Outputing>(_ alignment: S) -> Self where S.OutputType == Alignment {
-        view.addDisposable(alignment.catchObject(view) { v, a in
+        view.addDisposer(alignment.catchObject(view) { v, a in
             PuyoHelper.alignment(for: v, alignment: a)
         }, for: #function)
         return self
@@ -249,7 +249,7 @@ extension Puyo where T: UIView {
 
     @discardableResult
     public func visibility<S: Outputing>(_ visibility: S) -> Self where S.OutputType == Visibility {
-        view.addDisposable(visibility.catchObject(view) { v, a in
+        view.addDisposer(visibility.catchObject(view) { v, a in
             v.py_visibility = a
             v.py_setNeedsRelayout()
         }, for: #function)
@@ -262,7 +262,7 @@ extension Puyo where T: UIView {
 extension Puyo where T: UIView {
     @discardableResult
     public func activated<S: Outputing>(_ activated: S) -> Self where S.OutputType == Bool {
-        view.addDisposable(activated.catchObject(view) { v, a in
+        view.addDisposer(activated.catchObject(view) { v, a in
             v.py_measure.activated = a
             v.py_setNeedsRelayout()
         }, for: #function)

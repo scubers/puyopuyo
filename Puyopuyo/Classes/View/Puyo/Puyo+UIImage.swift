@@ -10,8 +10,8 @@ import Foundation
 public extension Puyo where T: UIImageView {
     @discardableResult
     func hightligitedImage<S: Outputing>(_ image: S) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIImage {
-        keyPath(\T.image, image.map(\.optionalValue))
-//        view.addDisposable(image.catchObject(view, { v, a in
+        keyPath(\T.image, image.asOutput().map(\.optionalValue))
+//        view.addDisposer(image.catchObject(view, { v, a in
 //            v.image = a.optionalValue
 //        }), for: #function)
 //        return self

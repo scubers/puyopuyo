@@ -11,21 +11,21 @@ public typealias SimpleOutput = Outputs
 public struct Outputs<Value>: Outputing {
     public typealias OutputType = Value
 
-    private var action: (Inputs<Value>) -> Disposable
+    private var action: (Inputs<Value>) -> Disposer
 
-    public init(_ block: @escaping (Inputs<Value>) -> Disposable) {
+    public init(_ block: @escaping (Inputs<Value>) -> Disposer) {
         action = block
     }
 
     public init<T: Outputing>(from: T) where T.OutputType == Value {
-        action = { (input: Inputs<Value>) -> Disposable in
+        action = { (input: Inputs<Value>) -> Disposer in
             from.outputing { x in
                 input.input(value: x)
             }
         }
     }
 
-    public func outputing(_ block: @escaping (Value) -> Void) -> Disposable {
+    public func outputing(_ block: @escaping (Value) -> Void) -> Disposer {
         let input = Inputs<Value> { x in
             block(x)
         }
@@ -33,8 +33,8 @@ public struct Outputs<Value>: Outputing {
     }
 
     public static func merge<T: Outputing>(_ outputs: [T]) -> Outputs<Value> where T.OutputType == Value {
-        return Outputs<Value> { i -> Disposable in
-            let disposables = outputs.map { o -> Disposable in
+        return Outputs<Value> { i -> Disposer in
+            let disposables = outputs.map { o -> Disposer in
                 o.outputing { v in
                     i.input(value: v)
                 }
@@ -55,7 +55,7 @@ public struct Outputs<Value>: Outputing {
 
 public extension Outputing {
     func asOutput() -> Outputs<OutputType> {
-        Outputs { i -> Disposable in
+        Outputs { i -> Disposer in
             self.outputing { v in
                 i.input(value: v)
             }
@@ -63,11 +63,13 @@ public extension Outputing {
     }
 
     func some() -> Outputs<OutputType?> {
-        map { $0 }
+        asOutput().map { $0 }
     }
+}
 
+public extension Outputs {
     func bind<T>(_ action: @escaping (OutputType, Inputs<T>) -> Void) -> Outputs<T> {
-        Outputs<T>({ i -> Disposable in
+        Outputs<T>({ i -> Disposer in
             self.outputing { v in
                 action(v, i)
             }
@@ -141,7 +143,7 @@ public extension Outputing {
     }
 }
 
-public extension Outputing where OutputType: OptionalableValueType {
+public extension Outputs where OutputType: OptionalableValueType {
     func map<R>(_ keyPath: KeyPath<OutputType.Wrap, R>, _ default: R) -> Outputs<R?> {
         bind {
             if let v = $0.optionalValue {
@@ -153,7 +155,7 @@ public extension Outputing where OutputType: OptionalableValueType {
     }
 }
 
-public extension Outputing where OutputType: OptionalableValueType {
+public extension Outputs where OutputType: OptionalableValueType {
     func unwrap(or: OutputType.Wrap) -> Outputs<OutputType.Wrap> {
         bind { v, i in
             if let v = v.optionalValue {
@@ -165,7 +167,7 @@ public extension Outputing where OutputType: OptionalableValueType {
     }
 }
 
-public extension Outputing where OutputType: Equatable {
+public extension Outputs where OutputType: Equatable {
     func distinct() -> Outputs<OutputType> {
         ignore { $0 == $1 }
     }

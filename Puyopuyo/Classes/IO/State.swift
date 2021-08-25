@@ -8,7 +8,7 @@
 import Foundation
 
 public class State<Value>: Outputing, Inputing, UniqueOutputable {
-    public var uniqueDisposable: Disposable?
+    public var uniqueDisposable: Disposer?
 
     public typealias OutputType = Value
 
@@ -38,7 +38,7 @@ public class State<Value>: Outputing, Inputing, UniqueOutputable {
 
     public func input(value: InputType) { _value = value }
 
-    public func outputing(_ block: @escaping (OutputType) -> Void) -> Disposable {
+    public func outputing(_ block: @escaping (OutputType) -> Void) -> Disposer {
         if let value = _value {
             block(value)
         }

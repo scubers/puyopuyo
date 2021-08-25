@@ -10,7 +10,7 @@ import Foundation
 public extension Puyo where T: UIControl {
     @discardableResult
     func isSelected<S: Outputing>(_ isSelected: S) -> Self where S.OutputType == Bool {
-        view.addDisposable(isSelected.catchObject(view) { v, a in
+        view.addDisposer(isSelected.catchObject(view) { v, a in
             v.isSelected = a
         }, for: #function)
         return self
@@ -18,7 +18,7 @@ public extension Puyo where T: UIControl {
 
     @discardableResult
     func isEnabled<S: Outputing>(_ isEnabled: S) -> Self where S.OutputType == Bool {
-        view.addDisposable(isEnabled.catchObject(view) { v, a in
+        view.addDisposer(isEnabled.catchObject(view) { v, a in
             v.isEnabled = a
         }, for: #function)
         return self
@@ -26,7 +26,7 @@ public extension Puyo where T: UIControl {
 
     @discardableResult
     func isHighlighted<S: Outputing>(_ isHighlighted: S) -> Self where S.OutputType == Bool {
-        view.addDisposable(isHighlighted.catchObject(view) { v, a in
+        view.addDisposer(isHighlighted.catchObject(view) { v, a in
             v.isHighlighted = a
         }, for: #function)
         return self
@@ -38,7 +38,7 @@ public extension Puyo where T: UIControl {
             action(control as! T)
         }
         if unique {
-            view.addDisposable(Disposable, for: "py_control_unique_action_\(event)")
+            view.addDisposer(Disposable, for: "py_control_unique_action_\(event)")
         }
         return self
     }

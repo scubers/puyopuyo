@@ -24,7 +24,7 @@ public class RetainWrapper<Wrapped: AnyObject> {
     }
 }
 
-extension RetainWrapper: Disposable {
+extension RetainWrapper: Disposer {
     public func dispose() {}
 }
 
