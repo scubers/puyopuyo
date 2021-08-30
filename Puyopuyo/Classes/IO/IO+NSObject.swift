@@ -26,10 +26,6 @@ extension NSObject: DisposableBag {
         .distinct()
     }
 
-    private func py_identifier() -> String {
-        return "\(Unmanaged.passRetained(self).toOpaque())"
-    }
-
     public func addDisposer(_ Disposable: Disposer, for key: String?) {
         py_disposerContainer.setDisposable(Disposable, for: key)
     }
@@ -39,12 +35,12 @@ extension NSObject: DisposableBag {
         return py_disposerContainer.removeDisposable(for: key)
     }
 
-    private static var puyopuyo_DisposableContainerKey = "puyoDisposable"
+    private static var py_disposableContainerKey = "py_puyoDisposable"
     private var py_disposerContainer: DisposableContainer {
-        var container = objc_getAssociatedObject(self, &NSObject.puyopuyo_DisposableContainerKey)
+        var container = objc_getAssociatedObject(self, &NSObject.py_disposableContainerKey)
         if container == nil {
             container = DisposableContainer()
-            objc_setAssociatedObject(self, &NSObject.puyopuyo_DisposableContainerKey, container, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &NSObject.py_disposableContainerKey, container, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         return container as! DisposableContainer
     }
