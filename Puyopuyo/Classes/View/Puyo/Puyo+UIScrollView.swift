@@ -10,37 +10,37 @@ import Foundation
 public extension Puyo where T: UIScrollView {
     @discardableResult
     func bounces<O: Outputing>(_ value: O) -> Self where O.OutputType == Bool {
-        keyPath(\T.bounces, value)
+        bind(keyPath: \T.bounces, value)
     }
 
     @discardableResult
     func alwaysVertBounds<O: Outputing>(_ value: O) -> Self where O.OutputType == Bool {
-        keyPath(\T.alwaysBounceVertical, value)
+        bind(keyPath: \T.alwaysBounceVertical, value)
     }
 
     @discardableResult
     func alwaysHorzBounds<O: Outputing>(_ value: O) -> Self where O.OutputType == Bool {
-        keyPath(\T.alwaysBounceHorizontal, value)
+        bind(keyPath: \T.alwaysBounceHorizontal, value)
     }
 
     @discardableResult
     func scrollEnabled<O: Outputing>(_ value: O) -> Self where O.OutputType == Bool {
-        keyPath(\T.isScrollEnabled, value)
+        bind(keyPath: \T.isScrollEnabled, value)
     }
 
     @discardableResult
     func showHorzIndicator<O: Outputing>(_ value: O) -> Self where O.OutputType == Bool {
-        keyPath(\T.showsHorizontalScrollIndicator, value)
+        bind(keyPath: \T.showsHorizontalScrollIndicator, value)
     }
 
     @discardableResult
     func showVertIndicator<O: Outputing>(_ value: O) -> Self where O.OutputType == Bool {
-        keyPath(\T.showsVerticalScrollIndicator, value)
+        bind(keyPath: \T.showsVerticalScrollIndicator, value)
     }
 
     @discardableResult
     func pagingEnabled<O: Outputing>(_ value: O) -> Self where O.OutputType == Bool {
-        keyPath(\T.isPagingEnabled, value)
+        bind(keyPath: \T.isPagingEnabled, value)
     }
 
     @discardableResult

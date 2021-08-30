@@ -10,6 +10,6 @@ import Foundation
 public extension Puyo where T: UISlider {
     @discardableResult
     func value<O: Outputing>(_ value: O) -> Self where O.OutputType == Float {
-        keyPath(\T.value, value)
+        bind(keyPath: \T.value, value)
     }
 }

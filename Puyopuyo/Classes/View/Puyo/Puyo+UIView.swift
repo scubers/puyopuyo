@@ -9,7 +9,7 @@ import Foundation
 
 public extension Puyo where T: DisposableBag {
     @discardableResult
-    func keyPath<S: Outputing>(_ keyPath: ReferenceWritableKeyPath<T, S.OutputType>, _ output: S) -> Self {
+    func bind<S: Outputing>(keyPath: ReferenceWritableKeyPath<T, S.OutputType>, _ output: S) -> Self {
         output.safeBind(to: view, id: "\(#function) | \(type(of: keyPath))") { v, a in
             v[keyPath: keyPath] = a
         }
@@ -20,12 +20,12 @@ public extension Puyo where T: DisposableBag {
 public extension Puyo where T: UIView {
     @discardableResult
     func backgroundColor<S: Outputing>(_ color: S) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIColor {
-        keyPath(\.backgroundColor, color.asOutput().map(\.optionalValue))
+        bind(keyPath: \.backgroundColor, color.asOutput().map(\.optionalValue))
     }
 
     @discardableResult
     func contentMode<S: Outputing>(_ mode: S) -> Self where S.OutputType == UIView.ContentMode {
-        keyPath(\.contentMode, mode)
+        bind(keyPath: \.contentMode, mode)
     }
 
     @discardableResult
@@ -36,38 +36,38 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func clipToBounds<S: Outputing>(_ clip: S) -> Self where S.OutputType == Bool {
-        keyPath(\T.clipsToBounds, clip)
+        bind(keyPath: \T.clipsToBounds, clip)
     }
 
     @discardableResult
     func cornerRadius<S: Outputing>(_ radius: S) -> Self where S.OutputType: CGFloatable {
-        keyPath(\T.layer.cornerRadius, radius.asOutput().map(\.cgFloatValue))
+        bind(keyPath: \T.layer.cornerRadius, radius.asOutput().map(\.cgFloatValue))
             .clipToBounds(true)
     }
 
     @discardableResult
     func borderWidth<S: Outputing>(_ width: S) -> Self where S.OutputType: CGFloatable {
-        keyPath(\T.layer.borderWidth, width.asOutput().map(\.cgFloatValue))
+        bind(keyPath: \T.layer.borderWidth, width.asOutput().map(\.cgFloatValue))
     }
 
     @discardableResult
     func borderColor<S: Outputing>(_ color: S) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIColor {
-        keyPath(\T.layer.borderColor, color.asOutput().map(\.optionalValue).map(\.?.cgColor))
+        bind(keyPath: \T.layer.borderColor, color.asOutput().map(\.optionalValue).map(\.?.cgColor))
     }
 
     @discardableResult
     func alpha<S: Outputing>(_ alpha: S) -> Self where S.OutputType == CGFloat {
-        keyPath(\T.alpha, alpha)
+        bind(keyPath: \T.alpha, alpha)
     }
 
     @discardableResult
     func userInteractionEnabled<S: Outputing>(_ enabled: S) -> Self where S.OutputType == Bool {
-        keyPath(\T.isUserInteractionEnabled, enabled)
+        bind(keyPath: \T.isUserInteractionEnabled, enabled)
     }
 
     @discardableResult
     func frame<S: Outputing>(_ frame: S) -> Self where S.OutputType == CGRect {
-        keyPath(\T.frame, frame)
+        bind(keyPath: \T.frame, frame)
     }
 
     @discardableResult
@@ -90,7 +90,7 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func center<S: Outputing>(_ point: S) -> Self where S.OutputType == CGPoint {
-        keyPath(\T.center, point)
+        bind(keyPath: \T.center, point)
     }
 
     @discardableResult

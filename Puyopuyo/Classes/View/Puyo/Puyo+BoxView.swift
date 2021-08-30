@@ -18,7 +18,7 @@ public extension Puyo where T: Boxable & UIView {
 
     @discardableResult
     func animator<O: Outputing>(_ animator: O) -> Self where O.OutputType == Animator {
-        keyPath(\T.boxHelper.animator, animator)
+        bind(keyPath: \T.boxHelper.animator, animator)
     }
 
     @discardableResult
