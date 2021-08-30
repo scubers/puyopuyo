@@ -25,18 +25,45 @@ public protocol DisposableBag {
     func addDisposer(_ disposer: Disposer, for: String)
 }
 
-// MARK: - Outputing, Inputing
+public typealias Unbinders = Disposers
+public struct Disposers {
+    private init() {}
+    public static func create(_ block: @escaping () -> Void = {}) -> Disposer {
+        return DisposableImpl(block)
+    }
 
-/// 输出接口
-public protocol Outputing {
-    associatedtype OutputType
-    func outputing(_ block: @escaping (OutputType) -> Void) -> Disposer
+    public static func createBag() -> DisposableBag {
+        NSObject()
+    }
+
+    private class DisposableImpl: NSObject, Disposer {
+        private var block: () -> Void
+
+        init(_ block: @escaping () -> Void) {
+            self.block = block
+        }
+
+        func dispose() {
+            block()
+            block = {}
+        }
+    }
 }
+
+// MARK: - Inputing
 
 /// 输入接口
 public protocol Inputing {
     associatedtype InputType
     func input(value: InputType)
+}
+
+// MARK: - Outputing
+
+/// 输出接口
+public protocol Outputing {
+    associatedtype OutputType
+    func outputing(_ block: @escaping (OutputType) -> Void) -> Disposer
 }
 
 public extension Outputing {
@@ -87,31 +114,6 @@ public extension Outputing where OutputType == Self {
     func outputing(_ block: @escaping (OutputType) -> Void) -> Disposer {
         block(self)
         return Disposers.create()
-    }
-}
-
-public typealias Unbinders = Disposers
-public struct Disposers {
-    private init() {}
-    public static func create(_ block: @escaping () -> Void = {}) -> Disposer {
-        return DisposableImpl(block)
-    }
-
-    public static func createBag() -> DisposableBag {
-        NSObject()
-    }
-
-    private class DisposableImpl: NSObject, Disposer {
-        private var block: () -> Void
-
-        init(_ block: @escaping () -> Void) {
-            self.block = block
-        }
-
-        func dispose() {
-            block()
-            block = {}
-        }
     }
 }
 
