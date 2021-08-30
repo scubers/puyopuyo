@@ -26,8 +26,8 @@ extension NSObject: DisposableBag {
         .distinct()
     }
 
-    public func addDisposer(_ Disposable: Disposer, for key: String?) {
-        py_disposerContainer.setDisposable(Disposable, for: key)
+    public func addDisposer(_ disposer: Disposer, for key: String?) {
+        py_disposerContainer.setDisposable(disposer, for: key)
     }
 
     @discardableResult
