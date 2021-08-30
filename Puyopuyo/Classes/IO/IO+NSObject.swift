@@ -16,12 +16,12 @@ extension NSObject: DisposableBag {
                 lastValue = rect
                 i.input(value: rect)
             }
-            let Disposable = Disposers.create { [unowned(unsafe) self] in
+            let disposer = Disposers.create { [unowned(unsafe) self] in
                 self.removeObserver(observer, forKeyPath: keyPath)
             }
             self.addObserver(observer, forKeyPath: keyPath, options: [.new, .initial], context: nil)
-            self.addDisposer(Disposable, for: id)
-            return Disposable
+            self.addDisposer(disposer, for: id)
+            return disposer
         }
         .distinct()
     }
@@ -31,16 +31,16 @@ extension NSObject: DisposableBag {
     }
 
     public func addDisposer(_ Disposable: Disposer, for key: String) {
-        py_DisposableContainer.setDisposable(Disposable, for: key)
+        py_disposerContainer.setDisposable(Disposable, for: key)
     }
 
     @discardableResult
     private func py_removeDisposable(for key: String) -> Disposer? {
-        return py_DisposableContainer.removeDisposable(for: key)
+        return py_disposerContainer.removeDisposable(for: key)
     }
 
     private static var puyopuyo_DisposableContainerKey = "puyoDisposable"
-    private var py_DisposableContainer: DisposableContainer {
+    private var py_disposerContainer: DisposableContainer {
         var container = objc_getAssociatedObject(self, &NSObject.puyopuyo_DisposableContainerKey)
         if container == nil {
             container = DisposableContainer()
@@ -50,20 +50,20 @@ extension NSObject: DisposableBag {
     }
 
     private class DisposableContainer: NSObject {
-        private var Disposables = [String: Disposer]()
+        private var disposers = [String: Disposer]()
 
         func setDisposable(_ Disposable: Disposer, for key: String) {
-            let old = Disposables[key]
+            let old = disposers[key]
             old?.dispose()
-            Disposables[key] = Disposable
+            disposers[key] = Disposable
         }
 
         func removeDisposable(for key: String) -> Disposer? {
-            return Disposables.removeValue(forKey: key)
+            return disposers.removeValue(forKey: key)
         }
 
         deinit {
-            Disposables.forEach { _, Disposable in
+            disposers.forEach { _, Disposable in
                 Disposable.dispose()
             }
         }
@@ -88,10 +88,4 @@ private class _Observer<Value>: NSObject {
             }
         }
     }
-
-    #if DEV
-        deinit {
-            print("observer deinit")
-        }
-    #endif
 }

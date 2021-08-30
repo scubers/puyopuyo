@@ -34,11 +34,11 @@ public extension Puyo where T: UIControl {
 
     @discardableResult
     func bind(event: UIControl.Event, unique: Bool = false, action: @escaping (T) -> Void) -> Self {
-        let Disposable = view.py_addAction(for: event) { control in
+        let disposer = view.py_addAction(for: event) { control in
             action(control as! T)
         }
         if unique {
-            view.addDisposer(Disposable, for: "py_control_unique_action_\(event)")
+            view.addDisposer(disposer, for: "py_control_unique_action_\(event)")
         }
         return self
     }

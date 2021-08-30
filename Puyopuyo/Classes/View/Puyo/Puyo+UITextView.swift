@@ -29,8 +29,8 @@ public extension Puyo where T: UITextView {
                 NotificationCenter.default.removeObserver(obj)
             }
         }
-        let Disposable = output.distinct().map { $0 as! S.InputType }.send(to: text)
-        view.addDisposer(Disposable, for: "\(#function)_input")
+        let disposer = output.distinct().map { $0 as! S.InputType }.send(to: text)
+        view.addDisposer(disposer, for: "\(#function)_input")
         return self
     }
 
@@ -49,8 +49,8 @@ public extension Puyo where T: UITextView {
                 NotificationCenter.default.removeObserver(obj)
             }
         }
-        let Disposable = output.distinct().send(to: text)
-        view.addDisposer(Disposable, for: "\(#function)")
+        let disposer = output.distinct().send(to: text)
+        view.addDisposer(disposer, for: "\(#function)")
         return self
     }
 
@@ -68,8 +68,8 @@ public extension Puyo where T: UITextView {
                 NotificationCenter.default.removeObserver(obj)
             }
         }
-        let Disposable = output.distinct().send(to: input)
-        view.addDisposer(Disposable, for: "\(#function)")
+        let disposer = output.distinct().send(to: input)
+        view.addDisposer(disposer, for: "\(#function)")
         return self
     }
 }

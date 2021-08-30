@@ -146,10 +146,10 @@ extension Puyo where T: UIView {
 
     @discardableResult
     public func margin<S: Outputing>(_ margin: S) -> Self where S.OutputType == UIEdgeInsets {
-        let Disposable = margin.catchObject(view) { v, m in
+        let disposer = margin.catchObject(view) { v, m in
             PuyoHelper.margin(for: v, all: nil, top: m.top, left: m.left, bottom: m.bottom, right: m.right)
         }
-        view.addDisposer(Disposable, for: #function)
+        view.addDisposer(disposer, for: #function)
         return self
     }
 

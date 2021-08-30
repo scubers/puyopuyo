@@ -52,11 +52,11 @@ public extension UIView {
     @discardableResult
     func py_setTap(action: @escaping (UITapGestureRecognizer) -> Void) -> Disposer {
         let tap = UITapGestureRecognizer()
-        let Disposable = tap.py_addAction { g in
+        let disposer = tap.py_addAction { g in
             action(g as! UITapGestureRecognizer)
         }
         addGestureRecognizer(tap)
-        addDisposer(Disposable, for: #function)
-        return Disposable
+        addDisposer(disposer, for: #function)
+        return disposer
     }
 }

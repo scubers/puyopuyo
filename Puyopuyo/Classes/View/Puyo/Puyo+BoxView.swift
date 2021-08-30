@@ -280,22 +280,22 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlowRegulator 
 public extension Puyo where T: Eventable {
     @discardableResult
     func onEventProduced<I: Inputing>(_ input: I) -> Self where I.InputType == T.EventType {
-        let Disposable = view.eventProducer.send(to: input)
+        let disposer = view.eventProducer.send(to: input)
         if let v = view as? NSObject {
-            v.addDisposer(Disposable, for: UUID().description)
+            v.addDisposer(disposer, for: UUID().description)
         }
         return self
     }
 
     @discardableResult
     func onEventProduced<Object: AnyObject>(to: Object, _ action: @escaping (Object, T.EventType) -> Void) -> Self {
-        let Disposable = view.eventProducer.outputing { [weak to] event in
+        let disposer = view.eventProducer.outputing { [weak to] event in
             if let to = to {
                 action(to, event)
             }
         }
         if let v = view as? DisposableBag {
-            v.addDisposer(Disposable, for: UUID().description)
+            v.addDisposer(disposer, for: UUID().description)
         }
         return self
     }
