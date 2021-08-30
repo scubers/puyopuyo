@@ -14,13 +14,14 @@ class MenuVC: BaseVC {
         "MENU"
     }
 
-    override func configView() {
+    override func configView() {        
         RecycleBox(
             sections: [
                 DataRecycleSection<(String, () -> UIViewController)>(
                     insets: UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16),
                     lineSpacing: 16,
                     list: [
+                        ("Test", { TestVC() }),
                         ("UIView Properties", { UIViewProertiesVC() }),
                         ("FlatBox Properties", { FlatPropertiesVC() }),
                         ("FlowBox Properties", { FlowPropertiesVC() }),

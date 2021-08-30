@@ -58,10 +58,10 @@ class FlatCalculator {
     /// 当前剩余尺寸，需要根据属性进行计算，由于当前计算即所有剩余尺寸，所以ratio为比例相同
     lazy var regChildrenRemainCalSize: CalFixedSize = {
         let size = Calculator.getChildRemainSize(self.regulator.size,
-                                                superRemain: self.remain,
-                                                margin: self.regulator.margin,
-                                                padding: self.regulator.padding,
-                                                ratio: nil)
+                                                 superRemain: self.remain,
+                                                 margin: self.regulator.margin,
+                                                 padding: self.regulator.padding,
+                                                 ratio: nil)
         return CalFixedSize(cgSize: size, direction: self.regulator.direction)
     }()
 
@@ -116,7 +116,6 @@ class FlatCalculator {
             if regCalSize.main.isWrap && subCalSize.main.isRatio {
                 Calculator.constraintConflict(crash: false, "parent wrap cannot contain main ratio children!!!!!")
                 unRegulatable = true
-                
             }
 
             // 判断W_R优先级冲突
@@ -138,9 +137,9 @@ class FlatCalculator {
             // 添加计算子节点
             calculateChildren.append(m)
         }
-        
+
         if unRegulatable {
-            Calculator.constraintConflict(crash: false, "Current regulator[\(self.regulator)] cannot regulated!!!!")
+            Calculator.constraintConflict(crash: false, "Current regulator[\(regulator)] cannot regulated!!!!")
             return Size()
         }
 
@@ -377,8 +376,9 @@ class FlatCalculator {
             let p1 = size1.flatcalculatePriority()
 
             if regulator.size.bothNotWrap(),
-                p0.isWrapPrioritable(),
-                p1.isWrapPrioritable() {
+               p0.isWrapPrioritable(),
+               p1.isWrapPrioritable()
+            {
                 // 布局为非包裹的优先级
                 return size0.main.priority > size1.main.priority
             } else if
@@ -386,7 +386,8 @@ class FlatCalculator {
                 p0.isWrapPrioritable(),
                 p1.isWrapPrioritable(),
                 p0 != .W_R,
-                p1 != .W_R {
+                p1 != .W_R
+            {
                 // 布局为包裹的优先级
                 return size0.main.priority > size1.main.priority
             }

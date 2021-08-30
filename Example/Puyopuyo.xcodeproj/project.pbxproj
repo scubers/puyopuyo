@@ -11,6 +11,7 @@
 		09761F9224277700006983CB /* WIKIDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09761F9124277700006983CB /* WIKIDemo.swift */; };
 		0982C1A02469AF730070F104 /* RecycleBoxPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */; };
 		09883C4A22C5E5FB006CE05A /* StyleTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09883C4922C5E5FB006CE05A /* StyleTestViewController.swift */; };
+		09AD0CBD26DD064E008231F1 /* TestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AD0CBC26DD064E008231F1 /* TestVC.swift */; };
 		09EA8E52243E1A45003F10D7 /* TGVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EA8E51243E1A45003F10D7 /* TGVC.swift */; };
 		09F6FF172471A1F300F97053 /* SequenceBoxPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F6FF162471A1F300F97053 /* SequenceBoxPropertiesVC.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
@@ -72,6 +73,7 @@
 		097B22AE2441F6290043B0A5 /* Puyopuyo_Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Puyopuyo_Example.entitlements; sourceTree = "<group>"; };
 		0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecycleBoxPropertiesVC.swift; sourceTree = "<group>"; };
 		09883C4922C5E5FB006CE05A /* StyleTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleTestViewController.swift; sourceTree = "<group>"; };
+		09AD0CBC26DD064E008231F1 /* TestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVC.swift; sourceTree = "<group>"; };
 		09EA8E51243E1A45003F10D7 /* TGVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TGVC.swift; sourceTree = "<group>"; };
 		09F6FF162471A1F300F97053 /* SequenceBoxPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequenceBoxPropertiesVC.swift; sourceTree = "<group>"; };
 		3324E3ECDF4649B3EFDB8B1A /* Puyopuyo.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Puyopuyo.podspec; path = ../Puyopuyo.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
@@ -298,6 +300,7 @@
 				A8D9430522FF362B002E487F /* FlatBox */,
 				A8D9430422FF3623002E487F /* Base */,
 				A8D9430322FF3614002E487F /* Menu */,
+				09AD0CBC26DD064E008231F1 /* TestVC.swift */,
 			);
 			path = Demos;
 			sourceTree = "<group>";
@@ -539,6 +542,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				09AD0CBD26DD064E008231F1 /* TestVC.swift in Sources */,
 				A8D9431222FFEC45002E487F /* ZBoxSizeVC.swift in Sources */,
 				A8BEC495239CDF5D001FD6BF /* AdvanceVC.swift in Sources */,
 				09761F9224277700006983CB /* WIKIDemo.swift in Sources */,
