@@ -30,7 +30,7 @@ public extension UIControl {
         let Disposable = Disposers.create {
             self.removeTarget(target, action: #selector(PuyoTarget<UIControl>.targetAction(_:)), for: event)
         }
-        addDisposer(target, for: UUID().description)
+        addDisposer(target, for: nil)
         return Disposable
     }
 }
@@ -43,20 +43,33 @@ public extension UIGestureRecognizer {
         let disposer = Disposers.create {
             self.removeTarget(target, action: #selector(PuyoTarget<UIGestureRecognizer>.targetAction(_:)))
         }
-        addDisposer(target, for: UUID().description)
+        addDisposer(target, for: nil)
         return disposer
     }
 }
 
 public extension UIView {
     @discardableResult
-    func py_setTap(action: @escaping (UITapGestureRecognizer) -> Void) -> Disposer {
-        let tap = UITapGestureRecognizer()
-        let disposer = tap.py_addAction { g in
+    func py_addTap(action: @escaping (UITapGestureRecognizer) -> Void) -> Disposer {
+        let tap = Gesture()
+        addGestureRecognizer(tap)
+        return tap.py_addAction { g in
             action(g as! UITapGestureRecognizer)
         }
-        addGestureRecognizer(tap)
-        addDisposer(disposer, for: #function)
-        return disposer
+    }
+
+    private class Gesture: UITapGestureRecognizer, UIGestureRecognizerDelegate {
+        init() {
+            super.init(target: nil, action: nil)
+            delegate = self
+            cancelsTouchesInView = false
+        }
+
+        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+            if gestureRecognizer.view == otherGestureRecognizer.view {
+                return true
+            }
+            return false
+        }
     }
 }

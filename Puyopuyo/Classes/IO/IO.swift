@@ -16,7 +16,7 @@ public protocol Disposer {
 }
 
 public extension Disposer {
-    func dispose(by: DisposableBag, id: String = UUID().description) {
+    func dispose(by: DisposableBag, id: String? = nil) {
         by.addDisposer(self, for: id)
     }
 }
@@ -89,7 +89,7 @@ public extension Outputing {
 
     /// 对象销毁时则移除绑定
     @discardableResult
-    func safeBind<Object: DisposableBag & AnyObject>(to object: Object, id: String = UUID().description, _ action: @escaping (Object, OutputType) -> Void) -> Disposer {
+    func safeBind<Object: DisposableBag & AnyObject>(to object: Object, id: String? = nil, _ action: @escaping (Object, OutputType) -> Void) -> Disposer {
         let disposer = outputing { [weak object] v in
             if let object = object {
                 action(object, v)

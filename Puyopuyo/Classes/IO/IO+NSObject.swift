@@ -20,7 +20,7 @@ extension NSObject: DisposableBag {
                 self.removeObserver(observer, forKeyPath: keyPath)
             }
             self.addObserver(observer, forKeyPath: keyPath, options: [.new, .initial], context: nil)
-            self.addDisposer(disposer, for: UUID().description)
+            self.addDisposer(disposer, for: nil)
             return disposer
         }
         .distinct()

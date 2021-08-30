@@ -180,11 +180,11 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func onTap<Object: AnyObject>(to object: Object?, _ action: @escaping (Object, UITapGestureRecognizer) -> Void) -> Self {
-        view.addDisposer(view.py_setTap(action: { [weak object] tap in
+        view.py_addTap(action: { [weak object] tap in
             if let o = object {
                 action(o, tap)
             }
-        }), for: UUID().description)
+        })
         return self
     }
 
@@ -195,17 +195,17 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func onTap(_ action: @escaping (UITapGestureRecognizer) -> Void) -> Self {
-        view.addDisposer(view.py_setTap(action: { tap in
+        view.py_addTap(action: { tap in
             action(tap)
-        }), for: UUID().description)
+        })
         return self
     }
 
     @discardableResult
     func onTap(_ action: @escaping () -> Void) -> Self {
-        view.addDisposer(view.py_setTap(action: { _ in
+        view.py_addTap(action: { _ in
             action()
-        }), for: UUID().description)
+        })
         return self
     }
 

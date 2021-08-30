@@ -13,7 +13,21 @@ class MenuVC: BaseVC {
     override var navTitle: String? {
         "MENU"
     }
+
     override func configView() {
+        UIButton().attach(vRoot)
+            .text("Text")
+            .size(.fill, 40)
+            .backgroundColor(UIColor.red)
+            .onTap {
+                print("1111")
+            }
+            .onTap {
+                print("2222")
+            }
+            .bind(event: .touchUpInside, input: Inputs { _ in
+                print("3333")
+            })
         RecycleBox(
             sections: [
                 DataRecycleSection<(String, () -> UIViewController)>(

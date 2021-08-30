@@ -180,7 +180,6 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlowRegulator 
     @discardableResult
     func hSpace<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
         bind(keyPath: \T.regulator.hSpace, space.mapCGFloat())
-        
     }
 
     @discardableResult
@@ -222,7 +221,7 @@ public extension Puyo where T: Eventable {
     func onEventProduced<I: Inputing>(_ input: I) -> Self where I.InputType == T.EventType {
         let disposer = view.eventProducer.send(to: input)
         if let v = view as? NSObject {
-            v.addDisposer(disposer, for: UUID().description)
+            v.addDisposer(disposer, for: nil)
         }
         return self
     }
@@ -235,7 +234,7 @@ public extension Puyo where T: Eventable {
             }
         }
         if let v = view as? DisposableBag {
-            v.addDisposer(disposer, for: UUID().description)
+            v.addDisposer(disposer, for: nil)
         }
         return self
     }
