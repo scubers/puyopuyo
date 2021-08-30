@@ -78,12 +78,12 @@ public extension Outputing {
 public extension Outputing where OutputType == Self {
     func outputing(_ block: @escaping (OutputType) -> Void) -> Disposer {
         block(self)
-        return Disposables.create()
+        return Disposers.create()
     }
 }
 
-public typealias Unbinders = Disposables
-public struct Disposables {
+public typealias Unbinders = Disposers
+public struct Disposers {
     private init() {}
     public static func create(_ block: @escaping () -> Void = {}) -> Disposer {
         return DisposableImpl(block)

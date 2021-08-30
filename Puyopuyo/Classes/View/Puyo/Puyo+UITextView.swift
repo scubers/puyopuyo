@@ -25,7 +25,7 @@ public extension Puyo where T: UITextView {
                     input.input(value: nil)
                 }
             }
-            return Disposables.create {
+            return Disposers.create {
                 NotificationCenter.default.removeObserver(obj)
             }
         }
@@ -45,7 +45,7 @@ public extension Puyo where T: UITextView {
                     input.input(value: nil)
                 }
             }
-            return Disposables.create {
+            return Disposers.create {
                 NotificationCenter.default.removeObserver(obj)
             }
         }
@@ -64,7 +64,7 @@ public extension Puyo where T: UITextView {
                     input.input(value: nil)
                 }
             }
-            return Disposables.create {
+            return Disposers.create {
                 NotificationCenter.default.removeObserver(obj)
             }
         }

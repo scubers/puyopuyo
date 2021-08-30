@@ -45,7 +45,7 @@ public class State<Value>: Outputing, Inputing, UniqueOutputable {
         let listener = Listener<Value>(input: Inputs(block))
         inputers.append(listener)
         let id = listener.uuid.description
-        return Disposables.create { [weak self] in
+        return Disposers.create { [weak self] in
             self?.inputers.removeAll(where: { $0.uuid.description == id })
         }
     }

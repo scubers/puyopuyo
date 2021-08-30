@@ -39,7 +39,7 @@ public struct Outputs<Value>: Outputing {
                     i.input(value: v)
                 }
             }
-            return Disposables.create {
+            return Disposers.create {
                 disposables.forEach { $0.dispose() }
             }
         }
@@ -48,7 +48,7 @@ public struct Outputs<Value>: Outputing {
     public static func only(_ value: Value) -> Outputs<Value> {
         .init {
             $0.input(value: value)
-            return Disposables.create()
+            return Disposers.create()
         }
     }
 }

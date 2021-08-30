@@ -16,7 +16,7 @@ extension NSObject: DisposableBag {
                 lastValue = rect
                 i.input(value: rect)
             }
-            let Disposable = Disposables.create { [unowned(unsafe) self] in
+            let Disposable = Disposers.create { [unowned(unsafe) self] in
                 self.removeObserver(observer, forKeyPath: keyPath)
             }
             self.addObserver(observer, forKeyPath: keyPath, options: [.new, .initial], context: nil)
