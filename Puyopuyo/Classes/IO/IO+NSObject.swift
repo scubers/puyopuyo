@@ -30,7 +30,7 @@ extension NSObject: DisposableBag {
         return "\(Unmanaged.passRetained(self).toOpaque())"
     }
 
-    public func addDisposer(_ Disposable: Disposer, for key: String) {
+    public func addDisposer(_ Disposable: Disposer, for key: String?) {
         py_disposerContainer.setDisposable(Disposable, for: key)
     }
 
@@ -51,11 +51,16 @@ extension NSObject: DisposableBag {
 
     private class DisposableContainer: NSObject {
         private var disposers = [String: Disposer]()
+        private var list = [Disposer]()
 
-        func setDisposable(_ Disposable: Disposer, for key: String) {
-            let old = disposers[key]
-            old?.dispose()
-            disposers[key] = Disposable
+        func setDisposable(_ disposer: Disposer, for key: String?) {
+            if let key = key {
+                let old = disposers[key]
+                old?.dispose()
+                disposers[key] = disposer
+            } else {
+                list.append(disposer)
+            }
         }
 
         func removeDisposable(for key: String) -> Disposer? {
@@ -63,9 +68,8 @@ extension NSObject: DisposableBag {
         }
 
         deinit {
-            disposers.forEach { _, Disposable in
-                Disposable.dispose()
-            }
+            disposers.forEach { $1.dispose() }
+            list.forEach { $0.dispose() }
         }
     }
 }
