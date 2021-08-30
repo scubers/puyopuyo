@@ -15,19 +15,6 @@ class MenuVC: BaseVC {
     }
 
     override func configView() {
-        UIButton().attach(vRoot)
-            .text("Text")
-            .size(.fill, 40)
-            .backgroundColor(UIColor.red)
-            .onTap {
-                print("1111")
-            }
-            .onTap {
-                print("2222")
-            }
-            .bind(event: .touchUpInside, input: Inputs { _ in
-                print("3333")
-            })
         RecycleBox(
             sections: [
                 DataRecycleSection<(String, () -> UIViewController)>(
@@ -54,7 +41,6 @@ class MenuVC: BaseVC {
                         }
                         .size(.fill, .wrap)
                         .padding(all: 16)
-//                        .cornerRadius(8)
                         .backgroundColor(UIColor.white)
                         .styles([TapScaleStyle(), ShadowStyle()])
                         .onTap {
