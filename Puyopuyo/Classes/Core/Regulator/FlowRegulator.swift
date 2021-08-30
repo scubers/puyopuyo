@@ -12,7 +12,7 @@ public class FlowRegulator: FlatRegulator {
     /// 每排的数量，若设置为0，则根据内容排列，性能较指定数量低，若非必要，可以指定数量
     public var arrange: Int = 1 {
         didSet {
-            if oldValue != oldValue {
+            if oldValue != arrange {
                 py_setNeedsRelayout()
             }
         }
