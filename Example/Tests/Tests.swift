@@ -119,7 +119,7 @@ class TestAutoLayout: BaseCell {
                     .text("slkdjflskjdflksdjflksdjf\(i)")
                     .view
                 
-                v.snp.makeConstraints { (m) in
+                v.snp.makeConstraints { m in
                     if let last = last {
                         m.top.equalTo(last.snp.bottom)
                     } else {
@@ -130,8 +130,6 @@ class TestAutoLayout: BaseCell {
                         m.bottom.equalToSuperview()
                     }
                 }
-                
-                
                 
                 last = v
             }
@@ -175,7 +173,7 @@ class ListCell: BaseCell {
                         .size(.wrap, 25)
                     
                     Spacer(20).attach($0)
-                        .width(on: $0) { .fix($0.width * 0.5) }
+                        .width($0.py_boundsState().map { $0.width * 0.5 })
                     
                     HBox().attach($0) {
                         UILabel().attach($0)

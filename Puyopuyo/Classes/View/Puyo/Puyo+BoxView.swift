@@ -37,87 +37,71 @@ public extension Puyo where T: Boxable & UIView {
     @discardableResult
     func padding<S: Outputing>(all: S? = nil, horz: S? = nil, vert: S? = nil, top: S? = nil, left: S? = nil, bottom: S? = nil, right: S? = nil) -> Self where S.OutputType: CGFloatable {
         if let s = all {
-            view.addDisposer(s.catchObject(view) { v, a in
+            s.safeBind(to: view) { v, a in
                 PuyoHelper.padding(for: v, all: a.cgFloatValue)
-            }, for: "\(#function)_all")
+            }
         }
         if let s = top {
-            view.addDisposer(s.catchObject(view) { v, a in
+            s.safeBind(to: view) { v, a in
                 PuyoHelper.padding(for: v, top: a.cgFloatValue)
-            }, for: "\(#function)_top")
+            }
         }
         if let s = horz {
-            view.addDisposer(s.catchObject(view) { v, a in
+            s.safeBind(to: view) { v, a in
                 PuyoHelper.padding(for: v, horz: a.cgFloatValue)
-            }, for: "\(#function)_horz")
+            }
         }
         if let s = vert {
-            view.addDisposer(s.catchObject(view) { v, a in
+            s.safeBind(to: view) { v, a in
                 PuyoHelper.padding(for: v, vert: a.cgFloatValue)
-            }, for: "\(#function)_vert")
+            }
         }
         if let s = left {
-            view.addDisposer(s.catchObject(view) { v, a in
+            s.safeBind(to: view) { v, a in
                 PuyoHelper.padding(for: v, left: a.cgFloatValue)
-            }, for: "\(#function)_left")
+            }
         }
         if let s = bottom {
-            view.addDisposer(s.catchObject(view) { v, a in
+            s.safeBind(to: view) { v, a in
                 PuyoHelper.padding(for: v, bottom: a.cgFloatValue)
-            }, for: "\(#function)_bottom")
+            }
         }
         if let s = right {
-            view.addDisposer(s.catchObject(view) { v, a in
+            s.safeBind(to: view) { v, a in
                 PuyoHelper.padding(for: v, right: a.cgFloatValue)
-            }, for: "\(#function)_right")
+            }
         }
         return self
     }
 
     @discardableResult
     func padding<O: Outputing>(_ padding: O) -> Self where O.OutputType == UIEdgeInsets {
-        view.addDisposer(padding.catchObject(view) { v, i in
-            v.regulator.padding = i
-            v.py_setNeedsRelayout()
-        }, for: #function)
-        return self
+        bind(keyPath: \T.regulator.padding, padding)
     }
 
     @discardableResult
     func justifyContent(_ alignment: Alignment) -> Self {
-        view.regulator.justifyContent = alignment
-        setNeedsLayout()
-        return self
+        bind(keyPath: \T.regulator.justifyContent, alignment)
     }
 
     @discardableResult
     func justifyContent<O: Outputing>(_ alignment: O) -> Self where O.OutputType == Alignment {
-        view.addDisposer(alignment.catchObject(view) { v, a in
-            v.regulator.justifyContent = a
-            v.py_setNeedsRelayout()
-        }, for: #function)
-        return self
+        bind(keyPath: \T.regulator.justifyContent, alignment)
     }
 
     @discardableResult
     func autoJudgeScroll(_ judge: Bool) -> Self {
-        view.boxHelper.isScrollViewControl = judge
-        setNeedsLayout()
-        return self
+        bind(keyPath: \T.boxHelper.isScrollViewControl, judge)
     }
 
     @discardableResult
     func isCenterControl(_ control: Bool) -> Self {
-        view.boxHelper.isCenterControl = control
-        setNeedsLayout()
-        return self
+        bind(keyPath: \T.boxHelper.isCenterControl, control)
     }
 
     @discardableResult
     func isSizeControl(_ control: Bool) -> Self {
-        view.boxHelper.isSizeControl = control
-        setNeedsLayout()
-        return self
+        bind(keyPath: \T.boxHelper.isSizeControl, control)
     }
 
     @discardableResult
@@ -156,52 +140,32 @@ public extension Puyo where T: Boxable & UIView {
 public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlatRegulator {
     @discardableResult
     func space<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
-        view.addDisposer(space.catchObject(view) { v, s in
-            v.regulator.space = s.cgFloatValue
-            v.py_setNeedsRelayout()
-        }, for: #function)
-        return self
+        bind(keyPath: \T.regulator.space, space.mapCGFloat())
     }
 
     @discardableResult
     func format(_ formation: Format) -> Self {
-        view.regulator.format = formation
-        setNeedsLayout()
-        return self
+        bind(keyPath: \T.regulator.format, formation)
     }
 
     @discardableResult
     func format<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
-        view.addDisposer(formation.catchObject(view) { v, f in
-            v.regulator.format = f
-            v.py_setNeedsRelayout()
-        }, for: #function)
-        return self
+        bind(keyPath: \T.regulator.format, formation)
     }
 
     @discardableResult
     func direction(_ direction: Direction) -> Self {
-        view.regulator.direction = direction
-        setNeedsLayout()
-        return self
+        bind(keyPath: \T.regulator.direction, direction)
     }
 
     @discardableResult
     func direction<O: Outputing>(_ direction: O) -> Self where O.OutputType == Direction {
-        view.addDisposer(direction.catchObject(view) { v, d in
-            v.regulator.direction = d
-            v.py_setNeedsRelayout()
-        }, for: #function)
-        return self
+        bind(keyPath: \T.regulator.direction, direction)
     }
 
     @discardableResult
     func reverse<O: Outputing>(_ reverse: O) -> Self where O.OutputType == Bool {
-        view.addDisposer(reverse.catchObject(view) { v, r in
-            v.regulator.reverse = r
-            v.py_setNeedsRelayout()
-        }, for: #function)
-        return self
+        bind(keyPath: \T.regulator.reverse, reverse)
     }
 }
 
@@ -210,68 +174,44 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlatRegulator 
 public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlowRegulator {
     @discardableResult
     func arrangeCount<O: Outputing>(_ count: O) -> Self where O.OutputType == Int {
-        view.addDisposer(count.catchObject(view) { v, c in
-            v.regulator.arrange = c
-            v.py_setNeedsRelayout()
-        }, for: #function)
-        return self
+        bind(keyPath: \T.regulator.arrange, count)
     }
 
     @discardableResult
     func hSpace<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
-        view.addDisposer(space.catchObject(view) { v, s in
-            v.regulator.hSpace = s.cgFloatValue
-            v.py_setNeedsRelayout()
-        }, for: #function)
-        return self
+        bind(keyPath: \T.regulator.hSpace, space.mapCGFloat())
+        
     }
 
     @discardableResult
     func vSpace<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
-        view.addDisposer(space.catchObject(view) { v, s in
-            v.regulator.vSpace = s.cgFloatValue
-            v.py_setNeedsRelayout()
-        }, for: #function)
+        bind(keyPath: \T.regulator.vSpace, space.mapCGFloat())
         return self
     }
 
     @discardableResult
     func hFormat<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
-        view.addDisposer(formation.catchObject(view) { v, f in
-            v.regulator.hFormat = f
-            v.py_setNeedsRelayout()
-        }, for: #function)
-        return self
+        bind(keyPath: \T.regulator.hFormat, formation)
     }
 
     @discardableResult
     func hFormat(_ format: Format) -> Self {
-        view.regulator.hFormat = format
-        return self
+        bind(keyPath: \T.regulator.hFormat, format)
     }
 
     @discardableResult
     func vFormat(_ format: Format) -> Self {
-        view.regulator.vFormat = format
-        return self
+        bind(keyPath: \T.regulator.vFormat, format)
     }
 
     @discardableResult
     func vFormat<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
-        view.addDisposer(formation.catchObject(view) { v, f in
-            v.regulator.vFormat = f
-            v.py_setNeedsRelayout()
-        }, for: #function)
-        return self
+        bind(keyPath: \T.regulator.vFormat, formation)
     }
 
     @discardableResult
     func stretchRows<O: Outputing>(_ stretch: O) -> Self where O.OutputType == Bool {
-        stretch.safeBind(to: view, id: #function) { v, a in
-            v.regulator.stretchRows = a
-            v.py_setNeedsRelayout()
-        }
-        return self
+        bind(keyPath: \T.regulator.stretchRows, stretch)
     }
 }
 

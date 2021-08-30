@@ -34,7 +34,7 @@ class AdvanceVC: BaseVC {
                 HBox().attach($0) {
                     Label.demo("1").attach($0)
                         .height(40)
-                        .width(on: $0) { .fix($0.width * 0.8) }
+                        .width($0.py_boundsState().map { $0.width * 0.8 })
                 }
                 .space(2)
                 .padding(all: 10)

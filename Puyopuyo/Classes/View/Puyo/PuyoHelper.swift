@@ -14,6 +14,29 @@ open class PuyoHelper {
         setNeedsLayout(view)
     }
 
+//    open class func overrideInsets(inset: UIEdgeInsets,
+//                                   all: CGFloatable? = nil,
+//                                   horz: CGFloatable? = nil,
+//                                   vert: CGFloatable? = nil,
+//                                   top: CGFloatable? = nil,
+//                                   left: CGFloatable? = nil,
+//                                   bottom: CGFloatable? = nil,
+//                                   right: CGFloatable? = nil) -> UIEdgeInsets
+//    {
+//        var origin = inset
+//
+//        if let s = all { origin = UIEdgeInsets(top: s, left: s, bottom: s, right: s) }
+//        if let s = horz { origin.left = s; origin.right = s }
+//        if let s = vert { origin.top = s; origin.bottom = s }
+//
+//        if let s = left { origin.left = s }
+//        if let s = right { origin.right = s }
+//        if let s = top { origin.top = s }
+//        if let s = bottom { origin.bottom = s }
+//
+//        return origin
+//    }
+
     open class func margin(for view: UIView,
                            all: CGFloat? = nil,
                            horz: CGFloat? = nil,
@@ -21,7 +44,8 @@ open class PuyoHelper {
                            top: CGFloat? = nil,
                            left: CGFloat? = nil,
                            bottom: CGFloat? = nil,
-                           right: CGFloat? = nil) {
+                           right: CGFloat? = nil)
+    {
         if let all = all {
             view.py_measure.margin = UIEdgeInsets(top: all, left: all, bottom: all, right: all)
         }
@@ -47,7 +71,8 @@ open class PuyoHelper {
                                         top: CGFloat? = nil,
                                         left: CGFloat? = nil,
                                         bottom: CGFloat? = nil,
-                                        right: CGFloat? = nil) {
+                                        right: CGFloat? = nil)
+    {
         if let all = all {
             view.regulator.padding = UIEdgeInsets(top: all, left: all, bottom: all, right: all)
         }

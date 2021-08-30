@@ -52,7 +52,7 @@ class ListVC: BaseVC {
             data.append(ListData(name: "名称名称名称名称名称", text: "孙零件扽三菱交付龙凯减肥三菱单反龙凯减肥领领奖看领结", time: "5分钟前"))
         }
 
-        vRoot.attach() {
+        vRoot.attach {
             ZBox().attach($0) {
                 self.table.attach($0)
                     .size(.fill, .fill)
@@ -90,18 +90,18 @@ struct ListData {
 
 class BaseCell: UITableViewCell, Stateful {
     typealias StateType = ListData?
-    let viewState: State<ListData?> = State<ListData?>(nil)
+    let viewState = State<ListData?>(nil)
 
     var name: Outputs<String?> {
-        return viewState.asOutput().map({ $0?.name })
+        return viewState.asOutput().map { $0?.name }
     }
 
     var textData: Outputs<String?> {
-        return viewState.asOutput().map({ $0?.text })
+        return viewState.asOutput().map { $0?.text }
     }
 
     var time: Outputs<String?> {
-        return viewState.asOutput().map({ $0?.time })
+        return viewState.asOutput().map { $0?.time }
     }
 }
 
@@ -136,7 +136,7 @@ class ListCell: BaseCell {
                         .size(.wrap, 25)
 
                     Spacer(20).attach($0)
-                        .width(on: $0, { .fix($0.width * 0.5) })
+                        .width($0.py_boundsState().map { $0.width * 0.5 })
 
                     HBox().attach($0) {
                         UILabel().attach($0)
@@ -167,6 +167,7 @@ class ListCell: BaseCell {
         Util.randomViewColor(view: self)
     }
 
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError()
     }
@@ -175,7 +176,6 @@ class ListCell: BaseCell {
         return root.sizeThatFits(size)
     }
 }
-
 
 class ListCell3: BaseCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -288,6 +288,7 @@ class ListCell3: BaseCell {
         Util.randomViewColor(view: contentView)
     }
 
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError()
     }

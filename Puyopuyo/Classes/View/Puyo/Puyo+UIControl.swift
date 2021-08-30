@@ -10,26 +10,17 @@ import Foundation
 public extension Puyo where T: UIControl {
     @discardableResult
     func isSelected<S: Outputing>(_ isSelected: S) -> Self where S.OutputType == Bool {
-        view.addDisposer(isSelected.catchObject(view) { v, a in
-            v.isSelected = a
-        }, for: #function)
-        return self
+        bind(keyPath: \T.isSelected, isSelected)
     }
 
     @discardableResult
     func isEnabled<S: Outputing>(_ isEnabled: S) -> Self where S.OutputType == Bool {
-        view.addDisposer(isEnabled.catchObject(view) { v, a in
-            v.isEnabled = a
-        }, for: #function)
-        return self
+        bind(keyPath: \T.isEnabled, isEnabled)
     }
 
     @discardableResult
     func isHighlighted<S: Outputing>(_ isHighlighted: S) -> Self where S.OutputType == Bool {
-        view.addDisposer(isHighlighted.catchObject(view) { v, a in
-            v.isHighlighted = a
-        }, for: #function)
-        return self
+        bind(keyPath: \T.isHighlighted, isHighlighted)
     }
 
     @discardableResult

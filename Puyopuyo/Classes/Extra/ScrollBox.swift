@@ -26,7 +26,8 @@ public class ScrollBox<T: Boxable & UIView>: ZBox, Delegatable where T.Regulator
     public init(scrollView: BoxGenerator<UIScrollView> = { UIScrollView() },
                 flat: @escaping BoxGenerator<T> = { T() },
                 direction: Direction = .y,
-                builder: @escaping BoxBuilder<UIView>) {
+                builder: @escaping BoxBuilder<UIView>)
+    {
         super.init(frame: .zero)
         self.scrollView = scrollView()
         self.scrollView.attach(self) {
@@ -40,6 +41,7 @@ public class ScrollBox<T: Boxable & UIView>: ZBox, Delegatable where T.Regulator
         .size(.fill, .fill)
     }
 
+    @available(*, unavailable)
     public required init?(coder _: NSCoder) {
         fatalError()
     }
@@ -57,7 +59,8 @@ public class ScrollingBox<Flat: Boxable & UIView>:
     UIScrollView,
     ScrollDirectionable,
     Delegatable,
-    Stateful where Flat.RegulatorType: FlatRegulator {
+    Stateful where Flat.RegulatorType: FlatRegulator
+{
     public struct ViewState {
         public var direction: ScrollDirection = .y
         public init(direction: ScrollDirection = .y) {
@@ -83,7 +86,8 @@ public class ScrollingBox<Flat: Boxable & UIView>:
 
     public init(flat: BoxGenerator<Flat> = { Flat() },
                 direction: ScrollDirection = .y,
-                builder: BoxBuilder<Flat>) {
+                builder: BoxBuilder<Flat>)
+    {
         self.flat = flat()
         super.init(frame: .zero)
 
@@ -104,7 +108,7 @@ public class ScrollingBox<Flat: Boxable & UIView>:
     public func setScrollDirection(_ direction: ScrollDirection) {
         viewState.value.direction = direction
     }
-    
+
     func handleDirection(_ direction: ScrollDirection) {
         switch direction {
         case .x:
@@ -115,7 +119,8 @@ public class ScrollingBox<Flat: Boxable & UIView>:
             flat.attach().size(.wrap, .wrap)
         }
     }
-    
+
+    @available(*, unavailable)
     public required init?(coder _: NSCoder) {
         fatalError()
     }
@@ -128,7 +133,7 @@ public extension Puyo where T: ScrollDirectionable & DisposableBag {
     }
 
     func scrollDirection<O: Outputing>(_ d: O) -> Self where O.OutputType == ScrollDirection {
-        d.safeBind(to: view, id: #function) { v, d in
+        d.safeBind(to: view) { v, d in
             v.setScrollDirection(d)
         }
         return self

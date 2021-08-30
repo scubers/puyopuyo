@@ -10,11 +10,11 @@ import Foundation
 public extension Puyo where T: UITextView {
     @discardableResult
     func onText<S: Outputing & Inputing>(_ text: S) -> Self where S.OutputType: OptionalableValueType, S.InputType == S.OutputType, S.OutputType.Wrap == String {
-        view.addDisposer(text.catchObject(view) { v, a in
+        text.safeBind(to: view) { v, a in
             guard a.optionalValue != v.text else { return }
             v.text = a.optionalValue
             v.py_setNeedsLayoutIfMayBeWrap()
-        }, for: "\(#function)_output")
+        }
 
         let output = Outputs<String?> { input -> Disposer in
             let obj = NotificationCenter.default.addObserver(forName: UITextView.textDidChangeNotification, object: self.view, queue: OperationQueue.main) { noti in
@@ -30,7 +30,7 @@ public extension Puyo where T: UITextView {
             }
         }
         let disposer = output.distinct().map { $0 as! S.InputType }.send(to: text)
-        view.addDisposer(disposer, for: "\(#function)_input")
+        view.addDisposer(disposer, for: nil)
         return self
     }
 
@@ -50,7 +50,7 @@ public extension Puyo where T: UITextView {
             }
         }
         let disposer = output.distinct().send(to: text)
-        view.addDisposer(disposer, for: "\(#function)")
+        view.addDisposer(disposer, for: nil)
         return self
     }
 
@@ -69,7 +69,7 @@ public extension Puyo where T: UITextView {
             }
         }
         let disposer = output.distinct().send(to: input)
-        view.addDisposer(disposer, for: "\(#function)")
+        view.addDisposer(disposer, for: nil)
         return self
     }
 }

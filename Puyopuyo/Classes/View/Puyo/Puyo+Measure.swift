@@ -13,16 +13,10 @@ public extension Puyo where T: UIView {
     @discardableResult
     func size<O: Outputing>(_ w: O?, _ h: O?) -> Self where O.OutputType: SizeDescriptible {
         if let x = w {
-            x.safeBind(to: view, id: "\(#function)_width") { v, a in
-                v.py_measure.size.width = a.sizeDescription
-                v.py_setNeedsRelayout()
-            }
+            bind(keyPath: \T.py_measure.size.width, x.asOutput().map(\.sizeDescription))
         }
         if let x = h {
-            x.safeBind(to: view, id: "\(#function)_height") { v, a in
-                v.py_measure.size.height = a.sizeDescription
-                v.py_setNeedsRelayout()
-            }
+            bind(keyPath: \T.py_measure.size.height, x.asOutput().map(\.sizeDescription))
         }
         return self
     }
@@ -63,22 +57,6 @@ public extension Puyo where T: UIView {
     }
 
     @discardableResult
-    func width(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
-        if let s = view?.py_boundsState().distinct() {
-            return width(s.map(block))
-        }
-        return self
-    }
-
-    @discardableResult
-    func height(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
-        if let s = view?.py_boundsState().distinct() {
-            height(s.map(block))
-        }
-        return self
-    }
-
-    @discardableResult
     func width(simulate modifiable: ValueModifiable) -> Self {
         return width(modifiable.checkSelfSimulate(view).modifyValue().map { SizeDescription.fix($0) })
     }
@@ -91,70 +69,67 @@ public extension Puyo where T: UIView {
 
 // MARK: - Margin ext
 
-extension Puyo where T: UIView {
+public extension Puyo where T: UIView {
     @discardableResult
-    public func margin(all: CGFloatable? = nil,
-                       horz: CGFloatable? = nil,
-                       vert: CGFloatable? = nil,
-                       top: CGFloatable? = nil,
-                       left: CGFloatable? = nil,
-                       bottom: CGFloatable? = nil,
-                       right: CGFloatable? = nil) -> Self {
+    func margin(all: CGFloatable? = nil,
+                horz: CGFloatable? = nil,
+                vert: CGFloatable? = nil,
+                top: CGFloatable? = nil,
+                left: CGFloatable? = nil,
+                bottom: CGFloatable? = nil,
+                right: CGFloatable? = nil) -> Self
+    {
         PuyoHelper.margin(for: view, all: all?.cgFloatValue, horz: horz?.cgFloatValue, vert: vert?.cgFloatValue, top: top?.cgFloatValue, left: left?.cgFloatValue, bottom: bottom?.cgFloatValue, right: right?.cgFloatValue)
         return self
     }
 
     @discardableResult
-    public func margin<S: Outputing>(all: S? = nil, horz: S? = nil, vert: S? = nil, top: S? = nil, left: S? = nil, bottom: S? = nil, right: S? = nil) -> Self where S.OutputType: CGFloatable {
+    func margin<S: Outputing>(all: S? = nil, horz: S? = nil, vert: S? = nil, top: S? = nil, left: S? = nil, bottom: S? = nil, right: S? = nil) -> Self where S.OutputType: CGFloatable {
         if let s = all {
-            view.addDisposer(s.catchObject(view) { v, a in
+            s.safeBind(to: view) { v, a in
                 PuyoHelper.margin(for: v, all: a.cgFloatValue)
-            }, for: "\(#function)_all")
+            }
         }
         if let s = top {
-            view.addDisposer(s.catchObject(view) { v, a in
+            s.safeBind(to: view) { v, a in
                 PuyoHelper.margin(for: v, top: a.cgFloatValue)
-            }, for: "\(#function)_top")
+            }
         }
         if let s = horz {
-            view.addDisposer(s.catchObject(view) { v, a in
+            s.safeBind(to: view) { v, a in
                 PuyoHelper.margin(for: v, horz: a.cgFloatValue)
-            }, for: "\(#function)_horz")
+            }
         }
         if let s = vert {
-            view.addDisposer(s.catchObject(view) { v, a in
+            s.safeBind(to: view) { v, a in
                 PuyoHelper.margin(for: v, vert: a.cgFloatValue)
-            }, for: "\(#function)_vert")
+            }
         }
         if let s = left {
-            view.addDisposer(s.catchObject(view) { v, a in
+            s.safeBind(to: view) { v, a in
                 PuyoHelper.margin(for: v, left: a.cgFloatValue)
-            }, for: "\(#function)_left")
+            }
         }
         if let s = bottom {
-            view.addDisposer(s.catchObject(view) { v, a in
+            s.safeBind(to: view) { v, a in
                 PuyoHelper.margin(for: v, bottom: a.cgFloatValue)
-            }, for: "\(#function)_bottom")
+            }
         }
         if let s = right {
-            view.addDisposer(s.catchObject(view) { v, a in
+            s.safeBind(to: view) { v, a in
                 PuyoHelper.margin(for: v, right: a.cgFloatValue)
-            }, for: "\(#function)_right")
+            }
         }
         return self
     }
 
     @discardableResult
-    public func margin<S: Outputing>(_ margin: S) -> Self where S.OutputType == UIEdgeInsets {
-        let disposer = margin.catchObject(view) { v, m in
-            PuyoHelper.margin(for: v, all: nil, top: m.top, left: m.left, bottom: m.bottom, right: m.right)
-        }
-        view.addDisposer(disposer, for: #function)
-        return self
+    func margin<S: Outputing>(_ margin: S) -> Self where S.OutputType == UIEdgeInsets {
+        bind(keyPath: \T.py_measure.margin, margin)
     }
 
     @discardableResult
-    public func marginTop(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
+    func marginTop(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
         if let s = view?.py_boundsState() {
             margin(top: s.map(block))
         }
@@ -162,7 +137,7 @@ extension Puyo where T: UIView {
     }
 
     @discardableResult
-    public func marginLeft(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
+    func marginLeft(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
         if let s = view?.py_boundsState() {
             margin(left: s.map(block))
         }
@@ -170,7 +145,7 @@ extension Puyo where T: UIView {
     }
 
     @discardableResult
-    public func marginBottom(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
+    func marginBottom(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
         if let s = view?.py_boundsState() {
             margin(bottom: s.map(block))
         }
@@ -178,7 +153,7 @@ extension Puyo where T: UIView {
     }
 
     @discardableResult
-    public func marginAll(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
+    func marginAll(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
         if let s = view?.py_boundsState() {
             margin(all: s.map(block))
         }
@@ -186,7 +161,7 @@ extension Puyo where T: UIView {
     }
 
     @discardableResult
-    public func marginRight(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
+    func marginRight(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
         if let s = view?.py_boundsState() {
             margin(right: s.map(block))
         }
@@ -205,67 +180,45 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func alignment<S: Outputing>(_ alignment: S) -> Self where S.OutputType == Alignment {
-        view.addDisposer(alignment.catchObject(view) { v, a in
-            PuyoHelper.alignment(for: v, alignment: a)
-        }, for: #function)
-        return self
+        bind(keyPath: \T.py_measure.alignment, alignment)
     }
 
     @discardableResult
     func alignmentRatio<O: Outputing>(horz: O? = nil, vert: O? = nil) -> Self where O.OutputType: CGFloatable {
         if let o = horz {
-            o.safeBind(to: view, id: "\(#function)_horz") { v, a in
-                v.py_measure.alignmentRatio.width = a.cgFloatValue
-                v.py_setNeedsRelayout()
-            }
+            bind(keyPath: \T.py_measure.alignmentRatio.width, o.mapCGFloat())
         }
         if let o = vert {
-            o.safeBind(to: view, id: "\(#function)_vert") { v, a in
-                v.py_measure.alignmentRatio.height = a.cgFloatValue
-                v.py_setNeedsRelayout()
-            }
+            bind(keyPath: \T.py_measure.alignmentRatio.height, o.mapCGFloat())
         }
-        return self
-    }
-    
-    @discardableResult
-    func flowEnding(_ flowEnding: Bool) -> Self {
-        view.py_measure.flowEnding = flowEnding
-        setNeedsLayout()
         return self
     }
 
+    @discardableResult
+    func flowEnding(_ flowEnding: Bool) -> Self {
+        bind(keyPath: \T.py_measure.flowEnding, flowEnding)
+    }
 }
 
 // MARK: - Visibility
 
-extension Puyo where T: UIView {
+public extension Puyo where T: UIView {
     @discardableResult
-    public func visibility(_ visibility: Visibility) -> Self {
-        view.py_visibility = visibility
-        view.py_setNeedsRelayout()
-        return self
+    func visibility(_ visibility: Visibility) -> Self {
+        bind(keyPath: \T.py_visibility, visibility)
     }
 
     @discardableResult
-    public func visibility<S: Outputing>(_ visibility: S) -> Self where S.OutputType == Visibility {
-        view.addDisposer(visibility.catchObject(view) { v, a in
-            v.py_visibility = a
-            v.py_setNeedsRelayout()
-        }, for: #function)
-        return self
+    func visibility<S: Outputing>(_ visibility: S) -> Self where S.OutputType == Visibility {
+        bind(keyPath: \T.py_visibility, visibility)
     }
 }
 
 // MARK: - Activated
 
-extension Puyo where T: UIView {
+public extension Puyo where T: UIView {
     @discardableResult
-    public func activated<S: Outputing>(_ activated: S) -> Self where S.OutputType == Bool {
-        view.addDisposer(activated.catchObject(view) { v, a in
-            v.py_measure.activated = a
-            v.py_setNeedsRelayout()
-        }, for: #function)
-        return self
+    func activated<S: Outputing>(_ activated: S) -> Self where S.OutputType == Bool {
+        bind(keyPath: \T.py_measure.activated, activated)
     }
 }

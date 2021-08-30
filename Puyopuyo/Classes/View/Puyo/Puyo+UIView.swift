@@ -10,8 +10,8 @@ import Foundation
 public extension Puyo where T: DisposableBag {
     @discardableResult
     func bind<S: Outputing>(keyPath: ReferenceWritableKeyPath<T, S.OutputType>, _ output: S) -> Self {
-        output.safeBind(to: view, id: "\(#function) | \(type(of: keyPath))") { v, a in
-            v[keyPath: keyPath] = a
+        output.safeBind(to: view) {
+            $0[keyPath: keyPath] = $1
         }
         return self
     }
@@ -81,7 +81,7 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func bounds<S: Outputing>(_ frame: S) -> Self where S.OutputType == CGRect {
-        frame.safeBind(to: view, id: #function) { v, a in
+        frame.safeBind(to: view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             v.bounds = a
         }.dispose(by: view)
@@ -114,83 +114,67 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func frameX(_ x: ValueModifiable) -> Self {
-        view.addDisposer(x.checkSelfSimulate(view).modifyValue().catchObject(view) { v, a in
-            Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
-            v.frame.origin.x = a
-        }, for: #function)
-        return self
+        bind(keyPath: \T.frame.origin.x, x.modifyValue())
     }
 
     @discardableResult
     func frameY(_ y: ValueModifiable) -> Self {
-        view.addDisposer(y.checkSelfSimulate(view).modifyValue().catchObject(view) { v, a in
-            Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
-            v.frame.origin.y = a
-        }, for: #function)
-        return self
+        bind(keyPath: \T.frame.origin.y, y.modifyValue())
     }
 
     @discardableResult
     func frameWidth(_ width: ValueModifiable) -> Self {
-        view.addDisposer(width.checkSelfSimulate(view).modifyValue().catchObject(view) { v, a in
-            Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
-            v.frame.size.width = max(0, a)
-        }, for: #function)
-        return self
+        bind(keyPath: \T.frame.size.width, width.modifyValue())
     }
 
     @discardableResult
-    func frameHeight(_ width: ValueModifiable) -> Self {
-        view.addDisposer(width.checkSelfSimulate(view).modifyValue().catchObject(view) { v, a in
-            Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
-            v.frame.size.height = max(0, a)
-        }, for: #function)
-        return self
+    func frameHeight(_ height: ValueModifiable) -> Self {
+        bind(keyPath: \T.frame.size.height, height.modifyValue())
     }
 
     @discardableResult
     func top(_ top: ValueModifiable) -> Self {
-        view.addDisposer(top.modifyValue().catchObject(view) { v, a in
+        top.modifyValue().safeBind(to: view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
             f.origin.y = a
             f.size.height = max(0, v.frame.maxY - a)
             v.frame = f
-        }, for: #function)
+        }
         return self
     }
 
     @discardableResult
     func left(_ left: ValueModifiable) -> Self {
-        view.addDisposer(left.modifyValue().catchObject(view) { v, a in
+        left.modifyValue().safeBind(to: view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
             f.origin.x = a
             f.size.width = max(0, v.frame.maxX - a)
             v.frame = f
-        }, for: #function)
+        }
         return self
     }
 
     @discardableResult
     func bottom(_ bottom: ValueModifiable) -> Self {
-        view.addDisposer(bottom.modifyValue().catchObject(view) { v, a in
+        bottom.modifyValue().safeBind(to: view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
             f.size.height = max(0, a - v.frame.origin.y)
             v.frame = f
-        }, for: #function)
+        }
         return self
     }
 
     @discardableResult
     func right(_ right: ValueModifiable) -> Self {
-        view.addDisposer(right.modifyValue().catchObject(view) { v, a in
+        right.modifyValue().safeBind(to: view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
             f.size.width = max(0, a - v.frame.origin.x)
             v.frame = f
-        }, for: #function)
+        }
         return self
     }
 
@@ -233,7 +217,7 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func styleSheet<O: Outputing>(_ styles: O) -> Self where O.OutputType: StyleSheet {
-        styles.safeBind(to: view, id: "\(#function)") { v, s in
+        styles.safeBind(to: view) { v, s in
             v.py_styleSheet = s
         }
         return self
