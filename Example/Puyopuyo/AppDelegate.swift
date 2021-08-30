@@ -7,6 +7,7 @@
 //
 
 import Puyopuyo
+import RxSwift
 import UIKit
 
 class NavController: UINavigationController {}
@@ -31,6 +32,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.rootViewController = NavController(rootViewController: MenuVC())
         window?.makeKeyAndVisible()
+
+        let person = State(Person())
+//        let v = person.asOutput().map { $0.cat }
+//        _ = person.map { $0.name }
 
         return true
     }
@@ -69,7 +74,7 @@ extension Observable: Outputing {
         let d = subscribe(onNext: { value in
             block(value)
         })
-        return Disposables.create {
+        return Disposers.create {
             d.dispose()
         }
     }

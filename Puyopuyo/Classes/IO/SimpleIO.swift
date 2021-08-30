@@ -12,7 +12,7 @@ struct Listener<Value> {
     let input: Inputs<Value>
 }
 
-public class SimpleIO<Value>: Inputing, Outputing, UniqueOutputable {
+public class SimpleIO<Value>: Inputing, Outputing, UniqueOutputable, OutputingModifier {
     public typealias InputType = Value
     public typealias OutputType = Value
     public var uniqueDisposable: Disposer?

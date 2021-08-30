@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class State<Value>: Outputing, Inputing, UniqueOutputable {
+public class State<Value>: Outputing, Inputing, UniqueOutputable, OutputingModifier {
     public var uniqueDisposable: Disposer?
 
     public typealias OutputType = Value

@@ -40,6 +40,14 @@ public protocol Inputing {
 }
 
 public extension Outputing {
+    func asOutput() -> Outputs<OutputType> {
+        Outputs { i -> Disposer in
+            self.outputing { v in
+                i.input(value: v)
+            }
+        }
+    }
+
     /// 将输出接口绑定到对象Object中，并持续接收outputing值
     /// - Parameters:
     ///   - object: 绑定对象
