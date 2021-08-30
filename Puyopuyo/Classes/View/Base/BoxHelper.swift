@@ -78,11 +78,11 @@ public class BoxHelper<R: Regulator> {
         positionControlDisposable?.dispose()
         if isCenterControl, let spv = view.superview, !isBox(view: spv) {
             let frame = spv
-                .py_observing(for: #keyPath(UIView.frame), id: "\(view.description)\(#function)frame")
+                .py_observing(for: #keyPath(UIView.frame))
                 .map { (f: CGRect?) in f?.size ?? .zero }
 
             let bounds = spv
-                .py_observing(for: #keyPath(UIView.bounds), id: "\(view.description)\(#function)bounds")
+                .py_observing(for: #keyPath(UIView.bounds))
                 .map { (f: CGRect?) in f?.size ?? .zero }
 
             positionControlDisposable =

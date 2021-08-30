@@ -8,7 +8,7 @@
 import Foundation
 
 extension NSObject: DisposableBag {
-    public func py_observing<Value: Equatable>(for keyPath: String, id: String = UUID().description) -> Outputs<Value?> {
+    public func py_observing<Value: Equatable>(for keyPath: String) -> Outputs<Value?> {
         return Outputs<Value?> { i -> Disposer in
             var lastValue: Value?
             let observer = _Observer<Value>(key: keyPath) { rect in
@@ -20,7 +20,7 @@ extension NSObject: DisposableBag {
                 self.removeObserver(observer, forKeyPath: keyPath)
             }
             self.addObserver(observer, forKeyPath: keyPath, options: [.new, .initial], context: nil)
-            self.addDisposer(disposer, for: id)
+            self.addDisposer(disposer, for: UUID().description)
             return disposer
         }
         .distinct()
