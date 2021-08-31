@@ -27,7 +27,6 @@ import Foundation
  -- 第一次循环 --
  1. 筛选activate = true 的子节点
  2. 校验是否可以format
- ????? 3. 判断主轴冲突(布局主轴为包裹，则子节点主轴不能有ratio)
  4. 累加主轴比例总和 (totalMainRatio)
  5. 累加主轴固定尺寸（表征当前布局的节点中，必然会使用的主轴尺寸：padding，margin，space，fix）
  6. 记录最大次轴固定尺寸
@@ -143,7 +142,7 @@ class FlatCalculator2 {
         // 根据优先级计算
         getSortedChildren(calculateChildren).forEach { calculateChild($0) }
 
-//        // 处理 w_r
+        // 处理 w_r
 //        calculateChildren.forEach {
 //            let calSize = $0.size.getCalSize(by: regDirection)
 //            if calSize.getSizeType() == .w_r {
@@ -196,10 +195,11 @@ class FlatCalculator2 {
             mainRemain = (regChildrenRemainCalSize.main - totalSubMain - totalSpace) * (calSubSize.main.ratio / totalMainRatio)
         }
 
-        var crossRemain = regChildrenRemainCalSize.cross
-        if regCalSize.cross.isWrap {
-            crossRemain = regChildrenRemainCalSize.cross
+        var crossRemain: CGFloat = regChildrenRemainCalSize.cross
+        if calSubSize.cross.isRatio && regCalSize.cross.isWrap {
+            crossRemain = maxSubCross
         }
+
         return CalFixedSize(main: mainRemain, cross: crossRemain, direction: regDirection)
     }
 
@@ -226,18 +226,18 @@ class FlatCalculator2 {
         }
     }
 
-    private lazy var placeholders = [Measure]()
-
-    private func getPlaceholder() -> Measure {
-        let m = MeasureFactory.getPlaceholder()
-        let calSize = CalSize(main: .fill, cross: .fix(0), direction: regulator.direction)
-        m.size = calSize.getSize()
-        return m
-    }
-
-    deinit {
-        MeasureFactory.recyclePlaceholders(placeholders)
-    }
+//    private lazy var placeholders = [Measure]()
+//
+//    private func getPlaceholder() -> Measure {
+//        let m = MeasureFactory.getPlaceholder()
+//        let calSize = CalSize(main: .fill, cross: .fix(0), direction: regulator.direction)
+//        m.size = calSize.getSize()
+//        return m
+//    }
+//
+//    deinit {
+//        MeasureFactory.recyclePlaceholders(placeholders)
+//    }
 
     /// 这里为measures的大小都计算好，需要计算每个节点的center
     ///
@@ -298,9 +298,14 @@ class FlatCalculator2 {
         let list = children.sorted {
             let size0 = $0.size.getCalSize(by: regDirection)
             let size1 = $1.size.getCalSize(by: regDirection)
-            return size0.getPriority() > size1.getPriority()
+            return size0.getPriority() < size1.getPriority()
         }
+        printPriority(list)
         return list
+    }
+
+    private func printPriority(_ children: [Measure]) {
+        print(children.map { $0.size.getCalSize(by: regDirection).getSizeType().getDesc() }.joined(separator: ","))
     }
 
     private func _calculateCrossOffset(measure: Measure) -> CGFloat {
@@ -330,7 +335,7 @@ extension CalSize {
     struct Priority: Comparable {
         static func < (lhs: CalSize.Priority, rhs: CalSize.Priority) -> Bool {
             if lhs.level == rhs.level {
-                return lhs.priority < rhs.priority
+                return lhs.priority > rhs.priority
             }
             return lhs.level < rhs.level
         }
@@ -363,6 +368,13 @@ extension CalSize {
         case f_r
         case r_f
         case r_r
+
+//        var description: String {
+//            return "\(self)"
+//        }
+        func getDesc() -> String {
+            "\(self)".split(separator: ".").last!.description
+        }
     }
 
     func getSizeType() -> SizeType {

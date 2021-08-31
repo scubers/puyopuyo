@@ -18,11 +18,11 @@ class MenuVC: BaseVC {
 //        view = UIView()
 //
 //        view.attach {
-//            VBox().attach($0) {
-//                HBox().attach($0) {
-//                    UILabel().attach($0)
-//                        .text("124")
-//                }
+//            VBox().attach($0) { _ in
+////                HBox().attach($0) {
+////                    UILabel().attach($0)
+////                        .text("124")
+////                }
 ////                .size(.fill, 50)
 //            }
 //            .justifyContent(.center)
@@ -30,10 +30,10 @@ class MenuVC: BaseVC {
 //            .size(.fill, .fill)
 //        }
 //    }
-
-    override func shouldRandomColor() -> Bool {
-        false
-    }
+//
+//    override func shouldRandomColor() -> Bool {
+//        true
+//    }
 
     override func configView() {
         menu()
