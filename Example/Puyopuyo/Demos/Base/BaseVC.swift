@@ -42,7 +42,6 @@ class BaseVC: UIViewController, UIScrollViewDelegate {
                     self.vRoot.attach($0)
                         .padding($0.py_safeArea())
                         .size(.fill, .fill)
-                        
                 }
                 .view
             }

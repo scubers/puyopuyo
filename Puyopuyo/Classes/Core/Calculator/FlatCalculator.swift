@@ -128,7 +128,7 @@ class FlatCalculator {
             switch subCalSize.flatcalculatePriority() {
             case .W_R: wrCount += 1
             case .R_W: rwCount += 1
-            case .F_R: totalSubMain += subCalSize.main.fixedValue + subCalMargin.mainFixed
+            case .F_R, .wrapFixMix: totalSubMain += subCalSize.main.fixedValue + subCalMargin.mainFixed
             case .R_F: if regCalSize.cross.isWrap { maxCross = max(maxCross, subCalSize.cross.fixedValue + subCalMargin.crossFixed) }
             default: break
             }
@@ -427,7 +427,23 @@ class FlatCalculator {
 }
 
 extension CalSize {
-    // 值越低越优先计算
+    /**
+     值越低越优先计算
+     ff
+     
+     fw
+     wf
+     ww
+     
+     wr
+     rw
+     
+     fr
+     rf
+     
+     rr
+     
+     */
     enum CalPriority: Int {
         case F_F = 10
 

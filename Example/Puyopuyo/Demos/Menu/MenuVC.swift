@@ -14,7 +14,32 @@ class MenuVC: BaseVC {
         "MENU"
     }
 
-    override func configView() {        
+//    override func loadView() {
+//        view = UIView()
+//
+//        view.attach {
+//            VBox().attach($0) {
+//                HBox().attach($0) {
+//                    UILabel().attach($0)
+//                        .text("124")
+//                }
+////                .size(.fill, 50)
+//            }
+//            .justifyContent(.center)
+//            .padding(top: 100)
+//            .size(.fill, .fill)
+//        }
+//    }
+
+    override func shouldRandomColor() -> Bool {
+        false
+    }
+
+    override func configView() {
+        menu()
+    }
+
+    func menu() {
         RecycleBox(
             sections: [
                 DataRecycleSection<(String, () -> UIViewController)>(
