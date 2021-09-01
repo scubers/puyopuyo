@@ -25,11 +25,13 @@ import Foundation
  1. 若布局非包裹cross，则最大cross由剩余空间cross确定(maxCross)
 
  -- 第一次循环 --
- 1. 筛选activate = true 的子节点
+ 1. 筛选计算节点
+    1.1 activate = true
+    1.2 当布局主轴 wrap，子节点主轴 ratio 不参与计算
  2. 校验是否可以format
- 4. 累加主轴比例总和 (totalMainRatio)
- 5. 累加主轴固定尺寸（表征当前布局的节点中，必然会使用的主轴尺寸：padding，margin，space，fix）
- 6. 记录最大次轴固定尺寸
+ 3. 累加主轴比例总和 (totalMainRatio)
+ 4. 累加主轴固定尺寸（表征当前布局的节点中，必然会使用的主轴尺寸：padding，margin，space，fix）
+ 5. 记录最大次轴固定尺寸
  6. 保存需要计算的子节点
 
  -- 第二次循环 --
@@ -45,8 +47,9 @@ import Foundation
  1. 计算子节点的大小
 
      1.1 每次循环获取剩余空间大小
+     1.2 计算节点大小
 
- 2. w_r: 最后修正次轴r
+ 2. 修正次轴r
 
  -- 第四次循环 --
  1. 计算根据format(.between, .leading, .round)计算center值
@@ -111,21 +114,29 @@ class FlatCalculator2 {
     func calculate() -> Size {
         // 第一次循环
         regulator.enumerateChild { _, m in
+            // 未激活的节点不计算
             guard m.activated else { return }
+
             let subCalSize = m.size.getCalSize(by: regDirection)
+
+            // 主轴: 布局包裹，节点ratio 将产生冲突，不参与计算
+            if subCalSize.main.isRatio, regCalSize.main.isWrap {
+                return
+            }
+
             let subCalMargin = m.margin.getCalEdges(by: regDirection)
 
-            // 校验是否可format
-            if subCalSize.main.isRatio && formattable || regCalSize.main.isWrap, regulator.format != .leading {
+            // 校验是否可format: 主轴包裹，则不可以被format
+            if formattable, regCalSize.main.isWrap, regulator.format != .leading {
                 formattable = false
             }
 
-            // 累加主轴固定尺寸 & margin
+            // 累加主轴固定尺寸 & 主轴margin
             if subCalSize.main.isFixed {
                 totalSubMain += subCalSize.main.fixedValue + subCalMargin.mainFixed
             }
 
-            // 记录次轴最大值
+            // 记录次轴最大值: 固定次轴尺寸 + 次轴margin
             if subCalSize.cross.isFixed {
                 maxSubCross = max(maxSubCross, subCalSize.cross.fixedValue + subCalMargin.crossFixed)
             }
@@ -142,16 +153,20 @@ class FlatCalculator2 {
         // 根据优先级计算
         getSortedChildren(calculateChildren).forEach { calculateChild($0) }
 
-        // 处理 w_r
-//        calculateChildren.forEach {
-//            let calSize = $0.size.getCalSize(by: regDirection)
-//            if calSize.getSizeType() == .w_r {
-//                var calFixedSize = $0.py_size.getCalFixedSize(by: regDirection)
-//                let calMargin = $0.margin.getCalEdges(by: regDirection)
-//                calFixedSize.cross = maxSubCross - calMargin.crossFixed
-//                $0.py_size = calFixedSize.getSize()
-//            }
-//        }
+        // 最后处理次轴比重
+        if regCalSize.cross.isWrap {
+            calculateChildren.forEach {
+                let calSize = $0.size.getCalSize(by: regDirection)
+                if calSize.cross.isRatio {
+                    var calFixedSize = $0.py_size.getCalFixedSize(by: regDirection)
+                    let calMargin = $0.margin.getCalEdges(by: regDirection)
+                    calFixedSize.cross = maxSubCross - calMargin.crossFixed
+                    print(calFixedSize)
+                    print(maxSubCross)
+                    $0.py_size = calFixedSize.getSize()
+                }
+            }
+        }
 
         // 4、第三次循环，计算子节点center，若format == .trailing, 则可能出现第四次循环
         let lastEnd = calculateCenter(measures: calculateChildren)
@@ -188,15 +203,19 @@ class FlatCalculator2 {
         var mainRemain: CGFloat = regChildrenRemainCalSize.main - totalSubMain - totalSpace
 
         if calSubSize.main.isFixed {
+            // 子主轴固定时，剩余空间需要减去当前固定尺寸
             mainRemain = regChildrenRemainCalSize.main - totalSubMain - totalSpace - calSubSize.main.fixedValue
         } else if calSubSize.main.isWrap {
+            // 包裹时就是当前剩余空间
             mainRemain = regChildrenRemainCalSize.main - totalSubMain - totalSpace
         } else if calSubSize.main.isRatio {
+            // 子主轴比重，需要根据当前剩余空间 & 比重进行计算
             mainRemain = (regChildrenRemainCalSize.main - totalSubMain - totalSpace) * (calSubSize.main.ratio / totalMainRatio)
         }
 
         var crossRemain: CGFloat = regChildrenRemainCalSize.cross
-        if calSubSize.cross.isRatio && regCalSize.cross.isWrap {
+        // 次轴上父子依赖的时候，剩余空间取当前已计算的最大次轴
+        if calSubSize.cross.isRatio, regCalSize.cross.isWrap {
             crossRemain = maxSubCross
         }
 
@@ -225,19 +244,6 @@ class FlatCalculator2 {
             _ = measure.calculate(byParent: regulator, remain: subRemain.getSize())
         }
     }
-
-//    private lazy var placeholders = [Measure]()
-//
-//    private func getPlaceholder() -> Measure {
-//        let m = MeasureFactory.getPlaceholder()
-//        let calSize = CalSize(main: .fill, cross: .fix(0), direction: regulator.direction)
-//        m.size = calSize.getSize()
-//        return m
-//    }
-//
-//    deinit {
-//        MeasureFactory.recyclePlaceholders(placeholders)
-//    }
 
     /// 这里为measures的大小都计算好，需要计算每个节点的center
     ///
@@ -300,7 +306,7 @@ class FlatCalculator2 {
             let size1 = $1.size.getCalSize(by: regDirection)
             return size0.getPriority() < size1.getPriority()
         }
-        printPriority(list)
+//        printPriority(list)
         return list
     }
 

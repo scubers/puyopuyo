@@ -11,11 +11,27 @@ import UIKit
 
 class TestVC: BaseVC {
     override func configView() {
-//        demo1().attach(vRoot)
+        demo1().attach(vRoot)
 //        demo2().attach(vRoot)
 //        demo3().attach(vRoot)
 //        demo4().attach(vRoot)
 //        demo5().attach(vRoot)
+//        demo6().attach(vRoot)
+    }
+    
+    func demo6() -> UIView {
+        VFlow(count: 2).attach {
+            for i in 0 ..< 4 {
+                UILabel().attach($0)
+                    .text(i.description)
+                    .width(.fill)
+                    .height(.fill)
+            }
+        }
+        .space(10)
+        .padding(all: 10)
+        .height(.wrap)
+        .view
     }
     
     func demo5() -> UIView {
@@ -56,6 +72,7 @@ class TestVC: BaseVC {
                 .size(.fill, .wrap)
         }
         .padding(all: 10)
+        .width(.fill)
         .view
     }
     
@@ -103,29 +120,29 @@ class TestVC: BaseVC {
                 UILabel().attach($0)
                     .numberOfLines(0)
                     .size(100, .wrap)
-                    .text(text.map { "F_W:\($0)" })
+                    .text(text.map { "F_W\n\($0)" })
                
                 UILabel().attach($0)
                     .numberOfLines(0)
                     .size(.wrap, 40)
-                    .text(text.map { "W_F:\($0)" })
+                    .text(text.map { "W_F\n\($0)" })
                
                 UILabel().attach($0)
                     .numberOfLines(0)
                     .size(.wrap(priority: 11), .wrap)
-                    .text(text.map { "W_W:\($0)" })
+                    .text(text.map { "W_W\n\($0)" })
                
                 UILabel().attach($0)
                     .numberOfLines(0)
                     .size(.wrap(priority: 10), .fill)
-                    .text(text.map { "W_R:\($0)" })
+                    .text(text.map { "W_R\n\($0)" })
                
                 UILabel().attach($0)
                     .numberOfLines(0)
                     .size(.fill, .wrap)
-                    .text(text.map { "R_W:\($0)" })
+                    .text(text.map { "R_W\n\($0)" })
             }
-            .size(.fill, 100)
+            .size(.fill, .wrap)
             .justifyContent(.center)
         }
         .size(.fill, .wrap)

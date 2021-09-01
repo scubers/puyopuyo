@@ -11,7 +11,7 @@ import UIKit
 
 class ScrollBoxPropertiesVC: BaseVC {
     override func configView() {
-        ScrollingBox<VBox> {
+        ScrollingBox<VBox>(flat: { VBox().attach().space(10).view }) {
             for i in 0 ..< 100 {
                 Label.demo("\(i)").attach($0)
                     .size(50, 50)
