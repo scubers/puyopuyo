@@ -65,6 +65,22 @@ public extension Puyo where T: UIView {
     func height(simulate modifiable: ValueModifiable) -> Self {
         return height(modifiable.checkSelfSimulate(view).modifyValue().map { SizeDescription.fix($0) })
     }
+
+    @discardableResult
+    func width(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
+        if let s = view?.py_boundsState().distinct() {
+            return width(s.map(block))
+        }
+        return self
+    }
+
+    @discardableResult
+    func height(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
+        if let s = view?.py_boundsState().distinct() {
+            height(s.map(block))
+        }
+        return self
+    }
 }
 
 // MARK: - Margin ext
