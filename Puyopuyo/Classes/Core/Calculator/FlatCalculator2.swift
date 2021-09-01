@@ -126,8 +126,8 @@ class FlatCalculator2 {
 
             let subCalMargin = m.margin.getCalEdges(by: regDirection)
 
-            // 校验是否可format: 主轴包裹，则不可以被format
-            if formattable, regCalSize.main.isWrap, regulator.format != .leading {
+            // 校验是否可format: 主轴包裹, 或者存在子主轴比重，则不可以被format
+            if formattable, (regCalSize.main.isWrap || subCalSize.main.isRatio), regulator.format != .leading {
                 formattable = false
             }
 
