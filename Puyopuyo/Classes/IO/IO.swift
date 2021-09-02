@@ -110,19 +110,10 @@ public extension Outputing where OutputType == Self {
 
 // MARK: - Default impls
 
-extension Optional: Outputing { public typealias OutputType = Wrapped? }
+extension Optional: Outputing { public typealias OutputType = Optional }
 
 extension String: Outputing { public typealias OutputType = String }
 extension Bool: Outputing { public typealias OutputType = Bool }
-extension CGRect: Outputing { public typealias OutputType = CGRect }
-extension UIEdgeInsets: Outputing { public typealias OutputType = UIEdgeInsets }
-extension CGPoint: Outputing { public typealias OutputType = CGPoint }
-extension CGSize: Outputing { public typealias OutputType = CGSize }
-extension Array: Outputing { public typealias OutputType = Array }
-extension Dictionary: Outputing { public typealias OutputType = Dictionary }
-extension Date: Outputing { public typealias OutputType = Date }
-extension URL: Outputing { public typealias OutputType = URL }
-extension Data: Outputing { public typealias OutputType = Data }
 
 extension Int: Outputing { public typealias OutputType = Int }
 extension CGFloat: Outputing { public typealias OutputType = CGFloat }
@@ -134,11 +125,24 @@ extension UInt32: Outputing { public typealias OutputType = UInt32 }
 extension Int64: Outputing { public typealias OutputType = Int64 }
 extension UInt64: Outputing { public typealias OutputType = UInt64 }
 
+extension Date: Outputing { public typealias OutputType = Date }
+extension URL: Outputing { public typealias OutputType = URL }
+extension Data: Outputing { public typealias OutputType = Data }
+
+extension Array: Outputing { public typealias OutputType = Array }
+extension Dictionary: Outputing { public typealias OutputType = Dictionary }
+
+extension NSTextAlignment: Outputing { public typealias OutputType = NSTextAlignment }
+
+extension CGRect: Outputing { public typealias OutputType = CGRect }
+extension CGPoint: Outputing { public typealias OutputType = CGPoint }
+extension CGSize: Outputing { public typealias OutputType = CGSize }
+
+extension UIEdgeInsets: Outputing { public typealias OutputType = UIEdgeInsets }
 extension UIImage: Outputing { public typealias OutputType = UIImage }
 extension UIColor: Outputing { public typealias OutputType = UIColor }
 extension UIFont: Outputing { public typealias OutputType = UIFont }
 extension UIControl.State: Outputing { public typealias OutputType = UIControl.State }
 extension UIControl.Event: Outputing { public typealias OutputType = UIControl.Event }
 extension UIView.ContentMode: Outputing { public typealias OutputType = UIView.ContentMode }
-extension NSTextAlignment: Outputing { public typealias OutputType = NSTextAlignment }
 extension UIKeyboardType: Outputing { public typealias OutputType = UIKeyboardType }
