@@ -10,27 +10,46 @@ import Puyopuyo
 import UIKit
 
 class TestVC: BaseVC {
+    let text = State("")
     override func configView() {
-        demo1().attach(vRoot)
+//        demo1().attach(vRoot)
 //        demo2().attach(vRoot)
 //        demo3().attach(vRoot)
 //        demo4().attach(vRoot)
 //        demo5().attach(vRoot)
-//        demo6().attach(vRoot)
+        demo6().attach(vRoot)
     }
     
     func demo6() -> UIView {
-        VFlow(count: 2).attach {
-            for i in 0 ..< 4 {
-                UILabel().attach($0)
-                    .text(i.description)
-                    .width(.fill)
-                    .height(.fill)
-            }
+        HBox().attach {
+            UITextField().attach($0)
+                .size(100, 40)
+                .onText(text)
+            
+//            HBox().attach($0) {
+                
+            UILabel().attach($0)
+                .text(text)
+                .margin(left: 10)
+                
+            UILabel().attach($0)
+                .text("texttexttexttexttexttext")
+                .margin(left: 10, right: 10)
+                
+            UIView().attach($0)
+                .width(.fill)
+                .margin(left: 30)
+                .height(10)
+                
+            UILabel().attach($0)
+                .text("Stay")
+                .width(.wrap)
+//            }
         }
-        .space(10)
-        .padding(all: 10)
+//        .space(10)
+//        .padding(all: 10)
         .height(.wrap)
+        .width(500)
         .view
     }
     

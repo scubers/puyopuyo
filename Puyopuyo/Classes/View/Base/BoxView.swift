@@ -110,3 +110,31 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable {
         boxHelper.didMoveToSuperview(view: self, regulator: regulator)
     }
 }
+
+class InspectView: UIView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = UIColor.blue.withAlphaComponent(0.2)
+        py_measure.activated = false
+    }
+
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
+        fatalError()
+    }
+
+    var superMeasure: Measure?
+
+    var disposer: Disposer?
+
+    override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        disposer?.dispose()
+        superMeasure = superview?.py_measure
+        superview?.py_boundsState().safeBind(to: self) { this, rect in
+            let margin = this.superMeasure!.margin
+            this.frame.size = CGSize(width: rect.width + margin.getHorzTotal(), height: rect.height + margin.getVertTotal())
+            this.center = CGPoint(x: rect.width / 2, y: rect.height / 2)
+        }
+    }
+}

@@ -10,7 +10,6 @@ import Puyopuyo
 import UIKit
 
 class NavigationBoxPropertiesVC: BaseVC {
-    
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let height = min(44, max(0, 44 - scrollView.contentOffset.y))
         navHeight.input(value: .fix(height))
@@ -34,7 +33,7 @@ class NavigationBoxPropertiesVC: BaseVC {
                         self.visible().attach($0)
                         self.alpha().attach($0)
                         self.avoid().attach($0)
-                        
+
                         UIView().attach($0)
                             .size(.fill, 200)
                     }
@@ -75,7 +74,8 @@ class NavigationBoxPropertiesVC: BaseVC {
                 Selector(desc: "gray", value: .lightGray),
                 Selector(desc: "red", value: .red),
                 Selector(desc: "blue", value: .blue),
-            ]
+            ],
+            selected: navState.value.backgroundColor
         )
         .attach()
         .onEventProduced(to: self) { s, x in
@@ -96,7 +96,8 @@ class NavigationBoxPropertiesVC: BaseVC {
                 Selector(desc: "84", value: .fix(84)),
                 Selector(desc: "94", value: .fix(94)),
                 Selector(desc: ".wrap", value: .wrap),
-            ]
+            ],
+            selected: navHeight.value
         )
         .attach()
         .onEventProduced(to: self) { s, x in
@@ -114,7 +115,8 @@ class NavigationBoxPropertiesVC: BaseVC {
             selectors: [
                 Selector(desc: "true", value: true),
                 Selector(desc: "false", value: false),
-            ]
+            ],
+            selected: navState.value.bodyAvoidNavBar
         )
         .attach()
         .onEventProduced(to: self) { s, x in
@@ -135,7 +137,8 @@ class NavigationBoxPropertiesVC: BaseVC {
                 Selector(desc: "0.5", value: 0.5),
                 Selector(desc: "0.7", value: 0.7),
                 Selector(desc: "1", value: 1),
-            ]
+            ],
+            selected: navState.value.alpha
         )
         .attach()
         .onEventProduced(to: self) { s, x in
@@ -154,7 +157,8 @@ class NavigationBoxPropertiesVC: BaseVC {
                 Selector(desc: "gone", value: .gone),
                 Selector(desc: "visble", value: .visible),
                 Selector(desc: "invisible", value: .invisible),
-            ]
+            ],
+            selected: self.navState.value.visible
         )
         .attach()
         .onEventProduced(to: self) { s, x in

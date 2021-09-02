@@ -17,11 +17,12 @@ struct Selector<T> {
 class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
     private var selection = [Selector<T>]()
 
-    var viewState = State<Selector<T>?>(nil)
-    var eventProducer = SimpleIO<Selector<T>>()
+    var viewState = State<T?>(nil)
+    var eventProducer = SimpleIO<T>()
 
-    init(_ selection: [Selector<T>]) {
+    init(_ selection: [Selector<T>], selected: T? = nil) {
         self.selection = selection
+        viewState.value = selected
         super.init(frame: .zero)
     }
 
@@ -38,11 +39,11 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
 
                 UIButton(type: .roundedRect).attach(v)
                     .onTap(to: self) { this, _ in
-                        this.eventProducer.input(value: x)
-                        this.viewState.value = x
+                        this.eventProducer.input(value: x.value)
+                        this.viewState.value = x.value
                     }
                     .viewUpdate(on: output) { btn, e in
-                        if let e = e, e.value == x.value {
+                        if e == x.value {
                             btn.backgroundColor = Theme.accentColor
                             btn.isSelected = true
                         } else {
@@ -69,11 +70,12 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
 
 class PlainSelectionView<T: Equatable>: ZBox, Eventable, Stateful {
     private var selection = [Selector<T>]()
-    var viewState = State<Selector<T>?>(nil)
-    var eventProducer = SimpleIO<Selector<T>>()
+    var viewState = State<T?>(nil)
+    var eventProducer = SimpleIO<T>()
 
-    init(_ selection: [Selector<T>]) {
+    init(_ selection: [Selector<T>], selected: T? = nil) {
         self.selection = selection
+        viewState.value = selected
         super.init(frame: .zero)
     }
 
@@ -97,11 +99,11 @@ class PlainSelectionView<T: Equatable>: ZBox, Eventable, Stateful {
 //                    v.subviews.forEach({ $0.removeFromSuperview() })
                     UIButton().attach(v)
                         .onTap(to: self) { this, _ in
-                            this.eventProducer.input(value: x)
-                            this.viewState.value = x
+                            this.eventProducer.input(value: x.value)
+                            this.viewState.value = x.value
                         }
                         .backgroundColor(self.viewState.asOutput().map { e -> UIColor in
-                            if let e = e, e.value == x.value {
+                            if e == x.value {
                                 return Theme.accentColor
                             }
                             return .clear

@@ -127,14 +127,16 @@ class FlatCalculator2 {
             let subCalMargin = m.margin.getCalEdges(by: regDirection)
 
             // 校验是否可format: 主轴包裹, 或者存在子主轴比重，则不可以被format
-            if formattable, (regCalSize.main.isWrap || subCalSize.main.isRatio), regulator.format != .leading {
+            if formattable, regCalSize.main.isWrap || subCalSize.main.isRatio, regulator.format != .leading {
                 formattable = false
             }
 
             // 累加主轴固定尺寸 & 主轴margin
             if subCalSize.main.isFixed {
-                totalSubMain += subCalSize.main.fixedValue + subCalMargin.mainFixed
+                totalSubMain += subCalSize.main.fixedValue
             }
+
+            totalSubMain += subCalMargin.mainFixed
 
             // 记录次轴最大值: 固定次轴尺寸 + 次轴margin
             if subCalSize.cross.isFixed {
@@ -199,18 +201,19 @@ class FlatCalculator2 {
 
     private func getCurrentChildRemainCalFixedSize(_ measure: Measure) -> CalFixedSize {
         let calSubSize = measure.size.getCalSize(by: regDirection)
+        let subCalMargin = measure.margin.getCalEdges(by: regDirection)
 
-        var mainRemain: CGFloat = regChildrenRemainCalSize.main - totalSubMain - totalSpace
+        // 总剩余空间 - 主轴固定长度 - 总间隙 + 当前节点主轴margin
+        var mainRemain: CGFloat = regChildrenRemainCalSize.main - totalSubMain - totalSpace + subCalMargin.mainFixed
 
         if calSubSize.main.isFixed {
             // 子主轴固定时，剩余空间需要减去当前固定尺寸
-            mainRemain = regChildrenRemainCalSize.main - totalSubMain - totalSpace - calSubSize.main.fixedValue
+            mainRemain += calSubSize.main.fixedValue
         } else if calSubSize.main.isWrap {
             // 包裹时就是当前剩余空间
-            mainRemain = regChildrenRemainCalSize.main - totalSubMain - totalSpace
         } else if calSubSize.main.isRatio {
             // 子主轴比重，需要根据当前剩余空间 & 比重进行计算
-            mainRemain = (regChildrenRemainCalSize.main - totalSubMain - totalSpace) * (calSubSize.main.ratio / totalMainRatio)
+            mainRemain = mainRemain * (calSubSize.main.ratio / totalMainRatio)
         }
 
         var crossRemain: CGFloat = regChildrenRemainCalSize.cross

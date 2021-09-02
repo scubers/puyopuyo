@@ -50,6 +50,7 @@ class UIViewProertiesVC: BaseVC {
             selectors: [Selector(desc: "top", value: .top),
                         Selector(desc: "bottom", value: .bottom),
                         Selector(desc: "center", value: .center)],
+            selected: a.value,
             desc: """
             覆盖Box.justfyContent, 单独设置自己的偏移
             """
@@ -98,6 +99,7 @@ class UIViewProertiesVC: BaseVC {
                         Selector(desc: ".fix(50)", value: .fix(50)),
                         Selector(desc: ".ratio(1)", value: .ratio(1)),
                         Selector(desc: ".ratio(0.5)", value: .ratio(0.5))],
+            selected: s.value,
             desc: """
             """
         )
@@ -142,6 +144,7 @@ class UIViewProertiesVC: BaseVC {
                         Selector(desc: ".fix(50)", value: .fix(50)),
                         Selector(desc: ".ratio(1)", value: .ratio(1)),
                         Selector(desc: ".ratio(0.5)", value: .ratio(0.5))],
+            selected: s.value,
             desc: """
             """
         )
@@ -169,6 +172,7 @@ class UIViewProertiesVC: BaseVC {
                 .view
             },
             selectors: [0, 10, 20, 30, 40].map { Selector(desc: "\($0)", value: $0) },
+            selected: margin.value,
             desc: "布局系统内，子view的外边局"
         )
         .attach()

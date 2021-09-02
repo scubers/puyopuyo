@@ -43,7 +43,7 @@ class FlowPropertiesVC: BaseVC {
     let hformat = State<Format>(.leading)
     let vformat = State<Format>(.leading)
 
-    let content = State<Alignment>([.top, .left])
+    let content = State<Alignment>([.top])
 
     let elementCount = State(10)
 
@@ -54,14 +54,14 @@ class FlowPropertiesVC: BaseVC {
     let blockFix = State(true)
 
     func getMenu() -> UIView {
-        func getSelectionView<T: Equatable, I: Inputing>(title: String, input: I, values: [Selector<T>]) -> UIView where I.InputType == T {
+        func getSelectionView<T: Equatable, I: Inputing>(title: String, input: I, values: [Selector<T>], selected: T? = nil) -> UIView where I.InputType == T {
             return HBox().attach {
                 UILabel().attach($0)
                     .text(title)
-                PlainSelectionView<T>(values).attach($0)
+                PlainSelectionView<T>(values, selected: selected).attach($0)
                     .size(.fill, 50)
                     .onEventProduced(Inputs {
-                        input.input(value: $0.value)
+                        input.input(value: $0)
                     })
             }
             .space(8)
@@ -114,30 +114,35 @@ class FlowPropertiesVC: BaseVC {
                                  input: self.step,
                                  values: [Selector<Int>(desc: "0", value: 0),
                                           Selector<Int>(desc: "1", value: 1),
-                                          Selector<Int>(desc: "2", value: 2)])
+                                          Selector<Int>(desc: "2", value: 2)],
+                                 selected: step.value)
                     .attach($0)
                 getSelectionView(title: "direction",
                                  input: self.direction,
                                  values: [Selector<Direction>(desc: ".x", value: .x),
-                                          Selector<Direction>(desc: ".y", value: .y)])
+                                          Selector<Direction>(desc: ".y", value: .y)],
+                                 selected: direction.value)
                     .attach($0)
                 getSelectionView(title: "width",
                                  input: self.width,
                                  values: [Selector<SizeDescription>(desc: ".fill", value: .fill),
-                                          Selector<SizeDescription>(desc: ".wrap", value: .wrap)])
+                                          Selector<SizeDescription>(desc: ".wrap", value: .wrap)],
+                                 selected: width.value)
                     .attach($0)
 
                 getSelectionView(title: "height",
                                  input: self.height,
                                  values: [Selector<SizeDescription>(desc: ".fill", value: .fill),
-                                          Selector<SizeDescription>(desc: ".wrap", value: .wrap)])
+                                          Selector<SizeDescription>(desc: ".wrap", value: .wrap)],
+                                 selected: height.value)
                     .attach($0)
 
                 getSelectionView(title: "arrange",
                                  input: self.arrange,
                                  values: (0 ..< 10).map {
                                      Selector<Int>(desc: "\($0)", value: $0)
-                                   })
+                                 },
+                                 selected: arrange.value)
                     .attach($0)
 
                 getSelectionView(title: "padding",
@@ -145,14 +150,16 @@ class FlowPropertiesVC: BaseVC {
                                  values: [Selector<CGFloat>(desc: "0", value: 0),
                                           Selector<CGFloat>(desc: "10", value: 10),
                                           Selector<CGFloat>(desc: "20", value: 20),
-                                          Selector<CGFloat>(desc: "40", value: 30)])
+                                          Selector<CGFloat>(desc: "40", value: 30)],
+                                 selected: padding.value)
                     .attach($0)
                 getSelectionView(title: "hSpace",
                                  input: self.hspace,
                                  values: [Selector<CGFloat>(desc: "10", value: 10),
                                           Selector<CGFloat>(desc: "20", value: 20),
                                           Selector<CGFloat>(desc: "30", value: 30),
-                                          Selector<CGFloat>(desc: "40", value: 40)])
+                                          Selector<CGFloat>(desc: "40", value: 40)],
+                                 selected: hspace.value)
                     .attach($0)
 
                 getSelectionView(title: "vSpace",
@@ -160,34 +167,39 @@ class FlowPropertiesVC: BaseVC {
                                  values: [Selector<CGFloat>(desc: "10", value: 10),
                                           Selector<CGFloat>(desc: "20", value: 20),
                                           Selector<CGFloat>(desc: "30", value: 30),
-                                          Selector<CGFloat>(desc: "40", value: 40)])
+                                          Selector<CGFloat>(desc: "40", value: 40)],
+                                 selected: vspace.value)
                     .attach($0)
 
                 getSelectionView(title: "reverse",
                                  input: self.reverse,
                                  values: [Selector<Bool>(desc: "true", value: true),
-                                          Selector<Bool>(desc: "false", value: false)])
+                                          Selector<Bool>(desc: "false", value: false)],
+                                 selected: reverse.value)
                     .attach($0)
 
                 getSelectionView(title: "hformat",
                                  input: self.hformat,
                                  values: Format.allCases.map {
                                      Selector<Format>(desc: "\($0)", value: $0)
-                                   })
+                                 },
+                                 selected: hformat.value)
                     .attach($0)
 
                 getSelectionView(title: "vformat",
                                  input: self.vformat,
                                  values: Format.allCases.map {
                                      Selector<Format>(desc: "\($0)", value: $0)
-                                   })
+                                 },
+                                 selected: vformat.value)
                     .attach($0)
 
                 getSelectionView(title: "content",
                                  input: self.content,
                                  values: (Alignment.vertAlignments() + Alignment.horzAlignments()).map {
                                      Selector<Alignment>(desc: "\($0)", value: $0)
-                                   })
+                                 },
+                                 selected: content.value)
                     .attach($0)
             }
             .padding(all: 4)

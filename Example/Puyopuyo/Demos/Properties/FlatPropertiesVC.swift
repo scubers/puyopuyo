@@ -46,6 +46,7 @@ class FlatPropertiesVC: BaseVC {
             selectors: [Selector(desc: "top", value: .top),
                         Selector(desc: "bottom", value: .bottom),
                         Selector(desc: "center", value: .center)],
+            selected: justifyContent.value,
             desc: """
             Box.justfyContent，布局次轴上用于统一控制子View的偏移
             """
@@ -79,6 +80,7 @@ class FlatPropertiesVC: BaseVC {
             selectors: [Selector(desc: "top", value: .top),
                         Selector(desc: "bottom", value: .bottom),
                         Selector(desc: "center", value: .center)],
+            selected: justifyContent.value,
             desc: """
             activate = false, 则不受布局控制，可自由设置frame
             """
@@ -113,6 +115,7 @@ class FlatPropertiesVC: BaseVC {
                         Selector(desc: "avg", value: .round),
                         Selector(desc: "sides", value: .between),
                         Selector(desc: "traing", value: .trailing)],
+            selected: format.value,
             desc: "布局主轴上的格式"
         )
         .attach()
@@ -142,6 +145,7 @@ class FlatPropertiesVC: BaseVC {
             },
             selectors: [Selector(desc: "x", value: .x),
                         Selector(desc: "y", value: .y)],
+            selected: direction.value,
             desc: """
             x: 水平方向
             y: 竖直方向
@@ -174,6 +178,7 @@ class FlatPropertiesVC: BaseVC {
                 .view
             },
             selectors: [0, 10, 20, 30, 40].map { Selector(desc: "\($0)", value: $0) },
+            selected: padding.value,
             desc: "Box布局系统的内边距"
         )
         .attach()
@@ -205,6 +210,7 @@ class FlatPropertiesVC: BaseVC {
                         Selector(desc: "20", value: 20),
                         Selector(desc: "30", value: 30),
                         Selector(desc: "40", value: 40)],
+            selected: space.value,
             desc: "布局系统子view间距"
         )
         .attach()
@@ -234,6 +240,7 @@ class FlatPropertiesVC: BaseVC {
             },
             selectors: [Selector(desc: "true", value: true),
                         Selector(desc: "false", value: false)],
+            selected: reverse.value,
             desc: "布局系统是否逆向布局"
         )
         .attach()

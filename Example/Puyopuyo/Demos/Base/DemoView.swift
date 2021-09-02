@@ -11,13 +11,14 @@ import UIKit
 
 typealias ViewBuilder = (UIView) -> UIView
 
-class DemoView<T: Equatable>: VBox, Eventable {
+class DemoView<T: Equatable>: VBox, Eventable, Stateful {
     var eventProducer = SimpleIO<T>()
+    var viewState = State<T?>(nil)
     
     var title: String
     var desc: String
     var selectors: [Selector<T>]
-    init(title: String, builder: @escaping ViewBuilder, selectors: [Selector<T>], desc: String = "") {
+    init(title: String, builder: @escaping ViewBuilder, selectors: [Selector<T>], selected: T? = nil, desc: String = "") {
 //        self.builder = builder
         self.title = title
         self.selectors = selectors
@@ -36,13 +37,18 @@ class DemoView<T: Equatable>: VBox, Eventable {
             .backgroundColor(Theme.card)
             .width(.fill)
             
-            SelectionView(self.selectors).attach($0)
+            SelectionView(self.selectors, selected: selected).attach($0)
                 .topBorder([.color(UIColor.black.withAlphaComponent(0.2)), .thick(Util.pixel(1))])
                 .size(.fill, .wrap)
                 .visibility(self.selectors.count > 0 ? .visible : .gone)
                 .onEventProduced(to: self) { this, s in
-                    this.eventProducer.input(value: s.value)
+                    this.eventProducer.input(value: s)
                 }
+//                .attach {
+//                    if let v = selected {
+//                        $0.viewState.value = v
+//                    }
+//                }
             
             Spacer().attach($0).size(.fill, Util.pixel(1))
                 .backgroundColor(Theme.dividerColor)
