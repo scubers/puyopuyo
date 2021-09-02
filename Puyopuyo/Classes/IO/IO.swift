@@ -75,18 +75,6 @@ public extension Outputing {
         }
     }
 
-    /// 将输出接口绑定到对象Object中，并持续接收outputing值
-    /// - Parameters:
-    ///   - object: 绑定对象
-    ///   - action: action description
-    func catchObject<Object: DisposableBag & AnyObject>(_ object: Object, _ action: @escaping (Object, OutputType) -> Void) -> Disposer {
-        outputing { [weak object] s in
-            if let object = object {
-                action(object, s)
-            }
-        }
-    }
-
     /// 对象销毁时则移除绑定
     @discardableResult
     func safeBind<Object: DisposableBag & AnyObject>(to object: Object, id: String? = nil, _ action: @escaping (Object, OutputType) -> Void) -> Disposer {
@@ -105,8 +93,11 @@ public extension Outputing {
         outputing(input.input(value:))
     }
 
-    func send<Input: Inputing>(to inputs: [Input]) -> [Disposer] where Input.InputType == OutputType {
-        inputs.map { send(to: $0) }
+    func send<Input: Inputing>(to inputs: [Input]) -> Disposer where Input.InputType == OutputType {
+        let disposers = inputs.map { send(to: $0) }
+        return Disposers.create {
+            disposers.forEach { $0.dispose() }
+        }
     }
 }
 

@@ -16,15 +16,14 @@ public protocol ISequenceSection: AnyObject {
     func getItems() -> [ISequenceItem]
 
     func headerView() -> UITableViewHeaderFooterView
-    
+
     func getHeaderHeight() -> CGFloat?
     func getEstimatedHeaderHeight() -> CGFloat?
-    
+
     func footerView() -> UITableViewHeaderFooterView
-    
+
     func getFooterHeight() -> CGFloat?
     func getEstimatedFooterHeight() -> CGFloat?
-    
 }
 
 public extension ISequenceSection {
@@ -68,9 +67,9 @@ public protocol ISequenceItem: AnyObject {
     func getCell() -> UITableViewCell
 
     func getRowHeight() -> CGFloat?
-    
+
     func getEstimatedRowHeight() -> CGFloat?
-    
+
     func getDiff() -> String
 }
 
@@ -78,21 +77,23 @@ public class SequenceBox: UITableView,
     Delegatable,
     DataSourceable,
     UITableViewDelegate,
-    UITableViewDataSource {
+    UITableViewDataSource
+{
     public init(style: UITableView.Style = .plain,
                 separatorStyle: UITableViewCell.SeparatorStyle = .singleLine,
                 rowHeight: CGFloat = UITableView.automaticDimension,
                 estimatedRowHeight: CGFloat = 0,
-                
+
                 sectionHeaderHeight: CGFloat = UITableView.automaticDimension,
                 estimatedHeaderHeight: CGFloat = 0,
-                
+
                 sectionFooterHeight: CGFloat = UITableView.automaticDimension,
                 estimatedFooterHeight: CGFloat = 0,
                 enableDiff: Bool = false,
                 sections: Outputs<[ISequenceSection]> = [].asOutput(),
                 header: BoxGenerator<UIView>? = nil,
-                footer: BoxGenerator<UIView>? = nil) {
+                footer: BoxGenerator<UIView>? = nil)
+    {
         super.init(frame: .zero, style: style)
 
         self.enableDiff = enableDiff
@@ -123,13 +124,13 @@ public class SequenceBox: UITableView,
         self.estimatedRowHeight = estimatedRowHeight
         estimatedSectionHeaderHeight = estimatedHeaderHeight
         estimatedSectionFooterHeight = estimatedFooterHeight
-        
+
         self.rowHeight = rowHeight
         self.sectionHeaderHeight = sectionHeaderHeight
         self.sectionFooterHeight = sectionFooterHeight
 
-        _ = sections.send(to: viewState)
-        _ = viewState.catchObject(self) { (this, s) in
+        sections.send(to: viewState).dispose(by: self)
+        viewState.safeBind(to: self) { this, s in
             this.prepareSections(s)
             this.reloadSections(s)
         }
@@ -143,6 +144,7 @@ public class SequenceBox: UITableView,
             }
     }
 
+    @available(*, unavailable)
     public required init?(coder _: NSCoder) {
         fatalError()
     }
@@ -178,9 +180,9 @@ public class SequenceBox: UITableView,
     public func setDataSource(_ dataSource: UITableViewDataSource, retained: Bool) {
         dataSourceProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: RetainWrapper(value: dataSource, retained: retained))
     }
-    
+
     // MARK: - UITableViewDelegate, UITableViewDataSource
-    
+
     public func numberOfSections(in _: UITableView) -> Int {
         sections.count
     }
@@ -192,52 +194,52 @@ public class SequenceBox: UITableView,
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         getRow(at: indexPath).getCell()
     }
-    
+
     public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         getRow(at: indexPath).getRowHeight() ?? rowHeight
     }
-    
+
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         getSection(at: section).headerView()
     }
-    
+
     public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         getSection(at: section).getHeaderHeight() ?? sectionHeaderHeight
     }
-    
+
     public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         getSection(at: section).footerView()
     }
-    
+
     public func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         getSection(at: section).getFooterHeight() ?? sectionFooterHeight
     }
-    
+
     public func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
         getSection(at: section).getEstimatedHeaderHeight() ?? estimatedSectionHeaderHeight
     }
-    
+
     public func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
         getSection(at: section).getEstimatedFooterHeight() ?? estimatedSectionFooterHeight
     }
-    
+
     public func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         getRow(at: indexPath).getEstimatedRowHeight() ?? estimatedRowHeight
     }
-    
+
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         getRow(at: indexPath).didSelect()
         tableView.deselectRow(at: indexPath, animated: true)
         delegateProxy.backup?.value?.tableView?(tableView, didSelectRowAt: indexPath)
     }
-    
+
     public func getSection(at index: Int) -> ISequenceSection {
         let s = sections[index]
         s.index = index
         s.box = self
         return s
     }
-    
+
     public func getRow(at indexPath: IndexPath) -> ISequenceItem {
         let section = getSection(at: indexPath.section)
         let r = section.getItems()[indexPath.row]
@@ -245,16 +247,15 @@ public class SequenceBox: UITableView,
         r.section = section
         return r
     }
-
 }
 
 private extension SequenceBox {
     func prepareSections(_ sections: [ISequenceSection]) {
-        sections.forEach { (s) in
+        sections.forEach { s in
             s.box = self
         }
     }
-    
+
     func reloadSections(_ sections: [ISequenceSection]) {
         self.sections = sections
         reloadData()
