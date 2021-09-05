@@ -15,20 +15,23 @@ class FeedVC: BaseVC, UITableViewDelegate {
 //    let list = State<[TableBoxSection]>([])
     override func configView() {
         vRoot.attach {
-            TableBox().attach($0)
-                .setDelegate(self)
-                .viewState([
-                    TableSection<Feed, UIView, Void>(
-                        identifier: "",
-                        dataSource: dataSource.asOutput(),
-                        _cell: { o, _ in
-                            ItemView().attach()
-                                .viewState(o.map(\.data))
-                                .width(.fill)
-                                .view
-                        }
-                    )
-                ].asOutput())
+            TableBox(
+                header: { Header() }
+            )
+            .attach($0)
+            .setDelegate(self)
+            .viewState([
+                TableSection<Feed, UIView, Void>(
+                    identifier: "",
+                    dataSource: dataSource.asOutput(),
+                    _cell: { o, _ in
+                        ItemView().attach()
+                            .viewState(o.map(\.data))
+                            .width(.fill)
+                            .view
+                    }
+                )
+            ].asOutput())
         }
     }
 
@@ -78,6 +81,36 @@ struct Feed {
     var comments: [String]
 }
 
+private class Header: VBox {
+    override func buildBody() {
+        attach {
+            UIImageView().attach($0)
+                .image(Images.download())
+                .size(.fill, 300)
+                .contentMode(.scaleAspectFill)
+                .clipToBounds(true)
+
+            HBox().attach($0) {
+                UILabel().attach($0)
+                    .text("Jrwong")
+                    .textColor(UIColor.white)
+                    .fontSize(20, weight: .heavy)
+                    .style(ShadowStyle())
+
+                UIImageView().attach($0)
+                    .image(Images.download())
+                    .size(100, 100)
+                    .cornerRadius(8)
+            }
+            .margin(top: -70, right: 40)
+            .justifyContent(.center)
+            .space(8)
+        }
+        .width(.fill)
+        .justifyContent(.right)
+    }
+}
+
 private class ItemView: HBox, Stateful {
     var viewState = State<Feed>.unstable()
 
@@ -92,7 +125,7 @@ private class ItemView: HBox, Stateful {
                 UILabel().attach($0)
                     .text(bind(\.name).distinct())
                     .fontSize(20, weight: .heavy)
-                
+
                 UILabel().attach($0)
                     .text(bind(\.content).distinct())
                     .numberOfLines(0)
@@ -109,8 +142,7 @@ private class ItemView: HBox, Stateful {
 
                     UIButton().attach($0)
                         .text("more")
-//                        .image(UIImage(systemName: "more"))
-                        .textColor(UIColor.black)
+                        .textColor(UIColor.lightGray)
                 }
                 .justifyContent(.center)
                 .format(.between)
@@ -132,7 +164,7 @@ private class ItemView: HBox, Stateful {
 
                     UIView().attach($0)
                         .size(.fill, Util.pixel(1))
-                        .backgroundColor(UIColor.black)
+                        .backgroundColor(UIColor.lightGray.withAlphaComponent(0.3))
 
                     VBox().attach($0) {
                         comments.safeBind(to: $0) { v, c in
@@ -147,7 +179,7 @@ private class ItemView: HBox, Stateful {
                     }
                     .width(.fill)
                 }
-                .backgroundColor(UIColor.lightGray)
+                .backgroundColor(UIColor(hexString: "#F6F6F6"))
                 .width(.fill)
                 .visibility(output.map { f in
                     (!(f.comments.isEmpty && (f.likes ?? []).isEmpty)).py_visibleOrGone()
@@ -156,8 +188,8 @@ private class ItemView: HBox, Stateful {
             .width(.fill)
             .space(8)
         }
-        .padding(all: 8)
-        .space(8)
+        .padding(all: 16)
+        .space(16)
     }
 }
 
@@ -213,6 +245,10 @@ enum Images {
 
     static func random(_ max: Int) -> [String] {
         (0 ..< Int.random(in: 0 ..< max)).map { _ in images[Int.random(in: 0 ..< images.count)] }
+    }
+
+    static func download() -> Outputs<UIImage?> {
+        downloadImage(url: get())
     }
 
     static let images = [
