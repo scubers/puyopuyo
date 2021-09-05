@@ -86,10 +86,13 @@ private class ItemView: HBox, Stateful {
             UIImageView().attach($0)
                 .size(80, 80)
                 .image(bind(\.icon).distinct().then { downloadImage(url: $0) })
+                .cornerRadius(4)
 
             VBox().attach($0) {
                 UILabel().attach($0)
                     .text(bind(\.name).distinct())
+                    .fontSize(20, weight: .heavy)
+                
                 UILabel().attach($0)
                     .text(bind(\.content).distinct())
                     .numberOfLines(0)
@@ -106,6 +109,7 @@ private class ItemView: HBox, Stateful {
 
                     UIButton().attach($0)
                         .text("more")
+//                        .image(UIImage(systemName: "more"))
                         .textColor(UIColor.black)
                 }
                 .justifyContent(.center)
