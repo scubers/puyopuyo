@@ -75,7 +75,7 @@ class BaseVC: UIViewController, UIScrollViewDelegate {
         return false
     }
 
-    var vRoot = VBox()
+    lazy var vRoot = VBox()
 
     @objc func back() {
         navigationController?.popViewController(animated: true)

@@ -71,6 +71,14 @@ public extension OutputingModifier where Self: Outputing {
             i.input(value: v)
         }
     }
+
+    func then<R>(_ then: @escaping (OutputType) -> Outputs<R>) -> Outputs<R> {
+        bind { o, i in
+            _ = then(o).outputing { v in
+                i.input(value: v)
+            }
+        }
+    }
 }
 
 public extension Outputs where OutputType: OptionalableValueType {

@@ -47,6 +47,7 @@ class MenuVC: BaseVC {
                     lineSpacing: 16,
                     list: [
                         ("Test", { TestVC() }),
+                        ("Feed", { FeedVC() }),
                         ("UIView Properties", { UIViewProertiesVC() }),
                         ("FlatBox Properties", { FlatPropertiesVC() }),
                         ("FlowBox Properties", { FlowPropertiesVC() }),

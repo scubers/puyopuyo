@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0910C08D26E45A350048D5C8 /* FeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0910C08C26E45A350048D5C8 /* FeedVC.swift */; };
 		0972D40526C576D200210D1C /* ShadowStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0972D40426C576D200210D1C /* ShadowStyle.swift */; };
 		09761F9224277700006983CB /* WIKIDemo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09761F9124277700006983CB /* WIKIDemo.swift */; };
 		0982C1A02469AF730070F104 /* RecycleBoxPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */; };
@@ -67,6 +68,7 @@
 
 /* Begin PBXFileReference section */
 		029D039CF2FB7AD03311F02E /* Pods-Puyopuyo_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Puyopuyo_Tests.debug.xcconfig"; path = "Target Support Files/Pods-Puyopuyo_Tests/Pods-Puyopuyo_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		0910C08C26E45A350048D5C8 /* FeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedVC.swift; sourceTree = "<group>"; };
 		093B861024012B64002AC9C6 /* Puyopuyo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Puyopuyo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0972D40426C576D200210D1C /* ShadowStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowStyle.swift; sourceTree = "<group>"; };
 		09761F9124277700006983CB /* WIKIDemo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WIKIDemo.swift; sourceTree = "<group>"; };
@@ -150,6 +152,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0910C08B26E45A2D0048D5C8 /* Feed */ = {
+			isa = PBXGroup;
+			children = (
+				0910C08C26E45A350048D5C8 /* FeedVC.swift */,
+			);
+			path = Feed;
+			sourceTree = "<group>";
+		};
 		0C5282B985C6C1A8396298C0 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -291,6 +301,7 @@
 		A8D9430222FF360B002E487F /* Demos */ = {
 			isa = PBXGroup;
 			children = (
+				0910C08B26E45A2D0048D5C8 /* Feed */,
 				A8BEC493239CDF50001FD6BF /* Advance */,
 				A8BCEEB4239961F6002DB739 /* Properties */,
 				A8841062234B3D9B0002B9EB /* BaseStyles */,
@@ -580,6 +591,7 @@
 				A8BEC492239CDB6B001FD6BF /* FlowPropertiesVC.swift in Sources */,
 				A81CE13C2310509B00E19E6B /* HBoxVC.swift in Sources */,
 				A8C045C423A9424B00B2C5CA /* ss.m in Sources */,
+				0910C08D26E45A350048D5C8 /* FeedVC.swift in Sources */,
 				A8BCEEB823996424002DB739 /* SelectionView.swift in Sources */,
 				A8BEC48C239C9EB4001FD6BF /* DemoView.swift in Sources */,
 			);
