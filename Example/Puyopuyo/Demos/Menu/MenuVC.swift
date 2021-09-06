@@ -19,11 +19,11 @@ class MenuVC: BaseVC {
 //
 //        view.attach {
 //            VBox().attach($0) { _ in
-////                HBox().attach($0) {
-////                    UILabel().attach($0)
-////                        .text("124")
-////                }
-////                .size(.fill, 50)
+    ////                HBox().attach($0) {
+    ////                    UILabel().attach($0)
+    ////                        .text("124")
+    ////                }
+    ////                .size(.fill, 50)
 //            }
 //            .justifyContent(.center)
 //            .padding(top: 100)
@@ -39,27 +39,29 @@ class MenuVC: BaseVC {
         menu()
     }
 
+    let dataSrouce: [(String, () -> UIViewController)] = [
+        ("Test", { TestVC() }),
+        ("Feed", { FeedVC() }),
+        ("UIView Properties", { UIViewProertiesVC() }),
+        ("FlatBox Properties", { FlatPropertiesVC() }),
+        ("FlowBox Properties", { FlowPropertiesVC() }),
+        ("ZBox Properties", { ZPropertiesVC() }),
+        ("ScrollingBox Properties", { ScrollBoxPropertiesVC() }),
+        ("NavigationBox Properties", { NavigationBoxPropertiesVC() }),
+        ("RecycleBox Properties", { RecycleBoxPropertiesVC() }),
+        ("SequenceBox Properties", { SequenceBoxPropertiesVC() }),
+        ("TableBox Properties", { TableBoxPropertiesVC() }),
+        ("CollectionBox Properties", { CollectionBoxPropertiesVC() }),
+        ("Advance Usage", { AdvanceVC() }),
+    ]
+
     func menu() {
         RecycleBox(
             sections: [
                 DataRecycleSection<(String, () -> UIViewController)>(
                     insets: UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16),
                     lineSpacing: 16,
-                    list: [
-                        ("Test", { TestVC() }),
-                        ("Feed", { FeedVC() }),
-                        ("UIView Properties", { UIViewProertiesVC() }),
-                        ("FlatBox Properties", { FlatPropertiesVC() }),
-                        ("FlowBox Properties", { FlowPropertiesVC() }),
-                        ("ZBox Properties", { ZPropertiesVC() }),
-                        ("ScrollingBox Properties", { ScrollBoxPropertiesVC() }),
-                        ("NavigationBox Properties", { NavigationBoxPropertiesVC() }),
-                        ("RecycleBox Properties", { RecycleBoxPropertiesVC() }),
-                        ("SequenceBox Properties", { SequenceBoxPropertiesVC() }),
-                        ("TableBox Properties", { TableBoxPropertiesVC() }),
-                        ("CollectionBox Properties", { CollectionBoxPropertiesVC() }),
-                        ("Advance Usage", { AdvanceVC() }),
-                    ].asOutput(),
+                    list: dataSrouce.asOutput(),
                     _cell: { [weak self] o, i in
                         HBox().attach {
                             Label("").attach($0)
