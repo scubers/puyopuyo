@@ -26,6 +26,8 @@ class Cat {
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
+    var view = UIView()
+    var disposable: Disposer?
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         UIImageView.appearance().tintColor = Theme.accentColor
 
@@ -33,9 +35,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = NavController(rootViewController: MenuVC())
         window?.makeKeyAndVisible()
 
-        let person = State(Person())
-//        let v = person.asOutput().map { $0.cat }
-//        _ = person.map { $0.name }
+//        view.py_observing(\.frame).safeBind(to: self) { this, rect in
+//            print(rect ?? .zero)
+//        }
+        
+        disposable = view.py_observing(\.frame).outputing { rect in
+            print(rect ?? .zero)
+        }
+        
+        view.frame = .init(x: 0, y: 1, width: 2, height: 3)
+//        view.frame = .init(x: 0, y: 1, width: 2, height: 3)
+//        view.frame = .init(x: 0, y: 1, width: 2, height: 3)
+//        view.frame = .init(x: 0, y: 1, width: 2, height: 3)
+//        view.frame = .init(x: 0, y: 1, width: 2, height: 3)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.view = UIView()
+            self.disposable?.dispose()
+        }
+        
 
         return true
     }

@@ -7,6 +7,21 @@
 
 import Foundation
 
+public extension _KeyValueCodingAndObserving where Self: DisposableBag {
+    func py_observing<R>(_ keyPath: KeyPath<Self, R>) -> Outputs<R?> {
+        return Outputs { i in
+            let observer = observe(keyPath) { _, v in
+                i.input(value: v.newValue)
+            }
+            let disposer = Disposers.create {
+                observer.invalidate()
+            }
+            addDisposer(disposer, for: nil)
+            return disposer
+        }
+    }
+}
+
 extension NSObject: DisposableBag {
     public func py_observing<Value: Equatable>(for keyPath: String) -> Outputs<Value?> {
         return Outputs<Value?> { i -> Disposer in
