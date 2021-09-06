@@ -107,6 +107,8 @@ class FlatCalculator2 {
     /// 需要计算的子节点
     var calculateChildren = [Measure]()
 
+    private lazy var crossRatioChildren = [Measure]()
+
     /// 是否可用format，主轴为包裹，或者存在主轴比例的子节点时，则不能使用
     var formattable: Bool = true
 
@@ -143,6 +145,10 @@ class FlatCalculator2 {
                 maxSubCross = max(maxSubCross, subCalSize.cross.fixedValue + subCalMargin.crossFixed)
             }
 
+            if subCalSize.cross.isRatio {
+                crossRatioChildren.append(m)
+            }
+
             // 统计主轴比例总和
             totalMainRatio += subCalSize.main.ratio
             // 添加计算子节点
@@ -157,14 +163,12 @@ class FlatCalculator2 {
 
         // 最后处理次轴比重
         if regCalSize.cross.isWrap {
-            calculateChildren.forEach {
+            crossRatioChildren.forEach {
                 let calSize = $0.size.getCalSize(by: regDirection)
                 if calSize.cross.isRatio {
                     var calFixedSize = $0.py_size.getCalFixedSize(by: regDirection)
                     let calMargin = $0.margin.getCalEdges(by: regDirection)
                     calFixedSize.cross = maxSubCross - calMargin.crossFixed
-                    print(calFixedSize)
-                    print(maxSubCross)
                     $0.py_size = calFixedSize.getSize()
                 }
             }
