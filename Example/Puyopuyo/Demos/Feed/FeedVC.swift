@@ -38,33 +38,8 @@ class FeedVC: BaseVC, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        dataSource.value = [
-            Feed(icon: Images.get(), name: "牛逼任务", content: "今天天气不错", images: Images.random(9), createdAt: Int(Date().timeIntervalSince1970), likes: ["John", "Jrwong", "liangzi"], comments: ["guangtou: you are great", "someone: fuck you"]),
-            Feed(icon: Images.get(), name: "牛逼任务", content: "今天天气不错", images: Images.random(9), createdAt: Int(Date().timeIntervalSince1970), likes: [], comments: []),
-            Feed(icon: Images.get(), name: "牛逼任务", content: "今天天气不错", images: Images.random(9), createdAt: Int(Date().timeIntervalSince1970), likes: [], comments: []),
-            Feed(icon: Images.get(), name: "牛逼任务", content: "今天天气不错", images: Images.random(9), createdAt: Int(Date().timeIntervalSince1970), likes: [], comments: []),
-            Feed(icon: Images.get(), name: "牛逼任务", content: "今天天气不错", images: Images.random(9), createdAt: Int(Date().timeIntervalSince1970), likes: [], comments: []),
-            Feed(icon: Images.get(), name: "牛逼任务", content: "今天天气不错", images: Images.random(9), createdAt: Int(Date().timeIntervalSince1970), likes: [], comments: []),
-            Feed(icon: Images.get(), name: "牛逼任务", content: "今天天气不错", images: Images.random(9), createdAt: Int(Date().timeIntervalSince1970), likes: [], comments: []),
-            Feed(icon: Images.get(), name: "牛逼任务", content: "今天天气不错", images: Images.random(9), createdAt: Int(Date().timeIntervalSince1970), likes: [], comments: []),
-            Feed(icon: Images.get(), name: "牛逼任务", content: "今天天气不错", images: Images.random(9), createdAt: Int(Date().timeIntervalSince1970), likes: [], comments: [])
-        ]
-
-//        download(0)
-    }
-
-    var imgs = [String]()
-
-    func download(_ index: Int) {
-        if index < Images.images.count {
-            _ = downloadImage(url: Images.images[index]).outputing { img in
-                if img != nil {
-                    self.imgs.append(Images.images[index])
-                }
-                self.download(index + 1)
-            }
-        } else {
-            print(imgs.count)
+        dataSource.value = (0 ..< 20).map { _ in
+            Feed(icon: Images().get(), name: Names().get(), content: Contents().get(), images: Images().random(9), createdAt: Int(Date().timeIntervalSince1970), likes: Names().random(10), comments: Contents().random(10).map { "\(Names().get()): \($0)" })
         }
     }
 
@@ -85,7 +60,7 @@ private class Header: VBox {
     override func buildBody() {
         attach {
             UIImageView().attach($0)
-                .image(Images.download())
+                .image(Images().download())
                 .size(.fill, 300)
                 .contentMode(.scaleAspectFill)
                 .clipToBounds(true)
@@ -98,7 +73,7 @@ private class Header: VBox {
                     .style(ShadowStyle())
 
                 UIImageView().attach($0)
-                    .image(Images.download())
+                    .image(Images().download())
                     .size(100, 100)
                     .cornerRadius(8)
             }
@@ -152,6 +127,8 @@ private class ItemView: HBox, Stateful {
                     let likes = bind(\.likes).unwrap(or: [])
                     let comments = bind(\.comments)
 
+                    let likeVisible = likes.map { (!$0.isEmpty).py_visibleOrGone() }
+
                     HBox().attach($0) {
                         UIImageView().attach($0)
                             .image(UIImage(systemName: "heart.fill"))
@@ -160,11 +137,12 @@ private class ItemView: HBox, Stateful {
                     }
                     .justifyContent(.center)
                     .padding(all: 8)
-                    .visibility(likes.map { (!$0.isEmpty).py_visibleOrGone() })
+                    .visibility(likeVisible)
 
                     UIView().attach($0)
                         .size(.fill, Util.pixel(1))
                         .backgroundColor(UIColor.lightGray.withAlphaComponent(0.3))
+                        .visibility(likeVisible)
 
                     VBox().attach($0) {
                         comments.safeBind(to: $0) { v, c in
@@ -238,20 +216,47 @@ func downloadImage(url: String?) -> Outputs<UIImage?> {
     }
 }
 
-enum Images {
-    static func get() -> String {
-        images[Int.random(in: 0 ..< images.count)]
+protocol RandomValues {
+    associatedtype V
+    var values: [V] { get }
+}
+
+extension RandomValues {
+    func get() -> V {
+        values[Int.random(in: 0 ..< values.count)]
     }
 
-    static func random(_ max: Int) -> [String] {
-        (0 ..< Int.random(in: 0 ..< max)).map { _ in images[Int.random(in: 0 ..< images.count)] }
+    func random(_ max: Int) -> [V] {
+        (0 ..< Int.random(in: 0 ..< max)).map { _ in values[Int.random(in: 0 ..< values.count)] }
     }
+}
 
-    static func download() -> Outputs<UIImage?> {
+struct Names: RandomValues {
+    var values = [
+        "John", "Tom", "Micheal", "Jrwong", "Scubers", "Fedex"
+    ]
+}
+
+struct Contents: RandomValues {
+    var values = [
+        "对于很多人来说，西装一直都是很传统的服装，尽管在这个不断有新鲜血液融入到时尚的年代，西装似乎也没有摆脱原有的单调与沉闷感，还是会有人把它定义为“老土单品”。但是时尚从来没有停下探索的脚步，尽管你会把它框在狭小的空间里，但是随着潮流的不断变化，西装也开始被贴上新的标签，例如：精致、洒脱、有内涵与有腔调。不光是女生的西装发生变化，男生的西装似乎看起来会更加韵味，不拘小节还显得很沉稳，重点能够展现出男生该有的绅士魅力，看着也很大气。",
+        "近日，有网友晒出在环球影城偶遇佟丽娅的照片，用叠字夸赞佟丽娅瘦、白、美，同时该网友回复评论，强调佟丽娅身边穿粉色外套的就是陈思诚。据悉，2021年5月20日，陈思诚佟丽娅在社交平台发文宣布离婚，佟丽娅生日当天，陈思诚还卡点送出祝福，这次是两人离婚以后的首次同框。 　　按照佟丽娅的蓝色毛衣配明黄色短裙造型，9月2日就有网友晒出在北京环球影城偶遇照片，佟丽娅则在9月4日晒出一组环球影城游客照",
+        "有媒体拍到张继科与一美女聚会后送女方回家，疑似新恋情曝光。 9月6日，张继科工作室发文辟谣了恋情：“爆料是假，恋情也是假，小室呼吁大家文明理性上网，不信谣不传谣。”同时也向大家保证如果今后真的有好消息，一定会和大家一起分享喜悦。",
+        "粉丝们看到辟谣后反倒不淡定了，纷纷表示希望张继科可以赶紧找到自己的幸福：“收到，期待哥遇见自己真命天女的那一天啊！”“不该加入催婚大队，但是希望哥哥可以赶紧找到自己的幸福呀！”",
+        "时隔2个月她再度公开恋情，秀出倚靠在新男友肩头的亲密互动，不过不久后她把IG照片全清空，关于恋情的发文也全都消失。",
+        "权珉娥昨（3）日在IG公开倚靠着一位男子的合照，她写下“不久前开始交往，现在遇见不错的人，也认真地在工作。”另外一张照片中虽然有3人，但她蜷曲在新男友的怀里，显得相当幸福。",
+        "生日快乐",
+        "寿比南山",
+        "新浪娱乐讯 9月5日，所属社Maroo发表公告，GHOST9成员黄栋俊、李兑昇经过与公司长时间的讨论决定退出组合活动，将不影响组合回归准备。"
+    ]
+}
+
+struct Images: RandomValues {
+    func download() -> Outputs<UIImage?> {
         downloadImage(url: get())
     }
 
-    static let images = [
+    let values = [
         "https://gimg2.baidu.com/image_search/src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20171221%2F2a14e6b09df846a1908379c06045ba96.jpeg&amp;refer=http%3A%2F%2F5b0988e595225.cdn.sohucs.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1633419559&amp;t=b72763232c581a611d7cc913047dc0d1",
         "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201710%2F24%2F20171024071632_hzJ8n.jpeg&amp;refer=http%3A%2F%2Fb-ssl.duitang.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1633419559&amp;t=7e16f80814a403848fba59bafab77654",
         "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201812%2F27%2F20181227101820_tqdsl.thumb.700_0.jpeg&amp;refer=http%3A%2F%2Fb-ssl.duitang.com&amp;app=2002&amp;size=f9999,10000&amp;q=a80&amp;n=0&amp;g=0n&amp;fmt=jpeg?sec=1633419559&amp;t=589881f015d27769ca388ae8bc059da0",
