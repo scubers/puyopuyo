@@ -81,10 +81,11 @@ public class TableBox: UITableView,
         }
 
         // 监听tableView变化，动态改变TableBox大小
-        py_observing(for: #keyPath(UITableView.contentSize))
-            .safeBind(to: self) { (this, size: CGSize?) in
+        py_observing(\.contentSize)
+            .unwrap(or: .zero)
+            .safeBind(to: self) { (this, size: CGSize) in
                 if this.wrapContent {
-                    this.attach().size(.fill, size?.height ?? 0)
+                    this.attach().size(.fill, size.height)
                 }
             }
     }

@@ -91,14 +91,14 @@ public extension UIView {
 
     func py_boundsState() -> Outputs<CGRect> {
         return
-            py_observing(for: #keyPath(UIView.bounds))
-                .map { (rect: CGRect?) in rect ?? .zero }
+            py_observing(\.bounds)
+                .unwrap(or: .zero)
                 .distinct()
     }
 
     func py_centerState() -> Outputs<CGPoint> {
         return
-            py_observing(for: #keyPath(UIView.center))
+            py_observing(\.center)
                 .map { (x: CGPoint?) in x ?? .zero }
                 .distinct()
     }
@@ -117,15 +117,15 @@ public extension UIView {
 
     func py_frameStateByKVO() -> Outputs<CGRect> {
         return
-            py_observing(for: #keyPath(UIView.frame))
-                .map { (x: CGRect?) in x ?? .zero }
+            py_observing(\.frame)
+                .unwrap(or: .zero)
                 .distinct()
     }
 
     /// ios11监听safeAreaInsets, ios10及以下，则监听frame变化并且通过转换坐标后得到与statusbar的差距
     func py_safeArea() -> Outputs<UIEdgeInsets> {
         if #available(iOS 11, *) {
-            return py_observing(for: #keyPath(UIView.safeAreaInsets)).map { (insets: UIEdgeInsets?) in insets ?? .zero }.distinct()
+            return py_observing(\.safeAreaInsets).map { (insets: UIEdgeInsets?) in insets ?? .zero }.distinct()
         } else {
             // ios 11 以下只可能存在statusbar影响的safeArea
             return

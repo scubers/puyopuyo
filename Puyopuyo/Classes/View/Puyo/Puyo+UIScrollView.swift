@@ -69,8 +69,8 @@ public extension Puyo where T: UIScrollView {
 
     @discardableResult
     func onContentOffsetChanged<T: Inputing>(_ input: T) -> Self where T.InputType == CGPoint {
-        view.py_observing(for: #keyPath(UIScrollView.contentOffset))
-            .map { (x: CGPoint?) in x ?? .zero }
+        view.py_observing(\.contentOffset)
+            .unwrap(or: .zero)
             .distinct()
             .send(to: input)
             .dispose(by: view)
@@ -79,8 +79,8 @@ public extension Puyo where T: UIScrollView {
 
     @discardableResult
     func onContentSizeChanged<T: Inputing>(_ input: T) -> Self where T.InputType == CGSize {
-        view.py_observing(for: #keyPath(UIScrollView.contentOffset))
-            .map { (x: CGSize?) in x ?? .zero }
+        view.py_observing(\.contentSize)
+            .unwrap(or: .zero)
             .distinct()
             .send(to: input)
             .dispose(by: view)

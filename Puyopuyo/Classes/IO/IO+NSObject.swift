@@ -8,9 +8,9 @@
 import Foundation
 
 public extension _KeyValueCodingAndObserving where Self: DisposableBag {
-    func py_observing<R>(_ keyPath: KeyPath<Self, R>) -> Outputs<R?> {
+    func py_observing<R>(_ keyPath: KeyPath<Self, R>, options: NSKeyValueObservingOptions = .initial.union(.new)) -> Outputs<R?> {
         return Outputs { i in
-            let observer = observe(keyPath) { _, v in
+            let observer = observe(keyPath, options: options) { _, v in
                 i.input(value: v.newValue)
             }
             let disposer = Disposers.create {
@@ -23,24 +23,6 @@ public extension _KeyValueCodingAndObserving where Self: DisposableBag {
 }
 
 extension NSObject: DisposableBag {
-    public func py_observing<Value: Equatable>(for keyPath: String) -> Outputs<Value?> {
-        return Outputs<Value?> { i -> Disposer in
-            var lastValue: Value?
-            let observer = _Observer<Value>(key: keyPath) { rect in
-                guard rect != lastValue else { return }
-                lastValue = rect
-                i.input(value: rect)
-            }
-            let disposer = Disposers.create { [unowned(unsafe) self] in
-                self.removeObserver(observer, forKeyPath: keyPath)
-            }
-            self.addObserver(observer, forKeyPath: keyPath, options: [.new, .initial], context: nil)
-            self.addDisposer(disposer, for: nil)
-            return disposer
-        }
-        .distinct()
-    }
-
     public func addDisposer(_ disposer: Disposer, for key: String?) {
         py_disposerContainer.setDisposable(disposer, for: key)
     }

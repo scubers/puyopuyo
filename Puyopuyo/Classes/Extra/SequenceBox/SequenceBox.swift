@@ -136,10 +136,11 @@ public class SequenceBox: UITableView,
         }
 
         // 监听tableView变化，动态改变TableBox大小
-        py_observing(for: #keyPath(UITableView.contentSize))
-            .safeBind(to: self) { (this, size: CGSize?) in
+        py_observing(\.contentSize)
+            .unwrap(or: .zero)
+            .safeBind(to: self) { (this, size: CGSize) in
                 if this.wrapContent {
-                    this.attach().height(size?.height ?? 0)
+                    this.attach().height(size.height)
                 }
             }
     }

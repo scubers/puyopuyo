@@ -25,7 +25,8 @@ public class ListBox: UITableView,
     Delegatable,
     DataSourceable,
     UITableViewDelegate,
-    UITableViewDataSource {
+    UITableViewDataSource
+{
     public let viewState = State<[ListBoxSection]>([])
     public var wrapContent = false
 
@@ -38,7 +39,8 @@ public class ListBox: UITableView,
                 separatorStyle: UITableViewCell.SeparatorStyle = .singleLine,
                 sections: [ListBoxSection] = [],
                 header: BoxGenerator<UIView>? = nil,
-                footer: BoxGenerator<UIView>? = nil) {
+                footer: BoxGenerator<UIView>? = nil)
+    {
         super.init(frame: .zero, style: style)
 
         delegateProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
@@ -81,14 +83,16 @@ public class ListBox: UITableView,
         }
 
         // 监听tableView变化，动态改变ListBox大小
-        py_observing(for: #keyPath(UITableView.contentSize))
-            .safeBind(to: self) { (this, size: CGSize?) in
+        py_observing(\.contentSize)
+            .unwrap(or: .zero)
+            .safeBind(to: self) { (this, size: CGSize) in
                 if this.wrapContent {
-                    this.attach().size(.fill, size?.height ?? 0)
+                    this.attach().size(.fill, size.height)
                 }
             }
     }
 
+    @available(*, unavailable)
     public required init?(coder _: NSCoder) {
         fatalError()
     }
@@ -216,7 +220,8 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
                 _cell: @escaping CellGenerator<Data, Cell, CellEvent>,
                 _header: @escaping HeaderFooterGenerator<[Data], CellEvent> = { _, _ in EmptyView() },
                 _footer: @escaping HeaderFooterGenerator<[Data], CellEvent> = { _, _ in EmptyView() },
-                _event: @escaping OnCellEvent<Event> = { _ in }) {
+                _event: @escaping OnCellEvent<Event> = { _ in })
+    {
         self.identifier = identifier
         cellGenerator = _cell
         headerGenerator = _header
@@ -391,6 +396,7 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
             }
         }
 
+        @available(*, unavailable)
         required init?(coder _: NSCoder) {
             fatalError()
         }
@@ -403,7 +409,7 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
     }
 
     public class EmptyView: UIView {
-        public override func sizeThatFits(_: CGSize) -> CGSize {
+        override public func sizeThatFits(_: CGSize) -> CGSize {
             return CGSize(width: 0, height: 0.1)
         }
     }
@@ -430,6 +436,7 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
             }
         }
 
+        @available(*, unavailable)
         required init?(coder _: NSCoder) {
             fatalError()
         }

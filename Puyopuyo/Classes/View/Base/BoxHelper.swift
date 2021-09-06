@@ -18,7 +18,7 @@ public class BoxHelper<R: Regulator> {
 
     public var isCenterControl = true
     public var isSizeControl = true
-    
+
     public var animator: Animator = Animators.none
 
     public func layoutSubviews(view: UIView, regulator: R) {
@@ -78,12 +78,12 @@ public class BoxHelper<R: Regulator> {
         positionControlDisposable?.dispose()
         if isCenterControl, let spv = view.superview, !isBox(view: spv) {
             let frame = spv
-                .py_observing(for: #keyPath(UIView.frame))
-                .map { (f: CGRect?) in f?.size ?? .zero }
+                .py_observing(\.frame)
+                .map(\.size, .zero)
 
             let bounds = spv
-                .py_observing(for: #keyPath(UIView.bounds))
-                .map { (f: CGRect?) in f?.size ?? .zero }
+                .py_observing(\.bounds)
+                .map(\.size, .zero)
 
             positionControlDisposable =
                 Outputs
@@ -127,7 +127,7 @@ public class BoxHelper<R: Regulator> {
         }
     }
 
-    var borders: Borders = Borders()
+    var borders = Borders()
 
     func _updatingBorders(view: UIView) {
         borders.updateTop(to: view.layer)
@@ -147,7 +147,7 @@ public protocol Boxable {
     var regulator: RegulatorType { get }
 }
 
-struct BoxUtil {
+enum BoxUtil {
     static func isBox(_ view: UIView?) -> Bool {
         guard let v = view else { return false }
         return v.py_measure is Regulator
