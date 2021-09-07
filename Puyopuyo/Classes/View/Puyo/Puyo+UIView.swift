@@ -113,66 +113,46 @@ public extension Puyo where T: UIView {
     }
 
     @discardableResult
-    func frameX(_ x: ValueModifiable) -> Self {
-        bind(keyPath: \T.frame.origin.x, x.modifyValue())
-    }
-
-    @discardableResult
-    func frameY(_ y: ValueModifiable) -> Self {
-        bind(keyPath: \T.frame.origin.y, y.modifyValue())
-    }
-
-    @discardableResult
-    func frameWidth(_ width: ValueModifiable) -> Self {
-        bind(keyPath: \T.frame.size.width, width.modifyValue())
-    }
-
-    @discardableResult
-    func frameHeight(_ height: ValueModifiable) -> Self {
-        bind(keyPath: \T.frame.size.height, height.modifyValue())
-    }
-
-    @discardableResult
-    func top(_ top: ValueModifiable) -> Self {
-        top.modifyValue().safeBind(to: view) { v, a in
+    func top<O: Outputing>(_ top: O) -> Self where O.OutputType: CGFloatable {
+        top.safeBind(to: view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
-            f.origin.y = a
-            f.size.height = max(0, v.frame.maxY - a)
+            f.origin.y = a.cgFloatValue
+            f.size.height = max(0, v.frame.maxY - a.cgFloatValue)
             v.frame = f
         }
         return self
     }
 
     @discardableResult
-    func left(_ left: ValueModifiable) -> Self {
-        left.modifyValue().safeBind(to: view) { v, a in
+    func left<O: Outputing>(_ left: O) -> Self where O.OutputType: CGFloatable {
+        left.safeBind(to: view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
-            f.origin.x = a
-            f.size.width = max(0, v.frame.maxX - a)
+            f.origin.x = a.cgFloatValue
+            f.size.width = max(0, v.frame.maxX - a.cgFloatValue)
             v.frame = f
         }
         return self
     }
 
     @discardableResult
-    func bottom(_ bottom: ValueModifiable) -> Self {
-        bottom.modifyValue().safeBind(to: view) { v, a in
+    func bottom<O: Outputing>(_ bottom: O) -> Self where O.OutputType: CGFloatable {
+        bottom.safeBind(to: view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
-            f.size.height = max(0, a - v.frame.origin.y)
+            f.size.height = max(0, a.cgFloatValue - v.frame.origin.y)
             v.frame = f
         }
         return self
     }
 
     @discardableResult
-    func right(_ right: ValueModifiable) -> Self {
-        right.modifyValue().safeBind(to: view) { v, a in
+    func right<O: Outputing>(_ right: O) -> Self where O.OutputType: CGFloatable {
+        right.safeBind(to: view) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
-            f.size.width = max(0, a - v.frame.origin.x)
+            f.size.width = max(0, a.cgFloatValue - v.frame.origin.x)
             v.frame = f
         }
         return self

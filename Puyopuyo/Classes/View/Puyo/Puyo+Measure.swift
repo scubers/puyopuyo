@@ -56,15 +56,15 @@ public extension Puyo where T: UIView {
         return width(w).height(h.sizeDescription)
     }
 
-    @discardableResult
-    func width(simulate modifiable: ValueModifiable) -> Self {
-        return width(modifiable.checkSelfSimulate(view).modifyValue().map { SizeDescription.fix($0) })
-    }
-
-    @discardableResult
-    func height(simulate modifiable: ValueModifiable) -> Self {
-        return height(modifiable.checkSelfSimulate(view).modifyValue().map { SizeDescription.fix($0) })
-    }
+//    @discardableResult
+//    func width(simulate modifiable: ValueModifiable) -> Self {
+//        return width(modifiable.checkSelfSimulate(view).modifyValue().map { SizeDescription.fix($0) })
+//    }
+//
+//    @discardableResult
+//    func height(simulate modifiable: ValueModifiable) -> Self {
+//        return height(modifiable.checkSelfSimulate(view).modifyValue().map { SizeDescription.fix($0) })
+//    }
 
     @discardableResult
     func width(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
@@ -79,6 +79,18 @@ public extension Puyo where T: UIView {
         if let s = view?.py_boundsState().distinct() {
             height(s.map(block))
         }
+        return self
+    }
+
+    @discardableResult
+    func widthEqualToHeight() -> Self {
+        width(view.py_boundsState().map(\.height))
+        return self
+    }
+
+    @discardableResult
+    func heightEqualToWidth() -> Self {
+        height(view.py_boundsState().map(\.width))
         return self
     }
 }

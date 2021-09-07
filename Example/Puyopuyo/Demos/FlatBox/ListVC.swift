@@ -135,7 +135,8 @@ class ListCell: BaseCell {
                     UIButton().attach($0)
                         .size(.wrap, 25)
 
-                    Spacer(20).attach($0)
+                    UIView().attach($0)
+                        .height(20)
                         .width($0.py_boundsState().map { $0.width * 0.5 })
 
                     HBox().attach($0) {

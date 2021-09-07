@@ -50,7 +50,7 @@ class DemoView<T: Equatable>: VBox, Eventable, Stateful {
 //                    }
 //                }
             
-            Spacer().attach($0).size(.fill, Util.pixel(1))
+            UIView().attach($0).size(.fill, Util.pixel(1))
                 .backgroundColor(Theme.dividerColor)
             
             Label(self.desc).attach($0)

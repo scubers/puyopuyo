@@ -34,9 +34,9 @@ class FlatMixVC: BaseVC {
             .attach()
             .frame(w: 60, h: 40)
             .styleSheet(.mainButton)
-            .onTap(to: self, { s, _ in
+            .onTap(to: self) { s, _ in
                 s.change()
-            })
+            }
             .view
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: btn)
 
@@ -64,10 +64,10 @@ class FlatMixVC: BaseVC {
             UIButton().attach($0)
                 .activated(false)
                 .text("change")
-                .bind(to: self, event: .touchUpInside, action: { (this, _) in
+                .bind(to: self, event: .touchUpInside, action: { this, _ in
                     this.change()
                 })
-                .frameY(Simulate($0).height.add(-20))
+                .bind(keyPath: \.frame.origin.y, $0.py_boundsState().map(\.height).map { $0 - 20 })
                 .frame(w: 100, h: 20)
         }
         .size(.fill, .fill)

@@ -59,17 +59,12 @@ class CollectionBoxPropertiesVC: BaseVC {
                     minLineSpacing: 20,
                     minInteractSpacing: 30,
                     insets: UIEdgeInsets(top: 10, left: 50, bottom: 10, right: 10).asOutput(),
-//                    _itemSize: { _, _ in
-//                        return CGSize(width: 20, height: 20)
-//                    },
                     _diffIdentifier: { $0 },
                     _cell: { o, _ in
                         HBox().attach {
                             Label.demo("").attach($0)
                                 .text(o.map { $0.data })
-                                .height(simulate: Simulate.ego.width)
-//                                .height(50)
-//                                .width(50)
+                                .heightEqualToWidth()
                         }
 
                         .padding(all: 8)

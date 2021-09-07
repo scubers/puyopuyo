@@ -58,7 +58,7 @@ class AdvanceVC: BaseVC {
                 HBox().attach($0) {
                     Label.demo("1").attach($0)
                         .height(.fill)
-                        .width(simulate: Simulate.ego.height)
+                        .widthEqualToHeight()
                 }
                 .space(2)
                 .padding(all: 10)
