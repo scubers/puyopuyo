@@ -144,18 +144,40 @@ private class ItemView: HBox, Stateful {
                         .backgroundColor(UIColor.lightGray.withAlphaComponent(0.3))
                         .visibility(likeVisible)
 
-                    VBox().attach($0) {
-                        comments.safeBind(to: $0) { v, c in
-                            v.subviews.forEach { $0.removeFromSuperview() }
-
-                            for comment in c {
-                                UILabel().attach(v)
-                                    .text(comment)
-                                    .margin(all: 8)
-                            }
+                    ItemsBox<String, Void>(
+                        builder: { o, i in
+                            UILabel().attach()
+                                .text(o)
+                                .margin(all: 8)
+                                .width(.fill)
+                                .userInteractionEnabled(true)
+                                .onTap {
+                                    i.input(value: ())
+                                }
+                                .view
                         }
-                    }
+                    )
+                    .attach($0)
+                    .onEventProduced(Inputs { event in
+                        print(event.data)
+                    })
+                    .space(10)
+                    .direction(.y)
                     .width(.fill)
+                    .viewState(comments)
+
+//                    VBox().attach($0) {
+//                        comments.safeBind(to: $0) { v, c in
+//                            v.subviews.forEach { $0.removeFromSuperview() }
+//
+//                            for comment in c {
+//                                UILabel().attach(v)
+//                                    .text(comment)
+//                                    .margin(all: 8)
+//                            }
+//                        }
+//                    }
+//                    .width(.fill)
                 }
                 .backgroundColor(UIColor(hexString: "#F6F6F6"))
                 .width(.fill)
