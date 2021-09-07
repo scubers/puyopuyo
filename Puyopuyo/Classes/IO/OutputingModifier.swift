@@ -11,7 +11,7 @@ public protocol OutputingModifier {}
 
 public extension OutputingModifier where Self: Outputing {
     func bind<T>(_ action: @escaping (OutputType, Inputs<T>) -> Void) -> Outputs<T> {
-        Outputs<T>({ i -> Disposer in
+        Outputs<T>({ i in
             self.outputing {
                 action($0, i)
             }
