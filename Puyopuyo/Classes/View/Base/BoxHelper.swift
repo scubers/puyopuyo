@@ -77,17 +77,17 @@ public class BoxHelper<R: Regulator> {
     public func didMoveToSuperview(view: UIView, regulator: R) {
         positionControlDisposable?.dispose()
         if isCenterControl, let spv = view.superview, !isBox(view: spv) {
-            let frame = spv
+            let frameSize = spv
                 .py_observing(\.frame)
                 .map(\.size, .zero)
 
-            let bounds = spv
+            let boundsSize = spv
                 .py_observing(\.bounds)
                 .map(\.size, .zero)
 
             positionControlDisposable =
                 Outputs
-                    .merge([frame, bounds])
+                    .merge([frameSize, boundsSize])
                     .distinct()
                     .outputing { [weak self] _ in
                         guard let self = self else { return }
