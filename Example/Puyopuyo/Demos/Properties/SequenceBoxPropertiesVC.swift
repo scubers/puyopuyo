@@ -13,14 +13,12 @@ class SequenceBoxPropertiesVC: BaseVC {
     let sections = State<[ISequenceSection]>([])
     override func configView() {
         vRoot.attach {
-            SequenceBox(
-                separatorStyle: .none,
-                estimatedRowHeight: 10,
-                estimatedHeaderHeight: 10,
-                sections: self.sections.asOutput()
-            )
-            .attach($0)
-            .size(.fill, .fill)
+            SequenceBox(sections: sections.asOutput())
+                .attach($0)
+                .bind(keyPath: \.estimatedRowHeight, CGFloat(10))
+                .bind(keyPath: \.estimatedSectionHeaderHeight, CGFloat(10))
+                .bind(keyPath: \.separatorStyle, State(.none))
+                .size(.fill, .fill)
         }
 
         reload()

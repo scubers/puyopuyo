@@ -81,15 +81,6 @@ public class SequenceBox: UITableView,
     UITableViewDataSource
 {
     public init(style: UITableView.Style = .plain,
-                separatorStyle: UITableViewCell.SeparatorStyle = .singleLine,
-                rowHeight: CGFloat = UITableView.automaticDimension,
-                estimatedRowHeight: CGFloat = 0,
-
-                sectionHeaderHeight: CGFloat = UITableView.automaticDimension,
-                estimatedHeaderHeight: CGFloat = 0,
-
-                sectionFooterHeight: CGFloat = UITableView.automaticDimension,
-                estimatedFooterHeight: CGFloat = 0,
                 enableDiff: Bool = false,
                 sections: Outputs<[ISequenceSection]> = [].asOutput(),
                 header: BoxGenerator<UIView>? = nil,
@@ -118,17 +109,18 @@ public class SequenceBox: UITableView,
         tableHeaderView = headerView
         tableFooterView = footerView
 
-        self.separatorStyle = separatorStyle
+        separatorStyle = .singleLine
 
         dataSource = dataSourceProxy
         delegate = delegateProxy
-        self.estimatedRowHeight = estimatedRowHeight
-        estimatedSectionHeaderHeight = estimatedHeaderHeight
-        estimatedSectionFooterHeight = estimatedFooterHeight
 
-        self.rowHeight = rowHeight
-        self.sectionHeaderHeight = sectionHeaderHeight
-        self.sectionFooterHeight = sectionFooterHeight
+        estimatedRowHeight = 0
+        estimatedSectionHeaderHeight = 0
+        estimatedSectionFooterHeight = 0
+
+        rowHeight = UITableView.automaticDimension
+        sectionHeaderHeight = UITableView.automaticDimension
+        sectionFooterHeight = UITableView.automaticDimension
 
         // 监听tableView变化，动态改变TableBox大小
         py_observing(\.contentSize)

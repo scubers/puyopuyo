@@ -93,7 +93,6 @@ open class RecycleBox: UICollectionView,
 {
     // contruct method
     public init(
-        layout: UICollectionViewFlowLayout = CollectionBoxFlowLayout(),
         direction: UICollectionView.ScrollDirection = .vertical,
         pinHeader: Bool = false,
         lineSpacing: CGFloat = 0,
@@ -103,13 +102,16 @@ open class RecycleBox: UICollectionView,
         enableDiff: Bool = false,
         sections: Outputs<[IRecycleSection]> = [].asOutput()
     ) {
-        flowLayout = layout
+        let layout = CollectionBoxFlowLayout()
+        
         layout.minimumInteritemSpacing = itemSpacing
         layout.minimumLineSpacing = lineSpacing
         layout.setSectionHeaderPin(pinHeader)
         layout.sectionInset = sectionInset
         layout.estimatedItemSize = estimatedSize
         layout.scrollDirection = direction
+        
+        flowLayout = layout
         
         super.init(frame: .zero, collectionViewLayout: layout)
         
