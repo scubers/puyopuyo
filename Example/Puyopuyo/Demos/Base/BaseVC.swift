@@ -30,7 +30,7 @@ class BaseVC: UIViewController, UIScrollViewDelegate {
         NavigationBox(
             navBar: {
                 NavBar(title: navTitle ?? "\(type(of: self))").attach()
-                    .height(self.navHeight)
+                    .height(navHeight)
                     .onEventProduced(to: self) { s, e in
                         if e == .tapLeading {
                             s.navigationController?.popViewController(animated: true)
@@ -39,7 +39,7 @@ class BaseVC: UIViewController, UIScrollViewDelegate {
                     .view
             }, body: {
                 ZBox().attach {
-                    self.vRoot.attach($0)
+                    vRoot.attach($0)
                         .padding($0.py_safeArea())
                         .size(.fill, .fill)
                 }

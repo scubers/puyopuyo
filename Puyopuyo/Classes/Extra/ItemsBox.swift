@@ -7,53 +7,78 @@
 
 import Foundation
 
-public class ItemsBox<T, E>: FlatBox, Stateful, Eventable {
-    public struct Event {
-        public var event: E
-        public var index: Int
-        public var data: T
+public class Trigger<T> {
+    public var isBuilding = true
+    var dataFinder: (() -> T?)?
+    var indexFinder: (() -> Int?)?
+
+    public var data: T? {
+        if isBuilding {
+            fatalError()
+        }
+        return dataFinder?()
     }
+
+    public var index: Int? {
+        if isBuilding {
+            fatalError()
+        }
+        return indexFinder?()
+    }
+}
+
+// MARK: - FlatBoxRecycle
+
+public class FlatBoxRecycle<T>: FlatBox, Recycler {
+    typealias Data = T
+
+    fileprivate var container = Container<T>()
+
+    fileprivate var builder: (Outputs<T>, Trigger<T>) -> UIView
 
     public var viewState = State<[T]>([])
 
-    public var eventProducer = SimpleIO<Event>()
-
-    public typealias Builder = (Outputs<T>, Inputs<E>) -> UIView
-
-    var builder: Builder
-
-    private var usingMap = Set<Context<T, E>>()
-    private var freeMap = Set<Context<T, E>>()
-
-    public init(builder: @escaping Builder) {
+    public required init(builder: @escaping (Outputs<T>, Trigger<T>) -> UIView) {
         self.builder = builder
         super.init(frame: .zero)
+        setup()
+    }
 
-        viewState.safeBind(to: self) { this, dataSource in
-            this.usingMap.forEach { c in
-                c.view.removeFromSuperview()
-                this.freeMap.insert(c)
-            }
+    @available(*, unavailable)
+    required init?(coder argument: NSCoder) {
+        fatalError()
+    }
+}
 
-            dataSource.enumerated().forEach { data in
-                if let c = this.freeMap.popFirst() {
-                    this.addSubview(c.view)
-                    c.state.input(value: data.element)
-                    this.usingMap.insert(c)
-                } else {
-                    let c = Context<T, E>()
-                    c.state.input(value: data.element)
-                    c.event
-                        .map { Event(event: $0, index: data.offset, data: data.element) }
-                        .send(to: this.eventProducer)
-                        .dispose(by: this)
-                    let view = this.builder(c.state.asOutput(), c.event.asInput())
-                    c.view = view
-                    this.addSubview(view)
-                    this.usingMap.insert(c)
-                }
-            }
-        }
+public class HBoxRecycle<T>: FlatBoxRecycle<T> {
+    public required init(builder: @escaping (Outputs<T>, Trigger<T>) -> UIView) {
+        super.init(builder: builder)
+        attach().direction(.x)
+    }
+}
+
+public class VBoxRecycle<T>: FlatBoxRecycle<T> {
+    public required init(builder: @escaping (Outputs<T>, Trigger<T>) -> UIView) {
+        super.init(builder: builder)
+        attach().direction(.y)
+    }
+}
+
+// MARK: - FlowBoxRecycle
+
+public class FlowBoxRecycle<T>: FlowBox, Recycler {
+    typealias Data = T
+
+    fileprivate var container = Container<T>()
+
+    fileprivate var builder: (Outputs<T>, Trigger<T>) -> UIView
+
+    public var viewState = State<[T]>([])
+
+    public required init(count: Int, builder: @escaping (Outputs<T>, Trigger<T>) -> UIView) {
+        self.builder = builder
+        super.init(frame: .zero)
+        setup()
     }
 
     @available(*, unavailable)
@@ -62,8 +87,47 @@ public class ItemsBox<T, E>: FlatBox, Stateful, Eventable {
     }
 }
 
-private class Context<T, E>: Hashable {
-    static func == (lhs: Context<T, E>, rhs: Context<T, E>) -> Bool {
+public class HFlowRecycle<T>: FlowBoxRecycle<T> {
+    public required init(count: Int = 0, builder: @escaping (Outputs<T>, Trigger<T>) -> UIView) {
+        super.init(count: count, builder: builder)
+        attach().direction(.x).arrangeCount(count)
+    }
+}
+
+public class VFlowRecycle<T>: FlowBoxRecycle<T> {
+    public required init(count: Int = 0, builder: @escaping (Outputs<T>, Trigger<T>) -> UIView) {
+        super.init(count: count, builder: builder)
+        attach().direction(.y)
+    }
+}
+
+// MARK: - ZBoxRecycle
+
+public class ZBoxRecycle<T>: ZBox, Recycler {
+    typealias Data = T
+
+    fileprivate var container = Container<T>()
+
+    fileprivate var builder: (Outputs<T>, Trigger<T>) -> UIView
+
+    public var viewState = State<[T]>([])
+
+    public required init(builder: @escaping (Outputs<T>, Trigger<T>) -> UIView) {
+        self.builder = builder
+        super.init(frame: .zero)
+        setup()
+    }
+
+    @available(*, unavailable)
+    public required init?(coder argument: NSCoder) {
+        fatalError()
+    }
+}
+
+// MARK: - Private
+
+private class Context<T>: Hashable {
+    static func == (lhs: Context<T>, rhs: Context<T>) -> Bool {
         lhs.id == rhs.id
     }
 
@@ -71,8 +135,69 @@ private class Context<T, E>: Hashable {
         hasher.combine(id)
     }
 
-    var view: UIView!
-    let state = State<T>.unstable()
-    let event = SimpleIO<E>()
     let id = UUID()
+
+    var view: UIView!
+
+    let state = State<T>.unstable()
+
+    var index: Int = 0
+}
+
+private protocol Recycler: Stateful {
+    associatedtype Data
+
+    var container: Container<Data> { get }
+    var builder: (Outputs<Data>, Trigger<Data>) -> UIView { get }
+}
+
+private class Container<T> {
+    var usingMap = Set<Context<T>>()
+    var freeMap = Set<Context<T>>()
+}
+
+extension Recycler where Self: Boxable & UIView, StateType == [Data] {
+    func setup() {
+        viewState.safeBind(to: self) { this, dataSource in
+            this.reload(dataSource: dataSource)
+        }
+    }
+
+    private func reload(dataSource: StateType) {
+        container.usingMap.forEach { c in
+            c.view.removeFromSuperview()
+            container.freeMap.insert(c)
+        }
+
+        for element in dataSource {
+            if let c = container.freeMap.popFirst() {
+                addSubview(c.view)
+                c.state.input(value: element)
+                container.usingMap.insert(c)
+            } else {
+                let c = Context<Data>()
+                c.state.input(value: element)
+                let trigger = Trigger<Data>()
+                let view = builder(c.state.asOutput(), trigger)
+
+                let finder = { [weak view, weak self] () -> Context<Data>? in
+                    guard let view = view, let self = self else {
+                        return nil
+                    }
+                    for context in self.container.usingMap {
+                        if context.view == view {
+                            return context
+                        }
+                    }
+                    return nil
+                }
+                trigger.indexFinder = { finder()?.index }
+                trigger.dataFinder = { finder()?.state.value }
+                trigger.isBuilding = false
+                c.view = view
+                addSubview(view)
+                container.usingMap.insert(c)
+            }
+        }
+    }
 }

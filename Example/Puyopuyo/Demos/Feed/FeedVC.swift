@@ -12,11 +12,20 @@ import UIKit
 
 class FeedVC: BaseVC, UITableViewDelegate {
     let dataSource = State<[Feed]>([])
-//    let list = State<[TableBoxSection]>([])
+
     override func configView() {
         vRoot.attach {
             TableBox(
-                header: { Header() }
+                header: {
+                    Header().attach()
+                        .onEventProduced(to: self) { this, e in
+                            switch e {
+                            case .reload:
+                                this.reload()
+                            }
+                        }
+                        .view
+                }
             )
             .attach($0)
             .setDelegate(self)
@@ -38,6 +47,10 @@ class FeedVC: BaseVC, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        reload()
+    }
+
+    private func reload() {
         dataSource.value = (0 ..< 20).map { _ in
             Feed(icon: Images().get(), name: Names().get(), content: Contents().get(), images: Images().random(9), createdAt: Int(Date().timeIntervalSince1970), likes: Names().random(10), comments: Contents().random(10).map { "\(Names().get()): \($0)" })
         }
@@ -56,33 +69,60 @@ struct Feed {
     var comments: [String]
 }
 
-private class Header: VBox {
+private class Header: ZBox, Eventable {
+    enum Event {
+        case reload
+    }
+
+    var eventProducer = SimpleIO<Event>()
     override func buildBody() {
         attach {
-            UIImageView().attach($0)
-                .image(Images().download())
-                .size(.fill, 300)
-                .contentMode(.scaleAspectFill)
-                .clipToBounds(true)
-
-            HBox().attach($0) {
-                UILabel().attach($0)
-                    .text("Jrwong")
-                    .textColor(UIColor.white)
-                    .fontSize(20, weight: .heavy)
-                    .style(ShadowStyle())
-
+            VBox().attach($0) {
                 UIImageView().attach($0)
                     .image(Images().download())
-                    .size(100, 100)
-                    .cornerRadius(8)
+                    .size(.fill, 300)
+                    .contentMode(.scaleAspectFill)
+                    .clipToBounds(true)
+
+                HBox().attach($0) {
+                    UILabel().attach($0)
+                        .text("Jrwong")
+                        .textColor(UIColor.white)
+                        .fontSize(20, weight: .heavy)
+                        .style(ShadowStyle())
+
+                    UIImageView().attach($0)
+                        .image(Images().download())
+                        .size(100, 100)
+                        .cornerRadius(8)
+                }
+                .margin(top: -70, right: 40)
+                .justifyContent(.center)
+                .space(8)
+
+                ZBox().attach($0) {
+                    UILabel().attach($0)
+                        .text("Refresh")
+                        .textColor(UIColor.white)
+                }
+                .padding(all: 8)
+                .cornerRadius(8)
+                .backgroundColor(UIColor.black.withAlphaComponent(0.7))
+                .width(200)
+                .alignment(.center)
+                .style(TapRippleStyle())
+                .onTap(to: self) { this, _ in
+                    this.emmit(.reload)
+                }
             }
-            .margin(top: -70, right: 40)
-            .justifyContent(.center)
-            .space(8)
+            .justifyContent(.right)
+            .width(.fill)
+
+            UIButton().attach($0)
+                .alignment([.left, .top])
+                .image(UIImage(systemName: "captions.bubble"))
         }
         .width(.fill)
-        .justifyContent(.right)
     }
 }
 
@@ -107,9 +147,19 @@ private class ItemView: HBox, Stateful {
 
                 let images = bind(\.images).unwrap(or: [])
 
-                ImagesView().attach($0)
-                    .viewState(images)
-                    .visibility(images.map { $0.isEmpty ? .gone : .visible })
+                VFlowRecycle<String>(
+                    builder: { o, _ in
+                        UIImageView().attach()
+                            .image(o.then { downloadImage(url: $0) })
+                            .size(150, 150)
+                            .view
+                    }
+                )
+                .attach($0)
+                .arrangeCount(images.map { $0.count < 5 ? 2 : 3 }.distinct())
+                .space(8)
+                .viewState(images)
+                .visibility(images.map { $0.isEmpty ? .gone : .visible })
 
                 HBox().attach($0) {
                     UILabel().attach($0)
@@ -132,6 +182,8 @@ private class ItemView: HBox, Stateful {
                     HBox().attach($0) {
                         UIImageView().attach($0)
                             .image(UIImage(systemName: "heart.fill"))
+                            .margin(right: 8)
+                        
                         UILabel().attach($0)
                             .text(likes.map { $0.joined(separator: ", ") })
                     }
@@ -144,40 +196,25 @@ private class ItemView: HBox, Stateful {
                         .backgroundColor(UIColor.lightGray.withAlphaComponent(0.3))
                         .visibility(likeVisible)
 
-                    ItemsBox<String, Void>(
+                    VBoxRecycle<String>(
                         builder: { o, i in
-                            UILabel().attach()
-                                .text(o)
-                                .margin(all: 8)
-                                .width(.fill)
-                                .userInteractionEnabled(true)
-                                .onTap {
-                                    i.input(value: ())
-                                }
-                                .view
+                            HBox().attach {
+                                UILabel().attach($0)
+                                    .text(o)
+                                    .width(.fill)
+                                    .userInteractionEnabled(true)
+                            }
+                            .padding(all: 8)
+                            .width(.fill)
+                            .onTap {
+                                print(i.data ?? "")
+                            }
+                            .view
                         }
                     )
                     .attach($0)
-                    .onEventProduced(Inputs { event in
-                        print(event.data)
-                    })
-                    .space(10)
-                    .direction(.y)
                     .width(.fill)
                     .viewState(comments)
-
-//                    VBox().attach($0) {
-//                        comments.safeBind(to: $0) { v, c in
-//                            v.subviews.forEach { $0.removeFromSuperview() }
-//
-//                            for comment in c {
-//                                UILabel().attach(v)
-//                                    .text(comment)
-//                                    .margin(all: 8)
-//                            }
-//                        }
-//                    }
-//                    .width(.fill)
                 }
                 .backgroundColor(UIColor(hexString: "#F6F6F6"))
                 .width(.fill)
@@ -190,27 +227,6 @@ private class ItemView: HBox, Stateful {
         }
         .padding(all: 16)
         .space(16)
-    }
-}
-
-private class ImagesView: VFlow, Stateful, Eventable {
-    let viewState = State<[String]>([])
-
-    var eventProducer = SimpleIO<Int>()
-
-    override func buildBody() {
-        attach { _ in
-            viewState.safeBind(to: self) { this, images in
-                this.subviews.forEach { $0.removeFromSuperview() }
-                images.forEach { url in
-                    UIImageView().attach(this)
-                        .image(downloadImage(url: url))
-                        .size(150, 150)
-                }
-            }
-        }
-        .arrangeCount(output.map { $0.count < 5 ? 2 : 3 }.distinct())
-        .space(8)
     }
 }
 
