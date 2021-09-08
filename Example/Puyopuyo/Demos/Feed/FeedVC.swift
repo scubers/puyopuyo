@@ -15,8 +15,8 @@ class FeedVC: BaseVC, UITableViewDelegate {
 
     override func configView() {
         vRoot.attach {
-            sequenceBox().attach($0)
-//            recycleBox().attach($0)
+//            sequenceBox().attach($0)
+            recycleBox().attach($0)
         }
     }
 
