@@ -25,10 +25,22 @@ class FeedVC: BaseVC, UITableViewDelegate {
                             }
                         }
                         .view
+                },
+                footer: {
+                    VBox().attach {
+                        UILabel().attach($0)
+                            .text("It's ending")
+                    }
+                    .backgroundColor(UIColor.systemPink)
+                    .padding(all: 16)
+                    .width(.fill)
+                    .justifyContent(.center)
+                    .view
                 }
             )
             .attach($0)
             .setDelegate(self)
+            .size(.fill, .fill)
             .viewState([
                 TableSection<Feed, UIView, Void>(
                     identifier: "",
@@ -47,7 +59,9 @@ class FeedVC: BaseVC, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        reload()
+        DispatchQueue.main.async {
+            self.reload()
+        }
     }
 
     private func reload() {
@@ -69,7 +83,7 @@ struct Feed {
     var comments: [String]
 }
 
-private class Header: ZBox, Eventable {
+private class Header: VBox, Eventable {
     enum Event {
         case reload
     }
@@ -77,51 +91,44 @@ private class Header: ZBox, Eventable {
     var eventProducer = SimpleIO<Event>()
     override func buildBody() {
         attach {
-            VBox().attach($0) {
+            UIImageView().attach($0)
+                .image(Images().download())
+                .size(.fill, 300)
+                .contentMode(.scaleAspectFill)
+                .clipToBounds(true)
+
+            HBox().attach($0) {
+                UILabel().attach($0)
+                    .text("Jrwong")
+                    .textColor(UIColor.white)
+                    .fontSize(20, weight: .heavy)
+                    .style(ShadowStyle())
+
                 UIImageView().attach($0)
                     .image(Images().download())
-                    .size(.fill, 300)
-                    .contentMode(.scaleAspectFill)
-                    .clipToBounds(true)
-
-                HBox().attach($0) {
-                    UILabel().attach($0)
-                        .text("Jrwong")
-                        .textColor(UIColor.white)
-                        .fontSize(20, weight: .heavy)
-                        .style(ShadowStyle())
-
-                    UIImageView().attach($0)
-                        .image(Images().download())
-                        .size(100, 100)
-                        .cornerRadius(8)
-                }
-                .margin(top: -70, right: 40)
-                .justifyContent(.center)
-                .space(8)
-
-                ZBox().attach($0) {
-                    UILabel().attach($0)
-                        .text("Refresh")
-                        .textColor(UIColor.white)
-                }
-                .padding(all: 8)
-                .cornerRadius(8)
-                .backgroundColor(UIColor.black.withAlphaComponent(0.7))
-                .width(200)
-                .alignment(.center)
-                .style(TapRippleStyle())
-                .onTap(to: self) { this, _ in
-                    this.emmit(.reload)
-                }
+                    .size(100, 100)
+                    .cornerRadius(8)
             }
-            .justifyContent(.right)
-            .width(.fill)
+            .margin(top: -70, right: 40)
+            .justifyContent(.center)
+            .space(8)
 
-            UIButton().attach($0)
-                .alignment([.left, .top])
-                .image(UIImage(systemName: "captions.bubble"))
+            ZBox().attach($0) {
+                UILabel().attach($0)
+                    .text("Refresh")
+                    .textColor(UIColor.white)
+            }
+            .padding(all: 8)
+            .cornerRadius(8)
+            .backgroundColor(UIColor.black.withAlphaComponent(0.7))
+            .width(200)
+            .alignment(.center)
+            .style(TapRippleStyle())
+            .onTap(to: self) { this, _ in
+                this.emmit(.reload)
+            }
         }
+        .justifyContent(.right)
         .width(.fill)
     }
 }
@@ -183,7 +190,7 @@ private class ItemView: HBox, Stateful {
                         UIImageView().attach($0)
                             .image(UIImage(systemName: "heart.fill"))
                             .margin(right: 8)
-                        
+
                         UILabel().attach($0)
                             .text(likes.map { $0.joined(separator: ", ") })
                     }
