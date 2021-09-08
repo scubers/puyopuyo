@@ -74,6 +74,7 @@ public protocol ISequenceItem: AnyObject {
 }
 
 public class SequenceBox: UITableView,
+    Stateful,
     Delegatable,
     DataSourceable,
     UITableViewDelegate,
@@ -129,12 +130,6 @@ public class SequenceBox: UITableView,
         self.sectionHeaderHeight = sectionHeaderHeight
         self.sectionFooterHeight = sectionFooterHeight
 
-        sections.send(to: viewState).dispose(by: self)
-        viewState.safeBind(to: self) { this, s in
-            this.prepareSections(s)
-            this.reloadSections(s)
-        }
-
         // 监听tableView变化，动态改变TableBox大小
         py_observing(\.contentSize)
             .unwrap(or: .zero)
@@ -143,6 +138,14 @@ public class SequenceBox: UITableView,
                     this.attach().height(size.height)
                 }
             }
+
+        sections.send(to: viewState).dispose(by: self)
+        viewState.safeBind(to: self) { this, s in
+            this.prepareSections(s)
+            DispatchQueue.main.async {
+                this.reloadSections(s)
+            }
+        }
     }
 
     @available(*, unavailable)
@@ -259,6 +262,13 @@ private extension SequenceBox {
 
     func reloadSections(_ sections: [ISequenceSection]) {
         self.sections = sections
+
+        headerView.setNeedsDisplay()
+        headerView.layoutIfNeeded()
+
+        footerView.setNeedsDisplay()
+        footerView.layoutIfNeeded()
+
         reloadData()
     }
 }

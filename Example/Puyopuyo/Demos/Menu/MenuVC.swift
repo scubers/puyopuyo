@@ -56,13 +56,14 @@ class MenuVC: BaseVC {
     ]
 
     func menu() {
+        let this = WeakCatcher(value: self)
         RecycleBox(
             sections: [
                 DataRecycleSection<(String, () -> UIViewController)>(
                     insets: UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16),
                     lineSpacing: 16,
-                    list: dataSrouce.asOutput(),
-                    _cell: { [weak self] o, i in
+                    items: dataSrouce.asOutput(),
+                    cell: { o, i in
                         HBox().attach {
                             Label("").attach($0)
                                 .textAlignment(.left)
@@ -73,8 +74,8 @@ class MenuVC: BaseVC {
                         .backgroundColor(UIColor.white)
                         .styles([TapScaleStyle(), ShadowStyle()])
                         .onTap {
-                            i.withContext {
-                                self?.push(vc: $0.data.1())
+                            if let context = i.context {
+                                this.value?.push(vc: context.data.1())
                             }
                         }
                         .view

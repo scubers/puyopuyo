@@ -7,18 +7,18 @@
 
 import Foundation
 
-// var headerGenerator: HeaderFooterGenerator<RecycleContext<[Data], UICollectionView>, CellEvent>
-// public typealias RecycleViewGenerator<D, E> = (SimpleOutput<D>, SimpleInput<E>) -> UIView?
-public struct RecycleContextHolder<D> {
-    var creator: () -> RecycleContext<D, UICollectionView>?
-    public func withContext(_ block: (RecycleContext<D, UICollectionView>) -> Void) {
-        if let ctx = creator() {
-            block(ctx)
+public struct ActionTrigger<D, V: UIView> {
+    var creator: () -> RecycleContext<D, V>?
+    public var context: RecycleContext<D, V>? { creator() }
+    
+    public func inContext(_ action: (RecycleContext<D, V>) -> Void) {
+        if let c = context {
+            action(c)
         }
     }
 }
 
-public typealias RecycleViewGenerator<D> = (Outputs<RecycleContext<D, UICollectionView>>, RecycleContextHolder<D>) -> UIView?
+public typealias RecycleViewGenerator<D> = (Outputs<RecycleContext<D, UICollectionView>>, ActionTrigger<D, UICollectionView>) -> UIView?
 
 public class BasicRecycleSection<Data>: IRecycleSection {
     public typealias Context = RecycleContext<Data, UICollectionView>
@@ -27,10 +27,13 @@ public class BasicRecycleSection<Data>: IRecycleSection {
         insets: UIEdgeInsets? = nil,
         lineSpacing: CGFloat? = nil,
         itemSpacing: CGFloat? = nil,
+        
         data: Data,
         items: Outputs<[IRecycleItem]> = [].asOutput(),
-        _header: RecycleViewGenerator<Data>? = nil,
-        _footer: RecycleViewGenerator<Data>? = nil,
+        
+        header: RecycleViewGenerator<Data>? = nil,
+        footer: RecycleViewGenerator<Data>? = nil,
+        
         function: StaticString = #function,
         line: Int = #line,
         column: Int = #column
@@ -39,8 +42,8 @@ public class BasicRecycleSection<Data>: IRecycleSection {
         sectionInsets = insets
         self.lineSpacing = lineSpacing
         self.itemSpacing = itemSpacing
-        headerGen = _header
-        footerGen = _footer
+        headerGen = header
+        footerGen = footer
         self.data = data
         items.safeBind(to: bag) { [weak self] _, items in
             self?.reload(items: items)
@@ -179,7 +182,7 @@ public class BasicRecycleSection<Data>: IRecycleSection {
             var root: UIView?
             let state = view.state
             let box = self.box
-            let holder = RecycleContextHolder { [weak box, weak view] () -> RecycleContext<Data, UICollectionView>? in
+            let holder = ActionTrigger { [weak box, weak view] () -> RecycleContext<Data, UICollectionView>? in
                 if let view = view,
                    let idx = box?.visibleSupplementaryViews(ofKind: kind).firstIndex(where: { $0 === view }),
                    let indexPathes = box?.indexPathsForVisibleSupplementaryElements(ofKind: kind),

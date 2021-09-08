@@ -31,11 +31,11 @@ class SequenceBoxPropertiesVC: BaseVC {
             BasicSequenceSection<Int>(
                 id: "sldkjf",
                 data: 1,
-                rows: (0..<5).map {
+                items: (0..<5).map {
                     BasicSequenceItem<Int>(
                         id: "sf98hsdf",
                         data: $0,
-                        _cell: { o, _ in
+                        cell: { o, _ in
                             ZBox().attach {
                                 Label.demo("").attach($0)
                                     .text(o.map { $0.data.description })
@@ -46,7 +46,7 @@ class SequenceBoxPropertiesVC: BaseVC {
                         }
                     )
                 }.asOutput(),
-                _header: { _, _ in
+                header: { _, _ in
                     HBox().attach {
                         Label.demo("single row header").attach($0)
                     }
@@ -58,7 +58,7 @@ class SequenceBoxPropertiesVC: BaseVC {
             DataSequenceSection<Int>(
                 id: "pure",
                 dataSource: (0..<5).map { $0 }.asOutput(),
-                _cell: { o, _ in
+                cell: { o, _ in
                     HBox().attach {
                         Label.demo("").attach($0)
                             .text(o.map { $0.data.description })
@@ -72,7 +72,7 @@ class SequenceBoxPropertiesVC: BaseVC {
                     .width(.fill)
                     .view
                 },
-                _header: { _, _ in
+                header: { _, _ in
                     HBox().attach {
                         Label.demo("pure section header").attach($0)
                     }

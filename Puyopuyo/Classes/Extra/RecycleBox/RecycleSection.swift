@@ -16,30 +16,30 @@ public class RecycleSection<Section, Data>: BasicRecycleSection<Section> {
         lineSpacing: CGFloat? = nil,
         itemSpacing: CGFloat? = nil,
         sectionData: Section,
-        list: Outputs<[Data]>,
+        items: Outputs<[Data]>,
         differ: ((Data) -> String)? = nil,
-        _cell: @escaping RecycleViewGenerator<Data>,
-        _cellConfig: ((UICollectionViewCell) -> Void)? = nil,
-        _header: RecycleViewGenerator<Section>? = nil,
-        _footer: RecycleViewGenerator<Section>? = nil,
-        _didSelect: ((ItemContext) -> Void)? = nil,
+        cell: @escaping RecycleViewGenerator<Data>,
+        cellConfig: ((UICollectionViewCell) -> Void)? = nil,
+        header: RecycleViewGenerator<Section>? = nil,
+        footer: RecycleViewGenerator<Section>? = nil,
+        didSelect: ((ItemContext) -> Void)? = nil,
         function: StaticString = #function,
         line: Int = #line,
         column: Int = #column
     ) {
         let state = State([IRecycleItem]())
-        super.init(id: id, insets: insets, lineSpacing: lineSpacing, itemSpacing: itemSpacing, data: sectionData, items: state.asOutput(), _header: _header, _footer: _footer, function: function, line: line, column: column)
+        super.init(id: id, insets: insets, lineSpacing: lineSpacing, itemSpacing: itemSpacing, data: sectionData, items: state.asOutput(), header: header, footer: footer, function: function, line: line, column: column)
 
         let itemId = "\(self.getSectionId())_buildin_item"
-        list.map {
+        items.map {
             $0.map { data in
                 BasicRecycleItem<Data>(
                     id: itemId,
                     data: data,
                     differ: differ,
-                    _cell: _cell,
-                    _cellConfig: _cellConfig,
-                    _didSelect: _didSelect,
+                    cell: cell,
+                    cellConfig: cellConfig,
+                    didSelect: didSelect,
                     function: function,
                     line: line,
                     column: column
@@ -63,13 +63,13 @@ public extension RecycleSection where Section == Void {
         insets: UIEdgeInsets? = nil,
         lineSpacing: CGFloat? = nil,
         itemSpacing: CGFloat? = nil,
-        list: Outputs<[Data]>,
+        items: Outputs<[Data]>,
         differ: ((Data) -> String)? = nil,
-        _cell: @escaping RecycleViewGenerator<Data>,
-        _cellConfig: ((UICollectionViewCell) -> Void)? = nil,
-        _header: RecycleViewGenerator<Section>? = nil,
-        _footer: RecycleViewGenerator<Section>? = nil,
-        _didSelect: ((ItemContext) -> Void)? = nil,
+        cell: @escaping RecycleViewGenerator<Data>,
+        cellConfig: ((UICollectionViewCell) -> Void)? = nil,
+        header: RecycleViewGenerator<Section>? = nil,
+        footer: RecycleViewGenerator<Section>? = nil,
+        didSelect: ((ItemContext) -> Void)? = nil,
         function: StaticString = #function,
         line: Int = #line,
         column: Int = #column
@@ -80,13 +80,13 @@ public extension RecycleSection where Section == Void {
             lineSpacing: lineSpacing,
             itemSpacing: itemSpacing,
             sectionData: (),
-            list: list,
+            items: items,
             differ: differ,
-            _cell: _cell,
-            _cellConfig: _cellConfig,
-            _header: _header,
-            _footer: _footer,
-            _didSelect: _didSelect,
+            cell: cell,
+            cellConfig: cellConfig,
+            header: header,
+            footer: footer,
+            didSelect: didSelect,
             function: function,
             line: line,
             column: column

@@ -15,53 +15,97 @@ class FeedVC: BaseVC, UITableViewDelegate {
 
     override func configView() {
         vRoot.attach {
-            TableBox(
-                header: {
-                    Header().attach()
-                        .onEventProduced(to: self) { this, e in
-                            switch e {
-                            case .reload:
-                                this.reload()
+            sequenceBox().attach($0)
+//            recycleBox().attach($0)
+        }
+    }
+
+    func recycleBox() -> UIView {
+        RecycleBox(
+            sections: [
+                RecycleSection<Void, Feed>(
+                    items: dataSource.asOutput(),
+                    cell: { o, _ in
+                        ItemView().attach()
+                            .viewState(o.map(\.data))
+                            .width(.fill)
+                            .bottomBorder([.color(UIColor.lightGray.withAlphaComponent(0.3)), .lead(20)])
+                            .view
+                    },
+                    header: { _, _ in
+                        Header().attach()
+                            .onEventProduced(to: self) { this, e in
+                                switch e {
+                                case .reload:
+                                    this.reload()
+                                }
                             }
+                            .view
+                    },
+                    footer: { _, _ in
+                        VBox().attach {
+                            UILabel().attach($0)
+                                .text("It's ending")
                         }
+                        .backgroundColor(UIColor.systemPink)
+                        .padding(all: 16)
+                        .width(.fill)
+                        .justifyContent(.center)
                         .view
-                },
-                footer: {
-                    VBox().attach {
-                        UILabel().attach($0)
-                            .text("It's ending")
                     }
-                    .backgroundColor(UIColor.systemPink)
-                    .padding(all: 16)
-                    .width(.fill)
-                    .justifyContent(.center)
-                    .view
-                }
-            )
-            .attach($0)
-            .setDelegate(self)
-            .size(.fill, .fill)
-            .viewState([
-                TableSection<Feed, UIView, Void>(
-                    identifier: "",
+                )
+            ].asOutput()
+        )
+        .attach()
+        .backgroundColor(UIColor.white)
+        .size(.fill, .fill)
+        .view
+    }
+
+    func sequenceBox() -> UIView {
+        SequenceBox(
+            sections: [
+                SequenceSection<Void, Feed>(
                     dataSource: dataSource.asOutput(),
-                    _cell: { o, _ in
+                    cell: { o, _ in
                         ItemView().attach()
                             .viewState(o.map(\.data))
                             .width(.fill)
                             .view
                     }
                 )
-            ].asOutput())
-        }
+            ].asOutput(),
+            header: {
+                Header().attach()
+                    .onEventProduced(to: self) { this, e in
+                        switch e {
+                        case .reload:
+                            this.reload()
+                        }
+                    }
+                    .view
+            },
+            footer: {
+                VBox().attach {
+                    UILabel().attach($0)
+                        .text("It's ending")
+                }
+                .backgroundColor(UIColor.systemPink)
+                .padding(all: 16)
+                .width(.fill)
+                .justifyContent(.center)
+                .view
+            }
+        )
+        .attach()
+        .setDelegate(self)
+        .size(.fill, .fill)
+        .view
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        DispatchQueue.main.async {
-            self.reload()
-        }
+        reload()
     }
 
     private func reload() {

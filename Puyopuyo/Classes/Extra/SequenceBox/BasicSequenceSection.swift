@@ -7,39 +7,36 @@
 
 import Foundation
 
-public struct SequenceContextHolder<D> {
-    var creator: () -> RecycleContext<D, UITableView>?
-    public func withContext(_ block: (RecycleContext<D, UITableView>) -> Void) {
-        if let ctx = creator() {
-            block(ctx)
-        }
-    }
-}
-
-public typealias SequenceViewGenerator<D> = (Outputs<RecycleContext<D, UITableView>>, SequenceContextHolder<D>) -> UIView?
+public typealias SequenceViewGenerator<D> = (Outputs<RecycleContext<D, UITableView>>, ActionTrigger<D, UITableView>) -> UIView?
 
 public class BasicSequenceSection<Data>: ISequenceSection {
     public init(
         id: String? = nil,
-        headerHeight: CGFloat? = nil,
-        estimatedHeaderHeight _: CGFloat? = nil,
-        footerHeight: CGFloat? = nil,
-        estimatedFooterHeight _: CGFloat? = nil,
+        
         data: Data,
-        rows: Outputs<[ISequenceItem]> = [].asOutput(),
-        _header: SequenceViewGenerator<Data>? = nil,
-        _footer: SequenceViewGenerator<Data>? = nil,
+        items: Outputs<[ISequenceItem]> = [].asOutput(),
+        
+        headerHeight: CGFloat? = nil,
+        estimatedHeaderHeight: CGFloat? = nil,
+        footerHeight: CGFloat? = nil,
+        estimatedFooterHeight: CGFloat? = nil,
+        
+        header: SequenceViewGenerator<Data>? = nil,
+        footer: SequenceViewGenerator<Data>? = nil,
+        
         function: StaticString = #function,
         line: Int = #line,
         column: Int = #column
     ) {
         self.id = id ?? "\(line)\(column)\(function)"
-        self.headerGen = _header
-        self.footerGen = _footer
+        self.headerGen = header
+        self.footerGen = footer
         self.data = data
         self.headerHeight = headerHeight
         self.footerHeight = footerHeight
-        rows.safeBind(to: bag) { [weak self] _, rows in
+        self.estimatedHeaderHeight = estimatedHeaderHeight
+        self.estimatedFooterHeight = estimatedFooterHeight
+        items.safeBind(to: bag) { [weak self] _, rows in
             self?.reload(rows: rows)
         }
     }
@@ -100,10 +97,11 @@ public class BasicSequenceSection<Data>: ISequenceSection {
         if view == nil {
             view = SequenceHeaderFooter<Data>(id: id)
             if header, let gen = headerGen {
-                let holder = SequenceContextHolder<Data> { [weak self] in
+                let holder = ActionTrigger<Data, UITableView> { [weak self] in
                     if let box = self?.box,
-                        let sectionIndex = self?.index,
-                        let section = box.getSection(at: sectionIndex) as? BasicSequenceSection<Data> {
+                       let sectionIndex = self?.index,
+                       let section = box.getSection(at: sectionIndex) as? BasicSequenceSection<Data>
+                    {
                         return section.getContext()
                     }
                     return nil
@@ -113,10 +111,11 @@ public class BasicSequenceSection<Data>: ISequenceSection {
                     view?.contentView.addSubview(root)
                 }
             } else if footer, let gen = footerGen {
-                let holder = SequenceContextHolder<Data> { [weak self] in
+                let holder = ActionTrigger<Data, UITableView> { [weak self] in
                     if let box = self?.box,
-                        let sectionIndex = self?.index,
-                        let section = box.getSection(at: sectionIndex) as? BasicSequenceSection<Data> {
+                       let sectionIndex = self?.index,
+                       let section = box.getSection(at: sectionIndex) as? BasicSequenceSection<Data>
+                    {
                         return section.getContext()
                     }
                     return nil
@@ -205,6 +204,7 @@ private class SequenceHeaderFooter<D>: UITableViewHeaderFooterView {
         super.init(reuseIdentifier: id)
     }
     
+    @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError()
     }
@@ -215,7 +215,7 @@ private class SequenceHeaderFooter<D>: UITableViewHeaderFooterView {
 }
 
 private class EmptyView: UITableViewHeaderFooterView {
-    public override func sizeThatFits(_: CGSize) -> CGSize {
+    override public func sizeThatFits(_: CGSize) -> CGSize {
         return CGSize(width: 0, height: 0.1)
     }
 }

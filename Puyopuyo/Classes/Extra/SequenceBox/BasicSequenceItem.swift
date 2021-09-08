@@ -17,18 +17,18 @@ public class BasicSequenceItem<Data>: ISequenceItem {
         estimatedRowHeight: CGFloat? = nil,
         data: Data,
         differ: ((Data) -> String)? = nil,
-        _cell: @escaping SequenceViewGenerator<Data>,
-        _cellConfig: ((UITableViewCell) -> Void)? = nil,
-        _didSelect: ((Context) -> Void)? = nil,
+        cell: @escaping SequenceViewGenerator<Data>,
+        cellConfig: ((UITableViewCell) -> Void)? = nil,
+        didSelect: ((Context) -> Void)? = nil,
         function: StaticString = #function,
         line: Int = #line,
         column: Int = #column
     ) {
         self.id = id ?? "\(line)\(column)\(function)"
         self.data = data
-        self.cellGen = _cell
+        self.cellGen = cell
         self.differ = differ
-        self._didSelect = _didSelect
+        self._didSelect = didSelect
         self.rowHeight = rowHeight
         self.estimatedRowHeight = estimatedRowHeight
         self.selectionStyle = selectionStyle
@@ -77,13 +77,13 @@ public class BasicSequenceItem<Data>: ISequenceItem {
         differ?(data) ?? (address + "\(data)")
     }
     
-    private func _getCell() -> (ListBoxCell<Data>, UIView?) {
+    private func _getCell() -> (SequenceBoxCell<Data>, UIView?) {
         let id = getRowIdentifier()
-        var cell = section?.box?.dequeueReusableCell(withIdentifier: id) as? ListBoxCell<Data>
+        var cell = section?.box?.dequeueReusableCell(withIdentifier: id) as? SequenceBoxCell<Data>
         if cell == nil {
-            cell = ListBoxCell(id: id)
+            cell = SequenceBoxCell(id: id)
             let box = section?.box
-            let holder = SequenceContextHolder<Data> { [weak box, weak cell] in
+            let holder = ActionTrigger<Data, UITableView> { [weak box, weak cell] in
                 if let box = box,
                     let cell = cell,
                     let indexpath = box.indexPath(for: cell),
@@ -115,7 +115,7 @@ public class BasicSequenceItem<Data>: ISequenceItem {
     
 }
 
-private class ListBoxCell<Data>: UITableViewCell {
+private class SequenceBoxCell<Data>: UITableViewCell {
     var root: UIView?
     let state = SimpleIO<RecycleContext<Data, UITableView>>()
 

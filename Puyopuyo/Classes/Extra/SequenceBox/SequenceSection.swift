@@ -17,17 +17,17 @@ public class SequenceSection<Section, Data>: BasicSequenceSection<Section> {
         data: Section,
         dataSource: Outputs<[Data]>,
         differ: ((Data) -> String)? = nil,
-        _cell: @escaping SequenceViewGenerator<Data>,
-        _cellConfig: ((UITableViewCell) -> Void)? = nil,
-        _header: SequenceViewGenerator<Section>? = nil,
-        _footer: SequenceViewGenerator<Section>? = nil,
-        _didSelect: ((RecycleContext<Data, UITableView>) -> Void)? = nil,
+        cell: @escaping SequenceViewGenerator<Data>,
+        cellConfig: ((UITableViewCell) -> Void)? = nil,
+        header: SequenceViewGenerator<Section>? = nil,
+        footer: SequenceViewGenerator<Section>? = nil,
+        didSelect: ((RecycleContext<Data, UITableView>) -> Void)? = nil,
         function: StaticString = #function,
         line: Int = #line,
         column: Int = #column
     ) {
         let state = SimpleIO<[ISequenceItem]>()
-        super.init(id: id, headerHeight: headerHeight, footerHeight: footerHeight, data: data, rows: state.asOutput(), _header: _header, _footer: _footer, function: function, line: line, column: column)
+        super.init(id: id, data: data, items: state.asOutput(), headerHeight: headerHeight, footerHeight: footerHeight, header: header, footer: footer, function: function, line: line, column: column)
 
         let itemId = getSectionId() + "buildin_item"
         dataSource
@@ -39,9 +39,9 @@ public class SequenceSection<Section, Data>: BasicSequenceSection<Section> {
                         rowHeight: rowHeight,
                         data: $0,
                         differ: differ,
-                        _cell: _cell,
-                        _cellConfig: _cellConfig,
-                        _didSelect: _didSelect,
+                        cell: cell,
+                        cellConfig: cellConfig,
+                        didSelect: didSelect,
                         function: function,
                         line: line,
                         column: column
@@ -64,11 +64,11 @@ public extension SequenceSection where Section == Void {
         footerHeight: CGFloat? = nil,
         dataSource: Outputs<[Data]>,
         differ: ((Data) -> String)? = nil,
-        _cell: @escaping SequenceViewGenerator<Data>,
-        _cellConfig: ((UITableViewCell) -> Void)? = nil,
-        _header: SequenceViewGenerator<Section>? = nil,
-        _footer: SequenceViewGenerator<Section>? = nil,
-        _didSelect: ((RecycleContext<Data, UITableView>) -> Void)? = nil,
+        cell: @escaping SequenceViewGenerator<Data>,
+        cellConfig: ((UITableViewCell) -> Void)? = nil,
+        header: SequenceViewGenerator<Section>? = nil,
+        footer: SequenceViewGenerator<Section>? = nil,
+        didSelect: ((RecycleContext<Data, UITableView>) -> Void)? = nil,
         function: StaticString = #function,
         line: Int = #line,
         column: Int = #column
@@ -82,11 +82,11 @@ public extension SequenceSection where Section == Void {
             data: (),
             dataSource: dataSource,
             differ: differ,
-            _cell: _cell,
-            _cellConfig: _cellConfig,
-            _header: _header,
-            _footer: _footer,
-            _didSelect: _didSelect,
+            cell: cell,
+            cellConfig: cellConfig,
+            header: header,
+            footer: footer,
+            didSelect: didSelect,
             function: function,
             line: line,
             column: column

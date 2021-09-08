@@ -13,18 +13,18 @@ public class BasicRecycleItem<Data>: IRecycleItem {
         id: String? = nil,
         data: Data,
         differ: ((Data) -> String)? = nil,
-        _cell: @escaping RecycleViewGenerator<Data>,
-        _cellConfig: ((UICollectionViewCell) -> Void)? = nil,
-        _didSelect: ((Context) -> Void)? = nil,
+        cell: @escaping RecycleViewGenerator<Data>,
+        cellConfig: ((UICollectionViewCell) -> Void)? = nil,
+        didSelect: ((Context) -> Void)? = nil,
         function: StaticString = #function,
         line: Int = #line,
         column: Int = #column
     ) {
         self.id = id ?? "\(line)\(column)\(function)"
         self.data = data
-        self.cellGen = _cell
+        self.cellGen = cell
         self.differ = differ
-        self._didSelect = _didSelect
+        self._didSelect = didSelect
     }
     
     public let id: String
@@ -118,7 +118,7 @@ public class BasicRecycleItem<Data>: IRecycleItem {
         cell.targetSize = size
         if cell.root == nil {
             let box = section.box
-            let holder = RecycleContextHolder { [weak box, weak cell] () -> RecycleContext<Data, UICollectionView>? in
+            let holder = ActionTrigger { [weak box, weak cell] () -> RecycleContext<Data, UICollectionView>? in
                 if let cell = cell,
                     let idx = box?.indexPath(for: cell),
                     let item = box?.getItem(idx) as? BasicRecycleItem<Data> {
