@@ -79,6 +79,10 @@ public extension OutputingModifier where Self: Outputing {
             _ = then($0).send(to: $1)
         }
     }
+
+    func combine<O: Outputing>(_ other: O) -> Outputs<(OutputType, O.OutputType)> {
+        Outputs<(OutputType, O.OutputType)>.combine(self, other)
+    }
 }
 
 public extension OutputingModifier where Self: Outputing, Self.OutputType: OptionalableValueType {

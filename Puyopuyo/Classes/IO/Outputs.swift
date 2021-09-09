@@ -31,8 +31,19 @@ public struct Outputs<Value>: Outputing, OutputingModifier {
         }
         return action(input)
     }
+}
 
-    public static func merge<T: Outputing>(_ outputs: [T]) -> Outputs<Value> where T.OutputType == Value {
+// MARK: - Creations
+
+public extension Outputs {
+    static func just(_ value: Value) -> Outputs<Value> {
+        .init {
+            $0.input(value: value)
+            return Disposers.create()
+        }
+    }
+
+    static func merge<T: Outputing>(_ outputs: [T]) -> Outputs<Value> where T.OutputType == Value {
         return Outputs<Value> { i -> Disposer in
             let disposables = outputs.map { o -> Disposer in
                 o.outputing { v in
@@ -44,11 +55,76 @@ public struct Outputs<Value>: Outputing, OutputingModifier {
             }
         }
     }
+}
 
-    public static func only(_ value: Value) -> Outputs<Value> {
-        .init {
-            $0.input(value: value)
-            return Disposers.create()
+public extension Outputs {
+    static func combine<O1, O2>(_ o1: O1, _ o2: O2) -> Outputs<(O1.OutputType, O2.OutputType)> where O1: Outputing, O2: Outputing {
+        Outputs<(O1.OutputType, O2.OutputType)> { i in
+            var o1Done = false
+            var o2Done = false
+
+            var o1Value: O1.OutputType?
+            var o2Value: O2.OutputType?
+
+            func executeNext() {
+                if o1Done, o2Done {
+                    i.input(value: (o1Value!, o2Value!))
+                }
+            }
+
+            let disposer = o1.outputing { o in
+                o1Value = o
+                o1Done = true
+                executeNext()
+            }
+
+            let disposer2 = o2.outputing { o in
+                o2Value = o
+                o2Done = true
+                executeNext()
+            }
+
+            return Disposers.create {
+                disposer.dispose()
+                disposer2.dispose()
+            }
+        }
+    }
+
+    static func combine<O1, O2, O3>(_ o1: O1, _ o2: O2, _ o3: O3) -> Outputs<(O1.OutputType, O2.OutputType, O3.OutputType)> where O1: Outputing, O2: Outputing, O3: Outputing {
+        Outputs.combine(o1, o2).combine(o3).map { o1, last in
+            (o1.0, o1.1, last)
+        }
+    }
+
+    static func combine<O1, O2, O3, O4>(_ o1: O1, _ o2: O2, _ o3: O3, _ o4: O4) -> Outputs<(O1.OutputType, O2.OutputType, O3.OutputType, O4.OutputType)> where O1: Outputing, O2: Outputing, O3: Outputing, O4: Outputing {
+        Outputs.combine(o1, o2, o3).combine(o4).map { o, last in
+            (o.0, o.1, o.2, last)
+        }
+    }
+
+    static func combine<O>(_ outputs: [O]) -> Outputs<[O.OutputType]> where O: Outputing {
+        Outputs<[O.OutputType]> { i in
+            var dones = Array(repeating: false, count: outputs.count)
+            var values: [O.OutputType?] = Array(repeating: nil, count: outputs.count)
+
+            func executeNext() {
+                if dones.firstIndex(where: { !$0 }) == nil {
+                    i.input(value: values.map { $0! })
+                }
+            }
+
+            let dos = outputs.enumerated().map { offset, element in
+                element.outputing { o in
+                    values[offset] = o
+                    dones[offset] = true
+                    executeNext()
+                }
+            }
+
+            return Disposers.create {
+                dos.forEach { $0.dispose() }
+            }
         }
     }
 }
