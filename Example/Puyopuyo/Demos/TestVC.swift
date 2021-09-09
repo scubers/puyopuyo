@@ -41,7 +41,7 @@ class TestVC: BaseVC {
                     .text(state.map { "\($0)\($0)" })
                     .width(.wrap(shrink: 1))
                     .observe(\.bounds, input: label1Rect)
-//                    .margin(left: 10)
+                    .margin(left: 10)
                     .bind(keyPath: \.lineBreakMode, .byClipping)
 
                 UILabel().attach($0)
@@ -54,9 +54,10 @@ class TestVC: BaseVC {
                 
                 UILabel().attach($0)
                     .text("stay")
+//                    .margin(left: 10)
                     .width(.wrap(priority: 1))
             }
-            .space(10)
+//            .space(10)
             .width(500)
             .height(100)
             .view

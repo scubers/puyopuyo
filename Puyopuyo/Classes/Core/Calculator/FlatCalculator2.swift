@@ -215,7 +215,7 @@ class FlatCalculator2 {
                     let calMargin = $0.margin.getCalEdges(by: regDirection)
                     // 需要压缩的主轴长度
                     let delta = oversize * (calSize.main.shrink / totalShrink)
-                    calFixedSize.main = max(calMargin.mainFixed, min(calFixedSize.main - delta, totalShrinkWrapRemain + calMargin.mainFixed))
+                    calFixedSize.main = max(0, min(calFixedSize.main - delta, totalShrinkWrapRemain)) + calMargin.mainFixed
                     var remain = getCurrentChildRemainCalFixedSize($0)
                     remain.main = calFixedSize.main
                     // 主轴长度被压缩，导致需要重新计算节点
