@@ -36,7 +36,7 @@ import Foundation
 
  -- 第二次循环 --
  1. 根据子节点的size的计算优先级进行排序
- 
+
      主_次
 
      f_f, f_w: 必须最先计算，主轴固定尺寸优先级最高
@@ -251,24 +251,16 @@ class FlatCalculator2 {
         let lastEnd = calculateCenter(measures: calculateChildren)
 
         // 计算自身大小
-        var main = regulator.size.getMain(parent: parent.direction)
+        var main = regulator.size.getMain(parent: regDirection)
         if main.isWrap {
-            if parent.direction == regulator.direction {
-                main = .fix(main.getWrapSize(by: lastEnd + regCalPadding.end))
-            } else {
-                main = .fix(main.getWrapSize(by: maxSubCross + regCalPadding.crossFixed))
-            }
+            main = .fix(main.getWrapSize(by: lastEnd + regCalPadding.end))
         }
-        var cross = regulator.size.getCross(parent: parent.direction)
+        
+        var cross = regulator.size.getCross(parent: regDirection)
         if cross.isWrap {
-            if parent.direction == regulator.direction {
-                cross = .fix(cross.getWrapSize(by: maxSubCross + regCalPadding.crossFixed))
-            } else {
-                cross = .fix(cross.getWrapSize(by: lastEnd + regCalPadding.end))
-            }
+            cross = .fix(cross.getWrapSize(by: maxSubCross + regCalPadding.crossFixed))
         }
-
-        return CalSize(main: main, cross: cross, direction: parent.direction).getSize()
+        return CalSize(main: main, cross: cross, direction: regDirection).getSize()
     }
 
     private func calculateChild(_ measure: Measure) {

@@ -63,6 +63,7 @@ class TestVC: BaseVC {
 //                    .margin(left: 10)
                     .width(.wrap(priority: 2))
             }
+            .justifyContent(.center)
 //            .space(10)
 //            .width(500)
 //            .height(100)

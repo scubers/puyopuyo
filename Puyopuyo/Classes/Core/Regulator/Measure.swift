@@ -121,18 +121,6 @@ public class Measure: Measurable, MeasureTargetable, Hashable {
         virtualTarget.children = children
     }
 
-    public var direction: Direction = .x {
-        willSet {
-            // 普通节点不能更改方向属性
-            assert(type(of: self) != Measure.self)
-        }
-        didSet {
-            if oldValue != direction {
-                py_setNeedsRelayout()
-            }
-        }
-    }
-
     /// 计算节点外边距
     public var margin = UIEdgeInsets.zero {
         didSet {

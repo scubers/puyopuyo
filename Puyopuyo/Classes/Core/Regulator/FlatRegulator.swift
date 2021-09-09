@@ -14,6 +14,14 @@ public class FlatRegulator: Regulator {
         justifyContent = [.left, .top]
     }
 
+    public var direction: Direction = .x {
+        didSet {
+            if oldValue != direction {
+                py_setNeedsRelayout()
+            }
+        }
+    }
+
     /// 间隔
     public var space: CGFloat = 0 {
         didSet {
@@ -41,8 +49,11 @@ public class FlatRegulator: Regulator {
         }
     }
 
+    public func getCalPadding() -> CalEdges {
+        return CalEdges(insets: padding, direction: direction)
+    }
+
     override public func calculate(byParent parent: Measure, remain size: CGSize) -> Size {
-//        return FlatCalculator(self, parent: parent, remain: size).calculate()
         return FlatCalculator2(self, parent: parent, remain: size).calculate()
     }
 }
