@@ -98,12 +98,13 @@ class FlatPropertiesVC: BaseVC {
             title: "format",
             builder: {
                 HBox().attach($0) {
-                    Label.demo("1").attach($0)
-                    Label.demo("2").attach($0)
-                    Label.demo("3").attach($0)
+                    for _ in 0..<6 {
+                        Label.demo("").attach($0)
+                            .size(40, 40)
+                    }
                 }
-                .space(2)
-                .padding(all: 10)
+//                .space(2)
+//                .padding(all: 10)
                 .justifyContent(.center)
                 .size(.fill, 60)
                 .animator(Animators.default)
@@ -112,8 +113,8 @@ class FlatPropertiesVC: BaseVC {
             },
             selectors: [Selector(desc: "leading", value: .leading),
                         Selector(desc: "center", value: .center),
-                        Selector(desc: "avg", value: .round),
-                        Selector(desc: "sides", value: .between),
+                        Selector(desc: "round", value: .round),
+                        Selector(desc: "between", value: .between),
                         Selector(desc: "traing", value: .trailing)],
             selected: format.value,
             desc: "布局主轴上的格式"

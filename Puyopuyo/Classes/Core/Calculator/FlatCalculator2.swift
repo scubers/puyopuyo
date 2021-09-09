@@ -96,7 +96,7 @@ class FlatCalculator2 {
     /// 不包含布局的padding
     var totalSubMain: CGFloat {
         // 间隙 + 主轴固定 + 主轴非压缩包裹 + 主轴压缩包裹 + 主轴margin
-        totalSpace + totalMainFixedSize + totalMainPrioritiedShrinkWrapSize + totalMainShrinkWrapSize + totalMainMarginSize
+        totalSpace + totalMainFixedSize + totalMainPrioritiedWrapSize + totalMainShrinkWrapSize + totalMainMarginSize
     }
 
     /// 主轴比例剩余空间
@@ -113,7 +113,7 @@ class FlatCalculator2 {
 
     /// 主轴压缩包裹可使用空间
     var totalShrinkWrapRemain: CGFloat {
-        totalPrioritedWrapRemain - totalMainPrioritiedShrinkWrapSize
+        totalPrioritedWrapRemain - totalMainPrioritiedWrapSize
     }
 
     /// 总间隙
@@ -124,7 +124,7 @@ class FlatCalculator2 {
     /// 总主轴margin
     var totalMainMarginSize: CGFloat = 0
     /// 总主轴非包裹尺寸
-    var totalMainPrioritiedShrinkWrapSize: CGFloat = 0
+    var totalMainPrioritiedWrapSize: CGFloat = 0
     /// 主轴压缩包裹尺寸
     var totalMainShrinkWrapSize: CGFloat = 0
 
@@ -211,15 +211,23 @@ class FlatCalculator2 {
             mainShrinkChildren.forEach {
                 let calSize = $0.size.getCalSize(by: regDirection)
                 if calSize.main.isWrap, calSize.main.shrink > 0 {
-                    var calFixedSize = $0.py_size.getCalFixedSize(by: regDirection)
+                    let calFixedSize = $0.py_size.getCalFixedSize(by: regDirection)
+
                     let calMargin = $0.margin.getCalEdges(by: regDirection)
                     // 需要压缩的主轴长度
                     let delta = oversize * (calSize.main.shrink / totalShrink)
-                    calFixedSize.main = max(0, min(calFixedSize.main - delta, totalShrinkWrapRemain)) + calMargin.mainFixed
+
+                    let mainRemain = max(0, min(calFixedSize.main - delta, totalShrinkWrapRemain)) + calMargin.mainFixed
+
                     var remain = getCurrentChildRemainCalFixedSize($0)
-                    remain.main = calFixedSize.main
-                    // 主轴长度被压缩，导致需要重新计算节点
+                    remain.main = mainRemain
+
+                    // 当前节点需要重新计算，所以先把累计值减去
+                    totalMainShrinkWrapSize -= calFixedSize.main
+                    // 重新计算
                     calculateChild($0, subRemain: remain)
+                    // 重新累计
+                    appendChildrenToCalculatedSize($0)
                 }
             }
         }
@@ -264,6 +272,11 @@ class FlatCalculator2 {
     private func calculateChild(_ measure: Measure) {
         let subRemain = getCurrentChildRemainCalFixedSize(measure)
         calculateChild(measure, subRemain: subRemain)
+        appendChildrenToCalculatedSize(measure)
+    }
+
+    /// 把计算好的节点的尺寸累计到统计值
+    private func appendChildrenToCalculatedSize(_ measure: Measure) {
         // 计算后把包裹的大小进行累加
         let subFixedSize = CalFixedSize(cgSize: measure.py_size, direction: regDirection)
         let subCalMargin = measure.margin.getCalEdges(by: regDirection)
@@ -272,7 +285,7 @@ class FlatCalculator2 {
             if subCalSize.main.shrink > 0 {
                 totalMainShrinkWrapSize += subFixedSize.main
             } else {
-                totalMainPrioritiedShrinkWrapSize += subFixedSize.main
+                totalMainPrioritiedWrapSize += subFixedSize.main
             }
         }
         if subCalSize.cross.isWrap {

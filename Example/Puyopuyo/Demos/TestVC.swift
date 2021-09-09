@@ -37,7 +37,7 @@ class TestVC: BaseVC {
 //                    .size(100, 50)
                 
                 UILabel().attach($0)
-//                    .numberOfLines(0)
+                    .numberOfLines(0)
                     .text(state.map { "\($0)\($0)" })
                     .width(.wrap(shrink: 1))
                     .observe(\.bounds, input: label1Rect)
@@ -45,7 +45,7 @@ class TestVC: BaseVC {
                     .bind(keyPath: \.lineBreakMode, .byClipping)
 
                 UILabel().attach($0)
-//                    .numberOfLines(0)
+                    .numberOfLines(0)
                     .text(state)
                     .width(.wrap(shrink: 1))
                     .observe(\.bounds, input: label2Rect)
@@ -58,8 +58,8 @@ class TestVC: BaseVC {
                     .width(.wrap(priority: 1))
             }
 //            .space(10)
-            .width(500)
-            .height(100)
+//            .width(500)
+//            .height(100)
             .view
             
             let original = state.map { text -> String in

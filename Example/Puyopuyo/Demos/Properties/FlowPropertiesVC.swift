@@ -155,7 +155,8 @@ class FlowPropertiesVC: BaseVC {
                     .attach($0)
                 getSelectionView(title: "hSpace",
                                  input: self.hspace,
-                                 values: [Selector<CGFloat>(desc: "10", value: 10),
+                                 values: [Selector<CGFloat>(desc: "0", value: 0),
+                                          Selector<CGFloat>(desc: "10", value: 10),
                                           Selector<CGFloat>(desc: "20", value: 20),
                                           Selector<CGFloat>(desc: "30", value: 30),
                                           Selector<CGFloat>(desc: "40", value: 40)],
@@ -164,7 +165,8 @@ class FlowPropertiesVC: BaseVC {
 
                 getSelectionView(title: "vSpace",
                                  input: self.vspace,
-                                 values: [Selector<CGFloat>(desc: "10", value: 10),
+                                 values: [Selector<CGFloat>(desc: "0", value: 0),
+                                          Selector<CGFloat>(desc: "10", value: 10),
                                           Selector<CGFloat>(desc: "20", value: 20),
                                           Selector<CGFloat>(desc: "30", value: 30),
                                           Selector<CGFloat>(desc: "40", value: 40)],

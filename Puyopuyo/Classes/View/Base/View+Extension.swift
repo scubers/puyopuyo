@@ -54,7 +54,7 @@ extension UIView: MeasureTargetable {
     public func py_setNeedsRelayout() {
         setNeedsLayout()
         if let superview = superview, BoxUtil.isBox(superview) {
-            superview.py_setNeedsRelayout()
+            superview.setNeedsLayout()
         }
     }
 }
