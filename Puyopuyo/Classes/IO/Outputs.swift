@@ -37,14 +37,14 @@ public struct Outputs<Value>: Outputing, OutputingModifier {
 
 public extension Outputs {
     static func just(_ value: Value) -> Outputs<Value> {
-        .init {
+        Outputs {
             $0.input(value: value)
             return Disposers.create()
         }
     }
 
     static func merge<T: Outputing>(_ outputs: [T]) -> Outputs<Value> where T.OutputType == Value {
-        return Outputs<Value> { i -> Disposer in
+        Outputs<Value> { i -> Disposer in
             let disposables = outputs.map { o -> Disposer in
                 o.outputing { v in
                     i.input(value: v)
@@ -57,7 +57,7 @@ public extension Outputs {
     }
 }
 
-public extension Outputs {
+public extension Outputs where Self.OutputType == Any {
     static func combine<O1, O2>(_ o1: O1, _ o2: O2) -> Outputs<(O1.OutputType, O2.OutputType)> where O1: Outputing, O2: Outputing {
         Outputs<(O1.OutputType, O2.OutputType)> { i in
             var o1Done = false

@@ -81,7 +81,7 @@ public extension OutputingModifier where Self: Outputing {
     }
 
     func combine<O: Outputing>(_ other: O) -> Outputs<(OutputType, O.OutputType)> {
-        Outputs<(OutputType, O.OutputType)>.combine(self, other)
+        Outputs.combine(self, other)
     }
 }
 
