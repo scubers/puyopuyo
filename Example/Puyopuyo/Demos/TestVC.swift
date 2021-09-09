@@ -41,7 +41,7 @@ class TestVC: BaseVC {
                     .text(state.map { "\($0)\($0)" })
                     .width(.wrap(shrink: 1))
                     .observe(\.bounds, input: label1Rect)
-                    .margin(horz: 10)
+//                    .margin(left: 10)
                     .bind(keyPath: \.lineBreakMode, .byClipping)
 
                 UILabel().attach($0)
@@ -49,7 +49,7 @@ class TestVC: BaseVC {
                     .text(state)
                     .width(.wrap(shrink: 1))
                     .observe(\.bounds, input: label2Rect)
-                    .margin(horz: 10)
+                    .margin(left: 10)
                     .bind(keyPath: \.lineBreakMode, .byClipping)
                 
                 UILabel().attach($0)
