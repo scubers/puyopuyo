@@ -47,17 +47,22 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
     public let min: CGFloat
     public let max: CGFloat
     public let priority: Double
+    public let shrink: CGFloat
 
     public static func fix(_ value: CGFloat) -> SizeDescription {
-        return SizeDescription(sizeType: .fixed, fixedValue: value, ratio: 0, add: 0, min: 0, max: .greatestFiniteMagnitude, priority: 0)
+        return SizeDescription(sizeType: .fixed, fixedValue: value, ratio: 0, add: 0, min: 0, max: .greatestFiniteMagnitude, priority: 0, shrink: 0)
     }
 
     public static func ratio(_ value: CGFloat) -> SizeDescription {
-        return SizeDescription(sizeType: .ratio, fixedValue: 0, ratio: value, add: 0, min: 0, max: .greatestFiniteMagnitude, priority: 0)
+        return SizeDescription(sizeType: .ratio, fixedValue: 0, ratio: value, add: 0, min: 0, max: .greatestFiniteMagnitude, priority: 0, shrink: 0)
     }
 
     public static func wrap(add: CGFloat = 0, min: CGFloat = 0, max: CGFloat = .greatestFiniteMagnitude, priority: Double = 0) -> SizeDescription {
-        return SizeDescription(sizeType: .wrap, fixedValue: 0, ratio: 0, add: add, min: min, max: max, priority: priority)
+        return SizeDescription(sizeType: .wrap, fixedValue: 0, ratio: 0, add: add, min: min, max: max, priority: priority, shrink: 0)
+    }
+
+    public static func wrap(shrink: CGFloat) -> SizeDescription {
+        return SizeDescription(sizeType: .wrap, fixedValue: 0, ratio: 0, add: 0, min: 0, max: .greatestFiniteMagnitude, priority: 0, shrink: shrink)
     }
 
     public static var wrap: SizeDescription {

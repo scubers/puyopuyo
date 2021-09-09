@@ -17,7 +17,95 @@ class TestVC: BaseVC {
 //        demo3().attach(vRoot)
 //        demo4().attach(vRoot)
 //        demo5().attach(vRoot)
-        demo6().attach(vRoot)
+//        demo6().attach(vRoot)
+        demo7().attach(vRoot)
+    }
+    
+    func demo7() -> UIView {
+        VBox().attach {
+            let state = State("sdfadsf")
+            
+            UITextField().attach($0)
+                .size(.fill, 50)
+                .onText(state)
+            
+            let label1Rect = State<CGRect?>(.zero)
+            let label2Rect = State<CGRect?>(.zero)
+            
+            let container = HBox().attach($0) {
+//                UIView().attach($0)
+//                    .size(100, 50)
+                
+                UILabel().attach($0)
+//                    .numberOfLines(0)
+                    .text(state.map { "\($0)\($0)" })
+                    .width(.wrap(shrink: 1))
+                    .observe(\.bounds, input: label1Rect)
+                    .margin(horz: 10)
+                    .bind(keyPath: \.lineBreakMode, .byClipping)
+
+                UILabel().attach($0)
+//                    .numberOfLines(0)
+                    .text(state)
+                    .width(.wrap(shrink: 1))
+                    .observe(\.bounds, input: label2Rect)
+                    .margin(horz: 10)
+                    .bind(keyPath: \.lineBreakMode, .byClipping)
+                
+                UILabel().attach($0)
+                    .text("stay")
+                    .width(.wrap(priority: 1))
+            }
+            .space(10)
+            .width(500)
+            .height(100)
+            .view
+            
+            let original = state.map { text -> String in
+                let label = UILabel()
+                label.text = "\(text)\(text)"
+                var size = label.sizeThatFits(.zero)
+                let originWidth1 = size.width
+                
+                label.text = text
+                size = label.sizeThatFits(.zero)
+                let originWidth2 = size.width
+                
+                let total = "total: \(originWidth1 + originWidth2)"
+                let delta = "delta: \(originWidth1 + originWidth2 - 500)"
+                let origin = "width1: \(originWidth1), width2: \(originWidth2), width1 / width2 = \(originWidth1 / originWidth2)"
+                
+                let cal1 = originWidth1 - (originWidth1 + originWidth2 - 500) / 2
+                let cal2 = originWidth2 - (originWidth1 + originWidth2 - 500) / 2
+                
+                let cal = "calW1: \(cal1)   calW2: \(cal2)"
+                return [total, delta, origin, cal].joined(separator: "\n")
+            }
+            
+            let containerWidth = container.py_boundsState().map { rect in
+                "container width: \(rect.size.width)"
+            }
+            
+//            let oversize = Outputs.combine(label1Rect.unwrap(or: .zero), label2Rect.unwrap(or: .zero), container.py_boundsState()).map { r1, r2, r3 in
+//                "total: \(r1.width + r2.width)   delta: \(r1.width + r2.width - r3.width)"
+//            }
+            
+            let width1 = label1Rect.unwrap(or: .zero).map { rect in
+                "label1 real width: \(rect.size)"
+            }
+            
+            let width2 = label2Rect.unwrap(or: .zero).map { rect in
+                "label2 real width: \(rect.size)"
+            }
+            
+            UILabel().attach($0)
+                .numberOfLines(0)
+                .size(.fill, .wrap)
+                .text(Outputs.combine([original, containerWidth, width1, width2]).map { $0.joined(separator: "\n\n") })
+        }
+        .padding(all: 20)
+        .size(.fill, .fill)
+        .view
     }
     
     func demo6() -> UIView {

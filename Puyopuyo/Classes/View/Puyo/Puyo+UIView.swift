@@ -15,6 +15,12 @@ public extension Puyo where T: DisposableBag {
         }
         return self
     }
+
+    @discardableResult
+    func bind<R>(keyPath: ReferenceWritableKeyPath<T, R>, _ value: R) -> Self {
+        view[keyPath: keyPath] = value
+        return self
+    }
 }
 
 public extension Puyo where T: UIView {

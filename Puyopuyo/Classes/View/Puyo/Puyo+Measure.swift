@@ -83,14 +83,18 @@ public extension Puyo where T: UIView {
     }
 
     @discardableResult
-    func widthEqualToHeight() -> Self {
-        width(view.py_boundsState().map(\.height))
+    func widthEqualToHeight(add: CGFloat = 0, multiply: CGFloat = 1) -> Self {
+        width(view.py_boundsState().map(\.height).map { v in
+            multiply * v + add
+        })
         return self
     }
 
     @discardableResult
-    func heightEqualToWidth() -> Self {
-        height(view.py_boundsState().map(\.width))
+    func heightEqualToWidth(add: CGFloat = 0, multiply: CGFloat = 1) -> Self {
+        height(view.py_boundsState().map(\.width).map { v in
+            multiply * v + add
+        })
         return self
     }
 }

@@ -89,11 +89,10 @@ public class BoxHelper<R: Regulator> {
                 Outputs
                     .merge([frameSize, boundsSize])
                     .distinct()
-                    .outputing { [weak self] _ in
-                        guard let self = self else { return }
+                    .outputing { [weak view] _ in
+                        guard let view = view else { return }
                         if regulator.size.maybeRatio() {
                             view.setNeedsLayout()
-                            self.setNeedsLayout(view: view, regulator: regulator)
                         }
                     }
         }
