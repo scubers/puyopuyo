@@ -98,7 +98,7 @@ class FlatPropertiesVC: BaseVC {
             title: "format",
             builder: {
                 HBox().attach($0) {
-                    for _ in 0 ..< 1 {
+                    for _ in 0 ..< 5 {
                         Label.demo("").attach($0)
                             .size(40, 40)
                     }
