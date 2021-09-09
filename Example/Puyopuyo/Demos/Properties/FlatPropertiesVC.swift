@@ -98,12 +98,19 @@ class FlatPropertiesVC: BaseVC {
             title: "format",
             builder: {
                 HBox().attach($0) {
-                    for _ in 0..<6 {
+                    for _ in 0 ..< 1 {
                         Label.demo("").attach($0)
                             .size(40, 40)
                     }
+
+                    UIView().attach($0)
+                        .activated(false)
+                        .backgroundColor(UIColor.black)
+                        .center($0.py_boundsState().map { CGPoint(x: $0.width / 2, y: $0.height / 2) })
+                        .bind(keyPath: \.frame.size.height, $0.py_boundsState().map { $0.height })
+                        .frame(w: 1)
                 }
-//                .space(2)
+                .space(10)
 //                .padding(all: 10)
                 .justifyContent(.center)
                 .size(.fill, 60)

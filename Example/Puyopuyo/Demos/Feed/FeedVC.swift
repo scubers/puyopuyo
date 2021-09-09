@@ -229,6 +229,7 @@ private class ItemView: HBox, Stateful {
                     let comments = bind(\.comments)
 
                     let likeVisible = likes.map { (!$0.isEmpty).py_visibleOrGone() }
+                    let commentVisible = comments.map { (!$0.isEmpty).py_visibleOrGone() }
 
                     HBox().attach($0) {
                         UIImageView().attach($0)
@@ -245,7 +246,9 @@ private class ItemView: HBox, Stateful {
                     UIView().attach($0)
                         .size(.fill, Util.pixel(1))
                         .backgroundColor(UIColor.lightGray.withAlphaComponent(0.3))
-                        .visibility(likeVisible)
+                        .visibility(Outputs.combine(likeVisible, commentVisible).map { v1, v2 in
+                            (v1 == .visible && v2 == .visible).py_visibleOrGone()
+                        })
 
                     VBoxRecycle<String>(
                         builder: { o, i in
@@ -266,6 +269,7 @@ private class ItemView: HBox, Stateful {
                     .attach($0)
                     .width(.fill)
                     .viewState(comments)
+                    .visibility(commentVisible)
                 }
                 .backgroundColor(UIColor(hexString: "#F6F6F6"))
                 .width(.fill)

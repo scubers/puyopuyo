@@ -357,10 +357,10 @@ class FlatCalculator2 {
             var delta: CGFloat = 0
             switch format {
             // between 和 main 会忽略space的作用
-            case .between where measures.count > 1 && calculateIndex != 0:
-                delta = (regChildrenRemainCalSize.main - totalSubMain) / CGFloat(measures.count - 1) - regulator.space
+            case .between where calculateIndex != 0:
+                delta = (regChildrenRemainCalSize.main - totalSubMain + totalSpace) / CGFloat(measures.count - 1) - regulator.space
             case .round:
-                delta = (regChildrenRemainCalSize.main - totalSubMain) / CGFloat(measures.count + 1) - (calculateIndex == 0 ? 0 : regulator.space)
+                delta = (regChildrenRemainCalSize.main - totalSubMain + totalSpace) / CGFloat(measures.count + 1) - (calculateIndex == 0 ? 0 : regulator.space)
             default: break
             }
             let (main, end) = _calculateMainOffset(measure: m, idx: calculateIndex, lastEnd: lastEnd + delta)
