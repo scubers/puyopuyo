@@ -434,24 +434,29 @@ extension CalSize {
     struct Priority: Comparable {
         static func < (lhs: CalSize.Priority, rhs: CalSize.Priority) -> Bool {
             if lhs.level == rhs.level {
-                return lhs.priority > rhs.priority
+                if lhs.priority == rhs.priority {
+                    return lhs.shrink < rhs.shrink
+                } else {
+                    return lhs.priority > rhs.priority
+                }
             }
             return lhs.level < rhs.level
         }
 
         var level: Int
         var priority: Double
+        var shrink: CGFloat
 
         static func level1() -> Priority {
-            .init(level: 0, priority: 0)
+            .init(level: 0, priority: 0, shrink: 0)
         }
 
-        static func level2(priority: Double) -> Priority {
-            .init(level: 10, priority: priority)
+        static func level2(priority: Double, shrink: CGFloat) -> Priority {
+            .init(level: 10, priority: priority, shrink: shrink)
         }
 
         static func level3() -> Priority {
-            .init(level: 20, priority: 0)
+            .init(level: 20, priority: 0, shrink: 0)
         }
     }
 
@@ -498,7 +503,7 @@ extension CalSize {
         }
         // level 2: w_f, w_w, w_r
         if main.isWrap {
-            return .level2(priority: main.priority)
+            return .level2(priority: main.priority, shrink: main.shrink)
         }
         // level 3: r_w, f_r, r_f, r_r
         return .level3()

@@ -36,6 +36,7 @@ class TestVC: BaseVC {
 //                UIView().attach($0)
 //                    .size(100, 50)
                 
+                
                 UILabel().attach($0)
                     .numberOfLines(0)
                     .text(state.map { "\($0)\($0)" })
@@ -52,10 +53,15 @@ class TestVC: BaseVC {
                     .margin(left: 10)
                     .bind(keyPath: \.lineBreakMode, .byClipping)
                 
+                
+                UILabel().attach($0)
+                    .text("100")
+                    .size(.wrap, .fill)
+                
                 UILabel().attach($0)
                     .text("stay")
 //                    .margin(left: 10)
-                    .width(.wrap(priority: 1))
+                    .width(.wrap(priority: 2))
             }
 //            .space(10)
 //            .width(500)
