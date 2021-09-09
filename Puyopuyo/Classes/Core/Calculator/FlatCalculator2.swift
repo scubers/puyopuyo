@@ -36,10 +36,12 @@ import Foundation
 
  -- 第二次循环 --
  1. 根据子节点的size的计算优先级进行排序
+ 
+     主_次
 
      f_f, f_w: 必须最先计算，主轴固定尺寸优先级最高
 
-     w_f, w_w, w_r: 下一步根据 主轴 w 的 priority 的优先级计算
+     w_f, w_w, w_r: 下一步根据 主轴 w 的 priority 以及 shrink 的优先级计算
 
      r_w, f_r, r_f, r_r: 必须最后计算，主次都依赖剩余空间, f 不依赖其他参数
 
