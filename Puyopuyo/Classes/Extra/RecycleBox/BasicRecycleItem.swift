@@ -131,6 +131,7 @@ public class BasicRecycleItem<Data>: IRecycleItem {
             if let root = root {
                 cell.contentView.addSubview(root)
             }
+            holder.isBuilding = false
         }
         cell.state.input(value: ctx)
         _cellConfig?(cell)

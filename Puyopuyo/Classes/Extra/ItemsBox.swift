@@ -13,17 +13,19 @@ public class Trigger<T> {
     var indexFinder: (() -> Int?)?
 
     public var data: T? {
-        if isBuilding {
-            fatalError()
-        }
+        ensureNotBuiling()
         return dataFinder?()
     }
 
     public var index: Int? {
-        if isBuilding {
-            fatalError()
-        }
+        ensureNotBuiling()
         return indexFinder?()
+    }
+
+    private func ensureNotBuiling() {
+        if isBuilding {
+            fatalError("can not call trigger when building")
+        }
     }
 }
 

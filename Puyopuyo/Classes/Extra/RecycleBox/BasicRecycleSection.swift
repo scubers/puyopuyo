@@ -7,9 +7,25 @@
 
 import Foundation
 
-public struct ActionTrigger<D, V: UIView> {
+public class ActionTrigger<D, V: UIView> {
     var creator: () -> RecycleContext<D, V>?
-    public var context: RecycleContext<D, V>? { creator() }
+    
+    init(creator: @escaping () -> RecycleContext<D, V>?) {
+        self.creator = creator
+    }
+    
+    var isBuilding = true
+    
+    private func ensureNotBuilding() {
+        if isBuilding {
+            fatalError("cannot call trigger when is builing")
+        }
+    }
+    
+    public var context: RecycleContext<D, V>? {
+        ensureNotBuilding()
+        return creator()
+    }
     
     public func inContext(_ action: (RecycleContext<D, V>) -> Void) {
         if let c = context {
@@ -203,6 +219,7 @@ public class BasicRecycleSection<Data>: IRecycleSection {
             if let root = root {
                 view.addSubview(root)
             }
+            holder.isBuilding = false
         }
         withContext { view.state.input(value: $0) }
     }

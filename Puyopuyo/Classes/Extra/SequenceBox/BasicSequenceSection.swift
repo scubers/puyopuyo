@@ -110,6 +110,7 @@ public class BasicSequenceSection<Data>: ISequenceSection {
                     view?.root = root
                     view?.contentView.addSubview(root)
                 }
+                holder.isBuilding = false
             } else if footer, let gen = footerGen {
                 let holder = ActionTrigger<Data, UITableView> { [weak self] in
                     if let box = self?.box,
@@ -124,6 +125,7 @@ public class BasicSequenceSection<Data>: ISequenceSection {
                     view?.root = root
                     view?.contentView.addSubview(root)
                 }
+                holder.isBuilding = false
             }
         }
         view?.state.input(value: getContext())

@@ -96,6 +96,7 @@ public class BasicSequenceItem<Data>: ISequenceItem {
                 cell?.root = root
                 cell?.contentView.addSubview(root)
             }
+            holder.isBuilding = false
             
         }
         if let ctx = getContext() {
