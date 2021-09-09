@@ -284,21 +284,24 @@ class FlatCalculator2 {
         let calSubSize = measure.size.getCalSize(by: regDirection)
         let subCalMargin = measure.margin.getCalEdges(by: regDirection)
 
-        // 总剩余空间 - 主轴固定长度 - 总间隙 + 当前节点主轴margin
-        var mainRemain: CGFloat = regChildrenRemainCalSize.main - totalSubMain + subCalMargin.mainFixed
+        // 总剩余空间 - 主轴固定长度 + 当前节点主轴margin
+        var mainRemain: CGFloat // = regChildrenRemainCalSize.main - totalSubMain + subCalMargin.mainFixed
 
-        if calSubSize.main.isFixed {
+        switch calSubSize.main.sizeType {
+        case .fixed:
             // 子主轴固定时，剩余空间需要减去当前固定尺寸
-            mainRemain += calSubSize.main.fixedValue
-        } else if calSubSize.main.isWrap {
+            mainRemain = totalRatioRemain + calSubSize.main.fixedValue
+        case .wrap:
             // 包裹时就是当前剩余空间
             // 当允许压缩时，优先算出总长度
             if calSubSize.main.shrink > 0 {
                 mainRemain = .greatestFiniteMagnitude
+            } else {
+                mainRemain = totalRatioRemain
             }
-        } else if calSubSize.main.isRatio {
+        case .ratio:
             // 子主轴比重，需要根据当前剩余空间 & 比重进行计算
-            mainRemain = mainRemain * (calSubSize.main.ratio / totalMainRatio)
+            mainRemain = totalRatioRemain * (calSubSize.main.ratio / totalMainRatio)
         }
 
         var crossRemain: CGFloat = regChildrenRemainCalSize.cross
@@ -307,7 +310,7 @@ class FlatCalculator2 {
             crossRemain = maxSubCross
         }
 
-        return CalFixedSize(main: mainRemain, cross: crossRemain, direction: regDirection)
+        return CalFixedSize(main: mainRemain + subCalMargin.mainFixed, cross: crossRemain, direction: regDirection)
     }
 
     private func calculateChild(_ measure: Measure, subRemain: CalFixedSize) {
