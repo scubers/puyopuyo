@@ -86,7 +86,7 @@ class FlowCalculator {
         }
 
         children.enumerated().forEach { _, m in
-            let subCalSize = m.calculate(byParent: Measure(), remain: remain).getCalSize(by: regDirection)
+            let subCalSize = m.calculate(byParent: Measure(), remain: regRemainCalSize.getSize()).getCalSize(by: regDirection)
             let subCalMargin = CalEdges(insets: m.margin, direction: regDirection)
             let subCrossSize = subCalSize.cross
 
@@ -122,7 +122,7 @@ class FlowCalculator {
         if !currentLine.isEmpty {
             virtualLines.append(getVirtualLine(children: currentLine))
         }
-        let size = getVirtualRegulator(children: virtualLines).calculate(byParent: parent, remain: remain)
+        let size = getVirtualRegulator(children: virtualLines).calculate(byParent: parent, remain: regRemainCalSize.getSize())
         virtualLines.forEach { $0.justifyChildrenWithCenter() }
         return size
     }
@@ -138,7 +138,7 @@ class FlowCalculator {
         }
 
         let virtualRegulator = getVirtualRegulator(children: fakeLines)
-        let size = virtualRegulator.calculate(byParent: parent, remain: remain)
+        let size = virtualRegulator.calculate(byParent: parent, remain: regRemainCalSize.getSize())
         fakeLines.forEach { $0.justifyChildrenWithCenter() }
         return size
     }

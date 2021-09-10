@@ -21,7 +21,8 @@ class FeedVC: BaseVC, UITableViewDelegate {
     }
 
     func recycleBox() -> UIView {
-        RecycleBox(
+        let this = WeakCatcher(value: self)
+        return RecycleBox(
             sections: [
                 RecycleSection<Void, Feed>(
                     items: dataSource.asOutput(),
@@ -34,12 +35,13 @@ class FeedVC: BaseVC, UITableViewDelegate {
                     },
                     header: { _, _ in
                         Header().attach()
-                            .onEventProduced(to: self) { this, e in
+                            .onEventProduced(Inputs { e in
                                 switch e {
                                 case .reload:
-                                    this.reload()
+                                    this.value?.reload()
                                 }
-                            }
+
+                            })
                             .view
                     },
                     footer: { _, _ in
@@ -63,7 +65,8 @@ class FeedVC: BaseVC, UITableViewDelegate {
     }
 
     func sequenceBox() -> UIView {
-        SequenceBox(
+        let this = WeakCatcher(value: self)
+        return SequenceBox(
             sections: [
                 SequenceSection<Void, Feed>(
                     dataSource: dataSource.asOutput(),
@@ -77,12 +80,12 @@ class FeedVC: BaseVC, UITableViewDelegate {
             ].asOutput(),
             header: {
                 Header().attach()
-                    .onEventProduced(to: self) { this, e in
+                    .onEventProduced(Inputs { e in
                         switch e {
                         case .reload:
-                            this.reload()
+                            this.value?.reload()
                         }
-                    }
+                    })
                     .view
             },
             footer: {
