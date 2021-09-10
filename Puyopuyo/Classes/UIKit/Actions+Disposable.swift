@@ -26,9 +26,10 @@ public extension UIControl {
     @discardableResult
     func py_addAction(for event: UIControl.Event, _ block: @escaping (UIControl) -> Void) -> Disposer {
         let target = PuyoTarget<UIControl>(block)
-        addTarget(target, action: #selector(PuyoTarget<UIControl>.targetAction(_:)), for: event)
-        let disposable = Disposers.create {
-            self.removeTarget(target, action: #selector(PuyoTarget<UIControl>.targetAction(_:)), for: event)
+        let action = #selector(PuyoTarget<UIControl>.targetAction(_:))
+        addTarget(target, action: action, for: event)
+        let disposable = Disposers.create { [weak self] in
+            self?.removeTarget(target, action: action, for: event)
         }
         addDisposer(disposable, for: nil)
         return disposable
@@ -39,9 +40,10 @@ public extension UIGestureRecognizer {
     @discardableResult
     func py_addAction(_ block: @escaping (UIGestureRecognizer) -> Void) -> Disposer {
         let target = PuyoTarget<UIGestureRecognizer>(block)
-        addTarget(target, action: #selector(PuyoTarget<UIGestureRecognizer>.targetAction(_:)))
-        let disposer = Disposers.create {
-            self.removeTarget(target, action: #selector(PuyoTarget<UIGestureRecognizer>.targetAction(_:)))
+        let action = #selector(PuyoTarget<UIGestureRecognizer>.targetAction(_:))
+        addTarget(target, action: action)
+        let disposer = Disposers.create { [weak self] in
+            self?.removeTarget(target, action: action)
         }
         addDisposer(disposer, for: nil)
         return disposer
