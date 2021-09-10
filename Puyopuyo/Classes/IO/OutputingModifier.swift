@@ -83,6 +83,14 @@ public extension OutputingModifier where Self: Outputing {
     func combine<O: Outputing>(_ other: O) -> Outputs<(OutputType, O.OutputType)> {
         Outputs.combine(self, other)
     }
+
+    func dispatchMain() -> Outputs<OutputType> {
+        bind { o, i in
+            DispatchQueue.main.async {
+                i.input(value: o)
+            }
+        }
+    }
 }
 
 public extension OutputingModifier where Self: Outputing, Self.OutputType: OptionalableValueType {

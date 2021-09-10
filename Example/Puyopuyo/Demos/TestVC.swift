@@ -52,6 +52,7 @@ class TestVC: BaseVC {
                     .observe(\.bounds, input: label2Rect)
                     .margin(left: 10)
                     .bind(keyPath: \.lineBreakMode, .byClipping)
+                    .heightEqualToWidth()
                 
                 
                 UILabel().attach($0)
