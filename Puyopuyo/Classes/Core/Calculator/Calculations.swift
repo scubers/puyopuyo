@@ -9,7 +9,8 @@ import Foundation
 
 /**
 
- 提供计算使用的结构体
+ *The struct for calculation*
+
  Size -> CalSize
  CGSize -> CalFixedSize
  CGPoint -> CalCenter
@@ -27,10 +28,6 @@ import Foundation
  forward     backward
          end
  ------------------------
-
- 布局开始方向 = start，相反 = end
- 从start -> end 方向为forward
- 从end -> start 方向为backward
 
  */
 
@@ -97,11 +94,11 @@ public extension UIEdgeInsets {
     func getCalEdges(by direction: Direction) -> CalEdges {
         return CalEdges(insets: self, direction: direction)
     }
-    
+
     func getHorzTotal() -> CGFloat {
         return left + right
     }
-    
+
     func getVertTotal() -> CGFloat {
         return top + bottom
     }
@@ -174,8 +171,8 @@ public struct CalSize {
     }
 }
 
-extension Size {
-    public func getCalSize(by direction: Direction) -> CalSize {
+public extension Size {
+    func getCalSize(by direction: Direction) -> CalSize {
         return CalSize(size: self, direction: direction)
     }
 }
@@ -211,8 +208,8 @@ public struct CalFixedSize {
     }
 }
 
-extension CGSize {
-    public func getCalFixedSize(by direction: Direction) -> CalFixedSize {
+public extension CGSize {
+    func getCalFixedSize(by direction: Direction) -> CalFixedSize {
         return CalFixedSize(cgSize: self, direction: direction)
     }
 }

@@ -251,12 +251,12 @@ class FlatCalculator2 {
         let lastEnd = calculateCenter(measures: calculateChildren)
 
         // 计算自身大小
-        var main = regulator.size.getMain(parent: regDirection)
+        var main = regulator.size.getMain(direction: regDirection)
         if main.isWrap {
             main = .fix(main.getWrapSize(by: lastEnd + regCalPadding.end))
         }
         
-        var cross = regulator.size.getCross(parent: regDirection)
+        var cross = regulator.size.getCross(direction: regDirection)
         if cross.isWrap {
             cross = .fix(cross.getWrapSize(by: maxSubCross + regCalPadding.crossFixed))
         }

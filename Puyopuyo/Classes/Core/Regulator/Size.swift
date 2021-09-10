@@ -132,14 +132,14 @@ public struct Size: Equatable {
         return width.isWrap && height.isWrap
     }
 
-    public func getMain(parent direction: Direction) -> SizeDescription {
+    public func getMain(direction: Direction) -> SizeDescription {
         if case .x = direction {
             return width
         }
         return height
     }
 
-    public func getCross(parent direction: Direction) -> SizeDescription {
+    public func getCross(direction: Direction) -> SizeDescription {
         if case .x = direction {
             return height
         }
