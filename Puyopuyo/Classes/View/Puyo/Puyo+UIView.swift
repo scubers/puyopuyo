@@ -175,11 +175,6 @@ public extension Puyo where T: UIView {
     }
 
     @discardableResult
-    func onTap<C: WeakCatchable, O>(to catcher: C, _ action: @escaping (O, UITapGestureRecognizer) -> Void) -> Self where C.Object == O {
-        onTap(to: catcher.catchedWeakObject, action)
-    }
-
-    @discardableResult
     func onTap(_ action: @escaping (UITapGestureRecognizer) -> Void) -> Self {
         view.py_addTap(action: { tap in
             action(tap)

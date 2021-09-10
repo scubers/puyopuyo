@@ -159,46 +159,6 @@ public extension Puyo where T: UIView {
     func margin<S: Outputing>(_ margin: S) -> Self where S.OutputType == UIEdgeInsets {
         bind(keyPath: \T.py_measure.margin, margin)
     }
-
-    @discardableResult
-    func marginTop(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
-        if let s = view?.py_boundsState() {
-            margin(top: s.map(block))
-        }
-        return self
-    }
-
-    @discardableResult
-    func marginLeft(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
-        if let s = view?.py_boundsState() {
-            margin(left: s.map(block))
-        }
-        return self
-    }
-
-    @discardableResult
-    func marginBottom(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
-        if let s = view?.py_boundsState() {
-            margin(bottom: s.map(block))
-        }
-        return self
-    }
-
-    @discardableResult
-    func marginAll(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
-        if let s = view?.py_boundsState() {
-            margin(all: s.map(block))
-        }
-        return self
-    }
-
-    @discardableResult
-    func marginRight(on view: UIView?, _ block: @escaping (CGRect) -> CGFloat) -> Self {
-        if let s = view?.py_boundsState() {
-            margin(right: s.map(block))
-        }
-        return self
-    }
 }
 
 // MARK: - Alignment ext
