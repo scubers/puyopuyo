@@ -18,10 +18,30 @@ class TestVC: BaseVC {
 //        demo4().attach(vRoot)
 //        demo5().attach(vRoot)
 //        demo6().attach(vRoot)
-        demo7().attach(vRoot)
+//        shrinkDeadLoopTest().attach(vRoot)
+        flowCompactTest().attach(vRoot)
     }
     
-    func demo7() -> UIView {
+    func flowCompactTest() -> UIView {
+        VBox().attach {
+            VFlow(count: 30).attach($0) {
+                for i in 0..<100 {
+                    Label.demo(i.description).attach($0)
+                        .width(.wrap(min: 50, shrink: 1))
+                        .height(50)
+//                        .size(50, 50)
+                }
+            }
+            .padding(all: 20)
+            .space(20)
+        }
+        .size(.fill, .fill)
+        .justifyContent(.center)
+        .padding(all: 10)
+        .view
+    }
+    
+    func shrinkDeadLoopTest() -> UIView {
         VBox().attach {
             let state = State("sdfadsf")
             

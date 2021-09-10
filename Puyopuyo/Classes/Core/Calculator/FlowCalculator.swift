@@ -42,7 +42,7 @@ class FlowCalculator {
     let remain: CGSize
     var arrange: Int { regulator.arrange }
 
-    var layoutDirection: Direction { regulator.direction }
+    var regDirection: Direction { regulator.direction }
 
     lazy var regRemainCalSize: CalFixedSize = {
         let size = Calculator.getChildRemainSize(self.regulator.size,
@@ -50,11 +50,11 @@ class FlowCalculator {
                                                 margin: self.regulator.margin,
                                                 padding: self.regulator.padding,
                                                 ratio: nil)
-        return CalFixedSize(cgSize: size, direction: self.regulator.direction)
+        return CalFixedSize(cgSize: size, direction: self.regDirection)
     }()
 
-    var regCalPadding: CalEdges { CalEdges(insets: regulator.padding, direction: regulator.direction) }
-    var regCalSize: CalSize { CalSize(size: regulator.size, direction: regulator.direction) }
+    var regCalPadding: CalEdges { CalEdges(insets: regulator.padding, direction: regDirection) }
+    var regCalSize: CalSize { CalSize(size: regulator.size, direction: regDirection) }
 
     func calculate() -> Size {
         var calculateChildren = [Measure]()
@@ -86,8 +86,8 @@ class FlowCalculator {
         }
 
         children.enumerated().forEach { _, m in
-            let subCalSize = m.calculate(byParent: Measure(), remain: remain).getCalSize(by: regulator.direction)
-            let subCalMargin = CalEdges(insets: m.margin, direction: regulator.direction)
+            let subCalSize = m.calculate(byParent: Measure(), remain: remain).getCalSize(by: regDirection)
+            let subCalMargin = CalEdges(insets: m.margin, direction: regDirection)
             let subCrossSize = subCalSize.cross
 
             let space = CGFloat(min(1, currentLine.count)) * getOppsiteSpace()
@@ -149,7 +149,7 @@ private extension FlowCalculator {
         let outside = VirtualFlatRegulator(target: nil, children: children)
         outside.justifyContent = regulator.justifyContent
         outside.alignment = regulator.alignment
-        outside.direction = layoutDirection
+        outside.direction = regDirection
         outside.space = getNormalSpace()
         outside.format = getNormalFormat()
         outside.margin = regulator.margin
@@ -169,7 +169,7 @@ private extension FlowCalculator {
         line.reverse = regulator.reverse
         line.alignment = regulator.alignment
 
-        var lineCalSize = CalSize(main: .wrap, cross: .wrap, direction: layoutDirection)
+        var lineCalSize = CalSize(main: .wrap, cross: .wrap, direction: regDirection)
         if !regCalSize.cross.isWrap {
             // 当流式布局为非包裹的时候，内部计算布局优先撑满
             lineCalSize.cross = .fill
@@ -189,7 +189,7 @@ private extension FlowCalculator {
             var maxRatio: CGFloat?
             var maxPriority: Double?
             children.forEach { m in
-                let size = m.size.getCalSize(by: layoutDirection)
+                let size = m.size.getCalSize(by: regDirection)
                 if size.main.isRatio {
                     if let m = maxRatio {
                         maxRatio = max(m, size.main.ratio)
@@ -224,34 +224,34 @@ private extension FlowCalculator {
     }
 
     func getNormalSpace() -> CGFloat {
-        if layoutDirection == .x {
+        if regDirection == .x {
             return regulator.hSpace
         }
         return regulator.vSpace
     }
 
     func getNormalFormat() -> Format {
-        if layoutDirection == .x {
+        if regDirection == .x {
             return regulator.hFormat
         }
         return regulator.vFormat
     }
 
     func getOppsiteFormat() -> Format {
-        if layoutDirection == .x {
+        if regDirection == .x {
             return regulator.vFormat
         }
         return regulator.hFormat
     }
 
     func getOppsiteSpace() -> CGFloat {
-        if layoutDirection == .x {
+        if regDirection == .x {
             return regulator.vSpace
         }
         return regulator.hSpace
     }
 
     func getOppsiteDirection() -> Direction {
-        return layoutDirection == .x ? .y : .x
+        return regDirection == .x ? .y : .x
     }
 }
