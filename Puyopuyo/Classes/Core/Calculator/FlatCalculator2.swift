@@ -207,9 +207,10 @@ class FlatCalculator2 {
         // 根据优先级计算
         getSortedChildren(calculateChildren).forEach { calculateChild($0) }
 
-        // 处理压缩主轴
+        // 子节点超出剩余空间并且存在可压缩节点时，处理主轴压缩
         if totalShrink > 0, totalSubMain > regChildrenRemainCalSize.main {
-            let oversize = totalSubMain - regChildrenRemainCalSize.main
+            let overflowSize = totalSubMain - regChildrenRemainCalSize.main
+
             mainShrinkChildren.forEach {
                 let calSize = $0.size.getCalSize(by: regDirection)
                 if calSize.main.isWrap, calSize.main.shrink > 0 {
@@ -217,7 +218,7 @@ class FlatCalculator2 {
 
                     let calMargin = $0.margin.getCalEdges(by: regDirection)
                     // 需要压缩的主轴长度
-                    let delta = oversize * (calSize.main.shrink / totalShrink)
+                    let delta = overflowSize * (calSize.main.shrink / totalShrink)
 
                     let mainRemain = max(0, min(calFixedSize.main - delta, totalShrinkWrapRemain)) + calMargin.mainFixed
 
@@ -255,7 +256,7 @@ class FlatCalculator2 {
         if main.isWrap {
             main = .fix(main.getWrapSize(by: lastEnd + regCalPadding.end))
         }
-        
+
         var cross = regulator.size.getCross(direction: regDirection)
         if cross.isWrap {
             cross = .fix(cross.getWrapSize(by: maxSubCross + regCalPadding.crossFixed))
@@ -299,11 +300,12 @@ class FlatCalculator2 {
             // 子主轴固定时，剩余空间需要减去当前固定尺寸
             mainRemain = totalRatioRemain + calSubSize.main.fixedValue
         case .wrap:
-            // 包裹时就是当前剩余空间
-            // 当允许压缩时，优先算出总长度
+
+            // 当允许压缩时，不限制剩余空间，优先算出总长度，下一步在进行处理压缩
             if calSubSize.main.shrink > 0 {
                 mainRemain = .greatestFiniteMagnitude
             } else {
+                // 包裹时就是当前剩余空间
                 mainRemain = totalRatioRemain
             }
         case .ratio:
@@ -323,7 +325,7 @@ class FlatCalculator2 {
     private func calculateChild(_ measure: Measure, subRemain: CalFixedSize) {
         let subEstimateSize = _getEstimateSize(measure: measure, remain: subRemain.getSize())
         if subEstimateSize.maybeWrap() {
-            fatalError("计算后的尺寸不能是包裹")
+            fatalError("Estimate size cannot be wrap")
         }
         Calculator.applyMeasure(measure, size: subEstimateSize, currentRemain: subRemain.getSize(), ratio: nil)
 

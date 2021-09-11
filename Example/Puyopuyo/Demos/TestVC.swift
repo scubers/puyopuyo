@@ -24,15 +24,17 @@ class TestVC: BaseVC {
     
     func flowCompactTest() -> UIView {
         VBox().attach {
-            VFlow(count: 30).attach($0) {
-                for i in 0..<100 {
+            VFlow(count: 0).attach($0) {
+                for i in 0..<3 {
                     Label.demo(i.description).attach($0)
-                        .width(.wrap(min: 50, shrink: 1))
-                        .height(50)
+                        .width(.wrap(min: 400, shrink: 1))
+                        .height(.wrap(min: 400, shrink: 1))
+                        .cornerRadius(10)
 //                        .size(50, 50)
                 }
             }
-            .padding(all: 20)
+//            .padding(all: 10)
+            .height(.fill)
             .space(20)
         }
         .size(.fill, .fill)
