@@ -22,14 +22,11 @@ class FlowPropertiesVC: BaseVC {
         step.safeBind(to: self) { this, _ in
             this.reset()
         }
-
-//        self.blockFix.safeBind(to: self) { this, _ in
-//            this.reset()
-//        }
     }
 
     func reset() {
-        elementCount.input(value: 10)
+        elements.input(value: (0 ..< 10).map { $0 })
+        endings.value = []
     }
 
     let width = State(SizeDescription.fill)
@@ -45,9 +42,20 @@ class FlowPropertiesVC: BaseVC {
 
     let justifyContent = State<Alignment>([.top])
 
-    let elementCount = State(10)
+    let elements = State((0 ..< 10).map { $0 })
+    let endings = State<[Int]>([])
 
-    let adding = SimpleIO<Void>()
+    func increase() {
+        elements.value.append(elements.value.count)
+    }
+
+    func toggleEndings(_ value: Int) {
+        if endings.value.contains(value) {
+            endings.value.removeAll(where: { $0 == value })
+        } else {
+            endings.value.append(value)
+        }
+    }
 
     let step = State(2)
 
@@ -82,12 +90,12 @@ class FlowPropertiesVC: BaseVC {
                         Label.demo("reset").attach($0)
                             .style(TapScaleStyle())
                             .onTap(to: self) { this, _ in
-                                this.elementCount.input(value: 10)
+                                this.reset()
                             }
                         Label.demo("add").attach($0)
                             .style(TapScaleStyle())
                             .onTap(to: self) { this, _ in
-                                this.adding.input(value: ())
+                                this.increase()
                             }
 
                         Label.demo("block fix").attach($0)
@@ -209,24 +217,48 @@ class FlowPropertiesVC: BaseVC {
     }
 
     func getFlow() -> FlowBox {
-        VFlow().attach {
-            let v = $0
+        let this = WeakCatcher(value: self)
+        return VFlowRecycle<Int> { [weak self] o, i in
+            guard let self = self else {
+                return UIView()
+            }
+            let base: CGFloat = 40
+            let width = Outputs.combine(o, self.step, self.blockFix).map { idx, step, blockFixed -> SizeDescription in
+                let size = base + CGFloat(step) * CGFloat(idx)
+                return blockFixed ? SizeDescription.fix(size) : .wrap(add: size)
+            }
 
-            _ = elementCount.outputing { [weak self] _ in
-                v.subviews.forEach { $0.removeFromSuperview() }
+            return Label.demo("").attach()
+                .text(o.map(\.description))
+                .backgroundColor(Util.randomColor())
+                .width(width)
+                .height(width)
+                .bind(keyPath: \.py_measure.flowEnding, self.endings.combine(o).map { v, idx in
+                    v.contains(idx)
+                })
+                .attach { v in
+                    let doubleTap = UITapGestureRecognizer()
+                    doubleTap.numberOfTapsRequired = 2
+                    doubleTap.py_addAction { _ in
+                        if let idx = i.index {
+                            this.value?.elements.value.remove(at: idx)
+                        }
+                    }
+                    v.addGestureRecognizer(doubleTap)
 
-                for idx in 0 ..< 10 {
-                    self?.getLabel(idx: idx).attach(v)
+                    let tap = UITapGestureRecognizer()
+                    tap.require(toFail: doubleTap)
+                    tap.py_addAction { _ in
+                        if let idx = i.index {
+                            this.value?.toggleEndings(idx)
+                        }
+                    }
+                    v.addGestureRecognizer(tap)
                 }
-            }
-
-            _ = adding.outputing { [weak self] in
-                let count = v.subviews.count
-                self?.getLabel(idx: count).attach(v)
-            }
+                .view
         }
-        .space(2)
-        .padding(all: 4)
+        .attach()
+        .viewState(elements)
         .view
     }
 

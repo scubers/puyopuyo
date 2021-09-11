@@ -31,7 +31,7 @@ public class Trigger<T> {
 
 // MARK: - FlatBoxRecycle
 
-public class FlatBoxRecycle<T>: FlatBox, Recycler {
+public class FlatBoxRecycle<T>: FlatBox, BoxRecycler {
     typealias Data = T
 
     fileprivate var container = Container<T>()
@@ -68,7 +68,7 @@ public class VBoxRecycle<T>: FlatBoxRecycle<T> {
 
 // MARK: - FlowBoxRecycle
 
-public class FlowBoxRecycle<T>: FlowBox, Recycler {
+public class FlowBoxRecycle<T>: FlowBox, BoxRecycler {
     typealias Data = T
 
     fileprivate var container = Container<T>()
@@ -105,7 +105,7 @@ public class VFlowRecycle<T>: FlowBoxRecycle<T> {
 
 // MARK: - ZBoxRecycle
 
-public class ZBoxRecycle<T>: ZBox, Recycler {
+public class ZBoxRecycle<T>: ZBox, BoxRecycler {
     typealias Data = T
 
     fileprivate var container = Container<T>()
@@ -141,12 +141,10 @@ private class Context<T>: Hashable {
 
     var view: UIView!
 
-    let state = State<T>.unstable()
-
-    var index: Int = 0
+    let state = State<(Int, T)>.unstable()
 }
 
-private protocol Recycler: Stateful {
+private protocol BoxRecycler: Stateful {
     associatedtype Data
 
     var container: Container<Data> { get }
@@ -161,7 +159,7 @@ private class Container<T> {
     var freeMap = [Context<T>]()
 }
 
-extension Recycler where Self: Boxable & UIView, StateType == [Data] {
+extension BoxRecycler where Self: Boxable & UIView, StateType == [Data] {
     func setup() {
         viewState.safeBind(to: self) { this, dataSource in
             this.reload(dataSource: dataSource)
@@ -171,18 +169,18 @@ extension Recycler where Self: Boxable & UIView, StateType == [Data] {
     private func reload(dataSource: [Data]) {
         dataSource.enumerated().forEach { idx, element in
             if idx < container.usingMap.count {
-                container.usingMap[idx].state.input(value: element)
+                container.usingMap[idx].state.input(value: (idx, element))
             } else {
                 if !container.freeMap.isEmpty {
                     let last = container.freeMap.removeLast()
-                    last.state.input(value: element)
+                    last.state.input(value: (idx, element))
                     container.usingMap.append(last)
                     addSubview(last.view)
                 } else {
                     let c = Context<Data>()
-                    c.state.input(value: element)
+                    c.state.input(value: (idx, element))
                     let trigger = Trigger<Data>()
-                    let view = builder(c.state.asOutput(), trigger)
+                    let view = builder(c.state.asOutput().map { $0.1 }, trigger)
 
                     let finder = { [weak view, weak self] () -> Context<Data>? in
                         guard let view = view, let self = self else {
@@ -195,8 +193,8 @@ extension Recycler where Self: Boxable & UIView, StateType == [Data] {
                         }
                         return nil
                     }
-                    trigger.indexFinder = { finder()?.index }
-                    trigger.dataFinder = { finder()?.state.value }
+                    trigger.indexFinder = { finder()?.state.value.0 }
+                    trigger.dataFinder = { finder()?.state.value.1 }
                     trigger.isBuilding = false
                     c.view = view
                     container.usingMap.append(c)

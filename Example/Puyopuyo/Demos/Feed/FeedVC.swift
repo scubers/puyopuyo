@@ -202,10 +202,16 @@ private class ItemView: HBox, Stateful {
                 let images = bind(\.images).unwrap(or: [])
 
                 VFlowRecycle<String>(
-                    builder: { o, _ in
+                    builder: { o, i in
                         UIImageView().attach()
                             .image(o.then { downloadImage(url: $0) })
                             .size(150, 150)
+                            .userInteractionEnabled(true)
+                            .onTap {
+                                if let i = i.index {
+                                    print(i)
+                                }
+                            }
                             .view
                     }
                 )
