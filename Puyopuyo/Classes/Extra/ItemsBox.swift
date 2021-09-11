@@ -154,8 +154,11 @@ private protocol Recycler: Stateful {
 }
 
 private class Container<T> {
-    var usingMap = Set<Context<T>>()
-    var freeMap = Set<Context<T>>()
+//    var usingMap = Set<Context<T>>()
+//    var freeMap = Set<Context<T>>()
+
+    var usingMap = [Context<T>]()
+    var freeMap = [Context<T>]()
 }
 
 extension Recycler where Self: Boxable & UIView, StateType == [Data] {
@@ -165,40 +168,51 @@ extension Recycler where Self: Boxable & UIView, StateType == [Data] {
         }
     }
 
-    private func reload(dataSource: StateType) {
-        container.usingMap.forEach { c in
-            c.view.removeFromSuperview()
-            container.freeMap.insert(c)
-        }
-
-        for element in dataSource {
-            if let c = container.freeMap.popFirst() {
-                addSubview(c.view)
-                c.state.input(value: element)
-                container.usingMap.insert(c)
+    private func reload(dataSource: [Data]) {
+        dataSource.enumerated().forEach { idx, element in
+            if idx < container.usingMap.count {
+                container.usingMap[idx].state.input(value: element)
             } else {
-                let c = Context<Data>()
-                c.state.input(value: element)
-                let trigger = Trigger<Data>()
-                let view = builder(c.state.asOutput(), trigger)
+                if !container.freeMap.isEmpty {
+                    let last = container.freeMap.removeLast()
+                    last.state.input(value: element)
+                    container.usingMap.append(last)
+                    addSubview(last.view)
+                } else {
+                    let c = Context<Data>()
+                    c.state.input(value: element)
+                    let trigger = Trigger<Data>()
+                    let view = builder(c.state.asOutput(), trigger)
 
-                let finder = { [weak view, weak self] () -> Context<Data>? in
-                    guard let view = view, let self = self else {
+                    let finder = { [weak view, weak self] () -> Context<Data>? in
+                        guard let view = view, let self = self else {
+                            return nil
+                        }
+                        for context in self.container.usingMap {
+                            if context.view == view {
+                                return context
+                            }
+                        }
                         return nil
                     }
-                    for context in self.container.usingMap {
-                        if context.view == view {
-                            return context
-                        }
-                    }
-                    return nil
+                    trigger.indexFinder = { finder()?.index }
+                    trigger.dataFinder = { finder()?.state.value }
+                    trigger.isBuilding = false
+                    c.view = view
+                    container.usingMap.append(c)
+                    addSubview(view)
                 }
-                trigger.indexFinder = { finder()?.index }
-                trigger.dataFinder = { finder()?.state.value }
-                trigger.isBuilding = false
-                c.view = view
-                addSubview(view)
-                container.usingMap.insert(c)
+            }
+        }
+
+        let total = container.usingMap.count
+        let delta = total - dataSource.count
+
+        if delta > 0 {
+            for idx in (total - delta ..< total).reversed() {
+                let c = container.usingMap.remove(at: idx)
+                c.view.removeFromSuperview()
+                container.freeMap.append(c)
             }
         }
     }

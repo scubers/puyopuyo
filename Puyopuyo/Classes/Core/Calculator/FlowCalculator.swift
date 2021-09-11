@@ -46,10 +46,10 @@ class FlowCalculator {
 
     lazy var regRemainCalSize: CalFixedSize = {
         let size = Calculator.getChildRemainSize(self.regulator.size,
-                                                superRemain: self.remain,
-                                                margin: self.regulator.margin,
-                                                padding: self.regulator.padding,
-                                                ratio: nil)
+                                                 superRemain: self.remain,
+                                                 margin: self.regulator.margin,
+                                                 padding: self.regulator.padding,
+                                                 ratio: nil)
         return CalFixedSize(cgSize: size, direction: self.regDirection)
     }()
 
@@ -90,7 +90,8 @@ class FlowCalculator {
             let subCalMargin = CalEdges(insets: m.margin, direction: regDirection)
             let subCrossSize = subCalSize.cross
 
-            let space = CGFloat(min(1, currentLine.count)) * getOppsiteSpace()
+//            let space = CGFloat(min(1, currentLine.count)) * getOppsiteSpace()
+            let space = CGFloat(min(1, currentLine.count)) * regulator.itemSpace
             // 计算当前累计的最大cross
             if subCrossSize.isRatio, maxCross + space + subCalMargin.crossFixed < totalCross {
                 // 还有剩余空间
@@ -101,10 +102,10 @@ class FlowCalculator {
 
             if maxCross > totalCross { // 内容超出
                 if currentLine.isEmpty {
-                    virtualLines.append(getVirtualLine(children: [m]))
+                    virtualLines.append(getVirtualLine(children: [m], index: virtualLines.count))
                 } else {
                     // 之前的行先归档
-                    virtualLines.append(getVirtualLine(children: currentLine))
+                    virtualLines.append(getVirtualLine(children: currentLine, index: virtualLines.count))
                     maxCross = getLength(from: subCrossSize) + subCalMargin.crossFixed
                     // 另起新的一行
                     currentLine = [m]
@@ -114,13 +115,13 @@ class FlowCalculator {
             }
             // 主动换行
             if m.flowEnding {
-                virtualLines.append(getVirtualLine(children: currentLine))
+                virtualLines.append(getVirtualLine(children: currentLine, index: virtualLines.count))
                 currentLine = []
                 maxCross = 0
             }
         }
         if !currentLine.isEmpty {
-            virtualLines.append(getVirtualLine(children: currentLine))
+            virtualLines.append(getVirtualLine(children: currentLine, index: virtualLines.count))
         }
         let size = getVirtualRegulator(children: virtualLines).calculate(byParent: parent, remain: regRemainCalSize.getSize())
         virtualLines.forEach { $0.justifyChildrenWithCenter() }
@@ -134,7 +135,7 @@ class FlowCalculator {
         fakeLines.reserveCapacity(line)
         for idx in 0 ..< line {
             let lineChildren = children[idx * arrange ..< min(idx * arrange + arrange, children.count)]
-            fakeLines.append(getVirtualLine(children: Array(lineChildren)))
+            fakeLines.append(getVirtualLine(children: Array(lineChildren), index: idx))
         }
 
         let virtualRegulator = getVirtualRegulator(children: fakeLines)
@@ -150,8 +151,8 @@ private extension FlowCalculator {
         outside.justifyContent = regulator.justifyContent
         outside.alignment = regulator.alignment
         outside.direction = regDirection
-        outside.space = getNormalSpace()
-        outside.format = getNormalFormat()
+        outside.space = regulator.runSpace
+        outside.format = regulator.runFormat
         outside.margin = regulator.margin
         outside.padding = regulator.padding
         outside.reverse = regulator.reverse
@@ -160,60 +161,24 @@ private extension FlowCalculator {
         return outside
     }
 
-    func getVirtualLine(children: [Measure]) -> VirtualFlatRegulator {
+    func getVirtualLine(children: [Measure], index: Int) -> VirtualFlatRegulator {
         let line = VirtualFlatRegulator(children: children)
         line.justifyContent = regulator.justifyContent
         line.direction = getOppsiteDirection()
-        line.space = getOppsiteSpace()
-        line.format = getOppsiteFormat()
+        line.space = regulator.itemSpace
+        line.format = regulator.format
         line.reverse = regulator.reverse
         line.alignment = regulator.alignment
 
-        var lineCalSize = CalSize(main: .wrap, cross: .wrap, direction: regDirection)
+        let lineMain = regulator.runingRowSize(index)
+        var lineCross = SizeDescription.wrap
+
         if !regCalSize.cross.isWrap {
-            // 当流式布局为非包裹的时候，内部计算布局优先撑满
-            lineCalSize.cross = .fill
+            lineCross = .fill
         }
 
-        if regCalSize.main.isWrap, regulator.stretchRows {
-            print("FlowRegulator: \(regulator), cannot stretch rows when main is wrap, reset to false")
-            regulator.stretchRows = false
-        }
+        line.size = CalSize(main: lineMain, cross: lineCross, direction: regDirection).getSize()
 
-        if regulator.stretchRows {
-            lineCalSize.main = .fill
-        }
-
-        if !regCalSize.main.isWrap {
-            // 找出最大的main
-            var maxRatio: CGFloat?
-            var maxPriority: Double?
-            children.forEach { m in
-                let size = m.size.getCalSize(by: regDirection)
-                if size.main.isRatio {
-                    if let m = maxRatio {
-                        maxRatio = max(m, size.main.ratio)
-                    } else {
-                        maxRatio = size.main.ratio
-                    }
-                }
-                if size.main.isWrap {
-                    if let m = maxPriority {
-                        maxPriority = max(m, size.main.priority)
-                    } else {
-                        maxPriority = size.main.priority
-                    }
-                }
-            }
-            if let max = maxRatio {
-                lineCalSize.main = .ratio(max)
-            }
-            if let max = maxPriority {
-                lineCalSize.main = .wrap(priority: max)
-            }
-        }
-
-        line.size = lineCalSize.getSize()
         return line
     }
 
@@ -223,33 +188,33 @@ private extension FlowCalculator {
         return base + (more > 0 ? 1 : 0)
     }
 
-    func getNormalSpace() -> CGFloat {
-        if regDirection == .x {
-            return regulator.hSpace
-        }
-        return regulator.vSpace
-    }
-
-    func getNormalFormat() -> Format {
-        if regDirection == .x {
-            return regulator.hFormat
-        }
-        return regulator.vFormat
-    }
-
-    func getOppsiteFormat() -> Format {
-        if regDirection == .x {
-            return regulator.vFormat
-        }
-        return regulator.hFormat
-    }
-
-    func getOppsiteSpace() -> CGFloat {
-        if regDirection == .x {
-            return regulator.vSpace
-        }
-        return regulator.hSpace
-    }
+//    func getNormalSpace() -> CGFloat {
+//        if regDirection == .x {
+//            return regulator.hSpace
+//        }
+//        return regulator.vSpace
+//    }
+//
+//    func getNormalFormat() -> Format {
+//        if regDirection == .x {
+//            return regulator.hFormat
+//        }
+//        return regulator.vFormat
+//    }
+//
+//    func getOppsiteFormat() -> Format {
+//        if regDirection == .x {
+//            return regulator.vFormat
+//        }
+//        return regulator.hFormat
+//    }
+//
+//    func getOppsiteSpace() -> CGFloat {
+//        if regDirection == .x {
+//            return regulator.vSpace
+//        }
+//        return regulator.hSpace
+//    }
 
     func getOppsiteDirection() -> Direction {
         return regDirection == .x ? .y : .x

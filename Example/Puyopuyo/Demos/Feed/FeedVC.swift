@@ -112,7 +112,7 @@ class FeedVC: BaseVC, UITableViewDelegate {
     }
 
     private func reload() {
-        dataSource.value = (0 ..< 20).map { _ in
+        dataSource.value = (0 ..< 20).map { idx in
             Feed(icon: Images().get(), name: Names().get(), content: Contents().get(), images: Images().random(9), createdAt: Int(Date().timeIntervalSince1970), likes: Names().random(10), comments: Contents().random(10).map { "\(Names().get()): \($0)" })
         }
     }

@@ -8,7 +8,7 @@
 import Foundation
 
 open class FlowBox: BoxView<FlowRegulator> {
-    public convenience init(count: Int) {
+    public convenience init(count: Int = 0) {
         self.init()
         attach().arrangeCount(count)
     }
