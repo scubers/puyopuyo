@@ -22,6 +22,12 @@ public class Trigger<T> {
         return indexFinder?()
     }
 
+    public func inContext(_ action: (Int, T) -> Void) {
+        if let index = index, let data = data {
+            action(index, data)
+        }
+    }
+
     private func ensureNotBuiling() {
         if isBuilding {
             fatalError("can not call trigger when building")
