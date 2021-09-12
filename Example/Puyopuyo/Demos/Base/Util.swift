@@ -99,7 +99,7 @@ class FPSView: ZBox {
         let passed = link.timestamp - timestamp
         if passed >= 1 {
             let fps = Double(times) / passed
-            text.value = String(format: "%.1f", fps)
+            text.value = String(format: "FPS: %.1f", fps)
             timestamp = link.timestamp
             times = 0
         }
