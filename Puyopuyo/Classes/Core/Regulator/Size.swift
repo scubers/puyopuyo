@@ -46,7 +46,7 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
     public let add: CGFloat
     public let min: CGFloat
     public let max: CGFloat
-    public let priority: Double
+    public let priority: CGFloat
     public let shrink: CGFloat
 
     public static func fix(_ value: CGFloat) -> SizeDescription {
@@ -57,7 +57,7 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
         return SizeDescription(sizeType: .ratio, fixedValue: 0, ratio: value, add: 0, min: 0, max: .greatestFiniteMagnitude, priority: 0, shrink: 0)
     }
 
-    public static func wrap(add: CGFloat = 0, min: CGFloat = 0, max: CGFloat = .greatestFiniteMagnitude, priority: Double = 0, shrink: CGFloat = 0) -> SizeDescription {
+    public static func wrap(add: CGFloat = 0, min: CGFloat = 0, max: CGFloat = .greatestFiniteMagnitude, priority: CGFloat = 0, shrink: CGFloat = 0) -> SizeDescription {
         if priority > 0, shrink > 0 {
             fatalError("priority & shrink should not be set at the same time")
         }
@@ -69,10 +69,6 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
 
     public static var wrap: SizeDescription {
         return .wrap()
-    }
-
-    public static var zero: SizeDescription {
-        return .fix(0)
     }
 
     public static var fill: SizeDescription {
@@ -115,7 +111,7 @@ public struct Size: Equatable {
         return lhs.width == rhs.width && lhs.height == rhs.height
     }
 
-    public init(width: SizeDescription = .zero, height: SizeDescription = .zero) {
+    public init(width: SizeDescription = .fix(0), height: SizeDescription = .fix(0)) {
         self.width = width
         self.height = height
     }

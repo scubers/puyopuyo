@@ -27,12 +27,13 @@ class TestVC: BaseVC {
             VFlow().attach($0) {
                 for i in 0..<50 {
                     Label.demo(i.description).attach($0)
-                        .width(.wrap(min: 100, shrink: 1))
+                        .width(.wrap(min: 100, max: 100, shrink: 1))
                         .height(.wrap(min: 100, shrink: 1))
                         .cornerRadius(10)
 //                        .size(50, 50)
                 }
             }
+            .arrangeCount(10)
             .height(.fill)
             .width(.fill)
             .space(20)

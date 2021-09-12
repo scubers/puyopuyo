@@ -69,7 +69,7 @@ import Foundation
  3. 包裹尺寸计算时候会根据优先级进行排序，但是若布局为包裹，子节点有个特殊包裹(w_r)不会.wrap(priority:)影响
 
  */
-class FlatCalculator2 {
+class FlatCalculator {
     let regulator: FlatRegulator
     let parent: Measure
     let remain: CGSize
@@ -440,14 +440,14 @@ extension CalSize {
         }
 
         var level: Int
-        var priority: Double
+        var priority: CGFloat
         var shrink: CGFloat
 
         static func level1() -> Priority {
             .init(level: 0, priority: 0, shrink: 0)
         }
 
-        static func level2(priority: Double, shrink: CGFloat) -> Priority {
+        static func level2(priority: CGFloat, shrink: CGFloat) -> Priority {
             .init(level: 10, priority: priority, shrink: shrink)
         }
 

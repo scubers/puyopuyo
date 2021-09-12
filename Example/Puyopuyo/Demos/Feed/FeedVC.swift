@@ -270,6 +270,7 @@ private class ItemView: HBox, Stateful {
                             .padding(all: 8)
                             .width(.fill)
                             .onTap {
+                                print(i.index ?? 0)
                                 print(i.data ?? "")
                             }
                             .view
