@@ -10,7 +10,6 @@
 
 Puyopuyo是基于Frame进行布局，并且提供了一套响应式的数据驱动开发模型的UI框架。
 
-
 ## Requirements
 
 swift 5.1
@@ -22,6 +21,8 @@ pod 'Puyopuyo'
 ```
 
 ## 使用
+
+强烈建议clone项目到本地运行查看实际Demo。
 
 一个简单的菜单Cell，可以如下实现，根据不同的布局规则，子节点将根据规则自动布局。
 
@@ -110,7 +111,40 @@ VFlow(count: 3).attach {
 |*runFormat*|控制布局内列的分布方式| `.leading, .center, .between, .round, .trailing`, default: .leading|
 |*runRowSize*|控制布局内列的分布方式| `(Int) -> SizeDescription`, default: .wrap(shrink: 1)|
 
+## 数据驱动
 
+声明式的UI进行布局之后，当数据变化后，UI将自动根据需要重新布局。
+
+```swift
+let text = State("")
+    
+VBox().attach {
+    UILabel().attach($0)
+        .text("Title")
+
+    UILabel().attach($0)
+        .text(text)
+}
+
+// do when some data come back
+text.value = "My Description"
+
+// if you are using RxSwift that would be another good choise
+// make `Observable` implements Outputing protocol
+extension Observable: Outputing {
+    public typealias OutputType = Element
+    /// .... some code
+}
+
+func getDescription() -> Observable<String> {
+    // get some description by network or other async works
+}
+
+UILabel().attach($0)
+    .text(getDescription())
+```
+
+*注意：数据驱动的所有逻辑遵循RxSwift的使用逻辑，请注意内存泄露*
 
 ## Author
 
