@@ -53,7 +53,7 @@ public class FlatRegulator: Regulator {
         return CalEdges(insets: padding, direction: direction)
     }
 
-    override public func calculate(remain size: CGSize) -> Size {
-        return FlatCalculator(self, remain: size).calculate()
+    override public func calculate(by size: CGSize) -> Size {
+        return FlatCalculator(self, residual: size).calculate()
     }
 }

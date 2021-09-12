@@ -10,7 +10,7 @@ import UIKit
 public protocol Measurable {
     /// 计算尺寸
     ///
-    func calculate(remain size: CGSize) -> Size
+    func calculate(by residualSize: CGSize) -> Size
 }
 
 public protocol MeasureTargetable: AnyObject {

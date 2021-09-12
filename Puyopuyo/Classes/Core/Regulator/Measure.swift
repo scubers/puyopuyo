@@ -174,8 +174,8 @@ public class Measure: Measurable, MeasureTargetable, Hashable {
         }
     }
 
-    public func calculate(remain size: CGSize) -> Size {
-        return MeasureCalculator.calculate(measure: self, remain: size)
+    public func calculate(by size: CGSize) -> Size {
+        return MeasureCalculator.calculate(measure: self, residual: size)
     }
 
     public var py_size: CGSize {

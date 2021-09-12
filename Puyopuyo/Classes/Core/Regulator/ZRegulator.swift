@@ -8,8 +8,8 @@
 import Foundation
 
 public class ZRegulator: Regulator {
-    override public func calculate(remain size: CGSize) -> Size {
-        return ZCalculator(self, remain: size).calculate()
+    override public func calculate(by size: CGSize) -> Size {
+        return ZCalculator(self, residual: size).calculate()
     }
 }
 
