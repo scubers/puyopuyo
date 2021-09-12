@@ -119,7 +119,7 @@ class Calculator {
         if remain.height == 0 { remain.height = .greatestFiniteMagnitude }
         // 父视图为非Regulator，需要事先应用一下固有尺寸
         Calculator.applyMeasure(measure, size: measure.size, currentRemain: remain, ratio: nil)
-        let sizeAfterCalulate = measure.calculate(byParent: temp, remain: remain)
+        let sizeAfterCalulate = measure.calculate(remain: remain)
         let fixedSize = Calculator.calculate(size: sizeAfterCalulate, by: size)
         return CGSize(width: fixedSize.width.fixedValue, height: fixedSize.height.fixedValue)
     }

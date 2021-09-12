@@ -9,11 +9,9 @@ import Foundation
 
 class ZCalculator {
     let regulator: ZRegulator
-    let parent: Measure
     let remain: CGSize
-    init(_ regulator: ZRegulator, parent: Measure, remain: CGSize) {
+    init(_ regulator: ZRegulator, remain: CGSize) {
         self.regulator = regulator
-        self.parent = parent
         self.remain = remain
     }
 
@@ -60,7 +58,7 @@ class ZCalculator {
             // 计算中心
             measure.py_center = _calculateCenter(measure, containerSize: containerSize)
             if regulator.calculateChildrenImmediately {
-                _ = measure.calculate(byParent: regulator, remain: regChildrenRemainSize)
+                _ = measure.calculate(remain: regChildrenRemainSize)
             }
         }
 
@@ -100,7 +98,7 @@ class ZCalculator {
         if measure.size.bothNotWrap() {
             size = measure.size
         }
-        size = measure.calculate(byParent: regulator, remain: remain)
+        size = measure.calculate(remain: remain)
         if size.maybeWrap() {
             fatalError()
         }

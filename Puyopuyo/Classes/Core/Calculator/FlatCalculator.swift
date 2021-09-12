@@ -72,11 +72,9 @@ import Foundation
  */
 class FlatCalculator {
     let regulator: FlatRegulator
-    let parent: Measure
     let remain: CGSize
-    init(_ regulator: FlatRegulator, parent: Measure, remain: CGSize) {
+    init(_ regulator: FlatRegulator, remain: CGSize) {
         self.regulator = regulator
-        self.parent = parent
         self.remain = remain
     }
 
@@ -331,7 +329,7 @@ class FlatCalculator {
         Calculator.applyMeasure(measure, size: subEstimateSize, currentRemain: subRemain.getSize(), ratio: nil)
 
         if regulator.calculateChildrenImmediately {
-            _ = measure.calculate(byParent: regulator, remain: subRemain.getSize())
+            _ = measure.calculate(remain: subRemain.getSize())
         }
     }
 
@@ -423,7 +421,7 @@ class FlatCalculator {
         if measure.size.bothNotWrap() {
             return measure.size
         }
-        return measure.calculate(byParent: regulator, remain: remain)
+        return measure.calculate(remain: remain)
     }
 }
 

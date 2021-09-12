@@ -40,7 +40,7 @@ public class BoxHelper<R: Regulator> {
             if regulator.size.bothNotWrap() {
                 let remain = CGSize(width: view.bounds.width + regulator.margin.getHorzTotal(),
                                     height: view.bounds.height + regulator.margin.getVertTotal())
-                _ = regulator.calculate(byParent: parentMeasure, remain: remain)
+                _ = regulator.calculate(remain: remain)
             }
         } else {
             if isSizeControl {
@@ -54,12 +54,12 @@ public class BoxHelper<R: Regulator> {
                 }
                 // 父视图为非Regulator，需要事先应用一下固有尺寸
                 Calculator.applyMeasure(regulator, size: regulator.size, currentRemain: size, ratio: nil)
-                let sizeAftercalculate = regulator.calculate(byParent: parentMeasure, remain: size)
+                let sizeAftercalculate = regulator.calculate(remain: size)
                 Calculator.applyMeasure(regulator, size: sizeAftercalculate, currentRemain: size, ratio: nil)
             } else {
                 Calculator.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
                 regulator.size = .init(width: .fill, height: .fill)
-                _ = regulator.calculate(byParent: parentMeasure, remain: view.bounds.size)
+                _ = regulator.calculate(remain: view.bounds.size)
             }
             if isCenterControl {
                 view.center = CGPoint(x: view.bounds.midX + regulator.margin.left, y: view.bounds.midY + regulator.margin.top)
