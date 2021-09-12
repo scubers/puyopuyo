@@ -103,6 +103,18 @@ public extension Outputs where Self.OutputType == Any {
         }
     }
 
+    static func combine<O1, O2, O3, O4, O5>(_ o1: O1, _ o2: O2, _ o3: O3, _ o4: O4, _ o5: O5) -> Outputs<(O1.OutputType, O2.OutputType, O3.OutputType, O4.OutputType, O5.OutputType)> where O1: Outputing, O2: Outputing, O3: Outputing, O4: Outputing, O5: Outputing {
+        Outputs.combine(o1, o2, o3, o4).combine(o5).map { o, last in
+            (o.0, o.1, o.2, o.3, last)
+        }
+    }
+
+    static func combine<O1, O2, O3, O4, O5, O6>(_ o1: O1, _ o2: O2, _ o3: O3, _ o4: O4, _ o5: O5, _ o6: O6) -> Outputs<(O1.OutputType, O2.OutputType, O3.OutputType, O4.OutputType, O5.OutputType, O6.OutputType)> where O1: Outputing, O2: Outputing, O3: Outputing, O4: Outputing, O5: Outputing, O6: Outputing {
+        Outputs.combine(o1, o2, o3, o4, o5).combine(o6).map { o, last in
+            (o.0, o.1, o.2, o.3, o.4, last)
+        }
+    }
+
     static func combine<O>(_ outputs: [O]) -> Outputs<[O.OutputType]> where O: Outputing {
         Outputs<[O.OutputType]> { i in
             var dones = Array(repeating: false, count: outputs.count)
