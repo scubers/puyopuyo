@@ -185,10 +185,8 @@ class ZPropertiesVC: BaseVC {
     }
 
     func getZBox() -> UIView {
-        let alignment = Outputs.merge([alignmentVert.asOutput(), alignmentHorz.asOutput()]).map { [weak self] a -> Alignment in
-            guard let self = self else { return a }
-            return self.alignmentVert.value.union(self.alignmentHorz.value)
-        }
+
+        let alignment = Outputs.combine(alignmentVert, alignmentHorz).map { $0.0.union($0.1) }
 
         return
             ZBox().attach {
