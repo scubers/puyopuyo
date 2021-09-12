@@ -9,22 +9,22 @@ import Foundation
 
 public class Trigger<T> {
     public var isBuilding = true
-    var dataFinder: (() -> T?)?
-    var indexFinder: (() -> Int?)?
 
-    public var data: T? {
-        ensureNotBuiling()
-        return dataFinder?()
+    public struct Context<T> {
+        public var data: T
+        public var index: Int
     }
 
-    public var index: Int? {
+    var createor: (() -> Context<T>?)?
+
+    public var context: Context<T>? {
         ensureNotBuiling()
-        return indexFinder?()
+        return createor?()
     }
 
-    public func inContext(_ action: (Int, T) -> Void) {
-        if let index = index, let data = data {
-            action(index, data)
+    public func inContext(_ action: (Context<T>) -> Void) {
+        if let context = context {
+            action(context)
         }
     }
 
@@ -199,8 +199,12 @@ extension BoxRecycler where Self: Boxable & UIView, StateType == [Data] {
                         }
                         return nil
                     }
-                    trigger.indexFinder = { finder()?.state.value.0 }
-                    trigger.dataFinder = { finder()?.state.value.1 }
+                    trigger.createor = {
+                        if let c = finder() {
+                            return .init(data: c.state.value.1, index: c.state.value.0)
+                        }
+                        return nil
+                    }
                     trigger.isBuilding = false
                     c.view = view
                     container.usingMap.append(c)

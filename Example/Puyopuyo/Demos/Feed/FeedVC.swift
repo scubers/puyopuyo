@@ -112,7 +112,7 @@ class FeedVC: BaseVC, UITableViewDelegate {
     }
 
     private func reload() {
-        dataSource.value = (0 ..< 20).map { idx in
+        dataSource.value = (0 ..< 20).map { _ in
             Feed(icon: Images().get(), name: Names().get(), content: Contents().get(), images: Images().random(9), createdAt: Int(Date().timeIntervalSince1970), likes: Names().random(10), comments: Contents().random(10).map { "\(Names().get()): \($0)" })
         }
     }
@@ -208,8 +208,8 @@ private class ItemView: HBox, Stateful {
                             .size(150, 150)
                             .userInteractionEnabled(true)
                             .onTap {
-                                if let i = i.index {
-                                    print(i)
+                                i.inContext { c in
+                                    print(c.index)
                                 }
                             }
                             .view
@@ -270,8 +270,10 @@ private class ItemView: HBox, Stateful {
                             .padding(all: 8)
                             .width(.fill)
                             .onTap {
-                                print(i.index ?? 0)
-                                print(i.data ?? "")
+                                i.inContext { c in
+                                    print(c.index)
+                                    print(c.data)
+                                }
                             }
                             .view
                         }

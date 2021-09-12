@@ -51,7 +51,8 @@ import Foundation
      1.1 每次循环获取剩余空间大小
      1.2 计算节点大小
 
- 2. 修正次轴R & 主轴压缩，可能加 1 次循环计算
+ 2. 处理主轴压缩 maybe +1 loop
+ 3. 修正次轴R maybe +1 loop
 
  -- 第四次循环 --
  1. 计算根据format(.between, .leading, .round)计算center值

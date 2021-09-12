@@ -47,7 +47,7 @@ public class RecycleSection<Section, Data>: BasicRecycleSection<Section> {
             }
         }
         .send(to: state)
-        .dispose(by: bag)
+        .dispose(by: self)
     }
 }
 

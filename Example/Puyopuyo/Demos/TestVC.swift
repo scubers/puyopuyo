@@ -19,13 +19,25 @@ class TestVC: BaseVC {
 //        demo5().attach(vRoot)
 //        demo6().attach(vRoot)
 //        shrinkDeadLoopTest().attach(vRoot)
-        flowCompactTest().attach(vRoot)
+//        flowCompactTest().attach(vRoot)
+    }
+    
+    func testRecycleBox() -> UIView {
+        RecycleBox(
+            sections: [
+                DataRecycleSection(items: [].asOutput(), cell: { _, _ in
+                    Label.title("")
+                })
+            ].asOutput()
+        )
+        .attach()
+        .view
     }
     
     func flowCompactTest() -> UIView {
         VBox().attach {
             VFlow().attach($0) {
-                for i in 0..<50 {
+                for i in 0 ..< 50 {
                     Label.demo(i.description).attach($0)
                         .width(.wrap(min: 100, max: 100, shrink: 1))
                         .height(.wrap(min: 100, shrink: 1))
@@ -59,7 +71,6 @@ class TestVC: BaseVC {
 //                UIView().attach($0)
 //                    .size(100, 50)
                 
-                
                 UILabel().attach($0)
                     .numberOfLines(0)
                     .text(state.map { "\($0)\($0)" })
@@ -76,7 +87,6 @@ class TestVC: BaseVC {
                     .margin(left: 10)
                     .bind(keyPath: \.lineBreakMode, .byClipping)
                     .heightEqualToWidth()
-                
                 
                 UILabel().attach($0)
                     .text("100")

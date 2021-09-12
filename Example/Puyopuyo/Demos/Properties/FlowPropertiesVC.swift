@@ -236,12 +236,15 @@ class FlowPropertiesVC: BaseVC {
                 .bind(keyPath: \.py_measure.flowEnding, self.endings.combine(o).map { v, idx in
                     v.contains(idx)
                 })
+                .onTap {
+                    print("----")
+                }
                 .attach { v in
                     let doubleTap = UITapGestureRecognizer()
                     doubleTap.numberOfTapsRequired = 2
                     doubleTap.py_addAction { _ in
-                        if let idx = i.index {
-                            this.value?.elements.value.remove(at: idx)
+                        i.inContext { c in
+                            this.value?.elements.value.remove(at: c.index)
                         }
                     }
                     v.addGestureRecognizer(doubleTap)
@@ -249,8 +252,8 @@ class FlowPropertiesVC: BaseVC {
                     let tap = UITapGestureRecognizer()
                     tap.require(toFail: doubleTap)
                     tap.py_addAction { _ in
-                        if let idx = i.index {
-                            this.value?.toggleEndings(idx)
+                        i.inContext { c in
+                            this.value?.toggleEndings(c.index)
                         }
                     }
                     v.addGestureRecognizer(tap)

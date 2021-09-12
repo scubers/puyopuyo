@@ -9,7 +9,7 @@ import Foundation
 
 public typealias SequenceViewGenerator<D> = (Outputs<RecycleContext<D, UITableView>>, ActionTrigger<D, UITableView>) -> UIView?
 
-public class BasicSequenceSection<Data>: ISequenceSection {
+public class BasicSequenceSection<Data>: ISequenceSection, DisposableBag {
     public init(
         id: String? = nil,
         
@@ -36,12 +36,11 @@ public class BasicSequenceSection<Data>: ISequenceSection {
         self.footerHeight = footerHeight
         self.estimatedHeaderHeight = estimatedHeaderHeight
         self.estimatedFooterHeight = estimatedFooterHeight
-        items.safeBind(to: bag) { [weak self] _, rows in
-            self?.reload(rows: rows)
+        items.safeBind(to: self) { this, rows in
+            this.reload(rows: rows)
         }
     }
     
-    let bag = NSObject()
     private var headerGen: SequenceViewGenerator<Data>?
     private var footerGen: SequenceViewGenerator<Data>?
     private var id: String
@@ -55,6 +54,11 @@ public class BasicSequenceSection<Data>: ISequenceSection {
     public var index: Int = 0
     
     public weak var box: SequenceBox?
+
+    private let bag = NSObject()
+    public func addDisposer(_ disposer: Disposer, for key: String?) {
+        bag.addDisposer(disposer, for: key)
+    }
     
     public func getItems() -> [ISequenceItem] {
         rowsState.value

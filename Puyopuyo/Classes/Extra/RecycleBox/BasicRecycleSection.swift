@@ -36,7 +36,11 @@ public class ActionTrigger<D, V: UIView> {
 
 public typealias RecycleViewGenerator<D> = (Outputs<RecycleContext<D, UICollectionView>>, ActionTrigger<D, UICollectionView>) -> UIView?
 
-public class BasicRecycleSection<Data>: IRecycleSection {
+public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
+    public func addDisposer(_ disposer: Disposer, for key: String?) {
+        bag.addDisposer(disposer, for: key)
+    }
+    
     public typealias Context = RecycleContext<Data, UICollectionView>
     public init(
         id: String? = nil,
@@ -61,12 +65,12 @@ public class BasicRecycleSection<Data>: IRecycleSection {
         headerGen = header
         footerGen = footer
         self.data = data
-        items.safeBind(to: bag) { [weak self] _, items in
-            self?.reload(items: items)
+        items.safeBind(to: self) { this, items in
+            this.reload(items: items)
         }
     }
     
-    let bag = NSObject()
+    private let bag = NSObject()
     public let recycleItems = State<[IRecycleItem]>([])
     public var sectionInsets: UIEdgeInsets?
     public var lineSpacing: CGFloat?

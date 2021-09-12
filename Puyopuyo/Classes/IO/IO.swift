@@ -22,7 +22,7 @@ public extension Disposer {
 }
 
 public protocol DisposableBag {
-    func addDisposer(_ disposer: Disposer, for: String?)
+    func addDisposer(_ disposer: Disposer, for key: String?)
 }
 
 public typealias Unbinders = Disposers
