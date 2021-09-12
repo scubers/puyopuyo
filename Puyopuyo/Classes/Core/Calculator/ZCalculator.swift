@@ -21,38 +21,42 @@ class ZCalculator {
     lazy var regFixedHeight: CGFloat = self.regulator.padding.top + self.regulator.padding.bottom
     lazy var regChildrenRemainSize: CGSize = {
         Calculator.getChildRemainSize(self.regulator.size,
-                                     superRemain: self.remain,
-                                     margin: self.regulator.margin,
-                                     padding: self.regulator.padding,
-                                     ratio: nil)
+                                      superRemain: self.remain,
+                                      margin: self.regulator.margin,
+                                      padding: self.regulator.padding,
+                                      ratio: nil)
     }()
 
     var maxSizeWithSubMargin: CGSize = .zero
 
+    var calculateChildren = [Measure]()
+
+    lazy var maybeRatioChildren = [Measure]()
+
     func calculate() -> Size {
-        var children = [Measure]()
         regulator.enumerateChild { _, measure in
             if measure.activated {
-                children.append(measure)
+                calculateChildren.append(measure)
+                let currentChildRemain = _getCurrentChildRemainSize(measure)
+                _calculateChild(measure, remain: currentChildRemain)
 
-                checkSizeConflict(measure)
-
-                let subSize = _getEstimateSize(measure: measure, remain: regChildrenRemainSize)
-
-                if subSize.width.isWrap || subSize.height.isWrap {
-                    fatalError()
+                if measure.size.maybeRatio() {
+                    maybeRatioChildren.append(measure)
                 }
-
-                Calculator.applyMeasure(measure, size: subSize, currentRemain: regChildrenRemainSize, ratio: .init(width: 1, height: 1))
-                // 计算大小
-
-                maxSizeWithSubMargin.width = max(maxSizeWithSubMargin.width, measure.py_size.width + measure.margin.getHorzTotal())
-                maxSizeWithSubMargin.height = max(maxSizeWithSubMargin.height, measure.py_size.height + measure.margin.getVertTotal())
             }
         }
+
+        // 当布局包裹时，需要最后拉伸子填充节点
+        if regulator.size.maybeWrap() {
+            maybeRatioChildren.forEach { m in
+                let currentChildRemain = _getCurrentChildRemainSize(m)
+                _calculateChild(m, remain: currentChildRemain)
+            }
+        }
+
         let containerSize = Calculator.getSize(regulator, currentRemain: remain, wrapContentSize: maxSizeWithSubMargin)
 
-        for measure in children {
+        for measure in calculateChildren {
             // 计算中心
             measure.py_center = _calculateCenter(measure, containerSize: containerSize)
             if regulator.calculateChildrenImmediately {
@@ -74,29 +78,15 @@ class ZCalculator {
         return Size(width: width, height: height)
     }
 
-    private func _getWidthIfWrap() -> CGFloat? {
-        if regulator.size.width.isWrap {
-            return regulator.size.width.getWrapSize(by: maxSizeWithSubMargin.width + regulator.padding.left + regulator.padding.right)
-        }
-        return nil
-    }
+    private func _calculateChild(_ measure: Measure, remain: CGSize) {
+        let subSize = _getEstimateSize(measure: measure, remain: remain)
 
-    private func _getHeightIfWrap() -> CGFloat? {
-        if regulator.size.height.isWrap {
-            return regulator.size.height.getWrapSize(by: maxSizeWithSubMargin.height + regulator.padding.top + regulator.padding.bottom)
-        }
-        return nil
-    }
+        // 计算 & 应用 大小
+        Calculator.applyMeasure(measure, size: subSize, currentRemain: remain, ratio: .init(width: 1, height: 1))
 
-    private func checkSizeConflict(_ measure: Measure) {
-        #if DEBUG
-        if regulator.size.width.isWrap && measure.size.width.isRatio {
-            Calculator.constraintConflict(crash: false, "[\(regulator.getRealTarget())] - [\(measure.getRealTarget())] - width (p: wrap, c: ratio) conflict !!!!")
-        }
-        if regulator.size.height.isWrap && measure.size.height.isRatio {
-            Calculator.constraintConflict(crash: false, "[\(regulator.getRealTarget())] - [\(measure.getRealTarget())] - height (p: wrap, c: ratio) conflict !!!!")
-        }
-        #endif
+        // 记录当前最大宽高
+        maxSizeWithSubMargin.width = max(maxSizeWithSubMargin.width, measure.py_size.width + measure.margin.getHorzTotal())
+        maxSizeWithSubMargin.height = max(maxSizeWithSubMargin.height, measure.py_size.height + measure.margin.getVertTotal())
     }
 
     private func _calculateCenter(_ measure: Measure, containerSize: CGSize) -> CGPoint {
@@ -106,9 +96,25 @@ class ZCalculator {
     }
 
     private func _getEstimateSize(measure: Measure, remain: CGSize) -> Size {
+        var size: Size
         if measure.size.bothNotWrap() {
-            return measure.size
+            size = measure.size
         }
-        return measure.calculate(byParent: regulator, remain: remain)
+        size = measure.calculate(byParent: regulator, remain: remain)
+        if size.maybeWrap() {
+            fatalError()
+        }
+        return size
+    }
+
+    private func _getCurrentChildRemainSize(_ measure: Measure) -> CGSize {
+        var remain = regChildrenRemainSize
+        if regulator.size.width.isWrap, measure.size.width.isRatio {
+            remain.width = maxSizeWithSubMargin.width
+        }
+        if regulator.size.height.isWrap, measure.size.height.isRatio {
+            remain.height = maxSizeWithSubMargin.height
+        }
+        return remain
     }
 }

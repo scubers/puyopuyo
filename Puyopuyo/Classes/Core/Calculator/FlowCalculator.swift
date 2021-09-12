@@ -44,7 +44,7 @@ class FlowCalculator {
 
     var regDirection: Direction { regulator.direction }
 
-    lazy var regRemainCalSize: CalFixedSize = {
+    lazy var regChildrenRemainCalSize: CalFixedSize = {
         let size = Calculator.getChildRemainSize(self.regulator.size,
                                                  superRemain: self.remain,
                                                  margin: self.regulator.margin,
@@ -75,7 +75,7 @@ class FlowCalculator {
         var currentLine = [Measure]()
         var maxCross: CGFloat = 0
 //        let totalCross = regRemainCalSize.cross - regCalPadding.crossFixed
-        let totalCross = regRemainCalSize.cross
+        let totalCross = regChildrenRemainCalSize.cross
 
         func getLength(from size: SizeDescription) -> CGFloat {
             assert(!size.isWrap)
@@ -86,7 +86,7 @@ class FlowCalculator {
         }
 
         children.enumerated().forEach { _, m in
-            let subCalSize = m.calculate(byParent: Measure(), remain: regRemainCalSize.getSize()).getCalSize(by: regDirection)
+            let subCalSize = m.calculate(byParent: Measure(), remain: regChildrenRemainCalSize.getSize()).getCalSize(by: regDirection)
             let subCalMargin = CalEdges(insets: m.margin, direction: regDirection)
             let subCrossSize = subCalSize.cross
 
@@ -123,7 +123,7 @@ class FlowCalculator {
         if !currentLine.isEmpty {
             virtualLines.append(getVirtualLine(children: currentLine, index: virtualLines.count))
         }
-        let size = getVirtualRegulator(children: virtualLines).calculate(byParent: parent, remain: regRemainCalSize.getSize())
+        let size = getVirtualRegulator(children: virtualLines).calculate(byParent: parent, remain: regChildrenRemainCalSize.getSize())
         virtualLines.forEach { $0.justifyChildrenWithCenter() }
         return size
     }
@@ -139,7 +139,7 @@ class FlowCalculator {
         }
 
         let virtualRegulator = getVirtualRegulator(children: fakeLines)
-        let size = virtualRegulator.calculate(byParent: parent, remain: regRemainCalSize.getSize())
+        let size = virtualRegulator.calculate(byParent: parent, remain: regChildrenRemainCalSize.getSize())
         fakeLines.forEach { $0.justifyChildrenWithCenter() }
         return size
     }
