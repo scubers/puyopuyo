@@ -23,7 +23,45 @@ pod 'Puyopuyo'
 
 ## 使用
 
+一个简单的菜单Cell，可以如下实现，根据不同的布局规则，子节点将根据规则自动布局。
+
 ```swift
+
+/**
+ VBox            HBox
+ |-----------|   |-------------------|
+ |Title      |   |Title   Description|
+ |           |   |-------------------|
+ |Description|
+ |-----------|
+ */
+ 
+VBox().attach {
+    UILabel().attach($0)
+        .text("Title")
+        .fontSize(20, weight: .bold)
+
+    UILabel().attach($0)
+        .text("Description")
+}
+.space(20)
+
+// or
+/**
+VFlow       HFlow
+|-------|   |-------|
+|0  1  2|   |0  3  6|
+|3  4  5|   |1  4  7|
+|6  7   |   |2  5   |
+|-------|   |-------|
+ */
+VFlow(count: 3).attach {
+    for i in 0..<8 {
+        UILabel().attach($0)
+            .text(i.description)
+    }
+}
+.space(20)
 
 ```
 
