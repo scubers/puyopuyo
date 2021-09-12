@@ -29,7 +29,6 @@ public enum Format: CaseIterable, Outputing {
 
 /// 描述一个布局具备控制子节点的属性
 public class Regulator: Measure {
-
     /// 布局节点对子节点的整体偏移
     public var justifyContent: Alignment = .center {
         didSet {
@@ -55,9 +54,5 @@ public class Regulator: Measure {
                 py_setNeedsRelayout()
             }
         }
-    }
-
-    public func enumerateChild(_ block: (Int, Measure) -> Void) {
-        py_enumerateChild(block)
     }
 }

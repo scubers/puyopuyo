@@ -17,24 +17,24 @@ class ZCalculator {
         self.remain = remain
     }
 
-    lazy var regFixedWidth: CGFloat = self.regulator.padding.left + self.regulator.padding.right
-    lazy var regFixedHeight: CGFloat = self.regulator.padding.top + self.regulator.padding.bottom
+    lazy var regFixedWidth: CGFloat = regulator.padding.left + regulator.padding.right
+    lazy var regFixedHeight: CGFloat = regulator.padding.top + regulator.padding.bottom
     lazy var regChildrenRemainSize: CGSize = {
-        Calculator.getChildRemainSize(self.regulator.size,
-                                      superRemain: self.remain,
-                                      margin: self.regulator.margin,
-                                      padding: self.regulator.padding,
+        Calculator.getChildRemainSize(regulator.size,
+                                      superRemain: remain,
+                                      margin: regulator.margin,
+                                      padding: regulator.padding,
                                       ratio: nil)
     }()
 
-    var maxSizeWithSubMargin: CGSize = .zero
+    var maxChildSizeWithSubMargin: CGSize = .zero
 
     var calculateChildren = [Measure]()
 
     lazy var maybeRatioChildren = [Measure]()
 
     func calculate() -> Size {
-        regulator.enumerateChild { _, measure in
+        regulator.py_enumerateChild { measure in
             if measure.activated {
                 calculateChildren.append(measure)
                 let currentChildRemain = _getCurrentChildRemainSize(measure)
@@ -54,7 +54,7 @@ class ZCalculator {
             }
         }
 
-        let containerSize = Calculator.getSize(regulator, currentRemain: remain, wrapContentSize: maxSizeWithSubMargin)
+        let containerSize = Calculator.getSize(regulator, currentRemain: remain, wrapContentSize: maxChildSizeWithSubMargin)
 
         for measure in calculateChildren {
             // 计算中心
@@ -85,8 +85,8 @@ class ZCalculator {
         Calculator.applyMeasure(measure, size: subSize, currentRemain: remain, ratio: .init(width: 1, height: 1))
 
         // 记录当前最大宽高
-        maxSizeWithSubMargin.width = max(maxSizeWithSubMargin.width, measure.py_size.width + measure.margin.getHorzTotal())
-        maxSizeWithSubMargin.height = max(maxSizeWithSubMargin.height, measure.py_size.height + measure.margin.getVertTotal())
+        maxChildSizeWithSubMargin.width = max(maxChildSizeWithSubMargin.width, measure.py_size.width + measure.margin.getHorzTotal())
+        maxChildSizeWithSubMargin.height = max(maxChildSizeWithSubMargin.height, measure.py_size.height + measure.margin.getVertTotal())
     }
 
     private func _calculateCenter(_ measure: Measure, containerSize: CGSize) -> CGPoint {
@@ -110,10 +110,10 @@ class ZCalculator {
     private func _getCurrentChildRemainSize(_ measure: Measure) -> CGSize {
         var remain = regChildrenRemainSize
         if regulator.size.width.isWrap, measure.size.width.isRatio {
-            remain.width = maxSizeWithSubMargin.width
+            remain.width = maxChildSizeWithSubMargin.width
         }
         if regulator.size.height.isWrap, measure.size.height.isRatio {
-            remain.height = maxSizeWithSubMargin.height
+            remain.height = maxChildSizeWithSubMargin.height
         }
         return remain
     }

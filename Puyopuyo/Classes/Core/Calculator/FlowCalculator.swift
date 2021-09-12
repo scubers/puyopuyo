@@ -58,7 +58,7 @@ class FlowCalculator {
 
     func calculate() -> Size {
         var calculateChildren = [Measure]()
-        regulator.enumerateChild { _, m in
+        regulator.py_enumerateChild { m in
             if m.activated {
                 calculateChildren.append(m)
             }

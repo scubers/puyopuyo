@@ -21,7 +21,7 @@ public protocol MeasureTargetable: AnyObject {
 
     var py_center: CGPoint { get set }
 
-    func py_enumerateChild(_ block: (Int, Measure) -> Void)
+    func py_enumerateChild(_ block: (Measure) -> Void)
 
     func py_sizeThatFits(_ size: CGSize) -> CGSize
 

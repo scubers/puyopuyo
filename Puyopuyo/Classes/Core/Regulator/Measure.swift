@@ -196,10 +196,8 @@ public class Measure: Measurable, MeasureTargetable, Hashable {
         }
     }
 
-    public func py_enumerateChild(_ block: (Int, Measure) -> Void) {
-        getRealTarget().py_enumerateChild { idx, m in
-            block(idx, m)
-        }
+    public func py_enumerateChild(_ block: (Measure) -> Void) {
+        getRealTarget().py_enumerateChild(block)
     }
 
     public func py_sizeThatFits(_ size: CGSize) -> CGSize {
@@ -223,10 +221,8 @@ class VirtualTarget: MeasureTargetable {
 
     var py_center: CGPoint = .zero
 
-    func py_enumerateChild(_ block: (Int, Measure) -> Void) {
-        children.enumerated().forEach {
-            block($0, $1)
-        }
+    func py_enumerateChild(_ block: (Measure) -> Void) {
+        children.forEach(block)
     }
 
     func py_sizeThatFits(_ size: CGSize) -> CGSize {

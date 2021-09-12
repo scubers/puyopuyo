@@ -156,7 +156,7 @@ class FlatCalculator {
     /// 计算本身布局属性，可能返回的size 为 .fixed, .ratio, 不可能返回wrap
     func calculate() -> Size {
         // 第一次循环
-        regulator.enumerateChild { _, m in
+        regulator.py_enumerateChild { m in
             // 未激活的节点不计算
             guard m.activated else { return }
 

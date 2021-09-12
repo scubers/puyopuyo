@@ -41,10 +41,8 @@ extension UIView: MeasureTargetable {
         }
     }
 
-    public func py_enumerateChild(_ block: (Int, Measure) -> Void) {
-        subviews.enumerated().forEach {
-            block($0, $1.py_measure)
-        }
+    public func py_enumerateChild(_ block: (Measure) -> Void) {
+        subviews.map(\.py_measure).forEach(block)
     }
 
     public func py_sizeThatFits(_ size: CGSize) -> CGSize {
