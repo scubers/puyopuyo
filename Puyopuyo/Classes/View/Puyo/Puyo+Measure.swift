@@ -23,52 +23,42 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func width(_ width: SizeDescription) -> Self {
-        return size(width, nil)
+        size(width, nil)
     }
 
     @discardableResult
     func height(_ height: SizeDescription) -> Self {
-        return size(nil, height)
+        size(nil, height)
     }
 
     @discardableResult
     func width<O: Outputing>(_ w: O) -> Self where O.OutputType: SizeDescriptible {
-        return size(w, nil)
+        size(w, nil)
     }
 
     @discardableResult
     func height<O: Outputing>(_ h: O) -> Self where O.OutputType: SizeDescriptible {
-        return size(nil, h)
+        size(nil, h)
     }
 
     @discardableResult
     func size(_ w: SizeDescription, _ h: SizeDescription) -> Self {
-        return width(w).height(h)
+        width(w).height(h)
     }
 
     @discardableResult
     func size(_ w: SizeDescriptible, _ h: SizeDescription) -> Self {
-        return width(w.sizeDescription).height(h)
+        width(w.sizeDescription).height(h)
     }
 
     @discardableResult
     func size(_ w: SizeDescription, _ h: SizeDescriptible) -> Self {
-        return width(w).height(h.sizeDescription)
+        width(w).height(h.sizeDescription)
     }
-
-//    @discardableResult
-//    func width(simulate modifiable: ValueModifiable) -> Self {
-//        return width(modifiable.checkSelfSimulate(view).modifyValue().map { SizeDescription.fix($0) })
-//    }
-//
-//    @discardableResult
-//    func height(simulate modifiable: ValueModifiable) -> Self {
-//        return height(modifiable.checkSelfSimulate(view).modifyValue().map { SizeDescription.fix($0) })
-//    }
 
     @discardableResult
     func width(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
-        if let s = view?.py_boundsState().distinct() {
+        if let s = view?.py_boundsState().distinct().dispatchMain() {
             return width(s.map(block))
         }
         return self
@@ -76,7 +66,7 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func height(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
-        if let s = view?.py_boundsState().distinct() {
+        if let s = view?.py_boundsState().distinct().dispatchMain() {
             height(s.map(block))
         }
         return self
@@ -87,7 +77,6 @@ public extension Puyo where T: UIView {
         width(view.py_boundsState().map(\.height).map { v in
             multiply * v + add
         }.dispatchMain())
-        return self
     }
 
     @discardableResult
@@ -95,7 +84,6 @@ public extension Puyo where T: UIView {
         height(view.py_boundsState().map(\.width).map { v in
             multiply * v + add
         }.dispatchMain())
-        return self
     }
 }
 

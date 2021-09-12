@@ -52,7 +52,7 @@ public class FlowRegulator: FlatRegulator {
         }
     }
 
-    public var runingRowSize: (Int) -> SizeDescription = { _ in SizeDescription.wrap(shrink: 1) } {
+    public var runRowSize: (Int) -> SizeDescription = { _ in SizeDescription.wrap(shrink: 1) } {
         didSet {
             py_setNeedsRelayout()
         }

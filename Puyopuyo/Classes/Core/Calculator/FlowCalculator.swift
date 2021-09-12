@@ -170,7 +170,7 @@ private extension FlowCalculator {
         line.reverse = regulator.reverse
         line.alignment = regulator.alignment
 
-        let lineMain = regulator.runingRowSize(index)
+        let lineMain = regulator.runRowSize(index)
         var lineCross = SizeDescription.wrap
 
         if !regCalSize.cross.isWrap {

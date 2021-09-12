@@ -20,6 +20,24 @@ class TestVC: BaseVC {
 //        demo6().attach(vRoot)
 //        shrinkDeadLoopTest().attach(vRoot)
 //        flowCompactTest().attach(vRoot)
+        
+        zboxFillAndWrapTest().attach(vRoot)
+    }
+    
+    func zboxFillAndWrapTest() -> UIView {
+        ZBox().attach {
+            UIView().attach($0)
+                .backgroundColor(UIColor.black)
+                .size(100, 100)
+            
+//            UIView().attach($0)
+//                .backgroundColor(UIColor.purple.withAlphaComponent(0.5))
+//                .size(.fill, .fill)
+            
+        }
+        .size(.wrap, .wrap)
+        .padding(all: 10)
+        .view
     }
     
     func testRecycleBox() -> UIView {

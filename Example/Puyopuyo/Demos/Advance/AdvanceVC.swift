@@ -90,7 +90,7 @@ class AdvanceVC: BaseVC {
                 .space(4)
                 .padding(all: 4)
                 .size(.fill, 240)
-                .runingRowSize(SizeDescription.fill)
+                .runRowSize(.fill)
                 .view
             },
             selectors: [],

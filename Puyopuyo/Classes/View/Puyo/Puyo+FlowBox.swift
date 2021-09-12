@@ -37,21 +37,21 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlowRegulator 
     }
 
     @discardableResult
-    func runingRowSize(each: @escaping (Int) -> SizeDescription) -> Self {
-        view.regulator.runingRowSize = each
+    func runRowSize(each: @escaping (Int) -> SizeDescription) -> Self {
+        view.regulator.runRowSize = each
         return self
     }
 
     @discardableResult
-    func runingRowSize<O: Outputing>(_ size: O) -> Self where O.OutputType: SizeDescriptible {
+    func runRowSize<O: Outputing>(_ size: O) -> Self where O.OutputType: SizeDescriptible {
         size.asOutput().map { $0.sizeDescription }.distinct().safeBind(to: view) { v, a in
-            v.regulator.runingRowSize = { _ in a }
+            v.regulator.runRowSize = { _ in a }
         }
         return self
     }
 
     @discardableResult
-    func runingRowSize(_ size: SizeDescription) -> Self {
-        runingRowSize(each: { _ in size })
+    func runRowSize(_ size: SizeDescription) -> Self {
+        runRowSize(each: { _ in size })
     }
 }

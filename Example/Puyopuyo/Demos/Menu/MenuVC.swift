@@ -14,27 +14,6 @@ class MenuVC: BaseVC {
         "MENU"
     }
 
-//    override func loadView() {
-//        view = UIView()
-//
-//        view.attach {
-//            VBox().attach($0) { _ in
-    ////                HBox().attach($0) {
-    ////                    UILabel().attach($0)
-    ////                        .text("124")
-    ////                }
-    ////                .size(.fill, 50)
-//            }
-//            .justifyContent(.center)
-//            .padding(top: 100)
-//            .size(.fill, .fill)
-//        }
-//    }
-//
-//    override func shouldRandomColor() -> Bool {
-//        true
-//    }
-
     override func configView() {
         menu()
     }
@@ -46,13 +25,13 @@ class MenuVC: BaseVC {
         ("FlatBox Properties", { FlatPropertiesVC() }),
         ("FlowBox Properties", { FlowPropertiesVC() }),
         ("ZBox Properties", { ZPropertiesVC() }),
-        ("ScrollingBox Properties", { ScrollBoxPropertiesVC() }),
         ("NavigationBox Properties", { NavigationBoxPropertiesVC() }),
         ("RecycleBox Properties", { RecycleBoxPropertiesVC() }),
         ("SequenceBox Properties", { SequenceBoxPropertiesVC() }),
-        ("TableBox Properties", { TableBoxPropertiesVC() }),
-        ("CollectionBox Properties", { CollectionBoxPropertiesVC() }),
         ("Advance Usage", { AdvanceVC() }),
+//        ("ScrollingBox Properties", { ScrollBoxPropertiesVC() }),
+//        ("TableBox Properties", { TableBoxPropertiesVC() }),
+//        ("CollectionBox Properties", { CollectionBoxPropertiesVC() }),
     ]
 
     func menu() {

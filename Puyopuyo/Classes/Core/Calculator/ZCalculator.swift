@@ -7,7 +7,7 @@
 
 import Foundation
 
-class ZCaculator {
+class ZCalculator {
     let regulator: ZRegulator
     let parent: Measure
     let remain: CGSize
