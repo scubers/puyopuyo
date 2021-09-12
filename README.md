@@ -6,11 +6,10 @@
 
 ## 描述
 
-一个UIKit的声明式、响应式布局。
+基于数据驱动的声明式UIKit
 
-被一个大佬的库和**SwiftUI**所启发。[TangramKit](https://github.com/youngsoft/TangramKit)
+Puyopuyo是基于Frame进行布局，并且提供了一套响应式的数据驱动开发模型的UI框架。
 
-具体详细使用方式可以查看**Demo**使用，或者查看[**WIKI**](https://github.com/scubers/puyopuyo/blob/master/WIKI.md)。
 
 ## Requirements
 
@@ -24,40 +23,56 @@ pod 'Puyopuyo'
 
 ## 使用
 
-相对于亲儿子的**SwiftUI**，当然是比较麻烦一点的了。单纯地声明布局，不能实现**View** 和父**View**的关系。所以需要在后面添加一个`attach(superview)`的操作。
-
 ```swift
-// 初始化一个view，附着在一个父view上，完成view的构建，并设置其相关属性
-VBox().attach(view) {
-    UILabel().attach($0)
-        .text("i am a text")
-        .size(.wrap(add: 20), 100)
 
-    UIButton().attach($0)
-        .text("i am a button")
-        .size(.fill, .wrap)
-}
 ```
 
-一旦我们通过声明布局后，即可以不需要成员变量持有view，所有view也都可以跟随着父视图销毁时同时销毁。
+布局的核心是UI节点描述  `Measure` `Regulator`
 
-数据流变化：
+### Measure 属性
 
-通过State，进行view和数据之间的绑定操作
+|属性|描述|值|
+|--|--|--|
+|*margin*|描述本节点的外边距| `UIEdgeInset`, default: .zero|
+|*alignment*|描述本节在父布局的偏移位置|`.none, .left, .top, .bottom, .vertCenter, .horzCenter`, default: .none|
+|*size*|描述本节点尺寸| `SizeDescription`, `.fixed` 固定尺寸, `.wrap` 包裹所有子节点的尺寸, `.ratio` 占剩余空间的比例；default: `.wrap`|
+|*flowEnding*|当前节点在 `FlowBox` 中，并且`arrangeCount = 0`才会生效，标记当前节点是否为当前行最后一个节点| `Bool`, default: false |
+|*activated*|描述本节点是否参与计算| `Bool`, default: false|
 
-```swift
-// 创建一个state
-let textState = State("")
+### Regulator & ZBox 属性
 
-HBox().attach(view) {
-    UILabel().attach($0)
-        .text(textState) // 绑定state
-}
-// state值改变
-textState.input(value: "i am a new text")
-```
+`ZBox` 继承于 `Regulator`
 
-拥抱响应式，从此规范数据流，让UI构建更流畅！！！
+|属性|描述|值|
+|--|--|--|
+|*justifyContent*|控制所有子节点在Box内的偏移位置，当子节点设置了 `alignment` 时，则优先使用 `alignment`| `.left, .top, .bottom, .vertCenter, .horzCenter`, default: .none |
+|*padding*|控制当前布局的内边距| `UIEdgeInset`, default: .zero|
+
+### FlatRegulator 属性
+
+`FlatRegulator` 继承于 `Regulator`
+
+|属性|描述|值|
+|--|--|--|
+|*space*|控制布局内子节点之间的间距| `CGFloat`, default: 0|
+|*format*|控制子节点在主轴上的分布方式| `.leading, .center, .between, .round, .trailing`, default: .leading|
+|*reverse*|控制子节点的排列方式是否于添加顺序相反| `Bool` default: false|
+
+
+### FlowRegulator 属性
+
+`FlowRegulator` 继承于 `FlatRegulator`
+
+|属性|描述|值|
+|--|--|--|
+|*arrange*|控制布局内每一列的数量，当 `arrange = 0` 时，则根据内容来自动决定是否换行| `Int`, default: 0|
+|*itemSpace*|控制布局单列内的节点间距| `CGFloat`, default: 0|
+|*runSpace*|控制布局内每列之间的间距| `CGFloat`, default: 0|
+|*format*|控制子节点在单列上的分布方式| `.leading, .center, .between, .round, .trailing`, default: .leading|
+|*runFormat*|控制布局内列的分布方式| `.leading, .center, .between, .round, .trailing`, default: .leading|
+|*runRowSize*|控制布局内列的分布方式| `(Int) -> SizeDescription`, default: .wrap(shrink: 1)|
+
+
 
 ## Author
 
