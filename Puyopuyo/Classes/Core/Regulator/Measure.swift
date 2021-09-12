@@ -143,7 +143,9 @@ public class Measure: Measurable, MeasureTargetable, Hashable {
         didSet {
             alignmentRatio.width = max(0, min(2, alignmentRatio.width))
             alignmentRatio.height = max(0, min(2, alignmentRatio.height))
-            py_setNeedsRelayout()
+            if oldValue != alignmentRatio {
+                py_setNeedsRelayout()
+            }
         }
     }
 
