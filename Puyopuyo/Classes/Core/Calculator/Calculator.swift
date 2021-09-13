@@ -107,25 +107,15 @@ class Calculator {
         let subFixedSize = measure.py_size.getCalFixedSize(by: direction)
 
         let subCrossAligment: Alignment = measure.alignment.hasCrossAligment(for: direction) ? measure.alignment : justifyContent
-        
+
         let crossAligmentRatio = direction == .x ? subCrossAligment.centerRatio.y : subCrossAligment.centerRatio.x
 
         var position = ((parentCalSize.cross - parentCalPadding.crossFixed - subFixedSize.cross - subCalMargin.crossFixed) / 2) * (crossAligmentRatio + 1) + parentCalPadding.forward + subFixedSize.cross / 2 + subCalMargin.forward
 
-        func alignmentConflictCheck() {
-            #if DEBUG
-            if crossAligmentRatio != 1 {
-                constraintConflict(crash: false, "[\(measure.getRealDelegate())]'s Alignment ratio can only activate when alignment == *center")
-            }
-            #endif
-        }
-
         if subCrossAligment.isForward(for: direction) {
             position = parentCalPadding.forward + subCalMargin.forward + subFixedSize.cross / 2
-            alignmentConflictCheck()
         } else if subCrossAligment.isBackward(for: direction) {
             position = parentCalSize.cross - (parentCalPadding.backward + subCalMargin.backward + subFixedSize.cross / 2)
-            alignmentConflictCheck()
         }
 
         return position
