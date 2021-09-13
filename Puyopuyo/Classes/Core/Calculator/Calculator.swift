@@ -47,20 +47,17 @@ class Calculator {
         }
     }
 
+    static func getIntrinsicSize(_ margin: UIEdgeInsets, residual: CGSize, size: Size) -> CGSize {
+        assert(size.bothNotWrap(), "cannot get intrinsci size from wrap size")
+        let width = getLength(size.width, currentResidual: residual.width, margin: margin.getHorzTotal(), padding: .zero)
+        let height = getLength(size.height, currentResidual: residual.height, margin: margin.getVertTotal(), padding: .zero)
+        return CGSize(width: width, height: height)
+    }
+
     static func applyMeasure(_ measure: Measure, size: Size, currentResidual: CGSize) {
-        // 把size应用到measure上，只关心剩余空间
-        let margin = measure.margin
-        if !size.width.isWrap {
-            let width = getLength(size.width, currentResidual: currentResidual.width, margin: margin.getHorzTotal(), padding: .zero)
-            if width != measure.py_size.width {
-                measure.py_size.width = width
-            }
-        }
-        if !size.height.isWrap {
-            let height = getLength(size.height, currentResidual: currentResidual.height, margin: margin.getVertTotal(), padding: .zero)
-            if height != measure.py_size.height {
-                measure.py_size.height = height
-            }
+        let intrinsicSize = getIntrinsicSize(measure.margin, residual: currentResidual, size: size)
+        if measure.py_size != intrinsicSize {
+            measure.py_size = intrinsicSize
         }
     }
 
@@ -106,8 +103,6 @@ class Calculator {
         var residual = size
         if residual.width == 0 { residual.width = .greatestFiniteMagnitude }
         if residual.height == 0 { residual.height = .greatestFiniteMagnitude }
-        // 父视图为非Regulator，需要事先应用一下固有尺寸
-        Calculator.applyMeasure(measure, size: measure.size, currentResidual: residual)
         let sizeAfterCalulate = measure.calculate(by: residual)
         let fixedSize = Calculator.calculate(size: sizeAfterCalulate, by: size)
         return CGSize(width: fixedSize.width.fixedValue, height: fixedSize.height.fixedValue)

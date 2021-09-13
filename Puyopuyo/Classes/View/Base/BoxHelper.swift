@@ -52,8 +52,6 @@ public class BoxHelper<R: Regulator> {
                 if regulator.size.height.isWrap {
                     size.height = regulator.size.height.max
                 }
-                // 父视图为非Regulator，需要事先应用一下固有尺寸
-                Calculator.applyMeasure(regulator, size: regulator.size, currentResidual: size)
                 let sizeAftercalculate = regulator.calculate(by: size)
                 Calculator.applyMeasure(regulator, size: sizeAftercalculate, currentResidual: size)
             } else {
