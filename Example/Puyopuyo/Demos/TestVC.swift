@@ -19,9 +19,9 @@ class TestVC: BaseVC {
 //        demo5().attach(vRoot)
 //        demo6().attach(vRoot)
 //        shrinkDeadLoopTest().attach(vRoot)
-//        flowCompactTest().attach(vRoot)
+        flowCompactTest().attach(vRoot)
         
-        zboxFillAndWrapTest().attach(vRoot)
+//        zboxFillAndWrapTest().attach(vRoot)
     }
     
     func zboxFillAndWrapTest() -> UIView {

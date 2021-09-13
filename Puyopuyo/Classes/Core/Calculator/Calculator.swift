@@ -78,34 +78,13 @@ class Calculator {
         return final
     }
 
-    /// 计算非wrap的size
-    static func calculate(size: Size, by cgSize: CGSize) -> Size {
-        let width = calculateFix(size.width, by: cgSize.width)
-        let height = calculateFix(size.height, by: cgSize.height)
-        return Size(width: width, height: height)
-    }
-
-    static func calculateFix(_ size: SizeDescription, by relayLength: CGFloat) -> SizeDescription {
-        guard !size.isWrap else {
-            fatalError("不能计算包裹尺寸")
-        }
-        if size.isFixed {
-            return size
-        }
-        if size.isRatio {
-            return .fix(relayLength)
-        }
-        fatalError()
-    }
-
     /// 允许size 存在0的情况，则视为不限制
     static func sizeThatFit(size: CGSize, to measure: Measure) -> CGSize {
         var residual = size
         if residual.width == 0 { residual.width = .greatestFiniteMagnitude }
         if residual.height == 0 { residual.height = .greatestFiniteMagnitude }
         let sizeAfterCalulate = measure.calculate(by: residual)
-        let fixedSize = Calculator.calculate(size: sizeAfterCalulate, by: size)
-        return CGSize(width: fixedSize.width.fixedValue, height: fixedSize.height.fixedValue)
+        return getIntrinsicSize(measure.margin, residual: residual, size: sizeAfterCalulate)
     }
 
     static func constraintConflict(crash: Bool, _ msg: String) {
