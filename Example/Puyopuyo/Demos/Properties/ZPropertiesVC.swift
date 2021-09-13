@@ -25,9 +25,6 @@ class ZPropertiesVC: BaseVC {
     let alignmentVert = State<Alignment>(.vertCenter)
     let alignmentHorz = State<Alignment>(.horzCenter)
 
-    let alignmentVertRatio = State<CGFloat>(1)
-    let alignmentHorzRatio = State<CGFloat>(1)
-
     let marginTop = State<CGFloat>(0)
     let marginLeft = State<CGFloat>(0)
     let marginBottom = State<CGFloat>(0)
@@ -95,14 +92,6 @@ class ZPropertiesVC: BaseVC {
                                  },
                                  selected: alignmentHorz.value)
                     .attach($0)
-                let ratios: [CGFloat] = [0, 0.5, 1, 1.5, 2]
-                getSelectionView(title: "H aligment ratio",
-                                 input: self.alignmentHorzRatio,
-                                 values: ratios.map {
-                                     Selector<CGFloat>(desc: "\($0)", value: $0)
-                                 },
-                                 selected: alignmentHorzRatio.value)
-                    .attach($0)
 
                 getSelectionView(title: "V alignment",
                                  input: self.alignmentVert,
@@ -110,13 +99,6 @@ class ZPropertiesVC: BaseVC {
                                      Selector(desc: "\($0)", value: $0)
                                  },
                                  selected: alignmentVert.value)
-                    .attach($0)
-                getSelectionView(title: "V aligment ratio",
-                                 input: self.alignmentVertRatio,
-                                 values: ratios.map {
-                                     Selector<CGFloat>(desc: "\($0)", value: $0)
-                                 },
-                                 selected: alignmentVertRatio.value)
                     .attach($0)
 
                 let insets: [CGFloat] = [0, 10, 20, 30, 40]
@@ -185,7 +167,6 @@ class ZPropertiesVC: BaseVC {
     }
 
     func getZBox() -> UIView {
-
         let alignment = Outputs.combine(alignmentVert, alignmentHorz).map { $0.0.union($0.1) }
 
         return
@@ -194,7 +175,6 @@ class ZPropertiesVC: BaseVC {
                     Label.demo("").attach($0)
                         .text(text)
                         .alignment(alignment)
-                        .alignmentRatio(horz: alignmentHorzRatio, vert: alignmentVertRatio)
                         .size(width, height)
                         .margin(top: marginTop, left: marginLeft, bottom: marginBottom, right: marginRight)
                 }

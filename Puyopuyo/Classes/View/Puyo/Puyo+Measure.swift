@@ -164,17 +164,6 @@ public extension Puyo where T: UIView {
     }
 
     @discardableResult
-    func alignmentRatio<O: Outputing>(horz: O? = nil, vert: O? = nil) -> Self where O.OutputType: CGFloatable {
-        if let o = horz {
-            bind(keyPath: \T.py_measure.alignmentRatio.width, o.mapCGFloat())
-        }
-        if let o = vert {
-            bind(keyPath: \T.py_measure.alignmentRatio.height, o.mapCGFloat())
-        }
-        return self
-    }
-
-    @discardableResult
     func flowEnding(_ flowEnding: Bool) -> Self {
         bind(keyPath: \T.py_measure.flowEnding, flowEnding)
     }

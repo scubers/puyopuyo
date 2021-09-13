@@ -106,11 +106,11 @@ class Calculator {
         let subCalMargin = measure.margin.getCalEdges(by: direction)
         let subFixedSize = measure.py_size.getCalFixedSize(by: direction)
 
-        let crossAligmentRatio = direction == .x ? measure.alignmentRatio.height : measure.alignmentRatio.width
-
         let subCrossAligment: Alignment = measure.alignment.hasCrossAligment(for: direction) ? measure.alignment : justifyContent
+        
+        let crossAligmentRatio = direction == .x ? subCrossAligment.centerRatio.y : subCrossAligment.centerRatio.x
 
-        var position = ((parentCalSize.cross - parentCalPadding.crossFixed - subFixedSize.cross - subCalMargin.crossFixed) / 2) * crossAligmentRatio + parentCalPadding.forward + subFixedSize.cross / 2 + subCalMargin.forward
+        var position = ((parentCalSize.cross - parentCalPadding.crossFixed - subFixedSize.cross - subCalMargin.crossFixed) / 2) * (crossAligmentRatio + 1) + parentCalPadding.forward + subFixedSize.cross / 2 + subCalMargin.forward
 
         func alignmentConflictCheck() {
             #if DEBUG

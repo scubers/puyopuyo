@@ -19,9 +19,22 @@ class TestVC: BaseVC {
 //        demo5().attach(vRoot)
 //        demo6().attach(vRoot)
 //        shrinkDeadLoopTest().attach(vRoot)
-        flowCompactTest().attach(vRoot)
+//        flowCompactTest().attach(vRoot)
         
 //        zboxFillAndWrapTest().attach(vRoot)
+        
+
+        crossAlignmentRatio().attach(vRoot)
+    }
+    
+    func crossAlignmentRatio() -> UIView {
+        ZBox().attach {
+            Label.demo("test").attach($0)
+//                .alignment(.vertCenter(ratio: 1.5))
+                .alignment(.center(x: -0.8, y: 0.8))
+        }
+        .size(.fill, 100)
+        .view
     }
     
     func zboxFillAndWrapTest() -> UIView {

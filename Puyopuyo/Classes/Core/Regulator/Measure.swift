@@ -19,7 +19,6 @@ public protocol MeasureDelegate: AnyObject {
     func py_setNeedsRelayout()
 }
 
-
 /// 描述一个节点相对于父节点的属性
 public class Measure: MeasureDelegate, Hashable {
     public static func == (lhs: Measure, rhs: Measure) -> Bool {
@@ -52,16 +51,6 @@ public class Measure: MeasureDelegate, Hashable {
     public var alignment: Alignment = .none {
         didSet {
             if oldValue != alignment {
-                py_setNeedsRelayout()
-            }
-        }
-    }
-
-    public var alignmentRatio: CGSize = .init(width: 1, height: 1) {
-        didSet {
-            alignmentRatio.width = max(0, min(2, alignmentRatio.width))
-            alignmentRatio.height = max(0, min(2, alignmentRatio.height))
-            if oldValue != alignmentRatio {
                 py_setNeedsRelayout()
             }
         }

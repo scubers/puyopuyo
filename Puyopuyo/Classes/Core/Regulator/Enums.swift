@@ -34,7 +34,12 @@ public struct Alignment: OptionSet, CustomStringConvertible, Outputing {
     }
 
     public init(rawValue: Int) {
+        self.init(rawValue: rawValue, ratio: .zero)
+    }
+
+    public init(rawValue: Int, ratio: CGPoint) {
         self.rawValue = rawValue
+        self.centerRatio = .init(x: max(-1, min(1, ratio.x)), y: max(-1, min(1, ratio.y)))
     }
 
     public typealias RawValue = Int
@@ -47,10 +52,25 @@ public struct Alignment: OptionSet, CustomStringConvertible, Outputing {
     public static let right = Alignment(rawValue: 16)
     public static let horzCenter = Alignment(rawValue: 32)
     public static let vertCenter = Alignment(rawValue: 64)
+
+    /// (-1, -1) < point < (1, 1)
+    public let centerRatio: CGPoint
 }
 
 public extension Alignment {
     static let center = Alignment.vertCenter.union(.horzCenter)
+
+    static func center(x: CGFloat = 0, y: CGFloat = 0) -> Alignment {
+        .init(rawValue: center.rawValue, ratio: .init(x: x, y: y))
+    }
+
+    static func horzCenter(ratio: CGFloat = 0) -> Alignment {
+        .init(rawValue: horzCenter.rawValue, ratio: .init(x: ratio, y: 0))
+    }
+
+    static func vertCenter(ratio: CGFloat = 0) -> Alignment {
+        .init(rawValue: vertCenter.rawValue, ratio: .init(x: 0, y: ratio))
+    }
 
     static func horzAlignments() -> [Alignment] {
         return [.left, .right, .horzCenter]
