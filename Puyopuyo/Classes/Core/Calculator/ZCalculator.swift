@@ -30,7 +30,7 @@ class ZCalculator {
 
     lazy var maybeRatioChildren = [Measure]()
 
-    func calculate() -> Size {
+    func calculate() -> CGSize {
         regulator.py_enumerateChild { measure in
             if measure.activated {
                 calculateChildren.append(measure)
@@ -56,52 +56,31 @@ class ZCalculator {
         for measure in calculateChildren {
             // 计算中心
             measure.py_center = _calculateCenter(measure, containerSize: containerSize)
-            if regulator.calculateChildrenImmediately {
-                _ = measure.calculate(by: regChildrenResidualSize)
-            }
         }
 
-        // 计算布局自身大小
-        var width = regulator.size.width
-        if width.isWrap {
-            width = .fix(containerSize.width)
-        }
-
-        var height = regulator.size.height
-        if height.isWrap {
-            height = .fix(containerSize.height)
-        }
-
-        return Size(width: width, height: height)
+        return containerSize
     }
 
     private func _calculateChild(_ measure: Measure, residual: CGSize) {
-        let subSize = _getEstimateSize(measure: measure, residual: residual)
+        var intrinsicSize: CGSize
+        if regulator.calculateChildrenImmediately || measure.size.maybeWrap() {
+            intrinsicSize = measure.calculate(by: residual)
+        } else {
+            intrinsicSize = Calculator.getIntrinsicSize(margin: measure.margin, residual: residual, size: measure.size)
+        }
+        measure.py_size = intrinsicSize
 
-        // 计算 & 应用 大小
-        Calculator.applyMeasure(measure, size: subSize, currentResidual: residual)
+        let margin = measure.margin
 
         // 记录当前最大宽高
-        maxChildSizeWithSubMargin.width = max(maxChildSizeWithSubMargin.width, measure.py_size.width + measure.margin.getHorzTotal())
-        maxChildSizeWithSubMargin.height = max(maxChildSizeWithSubMargin.height, measure.py_size.height + measure.margin.getVertTotal())
+        maxChildSizeWithSubMargin.width = max(maxChildSizeWithSubMargin.width, intrinsicSize.width + margin.getHorzTotal())
+        maxChildSizeWithSubMargin.height = max(maxChildSizeWithSubMargin.height, intrinsicSize.height + margin.getVertTotal())
     }
 
     private func _calculateCenter(_ measure: Measure, containerSize: CGSize) -> CGPoint {
         let x = Calculator.calculateCrossAlignmentOffset(measure, direction: .y, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: containerSize)
         let y = Calculator.calculateCrossAlignmentOffset(measure, direction: .x, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: containerSize)
         return CGPoint(x: x, y: y)
-    }
-
-    private func _getEstimateSize(measure: Measure, residual: CGSize) -> Size {
-        var size: Size
-        if measure.size.bothNotWrap() {
-            size = measure.size
-        }
-        size = measure.calculate(by: residual)
-        if size.maybeWrap() {
-            fatalError()
-        }
-        return size
     }
 
     private func _getCurrentChildResidualSize(_ measure: Measure) -> CGSize {

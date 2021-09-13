@@ -8,27 +8,27 @@
 import Foundation
 
 class MeasureCalculator {
-    static func calculate(measure: Measure, residual size: CGSize) -> Size {
+    static func calculate(measure: Measure, residual: CGSize) -> CGSize {
         if !measure.activated {
-            return Size()
+            return .zero
         }
         let margin = measure.margin
 
-        let parentCGSize = CGSize(width: max(0, size.width - margin.left - margin.right),
-                                  height: max(0, size.height - margin.top - margin.bottom))
+        let parentCGSize = CGSize(width: max(0, residual.width - margin.left - margin.right),
+                                  height: max(0, residual.height - margin.top - margin.bottom))
 
         if measure.size.maybeWrap(), parentCGSize.width == 0 || parentCGSize.height == 0 {
             // 若自身尺寸是包裹，并且剩余空间存在0，则不计算
-            return Size()
+            return .zero
         }
 
         var widthSize = measure.size.width
         var heightSize = measure.size.height
-        
+
         var maxSize = CGSize(width: min(parentCGSize.width, widthSize.max), height: min(parentCGSize.height, heightSize.max))
         if widthSize.isFixed { maxSize.width = widthSize.fixedValue }
         if heightSize.isFixed { maxSize.height = heightSize.fixedValue }
-        
+
         if measure.size.isWrap() {
             let wrappedSize = measure.py_sizeThatFits(maxSize)
             widthSize = .fix(min(widthSize.getWrapSize(by: wrappedSize.width), maxSize.width))
@@ -43,6 +43,7 @@ class MeasureCalculator {
             heightSize = .fix(min(heightSize.getWrapSize(by: wrappedCGSize.height), maxSize.height))
         }
 
-        return Size(width: widthSize, height: heightSize)
+        let size = Size(width: widthSize, height: heightSize)
+        return Calculator.getIntrinsicSize(margin: measure.margin, residual: residual, size: size)
     }
 }

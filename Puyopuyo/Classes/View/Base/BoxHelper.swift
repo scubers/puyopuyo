@@ -53,7 +53,8 @@ public class BoxHelper<R: Regulator> {
                     size.height = regulator.size.height.max
                 }
                 let sizeAftercalculate = regulator.calculate(by: size)
-                Calculator.applyMeasure(regulator, size: sizeAftercalculate, currentResidual: size)
+                regulator.py_size = sizeAftercalculate
+//                Calculator.applyMeasure(regulator, size: sizeAftercalculate, currentResidual: size)
             } else {
                 Calculator.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
                 regulator.size = .init(width: .fill, height: .fill)

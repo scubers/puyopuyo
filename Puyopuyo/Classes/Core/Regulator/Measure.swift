@@ -83,13 +83,15 @@ public class Measure: MeasureDelegate, Hashable {
         }
     }
 
-    public func calculate(by size: CGSize) -> Size {
+    public func calculate(by size: CGSize) -> CGSize {
         return MeasureCalculator.calculate(measure: self, residual: size)
     }
 
     public var py_size: CGSize {
         set {
-            getRealDelegate().py_size = newValue
+            if getRealDelegate().py_size != newValue {
+                getRealDelegate().py_size = newValue
+            }
         }
         get {
             return getRealDelegate().py_size

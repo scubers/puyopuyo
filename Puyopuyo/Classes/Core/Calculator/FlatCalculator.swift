@@ -151,7 +151,7 @@ class FlatCalculator {
     var formattable: Bool = true
 
     /// 计算本身布局属性，可能返回的size 为 .fixed, .ratio, 不可能返回wrap
-    func calculate() -> Size {
+    func calculate() -> CGSize {
         // 第一次循环
         regulator.py_enumerateChild { m in
             // 未激活的节点不计算
@@ -259,7 +259,8 @@ class FlatCalculator {
         if cross.isWrap {
             cross = .fix(cross.getWrapSize(by: maxSubCross + regCalPadding.crossFixed))
         }
-        return CalSize(main: main, cross: cross, direction: regDirection).getSize()
+        let size = CalSize(main: main, cross: cross, direction: regDirection).getSize()
+        return Calculator.getIntrinsicSize(margin: regulator.margin, residual: residual, size: size)
     }
 
     private func calculateChild(_ measure: Measure) {
@@ -321,15 +322,13 @@ class FlatCalculator {
     }
 
     private func calculateChild(_ measure: Measure, subResidual: CalFixedSize) {
-        let subEstimateSize = _getEstimateSize(measure: measure, residual: subResidual.getSize())
-        if subEstimateSize.maybeWrap() {
-            fatalError("Estimate size cannot be wrap")
+        var intrinsicSize: CGSize
+        if measure.size.maybeWrap() || regulator.calculateChildrenImmediately {
+            intrinsicSize = measure.calculate(by: subResidual.getSize())
+        } else {
+            intrinsicSize = Calculator.getIntrinsicSize(margin: measure.margin, residual: subResidual.getSize(), size: measure.size)
         }
-        Calculator.applyMeasure(measure, size: subEstimateSize, currentResidual: subResidual.getSize())
-
-        if regulator.calculateChildrenImmediately {
-            _ = measure.calculate(by: subResidual.getSize())
-        }
+        measure.py_size = intrinsicSize
     }
 
     /// 这里为measures的大小都计算好，需要计算每个节点的center
@@ -413,14 +412,6 @@ class FlatCalculator {
         // main = end + 间距 + 自身顶部margin + 自身主轴一半
         let main = lastEnd + space + calMargin.start + calFixedSize.main / 2
         return (main, main + calFixedSize.main / 2 + calMargin.end)
-    }
-
-    private func _getEstimateSize(measure: Measure, residual: CGSize) -> Size {
-        // 非包裹大小，可直接返回计算
-        if measure.size.bothNotWrap() {
-            return measure.size
-        }
-        return measure.calculate(by: residual)
     }
 }
 

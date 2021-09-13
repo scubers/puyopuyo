@@ -58,7 +58,7 @@ public class FlowRegulator: FlatRegulator {
         }
     }
 
-    override public func calculate(by size: CGSize) -> Size {
+    override public func calculate(by size: CGSize) -> CGSize {
         return FlowCalculator(self, residual: size).calculate()
     }
 }

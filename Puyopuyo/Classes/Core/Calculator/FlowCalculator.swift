@@ -53,7 +53,7 @@ class FlowCalculator {
     var regCalPadding: CalEdges { CalEdges(insets: regulator.padding, direction: regDirection) }
     var regCalSize: CalSize { CalSize(size: regulator.size, direction: regDirection) }
 
-    func calculate() -> Size {
+    func calculate() -> CGSize {
         var calculateChildren = [Measure]()
         regulator.py_enumerateChild { m in
             if m.activated {
@@ -66,34 +66,25 @@ class FlowCalculator {
         return _calculateByContent(available: calculateChildren)
     }
 
-    private func _calculateByContent(available children: [Measure]) -> Size {
+    private func _calculateByContent(available children: [Measure]) -> CGSize {
         var virtualLines = [VirtualFlatRegulator]()
 
         var currentLine = [Measure]()
         var maxCross: CGFloat = 0
-//        let totalCross = regResidualCalSize.cross - regCalPadding.crossFixed
         let totalCross = regChildrenResidualCalSize.cross
 
-        func getLength(from size: SizeDescription) -> CGFloat {
-            assert(!size.isWrap)
-            if size.isRatio {
-                return .greatestFiniteMagnitude
-            }
-            return size.fixedValue
-        }
-
-        children.enumerated().forEach { _, m in
-            let subCalSize = m.calculate(by: regChildrenResidualCalSize.getSize()).getCalSize(by: regDirection)
+        children.forEach { m in
+            let subCalSize = m.size.getCalSize(by: regDirection)
+            let subCalFixedSize = m.calculate(by: regChildrenResidualCalSize.getSize()).getCalFixedSize(by: regDirection)
             let subCalMargin = CalEdges(insets: m.margin, direction: regDirection)
-            let subCrossSize = subCalSize.cross
 
             let space = CGFloat(min(1, currentLine.count)) * regulator.itemSpace
             // 计算当前累计的最大cross
-            if subCrossSize.isRatio, maxCross + space + subCalMargin.crossFixed < totalCross {
+            if subCalSize.cross.isRatio, maxCross + space + subCalMargin.crossFixed < totalCross {
                 // 还有剩余空间
                 maxCross = totalCross
             } else {
-                maxCross += (getLength(from: subCrossSize) + space + subCalMargin.crossFixed)
+                maxCross += (subCalFixedSize.cross + space + subCalMargin.crossFixed)
             }
 
             if maxCross > totalCross { // 内容超出
@@ -102,7 +93,7 @@ class FlowCalculator {
                 } else {
                     // 之前的行先归档
                     virtualLines.append(getVirtualLine(children: currentLine, index: virtualLines.count))
-                    maxCross = getLength(from: subCrossSize) + subCalMargin.crossFixed
+                    maxCross = subCalFixedSize.cross + subCalMargin.crossFixed
                     // 另起新的一行
                     currentLine = [m]
                 }
@@ -124,7 +115,7 @@ class FlowCalculator {
         return size
     }
 
-    private func _calculateByFixedCount(available children: [Measure]) -> Size {
+    private func _calculateByFixedCount(available children: [Measure]) -> CGSize {
         let line = getLine(from: children)
 
         var fakeLines = [VirtualFlatRegulator]()
