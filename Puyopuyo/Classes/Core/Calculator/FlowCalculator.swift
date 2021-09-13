@@ -87,7 +87,6 @@ class FlowCalculator {
             let subCalMargin = CalEdges(insets: m.margin, direction: regDirection)
             let subCrossSize = subCalSize.cross
 
-//            let space = CGFloat(min(1, currentLine.count)) * getOppsiteSpace()
             let space = CGFloat(min(1, currentLine.count)) * regulator.itemSpace
             // 计算当前累计的最大cross
             if subCrossSize.isRatio, maxCross + space + subCalMargin.crossFixed < totalCross {
@@ -120,7 +119,7 @@ class FlowCalculator {
         if !currentLine.isEmpty {
             virtualLines.append(getVirtualLine(children: currentLine, index: virtualLines.count))
         }
-        let size = getVirtualRegulator(children: virtualLines).calculate(by: regChildrenResidualCalSize.getSize())
+        let size = getVirtualRegulator(children: virtualLines).calculate(by: residual)
         virtualLines.forEach { $0.justifyChildrenWithCenter() }
         return size
     }
@@ -136,7 +135,7 @@ class FlowCalculator {
         }
 
         let virtualRegulator = getVirtualRegulator(children: fakeLines)
-        let size = virtualRegulator.calculate(by: regChildrenResidualCalSize.getSize())
+        let size = virtualRegulator.calculate(by: residual)
         fakeLines.forEach { $0.justifyChildrenWithCenter() }
         return size
     }
