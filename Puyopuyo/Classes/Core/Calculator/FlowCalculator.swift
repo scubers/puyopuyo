@@ -43,11 +43,11 @@ class FlowCalculator {
     var regDirection: Direction { regulator.direction }
 
     lazy var regChildrenResidualCalSize: CalFixedSize = {
-        let size = Calculator.getChildResidualSize(self.regulator.size,
-                                                 superResidual: self.residual,
-                                                 margin: self.regulator.margin,
-                                                 padding: self.regulator.padding)
-        return CalFixedSize(cgSize: size, direction: self.regDirection)
+        let size = Calculator.getChildResidualSize(regulator.size,
+                                                   superResidual: residual,
+                                                   margin: regulator.margin,
+                                                   padding: regulator.padding)
+        return CalFixedSize(cgSize: size, direction: regDirection)
     }()
 
     var regCalPadding: CalEdges { CalEdges(insets: regulator.padding, direction: regDirection) }
