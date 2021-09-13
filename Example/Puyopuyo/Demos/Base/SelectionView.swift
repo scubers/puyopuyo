@@ -51,7 +51,7 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
                             btn.isSelected = false
                         }
                     }
-                    .styles([TapScaleStyle(), TapRippleStyle()])
+                    .styles([TapTransformStyle(), TapRippleStyle()])
                     .borderWidth(Util.pixel(1))
                     .borderColor(Theme.accentColor)
                     .cornerRadius(4)
@@ -109,7 +109,7 @@ class PlainSelectionView<T: Equatable>: ZBox, Eventable, Stateful {
                             return .clear
                         })
                         .styles([
-                            TapScaleStyle(),
+                            TapTransformStyle(),
                         ])
                         .borderWidth(Util.pixel(1))
                         .borderColor(Theme.accentColor)

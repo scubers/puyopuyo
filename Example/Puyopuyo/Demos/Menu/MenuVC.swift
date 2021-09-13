@@ -51,7 +51,7 @@ class MenuVC: BaseVC {
                         .size(.fill, .wrap)
                         .padding(all: 16)
                         .backgroundColor(UIColor.white)
-                        .styles([TapScaleStyle(), ShadowStyle()])
+                        .styles([TapTransformStyle(), ShadowStyle()])
                         .onTap {
                             if let context = i.context {
                                 this.value?.push(vc: context.data.1())

@@ -118,18 +118,18 @@ public class TapCoverStyle: BaseGestureStyle {
     }
 }
 
-// MARK: - TapScaleStyle
+// MARK: - TapTransformStyle
 
-public class TapScaleStyle: BaseGestureStyle {
-    var scale: Double
-    public init(scale: Double = 0.9) {
-        self.scale = scale
-        super.init(identifier: "TapScaleStyle")
+public class TapTransformStyle: BaseGestureStyle {
+    let tapTransform: CATransform3D
+    public init(transform: CATransform3D = CATransform3DMakeTranslation(2, 2, 0)) {
+        self.tapTransform = transform
+        super.init(identifier: "TapTransformStyle")
     }
 
     public override func getGesture() -> UIGestureRecognizer {
         let tap = Gesture()
-        tap.scale = scale
+        tap.transform = tapTransform
         let d = ShouldSimulateOtherGestureDelegate()
         tap.delegate = d
         tap.addDisposer(d, for: "\(styleIdentifier)_delegate")
@@ -137,7 +137,8 @@ public class TapScaleStyle: BaseGestureStyle {
     }
 
     class Gesture: UIGestureRecognizer {
-        var scale: Double = 1
+        var transform: CATransform3D!
+        
         override func touchesBegan(_: Set<UITouch>, with _: UIEvent) {
             startAnimate()
         }
@@ -157,7 +158,7 @@ public class TapScaleStyle: BaseGestureStyle {
         private func startAnimate() {
             guard let view = view else { return }
             UIView.animate(withDuration: 0.15) {
-                view.layer.transform = CATransform3DMakeScale(CGFloat(self.scale), CGFloat(self.scale), 1)
+                view.layer.transform = self.transform
             }
         }
 

@@ -89,7 +89,7 @@ class CustomView: UIView, Stateful, Eventable {
         UILabel().attach()
             .userInteractionEnabled(true)
             .style(TapRippleStyle())
-            .style(TapScaleStyle())
+            .style(TapTransformStyle())
             .styles(CustomStyles.titleStyle())
         
         let value = State<Float>(0)

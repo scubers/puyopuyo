@@ -88,24 +88,24 @@ class FlowPropertiesVC: BaseVC {
                 ScrollingBox<HBox> {
                     $0.attach {
                         Label.demo("reset").attach($0)
-                            .style(TapScaleStyle())
+                            .style(TapTransformStyle())
                             .onTap(to: self) { this, _ in
                                 this.reset()
                             }
                         Label.demo("add").attach($0)
-                            .style(TapScaleStyle())
+                            .style(TapTransformStyle())
                             .onTap(to: self) { this, _ in
                                 this.increase()
                             }
 
                         Label.demo("block fix").attach($0)
-                            .style(TapScaleStyle())
+                            .style(TapTransformStyle())
                             .onTap(to: self) { this, _ in
                                 this.blockFix.input(value: true)
                             }
 
                         Label.demo("block wrap").attach($0)
-                            .style(TapScaleStyle())
+                            .style(TapTransformStyle())
                             .onTap(to: self) { this, _ in
                                 this.blockFix.input(value: false)
                             }

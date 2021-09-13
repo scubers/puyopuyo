@@ -72,7 +72,7 @@ class StyleVC: BaseVC {
                     print("scale")
                 })
                 .styleSheet(self.selectableSheet.combine([
-                    TapScaleStyle()
+                    TapTransformStyle()
                 ]))
             
             Label("ripple + Cover + scale").attach($0)
@@ -82,7 +82,7 @@ class StyleVC: BaseVC {
                 .styleSheet(self.selectableSheet.combine([
                     TapCoverStyle(),
                     TapRippleStyle(color: UIColor.red.withAlphaComponent(0.5)),
-                    TapScaleStyle()
+                    TapTransformStyle()
                 ]))
         }
         .styles([
