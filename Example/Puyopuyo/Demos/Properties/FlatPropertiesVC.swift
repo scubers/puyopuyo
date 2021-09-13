@@ -111,7 +111,7 @@ class FlatPropertiesVC: BaseVC {
                         .frame(w: 1)
                 }
                 .space(10)
-//                .padding(all: 10)
+                .padding(all: 10)
                 .justifyContent(.center)
                 .size(.fill, 60)
                 .animator(Animators.default)
