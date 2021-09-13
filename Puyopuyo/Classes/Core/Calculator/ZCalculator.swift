@@ -19,7 +19,7 @@ class ZCalculator {
     lazy var regFixedHeight: CGFloat = regulator.padding.top + regulator.padding.bottom
     lazy var regChildrenResidualSize: CGSize = {
         Calculator.getChildResidualSize(regulator.size,
-                                        superResidual: residual,
+                                        residual: residual,
                                         margin: regulator.margin,
                                         padding: regulator.padding)
     }()

@@ -13,7 +13,7 @@ class Calculator {
     // padding 当前view的padding（如果有）
     // ratio 当前尺寸计算时，如果desc为ratio时依赖计算的总ratio，若为空，则取desc的ratio值，相当于比例为1
     static func getChildResidualLength(_ sizeDesc: SizeDescription,
-                                       superResidual: CGFloat,
+                                       residual: CGFloat,
                                        margin: CGFloat,
                                        padding: CGFloat) -> CGFloat
     {
@@ -22,26 +22,26 @@ class Calculator {
             return max(0, sizeDesc.fixedValue - padding)
         } else if sizeDesc.isRatio {
             // 子布局剩余空间为所有剩余空间
-            return max(0, superResidual - padding - margin)
+            return max(0, residual - padding - margin)
         } else if sizeDesc.isWrap {
             // 若存在最大值max，需要和最终算出的剩余空间取个最小值
-            return max(sizeDesc.min, max(0, min(sizeDesc.max - padding, superResidual - padding - margin)))
+            return max(sizeDesc.min, max(0, min(sizeDesc.max - padding, residual - padding - margin)))
         } else {
             fatalError()
         }
     }
 
-    static func getChildResidualSize(_ size: Size, superResidual: CGSize, margin: UIEdgeInsets, padding: UIEdgeInsets) -> CGSize {
-        let width = getChildResidualLength(size.width, superResidual: superResidual.width, margin: margin.getHorzTotal(), padding: padding.getHorzTotal())
-        let height = getChildResidualLength(size.height, superResidual: superResidual.height, margin: margin.getVertTotal(), padding: padding.getVertTotal())
+    static func getChildResidualSize(_ size: Size, residual: CGSize, margin: UIEdgeInsets, padding: UIEdgeInsets) -> CGSize {
+        let width = getChildResidualLength(size.width, residual: residual.width, margin: margin.getHorzTotal(), padding: padding.getHorzTotal())
+        let height = getChildResidualLength(size.height, residual: residual.height, margin: margin.getVertTotal(), padding: padding.getVertTotal())
         return CGSize(width: width, height: height)
     }
 
-    static func getIntrinsicLength(_ sizeDesc: SizeDescription, currentResidual: CGFloat, margin: CGFloat, padding: CGFloat, wrapValue: CGFloat? = nil) -> CGFloat {
+    static func getIntrinsicLength(_ sizeDesc: SizeDescription, residual: CGFloat, margin: CGFloat, padding: CGFloat, wrapValue: CGFloat? = nil) -> CGFloat {
         if sizeDesc.isFixed {
             return max(0, sizeDesc.fixedValue)
         } else if sizeDesc.isRatio {
-            return max(0, currentResidual - margin)
+            return max(0, residual - margin)
         } else {
             if let value = wrapValue {
                 return sizeDesc.getWrapSize(by: value + padding)
@@ -53,8 +53,8 @@ class Calculator {
 
     static func getIntrinsicSize(margin: UIEdgeInsets, padding: UIEdgeInsets, residual: CGSize, size: Size) -> CGSize {
         assert(size.bothNotWrap(), "cannot get intrinsci size from wrap size")
-        let width = getIntrinsicLength(size.width, currentResidual: residual.width, margin: margin.getHorzTotal(), padding: padding.getHorzTotal())
-        let height = getIntrinsicLength(size.height, currentResidual: residual.height, margin: margin.getVertTotal(), padding: padding.getVertTotal())
+        let width = getIntrinsicLength(size.width, residual: residual.width, margin: margin.getHorzTotal(), padding: padding.getHorzTotal())
+        let height = getIntrinsicLength(size.height, residual: residual.height, margin: margin.getVertTotal(), padding: padding.getVertTotal())
         return CGSize(width: width, height: height)
     }
 
@@ -69,10 +69,10 @@ class Calculator {
         let margin = regulator.margin
         let padding = regulator.padding
         let size = regulator.size
-        
-        let width = getIntrinsicLength(size.width, currentResidual: residual.width, margin: margin.getHorzTotal(), padding: padding.getHorzTotal(), wrapValue: contentSize.width)
-        let height = getIntrinsicLength(size.height, currentResidual: residual.height, margin: margin.getVertTotal(), padding: padding.getVertTotal(), wrapValue: contentSize.height)
-        
+
+        let width = getIntrinsicLength(size.width, residual: residual.width, margin: margin.getHorzTotal(), padding: padding.getHorzTotal(), wrapValue: contentSize.width)
+        let height = getIntrinsicLength(size.height, residual: residual.height, margin: margin.getVertTotal(), padding: padding.getVertTotal(), wrapValue: contentSize.height)
+
         return CGSize(width: width, height: height)
     }
 
