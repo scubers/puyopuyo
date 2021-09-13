@@ -83,8 +83,7 @@ class FlatCalculator {
         let size = Calculator.getChildResidualSize(self.regulator.size,
                                                  superResidual: self.residual,
                                                  margin: self.regulator.margin,
-                                                 padding: self.regulator.padding,
-                                                 ratio: nil)
+                                                 padding: self.regulator.padding)
         return CalFixedSize(cgSize: size, direction: self.regulator.direction)
     }()
 
@@ -326,7 +325,7 @@ class FlatCalculator {
         if subEstimateSize.maybeWrap() {
             fatalError("Estimate size cannot be wrap")
         }
-        Calculator.applyMeasure(measure, size: subEstimateSize, currentResidual: subResidual.getSize(), ratio: nil)
+        Calculator.applyMeasure(measure, size: subEstimateSize, currentResidual: subResidual.getSize())
 
         if regulator.calculateChildrenImmediately {
             _ = measure.calculate(by: subResidual.getSize())

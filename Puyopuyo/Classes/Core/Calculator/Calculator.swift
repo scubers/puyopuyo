@@ -19,18 +19,16 @@ class Calculator {
     // ratio 当前尺寸计算时，如果desc为ratio时依赖计算的总ratio，若为空，则取desc的ratio值，相当于比例为1
 
     static func getChildResidualLength(_ sizeDesc: SizeDescription,
-                                     superResidual: CGFloat,
-                                     margin: CGFloat,
-                                     padding: CGFloat,
-                                     ratio: CGFloat?) -> CGFloat
+                                       superResidual: CGFloat,
+                                       margin: CGFloat,
+                                       padding: CGFloat) -> CGFloat
     {
         if sizeDesc.isFixed {
             // 子布局剩余空间为固有尺寸 - 当前布局内边距
             return max(0, sizeDesc.fixedValue - padding)
         } else if sizeDesc.isRatio {
             // 子布局剩余空间为
-            let totalRatio = ratio ?? sizeDesc.ratio
-            return max(0, (sizeDesc.ratio / totalRatio) * (superResidual - padding - margin))
+            return max(0, superResidual - padding - margin)
         } else if sizeDesc.isWrap {
             // 若存在最大值max，需要和最终算出的剩余空间取个最小值
             return max(sizeDesc.min, max(0, min(sizeDesc.max - padding, superResidual - padding - margin)))
@@ -39,34 +37,33 @@ class Calculator {
         }
     }
 
-    static func getChildResidualSize(_ size: Size, superResidual: CGSize, margin: UIEdgeInsets, padding: UIEdgeInsets, ratio: Ratio?) -> CGSize {
-        let width = getChildResidualLength(size.width, superResidual: superResidual.width, margin: margin.getHorzTotal(), padding: padding.getHorzTotal(), ratio: ratio?.width)
-        let height = getChildResidualLength(size.height, superResidual: superResidual.height, margin: margin.getVertTotal(), padding: padding.getVertTotal(), ratio: ratio?.height)
+    static func getChildResidualSize(_ size: Size, superResidual: CGSize, margin: UIEdgeInsets, padding: UIEdgeInsets) -> CGSize {
+        let width = getChildResidualLength(size.width, superResidual: superResidual.width, margin: margin.getHorzTotal(), padding: padding.getHorzTotal())
+        let height = getChildResidualLength(size.height, superResidual: superResidual.height, margin: margin.getVertTotal(), padding: padding.getVertTotal())
         return CGSize(width: width, height: height)
     }
 
-    static func getLength(_ sizeDesc: SizeDescription, currentResidual: CGFloat, margin: CGFloat, padding: CGFloat, ratio: CGFloat?) -> CGFloat {
+    static func getLength(_ sizeDesc: SizeDescription, currentResidual: CGFloat, margin: CGFloat, padding: CGFloat) -> CGFloat {
         if sizeDesc.isFixed {
             return max(0, sizeDesc.fixedValue)
         } else if sizeDesc.isRatio {
-            let totalRatio = ratio ?? sizeDesc.ratio
-            return max(0, (sizeDesc.ratio / totalRatio) * (currentResidual - margin - padding))
+            return max(0, currentResidual - margin - padding)
         } else {
             fatalError()
         }
     }
 
-    static func applyMeasure(_ measure: Measure, size: Size, currentResidual: CGSize, ratio: Ratio?) {
+    static func applyMeasure(_ measure: Measure, size: Size, currentResidual: CGSize) {
         // 把size应用到measure上，只关心剩余空间
         let margin = measure.margin
         if !size.width.isWrap {
-            let width = getLength(size.width, currentResidual: currentResidual.width, margin: margin.getHorzTotal(), padding: .zero, ratio: ratio?.width)
+            let width = getLength(size.width, currentResidual: currentResidual.width, margin: margin.getHorzTotal(), padding: .zero)
             if width != measure.py_size.width {
                 measure.py_size.width = width
             }
         }
         if !size.height.isWrap {
-            let height = getLength(size.height, currentResidual: currentResidual.height, margin: margin.getVertTotal(), padding: .zero, ratio: ratio?.height)
+            let height = getLength(size.height, currentResidual: currentResidual.height, margin: margin.getVertTotal(), padding: .zero)
             if height != measure.py_size.height {
                 measure.py_size.height = height
             }
@@ -80,12 +77,12 @@ class Calculator {
         if size.width.isWrap {
             final.width = regulator.size.width.getWrapSize(by: wrapContentSize.width + regulator.padding.left + regulator.padding.right)
         } else {
-            final.width = getLength(size.width, currentResidual: currentResidual.width, margin: margin.getHorzTotal(), padding: .zero, ratio: nil)
+            final.width = getLength(size.width, currentResidual: currentResidual.width, margin: margin.getHorzTotal(), padding: .zero)
         }
         if size.height.isWrap {
             final.height = regulator.size.height.getWrapSize(by: wrapContentSize.height + regulator.padding.top + regulator.padding.bottom)
         } else {
-            final.height = getLength(size.height, currentResidual: currentResidual.height, margin: margin.getVertTotal(), padding: .zero, ratio: nil)
+            final.height = getLength(size.height, currentResidual: currentResidual.height, margin: margin.getVertTotal(), padding: .zero)
         }
         return final
     }
@@ -116,7 +113,7 @@ class Calculator {
         if residual.width == 0 { residual.width = .greatestFiniteMagnitude }
         if residual.height == 0 { residual.height = .greatestFiniteMagnitude }
         // 父视图为非Regulator，需要事先应用一下固有尺寸
-        Calculator.applyMeasure(measure, size: measure.size, currentResidual: residual, ratio: nil)
+        Calculator.applyMeasure(measure, size: measure.size, currentResidual: residual)
         let sizeAfterCalulate = measure.calculate(by: residual)
         let fixedSize = Calculator.calculate(size: sizeAfterCalulate, by: size)
         return CGSize(width: fixedSize.width.fixedValue, height: fixedSize.height.fixedValue)
@@ -132,10 +129,10 @@ class Calculator {
     }
 
     static func calculateCrossAlignmentOffset(_ measure: Measure,
-                                             direction: Direction,
-                                             justifyContent: Alignment,
-                                             parentPadding: UIEdgeInsets,
-                                             parentSize: CGSize) -> CGFloat
+                                              direction: Direction,
+                                              justifyContent: Alignment,
+                                              parentPadding: UIEdgeInsets,
+                                              parentSize: CGSize) -> CGFloat
     {
         let parentCalSize = parentSize.getCalFixedSize(by: direction)
         let parentCalPadding = parentPadding.getCalEdges(by: direction)

@@ -19,10 +19,9 @@ class ZCalculator {
     lazy var regFixedHeight: CGFloat = regulator.padding.top + regulator.padding.bottom
     lazy var regChildrenResidualSize: CGSize = {
         Calculator.getChildResidualSize(regulator.size,
-                                      superResidual: residual,
-                                      margin: regulator.margin,
-                                      padding: regulator.padding,
-                                      ratio: nil)
+                                        superResidual: residual,
+                                        margin: regulator.margin,
+                                        padding: regulator.padding)
     }()
 
     var maxChildSizeWithSubMargin: CGSize = .zero
@@ -80,7 +79,7 @@ class ZCalculator {
         let subSize = _getEstimateSize(measure: measure, residual: residual)
 
         // 计算 & 应用 大小
-        Calculator.applyMeasure(measure, size: subSize, currentResidual: residual, ratio: .init(width: 1, height: 1))
+        Calculator.applyMeasure(measure, size: subSize, currentResidual: residual)
 
         // 记录当前最大宽高
         maxChildSizeWithSubMargin.width = max(maxChildSizeWithSubMargin.width, measure.py_size.width + measure.margin.getHorzTotal())

@@ -46,8 +46,7 @@ class FlowCalculator {
         let size = Calculator.getChildResidualSize(self.regulator.size,
                                                  superResidual: self.residual,
                                                  margin: self.regulator.margin,
-                                                 padding: self.regulator.padding,
-                                                 ratio: nil)
+                                                 padding: self.regulator.padding)
         return CalFixedSize(cgSize: size, direction: self.regDirection)
     }()
 

@@ -27,18 +27,10 @@ class TestVC: BaseVC {
     func zboxFillAndWrapTest() -> UIView {
         ZBox().attach {
             UIView().attach($0)
-                .backgroundColor(UIColor.purple.withAlphaComponent(0.5))
-                .margin(all: -5)
-                .size(.fill, .fill)
-            
-            UIView().attach($0)
                 .backgroundColor(UIColor.black)
-                .size(100, 100)
-            
-            
-            
+                .size(.ratio(2), .ratio(2))
         }
-        .size(.wrap, .wrap)
+        .size(100, 100)
         .padding(all: 10)
         .view
     }
