@@ -143,7 +143,7 @@ class Calculator {
         func alignmentConflictCheck() {
             #if DEBUG
             if crossAligmentRatio != 1 {
-                constraintConflict(crash: false, "[\(measure.getRealTarget())]'s Alignment ratio can only activate when alignment == *center")
+                constraintConflict(crash: false, "[\(measure.getRealDelegate())]'s Alignment ratio can only activate when alignment == *center")
             }
             #endif
         }

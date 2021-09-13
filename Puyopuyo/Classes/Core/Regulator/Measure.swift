@@ -7,8 +7,21 @@
 
 import UIKit
 
+public protocol MeasureDelegate: AnyObject {
+    var py_size: CGSize { get set }
+
+    var py_center: CGPoint { get set }
+
+    func py_enumerateChild(_ block: (Measure) -> Void)
+
+    func py_sizeThatFits(_ size: CGSize) -> CGSize
+
+    func py_setNeedsRelayout()
+}
+
+
 /// 描述一个节点相对于父节点的属性
-public class Measure: Measurable, MeasureTargetable, Hashable {
+public class Measure: MeasureDelegate, Hashable {
     public static func == (lhs: Measure, rhs: Measure) -> Bool {
         return lhs === rhs
     }
@@ -16,14 +29,14 @@ public class Measure: Measurable, MeasureTargetable, Hashable {
     public func hash(into _: inout Hasher) {}
 
     /// 虚拟目标计算节点
-    var virtualTarget = VirtualTarget()
+    var virtualDelegate = VirtualTarget()
 
     /// 真实计算节点
-    private weak var target: MeasureTargetable?
+    private weak var delegate: MeasureDelegate?
 
-    public init(target: MeasureTargetable? = nil, children: [Measure] = []) {
-        self.target = target
-        virtualTarget.children = children
+    public init(target: MeasureDelegate? = nil, children: [Measure] = []) {
+        self.delegate = target
+        virtualDelegate.children = children
     }
 
     /// 计算节点外边距
@@ -87,43 +100,43 @@ public class Measure: Measurable, MeasureTargetable, Hashable {
 
     public var py_size: CGSize {
         set {
-            getRealTarget().py_size = newValue
+            getRealDelegate().py_size = newValue
         }
         get {
-            return getRealTarget().py_size
+            return getRealDelegate().py_size
         }
     }
 
     public var py_center: CGPoint {
         set {
-            getRealTarget().py_center = newValue
+            getRealDelegate().py_center = newValue
         }
         get {
-            return getRealTarget().py_center
+            return getRealDelegate().py_center
         }
     }
 
     public func py_enumerateChild(_ block: (Measure) -> Void) {
-        getRealTarget().py_enumerateChild(block)
+        getRealDelegate().py_enumerateChild(block)
     }
 
     public func py_sizeThatFits(_ size: CGSize) -> CGSize {
-        return getRealTarget().py_sizeThatFits(size)
+        return getRealDelegate().py_sizeThatFits(size)
     }
 
-    func getRealTarget() -> MeasureTargetable {
-        if let target = target {
+    func getRealDelegate() -> MeasureDelegate {
+        if let target = delegate {
             return target
         }
-        return virtualTarget
+        return virtualDelegate
     }
 
     public func py_setNeedsRelayout() {
-        getRealTarget().py_setNeedsRelayout()
+        getRealDelegate().py_setNeedsRelayout()
     }
 }
 
-class VirtualTarget: MeasureTargetable {
+class VirtualTarget: MeasureDelegate {
     var py_size: CGSize = .zero
 
     var py_center: CGPoint = .zero

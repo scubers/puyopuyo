@@ -9,7 +9,7 @@ import Foundation
 
 /// 平面布局
 public class FlatRegulator: Regulator {
-    override public init(target: MeasureTargetable? = nil, children: [Measure] = []) {
+    override public init(target: MeasureDelegate? = nil, children: [Measure] = []) {
         super.init(target: target, children: children)
         justifyContent = [.left, .top]
     }

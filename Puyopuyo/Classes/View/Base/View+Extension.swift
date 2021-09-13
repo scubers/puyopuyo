@@ -21,7 +21,7 @@ extension UIView: MeasureHolder {
 
 // MARK: - MeasureTargetable impl
 
-extension UIView: MeasureTargetable {
+extension UIView: MeasureDelegate {
     public var py_size: CGSize {
         get {
             return bounds.size

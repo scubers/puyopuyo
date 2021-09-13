@@ -8,7 +8,7 @@
 import Foundation
 
 private class VirtualFlatRegulator: FlatRegulator {
-    override init(target: MeasureTargetable? = nil, children: [Measure] = []) {
+    override init(target: MeasureDelegate? = nil, children: [Measure] = []) {
         super.init(target: target, children: children)
         calculateChildrenImmediately = true
     }
@@ -20,8 +20,8 @@ private class VirtualFlatRegulator: FlatRegulator {
         // 计算虚拟位置的偏移量
         let delta = CGPoint(x: center.x - size.width / 2, y: center.y - size.height / 2)
 
-        virtualTarget.children.forEach { m in
-            let target = m.getRealTarget()
+        virtualDelegate.children.forEach { m in
+            let target = m.getRealDelegate()
             var center = target.py_center
             center.x += delta.x // - oldDelta.x
             center.y += delta.y // - oldDelta.y
