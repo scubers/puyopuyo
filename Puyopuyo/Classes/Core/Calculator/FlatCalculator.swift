@@ -402,7 +402,7 @@ class FlatCalculator {
     }
 
     private func _calculateCrossOffset(measure: Measure) -> CGFloat {
-        let parentSize = Calculator.getSize(regulator, currentResidual: residual, wrapContentSize: CalFixedSize(main: 0, cross: maxSubCross, direction: regDirection).getSize())
+        let parentSize = Calculator.getRegulatorIntrinsicSize(regulator, residual: residual, contentSize: CalFixedSize(main: 0, cross: maxSubCross, direction: regDirection).getSize())
         return Calculator.calculateCrossAlignmentOffset(measure, direction: regDirection, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: parentSize)
     }
 

@@ -51,7 +51,7 @@ class ZCalculator {
             }
         }
 
-        let containerSize = Calculator.getSize(regulator, currentResidual: residual, wrapContentSize: maxChildSizeWithSubMargin)
+        let containerSize = Calculator.getRegulatorIntrinsicSize(regulator, residual: residual, contentSize: maxChildSizeWithSubMargin)
 
         for measure in calculateChildren {
             // 计算中心

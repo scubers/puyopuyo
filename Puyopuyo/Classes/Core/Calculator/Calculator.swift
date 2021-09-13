@@ -37,45 +37,43 @@ class Calculator {
         return CGSize(width: width, height: height)
     }
 
-    static func getLength(_ sizeDesc: SizeDescription, currentResidual: CGFloat, margin: CGFloat, padding: CGFloat) -> CGFloat {
+    static func getIntrinsicLength(_ sizeDesc: SizeDescription, currentResidual: CGFloat, margin: CGFloat, padding: CGFloat, wrapValue: CGFloat? = nil) -> CGFloat {
         if sizeDesc.isFixed {
             return max(0, sizeDesc.fixedValue)
         } else if sizeDesc.isRatio {
-            return max(0, currentResidual - margin - padding)
+            return max(0, currentResidual - margin)
         } else {
-            fatalError()
+            if let value = wrapValue {
+                return sizeDesc.getWrapSize(by: value + padding)
+            } else {
+                fatalError("when size is wrap, wrap value must not be nil")
+            }
         }
     }
 
-    static func getIntrinsicSize(_ margin: UIEdgeInsets, residual: CGSize, size: Size) -> CGSize {
+    static func getIntrinsicSize(margin: UIEdgeInsets, padding: UIEdgeInsets, residual: CGSize, size: Size) -> CGSize {
         assert(size.bothNotWrap(), "cannot get intrinsci size from wrap size")
-        let width = getLength(size.width, currentResidual: residual.width, margin: margin.getHorzTotal(), padding: .zero)
-        let height = getLength(size.height, currentResidual: residual.height, margin: margin.getVertTotal(), padding: .zero)
+        let width = getIntrinsicLength(size.width, currentResidual: residual.width, margin: margin.getHorzTotal(), padding: padding.getHorzTotal())
+        let height = getIntrinsicLength(size.height, currentResidual: residual.height, margin: margin.getVertTotal(), padding: padding.getVertTotal())
         return CGSize(width: width, height: height)
     }
 
     static func applyMeasure(_ measure: Measure, size: Size, currentResidual: CGSize) {
-        let intrinsicSize = getIntrinsicSize(measure.margin, residual: currentResidual, size: size)
+        let intrinsicSize = getIntrinsicSize(margin: measure.margin, padding: .zero, residual: currentResidual, size: size)
         if measure.py_size != intrinsicSize {
             measure.py_size = intrinsicSize
         }
     }
 
-    static func getSize(_ regulator: Regulator, currentResidual: CGSize, wrapContentSize: CGSize) -> CGSize {
+    static func getRegulatorIntrinsicSize(_ regulator: Regulator, residual: CGSize, contentSize: CGSize) -> CGSize {
         let margin = regulator.margin
+        let padding = regulator.padding
         let size = regulator.size
-        var final = CGSize()
-        if size.width.isWrap {
-            final.width = regulator.size.width.getWrapSize(by: wrapContentSize.width + regulator.padding.left + regulator.padding.right)
-        } else {
-            final.width = getLength(size.width, currentResidual: currentResidual.width, margin: margin.getHorzTotal(), padding: .zero)
-        }
-        if size.height.isWrap {
-            final.height = regulator.size.height.getWrapSize(by: wrapContentSize.height + regulator.padding.top + regulator.padding.bottom)
-        } else {
-            final.height = getLength(size.height, currentResidual: currentResidual.height, margin: margin.getVertTotal(), padding: .zero)
-        }
-        return final
+        
+        let width = getIntrinsicLength(size.width, currentResidual: residual.width, margin: margin.getHorzTotal(), padding: padding.getHorzTotal(), wrapValue: contentSize.width)
+        let height = getIntrinsicLength(size.height, currentResidual: residual.height, margin: margin.getVertTotal(), padding: padding.getVertTotal(), wrapValue: contentSize.height)
+        
+        return CGSize(width: width, height: height)
     }
 
     /// 允许size 存在0的情况，则视为不限制
@@ -84,7 +82,7 @@ class Calculator {
         if residual.width == 0 { residual.width = .greatestFiniteMagnitude }
         if residual.height == 0 { residual.height = .greatestFiniteMagnitude }
         let sizeAfterCalulate = measure.calculate(by: residual)
-        return getIntrinsicSize(measure.margin, residual: residual, size: sizeAfterCalulate)
+        return getIntrinsicSize(margin: measure.margin, padding: .zero, residual: residual, size: sizeAfterCalulate)
     }
 
     static func constraintConflict(crash: Bool, _ msg: String) {
