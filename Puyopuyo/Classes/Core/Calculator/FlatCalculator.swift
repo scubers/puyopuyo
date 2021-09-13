@@ -131,8 +131,6 @@ class FlatCalculator {
     /// 记录计算好的最大次轴
     var maxSubCross: CGFloat = 0
 
-    /// 主轴比例子项目
-    var ratioMainMeasures = [Measure]()
     /// 主轴比例分母
     var totalMainRatio: CGFloat = 0
     /// 需要计算的子节点
