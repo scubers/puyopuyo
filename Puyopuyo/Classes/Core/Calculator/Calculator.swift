@@ -8,16 +8,10 @@
 import Foundation
 
 class Calculator {
-    struct Ratio {
-        var width: CGFloat?
-        var height: CGFloat?
-    }
-
     // residual 剩余空间，标记当前view布局的时候，父view给予的剩余空间
     // margin 当前view布局时候的margin
     // padding 当前view的padding（如果有）
     // ratio 当前尺寸计算时，如果desc为ratio时依赖计算的总ratio，若为空，则取desc的ratio值，相当于比例为1
-
     static func getChildResidualLength(_ sizeDesc: SizeDescription,
                                        superResidual: CGFloat,
                                        margin: CGFloat,
@@ -27,7 +21,7 @@ class Calculator {
             // 子布局剩余空间为固有尺寸 - 当前布局内边距
             return max(0, sizeDesc.fixedValue - padding)
         } else if sizeDesc.isRatio {
-            // 子布局剩余空间为
+            // 子布局剩余空间为所有剩余空间
             return max(0, superResidual - padding - margin)
         } else if sizeDesc.isWrap {
             // 若存在最大值max，需要和最终算出的剩余空间取个最小值
