@@ -185,34 +185,6 @@ private extension FlowCalculator {
         return base + (more > 0 ? 1 : 0)
     }
 
-//    func getNormalSpace() -> CGFloat {
-//        if regDirection == .x {
-//            return regulator.hSpace
-//        }
-//        return regulator.vSpace
-//    }
-//
-//    func getNormalFormat() -> Format {
-//        if regDirection == .x {
-//            return regulator.hFormat
-//        }
-//        return regulator.vFormat
-//    }
-//
-//    func getOppsiteFormat() -> Format {
-//        if regDirection == .x {
-//            return regulator.vFormat
-//        }
-//        return regulator.hFormat
-//    }
-//
-//    func getOppsiteSpace() -> CGFloat {
-//        if regDirection == .x {
-//            return regulator.vSpace
-//        }
-//        return regulator.hSpace
-//    }
-
     func getOppsiteDirection() -> Direction {
         return regDirection == .x ? .y : .x
     }
