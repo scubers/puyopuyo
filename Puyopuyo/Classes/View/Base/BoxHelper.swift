@@ -37,9 +37,9 @@ public class BoxHelper<R: Regulator> {
         if isBox(view: view.superview) {
             // 当父视图为布局，并且当前view可能是wrap的情况下，父布局在计算的时候已经帮子布局计算完成，所以不需要再次计算
             //
-            if regulator.size.bothNotWrap() {
+            if regulator.size.bothNotWrap(), !regulator.calculateChildrenImmediately {
                 let residual = CGSize(width: view.bounds.width + regulator.margin.getHorzTotal(),
-                                    height: view.bounds.height + regulator.margin.getVertTotal())
+                                      height: view.bounds.height + regulator.margin.getVertTotal())
                 _ = regulator.calculate(by: residual)
             }
         } else {
