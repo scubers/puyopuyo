@@ -58,12 +58,6 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
     }
 
     public static func wrap(add: CGFloat = 0, min: CGFloat = 0, max: CGFloat = .greatestFiniteMagnitude, priority: CGFloat = 0, shrink: CGFloat = 0) -> SizeDescription {
-        if priority > 0, shrink > 0 {
-            fatalError("priority & shrink should not be set at the same time")
-        }
-        if min > max {
-            fatalError("min(\(min) is less than max:\(max), which is not allowd")
-        }
         return SizeDescription(sizeType: .wrap, fixedValue: 0, ratio: 0, add: add, min: min, max: max, priority: priority, shrink: shrink)
     }
 

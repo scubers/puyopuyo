@@ -47,7 +47,10 @@ public class BoxControl<R: Regulator> {
                 }
                 regulator.py_size = regulator.calculate(by: size)
             } else {
-                Calculator.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
+                if !regulator.size.isRatio() {
+                    Calculator.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
+                    regulator.size = .init(width: .fill, height: .fill)
+                }
                 _ = regulator.calculate(by: view.bounds.size)
             }
             if isCenterControl {
