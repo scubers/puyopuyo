@@ -7,14 +7,8 @@
 
 import UIKit
 
-public class BoxHelper<R: Regulator> {
+public class BoxControl<R: Regulator> {
     public var isScrollViewControl = false
-
-    @available(*, deprecated)
-    public var isSelfPositionControl: Bool {
-        get { isCenterControl }
-        set { isCenterControl = newValue }
-    }
 
     public var isCenterControl = true
     public var isSizeControl = true
@@ -31,8 +25,6 @@ public class BoxHelper<R: Regulator> {
     }
 
     private func _layoutSubviews(view: UIView, regulator: R) {
-        let parentMeasure = view.superview?.py_measure ?? Measure()
-
         // 父视图为布局
         if isBox(view: view.superview) {
             // 当父视图为布局，并且当前view可能是wrap的情况下，父布局在计算的时候已经帮子布局计算完成，所以不需要再次计算
@@ -44,20 +36,18 @@ public class BoxHelper<R: Regulator> {
             }
         } else {
             if isSizeControl {
+                let parentMeasure = view.superview?.py_measure ?? Measure()
                 // 父视图为普通视图
                 var size = parentMeasure.py_size
                 if regulator.size.width.isWrap {
-                    size.width = regulator.size.width.max
+                    size.width = regulator.size.width.max - regulator.margin.getHorzTotal()
                 }
                 if regulator.size.height.isWrap {
-                    size.height = regulator.size.height.max
+                    size.height = regulator.size.height.max - regulator.margin.getVertTotal()
                 }
-                let sizeAftercalculate = regulator.calculate(by: size)
-                regulator.py_size = sizeAftercalculate
-//                Calculator.applyMeasure(regulator, size: sizeAftercalculate, currentResidual: size)
+                regulator.py_size = regulator.calculate(by: size)
             } else {
                 Calculator.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
-                regulator.size = .init(width: .fill, height: .fill)
                 _ = regulator.calculate(by: view.bounds.size)
             }
             if isCenterControl {
@@ -135,13 +125,13 @@ public class BoxHelper<R: Regulator> {
     }
 
     private func isBox(view: UIView?) -> Bool {
-        return BoxUtil.isBox(view)
+        BoxUtil.isBox(view)
     }
 }
 
 public protocol Boxable {
     associatedtype RegulatorType: Regulator
-    var boxHelper: BoxHelper<RegulatorType> { get }
+    var control: BoxControl<RegulatorType> { get }
     var regulator: RegulatorType { get }
 }
 

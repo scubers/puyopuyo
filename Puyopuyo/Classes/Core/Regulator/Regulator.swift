@@ -15,16 +15,6 @@ public enum Format: CaseIterable, Outputing {
     case between
     case round
     case trailing
-
-    @available(*, deprecated, message: "use between")
-    public static var sides: Format {
-        return .between
-    }
-
-    @available(*, deprecated, message: "use round")
-    public static var avg: Format {
-        return .round
-    }
 }
 
 /// 描述一个布局具备控制子节点的属性

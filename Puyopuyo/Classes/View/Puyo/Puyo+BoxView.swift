@@ -12,13 +12,13 @@ import Foundation
 public extension Puyo where T: Boxable & UIView {
     @discardableResult
     func animator(_ animator: Animator) -> Self {
-        view.boxHelper.animator = animator
+        view.control.animator = animator
         return self
     }
 
     @discardableResult
     func animator<O: Outputing>(_ animator: O) -> Self where O.OutputType == Animator {
-        bind(keyPath: \T.boxHelper.animator, animator)
+        bind(keyPath: \T.control.animator, animator)
     }
 
     @discardableResult
@@ -91,46 +91,46 @@ public extension Puyo where T: Boxable & UIView {
 
     @discardableResult
     func autoJudgeScroll(_ judge: Bool) -> Self {
-        bind(keyPath: \T.boxHelper.isScrollViewControl, judge)
+        bind(keyPath: \T.control.isScrollViewControl, judge)
     }
 
     @discardableResult
     func isCenterControl(_ control: Bool) -> Self {
-        bind(keyPath: \T.boxHelper.isCenterControl, control)
+        bind(keyPath: \T.control.isCenterControl, control)
     }
 
     @discardableResult
     func isSizeControl(_ control: Bool) -> Self {
-        bind(keyPath: \T.boxHelper.isSizeControl, control)
+        bind(keyPath: \T.control.isSizeControl, control)
     }
 
     @discardableResult
     func borders(_ options: [BorderOptions]) -> Self {
-        view.boxHelper.borders = Borders.all(Border(options: options))
+        view.control.borders = Borders.all(Border(options: options))
         return self
     }
 
     @discardableResult
     func topBorder(_ options: [BorderOptions]) -> Self {
-        view.boxHelper.borders.top = Border(options: options)
+        view.control.borders.top = Border(options: options)
         return self
     }
 
     @discardableResult
     func leftBorder(_ options: [BorderOptions]) -> Self {
-        view.boxHelper.borders.left = Border(options: options)
+        view.control.borders.left = Border(options: options)
         return self
     }
 
     @discardableResult
     func bottomBorder(_ options: [BorderOptions]) -> Self {
-        view.boxHelper.borders.bottom = Border(options: options)
+        view.control.borders.bottom = Border(options: options)
         return self
     }
 
     @discardableResult
     func rightBorder(_ options: [BorderOptions]) -> Self {
-        view.boxHelper.borders.right = Border(options: options)
+        view.control.borders.right = Border(options: options)
         return self
     }
 }
