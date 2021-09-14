@@ -281,7 +281,7 @@ class FlatCalculator {
         if calSubSize.cross.isRatio, regCalSize.cross.isWrap {
             crossResidual = maxSubCross
         }
-        
+
         // 下面注释代码允许 cross 在 ratio != 1 的情况下跟随比例变化
 //        if calSubSize.cross.isRatio {
 //            crossResidual = (crossResidual - subCalMargin.crossFixed) * calSubSize.cross.ratio
@@ -340,6 +340,11 @@ class FlatCalculator {
                     let calMargin = $0.margin.getCalEdges(by: regDirection)
                     calFixedSize.cross = maxSubCross - calMargin.crossFixed
                     $0.py_size = calFixedSize.getSize()
+
+                    if calSize.main.isWrap {
+                        // 包裹需要重新计算
+                        _ = $0.calculate(by: CalFixedSize(main: calFixedSize.main, cross: maxSubCross, direction: regDirection).getSize())
+                    }
                 }
             }
         }
