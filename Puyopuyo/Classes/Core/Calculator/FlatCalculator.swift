@@ -281,6 +281,11 @@ class FlatCalculator {
         if calSubSize.cross.isRatio, regCalSize.cross.isWrap {
             crossResidual = maxSubCross
         }
+        
+        // 下面注释代码允许 cross 在 ratio != 1 的情况下跟随比例变化
+//        if calSubSize.cross.isRatio {
+//            crossResidual = (crossResidual - subCalMargin.crossFixed) * calSubSize.cross.ratio
+//        }
 
         return CalFixedSize(main: mainResidual + subCalMargin.mainFixed, cross: crossResidual, direction: regDirection)
     }
