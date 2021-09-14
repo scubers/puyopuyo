@@ -201,48 +201,14 @@ class FlatCalculator {
         totalSpace += (CGFloat(calculateChildren.count - 1) * regulator.space)
 
         // 根据优先级计算
-        getSortedChildren(calculateChildren).forEach { calculateChild($0) }
+        let sorted = getSortedChildren(calculateChildren)
+        sorted.forEach { calculateChild($0) }
 
-        // 子节点超出剩余空间并且存在可压缩节点时，处理主轴压缩
-        if totalShrink > 0, totalSubMain > regChildrenResidualCalSize.main {
-            let overflowSize = totalSubMain - regChildrenResidualCalSize.main
+        // 处理主轴压缩
+        handleMainShrink()
 
-            mainShrinkChildren.forEach {
-                let calSize = $0.size.getCalSize(by: regDirection)
-                if calSize.main.isWrap, calSize.main.shrink > 0 {
-                    let calFixedSize = $0.py_size.getCalFixedSize(by: regDirection)
-
-                    let calMargin = $0.margin.getCalEdges(by: regDirection)
-                    // 需要压缩的主轴长度
-                    let delta = overflowSize * (calSize.main.shrink / totalShrink)
-
-                    let mainResidual = max(0, min(calFixedSize.main - delta, totalShrinkWrapResidual)) + calMargin.mainFixed
-
-                    var residual = getCurrentChildResidualCalFixedSize($0)
-                    residual.main = mainResidual
-
-                    // 当前节点需要重新计算，所以先把累计值减去
-                    totalMainShrinkWrapSize -= calFixedSize.main
-                    // 重新计算
-                    calculateChild($0, subResidual: residual)
-                    // 重新累计
-                    appendChildrenToCalculatedSize($0)
-                }
-            }
-        }
-
-        // 最后处理次轴比重
-        if regCalSize.cross.isWrap {
-            crossRatioChildren.forEach {
-                let calSize = $0.size.getCalSize(by: regDirection)
-                if calSize.cross.isRatio {
-                    var calFixedSize = $0.py_size.getCalFixedSize(by: regDirection)
-                    let calMargin = $0.margin.getCalEdges(by: regDirection)
-                    calFixedSize.cross = maxSubCross - calMargin.crossFixed
-                    $0.py_size = calFixedSize.getSize()
-                }
-            }
-        }
+        // 处理次轴扩张
+        handleCrossRatio()
 
         // 4、第三次循环，计算子节点center，若format == .trailing, 则可能出现第四次循环
         let lastEnd = calculateCenter(measures: calculateChildren)
@@ -327,6 +293,51 @@ class FlatCalculator {
             intrinsicSize = Calculator.getIntrinsicSize(margin: measure.margin, residual: subResidual.getSize(), size: measure.size)
         }
         measure.py_size = intrinsicSize
+    }
+
+    private func handleMainShrink() {
+        // 子节点超出剩余空间并且存在可压缩节点时，处理主轴压缩
+        if totalShrink > 0, totalSubMain > regChildrenResidualCalSize.main {
+            let overflowSize = totalSubMain - regChildrenResidualCalSize.main
+
+            mainShrinkChildren.forEach {
+                let calSize = $0.size.getCalSize(by: regDirection)
+                if calSize.main.isWrap, calSize.main.shrink > 0 {
+                    let calFixedSize = $0.py_size.getCalFixedSize(by: regDirection)
+
+                    let calMargin = $0.margin.getCalEdges(by: regDirection)
+                    // 需要压缩的主轴长度
+                    let delta = overflowSize * (calSize.main.shrink / totalShrink)
+
+                    let mainResidual = max(0, min(calFixedSize.main - delta, totalShrinkWrapResidual)) + calMargin.mainFixed
+
+                    var residual = getCurrentChildResidualCalFixedSize($0)
+                    residual.main = mainResidual
+
+                    // 当前节点需要重新计算，所以先把累计值减去
+                    totalMainShrinkWrapSize -= calFixedSize.main
+                    // 重新计算
+                    calculateChild($0, subResidual: residual)
+                    // 重新累计
+                    appendChildrenToCalculatedSize($0)
+                }
+            }
+        }
+    }
+
+    private func handleCrossRatio() {
+        // 最后处理次轴比重
+        if regCalSize.cross.isWrap {
+            crossRatioChildren.forEach {
+                let calSize = $0.size.getCalSize(by: regDirection)
+                if calSize.cross.isRatio {
+                    var calFixedSize = $0.py_size.getCalFixedSize(by: regDirection)
+                    let calMargin = $0.margin.getCalEdges(by: regDirection)
+                    calFixedSize.cross = maxSubCross - calMargin.crossFixed
+                    $0.py_size = calFixedSize.getSize()
+                }
+            }
+        }
     }
 
     /// 这里为measures的大小都计算好，需要计算每个节点的center
