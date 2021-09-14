@@ -100,14 +100,17 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
 public struct Size: Equatable {
     public var width: SizeDescription
     public var height: SizeDescription
+    
+    public var aspectRatio: CGFloat?
 
     public static func == (lhs: Self, rhs: Self) -> Bool {
         return lhs.width == rhs.width && lhs.height == rhs.height
     }
 
-    public init(width: SizeDescription = .fix(0), height: SizeDescription = .fix(0)) {
+    public init(width: SizeDescription = .fix(0), height: SizeDescription = .fix(0), aspectRatio: CGFloat? = nil) {
         self.width = width
         self.height = height
+        self.aspectRatio = aspectRatio
     }
 
     public func isFixed() -> Bool {

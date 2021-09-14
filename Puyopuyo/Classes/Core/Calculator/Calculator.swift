@@ -53,8 +53,24 @@ class Calculator {
 
     static func getIntrinsicSize(margin: UIEdgeInsets, residual: CGSize, size: Size) -> CGSize {
         assert(size.bothNotWrap(), "cannot get intrinsci size from wrap size")
-        let width = getIntrinsicLength(size.width, residual: residual.width, margin: margin.getHorzTotal(), padding: .zero)
-        let height = getIntrinsicLength(size.height, residual: residual.height, margin: margin.getVertTotal(), padding: .zero)
+        var width = getIntrinsicLength(size.width, residual: residual.width, margin: margin.getHorzTotal(), padding: .zero)
+        var height = getIntrinsicLength(size.height, residual: residual.height, margin: margin.getVertTotal(), padding: .zero)
+
+        if let aspectRatio = size.aspectRatio, !(height == 0 && width == 0), false {
+            if width == 0 {
+                width = aspectRatio * height
+            } else if height == 0 {
+                height = width / aspectRatio
+            } else {
+                // w h 都有值
+                let currentRatio = width / height
+                if currentRatio > aspectRatio {
+                    height = width / aspectRatio
+                } else if currentRatio < aspectRatio {
+                    width = height * aspectRatio
+                }
+            }
+        }
         return CGSize(width: width, height: height)
     }
 
