@@ -54,6 +54,6 @@ public class FlatRegulator: Regulator {
     }
 
     override public func calculate(by size: CGSize) -> CGSize {
-        return FlatCalculator(self, residual: size).calculate()
+        return FlatCalculator(self, residual: size, isIntrinsic: false).calculate()
     }
 }

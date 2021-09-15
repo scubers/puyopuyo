@@ -91,6 +91,21 @@ public extension OutputingModifier where Self: Outputing {
             }
         }
     }
+
+    func debounce(interval: TimeInterval = 0) -> Outputs<OutputType> {
+        Outputs { i in
+            var indicator: UInt64 = 0
+            return self.outputing { o in
+                indicator += 1
+                let current = indicator
+                DispatchQueue.main.asyncAfter(deadline: .now() + interval) {
+                    if current == indicator {
+                        i.input(value: o)
+                    }
+                }
+            }
+        }
+    }
 }
 
 public extension OutputingModifier where Self: Outputing, Self.OutputType: OptionalableValueType {
