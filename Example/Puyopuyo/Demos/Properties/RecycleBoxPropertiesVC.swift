@@ -63,7 +63,9 @@ class RecycleBoxPropertiesVC: BaseVC {
                     VBox().attach {
                         Label.demo("").attach($0)
                             .text(o.map { "\($0.data * 100)" })
-                            .size(60, 60)
+//                            .size(60, 60)
+                            .width(60)
+                            .aspectRatio(1)
                     }
                     .padding(all: 10)
                     .borders([.color(Theme.dividerColor)])

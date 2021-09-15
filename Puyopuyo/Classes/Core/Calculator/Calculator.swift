@@ -56,7 +56,7 @@ class Calculator {
         var width = getIntrinsicLength(size.width, residual: residual.width, margin: margin.getHorzTotal(), padding: .zero)
         var height = getIntrinsicLength(size.height, residual: residual.height, margin: margin.getVertTotal(), padding: .zero)
 
-        if let aspectRatio = size.aspectRatio, !(height == 0 && width == 0), false {
+        if let aspectRatio = size.aspectRatio /*, !(height == 0 && width == 0)*/ {
             let s = getAspectRatioSize(CGSize(width: width, height: height), aspectRatio: aspectRatio, expand: true)
             width = s.width
             height = s.height

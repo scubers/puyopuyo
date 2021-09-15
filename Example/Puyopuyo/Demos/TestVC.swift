@@ -18,12 +18,43 @@ class TestVC: BaseVC {
 //        demo4().attach(vRoot)
 //        demo5().attach(vRoot)
 //        demo6().attach(vRoot)
-//        shrinkDeadLoopTest().attach(vRoot)
-        flowCompactTest().attach(vRoot)
+        shrinkDeadLoopTest().attach(vRoot)
+//        flowCompactTest().attach(vRoot)
         
 //        zboxFillAndWrapTest().attach(vRoot)
         
 //        crossAlignmentRatio().attach(vRoot)
+        
+//        flowRatioWrapTest().attach(vRoot)
+    }
+    
+    func flowRatioWrapTest() -> UIView {
+        VBox().attach {
+            VFlow().attach($0) {
+                Label.demo("1").attach($0)
+                    .size(100, 50)
+//                    .width(.wrap(min: 100, max: 100, shrink: 1))
+//                    .height(.wrap(min: 100, shrink: 1))
+                    .cornerRadius(10)
+                Label.demo("2").attach($0)
+                    .width(.wrap(min: 100, max: 100, shrink: 1))
+                    .height(.fill)
+                    .cornerRadius(10)
+                
+                Label.demo("3").attach($0)
+                    .width(.wrap(min: 100, max: 100, shrink: 1))
+                    .height(.wrap(min: 100, shrink: 1))
+                    .cornerRadius(10)
+            }
+            .arrangeCount(2)
+//            .height(.fill)
+//            .width(.fill)
+            .space(20)
+        }
+        .size(.fill, .fill)
+        .justifyContent(.center)
+        .padding(all: 10)
+        .view
     }
     
     func crossAlignmentRatio() -> UIView {
@@ -93,8 +124,8 @@ class TestVC: BaseVC {
             let label2Rect = State<CGRect?>(.zero)
             
             let container = HBox().attach($0) {
-//                UIView().attach($0)
-//                    .size(100, 50)
+                UIView().attach($0)
+                    .size(30, .fill)
                 
                 UILabel().attach($0)
                     .numberOfLines(0)
@@ -107,11 +138,13 @@ class TestVC: BaseVC {
                 UILabel().attach($0)
                     .numberOfLines(0)
                     .text(state)
-                    .width(.wrap(shrink: 1))
+                    .width(.wrap(max: 200, shrink: 1))
                     .observe(\.bounds, input: label2Rect)
                     .margin(left: 10)
                     .bind(keyPath: \.lineBreakMode, .byClipping)
-                    .heightEqualToWidth()
+                    .height(.wrap(max: 100))
+//                    .heightEqualToWidth()
+                    .aspectRatio(1)
                 
                 UILabel().attach($0)
                     .text("100")

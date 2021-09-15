@@ -173,7 +173,8 @@ class FlatCalculator {
         if cross.isWrap {
             cross = .fix(cross.getWrapSize(by: maxSubCross + regCalPadding.crossFixed))
         }
-        let size = CalSize(main: main, cross: cross, direction: regDirection).getSize()
+        var size = CalSize(main: main, cross: cross, direction: regDirection).getSize()
+        size.aspectRatio = regulator.size.aspectRatio
         return Calculator.getIntrinsicSize(margin: regulator.margin, residual: residual, size: size)
     }
 
@@ -312,11 +313,11 @@ class FlatCalculator {
         case .wrap:
             crossResidual = regChildrenResidualCalSize.cross
         case .ratio:
-            if regCalSize.cross.isWrap, !isIntrinsic {
-                crossResidual = maxSubCross
-            } else {
+//            if regCalSize.cross.isWrap, !isIntrinsic {
                 crossResidual = regChildrenResidualCalSize.cross
-            }
+//            } else {
+//                crossResidual = regChildrenResidualCalSize.cross
+//            }
         }
 
         // 下面注释代码允许 cross 在 ratio != 1 的情况下跟随比例变化
@@ -328,11 +329,14 @@ class FlatCalculator {
     }
 
     private func calculateChild(_ measure: Measure, subResidual: CalFixedSize) {
+        
+        let residual = Calculator.getAspectRatioResidual(for: measure, residual: subResidual.getSize(), expand: false)
+        
         var intrinsicSize: CGSize
         if measure.size.maybeWrap() || regulator.calculateChildrenImmediately {
-            intrinsicSize = measure.calculate(by: subResidual.getSize())
+            intrinsicSize = measure.calculate(by: residual)
         } else {
-            intrinsicSize = Calculator.getIntrinsicSize(margin: measure.margin, residual: subResidual.getSize(), size: measure.size)
+            intrinsicSize = Calculator.getIntrinsicSize(margin: measure.margin, residual: residual, size: measure.size)
         }
         measure.py_size = intrinsicSize
     }
