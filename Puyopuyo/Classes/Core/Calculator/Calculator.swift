@@ -57,19 +57,9 @@ class Calculator {
         var height = getIntrinsicLength(size.height, residual: residual.height, margin: margin.getVertTotal(), padding: .zero)
 
         if let aspectRatio = size.aspectRatio, !(height == 0 && width == 0), false {
-            if width == 0 {
-                width = aspectRatio * height
-            } else if height == 0 {
-                height = width / aspectRatio
-            } else {
-                // w h 都有值
-                let currentRatio = width / height
-                if currentRatio > aspectRatio {
-                    height = width / aspectRatio
-                } else if currentRatio < aspectRatio {
-                    width = height * aspectRatio
-                }
-            }
+            let s = getAspectRatioSize(CGSize(width: width, height: height), aspectRatio: aspectRatio, expand: true)
+            width = s.width
+            height = s.height
         }
         return CGSize(width: width, height: height)
     }
@@ -132,5 +122,50 @@ class Calculator {
         }
 
         return position
+    }
+
+    /// 根据提供的尺寸和宽高比，获取合理的尺寸
+    ///
+    /// - Parameters:
+    ///   - size: Original size
+    ///   - aspectRatio: aspectRatio
+    ///   - expand: if true, return the max size, otherwise the min size
+    /// - Returns: The result size
+    private static func getAspectRatioSize(_ size: CGSize, aspectRatio: CGFloat, expand: Bool) -> CGSize {
+        assert(aspectRatio > 0)
+
+        if size.width == 0 || size.height == 0 { return size }
+
+        let currentAspectRatio = size.width / size.height
+
+        if currentAspectRatio == aspectRatio { return size }
+
+        var finalResidual = size
+
+        if currentAspectRatio > aspectRatio {
+            if expand {
+                finalResidual.height = size.width / aspectRatio
+            } else {
+                finalResidual.width = size.height * aspectRatio
+            }
+        } else if currentAspectRatio < aspectRatio {
+            if expand {
+                finalResidual.width = size.height * aspectRatio
+            } else {
+                finalResidual.height = size.width / aspectRatio
+            }
+        }
+
+        return finalResidual
+    }
+
+    static func getAspectRatioResidual(for measure: Measure, residual: CGSize, expand: Bool) -> CGSize {
+        guard let aspectRatio = measure.size.aspectRatio, !measure.size.isFixed() else {
+            return residual
+        }
+//        return getAspectRatioSize(residual, aspectRatio: aspectRatio, expand: expand)
+        let margin = measure.margin
+        let size = getAspectRatioSize(CGSize(width: residual.width - margin.getHorzTotal(), height: residual.height - margin.getVertTotal()), aspectRatio: aspectRatio, expand: expand)
+        return CGSize(width: size.width + margin.getHorzTotal(), height: size.height + margin.getVertTotal())
     }
 }
