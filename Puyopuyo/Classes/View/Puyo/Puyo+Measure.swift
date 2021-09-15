@@ -59,7 +59,7 @@ public extension Puyo where T: UIView {
     @discardableResult
     func width(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
         if let s = view?.py_boundsState().distinct().dispatchMain() {
-            return width(s.map(block))
+            return width(s.map(block).debounce())
         }
         return self
     }
@@ -67,7 +67,7 @@ public extension Puyo where T: UIView {
     @discardableResult
     func height(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
         if let s = view?.py_boundsState().distinct().dispatchMain() {
-            height(s.map(block))
+            height(s.map(block).debounce())
         }
         return self
     }
@@ -94,6 +94,16 @@ public extension Puyo where T: UIView {
             .map { SizeDescription.wrap(min: $0, max: $0) }
             .debounce()
         )
+    }
+
+    @discardableResult
+    func aspectRatio(_ ratio: CGFloat?) -> Self {
+        bind(keyPath: \T.py_measure.size.aspectRatio, ratio)
+    }
+
+    @discardableResult
+    func aspectRatio<O: Outputing>(_ ratio: O) -> Self where O.OutputType: OptionalableValueType, O.OutputType.Wrap == CGFloat {
+        bind(keyPath: \T.py_measure.size.aspectRatio, ratio.mapWrappedValue())
     }
 }
 
