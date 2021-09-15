@@ -367,26 +367,6 @@ class FlatCalculator {
         }
     }
 
-    private func handleCrossRatio() {
-        // 最后处理次轴比重
-        if regCalSize.cross.isWrap {
-            crossRatioChildren.forEach {
-                let calSize = $0.size.getCalSize(by: regDirection)
-                if calSize.cross.isRatio {
-                    var calFixedSize = $0.py_size.getCalFixedSize(by: regDirection)
-                    let calMargin = $0.margin.getCalEdges(by: regDirection)
-                    calFixedSize.cross = maxSubCross - calMargin.crossFixed
-                    $0.py_size = calFixedSize.getSize()
-
-                    if calSize.main.isWrap {
-                        // 包裹需要重新计算
-                        _ = $0.calculate(by: CalFixedSize(main: calFixedSize.main, cross: maxSubCross, direction: regDirection).getSize())
-                    }
-                }
-            }
-        }
-    }
-
     /// 这里为measures的大小都计算好，需要计算每个节点的center
     ///
     /// - Parameters:
