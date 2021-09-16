@@ -43,12 +43,14 @@ class FlatPropertiesVC: BaseVC {
                 .animator(Animators.default)
                 .view
             },
-            selectors: [Selector(desc: "top", value: .top),
-                        Selector(desc: "bottom", value: .bottom),
-                        Selector(desc: "center", value: .center)],
+            selectors: [
+                Selector(desc: "top", value: .top),
+                Selector(desc: "center", value: .center),
+                Selector(desc: "bottom", value: .bottom),
+            ],
             selected: justifyContent.value,
             desc: """
-            Box.justfyContent，布局次轴上用于统一控制子View的偏移
+            Box.justfyContent, BoxViwe will adjust all subviews alignment at cross axis
             """
         )
         .attach()
@@ -77,12 +79,14 @@ class FlatPropertiesVC: BaseVC {
                 .animator(Animators.default)
                 .view
             },
-            selectors: [Selector(desc: "top", value: .top),
-                        Selector(desc: "bottom", value: .bottom),
-                        Selector(desc: "center", value: .center)],
+            selectors: [
+                Selector(desc: "top", value: .top),
+                Selector(desc: "center", value: .center),
+                Selector(desc: "bottom", value: .bottom),
+            ],
             selected: justifyContent.value,
             desc: """
-            activate = false, 则不受布局控制，可自由设置frame
+            if measure.activate = false, the view will not be calculate by box, you can set frame to position it.
             """
         )
         .attach()
@@ -118,13 +122,15 @@ class FlatPropertiesVC: BaseVC {
                 .format(format)
                 .view
             },
-            selectors: [Selector(desc: "leading", value: .leading),
-                        Selector(desc: "center", value: .center),
-                        Selector(desc: "round", value: .round),
-                        Selector(desc: "between", value: .between),
-                        Selector(desc: "traing", value: .trailing)],
+            selectors: [
+                Selector(desc: "leading", value: .leading),
+                Selector(desc: "between", value: .between),
+                Selector(desc: "center", value: .center),
+                Selector(desc: "round", value: .round),
+                Selector(desc: "traing", value: .trailing),
+            ],
             selected: format.value,
-            desc: "布局主轴上的格式"
+            desc: "All subviews formation at main axis"
         )
         .attach()
         .onEventProduced(to: self) { _, x in
@@ -151,12 +157,14 @@ class FlatPropertiesVC: BaseVC {
                 .direction(direction)
                 .view
             },
-            selectors: [Selector(desc: "x", value: .x),
-                        Selector(desc: "y", value: .y)],
+            selectors: [
+                Selector(desc: "x", value: .x),
+                Selector(desc: "y", value: .y),
+            ],
             selected: direction.value,
             desc: """
-            x: 水平方向
-            y: 竖直方向
+            x: Horizontal
+            y: Vertical
             """
         )
         .attach()
@@ -172,9 +180,6 @@ class FlatPropertiesVC: BaseVC {
             title: "padding",
             builder: {
                 HBox().attach($0) {
-                    //                    Label.demo("1").attach($0)
-                    //                    Label.demo("2").attach($0)
-                    //                    Label.demo("3").attach($0)
                     UIView().attach($0)
                         .size(.fill, .fill)
                         .style(StyleSheet.randomColorStyle)
@@ -187,7 +192,7 @@ class FlatPropertiesVC: BaseVC {
             },
             selectors: [0, 10, 20, 30, 40].map { Selector(desc: "\($0)", value: $0) },
             selected: padding.value,
-            desc: "Box布局系统的内边距"
+            desc: "Box padding"
         )
         .attach()
         .onEventProduced(to: self) { _, x in
@@ -219,7 +224,7 @@ class FlatPropertiesVC: BaseVC {
                         Selector(desc: "30", value: 30),
                         Selector(desc: "40", value: 40)],
             selected: space.value,
-            desc: "布局系统子view间距"
+            desc: "Control subviews's space"
         )
         .attach()
         .onEventProduced(to: self) { _, x in
@@ -249,7 +254,7 @@ class FlatPropertiesVC: BaseVC {
             selectors: [Selector(desc: "true", value: true),
                         Selector(desc: "false", value: false)],
             selected: reverse.value,
-            desc: "布局系统是否逆向布局"
+            desc: "Layout the subviews with reverse to the adding order"
         )
         .attach()
         .onEventProduced(to: self) { _, x in
