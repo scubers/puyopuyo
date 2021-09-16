@@ -231,23 +231,23 @@ class FlatCalculator {
         totalSpace += (CGFloat(calculateChildren.count - 1) * regulator.space)
 
         // 根据优先级计算
-        let sorted = getSortedChildren(calculateChildren)
-        sorted.forEach { calculateChild($0) }
+        getSortedChildren(calculateChildren).forEach(calculateChild(_:))
 
         // 处理主轴压缩
         handleMainShrink()
 
-        // 重置计算值
+        // 重新获取最新计算值
         resetMainWrapSizeAndMaxSubCross()
 
-        // 具备条件进行复算尺寸
+        // 具备条件进行复算尺寸: 存在次轴父子依赖，并且当前为非固有尺寸模式
         if !isIntrinsic, !crossRatioChildren.isEmpty, regCalSize.cross.isWrap {
-            let calResidual = residual.getCalFixedSize(by: regDirection)
-
-            let intrinsicCalResidual = CalFixedSize(main: calResidual.main, cross: maxSubCross + regCalPadding.crossFixed + regCalMargin.crossFixed, direction: regDirection)
-
-            let calculator = FlatCalculator(regulator, residual: intrinsicCalResidual.getSize(), isIntrinsic: true)
-            calculator.calculateChildrenSize()
+            let intrinsic = calculateRegulatorSize().getCalFixedSize(by: regDirection)
+            let residual = CalFixedSize(
+                main: intrinsic.main + regCalMargin.mainFixed,
+                cross: intrinsic.cross + regCalMargin.crossFixed,
+                direction: regDirection
+            )
+            FlatCalculator(regulator, residual: residual.getSize(), isIntrinsic: true).calculateChildrenSize()
         }
     }
 
@@ -312,14 +312,8 @@ class FlatCalculator {
         switch calSubSize.cross.sizeType {
         case .fixed:
             crossResidual = calSubSize.cross.fixedValue + subCalMargin.crossFixed
-        case .wrap:
+        case .wrap, .ratio:
             crossResidual = regChildrenResidualCalSize.cross
-        case .ratio:
-//            if regCalSize.cross.isWrap, !isIntrinsic {
-            crossResidual = regChildrenResidualCalSize.cross
-//            } else {
-//                crossResidual = regChildrenResidualCalSize.cross
-//            }
         }
 
         // 下面注释代码允许 cross 在 ratio != 1 的情况下跟随比例变化
