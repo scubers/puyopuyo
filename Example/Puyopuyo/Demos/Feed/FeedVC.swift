@@ -13,10 +13,18 @@ import UIKit
 class FeedVC: BaseVC, UITableViewDelegate {
     let dataSource = State<[Feed]>([])
 
+    let type = State(true)
+
+    func change() {
+        type.value = !type.value
+    }
+
     override func configView() {
         vRoot.attach {
-//            sequenceBox().attach($0)
+            sequenceBox().attach($0)
+                .visibility(type.map { $0.py_visibleOrGone() })
             recycleBox().attach($0)
+                .visibility(type.map { $0.py_toggled().py_visibleOrGone() })
         }
     }
 
@@ -39,6 +47,8 @@ class FeedVC: BaseVC, UITableViewDelegate {
                                 switch e {
                                 case .reload:
                                     this.value?.reload()
+                                case .change:
+                                    this.value?.change()
                                 }
 
                             })
@@ -84,6 +94,8 @@ class FeedVC: BaseVC, UITableViewDelegate {
                         switch e {
                         case .reload:
                             this.value?.reload()
+                        case .change:
+                            this.value?.change()
                         }
                     })
                     .view
@@ -112,8 +124,10 @@ class FeedVC: BaseVC, UITableViewDelegate {
     }
 
     private func reload() {
-        dataSource.value = (0 ..< 20).map { _ in
-            Feed(icon: Images().get(), name: Names().get(), content: Contents().get(), images: Images().random(9), createdAt: Int(Date().timeIntervalSince1970), likes: Names().random(10), comments: Contents().random(10).map { "\(Names().get()): \($0)" })
+        DispatchQueue.main.async {
+            self.dataSource.value = (0 ..< 20).map { _ in
+                Feed(icon: Images().get(), name: Names().get(), content: Contents().get(), images: Images().random(9), createdAt: Int(Date().timeIntervalSince1970), likes: Names().random(10), comments: Contents().random(10).map { "\(Names().get()): \($0)" })
+            }
         }
     }
 
@@ -133,6 +147,7 @@ struct Feed {
 private class Header: VBox, Eventable {
     enum Event {
         case reload
+        case change
     }
 
     var eventProducer = SimpleIO<Event>()
@@ -160,27 +175,46 @@ private class Header: VBox, Eventable {
             .justifyContent(.center)
             .space(8)
 
-            ZBox().attach($0) {
-                UILabel().attach($0)
-                    .text("Refresh")
-                    .textColor(UIColor.white)
+            HBox().attach($0) {
+                ZBox().attach($0) {
+                    UILabel().attach($0)
+                        .text("Refresh")
+                        .textColor(UIColor.white)
+                }
+                .padding(all: 8)
+                .cornerRadius(8)
+                .backgroundColor(UIColor.black.withAlphaComponent(0.7))
+                .width(.wrap(add: 20))
+                .alignment(.center)
+                .style(TapRippleStyle())
+                .onTap(to: self) { this, _ in
+                    this.emmit(.reload)
+                }
+
+                ZBox().attach($0) {
+                    UILabel().attach($0)
+                        .text("Change RecycleBox and SequenceBox")
+                        .textColor(UIColor.white)
+                }
+                .padding(all: 8)
+                .cornerRadius(8)
+                .backgroundColor(UIColor.black.withAlphaComponent(0.7))
+                .width(.wrap(add: 20))
+                .alignment(.center)
+                .style(TapRippleStyle())
+                .onTap(to: self) { this, _ in
+                    this.emmit(.change)
+                }
             }
-            .padding(all: 8)
-            .cornerRadius(8)
-            .backgroundColor(UIColor.black.withAlphaComponent(0.7))
-            .width(200)
+            .space(10)
             .alignment(.center)
-            .style(TapRippleStyle())
-            .onTap(to: self) { this, _ in
-                this.emmit(.reload)
-            }
         }
         .justifyContent(.right)
         .width(.fill)
     }
 }
 
-private class ItemView: HBox, Stateful {
+class ItemView: HBox, Stateful {
     var viewState = State<Feed>.unstable()
 
     override func buildBody() {
@@ -294,6 +328,7 @@ private class ItemView: HBox, Stateful {
         }
         .padding(all: 16)
         .space(16)
+        .width(.fill)
     }
 }
 

@@ -30,8 +30,17 @@ class TestVC: BaseVC {
 //        zboxAspectRatioTest().attach(vRoot)
         
 //        zboxRatioTest().attach(vRoot)
-        
+        VBox().attach(vRoot) {
+            ItemView().attach($0)
+                .viewState(State(Feed(icon: Images().get(), name: Names().get(), content: Contents().get(), images: Images().random(9), createdAt: Int(Date().timeIntervalSince1970), likes: Names().random(10), comments: Contents().random(10))))
+                .width(.fill)
+//                .attach {
+//                    let size = $0.sizeThatFits(CGSize(width: 600, height: 0))
+//                    print(size)
+//                }
 
+        }
+        .width(.fill)
     }
     
     func zboxRatioTest() -> UIView {

@@ -112,7 +112,8 @@ class Calculator {
         var residual = size
         if residual.width == 0 { residual.width = .greatestFiniteMagnitude }
         if residual.height == 0 { residual.height = .greatestFiniteMagnitude }
-        return calculateIntrinsicSize(for: measure, residual: size, calculateChildrenImmediately: false)
+//        return calculateIntrinsicSize(for: measure, residual: size, calculateChildrenImmediately: true)
+        return measure.calculate(by: residual)
     }
 
     static func constraintConflict(crash: Bool, _ msg: String) {
