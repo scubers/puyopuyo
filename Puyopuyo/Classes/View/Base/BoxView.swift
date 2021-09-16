@@ -54,38 +54,11 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable {
         layouting = false
     }
 
-    override open func didAddSubview(_: UIView) {
-//        UIView.doOnce
-    }
-
     override open func sizeThatFits(_ size: CGSize) -> CGSize {
         return control.sizeThatFits(size, regulator: regulator)
     }
 
     override open func didMoveToSuperview() {
         control.didMoveToSuperview(view: self, regulator: regulator)
-    }
-}
-
-extension UIView {
-    @objc func py_swizzledSetNeedsLayout() {
-        py_swizzledSetNeedsLayout()
-        if BoxUtil.isBox(superview) {
-            superview?.py_swizzledSetNeedsLayout()
-        }
-    }
-
-    fileprivate static let doOnce: Void = {
-        py_swizzle()
-    }()
-
-    static func py_swizzle() {
-        let old = #selector(UIView.setNeedsLayout)
-        let new = #selector(UIView.py_swizzledSetNeedsLayout)
-
-        let oldMethod = class_getInstanceMethod(UIView.self, old)
-        let newMethod = class_getInstanceMethod(UIView.self, new)
-
-        method_exchangeImplementations(oldMethod!, newMethod!)
     }
 }
