@@ -301,8 +301,10 @@ class FlatCalculator {
         switch calSubSize.cross.sizeType {
         case .fixed:
             crossResidual = calSubSize.cross.fixedValue + subCalMargin.crossFixed
-        case .wrap, .ratio:
+        case .wrap:
             crossResidual = regChildrenResidualCalSize.cross
+        case .ratio:
+            crossResidual = (regChildrenResidualCalSize.cross - subCalMargin.crossFixed) * calSubSize.cross.ratio
         }
 
         // 下面注释代码允许 cross 在 ratio != 1 的情况下跟随比例变化

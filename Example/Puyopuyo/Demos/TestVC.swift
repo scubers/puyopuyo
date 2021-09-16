@@ -26,6 +26,41 @@ class TestVC: BaseVC {
 //        crossAlignmentRatio().attach(vRoot)
         
 //        flowRatioWrapTest().attach(vRoot)
+        
+//        zboxAspectRatioTest().attach(vRoot)
+        
+//        zboxRatioTest().attach(vRoot)
+    }
+    
+    func zboxRatioTest() -> UIView {
+        VBox().attach {
+            ZBox().attach($0) {
+                Label.demo("3").attach($0)
+                    .size(.ratio(1.2), .ratio(1.2))
+                
+                Label.demo("2").attach($0)
+                    .size(.fill, .fill)
+                
+                Label.demo("1").attach($0)
+                    .size(.ratio(0.8), .ratio(0.8))
+            }
+            .justifyContent([.left, .bottom])
+            .size(100, 100)
+        }
+        .view
+    }
+    
+    func zboxAspectRatioTest() -> UIView {
+        VBox().attach {
+            ZBox().attach($0) {
+                Label.demo("100").attach($0)
+                    .aspectRatio(2 / 1)
+                    .alignment([.top, .right])
+            }
+            .padding(all: 10)
+            .aspectRatio(1)
+        }
+        .view
     }
     
     func flowRatioWrapTest() -> UIView {
