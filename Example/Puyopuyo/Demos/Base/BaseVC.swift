@@ -11,7 +11,7 @@ import UIKit
 
 class BaseVC: UIViewController, UIScrollViewDelegate {
     var navState = State(NavigationBox.ViewState())
-    var navHeight = State<SizeDescription>(.fix(44))
+    var navHeight = State<SizeDescription>(.fix(64))
 
     var navTitle: String? { nil }
 

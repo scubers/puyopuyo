@@ -19,18 +19,15 @@ class MenuVC: BaseVC {
     }
 
     let dataSrouce: [(String, () -> UIViewController)] = [
-        ("FlatBox Demo", { FlatPropertiesVC() }),
         ("Test", { TestVC() }),
-        ("Feed", { FeedVC() }),
+        ("FlatBox Properties", { FlatPropertiesVC() }),
         ("UIView Properties", { UIViewProertiesVC() }),
         ("FlowBox Properties", { FlowPropertiesVC() }),
         ("ZBox Properties", { ZPropertiesVC() }),
         ("RecycleBox Properties", { RecycleBoxPropertiesVC() }),
         ("SequenceBox Properties", { SequenceBoxPropertiesVC() }),
+        ("Feed", { FeedVC() }),
         ("Advance Usage", { AdvanceVC() }),
-//        ("ScrollingBox Properties", { ScrollBoxPropertiesVC() }),
-//        ("TableBox Properties", { TableBoxPropertiesVC() }),
-//        ("CollectionBox Properties", { CollectionBoxPropertiesVC() }),
     ]
 
     func menu() {
@@ -52,8 +49,8 @@ class MenuVC: BaseVC {
                         .backgroundColor(UIColor.white)
                         .styles([TapTransformStyle(), ShadowStyle()])
                         .onTap {
-                            if let context = i.context {
-                                this.value?.push(vc: context.data.1())
+                            i.inContext { c in
+                                this.value?.push(vc: c.data.1())
                             }
                         }
                         .view

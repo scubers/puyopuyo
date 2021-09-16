@@ -59,16 +59,14 @@ class NavBar: ZBox, Eventable {
     convenience init(title: String) {
         self.init(
             title: {
-                Label(title).attach($0).view
-            }, leading: {
-                UIImageView(image: UIImage(systemName: "arrow.backward.circle.fill")).attach($0)
-                    .userInteractionEnabled(true)
+                Label(title).attach($0)
+                    .fontSize(22, weight: .bold)
                     .view
-//                UIButton().attach($0)
-//                    .text("<-  ")
-//                    .textColor(UIColor.black)
-//                    .userInteractionEnabled(false)
-//                    .view
+            }, leading: {
+                UIButton().attach($0)
+                    .image(UIImage(systemName: "arrow.backward.circle.fill"))
+                    .margin(all: 10, left: 0)
+                    .view
             }
         )
     }

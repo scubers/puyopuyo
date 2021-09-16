@@ -38,7 +38,8 @@ class UIViewProertiesVC: BaseVC {
 
                     Label.demo("change").attach($0)
                         .alignment(a)
-                        .text(a.asOutput().map { "\($0)" })
+                        .backgroundColor(UIColor.systemPink)
+                        .text(a.map(\.description))
                 }
                 .space(2)
                 .padding(all: 10)
@@ -85,8 +86,9 @@ class UIViewProertiesVC: BaseVC {
 
                     Label.demo("change").attach($0)
                         .width(s)
-                        .text(s.asOutput().map { "\($0)" })
+                        .text(s.map(\.description))
                         .height(30)
+                        .backgroundColor(UIColor.systemPink)
                 }
                 .space(8)
                 .padding(all: 10)
@@ -132,6 +134,8 @@ class UIViewProertiesVC: BaseVC {
 
                     Label.demo("change").attach($0)
                         .height(s)
+                        .text(s.map(\.description))
+                        .backgroundColor(UIColor.systemPink)
                 }
                 .space(8)
                 .padding(all: 10)
