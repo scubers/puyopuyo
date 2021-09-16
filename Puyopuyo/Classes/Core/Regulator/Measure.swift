@@ -20,13 +20,7 @@ public protocol MeasureDelegate: AnyObject {
 }
 
 /// 描述一个节点相对于父节点的属性
-public class Measure: MeasureDelegate, Hashable {
-    public static func == (lhs: Measure, rhs: Measure) -> Bool {
-        return lhs === rhs
-    }
-
-    public func hash(into _: inout Hasher) {}
-
+public class Measure: MeasureDelegate {
     /// 虚拟目标计算节点
     var virtualDelegate = VirtualTarget()
 
