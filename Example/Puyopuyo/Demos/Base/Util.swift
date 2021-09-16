@@ -7,20 +7,20 @@
 //
 
 import Foundation
-import UIKit
 import Puyopuyo
+import UIKit
 
 struct Util {
     static func randomColor() -> UIColor {
-        let red = CGFloat(arc4random()%256)/255.0
-        let green = CGFloat(arc4random()%256)/255.0
-        let blue = CGFloat(arc4random()%256)/255.0
+        let red = CGFloat(arc4random()%256) / 255.0
+        let green = CGFloat(arc4random()%256) / 255.0
+        let blue = CGFloat(arc4random()%256) / 255.0
         let c = UIColor(red: red, green: green, blue: blue, alpha: 0.7)
         return c
     }
     
     static func randomViewColor(view: UIView) {
-        view.subviews.forEach { (v) in
+        view.subviews.forEach { v in
             v.backgroundColor = self.randomColor()
             self.randomViewColor(view: v)
         }
@@ -42,20 +42,12 @@ struct Util {
         return nil
     }
     
-    static func when(_ flag: Bool, _ block: () -> Void) {
-        if flag { block() }
-    }
-    
     static func pixel(_ pixcel: CGFloat) -> CGFloat {
         return pixcel / UIScreen.main.scale
     }
-    
-    
-    
 }
 
 class FPSView: ZBox {
-    
     let text = State<String?>(nil)
 
     var times = 0
@@ -65,10 +57,11 @@ class FPSView: ZBox {
             link?.invalidate()
         }
     }
+
     var timestamp: CFTimeInterval = 0
     override init(frame: CGRect) {
         super.init(frame: frame)
-        UILabel().attach(self).text(self.text)
+        UILabel().attach(self).text(text)
         backgroundColor = .white
     }
     
@@ -76,6 +69,7 @@ class FPSView: ZBox {
         link?.invalidate()
     }
     
+    @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
@@ -112,6 +106,7 @@ class Iterator<T> {
         assert(arr.count > 0)
         self.arr = arr
     }
+
     private var index: Int = -1
     func next() -> T {
         index += 1

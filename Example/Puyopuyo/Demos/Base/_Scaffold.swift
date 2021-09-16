@@ -9,32 +9,6 @@
 import Puyopuyo
 import UIKit
 
-class _Scaffold: UIView {
-    init(navBar: ViewBuilder? = nil, body: @escaping ViewBuilder) {
-        super.init(frame: .zero)
-
-        VBox().attach(self) {
-            ZBox().attach($0) {
-                navBar?($0).attach($0)
-                    .width(.fill)
-                    .alignment(.bottom)
-            }
-            .bottomBorder([.color(UIColor.black.withAlphaComponent(0.2)), .thick(Util.pixel(1))])
-            .width(.fill)
-            .height($0.py_safeArea().distinct().map { SizeDescription.wrap(add: $0.top) })
-
-            body($0).attach($0)
-                .size(.fill, .fill)
-        }
-        .size(.fill, .fill)
-    }
-
-    @available(*, unavailable)
-    required init?(coder _: NSCoder) {
-        fatalError()
-    }
-}
-
 class NavBar: ZBox, Eventable {
     enum Event {
         case tapLeading

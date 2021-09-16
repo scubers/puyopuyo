@@ -11,7 +11,7 @@ import UIKit
 
 class DemoScroll: UIScrollView {
 //    var builder: (UIView) -> Void
-    init(builder: (UIView) -> Void, box: (FlatBox) -> Void = { _ in }) {
+    init(builder: (UIView) -> Void) {
 //        self.builder = builder
         super.init(frame: .zero)
 
@@ -21,7 +21,7 @@ class DemoScroll: UIScrollView {
             .animator(Animators.default)
             .space(20)
             .attach {
-                box($0)
+//                box($0)
                 _ = builder($0)
             }
     }
