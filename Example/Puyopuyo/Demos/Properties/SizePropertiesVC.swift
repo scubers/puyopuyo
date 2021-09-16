@@ -18,10 +18,57 @@ class SizePropertiesVC: BaseVC {
                 crossRatioSizeWillOcuppyResidual().attach($0)
                 wrapSizeWillBeCompress().attach($0)
                 wrapSizePriority().attach($0)
+                wrapSizeShrink().attach($0)
             }
         )
         .attach(vRoot)
         .size(.fill, .fill)
+    }
+
+    func wrapSizeShrink() -> UIView {
+        let width = State(SizeDescription.fill)
+        return DemoView<SizeDescription>(
+            title: "Wrap size shrink",
+            builder: {
+                HBox().attach($0) {
+                    Label.demo("xxxxx shrink(3)").attach($0)
+                        .numberOfLines(1)
+                        .width(.wrap(shrink: 3))
+                        .height(30)
+                    
+                    Label.demo("yyyyy shrink(2)").attach($0)
+                        .width(.wrap(shrink: 2))
+                        .numberOfLines(1)
+                        .height(30)
+                    
+                    Label.demo("zzzzz shrink(1)").attach($0)
+                        .width(.wrap(shrink: 1))
+                        .numberOfLines(1)
+                        .height(30)
+                    
+                    Label.demo("aaaaa shrink(1)").attach($0)
+                        .width(.wrap(shrink: 1))
+                        .numberOfLines(1)
+                        .height(30)
+                }
+                .demo()
+                .width(width)
+                .height(80)
+                .space(8)
+                .view
+            },
+            selectors: [
+                Selector(desc: ".fill", value: .fill),
+                Selector(desc: "250", value: .fix(250)),
+                Selector(desc: "300", value: .fix(300)),
+                Selector(desc: "400", value: .fix(400)),
+            ],
+            desc: "Wrap size will be compressed when residual size is not enough, set shrink value make wrap size view can shrink by seprate the overflow value, if overflow size is 600, then shrink(3) will compress 300 px, shrink(2) will compress 200 px, shrink(1) will be 100 px"
+        )
+        .attach()
+        .onEventProduced(width)
+        .width(.fill)
+        .view
     }
 
     func wrapSizePriority() -> UIView {
