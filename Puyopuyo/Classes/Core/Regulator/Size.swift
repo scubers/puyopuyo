@@ -100,7 +100,8 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
 public struct Size: Equatable {
     public var width: SizeDescription
     public var height: SizeDescription
-    
+
+    /// width / height
     public var aspectRatio: CGFloat?
 
     public static func == (lhs: Self, rhs: Self) -> Bool {
@@ -149,20 +150,5 @@ public struct Size: Equatable {
 
     public func maybeRatio() -> Bool {
         return width.isRatio || height.isRatio
-    }
-}
-
-extension SizeDescription {
-    /// 根据参数计算size最后的CGFloat值
-    /// - Parameters:
-    ///   - relay: relay 依赖计算的具体值
-    ///   - totalRatio: totalRatio 比例计算时候的总比例
-    ///   - ratioFill: ratioFill 如果为true，则ratio不管为任何值，都返回relay，否则返回 比重值
-    func getFixValue(relay: CGFloat, totalRatio: CGFloat, ratioFill: Bool) -> CGFloat {
-        assert(!isWrap, "wrap size cannot get fix value directly")
-        if isFixed { return fixedValue }
-        if ratioFill { return relay }
-        assert(totalRatio != 0, "total ratio cannot be zero!!!")
-        return ratio / totalRatio * relay
     }
 }
