@@ -80,15 +80,7 @@ class ZCalculator {
     }
 
     private func _calculateChild(_ measure: Measure, residual: CGSize) {
-        let finalResidual = Calculator.getAspectRatioResidual(for: measure, residual: residual, transform: .min)
-
-        var intrinsicSize: CGSize
-        if regulator.calculateChildrenImmediately || measure.size.maybeWrap() {
-            intrinsicSize = measure.calculate(by: finalResidual)
-        } else {
-            intrinsicSize = Calculator.getIntrinsicSize(margin: measure.margin, residual: finalResidual, size: measure.size)
-        }
-        measure.py_size = intrinsicSize
+        measure.py_size = Calculator.calculateIntrinsicSize(for: measure, residual: residual, calculateChildrenImmediately: regulator.calculateChildrenImmediately)
 
         // 记录当前最大宽高
         appendMaxWidthIfNeeded(measure)

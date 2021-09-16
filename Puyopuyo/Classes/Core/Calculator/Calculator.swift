@@ -53,6 +53,7 @@ class Calculator {
         }
     }
 
+    /// 根据已经计算好的内容获取固有尺寸
     static func getIntrinsicSize(margin: UIEdgeInsets, residual: CGSize, size: Size) -> CGSize {
         assert(size.bothNotWrap(), "cannot get intrinsci size from wrap size")
         let width = getIntrinsicLength(size.width, residual: residual.width, margin: margin.getHorzTotal(), padding: .zero)
@@ -66,6 +67,12 @@ class Calculator {
         return finalSize
     }
 
+    /// 根据计算好的内容获取当前布局的固有尺寸
+    /// - Parameters:
+    ///   - regulator: 布局对象
+    ///   - residual: 布局可用剩余尺寸
+    ///   - contentSize: 布局内部内容尺寸
+    /// - Returns: 固有尺寸
     static func getRegulatorIntrinsicSize(_ regulator: Regulator, residual: CGSize, contentSize: CGSize) -> CGSize {
         let margin = regulator.margin
         let padding = regulator.padding
@@ -82,12 +89,30 @@ class Calculator {
         return finalSize
     }
 
+    /// 计算一个节点的固有吃醋
+    /// - Parameters:
+    ///   - measure: 节点描述
+    ///   - residual: 节点可用剩余尺寸
+    ///   - calculateChildrenImmediately: 是否立即计算下一个层级
+    /// - Returns: 节点固有尺寸
+    static func calculateIntrinsicSize(for measure: Measure, residual: CGSize, calculateChildrenImmediately: Bool) -> CGSize {
+        let residual = Calculator.getAspectRatioResidual(for: measure, residual: residual, transform: .min)
+
+        var intrinsicSize: CGSize
+        if measure.size.maybeWrap() || calculateChildrenImmediately {
+            intrinsicSize = measure.calculate(by: residual)
+        } else {
+            intrinsicSize = Calculator.getIntrinsicSize(margin: measure.margin, residual: residual, size: measure.size)
+        }
+        return intrinsicSize
+    }
+
     /// 允许size 存在0的情况，则视为不限制
     static func sizeThatFit(size: CGSize, to measure: Measure) -> CGSize {
         var residual = size
         if residual.width == 0 { residual.width = .greatestFiniteMagnitude }
         if residual.height == 0 { residual.height = .greatestFiniteMagnitude }
-        return measure.calculate(by: residual)
+        return calculateIntrinsicSize(for: measure, residual: size, calculateChildrenImmediately: false)
     }
 
     static func constraintConflict(crash: Bool, _ msg: String) {
