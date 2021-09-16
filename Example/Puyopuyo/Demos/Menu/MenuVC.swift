@@ -20,6 +20,7 @@ class MenuVC: BaseVC {
 
     let dataSrouce: [(String, () -> UIViewController)] = [
         ("Test", { TestVC() }),
+        ("Size Properties", { SizePropertiesVC() }),
         ("FlatBox Properties", { FlatPropertiesVC() }),
         ("UIView Properties", { UIViewProertiesVC() }),
         ("FlowBox Properties", { FlowPropertiesVC() }),

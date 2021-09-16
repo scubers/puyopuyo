@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		090C8DB826F3A1D700FEF026 /* SizePropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090C8DB726F3A1D700FEF026 /* SizePropertiesVC.swift */; };
 		0910C08D26E45A350048D5C8 /* FeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0910C08C26E45A350048D5C8 /* FeedVC.swift */; };
 		0972D40526C576D200210D1C /* ShadowStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0972D40426C576D200210D1C /* ShadowStyle.swift */; };
 		0982C1A02469AF730070F104 /* RecycleBoxPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */; };
@@ -48,6 +49,7 @@
 
 /* Begin PBXFileReference section */
 		029D039CF2FB7AD03311F02E /* Pods-Puyopuyo_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Puyopuyo_Tests.debug.xcconfig"; path = "Target Support Files/Pods-Puyopuyo_Tests/Pods-Puyopuyo_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		090C8DB726F3A1D700FEF026 /* SizePropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizePropertiesVC.swift; sourceTree = "<group>"; };
 		0910C08C26E45A350048D5C8 /* FeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedVC.swift; sourceTree = "<group>"; };
 		093B861024012B64002AC9C6 /* Puyopuyo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Puyopuyo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0972D40426C576D200210D1C /* ShadowStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowStyle.swift; sourceTree = "<group>"; };
@@ -218,6 +220,7 @@
 				A84E5CC0239EB5AC0091D39B /* ZPropertiesVC.swift */,
 				0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */,
 				09F6FF162471A1F300F97053 /* SequenceBoxPropertiesVC.swift */,
+				090C8DB726F3A1D700FEF026 /* SizePropertiesVC.swift */,
 			);
 			path = Properties;
 			sourceTree = "<group>";
@@ -477,6 +480,7 @@
 				A8BEC492239CDB6B001FD6BF /* FlowPropertiesVC.swift in Sources */,
 				0910C08D26E45A350048D5C8 /* FeedVC.swift in Sources */,
 				A8BCEEB823996424002DB739 /* SelectionView.swift in Sources */,
+				090C8DB826F3A1D700FEF026 /* SizePropertiesVC.swift in Sources */,
 				A8BEC48C239C9EB4001FD6BF /* DemoView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

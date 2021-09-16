@@ -163,8 +163,10 @@ class Calculator {
     ///   - aspectRatio: aspectRatio
     ///   - expand: if true, return the max size, otherwise the min size
     /// - Returns: The result size
-    static func getAspectRatioSize(_ size: CGSize, aspectRatio: CGFloat, transform: AspectRatioTransform) -> CGSize {
-        assert(aspectRatio > 0)
+    static func getAspectRatioSize(_ size: CGSize, aspectRatio: CGFloat?, transform: AspectRatioTransform) -> CGSize {
+        guard let aspectRatio = aspectRatio, aspectRatio > 0 else {
+            return size
+        }
 
         if size.width == 0 || size.height == 0 { return size }
 

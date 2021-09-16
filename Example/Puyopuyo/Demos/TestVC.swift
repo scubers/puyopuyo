@@ -18,7 +18,7 @@ class TestVC: BaseVC {
 //        demo4().attach(vRoot)
 //        demo5().attach(vRoot)
 //        demo6().attach(vRoot)
-        shrinkDeadLoopTest().attach(vRoot)
+//        shrinkDeadLoopTest().attach(vRoot)
 //        flowCompactTest().attach(vRoot)
         
 //        zboxFillAndWrapTest().attach(vRoot)
@@ -30,6 +30,23 @@ class TestVC: BaseVC {
 //        zboxAspectRatioTest().attach(vRoot)
         
 //        zboxRatioTest().attach(vRoot)
+        
+        ZBox().attach(vRoot) {
+            HBox().attach($0) {
+                Label.demo(".ratio(0.5)").attach($0)
+                    .height(.ratio(0.5))
+                Label.demo(".ratio(1)").attach($0)
+                    .height(.ratio(1))
+                Label.demo(".ratio(2)").attach($0)
+                    .height(.ratio(2))
+            }
+            .demo()
+            .width(.fill)
+            .height(80)
+            .space(8)
+        }
+        .width(.fill)
+
     }
     
     func zboxRatioTest() -> UIView {
@@ -191,6 +208,7 @@ class TestVC: BaseVC {
                     .width(.wrap(priority: 2))
             }
             .justifyContent(.center)
+            .animator(Animators.default)
 //            .space(10)
 //            .width(500)
 //            .height(100)

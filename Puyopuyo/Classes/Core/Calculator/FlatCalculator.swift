@@ -301,7 +301,7 @@ class FlatCalculator {
         case .wrap:
             crossResidual = regChildrenResidualCalSize.cross
         case .ratio:
-            crossResidual = (regChildrenResidualCalSize.cross - subCalMargin.crossFixed) * calSubSize.cross.ratio
+            crossResidual = (regChildrenResidualCalSize.cross) * calSubSize.cross.ratio
         }
 
         return CalFixedSize(main: mainResidual, cross: crossResidual, direction: regDirection)

@@ -131,10 +131,10 @@ class ZCalculator {
         }
         // 下面的注释代码允许 .ratio != 1 的情况跟随比例变化
         if measure.size.width.isRatio {
-            residual.width = (residual.width - measure.margin.getHorzTotal()) * measure.size.width.ratio
+            residual.width = (residual.width) * measure.size.width.ratio
         }
         if measure.size.height.isRatio {
-            residual.height = (residual.height - measure.margin.getVertTotal()) * measure.size.height.ratio
+            residual.height = (residual.height) * measure.size.height.ratio
         }
         return residual
     }
