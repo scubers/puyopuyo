@@ -10,35 +10,33 @@ import Foundation
 // MARK: - Size ext
 
 public extension Puyo where T: UIView {
-    @discardableResult
-    func size<O: Outputing>(_ w: O?, _ h: O?) -> Self where O.OutputType: SizeDescriptible {
-        if let x = w {
-            bind(keyPath: \T.py_measure.size.width, x.asOutput().map(\.sizeDescription))
-        }
-        if let x = h {
-            bind(keyPath: \T.py_measure.size.height, x.asOutput().map(\.sizeDescription))
-        }
-        return self
-    }
+    // MARK: - Width Height
 
     @discardableResult
     func width(_ width: SizeDescription) -> Self {
-        size(width, nil)
+        bind(keyPath: \T.py_measure.size.width, width)
     }
 
     @discardableResult
     func height(_ height: SizeDescription) -> Self {
-        size(nil, height)
+        bind(keyPath: \T.py_measure.size.height, height)
     }
 
     @discardableResult
     func width<O: Outputing>(_ w: O) -> Self where O.OutputType: SizeDescriptible {
-        size(w, nil)
+        bind(keyPath: \T.py_measure.size.width, w.asOutput().map(\.sizeDescription))
     }
 
     @discardableResult
     func height<O: Outputing>(_ h: O) -> Self where O.OutputType: SizeDescriptible {
-        size(nil, h)
+        bind(keyPath: \T.py_measure.size.height, h.asOutput().map(\.sizeDescription))
+    }
+
+    // MARK: - Size
+
+    @discardableResult
+    func size<O: Outputing>(_ w: O, _ h: O) -> Self where O.OutputType: SizeDescriptible {
+        width(w).height(h)
     }
 
     @discardableResult
@@ -55,6 +53,20 @@ public extension Puyo where T: UIView {
     func size(_ w: SizeDescription, _ h: SizeDescriptible) -> Self {
         width(w).height(h.sizeDescription)
     }
+
+    // MARK: - AspectRatio
+
+    @discardableResult
+    func aspectRatio(_ ratio: CGFloat?) -> Self {
+        bind(keyPath: \T.py_measure.size.aspectRatio, ratio)
+    }
+
+    @discardableResult
+    func aspectRatio<O: Outputing>(_ ratio: O) -> Self where O.OutputType: OptionalableValueType, O.OutputType.Wrap == CGFloat {
+        bind(keyPath: \T.py_measure.size.aspectRatio, ratio.mapWrappedValue())
+    }
+
+    // MARK: - Second layoutable methods
 
     @discardableResult
     func width(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
@@ -94,16 +106,6 @@ public extension Puyo where T: UIView {
             .map { SizeDescription.wrap(min: $0, max: $0) }
             .debounce()
         )
-    }
-
-    @discardableResult
-    func aspectRatio(_ ratio: CGFloat?) -> Self {
-        bind(keyPath: \T.py_measure.size.aspectRatio, ratio)
-    }
-
-    @discardableResult
-    func aspectRatio<O: Outputing>(_ ratio: O) -> Self where O.OutputType: OptionalableValueType, O.OutputType.Wrap == CGFloat {
-        bind(keyPath: \T.py_measure.size.aspectRatio, ratio.mapWrappedValue())
     }
 }
 
