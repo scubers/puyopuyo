@@ -304,11 +304,6 @@ class FlatCalculator {
             crossResidual = (regChildrenResidualCalSize.cross - subCalMargin.crossFixed) * calSubSize.cross.ratio
         }
 
-        // 下面注释代码允许 cross 在 ratio != 1 的情况下跟随比例变化
-//        if calSubSize.cross.isRatio {
-//            crossResidual = (crossResidual - subCalMargin.crossFixed) * calSubSize.cross.ratio
-//        }
-
         return CalFixedSize(main: mainResidual, cross: crossResidual, direction: regDirection)
     }
 

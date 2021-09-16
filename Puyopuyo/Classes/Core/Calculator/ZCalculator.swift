@@ -80,11 +80,13 @@ class ZCalculator {
     }
 
     private func _calculateChild(_ measure: Measure, residual: CGSize) {
+        let finalResidual = Calculator.getAspectRatioResidual(for: measure, residual: residual, transform: .min)
+
         var intrinsicSize: CGSize
         if regulator.calculateChildrenImmediately || measure.size.maybeWrap() {
-            intrinsicSize = measure.calculate(by: residual)
+            intrinsicSize = measure.calculate(by: finalResidual)
         } else {
-            intrinsicSize = Calculator.getIntrinsicSize(margin: measure.margin, residual: residual, size: measure.size)
+            intrinsicSize = Calculator.getIntrinsicSize(margin: measure.margin, residual: finalResidual, size: measure.size)
         }
         measure.py_size = intrinsicSize
 
