@@ -83,13 +83,13 @@ class Calculator {
 
         var finalSize = CGSize(width: width, height: height)
 
-        if let aspectRatio = size.aspectRatio /* , !(height == 0 && width == 0) */ {
+        if let aspectRatio = size.aspectRatio, !regulator.size.isFixed() {
             finalSize = getAspectRatioSize(CGSize(width: width, height: height), aspectRatio: aspectRatio, transform: .max)
         }
         return finalSize
     }
 
-    /// 计算一个节点的固有吃醋
+    /// 计算一个节点的固有尺寸
     /// - Parameters:
     ///   - measure: 节点描述
     ///   - residual: 节点可用剩余尺寸
@@ -194,11 +194,11 @@ class Calculator {
         return finalResidual
     }
 
+    /// 根据宽高比获取合理的尺寸
     static func getAspectRatioResidual(for measure: Measure, residual: CGSize, transform: AspectRatioTransform) -> CGSize {
         guard let aspectRatio = measure.size.aspectRatio, !measure.size.isFixed() else {
             return residual
         }
-//        return getAspectRatioSize(residual, aspectRatio: aspectRatio, expand: expand)
         let margin = measure.margin
         let size = getAspectRatioSize(CGSize(width: residual.width - margin.getHorzTotal(), height: residual.height - margin.getVertTotal()), aspectRatio: aspectRatio, transform: transform)
         return CGSize(width: size.width + margin.getHorzTotal(), height: size.height + margin.getVertTotal())
