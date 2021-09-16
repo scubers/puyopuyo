@@ -38,14 +38,17 @@ public class BoxControl<R: Regulator> {
             if isSizeControl {
                 let parentMeasure = view.superview?.py_measure ?? Measure()
                 // 父视图为普通视图
-                var size = parentMeasure.py_size
+                var residual = parentMeasure.py_size
                 if regulator.size.width.isWrap {
-                    size.width = regulator.size.width.max - regulator.margin.getHorzTotal()
+                    residual.width = regulator.size.width.max - regulator.margin.getHorzTotal()
                 }
                 if regulator.size.height.isWrap {
-                    size.height = regulator.size.height.max - regulator.margin.getVertTotal()
+                    residual.height = regulator.size.height.max - regulator.margin.getVertTotal()
                 }
-                regulator.py_size = regulator.calculate(by: size)
+                if let aspectRatio = regulator.size.aspectRatio {
+                    residual = Calculator.getAspectRatioSize(residual, aspectRatio: aspectRatio, transform: .min)
+                }
+                regulator.py_size = regulator.calculate(by: residual)
             } else {
                 if !regulator.size.isRatio() {
                     Calculator.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")

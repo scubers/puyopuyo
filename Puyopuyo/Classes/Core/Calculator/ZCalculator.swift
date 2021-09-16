@@ -24,25 +24,55 @@ class ZCalculator {
                                         padding: regulator.padding)
     }()
 
-    var maxChildSizeWithSubMargin: CGSize = .zero
+    var maxContentSize: CGSize = .zero
 
     var calculateChildren = [Measure]()
 
     lazy var maybeRatioChildren = [Measure]()
 
     func calculate() -> CGSize {
-        regulator.py_enumerateChild { measure in
-            if measure.activated {
-                calculateChildren.append(measure)
-                let currentChildResidual = _getCurrentChildResidualSize(measure)
-                _calculateChild(measure, residual: currentChildResidual)
+        prepareData()
 
-                if measure.size.maybeRatio() {
-                    maybeRatioChildren.append(measure)
-                }
+        calculateChildrenSize()
+
+        handleRatioChildrenIfNeeded()
+
+        let intrinsicSize = Calculator.getRegulatorIntrinsicSize(regulator, residual: residual, contentSize: maxContentSize)
+
+        calculateChildrenCenter(intrinsic: intrinsicSize)
+
+        return intrinsicSize
+    }
+
+    private func prepareData() {
+        regulator.py_enumerateChild { m in
+            if !m.activated { return }
+
+            calculateChildren.append(m)
+
+            if m.size.maybeRatio() {
+                maybeRatioChildren.append(m)
+            }
+
+            // 校验最大固有尺寸
+            if m.size.width.isFixed {
+                maxContentSize.width = max(maxContentSize.width, m.size.width.fixedValue + m.margin.getHorzTotal())
+            }
+
+            if m.size.height.isFixed {
+                maxContentSize.height = max(maxContentSize.height, m.size.height.fixedValue + m.margin.getVertTotal())
             }
         }
+    }
 
+    private func calculateChildrenSize() {
+        calculateChildren.forEach { m in
+            let subResidual = _getCurrentChildResidualSize(m)
+            _calculateChild(m, residual: subResidual)
+        }
+    }
+
+    private func handleRatioChildrenIfNeeded() {
         // 当布局包裹时，需要最后拉伸子填充节点
         if regulator.size.maybeWrap() {
             maybeRatioChildren.forEach { m in
@@ -50,15 +80,6 @@ class ZCalculator {
                 _calculateChild(m, residual: currentChildResidual)
             }
         }
-
-        let containerSize = Calculator.getRegulatorIntrinsicSize(regulator, residual: residual, contentSize: maxChildSizeWithSubMargin)
-
-        for measure in calculateChildren {
-            // 计算中心
-            measure.py_center = _calculateCenter(measure, containerSize: containerSize)
-        }
-
-        return containerSize
     }
 
     private func _calculateChild(_ measure: Measure, residual: CGSize) {
@@ -70,11 +91,36 @@ class ZCalculator {
         }
         measure.py_size = intrinsicSize
 
-        let margin = measure.margin
-
         // 记录当前最大宽高
-        maxChildSizeWithSubMargin.width = max(maxChildSizeWithSubMargin.width, intrinsicSize.width + margin.getHorzTotal())
-        maxChildSizeWithSubMargin.height = max(maxChildSizeWithSubMargin.height, intrinsicSize.height + margin.getVertTotal())
+        appendMaxWidthIfNeeded(measure)
+        appendMaxHeightIfNeeded(measure)
+    }
+
+    private func calculateChildrenCenter(intrinsic: CGSize) {
+        for measure in calculateChildren {
+            // 计算中心
+            measure.py_center = _calculateCenter(measure, containerSize: intrinsic)
+        }
+    }
+
+    private func resetMaxContentSize() {
+        maxContentSize = .zero
+        calculateChildren.forEach { m in
+            appendMaxWidthIfNeeded(m)
+            appendMaxHeightIfNeeded(m)
+        }
+    }
+
+    private func appendMaxWidthIfNeeded(_ measure: Measure) {
+        if !measure.size.width.isRatio {
+            maxContentSize.width = max(maxContentSize.width, measure.py_size.width + measure.margin.getHorzTotal())
+        }
+    }
+
+    private func appendMaxHeightIfNeeded(_ measure: Measure) {
+        if !measure.size.height.isRatio {
+            maxContentSize.height = max(maxContentSize.height, measure.py_size.height + measure.margin.getVertTotal())
+        }
     }
 
     private func _calculateCenter(_ measure: Measure, containerSize: CGSize) -> CGPoint {
@@ -84,12 +130,13 @@ class ZCalculator {
     }
 
     private func _getCurrentChildResidualSize(_ measure: Measure) -> CGSize {
-        var residual = regChildrenResidualSize
+        var residual: CGSize = regChildrenResidualSize
+
         if regulator.size.width.isWrap, measure.size.width.isRatio {
-            residual.width = maxChildSizeWithSubMargin.width
+            residual.width = maxContentSize.width
         }
         if regulator.size.height.isWrap, measure.size.height.isRatio {
-            residual.height = maxChildSizeWithSubMargin.height
+            residual.height = maxContentSize.height
         }
         // 下面的注释代码允许 .ratio != 1 的情况跟随比例变化
 //        if measure.size.width.isRatio {
