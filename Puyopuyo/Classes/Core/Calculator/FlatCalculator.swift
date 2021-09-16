@@ -150,8 +150,6 @@ class FlatCalculator {
 
     /// 计算本身布局属性，可能返回的size 为 .fixed, .ratio, 不可能返回wrap
     func calculate() -> CGSize {
-        prepareData()
-
         calculateChildrenSize()
 
         let finalSize = calculateRegulatorSize()
@@ -167,6 +165,8 @@ class FlatCalculator {
     }
 
     func calculateChildrenSize() {
+        prepareData()
+
         // 根据优先级计算
         getSortedChildren(calculateChildren).forEach(calculateChild(_:))
 
