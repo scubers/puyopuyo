@@ -8,36 +8,38 @@
 import Foundation
 
 class Calculator {
-    // residual 剩余空间，标记当前view布局的时候，父view给予的剩余空间
-    // margin 当前view布局时候的margin
-    // padding 当前view的padding（如果有）
-    // ratio 当前尺寸计算时，如果desc为ratio时依赖计算的总ratio，若为空，则取desc的ratio值，相当于比例为1
-    static func getChildResidualLength(_ sizeDesc: SizeDescription,
-                                       residual: CGFloat,
-                                       margin: CGFloat,
-                                       padding: CGFloat) -> CGFloat
-    {
-        if sizeDesc.isFixed {
-            // 子布局剩余空间为固有尺寸 - 当前布局内边距
-            return max(0, sizeDesc.fixedValue - padding)
-        } else if sizeDesc.isRatio {
-            // 子布局剩余空间为所有剩余空间
-            return max(0, residual - padding - margin)
-        } else if sizeDesc.isWrap {
-            // 若存在最大值max，需要和最终算出的剩余空间取个最小值
-            return max(sizeDesc.min, max(0, min(sizeDesc.max - padding, residual - padding - margin)))
-        } else {
-            fatalError()
-        }
-    }
+    /// 获取Box在布局子节点时，子节点可使用的最大尺寸
+    /// - Parameters:
+    ///   - regulator: regulator
+    ///   - regulatorResidual: 布局自身可使用的尺寸
+    /// - Returns: 子节点布局可以使用的尺寸
+    static func getChildrenTotalResidul(for regulator: Regulator, regulatorResidual: CGSize) -> CGSize {
+        let regSize = regulator.size
+        let margin = regulator.margin
+        let padding = regulator.padding
 
-    static func getChildResidualSize(_ size: Size, residual: CGSize, margin: UIEdgeInsets, padding: UIEdgeInsets) -> CGSize {
-        let width = getChildResidualLength(size.width, residual: residual.width, margin: margin.getHorzTotal(), padding: padding.getHorzTotal())
-        let height = getChildResidualLength(size.height, residual: residual.height, margin: margin.getVertTotal(), padding: padding.getVertTotal())
+        func getLength(_ sizeDesc: SizeDescription, residual: CGFloat, margin: CGFloat, padding: CGFloat) -> CGFloat {
+            if sizeDesc.isFixed {
+                // 子布局剩余空间为固有尺寸 - 当前布局内边距
+                return max(0, sizeDesc.fixedValue - padding)
+            } else if sizeDesc.isRatio {
+                // 子布局剩余空间为所有剩余空间
+                return max(0, residual - padding - margin)
+            } else if sizeDesc.isWrap {
+                // 若存在最大值max，需要和最终算出的剩余空间取个最小值
+                return max(sizeDesc.min, max(0, min(sizeDesc.max - padding, residual - padding - margin)))
+            } else {
+                fatalError()
+            }
+        }
+
+        let width = getLength(regSize.width, residual: regulatorResidual.width, margin: margin.getHorzTotal(), padding: padding.getHorzTotal())
+        let height = getLength(regSize.height, residual: regulatorResidual.height, margin: margin.getVertTotal(), padding: padding.getVertTotal())
+
         return CGSize(width: width, height: height)
     }
 
-    static func getIntrinsicLength(_ sizeDesc: SizeDescription, residual: CGFloat, margin: CGFloat, padding: CGFloat? = nil, wrapValue: CGFloat? = nil) -> CGFloat {
+    private static func getIntrinsicLength(_ sizeDesc: SizeDescription, residual: CGFloat, margin: CGFloat, padding: CGFloat? = nil, wrapValue: CGFloat? = nil) -> CGFloat {
         if sizeDesc.isFixed {
             return max(0, sizeDesc.fixedValue)
         } else if sizeDesc.isRatio {

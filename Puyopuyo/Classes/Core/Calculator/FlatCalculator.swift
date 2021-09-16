@@ -82,10 +82,7 @@ class FlatCalculator {
 
     /// 当前剩余尺寸，需要根据属性进行计算，由于当前计算即所有剩余尺寸，所以ratio为比例相同
     lazy var regChildrenResidualCalSize: CalFixedSize = {
-        let size = Calculator.getChildResidualSize(regulator.size,
-                                                   residual: residual,
-                                                   margin: regulator.margin,
-                                                   padding: regulator.padding)
+        let size = Calculator.getChildrenTotalResidul(for: regulator, regulatorResidual: residual)
         return CalFixedSize(cgSize: size, direction: regulator.direction)
     }()
 
