@@ -65,8 +65,11 @@ class RecycleBoxPropertiesVC: BaseVC {
                             .text(o.map { "\($0.data * 100)" })
 //                            .size(60, 60)
                             .width(60)
-                            .aspectRatio(1)
+//                            .aspectRatio(1)
+                            .aspectRatio(2 / 1)
                     }
+                    .justifyContent(.center)
+                    .aspectRatio(2 / 1)
                     .padding(all: 10)
                     .borders([.color(Theme.dividerColor)])
                     .onTap { _ in

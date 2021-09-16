@@ -154,19 +154,20 @@ class FlatCalculator {
         calculateChildrenSize()
 
         // 准备数据
-        resetMainWrapSizeAndMaxSubCross()
+
+        let finalSize = calculateRegulatorSize()
 
         // 4、第三次循环，计算子节点center，若format == .trailing, 则可能出现第四次循环
-        let lastEnd = calculateChildrenCenter()
+        calculateChildrenCenter(intrinsic: finalSize)
 
         // 计算自身大小
-        return calculateRegulatorSize(lastEnd: lastEnd)
+        return finalSize
     }
 
-    func calculateRegulatorSize(lastEnd: CGFloat) -> CGSize {
+    func calculateRegulatorSize() -> CGSize {
         var main = regulator.size.getMain(direction: regDirection)
         if main.isWrap {
-            main = .fix(main.getWrapSize(by: lastEnd + regCalPadding.end))
+            main = .fix(main.getWrapSize(by: totalSubMain + regCalPadding.mainFixed))
         }
 
         var cross = regulator.size.getCross(direction: regDirection)
@@ -236,10 +237,11 @@ class FlatCalculator {
         // 处理主轴压缩
         handleMainShrink()
 
+        // 重置计算值
+        resetMainWrapSizeAndMaxSubCross()
+
         // 具备条件进行复算尺寸
         if !isIntrinsic, !crossRatioChildren.isEmpty, regCalSize.cross.isWrap {
-            resetMainWrapSizeAndMaxSubCross()
-
             let calResidual = residual.getCalFixedSize(by: regDirection)
 
             let intrinsicCalResidual = CalFixedSize(main: calResidual.main, cross: maxSubCross + regCalPadding.crossFixed + regCalMargin.crossFixed, direction: regDirection)
@@ -314,7 +316,7 @@ class FlatCalculator {
             crossResidual = regChildrenResidualCalSize.cross
         case .ratio:
 //            if regCalSize.cross.isWrap, !isIntrinsic {
-                crossResidual = regChildrenResidualCalSize.cross
+            crossResidual = regChildrenResidualCalSize.cross
 //            } else {
 //                crossResidual = regChildrenResidualCalSize.cross
 //            }
@@ -329,9 +331,8 @@ class FlatCalculator {
     }
 
     private func calculateChild(_ measure: Measure, subResidual: CalFixedSize) {
-        
         let residual = Calculator.getAspectRatioResidual(for: measure, residual: subResidual.getSize(), expand: false)
-        
+
         var intrinsicSize: CGSize
         if measure.size.maybeWrap() || regulator.calculateChildrenImmediately {
             intrinsicSize = measure.calculate(by: residual)
@@ -376,7 +377,7 @@ class FlatCalculator {
     /// - Parameters:
     ///   - measures: 已经计算好大小的节点
     /// - Returns: 返回最后节点的end(包括最后一个节点的margin.end)
-    private func calculateChildrenCenter() -> CGFloat {
+    private func calculateChildrenCenter(intrinsic: CGSize) {
         let measures = calculateChildren
 
         var lastEnd: CGFloat = regCalPadding.start
@@ -386,7 +387,7 @@ class FlatCalculator {
             // 获取计算对象，根据是否反转获取
             let m = reversed ? measures[measures.count - calculateIndex - 1] : measures[calculateIndex]
             // 计算cross偏移
-            let cross = _calculateCrossOffset(measure: m)
+            let cross = Calculator.calculateCrossAlignmentOffset(m, direction: regDirection, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: intrinsic)
             // 计算main偏移
             // 1. 计算之前，需要根据format计算补充间距
             var delta: CGFloat = 0
@@ -425,7 +426,7 @@ class FlatCalculator {
             }
         }
 
-        return lastEnd
+//        return lastEnd
     }
 
     private func getSortedChildren(_ children: [Measure]) -> [Measure] {
@@ -440,11 +441,6 @@ class FlatCalculator {
 
     private func printPriority(_ children: [Measure]) {
         print(children.map { $0.size.getCalSize(by: regDirection).getSizeType().getDesc() }.joined(separator: ","))
-    }
-
-    private func _calculateCrossOffset(measure: Measure) -> CGFloat {
-        let parentSize = Calculator.getRegulatorIntrinsicSize(regulator, residual: residual, contentSize: CalFixedSize(main: 0, cross: maxSubCross, direction: regDirection).getSize())
-        return Calculator.calculateCrossAlignmentOffset(measure, direction: regDirection, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: parentSize)
     }
 
     private func _calculateMainOffset(measure: Measure, idx: Int, lastEnd: CGFloat) -> (CGFloat, CGFloat) {
