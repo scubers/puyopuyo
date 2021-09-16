@@ -18,7 +18,7 @@ struct Util {
         let c = UIColor(red: red, green: green, blue: blue, alpha: 0.7)
         return c
     }
-    
+
     static func randomViewColor(view: UIView) {
         view.subviews.forEach { v in
             v.backgroundColor = self.randomColor()
@@ -30,7 +30,7 @@ struct Util {
         let index = arc4random_uniform(UInt32(array.count))
         return array[Int(index)]
     }
-    
+
     static func getViewController(from view: UIView) -> UIViewController? {
         var responder = view.next
         while responder != nil {
@@ -41,7 +41,7 @@ struct Util {
         }
         return nil
     }
-    
+
     static func pixel(_ pixcel: CGFloat) -> CGFloat {
         return pixcel / UIScreen.main.scale
     }
@@ -64,22 +64,22 @@ class FPSView: ZBox {
         UILabel().attach(self).text(text)
         backgroundColor = .white
     }
-    
+
     deinit {
         link?.invalidate()
     }
-    
+
     @available(*, unavailable)
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
-    
+
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
         link = CADisplayLink(target: self, selector: #selector(ticks(link:)))
         link?.add(to: RunLoop.main, forMode: .common)
     }
-    
+
     @objc func ticks(link: CADisplayLink) {
         guard superview != nil else {
             link.invalidate()
@@ -114,5 +114,57 @@ class Iterator<T> {
             index = 0
         }
         return arr[index]
+    }
+}
+
+extension UIColor {
+    // Hex String -> UIColor
+    convenience init(hexString: String) {
+        let hexString = hexString.trimmingCharacters(in: .whitespacesAndNewlines)
+        let scanner = Scanner(string: hexString)
+
+        if hexString.hasPrefix("#") {
+            scanner.scanLocation = 1
+        }
+
+        var color: UInt32 = 0
+        scanner.scanHexInt32(&color)
+
+        let mask = 0x000000FF
+        let r = Int(color >> 16) & mask
+        let g = Int(color >> 8) & mask
+        let b = Int(color) & mask
+
+        let red = CGFloat(r) / 255.0
+        let green = CGFloat(g) / 255.0
+        let blue = CGFloat(b) / 255.0
+
+        self.init(red: red, green: green, blue: blue, alpha: 1)
+    }
+}
+
+enum Theme {
+    static let accentColor = UIColor(hexString: "237cff")
+    static let antiAccentColor = UIColor.white
+
+    static let background = UIColor(hexString: "eeeeee")
+    static let card = UIColor(hexString: "ffffff")
+
+    static let dividerColor = UIColor.black.withAlphaComponent(0.2)
+
+    static let demoBoxBorder: [BorderOptions] = [
+        .color(.lightGray),
+        .thick(Util.pixel(1)),
+        .dash(2, 2)
+    ]
+}
+
+extension Puyo where T: Boxable & UIView {
+    @discardableResult
+    func demo() -> Self {
+        borders(Theme.demoBoxBorder)
+        padding(all: 10)
+        margin(all: 10)
+        return self
     }
 }

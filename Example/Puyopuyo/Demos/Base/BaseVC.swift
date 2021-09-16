@@ -9,16 +9,6 @@
 import Puyopuyo
 import UIKit
 
-class Theme {
-    static let accentColor = UIColor(hexString: "237cff")
-    static let antiAccentColor = UIColor.white
-
-    static let background = UIColor(hexString: "eeeeee")
-    static let card = UIColor(hexString: "ffffff")
-
-    static let dividerColor = UIColor.black.withAlphaComponent(0.2)
-}
-
 class BaseVC: UIViewController, UIScrollViewDelegate {
     var navState = State(NavigationBox.ViewState())
     var navHeight = State<SizeDescription>(.fix(44))

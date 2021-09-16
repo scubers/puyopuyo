@@ -19,13 +19,12 @@ class MenuVC: BaseVC {
     }
 
     let dataSrouce: [(String, () -> UIViewController)] = [
+        ("FlatBox Demo", { FlatPropertiesVC() }),
         ("Test", { TestVC() }),
         ("Feed", { FeedVC() }),
         ("UIView Properties", { UIViewProertiesVC() }),
-        ("FlatBox Properties", { FlatPropertiesVC() }),
         ("FlowBox Properties", { FlowPropertiesVC() }),
         ("ZBox Properties", { ZPropertiesVC() }),
-        ("NavigationBox Properties", { NavigationBoxPropertiesVC() }),
         ("RecycleBox Properties", { RecycleBoxPropertiesVC() }),
         ("SequenceBox Properties", { SequenceBoxPropertiesVC() }),
         ("Advance Usage", { AdvanceVC() }),
