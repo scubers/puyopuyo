@@ -107,6 +107,11 @@ public extension Puyo where T: UIView {
             .debounce()
         )
     }
+
+    @discardableResult
+    func diagnosis(_ diagnosis: Bool) -> Self {
+        bind(keyPath: \T.py_measure.diagnosis, diagnosis)
+    }
 }
 
 // MARK: - Margin ext

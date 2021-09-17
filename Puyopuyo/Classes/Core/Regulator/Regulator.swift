@@ -45,4 +45,13 @@ public class Regulator: Measure {
             }
         }
     }
+
+    override public var diagnosisMessage: String {
+        """
+        \(super.diagnosisMessage)
+        - padding: [top: \(padding.top), left: \(padding.left), bottom: \(padding.bottom), right: \(padding.right)]
+        - justifyContent: [\(justifyContent)]
+        - calculateChildrenImmediately: [\(calculateChildrenImmediately)]
+        """
+    }
 }

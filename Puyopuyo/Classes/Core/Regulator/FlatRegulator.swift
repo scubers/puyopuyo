@@ -56,4 +56,14 @@ public class FlatRegulator: Regulator {
     override public func calculate(by size: CGSize) -> CGSize {
         return FlatCalculator(self, residual: size, isIntrinsic: false).calculate()
     }
+    
+    public override var diagnosisMessage: String {
+        """
+        \(super.diagnosisMessage)
+        - direction: [\(direction)]
+        - space: [\(space)]
+        - format: [\(format)]
+        - reverse: [\(reverse)]
+        """
+    }
 }

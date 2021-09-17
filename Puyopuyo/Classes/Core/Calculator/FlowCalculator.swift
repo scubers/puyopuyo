@@ -72,7 +72,7 @@ class FlowCalculator {
 
         children.forEach { m in
             let subCalSize = m.size.getCalSize(by: regDirection)
-            let subCalFixedSize = m.calculate(by: regChildrenResidualCalSize.getSize()).getCalFixedSize(by: regDirection)
+            let subCalFixedSize = Calculator.calculateIntrinsicSize(for: m, residual: regChildrenResidualCalSize.getSize(), calculateChildrenImmediately: false).getCalFixedSize(by: regDirection)
             let subCalMargin = CalEdges(insets: m.margin, direction: regDirection)
 
             let space = CGFloat(min(1, currentLine.count)) * regulator.itemSpace

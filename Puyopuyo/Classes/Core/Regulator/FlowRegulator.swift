@@ -61,4 +61,14 @@ public class FlowRegulator: FlatRegulator {
     override public func calculate(by size: CGSize) -> CGSize {
         return FlowCalculator(self, residual: size).calculate()
     }
+
+    override public var diagnosisMessage: String {
+        """
+        \(super.diagnosisMessage)
+        - arrange: [\(arrange)]
+        - runFormat: [\(runFormat)]
+        - itemSpace: [\(itemSpace)]
+        - runSpace: [\(runSpace)]
+        """
+    }
 }

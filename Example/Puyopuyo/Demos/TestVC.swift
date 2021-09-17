@@ -31,14 +31,12 @@ class TestVC: BaseVC {
         
 //        zboxRatioTest().attach(vRoot)
         VBox().attach(vRoot) {
-
             ControlPad().attach($0)
                 .size(100, 100)
                 .onEvent { v in
                     print("v: \(v)")
                 }
-            
-
+                .bind(keyPath: \.py_measure.diagnosis, true)
         }
         .width(.fill)
     }

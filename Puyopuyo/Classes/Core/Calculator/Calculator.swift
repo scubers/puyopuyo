@@ -97,10 +97,30 @@ class Calculator {
     /// - Returns: 节点固有尺寸
     static func calculateIntrinsicSize(for measure: Measure, residual: CGSize, calculateChildrenImmediately: Bool) -> CGSize {
         let finalResidual = Calculator.getAspectRatioResidual(for: measure, residual: residual, transform: .min)
+        var intrinsic: CGSize
         if measure.size.maybeWrap() || calculateChildrenImmediately {
-            return measure.calculate(by: finalResidual)
+            intrinsic = measure.calculate(by: finalResidual)
+        } else {
+            intrinsic = Calculator.getIntrinsicSize(margin: measure.margin, residual: finalResidual, size: measure.size)
         }
-        return Calculator.getIntrinsicSize(margin: measure.margin, residual: finalResidual, size: measure.size)
+        startCalculateDiagnosis(measure: measure, residual: residual, intrinsic: intrinsic)
+        return intrinsic
+    }
+
+    static func startCalculateDiagnosis(measure: Measure, residual: CGSize, intrinsic: CGSize) {
+        #if DEBUG
+        guard measure.diagnosis else { return }
+        let content = """
+        
+        >>>>>>>>>> [Calculation diagnosis] >>>>>>>>>>
+        \(measure.diagnosisMessage)
+        - Residual: [width: \(residual.width), height: \(residual.height)]
+        - Intrinsic: [width: \(intrinsic.width), height: \(intrinsic.height)]
+        >>>>>>>>>> [Calculation diagnosis] >>>>>>>>>>
+        
+        """
+        print(content)
+        #endif
     }
 
     /// 允许size 存在0的情况，则视为不限制

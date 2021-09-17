@@ -309,15 +309,6 @@ class FlatCalculator {
 
     private func calculateChild(_ measure: Measure, subResidual: CalFixedSize) {
         measure.py_size = Calculator.calculateIntrinsicSize(for: measure, residual: subResidual.getSize(), calculateChildrenImmediately: regulator.calculateChildrenImmediately)
-//        let residual = Calculator.getAspectRatioResidual(for: measure, residual: subResidual.getSize(), transform: .min)
-//
-//        var intrinsicSize: CGSize
-//        if measure.size.maybeWrap() || regulator.calculateChildrenImmediately {
-//            intrinsicSize = measure.calculate(by: residual)
-//        } else {
-//            intrinsicSize = Calculator.getIntrinsicSize(margin: measure.margin, residual: residual, size: measure.size)
-//        }
-//        measure.py_size = intrinsicSize
     }
 
     private func handleMainShrink() {

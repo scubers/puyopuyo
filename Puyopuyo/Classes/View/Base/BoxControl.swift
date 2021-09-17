@@ -32,7 +32,7 @@ public class BoxControl<R: Regulator> {
             if regulator.size.bothNotWrap(), !regulator.calculateChildrenImmediately {
                 let residual = CGSize(width: view.bounds.width + regulator.margin.getHorzTotal(),
                                       height: view.bounds.height + regulator.margin.getVertTotal())
-                _ = regulator.calculate(by: residual)
+                _ = Calculator.calculateIntrinsicSize(for: regulator, residual: residual, calculateChildrenImmediately: true)
             }
         } else {
             if isSizeControl {
@@ -45,16 +45,13 @@ public class BoxControl<R: Regulator> {
                 if regulator.size.height.isWrap {
                     residual.height = regulator.size.height.max - regulator.margin.getVertTotal()
                 }
-                if let aspectRatio = regulator.size.aspectRatio {
-                    residual = Calculator.getAspectRatioSize(residual, aspectRatio: aspectRatio, transform: .min)
-                }
-                regulator.py_size = regulator.calculate(by: residual)
+                regulator.py_size = Calculator.calculateIntrinsicSize(for: regulator, residual: residual, calculateChildrenImmediately: true)
             } else {
                 if !regulator.size.isRatio() {
                     Calculator.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
                     regulator.size = .init(width: .fill, height: .fill)
                 }
-                _ = regulator.calculate(by: view.bounds.size)
+                _ = Calculator.calculateIntrinsicSize(for: regulator, residual: view.bounds.size, calculateChildrenImmediately: true)
             }
             if isCenterControl {
                 view.center = CGPoint(x: view.bounds.midX + regulator.margin.left, y: view.bounds.midY + regulator.margin.top)
