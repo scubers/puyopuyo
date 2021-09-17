@@ -87,7 +87,7 @@ public extension Puyo where T: UIView {
     @discardableResult
     func widthEqualToHeight(add: CGFloat = 0, multiply: CGFloat = 1) -> Self {
         width(
-            view.py_boundsState().map(\.height).map { v in
+            view.py_sizeState().map(\.height).map { v in
                 multiply * v + add
             }
             .distinct()
@@ -99,7 +99,7 @@ public extension Puyo where T: UIView {
     @discardableResult
     func heightEqualToWidth(add: CGFloat = 0, multiply: CGFloat = 1) -> Self {
         height(
-            view.py_boundsState().map(\.width).map { v in
+            view.py_sizeState().map(\.width).map { v in
                 multiply * v + add
             }
             .distinct()

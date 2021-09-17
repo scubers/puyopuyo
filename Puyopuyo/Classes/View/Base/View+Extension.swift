@@ -110,16 +110,20 @@ public extension UIView {
         } else {
             // ios 11 以下只可能存在statusbar影响的safeArea
             return
-                Outputs.merge([py_frameState().map { _ in 1 }, py_centerState().map { _ in 1 }])
-                    .map { [weak self] _ -> UIEdgeInsets in
-                        guard let self = self else { return .zero }
-                        let newRect = self.convert(self.bounds, to: UIApplication.shared.keyWindow)
-                        var inset = UIEdgeInsets.zero
-                        let statusFrame = UIApplication.shared.statusBarFrame
-                        inset.top = min(statusFrame.height, max(0, statusFrame.height - newRect.origin.y))
-                        return inset
-                    }
-                    .distinct()
+                Outputs.merge([
+                    py_frameState().map { _ in 1 },
+                    py_centerState().map { _ in 1 },
+                    py_boundsState().map { _ in 1 },
+                ])
+                .map { [weak self] _ -> UIEdgeInsets in
+                    guard let self = self else { return .zero }
+                    let newRect = self.convert(self.bounds, to: UIApplication.shared.keyWindow)
+                    var inset = UIEdgeInsets.zero
+                    let statusFrame = UIApplication.shared.statusBarFrame
+                    inset.top = min(statusFrame.height, max(0, statusFrame.height - newRect.origin.y))
+                    return inset
+                }
+                .distinct()
         }
     }
 }

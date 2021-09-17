@@ -10,7 +10,7 @@ import Foundation
 /**
 
  =============== 线性布局主轴原则 =================
- 1. 最优先保证 fix 的大小，允许超过剩余空间
+ 1. 最优先保证 固有尺寸 的大小，允许超过剩余空间：固有尺寸包括padding，margin，space，fixedSize
  2. 根据 wrap 的 priority 保证 wrap 的大小，不允许超过剩余空间
  3. 最后根据剩余空间分配 ratio
 
@@ -52,12 +52,16 @@ import Foundation
      1.2 计算节点大小
 
  2. 处理主轴压缩 maybe +1 loop
- 3. 修正次轴R maybe +1 loop
+ 3. 如果存在次轴父子依赖：父wrap，子ratio
+    3.1 进行二次复算
 
  -- 第四次循环 --
+ 1. 根据计算结果py_size, 重置wrap and maxSubCross值
+ 
+ -- 第五次循环 --
  1. 计算根据format(.between, .leading, .round)计算center值
 
- -- 可能存在的第五次循环 --
+ -- 可能存在的第六次循环 --
  1. 若format值 == .trailing || .center,则需要第五次循环计算format的偏移量
 
  =============== 线性布局子节点计算逻辑说明 ===============
