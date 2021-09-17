@@ -13,22 +13,71 @@ class SizePropertiesVC: BaseVC {
     override func configView() {
         DemoScroll(
             builder: {
-                aspectRatio().attach($0)
-
                 fixedSizeWillOverflow().attach($0)
+
                 mainRatioSizeWillFillResidual().attach($0)
                 crossRatioSizeWillOcuppyResidual().attach($0)
+
                 wrapSizeWillBeCompress().attach($0)
                 wrapSizePriority().attach($0)
                 wrapSizeShrink().attach($0)
+
+                wrapSizeAddMinMax().attach($0)
+
+                aspectRatio().attach($0)
             }
         )
         .attach(vRoot)
         .size(.fill, .fill)
     }
 
+    func wrapSizeAddMinMax() -> UIView {
+        let progress = State<CGFloat>(0.2)
+        let content = progress.map { Int(50 * $0) }.map { (0 ..< $0).map(\.description).joined() }
+        return DemoView<SizeDescription>(
+            title: "Wrap size (add, min, max)",
+            builder: {
+                VBox().attach($0) {
+                    HBox().attach($0) {
+                        Label.demo("").attach($0)
+                            .text(content.map { "wrap(max: 100)\n\($0)" })
+                            .size(.wrap(max: 100), .wrap(max: 100))
+
+                        Label.demo("").attach($0)
+                            .text(content.map { "wrap(add: 50, shrink: 2)\n\($0)" })
+                            .size(.wrap(add: 50, shrink: 2), .wrap(add: 50))
+
+                        Label.demo("").attach($0)
+                            .text(content.map { "wrap(min: 50, shrink: 1)\n\($0)" })
+                            .size(.wrap(min: 50, shrink: 1), .wrap(min: 50))
+                    }
+                    .demo()
+                    .width(.fill)
+                    .space(8)
+
+                    UISlider().attach($0)
+                        .bind(keyPath: \.value, progress.map(Float.init))
+                        .onEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
+                        .width(.fill)
+                }
+                .width(.fill)
+                .padding(all: 10)
+                .view
+            },
+            selectors: [],
+            desc: """
+            Wrap size add three another parameters to help control size.
+            .wrap(add: min: max:)
+            """
+        )
+        .attach()
+        .width(.fill)
+        .view
+    }
+
     func aspectRatio() -> UIView {
-        let progress = State<CGFloat>(1)
+        let progress = State<CGFloat>(0.5)
+        let height = progress.map { 400 * $0 }
         return DemoView<SizeDescription>(
             title: "AspectRatio w / h",
             builder: {
@@ -54,10 +103,11 @@ class SizePropertiesVC: BaseVC {
                             .aspectRatio(2 / 1)
 
                         Label.demo("""
-                        1 : 2
+                        1 : 3
                         height(.fix(150))
                         """).attach($0)
-                            .height(150)
+                            .height(90)
+                            .backgroundColor(.systemPink)
                             .aspectRatio(1 / 3)
 
                         Label.demo("""
@@ -66,11 +116,17 @@ class SizePropertiesVC: BaseVC {
                         """).attach($0)
                             .size(100, 100)
                             .aspectRatio(1 / 100)
+                            .backgroundColor(.systemPink)
                     }
                     .demo()
-                    .height(progress.map { SizeDescription.fix(400 * $0) })
+                    .height(height.map { SizeDescription.fix($0) })
                     .width(.fill)
                     .space(8)
+
+                    UILabel().attach($0)
+                        .text(height.map {
+                            "Height: \($0)"
+                        })
 
                     UISlider().attach($0)
                         .bind(keyPath: \.value, progress.map(Float.init))
@@ -78,11 +134,12 @@ class SizePropertiesVC: BaseVC {
                         .width(.fill)
                 }
                 .width(.fill)
+                .padding(all: 10)
                 .view
             },
             selectors: [],
             desc: """
-            AspectRatio means view's ratio value of width / height. It will not work if the size is fixed (width & height are fixed)
+            AspectRatio means view's ratio value of width / height. It will not work if the size maybe fixed (width or height is fixed); Slide to change the height of box
             """
         )
         .attach()
@@ -119,11 +176,7 @@ class SizePropertiesVC: BaseVC {
                     }
                     .demo()
                     .width(Outputs.combine($0.py_boundsState(), progress).map { r, v -> SizeDescription in
-                        if v == 1 {
-                            return .fill
-                        } else {
-                            return .fix(r.width * v)
-                        }
+                        .fix(r.width * v)
                     })
                     .height(80)
                     .space(8)
@@ -134,10 +187,14 @@ class SizePropertiesVC: BaseVC {
                         .width(.fill)
                 }
                 .width(.fill)
+                .padding(all: 10)
                 .view
             },
             selectors: [],
-            desc: "Wrap size will be compressed when residual size is not enough, set shrink value make wrap size view can shrink by seprate the overflow value, if overflow size is 600, then shrink(3) will compress 300 px, shrink(2) will compress 200 px, shrink(1) will be 100 px"
+            desc: """
+            Wrap size will be compressed when residual size is not enough, set shrink value make wrap size view can shrink by seprate the overflow value, if overflow size is 600, then shrink(3) will compress 300 px, shrink(2) will compress 200 px, shrink(1) will be 100 px.
+            Shrink view maybe overflow out of the layout box, because of each view will shrink the overflow size, but some view is too small to shrink
+            """
         )
         .attach()
         .width(.fill)
@@ -145,7 +202,7 @@ class SizePropertiesVC: BaseVC {
     }
 
     func wrapSizePriority() -> UIView {
-        let progress = State(CGFloat(0.5))
+        let progress = State(CGFloat(0.3))
         return DemoView<SizeDescription>(
             title: "Wrap size priority",
             builder: {
@@ -153,24 +210,30 @@ class SizePropertiesVC: BaseVC {
                     HBox().attach($0) {
                         Label.demo("change").attach($0)
                             .width(Outputs.combine($0.py_boundsState(), progress).map { r, v -> SizeDescription in
-                                if v == 1 {
-                                    return .fill
-                                } else {
-                                    return .fix(r.width * v)
-                                }
+                                .fix(r.width * v)
                             })
+                            .height(80)
 
-                        Label.demo("priority(1)").attach($0)
-                            .width(.wrap(priority: 1))
+                        Label.demo("priority(3)").attach($0)
+                            .width(.wrap(priority: 3))
+                            .height(80)
 
                         Label.demo("priority(2)").attach($0)
                             .width(.wrap(priority: 2))
+                            .height(80)
+
+                        Label.demo("priority(1)").attach($0)
+                            .width(.wrap(priority: 1))
+                            .height(80)
+
+                        Label.demo("priority(2)").attach($0)
+                            .width(.wrap(priority: 2))
+                            .height(80)
                     }
                     .demo()
                     .padding(all: 10)
                     .margin(all: 10)
                     .width(.fill)
-                    .height(80)
                     .space(8)
 
                     UISlider().attach($0)
@@ -179,6 +242,7 @@ class SizePropertiesVC: BaseVC {
                         .width(.fill)
                 }
                 .width(.fill)
+                .padding(all: 10)
                 .view
             },
             selectors: [],
@@ -204,11 +268,7 @@ class SizePropertiesVC: BaseVC {
                     }
                     .demo()
                     .width(Outputs.combine($0.py_boundsState(), progress).map { r, v -> SizeDescription in
-                        if v == 1 {
-                            return .fill
-                        } else {
-                            return .fix(r.width * v)
-                        }
+                        .fix(r.width * v)
                     })
                     .space(8)
 
@@ -218,6 +278,7 @@ class SizePropertiesVC: BaseVC {
                         .width(.fill)
                 }
                 .width(.fill)
+                .padding(all: 10)
                 .view
             },
             selectors: [],
@@ -289,18 +350,14 @@ class SizePropertiesVC: BaseVC {
             builder: {
                 VBox().attach($0) {
                     HBox().attach($0) {
-                        for i in 0 ..< 20 {
+                        for i in 0 ..< 10 {
                             Label.demo(i.description).attach($0)
                                 .size(100, 100)
                         }
                     }
                     .demo()
                     .width(Outputs.combine($0.py_boundsState(), progress).map { r, v -> SizeDescription in
-                        if v == 1 {
-                            return .fill
-                        } else {
-                            return .fix(r.width * v)
-                        }
+                        .fix(r.width * v)
                     })
                     .space(8)
 
@@ -310,6 +367,7 @@ class SizePropertiesVC: BaseVC {
                         .width(.fill)
                 }
                 .width(.fill)
+                .padding(all: 10)
                 .view
 
             },

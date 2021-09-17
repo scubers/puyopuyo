@@ -45,7 +45,7 @@ class MeasureCalculator {
             heightSize = .fix(min(heightSize.getWrapSize(by: wrappedCGSize.height), maxSize.height))
         }
 
-        let size = Size(width: widthSize, height: heightSize, aspectRatio: measure.size.isFixed() ? nil : measure.size.aspectRatio)
+        let size = Size(width: widthSize, height: heightSize, aspectRatio: measure.size.maybeFixed() ? nil : measure.size.aspectRatio)
         return Calculator.getIntrinsicSize(margin: measure.margin, residual: residual, size: size)
     }
 }

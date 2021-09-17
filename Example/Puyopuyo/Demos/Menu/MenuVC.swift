@@ -10,10 +10,6 @@ import Puyopuyo
 import UIKit
 
 class MenuVC: BaseVC {
-    override var navTitle: String? {
-        "MENU"
-    }
-
     override func configView() {
         menu()
     }
@@ -51,7 +47,9 @@ class MenuVC: BaseVC {
                         .styles([TapTransformStyle(), ShadowStyle()])
                         .onTap {
                             i.inContext { c in
-                                this.value?.push(vc: c.data.1())
+                                let vc = c.data.1()
+                                vc.title = c.data.0
+                                this.value?.push(vc: vc)
                             }
                         }
                         .view
@@ -67,6 +65,7 @@ class MenuVC: BaseVC {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "MENU"
     }
 
     func push(vc: UIViewController) {

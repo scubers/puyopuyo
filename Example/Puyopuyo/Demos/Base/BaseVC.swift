@@ -13,13 +13,11 @@ class BaseVC: UIViewController, UIScrollViewDelegate {
     var navState = State(NavigationBox.ViewState())
     var navHeight = State<SizeDescription>(.fix(64))
 
-    var navTitle: String? { nil }
-
     override func loadView() {
         super.loadView()
         NavigationBox(
             navBar: {
-                NavBar(title: navTitle ?? "\(type(of: self))").attach()
+                NavBar(title: title ?? "\(type(of: self))").attach()
                     .height(navHeight)
                     .onEvent(to: self) { s, e in
                         if e == .tapLeading {

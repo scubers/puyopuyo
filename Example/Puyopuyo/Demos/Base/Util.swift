@@ -163,8 +163,8 @@ extension Puyo where T: Boxable & UIView {
     @discardableResult
     func demo() -> Self {
         borders(Theme.demoBoxBorder)
-        padding(all: 10)
-        margin(all: 10)
+        padding(all: 12)
+        animator(Animators.default)
         return self
     }
 }

@@ -83,7 +83,7 @@ class Calculator {
 
         var finalSize = CGSize(width: width, height: height)
 
-        if let aspectRatio = size.aspectRatio, !regulator.size.isFixed() {
+        if let aspectRatio = size.aspectRatio, !regulator.size.maybeFixed() {
             finalSize = getAspectRatioSize(CGSize(width: width, height: height), aspectRatio: aspectRatio, transform: .max)
         }
         return finalSize
@@ -217,7 +217,7 @@ class Calculator {
 
     /// 根据宽高比获取合理的尺寸
     static func getAspectRatioResidual(for measure: Measure, residual: CGSize, transform: AspectRatioTransform) -> CGSize {
-        guard let aspectRatio = measure.size.aspectRatio, !measure.size.isFixed() else {
+        guard let aspectRatio = measure.size.aspectRatio, !measure.size.maybeFixed() else {
             return residual
         }
         let margin = measure.margin
