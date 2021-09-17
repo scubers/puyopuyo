@@ -26,47 +26,55 @@ class SizePropertiesVC: BaseVC {
     }
 
     func wrapSizeShrink() -> UIView {
-        let width = State(SizeDescription.fill)
+        let progress = State<CGFloat>(1)
         return DemoView<SizeDescription>(
             title: "Wrap size shrink",
             builder: {
-                HBox().attach($0) {
-                    Label.demo("xxxxx shrink(3)").attach($0)
-                        .numberOfLines(1)
-                        .width(.wrap(shrink: 3))
-                        .height(30)
+                VBox().attach($0) {
+                    HBox().attach($0) {
+                        Label.demo("xxxxx shrink(3)").attach($0)
+                            .numberOfLines(1)
+                            .width(.wrap(shrink: 3))
+                            .height(30)
 
-                    Label.demo("yyyyy shrink(2)").attach($0)
-                        .width(.wrap(shrink: 2))
-                        .numberOfLines(1)
-                        .height(30)
+                        Label.demo("yyyyy shrink(2)").attach($0)
+                            .width(.wrap(shrink: 2))
+                            .numberOfLines(1)
+                            .height(30)
 
-                    Label.demo("zzzzz shrink(1)").attach($0)
-                        .width(.wrap(shrink: 1))
-                        .numberOfLines(1)
-                        .height(30)
+                        Label.demo("zzzzz shrink(1)").attach($0)
+                            .width(.wrap(shrink: 1))
+                            .numberOfLines(1)
+                            .height(30)
 
-                    Label.demo("aaaaa shrink(1)").attach($0)
-                        .width(.wrap(shrink: 1))
-                        .numberOfLines(1)
-                        .height(30)
+                        Label.demo("aaaaa shrink(1)").attach($0)
+                            .width(.wrap(shrink: 1))
+                            .numberOfLines(1)
+                            .height(30)
+                    }
+                    .demo()
+                    .width(Outputs.combine($0.py_boundsState(), progress).map { r, v -> SizeDescription in
+                        if v == 1 {
+                            return .fill
+                        } else {
+                            return .fix(r.width * v)
+                        }
+                    })
+                    .height(80)
+                    .space(8)
+
+                    UISlider().attach($0)
+                        .bind(keyPath: \.value, progress.map(Float.init))
+                        .onEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
+                        .width(.fill)
                 }
-                .demo()
-                .width(width)
-                .height(80)
-                .space(8)
+                .width(.fill)
                 .view
             },
-            selectors: [
-                Selector(desc: ".fill", value: .fill),
-                Selector(desc: "250", value: .fix(250)),
-                Selector(desc: "300", value: .fix(300)),
-                Selector(desc: "400", value: .fix(400)),
-            ],
+            selectors: [],
             desc: "Wrap size will be compressed when residual size is not enough, set shrink value make wrap size view can shrink by seprate the overflow value, if overflow size is 600, then shrink(3) will compress 300 px, shrink(2) will compress 200 px, shrink(1) will be 100 px"
         )
         .attach()
-        .onEvent(width)
         .width(.fill)
         .view
     }
@@ -114,31 +122,40 @@ class SizePropertiesVC: BaseVC {
     }
 
     func wrapSizeWillBeCompress() -> UIView {
-        let width = State(SizeDescription.fill)
+        let progress = State(CGFloat(1))
         return DemoView<SizeDescription>(
             title: "Wrap size",
             builder: {
-                HBox().attach($0) {
-                    for _ in 0 ..< 10 {
-                        Label.demo(Names().get()).attach($0)
-                            .width(.wrap(add: 10))
-                            .height(.wrap(add: 10))
+                VBox().attach($0) {
+                    HBox().attach($0) {
+                        for _ in 0 ..< 10 {
+                            Label.demo(Names().get()).attach($0)
+                                .width(.wrap(add: 10))
+                                .height(.wrap(add: 10))
+                        }
                     }
+                    .demo()
+                    .width(Outputs.combine($0.py_boundsState(), progress).map { r, v -> SizeDescription in
+                        if v == 1 {
+                            return .fill
+                        } else {
+                            return .fix(r.width * v)
+                        }
+                    })
+                    .space(8)
+
+                    UISlider().attach($0)
+                        .bind(keyPath: \.value, progress.map(Float.init))
+                        .onEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
+                        .width(.fill)
                 }
-                .demo()
-                .width(width)
-                .space(8)
+                .width(.fill)
                 .view
             },
-            selectors: [
-                Selector(desc: "fill", value: .fill),
-                Selector(desc: "200", value: .fix(200)),
-            ],
-            selected: width.value,
+            selectors: [],
             desc: "Wrap size will wrap the content of the view, and calcaulate by the residual size, if residual size is smaller than content, view will be compress: There is 10 view above"
         )
         .attach()
-        .onEvent(width)
         .width(.fill)
         .view
     }
