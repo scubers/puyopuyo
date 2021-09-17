@@ -43,15 +43,14 @@ class FeedVC: BaseVC, UITableViewDelegate {
                     },
                     header: { _, _ in
                         Header().attach()
-                            .onEventProduced(Inputs { e in
+                            .onEvent { e in
                                 switch e {
                                 case .reload:
                                     this.value?.reload()
                                 case .change:
                                     this.value?.change()
                                 }
-
-                            })
+                            }
                             .view
                     },
                     footer: { _, _ in
@@ -90,14 +89,14 @@ class FeedVC: BaseVC, UITableViewDelegate {
             ].asOutput(),
             header: {
                 Header().attach()
-                    .onEventProduced(Inputs { e in
+                    .onEvent { e in
                         switch e {
                         case .reload:
                             this.value?.reload()
                         case .change:
                             this.value?.change()
                         }
-                    })
+                    }
                     .view
             },
             footer: {

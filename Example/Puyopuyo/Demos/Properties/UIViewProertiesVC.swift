@@ -57,9 +57,7 @@ class UIViewProertiesVC: BaseVC {
             """
         )
         .attach()
-        .onEventProduced(to: self) {
-            a.input(value: $1)
-        }
+        .onEvent(a)
         .view
     }
 
@@ -106,9 +104,7 @@ class UIViewProertiesVC: BaseVC {
             """
         )
         .attach()
-        .onEventProduced(to: self) { _, x in
-            s.value = x
-        }
+        .onEvent(s)
         .view
     }
 
@@ -153,9 +149,7 @@ class UIViewProertiesVC: BaseVC {
             """
         )
         .attach()
-        .onEventProduced(to: self) { _, x in
-            s.value = x
-        }
+        .onEvent(s)
         .view
     }
 
@@ -180,9 +174,7 @@ class UIViewProertiesVC: BaseVC {
             desc: "布局系统内，子view的外边局"
         )
         .attach()
-        .onEventProduced(to: self) { _, x in
-            margin.value = x
-        }
+        .onEvent(margin)
         .view
     }
 

@@ -42,9 +42,7 @@ class ZPropertiesVC: BaseVC {
                     .text(title)
                 PlainSelectionView<T>(values, selected: selected).attach($0)
                     .size(.fill, 50)
-                    .onEventProduced(Inputs {
-                        input.input(value: $0)
-                    })
+                    .onEvent(input)
             }
             .space(8)
             .padding(horz: 4)

@@ -21,7 +21,7 @@ class BaseVC: UIViewController, UIScrollViewDelegate {
             navBar: {
                 NavBar(title: navTitle ?? "\(type(of: self))").attach()
                     .height(navHeight)
-                    .onEventProduced(to: self) { s, e in
+                    .onEvent(to: self) { s, e in
                         if e == .tapLeading {
                             s.navigationController?.popViewController(animated: true)
                         }

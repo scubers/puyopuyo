@@ -35,17 +35,17 @@ class SizePropertiesVC: BaseVC {
                         .numberOfLines(1)
                         .width(.wrap(shrink: 3))
                         .height(30)
-                    
+
                     Label.demo("yyyyy shrink(2)").attach($0)
                         .width(.wrap(shrink: 2))
                         .numberOfLines(1)
                         .height(30)
-                    
+
                     Label.demo("zzzzz shrink(1)").attach($0)
                         .width(.wrap(shrink: 1))
                         .numberOfLines(1)
                         .height(30)
-                    
+
                     Label.demo("aaaaa shrink(1)").attach($0)
                         .width(.wrap(shrink: 1))
                         .numberOfLines(1)
@@ -66,7 +66,7 @@ class SizePropertiesVC: BaseVC {
             desc: "Wrap size will be compressed when residual size is not enough, set shrink value make wrap size view can shrink by seprate the overflow value, if overflow size is 600, then shrink(3) will compress 300 px, shrink(2) will compress 200 px, shrink(1) will be 100 px"
         )
         .attach()
-        .onEventProduced(width)
+        .onEvent(width)
         .width(.fill)
         .view
     }
@@ -138,9 +138,7 @@ class SizePropertiesVC: BaseVC {
             desc: "Wrap size will wrap the content of the view, and calcaulate by the residual size, if residual size is smaller than content, view will be compress: There is 10 view above"
         )
         .attach()
-        .onEventProduced(Inputs {
-            width.input(value: $0)
-        })
+        .onEvent(width)
         .width(.fill)
         .view
     }

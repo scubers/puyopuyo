@@ -54,9 +54,7 @@ class FlatPropertiesVC: BaseVC {
             """
         )
         .attach()
-        .onEventProduced(to: self) { _, x in
-            justifyContent.value = x
-        }
+        .onEvent(justifyContent)
         .view
     }
 
@@ -90,9 +88,7 @@ class FlatPropertiesVC: BaseVC {
             """
         )
         .attach()
-        .onEventProduced(to: self) { _, x in
-            justifyContent.value = x
-        }
+        .onEvent(justifyContent)
         .view
     }
 
@@ -133,9 +129,7 @@ class FlatPropertiesVC: BaseVC {
             desc: "All subviews formation at main axis"
         )
         .attach()
-        .onEventProduced(to: self) { _, x in
-            format.value = x
-        }
+        .onEvent(format)
         .view
     }
 
@@ -168,9 +162,7 @@ class FlatPropertiesVC: BaseVC {
             """
         )
         .attach()
-        .onEventProduced(to: self) { _, x in
-            direction.value = x
-        }
+        .onEvent(direction)
         .view
     }
 
@@ -195,9 +187,7 @@ class FlatPropertiesVC: BaseVC {
             desc: "Box padding"
         )
         .attach()
-        .onEventProduced(to: self) { _, x in
-            padding.value = x
-        }
+        .onEvent(padding)
         .view
     }
 
@@ -227,9 +217,7 @@ class FlatPropertiesVC: BaseVC {
             desc: "Control subviews's space"
         )
         .attach()
-        .onEventProduced(to: self) { _, x in
-            space.value = x
-        }
+        .onEvent(space)
         .view
     }
 
@@ -257,9 +245,7 @@ class FlatPropertiesVC: BaseVC {
             desc: "Layout the subviews with reverse to the adding order"
         )
         .attach()
-        .onEventProduced(to: self) { _, x in
-            reverse.value = x
-        }
+        .onEvent(reverse)
         .view
     }
 

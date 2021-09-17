@@ -135,30 +135,30 @@ public extension Puyo where T: Boxable & UIView {
     }
 }
 
-
 // MARK: - Statful & Eventable
 
 public extension Puyo where T: Eventable {
     @discardableResult
-    func onEventProduced<I: Inputing>(_ input: I) -> Self where I.InputType == T.EventType {
+    func onEvent<I: Inputing>(_ input: I) -> Self where I.InputType == T.EventType {
         let disposer = view.eventProducer.send(to: input)
         if let v = view as? NSObject {
-            v.addDisposer(disposer, for: nil)
+            disposer.dispose(by: v)
         }
         return self
     }
 
     @discardableResult
-    func onEventProduced<Object: AnyObject>(to: Object, _ action: @escaping (Object, T.EventType) -> Void) -> Self {
-        let disposer = view.eventProducer.outputing { [weak to] event in
+    func onEvent(_ event: @escaping (T.EventType) -> Void) -> Self {
+        onEvent(Inputs(event))
+    }
+
+    @discardableResult
+    func onEvent<O: AnyObject>(to: O?, _ event: @escaping (O, T.EventType) -> Void) -> Self {
+        onEvent(Inputs { [weak to] v in
             if let to = to {
-                action(to, event)
+                event(to, v)
             }
-        }
-        if let v = view as? DisposableBag {
-            v.addDisposer(disposer, for: nil)
-        }
-        return self
+        })
     }
 }
 

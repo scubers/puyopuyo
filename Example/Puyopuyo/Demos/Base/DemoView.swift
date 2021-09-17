@@ -41,14 +41,7 @@ class DemoView<T: Equatable>: VBox, Eventable, Stateful {
                 .topBorder([.color(UIColor.black.withAlphaComponent(0.2)), .thick(Util.pixel(1))])
                 .size(.fill, .wrap)
                 .visibility(self.selectors.count > 0 ? .visible : .gone)
-                .onEventProduced(to: self) { this, s in
-                    this.eventProducer.input(value: s)
-                }
-//                .attach {
-//                    if let v = selected {
-//                        $0.viewState.value = v
-//                    }
-//                }
+                .onEvent(eventProducer)
             
             UIView().attach($0).size(.fill, Util.pixel(1))
                 .backgroundColor(Theme.dividerColor)
