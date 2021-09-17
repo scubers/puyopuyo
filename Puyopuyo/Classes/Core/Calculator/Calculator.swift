@@ -101,7 +101,9 @@ class Calculator {
         if measure.size.maybeWrap() || calculateChildrenImmediately {
             intrinsic = measure.calculate(by: finalResidual)
         } else {
-            intrinsic = Calculator.getIntrinsicSize(margin: measure.margin, residual: finalResidual, size: measure.size)
+            var s = measure.size
+            if s.isFixed() { s.aspectRatio = nil }
+            intrinsic = Calculator.getIntrinsicSize(margin: measure.margin, residual: finalResidual, size: s)
         }
         startCalculateDiagnosis(measure: measure, residual: residual, intrinsic: intrinsic, msg: diagnosisMessage)
         return intrinsic

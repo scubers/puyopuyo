@@ -13,6 +13,8 @@ class SizePropertiesVC: BaseVC {
     override func configView() {
         DemoScroll(
             builder: {
+                aspectRatio().attach($0)
+
                 fixedSizeWillOverflow().attach($0)
                 mainRatioSizeWillFillResidual().attach($0)
                 crossRatioSizeWillOcuppyResidual().attach($0)
@@ -23,6 +25,69 @@ class SizePropertiesVC: BaseVC {
         )
         .attach(vRoot)
         .size(.fill, .fill)
+    }
+
+    func aspectRatio() -> UIView {
+        let progress = State<CGFloat>(1)
+        return DemoView<SizeDescription>(
+            title: "AspectRatio w / h",
+            builder: {
+                VBox().attach($0) {
+                    HBox().attach($0) {
+                        Label.demo("""
+                        1 : 1
+                        height(.fill)
+                        """).attach($0)
+                            .aspectRatio(1 / 1)
+                            .height(.fill)
+
+                        Label.demo("""
+                        1 : 2
+                        height(.wrap)
+                        """).attach($0)
+                            .aspectRatio(1 / 2)
+
+                        Label.demo("""
+                        2 : 1
+                        height(.wrap)
+                        """).attach($0)
+                            .aspectRatio(2 / 1)
+
+                        Label.demo("""
+                        1 : 2
+                        height(.fix(150))
+                        """).attach($0)
+                            .height(150)
+                            .aspectRatio(1 / 3)
+
+                        Label.demo("""
+                        1 : 100
+                        fixed
+                        """).attach($0)
+                            .size(100, 100)
+                            .aspectRatio(1 / 100)
+                    }
+                    .demo()
+                    .height(progress.map { SizeDescription.fix(400 * $0) })
+                    .width(.fill)
+                    .space(8)
+
+                    UISlider().attach($0)
+                        .bind(keyPath: \.value, progress.map(Float.init))
+                        .onEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
+                        .width(.fill)
+                }
+                .width(.fill)
+                .view
+            },
+            selectors: [],
+            desc: """
+            AspectRatio means view's ratio value of width / height. It will not work if the size is fixed (width & height are fixed)
+            """
+        )
+        .attach()
+        .width(.fill)
+        .view
     }
 
     func wrapSizeShrink() -> UIView {
