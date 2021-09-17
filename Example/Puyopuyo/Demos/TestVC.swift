@@ -18,7 +18,7 @@ class TestVC: BaseVC {
 //        demo4().attach(vRoot)
 //        demo5().attach(vRoot)
 //        demo6().attach(vRoot)
-//        shrinkDeadLoopTest().attach(vRoot)
+        shrinkDeadLoopTest().attach(vRoot)
 //        flowCompactTest().attach(vRoot)
         
 //        zboxFillAndWrapTest().attach(vRoot)
@@ -30,15 +30,6 @@ class TestVC: BaseVC {
 //        zboxAspectRatioTest().attach(vRoot)
         
 //        zboxRatioTest().attach(vRoot)
-        VBox().attach(vRoot) {
-            ControlPad().attach($0)
-                .size(100, 100)
-                .onEvent { v in
-                    print("v: \(v)")
-                }
-                .bind(keyPath: \.py_measure.diagnosis, true)
-        }
-        .width(.fill)
     }
     
     func zboxRatioTest() -> UIView {
@@ -187,8 +178,9 @@ class TestVC: BaseVC {
                     .margin(left: 10)
                     .bind(keyPath: \.lineBreakMode, .byClipping)
                     .height(.wrap(max: 100))
-//                    .heightEqualToWidth()
                     .aspectRatio(1)
+                    .diagnosis("control pad")
+                    .diagnosisExtraMessage("good job")
                 
                 UILabel().attach($0)
                     .text("100")

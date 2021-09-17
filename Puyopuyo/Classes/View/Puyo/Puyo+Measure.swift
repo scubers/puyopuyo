@@ -109,8 +109,13 @@ public extension Puyo where T: UIView {
     }
 
     @discardableResult
-    func diagnosis(_ diagnosis: Bool) -> Self {
-        bind(keyPath: \T.py_measure.diagnosis, diagnosis)
+    func diagnosis(_ id: String? = "") -> Self {
+        bind(keyPath: \T.py_measure.diagnosisId, id)
+    }
+
+    @discardableResult
+    func diagnosisExtraMessage(_ msg: String?) -> Self {
+        bind(keyPath: \T.py_measure.extraDiagnosisMessage, msg)
     }
 }
 

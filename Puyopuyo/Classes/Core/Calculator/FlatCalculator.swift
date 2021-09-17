@@ -165,7 +165,9 @@ class FlatCalculator {
         prepareData()
 
         // 根据优先级计算
-        getSortedChildren(calculateChildren).forEach(calculateChild(_:))
+        getSortedChildren(calculateChildren).forEach {
+            calculateChild($0, msg: "FlatCalculator first time calculating")
+        }
 
         // 处理主轴压缩
         handleMainShrink()
@@ -237,9 +239,9 @@ class FlatCalculator {
         totalSpace += (CGFloat(calculateChildren.count - 1) * regulator.space)
     }
 
-    private func calculateChild(_ measure: Measure) {
+    private func calculateChild(_ measure: Measure, msg: String) {
         let subResidual = getCurrentChildResidualCalFixedSize(measure)
-        calculateChild(measure, subResidual: subResidual)
+        calculateChild(measure, subResidual: subResidual, msg: msg)
         appendChildrenToCalculatedSize(measure)
     }
 
@@ -307,8 +309,8 @@ class FlatCalculator {
         return CalFixedSize(main: mainResidual, cross: crossResidual, direction: regDirection)
     }
 
-    private func calculateChild(_ measure: Measure, subResidual: CalFixedSize) {
-        measure.py_size = Calculator.calculateIntrinsicSize(for: measure, residual: subResidual.getSize(), calculateChildrenImmediately: regulator.calculateChildrenImmediately)
+    private func calculateChild(_ measure: Measure, subResidual: CalFixedSize, msg: String) {
+        measure.py_size = Calculator.calculateIntrinsicSize(for: measure, residual: subResidual.getSize(), calculateChildrenImmediately: regulator.calculateChildrenImmediately, diagnosisMessage: msg)
     }
 
     private func handleMainShrink() {
@@ -333,7 +335,7 @@ class FlatCalculator {
                     // 当前节点需要重新计算，所以先把累计值减去
                     totalMainShrinkWrapSize -= calFixedSize.main
                     // 重新计算
-                    calculateChild($0, subResidual: residual)
+                    calculateChild($0, subResidual: residual, msg: "FlatCalculator shrink calculating")
                     // 重新累计
                     appendChildrenToCalculatedSize($0)
                 }

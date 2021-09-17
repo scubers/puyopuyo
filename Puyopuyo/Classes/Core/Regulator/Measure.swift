@@ -24,8 +24,6 @@ public class Measure: MeasureDelegate {
     /// 虚拟目标计算节点
     var virtualDelegate = VirtualTarget()
 
-    public var diagnosis = false
-
     /// 真实计算节点
     private weak var delegate: MeasureDelegate?
 
@@ -82,10 +80,16 @@ public class Measure: MeasureDelegate {
     public func calculate(by size: CGSize) -> CGSize {
         return MeasureCalculator.calculate(measure: self, residual: size)
     }
+    
+    public var diagnosisId: String?
+    
+    public var extraDiagnosisMessage: String?
 
     public var diagnosisMessage: String {
         """
         [\(type(of: self)), delegate: \(getRealDelegate())]
+        - id: [\(diagnosisId ?? "")]
+        - extra: [\(extraDiagnosisMessage ?? "")]
         - size: [width: \(size.width), height: \(size.height)]
         - alignment: [\(alignment)]
         - margin: [top: \(margin.top), left: \(margin.left), bottom: \(margin.bottom), right: \(margin.right)]

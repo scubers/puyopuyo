@@ -65,7 +65,7 @@ class ZCalculator {
     private func calculateChildrenSize() {
         calculateChildren.forEach { m in
             let subResidual = _getCurrentChildResidualSize(m)
-            _calculateChild(m, residual: subResidual)
+            _calculateChild(m, residual: subResidual, msg: "ZCalculator first time calculating")
         }
     }
 
@@ -74,13 +74,13 @@ class ZCalculator {
         if regulator.size.maybeWrap() {
             maybeRatioChildren.forEach { m in
                 let currentChildResidual = _getCurrentChildResidualSize(m)
-                _calculateChild(m, residual: currentChildResidual)
+                _calculateChild(m, residual: currentChildResidual, msg: "ZCalculator ratio fill up calculating")
             }
         }
     }
 
-    private func _calculateChild(_ measure: Measure, residual: CGSize) {
-        measure.py_size = Calculator.calculateIntrinsicSize(for: measure, residual: residual, calculateChildrenImmediately: regulator.calculateChildrenImmediately)
+    private func _calculateChild(_ measure: Measure, residual: CGSize, msg: String) {
+        measure.py_size = Calculator.calculateIntrinsicSize(for: measure, residual: residual, calculateChildrenImmediately: regulator.calculateChildrenImmediately, diagnosisMessage: msg)
 
         // 记录当前最大宽高
         appendMaxWidthIfNeeded(measure)

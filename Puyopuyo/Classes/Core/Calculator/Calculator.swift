@@ -95,7 +95,7 @@ class Calculator {
     ///   - residual: 节点可用剩余尺寸
     ///   - calculateChildrenImmediately: 是否立即计算下一个层级
     /// - Returns: 节点固有尺寸
-    static func calculateIntrinsicSize(for measure: Measure, residual: CGSize, calculateChildrenImmediately: Bool) -> CGSize {
+    static func calculateIntrinsicSize(for measure: Measure, residual: CGSize, calculateChildrenImmediately: Bool, diagnosisMessage: String? = nil) -> CGSize {
         let finalResidual = Calculator.getAspectRatioResidual(for: measure, residual: residual, transform: .min)
         var intrinsic: CGSize
         if measure.size.maybeWrap() || calculateChildrenImmediately {
@@ -103,21 +103,22 @@ class Calculator {
         } else {
             intrinsic = Calculator.getIntrinsicSize(margin: measure.margin, residual: finalResidual, size: measure.size)
         }
-        startCalculateDiagnosis(measure: measure, residual: residual, intrinsic: intrinsic)
+        startCalculateDiagnosis(measure: measure, residual: residual, intrinsic: intrinsic, msg: diagnosisMessage)
         return intrinsic
     }
 
-    static func startCalculateDiagnosis(measure: Measure, residual: CGSize, intrinsic: CGSize) {
+    static func startCalculateDiagnosis(measure: Measure, residual: CGSize, intrinsic: CGSize, msg: String?) {
         #if DEBUG
-        guard measure.diagnosis else { return }
+        guard measure.diagnosisId != nil else { return }
         let content = """
-        
-        >>>>>>>>>> [Calculation diagnosis] >>>>>>>>>>
+
+        >>>>>>>>>> [Calculation diagnosis\(msg == nil ? "" : ": \(msg!)")] >>>>>>>>>>
         \(measure.diagnosisMessage)
+        >>>>>>>>>> Result
         - Residual: [width: \(residual.width), height: \(residual.height)]
         - Intrinsic: [width: \(intrinsic.width), height: \(intrinsic.height)]
         >>>>>>>>>> [Calculation diagnosis] >>>>>>>>>>
-        
+
         """
         print(content)
         #endif

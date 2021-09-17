@@ -87,11 +87,17 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
 
     public var description: String {
         if isRatio {
-            return "ratio: \(ratio)"
+            return "ratio(\(ratio))"
         } else if isWrap {
-            return "wrap(add: \(add), min: \(min), max: \(max == .greatestFiniteMagnitude ? "inf" : max.description), priority: \(priority), shrink: \(shrink)"
+            var text = [String]()
+            if add != 0 { text.append("add:\(add)")}
+            if min != 0 { text.append("min:\(min)")}
+            if max != .greatestFiniteMagnitude { text.append("max:\(max)")}
+            if priority != 0 { text.append("priority:\(priority)")}
+            if shrink != 0 { text.append("shrink:\(shrink)")}
+            return "wrap(\(text.joined(separator: ", "))"
         } else {
-            return "fix: \(fixedValue)"
+            return "fix(\(fixedValue))"
         }
     }
 }

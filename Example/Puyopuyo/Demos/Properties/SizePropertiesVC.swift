@@ -80,22 +80,20 @@ class SizePropertiesVC: BaseVC {
     }
 
     func wrapSizePriority() -> UIView {
-//        let width = State(SizeDescription.fill)
+        let progress = State(CGFloat(0.5))
         return DemoView<SizeDescription>(
             title: "Wrap size priority",
             builder: {
                 VBox().attach($0) {
-                    let text = State("")
-//
-                    UITextField().attach($0)
-                        .onText(text)
-                        .placeholder("Please input something here")
-                        .size(.fill, 30)
-
                     HBox().attach($0) {
-                        Label.demo("").attach($0)
-                            .text(text)
-                            .width(.wrap(priority: 3))
+                        Label.demo("change").attach($0)
+                            .width(Outputs.combine($0.py_boundsState(), progress).map { r, v -> SizeDescription in
+                                if v == 1 {
+                                    return .fill
+                                } else {
+                                    return .fix(r.width * v)
+                                }
+                            })
 
                         Label.demo("priority(1)").attach($0)
                             .width(.wrap(priority: 1))
@@ -109,6 +107,11 @@ class SizePropertiesVC: BaseVC {
                     .width(.fill)
                     .height(80)
                     .space(8)
+
+                    UISlider().attach($0)
+                        .bind(keyPath: \.value, progress.map(Float.init))
+                        .onEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
+                        .width(.fill)
                 }
                 .width(.fill)
                 .view
@@ -215,19 +218,35 @@ class SizePropertiesVC: BaseVC {
     }
 
     func fixedSizeWillOverflow() -> UIView {
+        let progress = State(CGFloat(1))
         return DemoView<CGFloat>(
             title: "Fixed size will overflow",
             builder: {
-                HBox().attach($0) {
-                    for i in 0 ..< 20 {
-                        Label.demo(i.description).attach($0)
-                            .size(100, 100)
+                VBox().attach($0) {
+                    HBox().attach($0) {
+                        for i in 0 ..< 20 {
+                            Label.demo(i.description).attach($0)
+                                .size(100, 100)
+                        }
                     }
+                    .demo()
+                    .width(Outputs.combine($0.py_boundsState(), progress).map { r, v -> SizeDescription in
+                        if v == 1 {
+                            return .fill
+                        } else {
+                            return .fix(r.width * v)
+                        }
+                    })
+                    .space(8)
+
+                    UISlider().attach($0)
+                        .bind(keyPath: \.value, progress.map(Float.init))
+                        .onEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
+                        .width(.fill)
                 }
-                .demo()
                 .width(.fill)
-                .space(8)
                 .view
+
             },
             selectors: [],
             desc: ".fixed(value) size will ignore residual size, and overflow"
