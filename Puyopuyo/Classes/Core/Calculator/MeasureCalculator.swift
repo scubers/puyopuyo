@@ -14,10 +14,12 @@ class MeasureCalculator {
         }
         let margin = measure.margin
 
-        let parentCGSize = CGSize(width: max(0, residual.width - margin.left - margin.right),
-                                  height: max(0, residual.height - margin.top - margin.bottom))
+        let parentSize = CGSize(
+            width: max(0, residual.width - margin.getHorzTotal()),
+            height: max(0, residual.height - margin.getVertTotal())
+        )
 
-        if measure.size.maybeWrap(), parentCGSize.width == 0 || parentCGSize.height == 0 {
+        if measure.size.maybeWrap(), parentSize.width == 0 || parentSize.height == 0 {
             // 若自身尺寸是包裹，并且剩余空间存在0，则不计算
             return .zero
         }
@@ -25,7 +27,7 @@ class MeasureCalculator {
         var widthSize = measure.size.width
         var heightSize = measure.size.height
 
-        var maxSize = CGSize(width: min(parentCGSize.width, widthSize.max), height: min(parentCGSize.height, heightSize.max))
+        var maxSize = CGSize(width: min(parentSize.width, widthSize.max), height: min(parentSize.height, heightSize.max))
         if widthSize.isFixed { maxSize.width = widthSize.fixedValue }
         if heightSize.isFixed { maxSize.height = heightSize.fixedValue }
 
@@ -43,7 +45,7 @@ class MeasureCalculator {
             heightSize = .fix(min(heightSize.getWrapSize(by: wrappedCGSize.height), maxSize.height))
         }
 
-        let size = Size(width: widthSize, height: heightSize, aspectRatio: measure.size.aspectRatio)
+        let size = Size(width: widthSize, height: heightSize, aspectRatio: measure.size.isFixed() ? nil : measure.size.aspectRatio)
         return Calculator.getIntrinsicSize(margin: measure.margin, residual: residual, size: size)
     }
 }
