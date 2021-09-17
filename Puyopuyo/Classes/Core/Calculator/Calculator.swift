@@ -96,15 +96,11 @@ class Calculator {
     ///   - calculateChildrenImmediately: 是否立即计算下一个层级
     /// - Returns: 节点固有尺寸
     static func calculateIntrinsicSize(for measure: Measure, residual: CGSize, calculateChildrenImmediately: Bool) -> CGSize {
-        let residual = Calculator.getAspectRatioResidual(for: measure, residual: residual, transform: .min)
-
-        var intrinsicSize: CGSize
+        let finalResidual = Calculator.getAspectRatioResidual(for: measure, residual: residual, transform: .min)
         if measure.size.maybeWrap() || calculateChildrenImmediately {
-            intrinsicSize = measure.calculate(by: residual)
-        } else {
-            intrinsicSize = Calculator.getIntrinsicSize(margin: measure.margin, residual: residual, size: measure.size)
+            return measure.calculate(by: finalResidual)
         }
-        return intrinsicSize
+        return Calculator.getIntrinsicSize(margin: measure.margin, residual: finalResidual, size: measure.size)
     }
 
     /// 允许size 存在0的情况，则视为不限制
@@ -112,8 +108,7 @@ class Calculator {
         var residual = size
         if residual.width == 0 { residual.width = .greatestFiniteMagnitude }
         if residual.height == 0 { residual.height = .greatestFiniteMagnitude }
-//        return calculateIntrinsicSize(for: measure, residual: size, calculateChildrenImmediately: true)
-        return measure.calculate(by: residual)
+        return calculateIntrinsicSize(for: measure, residual: residual, calculateChildrenImmediately: false)
     }
 
     static func constraintConflict(crash: Bool, _ msg: String) {
