@@ -12,8 +12,8 @@ import UIKit
 class ZPropertiesVC: BaseVC {
     override func configView() {
         HBox().attach(vRoot) {
-            self.getMenu().attach($0).size(.fill, .fill)
-            self.getZBox().attach($0).size(.fill, .fill)
+            getMenu().attach($0).size(.fill, .fill)
+            getZBox().attach($0).size(.fill, .fill)
         }
         .size(.fill, .fill)
     }
@@ -54,108 +54,100 @@ class ZPropertiesVC: BaseVC {
 
         return ScrollingBox<VBox> {
             $0.attach {
-                Label("请横屏使用\nChange to landscape").attach($0)
+                Label("""
+                Change to landscape
+                """).attach($0)
                     .textAlignment(.left)
                     .numberOfLines(0)
+                    .fontSize(20, weight: .bold)
 
                 HBox().attach($0) {
                     UILabel().attach($0)
                         .text("input:")
                     UITextField().attach($0)
                         .size(.fill, .fill)
-                        .onText(self.text)
+                        .onText(text)
                 }
                 .justifyContent(.center)
                 .size(.fill, 30)
 
                 getSelectionView(title: "Width",
-                                 input: self.width,
+                                 input: width,
                                  values: [Selector<SizeDescription>(desc: ".fill", value: .fill),
                                           Selector<SizeDescription>(desc: ".fix(100)", value: .fix(100)),
                                           Selector<SizeDescription>(desc: ".wrap", value: .wrap)],
-                                 selected: width.value)
-                    .attach($0)
+                                 selected: width.value).attach($0)
+
                 getSelectionView(title: "Height",
-                                 input: self.height,
+                                 input: height,
                                  values: [Selector<SizeDescription>(desc: ".fill", value: .fill),
                                           Selector<SizeDescription>(desc: ".fix(100)", value: .fix(100)),
                                           Selector<SizeDescription>(desc: ".wrap", value: .wrap)],
-                                 selected: height.value)
-                    .attach($0)
+                                 selected: height.value).attach($0)
 
                 getSelectionView(title: "H alignment",
-                                 input: self.alignmentHorz,
+                                 input: alignmentHorz,
                                  values: Alignment.horzAlignments().map {
                                      Selector(desc: "\($0)", value: $0)
                                  },
-                                 selected: alignmentHorz.value)
-                    .attach($0)
+                                 selected: alignmentHorz.value).attach($0)
 
                 getSelectionView(title: "V alignment",
-                                 input: self.alignmentVert,
+                                 input: alignmentVert,
                                  values: Alignment.vertAlignments().map {
                                      Selector(desc: "\($0)", value: $0)
                                  },
-                                 selected: alignmentVert.value)
-                    .attach($0)
+                                 selected: alignmentVert.value).attach($0)
 
                 let insets: [CGFloat] = [0, 10, 20, 30, 40]
                 getSelectionView(title: "MarginTop",
-                                 input: self.marginTop,
+                                 input: marginTop,
                                  values: insets.map {
                                      Selector<CGFloat>(desc: "\($0)", value: $0)
                                  },
-                                 selected: marginTop.value)
-                    .attach($0)
+                                 selected: marginTop.value).attach($0)
                 getSelectionView(title: "MarginLeft",
-                                 input: self.marginLeft,
+                                 input: marginLeft,
                                  values: insets.map {
                                      Selector<CGFloat>(desc: "\($0)", value: $0)
                                  },
-                                 selected: marginLeft.value)
-                    .attach($0)
+                                 selected: marginLeft.value).attach($0)
                 getSelectionView(title: "MarginBottom",
-                                 input: self.marginBottom,
+                                 input: marginBottom,
                                  values: insets.map {
                                      Selector<CGFloat>(desc: "\($0)", value: $0)
                                  },
-                                 selected: marginBottom.value)
-                    .attach($0)
+                                 selected: marginBottom.value).attach($0)
                 getSelectionView(title: "MarginRight",
-                                 input: self.marginRight,
+                                 input: marginRight,
                                  values: insets.map {
                                      Selector<CGFloat>(desc: "\($0)", value: $0)
                                  },
-                                 selected: marginRight.value)
-                    .attach($0)
+                                 selected: marginRight.value).attach($0)
                 getSelectionView(title: "PaddingTop",
-                                 input: self.paddingTop,
+                                 input: paddingTop,
                                  values: insets.map {
                                      Selector<CGFloat>(desc: "\($0)", value: $0)
                                  },
-                                 selected: paddingTop.value)
-                    .attach($0)
+                                 selected: paddingTop.value).attach($0)
                 getSelectionView(title: "PaddingLeft",
-                                 input: self.paddingLeft,
+                                 input: paddingLeft,
                                  values: insets.map {
                                      Selector<CGFloat>(desc: "\($0)", value: $0)
                                  },
-                                 selected: paddingLeft.value)
-                    .attach($0)
+                                 selected: paddingLeft.value).attach($0)
                 getSelectionView(title: "PaddingBottom",
-                                 input: self.paddingBottom,
+                                 input: paddingBottom,
                                  values: insets.map {
                                      Selector<CGFloat>(desc: "\($0)", value: $0)
                                  },
-                                 selected: paddingBottom.value)
-                    .attach($0)
+                                 selected: paddingBottom.value).attach($0)
                 getSelectionView(title: "PaddingRight",
-                                 input: self.paddingRight,
+                                 input: paddingRight,
                                  values: insets.map {
                                      Selector<CGFloat>(desc: "\($0)", value: $0)
                                  },
-                                 selected: paddingRight.value)
-                    .attach($0)
+                                 selected: paddingRight.value).attach($0)
             }
             .padding(all: 4)
         }

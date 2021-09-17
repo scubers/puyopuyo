@@ -79,9 +79,14 @@ class FlowPropertiesVC: BaseVC {
         }
         return ScrollingBox<VBox> {
             $0.attach {
-                Label("请横屏使用\nChange to landscape\n double click(remove) or click(when arrange = 0)").attach($0)
+                Label("""
+                Change device to landscape.
+                Double click block to remove it
+                Single tap when arrange = 0, the view will be the last of the row
+                """).attach($0)
                     .textAlignment(.left)
                     .numberOfLines(0)
+                    .fontSize(20, weight: .bold)
 
                 ScrollingBox<HBox> {
                     $0.attach {
@@ -121,35 +126,30 @@ class FlowPropertiesVC: BaseVC {
                                  values: [Selector<Int>(desc: "0", value: 0),
                                           Selector<Int>(desc: "1", value: 1),
                                           Selector<Int>(desc: "2", value: 2)],
-                                 selected: step.value)
-                    .attach($0)
+                                 selected: step.value).attach($0)
                 getSelectionView(title: "direction",
                                  input: direction,
                                  values: [Selector<Direction>(desc: ".x", value: .x),
                                           Selector<Direction>(desc: ".y", value: .y)],
-                                 selected: direction.value)
-                    .attach($0)
+                                 selected: direction.value).attach($0)
                 getSelectionView(title: "width",
                                  input: width,
                                  values: [Selector<SizeDescription>(desc: ".fill", value: .fill),
                                           Selector<SizeDescription>(desc: ".wrap", value: .wrap)],
-                                 selected: width.value)
-                    .attach($0)
+                                 selected: width.value).attach($0)
 
                 getSelectionView(title: "height",
                                  input: height,
                                  values: [Selector<SizeDescription>(desc: ".fill", value: .fill),
                                           Selector<SizeDescription>(desc: ".wrap", value: .wrap)],
-                                 selected: height.value)
-                    .attach($0)
+                                 selected: height.value).attach($0)
 
                 getSelectionView(title: "arrange",
                                  input: arrange,
                                  values: (0 ..< 10).map {
                                      Selector<Int>(desc: "\($0)", value: $0)
                                  },
-                                 selected: arrange.value)
-                    .attach($0)
+                                 selected: arrange.value).attach($0)
 
                 getSelectionView(title: "padding",
                                  input: padding,
@@ -157,8 +157,7 @@ class FlowPropertiesVC: BaseVC {
                                           Selector<CGFloat>(desc: "10", value: 10),
                                           Selector<CGFloat>(desc: "20", value: 20),
                                           Selector<CGFloat>(desc: "40", value: 30)],
-                                 selected: padding.value)
-                    .attach($0)
+                                 selected: padding.value).attach($0)
                 getSelectionView(title: "itemSpace",
                                  input: itemSpace,
                                  values: [Selector<CGFloat>(desc: "0", value: 0),
@@ -166,8 +165,7 @@ class FlowPropertiesVC: BaseVC {
                                           Selector<CGFloat>(desc: "20", value: 20),
                                           Selector<CGFloat>(desc: "30", value: 30),
                                           Selector<CGFloat>(desc: "40", value: 40)],
-                                 selected: itemSpace.value)
-                    .attach($0)
+                                 selected: itemSpace.value).attach($0)
 
                 getSelectionView(title: "runSpace",
                                  input: runSpace,
@@ -176,39 +174,34 @@ class FlowPropertiesVC: BaseVC {
                                           Selector<CGFloat>(desc: "20", value: 20),
                                           Selector<CGFloat>(desc: "30", value: 30),
                                           Selector<CGFloat>(desc: "40", value: 40)],
-                                 selected: runSpace.value)
-                    .attach($0)
+                                 selected: runSpace.value).attach($0)
 
                 getSelectionView(title: "reverse",
                                  input: reverse,
                                  values: [Selector<Bool>(desc: "true", value: true),
                                           Selector<Bool>(desc: "false", value: false)],
-                                 selected: reverse.value)
-                    .attach($0)
+                                 selected: reverse.value).attach($0)
 
                 getSelectionView(title: "format",
                                  input: format,
                                  values: Format.allCases.map {
                                      Selector<Format>(desc: "\($0)", value: $0)
                                  },
-                                 selected: format.value)
-                    .attach($0)
+                                 selected: format.value).attach($0)
 
                 getSelectionView(title: "runFormat",
                                  input: runFormat,
                                  values: Format.allCases.map {
                                      Selector<Format>(desc: "\($0)", value: $0)
                                  },
-                                 selected: runFormat.value)
-                    .attach($0)
+                                 selected: runFormat.value).attach($0)
 
                 getSelectionView(title: "justifyContent",
                                  input: justifyContent,
                                  values: (Alignment.vertAlignments() + Alignment.horzAlignments()).map {
                                      Selector<Alignment>(desc: "\($0)", value: $0)
                                  },
-                                 selected: justifyContent.value)
-                    .attach($0)
+                                 selected: justifyContent.value).attach($0)
             }
             .padding(all: 4)
         }
