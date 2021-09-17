@@ -57,7 +57,7 @@ import Foundation
 
  -- 第四次循环 --
  1. 根据计算结果py_size, 重置wrap and maxSubCross值
- 
+
  -- 第五次循环 --
  1. 计算根据format(.between, .leading, .round)计算center值
 
@@ -170,7 +170,7 @@ class FlatCalculator {
 
         // 根据优先级计算
         getSortedChildren(calculateChildren).forEach {
-            calculateChild($0, msg: "FlatCalculator first time calculating")
+            calculateChild($0, msg: "FlatCalculator \(isIntrinsic ? "intrinsic" : "first time") calculating")
         }
 
         // 处理主轴压缩
@@ -471,9 +471,6 @@ extension CalSize {
         case r_f
         case r_r
 
-//        var description: String {
-//            return "\(self)"
-//        }
         func getDesc() -> String {
             "\(self)".split(separator: ".").last!.description
         }

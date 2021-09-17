@@ -16,9 +16,9 @@ class ShadowStyle: Style {
             view.layer.shadowRadius = 4
             view.layer.shadowOffset = CGSize(width: 5, height: 5)
             view.layer.shadowOpacity = 0.3
-            view.py_sizeState().distinct().safeBind(to: view, id: "ShadowStyle") { _, size in
+            view.py_sizeState().distinct().safeBind(to: view, id: "ShadowStyle") { v, size in
                 let path = UIBezierPath(rect: CGRect(origin: .zero, size: size))
-                view.layer.shadowPath = path.cgPath
+                v.layer.shadowPath = path.cgPath
             }
         }
     }
