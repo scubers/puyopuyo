@@ -83,51 +83,34 @@ public extension UIView {
         }
     }
 
-    func py_mayBeWrap() -> Bool {
-        return py_measure.size.maybeWrap()
+    func py_originState() -> Outputs<CGPoint> {
+        py_frameState().map(\.origin).distinct()
+    }
+
+    func py_sizeState() -> Outputs<CGSize> {
+        Outputs.merge([py_boundsState(), py_frameState()]).map(\.size).distinct()
     }
 
     func py_boundsState() -> Outputs<CGRect> {
-        return
-            py_observing(\.bounds)
-                .unwrap(or: .zero)
-                .distinct()
+        py_observing(\.bounds).unwrap(or: .zero).distinct()
+    }
+
+    func py_frameState() -> Outputs<CGRect> {
+        py_observing(\.frame).unwrap(or: .zero).distinct()
     }
 
     func py_centerState() -> Outputs<CGPoint> {
-        return
-            py_observing(\.center)
-                .map { (x: CGPoint?) in x ?? .zero }
-                .distinct()
-    }
-
-    func py_frameStateByBoundsCenter() -> Outputs<CGRect> {
-        let bounds = py_boundsState().map { _ in CGRect.zero }
-        let center = py_centerState().map { _ in CGRect.zero }
-        return
-            Outputs.merge([bounds, center])
-                .map { [weak self] _ -> CGRect in
-                    guard let self = self else { return .zero }
-                    return self.frame
-                }
-        // 因为这里是合并，不知道为何不能去重
-    }
-
-    func py_frameStateByKVO() -> Outputs<CGRect> {
-        return
-            py_observing(\.frame)
-                .unwrap(or: .zero)
-                .distinct()
+        py_observing(\.center).unwrap(or: .zero).distinct()
     }
 
     /// ios11监听safeAreaInsets, ios10及以下，则监听frame变化并且通过转换坐标后得到与statusbar的差距
     func py_safeArea() -> Outputs<UIEdgeInsets> {
         if #available(iOS 11, *) {
-            return py_observing(\.safeAreaInsets).map { (insets: UIEdgeInsets?) in insets ?? .zero }.distinct()
+            return py_observing(\.safeAreaInsets).unwrap(or: .zero).distinct()
         } else {
             // ios 11 以下只可能存在statusbar影响的safeArea
             return
-                Outputs.merge([py_frameStateByBoundsCenter(), py_frameStateByKVO()])
+                Outputs.merge([py_frameState().map { _ in 1 }, py_centerState().map { _ in 1 }])
                     .map { [weak self] _ -> UIEdgeInsets in
                         guard let self = self else { return .zero }
                         let newRect = self.convert(self.bounds, to: UIApplication.shared.keyWindow)

@@ -30,14 +30,18 @@ public extension Puyo where T: UIView {
     }
 
     @discardableResult
+    func backgroundColor(_ color: UIColor?) -> Self {
+        bind(keyPath: \.backgroundColor, color)
+    }
+
+    @discardableResult
     func contentMode<S: Outputing>(_ mode: S) -> Self where S.OutputType == UIView.ContentMode {
         bind(keyPath: \.contentMode, mode)
     }
 
     @discardableResult
     func contentMode(_ mode: UIView.ContentMode) -> Self {
-        view.contentMode = mode
-        return self
+        bind(keyPath: \.contentMode, mode)
     }
 
     @discardableResult
@@ -113,8 +117,7 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func onFrameChanged<O: Inputing>(_ frame: O) -> Self where O.InputType == CGRect {
-        view.py_frameStateByBoundsCenter().send(to: frame).dispose(by: view)
-        view.py_frameStateByKVO().send(to: frame).dispose(by: view)
+        view.py_frameState().send(to: frame).dispose(by: view)
         return self
     }
 
