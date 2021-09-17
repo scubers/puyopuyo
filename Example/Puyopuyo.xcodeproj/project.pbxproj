@@ -11,6 +11,7 @@
 		0910C08D26E45A350048D5C8 /* FeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0910C08C26E45A350048D5C8 /* FeedVC.swift */; };
 		0915661326F46D3F007EBB05 /* ShowCaseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0915661226F46D3F007EBB05 /* ShowCaseVC.swift */; };
 		0915661526F46DCE007EBB05 /* ControlPad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0915661426F46DCE007EBB05 /* ControlPad.swift */; };
+		095E422326F50B0000D6B88C /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095E422226F50B0000D6B88C /* ChatVC.swift */; };
 		0972D40526C576D200210D1C /* ShadowStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0972D40426C576D200210D1C /* ShadowStyle.swift */; };
 		0982C1A02469AF730070F104 /* RecycleBoxPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */; };
 		09AD0CBD26DD064E008231F1 /* TestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AD0CBC26DD064E008231F1 /* TestVC.swift */; };
@@ -56,6 +57,7 @@
 		0915661226F46D3F007EBB05 /* ShowCaseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowCaseVC.swift; sourceTree = "<group>"; };
 		0915661426F46DCE007EBB05 /* ControlPad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPad.swift; sourceTree = "<group>"; };
 		093B861024012B64002AC9C6 /* Puyopuyo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Puyopuyo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		095E422226F50B0000D6B88C /* ChatVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatVC.swift; sourceTree = "<group>"; };
 		0972D40426C576D200210D1C /* ShadowStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowStyle.swift; sourceTree = "<group>"; };
 		097B22AE2441F6290043B0A5 /* Puyopuyo_Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Puyopuyo_Example.entitlements; sourceTree = "<group>"; };
 		0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecycleBoxPropertiesVC.swift; sourceTree = "<group>"; };
@@ -130,6 +132,14 @@
 				0915661226F46D3F007EBB05 /* ShowCaseVC.swift */,
 			);
 			path = ShowCase;
+			sourceTree = "<group>";
+		};
+		095E422126F50AF900D6B88C /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				095E422226F50B0000D6B88C /* ChatVC.swift */,
+			);
+			path = Chat;
 			sourceTree = "<group>";
 		};
 		0C5282B985C6C1A8396298C0 /* Pods */ = {
@@ -248,6 +258,7 @@
 		A8D9430222FF360B002E487F /* Demos */ = {
 			isa = PBXGroup;
 			children = (
+				095E422126F50AF900D6B88C /* Chat */,
 				0915661126F46D37007EBB05 /* ShowCase */,
 				0910C08B26E45A2D0048D5C8 /* Feed */,
 				A8BEC493239CDF50001FD6BF /* Advance */,
@@ -483,6 +494,7 @@
 				A81CE1492312EE6900E19E6B /* OptionView.swift in Sources */,
 				A86F4381233F9C100008606F /* StyleVC.swift in Sources */,
 				A8BEC48E239CD3E6001FD6BF /* DemoScroll.swift in Sources */,
+				095E422326F50B0000D6B88C /* ChatVC.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				A84E5CC1239EB5AC0091D39B /* ZPropertiesVC.swift in Sources */,
 				A8E53FB322C8E679000B2B6D /* BaseVC.swift in Sources */,

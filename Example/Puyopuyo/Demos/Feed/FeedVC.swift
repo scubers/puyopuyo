@@ -219,7 +219,7 @@ class ItemView: HBox, Stateful {
     override func buildBody() {
         attach {
             UIImageView().attach($0)
-                .size(80, 80)
+                .size(50, 50)
                 .image(bind(\.icon).distinct().then { downloadImage(url: $0) })
                 .cornerRadius(4)
 
@@ -238,7 +238,7 @@ class ItemView: HBox, Stateful {
                     builder: { o, i in
                         UIImageView().attach()
                             .image(o.then { downloadImage(url: $0) })
-                            .size(150, 150)
+                            .size(100, 100)
                             .userInteractionEnabled(true)
                             .onTap {
                                 i.inContext { c in
