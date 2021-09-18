@@ -17,8 +17,8 @@ class MeasureFactory {
                 measure = FlowRegulator(target: view)
             } else if view is ZBox {
                 measure = ZRegulator(target: view)
-            } else if view is FlatBox {
-                measure = FlatRegulator(target: view)
+            } else if view is LinearBox {
+                measure = LinearRegulator(target: view)
             } else {
                 measure = Measure(target: view)
             }

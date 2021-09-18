@@ -8,11 +8,11 @@
 
 import Foundation
 
-open class FlatBox: BoxView<FlatRegulator> {}
+open class LinearBox: BoxView<LinearRegulator> {}
 
-open class HBox: FlatBox {}
+open class HBox: LinearBox {}
 
-open class VBox: FlatBox {
+open class VBox: LinearBox {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         attach().direction(.y)

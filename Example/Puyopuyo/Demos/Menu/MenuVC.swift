@@ -18,7 +18,7 @@ class MenuVC: BaseVC {
         ("Test", { TestVC() }),
         ("Chat", { ChatVC() }),
         ("Size Properties", { SizePropertiesVC() }),
-        ("FlatBox Properties", { FlatPropertiesVC() }),
+        ("LinearBox Properties", { LinearPropertiesVC() }),
         ("UIView Properties", { UIViewProertiesVC() }),
         ("FlowBox Properties", { FlowPropertiesVC() }),
         ("ZBox Properties", { ZPropertiesVC() }),

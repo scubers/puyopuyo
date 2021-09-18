@@ -88,18 +88,18 @@ public extension Puyo where T: UIScrollView {
     }
 
     @discardableResult
-    func flatBox(_ direction: Direction) -> Puyo<FlatBox> {
+    func flatBox(_ direction: Direction) -> Puyo<LinearBox> {
         if direction == .y {
             view.attach().alwaysVertBounds(true)
             return
-                FlatBox().attach(view)
+                LinearBox().attach(view)
                     .direction(direction)
                     .autoJudgeScroll(true)
                     .size(.fill, .wrap)
         } else {
             view.attach().alwaysHorzBounds(true)
             return
-                FlatBox().attach(view)
+                LinearBox().attach(view)
                     .direction(direction)
                     .autoJudgeScroll(true)
                     .size(.wrap, .fill)

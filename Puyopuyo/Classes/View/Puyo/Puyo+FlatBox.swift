@@ -1,5 +1,5 @@
 //
-//  Puyo+FlatBox.swift
+//  Puyo+LinearBox.swift
 //  Puyopuyo
 //
 //  Created by J on 2021/9/11.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-// MARK: - FlatBox
+// MARK: - LinearBox
 
-public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlatRegulator {
+public extension Puyo where T: Boxable & UIView, T.RegulatorType: LinearRegulator {
     @discardableResult
     func space<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
         bind(keyPath: \T.regulator.space, space.mapCGFloat())

@@ -7,7 +7,7 @@
 
 import Foundation
 
-private class VirtualFlatRegulator: FlatRegulator {
+private class VirtualLinearRegulator: LinearRegulator {
     override init(target: MeasureDelegate? = nil, children: [Measure] = []) {
         super.init(target: target, children: children)
         calculateChildrenImmediately = true
@@ -64,7 +64,7 @@ class FlowCalculator {
     }
 
     private func _calculateByContent(available children: [Measure]) -> CGSize {
-        var virtualLines = [VirtualFlatRegulator]()
+        var virtualLines = [VirtualLinearRegulator]()
 
         var currentLine = [Measure]()
         var maxCross: CGFloat = 0
@@ -115,7 +115,7 @@ class FlowCalculator {
     private func _calculateByFixedCount(available children: [Measure]) -> CGSize {
         let line = getLine(from: children)
 
-        var fakeLines = [VirtualFlatRegulator]()
+        var fakeLines = [VirtualLinearRegulator]()
         fakeLines.reserveCapacity(line)
         for idx in 0 ..< line {
             let lineChildren = children[idx * arrange ..< min(idx * arrange + arrange, children.count)]
@@ -130,8 +130,8 @@ class FlowCalculator {
 }
 
 private extension FlowCalculator {
-    func getVirtualRegulator(children: [Measure]) -> VirtualFlatRegulator {
-        let outside = VirtualFlatRegulator(target: nil, children: children)
+    func getVirtualRegulator(children: [Measure]) -> VirtualLinearRegulator {
+        let outside = VirtualLinearRegulator(target: nil, children: children)
         outside.justifyContent = regulator.justifyContent
         outside.alignment = regulator.alignment
         outside.direction = regDirection
@@ -145,8 +145,8 @@ private extension FlowCalculator {
         return outside
     }
 
-    func getVirtualLine(children: [Measure], index: Int) -> VirtualFlatRegulator {
-        let line = VirtualFlatRegulator(children: children)
+    func getVirtualLine(children: [Measure], index: Int) -> VirtualLinearRegulator {
+        let line = VirtualLinearRegulator(children: children)
         line.justifyContent = regulator.justifyContent
         line.direction = getOppsiteDirection()
         line.space = regulator.itemSpace

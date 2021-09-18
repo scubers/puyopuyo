@@ -35,9 +35,9 @@ public class Trigger<T> {
     }
 }
 
-// MARK: - FlatBoxRecycle
+// MARK: - LinearBoxRecycle
 
-public class FlatBoxRecycle<T>: FlatBox, BoxRecycler {
+public class LinearBoxRecycle<T>: LinearBox, BoxRecycler {
     typealias Data = T
 
     fileprivate var container = Container<T>()
@@ -58,14 +58,14 @@ public class FlatBoxRecycle<T>: FlatBox, BoxRecycler {
     }
 }
 
-public class HBoxRecycle<T>: FlatBoxRecycle<T> {
+public class HBoxRecycle<T>: LinearBoxRecycle<T> {
     public required init(builder: @escaping (Outputs<T>, Trigger<T>) -> UIView) {
         super.init(builder: builder)
         attach().direction(.x)
     }
 }
 
-public class VBoxRecycle<T>: FlatBoxRecycle<T> {
+public class VBoxRecycle<T>: LinearBoxRecycle<T> {
     public required init(builder: @escaping (Outputs<T>, Trigger<T>) -> UIView) {
         super.init(builder: builder)
         attach().direction(.y)

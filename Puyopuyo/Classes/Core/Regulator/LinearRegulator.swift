@@ -7,8 +7,7 @@
 
 import Foundation
 
-/// 平面布局
-public class FlatRegulator: Regulator {
+public class LinearRegulator: Regulator {
     override public init(target: MeasureDelegate? = nil, children: [Measure] = []) {
         super.init(target: target, children: children)
         justifyContent = [.left, .top]
@@ -54,10 +53,10 @@ public class FlatRegulator: Regulator {
     }
 
     override public func calculate(by size: CGSize) -> CGSize {
-        return FlatCalculator(self, residual: size, isIntrinsic: false).calculate()
+        return LinearCalculator(self, residual: size, isIntrinsic: false).calculate()
     }
-    
-    public override var diagnosisMessage: String {
+
+    override public var diagnosisMessage: String {
         """
         \(super.diagnosisMessage)
         - direction: [\(direction)]

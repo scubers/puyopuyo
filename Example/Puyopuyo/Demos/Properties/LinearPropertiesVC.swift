@@ -1,5 +1,5 @@
 //
-//  FlatPropertiesVC.swift
+//  LinearPropertiesVC.swift
 //  Puyopuyo_Example
 //
 //  Created by Jrwong on 2019/12/8.
@@ -9,7 +9,7 @@
 import Puyopuyo
 import UIKit
 
-class FlatPropertiesVC: BaseVC {
+class LinearPropertiesVC: BaseVC {
     override func configView() {
         DemoScroll(
             builder: {
@@ -138,7 +138,7 @@ class FlatPropertiesVC: BaseVC {
         return DemoView<Direction>(
             title: "direction",
             builder: {
-                FlatBox().attach($0) {
+                LinearBox().attach($0) {
                     Label.demo("1").attach($0)
                     Label.demo("2").attach($0)
                     Label.demo("3").attach($0)

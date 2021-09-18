@@ -8,7 +8,7 @@
 import Foundation
 
 /// 流式布局
-public class FlowRegulator: FlatRegulator {
+public class FlowRegulator: LinearRegulator {
     /// 每排的数量，若设置为0，则根据内容排列
     public var arrange: Int = 0 {
         didSet {

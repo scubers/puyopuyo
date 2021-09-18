@@ -87,9 +87,9 @@ VFlow(count: 3).attach {
 |*justifyContent*|控制所有子节点在Box内的偏移位置，当子节点设置了 `alignment` 时，则优先使用 `alignment`| `.left, .top, .bottom, .vertCenter, .horzCenter`, default: .none |
 |*padding*|控制当前布局的内边距| `UIEdgeInset`, default: .zero|
 
-### FlatRegulator 属性
+### LinearRegulator 属性
 
-`FlatRegulator` 继承于 `Regulator`
+`LinearRegulator` 继承于 `Regulator`
 
 |属性|描述|值|
 |--|--|--|
@@ -100,7 +100,7 @@ VFlow(count: 3).attach {
 
 ### FlowRegulator 属性
 
-`FlowRegulator` 继承于 `FlatRegulator`
+`FlowRegulator` 继承于 `LinearRegulator`
 
 |属性|描述|值|
 |--|--|--|

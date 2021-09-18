@@ -1,5 +1,5 @@
 //
-//  FlatCalculator2.swift
+//  LinearCaclculator.swift
 //  Puyopuyo
 //
 //  Created by J on 2021/8/31.
@@ -70,15 +70,15 @@ import Foundation
  2. Size会有三种描述 (fix, ratio, wrap), 对应宽高的组合，则有 9 种搭配方式: (main|cross)
     (f_f),(w_w, w_f, f_w),(w_r, r_w),(r_f, f_r),(r_r)
     对应的计算顺序参考枚举 @see CalPriority，枚举值越小，优先计算
-    具体计算逻辑参考 @see FlatCalculator.regulateChild(_:)
+    具体计算逻辑参考 @see LinearCalculator.regulateChild(_:)
  3. 包裹尺寸计算时候会根据优先级进行排序，但是若布局为包裹，子节点有个特殊包裹(w_r)不会.wrap(priority:)影响
 
  */
-class FlatCalculator {
-    let regulator: FlatRegulator
+class LinearCalculator {
+    let regulator: LinearRegulator
     let residual: CGSize
     let isIntrinsic: Bool
-    init(_ regulator: FlatRegulator, residual: CGSize, isIntrinsic: Bool) {
+    init(_ regulator: LinearRegulator, residual: CGSize, isIntrinsic: Bool) {
         self.regulator = regulator
         self.residual = residual
         self.isIntrinsic = isIntrinsic
@@ -170,7 +170,7 @@ class FlatCalculator {
 
         // 根据优先级计算
         getSortedChildren(calculateChildren).forEach {
-            calculateChild($0, msg: "FlatCalculator \(isIntrinsic ? "intrinsic" : "first time") calculating")
+            calculateChild($0, msg: "LinearCalculator \(isIntrinsic ? "intrinsic" : "first time") calculating")
         }
 
         // 处理主轴压缩
@@ -187,7 +187,7 @@ class FlatCalculator {
                 cross: intrinsic.cross + regCalMargin.crossFixed,
                 direction: regDirection
             )
-            FlatCalculator(regulator, residual: residual.getSize(), isIntrinsic: true).calculateChildrenSize()
+            LinearCalculator(regulator, residual: residual.getSize(), isIntrinsic: true).calculateChildrenSize()
         }
     }
 
@@ -339,7 +339,7 @@ class FlatCalculator {
                     // 当前节点需要重新计算，所以先把累计值减去
                     totalMainShrinkWrapSize -= calFixedSize.main
                     // 重新计算
-                    calculateChild($0, subResidual: residual, msg: "FlatCalculator shrink calculating")
+                    calculateChild($0, subResidual: residual, msg: "LinearCalculator shrink calculating")
                     // 重新累计
                     appendChildrenToCalculatedSize($0)
                 }
