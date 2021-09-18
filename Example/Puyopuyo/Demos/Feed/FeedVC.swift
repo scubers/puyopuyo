@@ -219,10 +219,13 @@ class ItemView: HBox, Stateful {
 
     override func buildBody() {
         attach {
-            UIImageView().attach($0)
-                .size(40, 40)
-                .image(bind(\.icon).distinct().then { downloadImage(url: $0) })
-                .cornerRadius(4)
+            ZBox().attach($0) {
+                UIButton().attach($0)
+                    .size(40, 40)
+                    .image(bind(\.icon).distinct().then { downloadImage(url: $0) })
+                    .cornerRadius(4)
+            }
+            .style(ShadowStyle())
 
             VBox().attach($0) {
                 UILabel().attach($0)
@@ -263,6 +266,7 @@ class ItemView: HBox, Stateful {
                 .attach($0)
                 .arrangeCount(images.map { $0.count < 5 ? 2 : 3 }.distinct())
                 .space(8)
+                .margin(top: 8)
                 .viewState(images)
                 .visibility(images.map { $0.isEmpty ? .gone : .visible })
 
@@ -313,7 +317,7 @@ class ItemView: HBox, Stateful {
                                     .fontSize(12)
                                     .userInteractionEnabled(true)
                             }
-                            .padding(all: 8)
+                            .padding(horz: 8, vert: 4)
                             .width(.fill)
                             .onTap {
                                 i.inContext { c in

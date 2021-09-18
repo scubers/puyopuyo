@@ -13,6 +13,13 @@ class SizePropertiesVC: BaseVC {
     override func configView() {
         DemoScroll(
             builder: {
+                UILabel().attach($0)
+                    .text("""
+                    Rotate your device to landscape, get more space
+                    """)
+                    .fontSize(20, weight: .bold)
+                    .width(.fill)
+
                 fixedSizeWillOverflow().attach($0)
 
                 mainRatioSizeWillFillResidual().attach($0)

@@ -95,7 +95,7 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
             if max != .greatestFiniteMagnitude { text.append("max:\(max)") }
             if priority != 0 { text.append("priority:\(priority)") }
             if shrink != 0 { text.append("shrink:\(shrink)") }
-            return "wrap(\(text.joined(separator: ", "))"
+            return "wrap(\(text.joined(separator: ", ")))"
         } else {
             return "fix(\(fixedValue))"
         }
