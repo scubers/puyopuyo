@@ -53,10 +53,6 @@ public class RecycleSection<Section, Data>: BasicRecycleSection<Section> {
 
 public typealias DataRecycleSection<Data> = RecycleSection<Void, Data>
 
-@available(*, deprecated, message: "- use [DataRecycleSection]")
-public typealias ListRecycleSection<Data> = RecycleSection<Void, Data>
-
-
 public extension RecycleSection where Section == Void {
     convenience init(
         id: String? = nil,

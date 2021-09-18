@@ -46,7 +46,8 @@ class FlowPropertiesVC: BaseVC {
     let endings = State<[Int]>([])
 
     func increase() {
-        elements.value.append(elements.value.count)
+        let last = elements.value.last ?? 0
+        elements.value.append(last + 1)
     }
 
     func toggleEndings(_ value: Int) {

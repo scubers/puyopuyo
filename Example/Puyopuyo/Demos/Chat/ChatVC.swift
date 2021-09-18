@@ -33,7 +33,7 @@ class ChatVC: BaseVC, UICollectionViewDelegateFlowLayout {
         let this = WeakCatcher(value: self)
         vRoot.attach {
             box = RecycleBox(
-                enableDiff: true,
+                diff: true,
                 sections: [
                     DataRecycleSection(
                         items: messages.asOutput(),

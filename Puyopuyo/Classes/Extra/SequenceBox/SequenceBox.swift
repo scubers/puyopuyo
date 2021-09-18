@@ -81,14 +81,14 @@ public class SequenceBox: UITableView,
     UITableViewDataSource
 {
     public init(style: UITableView.Style = .plain,
-                enableDiff: Bool = false,
+                diff: Bool = false,
                 sections: Outputs<[ISequenceSection]> = [].asOutput(),
                 header: BoxGenerator<UIView>? = nil,
                 footer: BoxGenerator<UIView>? = nil)
     {
         super.init(frame: .zero, style: style)
 
-        self.enableDiff = enableDiff
+        self.enableDiff = diff
         delegateProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
         dataSourceProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
 

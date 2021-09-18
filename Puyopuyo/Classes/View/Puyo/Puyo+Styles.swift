@@ -103,8 +103,8 @@ public extension Puyo where T: TextColorDecorable & UIView {
 public extension Puyo where T: TextDecorable & UIView {
     @discardableResult
     func text<S: Outputing>(_ text: S, state: UIControl.State = .normal) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == String {
-        text.safeBind(to: view) { v, a in
-            v.applyText(a.optionalValue, state: state)
+        text.mapWrappedValue().distinct().safeBind(to: view) { v, a in
+            v.applyText(a, state: state)
             v.py_setNeedsLayoutIfMayBeWrap()
         }
         return self
@@ -112,8 +112,8 @@ public extension Puyo where T: TextDecorable & UIView {
 
     @discardableResult
     func attrText<S: Outputing>(_ text: S, state: UIControl.State = .normal) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == NSAttributedString {
-        text.safeBind(to: view) { v, a in
-            v.applyAttrText(a.optionalValue, state: state)
+        text.mapWrappedValue().distinct().safeBind(to: view) { v, a in
+            v.applyAttrText(a, state: state)
             v.py_setNeedsLayoutIfMayBeWrap()
         }
         return self

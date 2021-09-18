@@ -99,7 +99,7 @@ open class RecycleBox: UICollectionView,
         itemSpacing: CGFloat = 0,
         estimatedSize: CGSize = .zero,
         sectionInset: UIEdgeInsets = .zero,
-        enableDiff: Bool = false,
+        diff: Bool = false,
         sections: Outputs<[IRecycleSection]> = [].asOutput()
     ) {
         let layout = CollectionBoxFlowLayout()
@@ -115,7 +115,7 @@ open class RecycleBox: UICollectionView,
         
         super.init(frame: .zero, collectionViewLayout: layout)
         
-        self.enableDiff = enableDiff
+        self.enableDiff = diff
         delegateProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
         dataSourceProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
         backgroundColor = .clear

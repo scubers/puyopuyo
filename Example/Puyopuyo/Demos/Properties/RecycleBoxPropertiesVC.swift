@@ -18,7 +18,7 @@ class RecycleBoxPropertiesVC: BaseVC {
                 pinHeader: true,
                 estimatedSize: .init(width: 1, height: 1),
                 sectionInset: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
-                enableDiff: true,
+                diff: true,
                 sections: self.sections.asOutput()
             )
             .attach($0)

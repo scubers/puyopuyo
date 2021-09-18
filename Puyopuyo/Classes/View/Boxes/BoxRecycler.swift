@@ -158,9 +158,6 @@ private protocol BoxRecycler: Stateful {
 }
 
 private class Container<T> {
-//    var usingMap = Set<Context<T>>()
-//    var freeMap = Set<Context<T>>()
-
     var usingMap = [Context<T>]()
     var freeMap = [Context<T>]()
 }
@@ -177,7 +174,9 @@ extension BoxRecycler where Self: Boxable & UIView, StateType == [Data] {
     }
 
     private func reloadWithDiff(dataSource: [Data]) {
-        let diff = Diff(src: container.usingMap.map(\.state.value).map { $1 }, dest: dataSource)
+        let diff = Diff(src: container.usingMap.map(\.state.value).map { $1 }, dest: dataSource, identifier: {
+            ($0 as! RecycleIdentifiable).recycleIdentifier
+        })
         diff.check()
 
         var list = [Context<Data>?](repeating: nil, count: dataSource.count)

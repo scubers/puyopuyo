@@ -235,13 +235,13 @@ class ItemView: HBox, Stateful {
                     .numberOfLines(0)
 
                 let images = bind(\.images).unwrap(or: [])
-                
+
                 let imageWidth = images.map { list -> CGFloat in
                     if list.count == 1 {
                         return 200
                     }
                     if list.count < 5 {
-                        return 150
+                        return 120
                     }
                     return 90
                 }
