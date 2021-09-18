@@ -11,7 +11,8 @@ import UIKit
 
 class BaseVC: UIViewController, UIScrollViewDelegate {
     var navState = State(NavigationBox.ViewState())
-    var navHeight = State<SizeDescription>(.fix(64))
+    var navHeight = State<SizeDescription>(.fix(44))
+    let additionalSafeAreaPadding = State(UIEdgeInsets.zero)
 
     override func loadView() {
         super.loadView()
@@ -27,8 +28,11 @@ class BaseVC: UIViewController, UIScrollViewDelegate {
                     .view
             }, body: {
                 ZBox().attach {
+                    let padding = Outputs.combine($0.py_safeArea(), additionalSafeAreaPadding).map { safe, add -> UIEdgeInsets in
+                        UIEdgeInsets(top: safe.top + add.top, left: safe.left + add.left, bottom: safe.bottom + add.bottom, right: safe.right + add.right)
+                    }
                     vRoot.attach($0)
-                        .padding($0.py_safeArea())
+                        .padding(padding)
                         .size(.fill, .fill)
                 }
                 .view

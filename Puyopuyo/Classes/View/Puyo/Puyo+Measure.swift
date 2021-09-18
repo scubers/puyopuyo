@@ -54,6 +54,16 @@ public extension Puyo where T: UIView {
         width(w).height(h.sizeDescription)
     }
 
+    @discardableResult
+    func size(_ size: Size) -> Self {
+        bind(keyPath: \T.py_measure.size, size)
+    }
+
+    @discardableResult
+    func size<O: Outputing>(_ size: O) -> Self where O.OutputType == Size {
+        bind(keyPath: \T.py_measure.size, size)
+    }
+
     // MARK: - AspectRatio
 
     @discardableResult

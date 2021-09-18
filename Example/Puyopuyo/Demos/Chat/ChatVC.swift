@@ -9,7 +9,7 @@
 import Foundation
 import Puyopuyo
 
-class ChatVC: BaseVC {
+class ChatVC: BaseVC, UICollectionViewDelegateFlowLayout {
     let messages = State<[Message]>((0 ..< 5).map { _ in Message() })
     var box: RecycleBox!
 
@@ -17,6 +17,15 @@ class ChatVC: BaseVC {
         super.viewDidLoad()
         DispatchQueue.main.async {
             self.showLast()
+        }
+
+        Outputs.listen(to: UIResponder.keyboardWillShowNotification).safeBind(to: self) { this, notice in
+            let rect = notice.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
+            this.additionalSafeAreaPadding.value.bottom = rect.height - this.view.safeAreaInsets.bottom
+        }
+
+        Outputs.listen(to: UIResponder.keyboardWillHideNotification).safeBind(to: self) { this, _ in
+            this.additionalSafeAreaPadding.value.bottom = 0
         }
     }
 
@@ -47,9 +56,7 @@ class ChatVC: BaseVC {
             .attach($0)
             .bind(keyPath: \.showsVerticalScrollIndicator, false)
             .size(.fill, .fill)
-            .onTap(to: self) { v, _ in
-                v.becomeFirstResponder()
-            }
+            .setDelegate(self)
             .view
 
             MessageInputView().attach($0)
@@ -62,8 +69,8 @@ class ChatVC: BaseVC {
                         this.addMessage()
                     }
                 }
-                .margin(bottom: $0.py_safeArea().map(\.bottom))
         }
+        .animator(Animators.default)
     }
 
     private func addMessage(message: String? = nil, isSelf: Bool = Util.random(array: [true, false])) {
@@ -79,6 +86,12 @@ class ChatVC: BaseVC {
     }
 
     override var canBecomeFirstResponder: Bool { true }
+
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {}
+
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        becomeFirstResponder()
+    }
 }
 
 struct Message {
@@ -124,7 +137,7 @@ class MessageView: HBox, Stateful, Eventable {
                         .textColor(isSelf.map { $0 ? UIColor.white : .black })
                 }
                 .width(.wrap(max: 300))
-                .padding(all: 16)
+                .padding(all: 12)
                 .backgroundColor(isSelf.map { $0 ? Theme.accentColor : .white })
                 .cornerRadius(8)
             }
@@ -145,7 +158,10 @@ class MessageInputView: HBox, Eventable, UITextViewDelegate {
 
     var eventProducer = SimpleIO<Event>()
 
+    private let text = State("")
+
     override func buildBody() {
+        let hasText = text.map(\.isEmpty).map { !$0 }
         attach {
             UIButton().attach($0)
                 .image(UIImage(systemName: "share"))
@@ -156,22 +172,40 @@ class MessageInputView: HBox, Eventable, UITextViewDelegate {
                 .backgroundColor(.lightGray.withAlphaComponent(0.4))
                 .textColor(UIColor.black)
                 .fontSize(20)
+                .onText(text)
                 .view
                 .delegate = self
 
-            UIButton(type: .contactAdd).attach($0)
-                .bind(event: .touchUpInside, input: eventProducer.asInput { _ in .add })
+            ZBox().attach($0) {
+                UIButton(type: .contactAdd).attach($0)
+                    .bind(event: .touchUpInside, input: eventProducer.asInput { _ in .add })
+                    .visibility(hasText.map { (!$0).py_visibleOrGone() })
+
+                Label.demo("Send").attach($0)
+                    .onTap(to: self) { this, _ in
+                        this.send()
+                    }
+                    .size(Size(width: .wrap(min: 60), height: .wrap(min: 40)))
+                    .visibility(hasText.map { $0.py_visibleOrGone() })
+            }
+            .justifyContent(.center)
+            .animator(Animators.default)
         }
         .space(8)
         .backgroundColor(.white)
         .justifyContent(.center)
         .padding(all: 8)
+        .animator(Animators.default)
     }
 
     func textViewDidChange(_ textView: UITextView) {
         if let text = textView.text, text.hasSuffix("\n") {
-            emmit(.send(text.replacingOccurrences(of: "\n", with: "")))
-            textView.text = nil
+            send()
         }
+    }
+
+    func send() {
+        emmit(.send(text.value.replacingOccurrences(of: "\n", with: "")))
+        text.value = ""
     }
 }

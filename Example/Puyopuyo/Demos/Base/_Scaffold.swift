@@ -60,7 +60,7 @@ class NavBar: ZBox, Eventable {
         self.init(
             title: {
                 Label(title).attach($0)
-                    .fontSize(22, weight: .bold)
+                    .fontSize(20, weight: .bold)
                     .view
             }, leading: {
                 UIButton().attach($0)

@@ -103,7 +103,8 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
 }
 
 /// 描述一个测量宽高
-public struct Size: Equatable {
+public struct Size: Equatable, Outputing {
+    public typealias OutputType = Size
     public var width: SizeDescription
     public var height: SizeDescription
 
@@ -118,6 +119,10 @@ public struct Size: Equatable {
         self.width = width
         self.height = height
         self.aspectRatio = aspectRatio
+    }
+
+    public static func fixed(_ value: CGFloat = 0) -> Size {
+        Size(width: .fix(value), height: .fix(value))
     }
 
     public func isFixed() -> Bool {
