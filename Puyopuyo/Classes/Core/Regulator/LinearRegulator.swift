@@ -8,8 +8,8 @@
 import Foundation
 
 public class LinearRegulator: Regulator {
-    override public init(target: MeasureDelegate? = nil, children: [Measure] = []) {
-        super.init(target: target, children: children)
+    override public init(delegate: MeasureDelegate? = nil, children: [Measure] = []) {
+        super.init(delegate: delegate, children: children)
         justifyContent = [.left, .top]
     }
 

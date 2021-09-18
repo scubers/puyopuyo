@@ -14,13 +14,13 @@ class MeasureFactory {
         var measure = objc_getAssociatedObject(view, &MeasureFactory.measureHoldingKey) as? Measure
         if measure == nil {
             if view is FlowBox {
-                measure = FlowRegulator(target: view)
+                measure = FlowRegulator(delegate: view)
             } else if view is ZBox {
-                measure = ZRegulator(target: view)
+                measure = ZRegulator(delegate: view)
             } else if view is LinearBox {
-                measure = LinearRegulator(target: view)
+                measure = LinearRegulator(delegate: view)
             } else {
-                measure = Measure(target: view)
+                measure = Measure(delegate: view)
             }
             objc_setAssociatedObject(view, &MeasureFactory.measureHoldingKey, measure, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }

@@ -8,8 +8,8 @@
 import Foundation
 
 private class VirtualLinearRegulator: LinearRegulator {
-    override init(target: MeasureDelegate? = nil, children: [Measure] = []) {
-        super.init(target: target, children: children)
+    override init(delegate: MeasureDelegate? = nil, children: [Measure] = []) {
+        super.init(delegate: delegate, children: children)
         calculateChildrenImmediately = true
     }
 
@@ -21,11 +21,11 @@ private class VirtualLinearRegulator: LinearRegulator {
         let delta = CGPoint(x: center.x - size.width / 2, y: center.y - size.height / 2)
 
         virtualDelegate.children.forEach { m in
-            let target = m.getRealDelegate()
-            var center = target.py_center
+            let delegate = m.getRealDelegate()
+            var center = delegate.py_center
             center.x += delta.x // - oldDelta.x
             center.y += delta.y // - oldDelta.y
-            target.py_center = center
+            delegate.py_center = center
         }
     }
 }
@@ -131,7 +131,7 @@ class FlowCalculator {
 
 private extension FlowCalculator {
     func getVirtualRegulator(children: [Measure]) -> VirtualLinearRegulator {
-        let outside = VirtualLinearRegulator(target: nil, children: children)
+        let outside = VirtualLinearRegulator(delegate: nil, children: children)
         outside.justifyContent = regulator.justifyContent
         outside.alignment = regulator.alignment
         outside.direction = regDirection

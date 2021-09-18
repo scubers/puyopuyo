@@ -25,10 +25,10 @@ public class Measure: MeasureDelegate {
     var virtualDelegate = VirtualTarget()
 
     /// 真实计算节点
-    private weak var delegate: MeasureDelegate?
+    public weak var delegate: MeasureDelegate?
 
-    public init(target: MeasureDelegate? = nil, children: [Measure] = []) {
-        self.delegate = target
+    public init(delegate: MeasureDelegate? = nil, children: [Measure] = []) {
+        self.delegate = delegate
         virtualDelegate.children = children
     }
 
