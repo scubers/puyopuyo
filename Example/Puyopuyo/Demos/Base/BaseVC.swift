@@ -32,7 +32,7 @@ class BaseVC: UIViewController, UIScrollViewDelegate {
                         UIEdgeInsets(top: safe.top + add.top, left: safe.left + add.left, bottom: safe.bottom + add.bottom, right: safe.right + add.right)
                     }
                     vRoot.attach($0)
-                        .padding(padding)
+                        .padding(padding.distinct())
                         .size(.fill, .fill)
                 }
                 .view

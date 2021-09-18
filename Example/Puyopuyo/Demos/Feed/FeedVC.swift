@@ -220,7 +220,7 @@ class ItemView: HBox, Stateful {
     override func buildBody() {
         attach {
             UIImageView().attach($0)
-                .size(50, 50)
+                .size(40, 40)
                 .image(bind(\.icon).distinct().then { downloadImage(url: $0) })
                 .cornerRadius(4)
 
@@ -231,15 +231,26 @@ class ItemView: HBox, Stateful {
 
                 UILabel().attach($0)
                     .text(bind(\.content).distinct())
+                    .fontSize(14)
                     .numberOfLines(0)
 
                 let images = bind(\.images).unwrap(or: [])
+                
+                let imageWidth = images.map { list -> CGFloat in
+                    if list.count == 1 {
+                        return 200
+                    }
+                    if list.count < 5 {
+                        return 150
+                    }
+                    return 90
+                }
 
                 VFlowRecycle<String>(
                     builder: { o, i in
                         UIImageView().attach()
                             .image(o.then { downloadImage(url: $0) })
-                            .size(100, 100)
+                            .size(imageWidth, imageWidth)
                             .userInteractionEnabled(true)
                             .onTap {
                                 i.inContext { c in
@@ -299,6 +310,7 @@ class ItemView: HBox, Stateful {
                                 UILabel().attach($0)
                                     .text(o)
                                     .width(.fill)
+                                    .fontSize(12)
                                     .userInteractionEnabled(true)
                             }
                             .padding(all: 8)

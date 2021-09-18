@@ -18,7 +18,7 @@ class TestVC: BaseVC {
 //        demo4().attach(vRoot)
 //        demo5().attach(vRoot)
 //        demo6().attach(vRoot)
-        shrinkDeadLoopTest().attach(vRoot)
+//        shrinkDeadLoopTest().attach(vRoot)
 //        flowCompactTest().attach(vRoot)
         
 //        zboxFillAndWrapTest().attach(vRoot)
@@ -30,6 +30,27 @@ class TestVC: BaseVC {
 //        zboxAspectRatioTest().attach(vRoot)
         
 //        zboxRatioTest().attach(vRoot)
+        
+        let size = State(CGSize(width: 100, height: 100))
+        additionalSafeAreaPadding.value = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        
+        vRoot.attach {
+            ZBox().attach($0) {
+                UIView().attach($0)
+                    .bind(keyPath: \.frame, size.map { CGRect(origin: .init(x: 10, y: 10), size: $0) })
+                    .size(.fill, .fill)
+                    .diagnosis()
+            }
+            .padding(all: 10)
+            .size(300, 300)
+            
+            ControlPad().attach($0)
+                .onEvent(size.asInput { v in
+                    CGSize(width: 100 + (v.x * 100), height: 100 + (v.y * 100))
+                })
+                .size(200, 200)
+        }
+        .space(10)
     }
     
     func zboxRatioTest() -> UIView {

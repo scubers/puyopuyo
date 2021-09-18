@@ -168,7 +168,82 @@ private class Container<T> {
 extension BoxRecycler where Self: Boxable & UIView, StateType == [Data] {
     func setup() {
         viewState.safeBind(to: self) { this, dataSource in
-            this.reload(dataSource: dataSource)
+            if Data.self is RecycleIdentifiable.Type {
+                this.reloadWithDiff(dataSource: dataSource)
+            } else {
+                this.reload(dataSource: dataSource)
+            }
+        }
+    }
+
+    private func reloadWithDiff(dataSource: [Data]) {
+        let diff = Diff(src: container.usingMap.map(\.state.value).map { $1 }, dest: dataSource)
+        diff.check()
+
+        var list = [Context<Data>?](repeating: nil, count: dataSource.count)
+
+        diff.delete.forEach { delete in
+            // recycle the old context to free map
+            let context = container.usingMap[delete.from]
+            recycleContext(context)
+        }
+
+        diff.insert.forEach { insert in
+            // get context from free map or create a new one
+            list[insert.to] = getContext()
+        }
+
+        diff.stay.forEach { stay in
+            list[stay.to] = container.usingMap[stay.from]
+        }
+
+        diff.move.forEach { move in
+            list[move.to] = container.usingMap[move.from]
+        }
+        container.usingMap = list.map { $0! }
+
+        dataSource.enumerated().forEach { idx, element in
+            let context = container.usingMap[idx]
+            context.view.removeFromSuperview()
+            addSubview(context.view)
+            context.state.input(value: (idx, element))
+        }
+    }
+
+    private func recycleContext(_ context: Context<Data>) {
+        context.view.removeFromSuperview()
+        context.view.frame = .zero
+        container.freeMap.append(context)
+    }
+
+    private func getContext() -> Context<Data> {
+        if container.freeMap.isEmpty {
+            let c = Context<Data>()
+            let trigger = Trigger<Data>()
+            let view = builder(c.state.asOutput().map { $0.1 }, trigger)
+
+            let finder = { [weak view, weak self] () -> Context<Data>? in
+                guard let view = view, let self = self else {
+                    return nil
+                }
+                for context in self.container.usingMap {
+                    if context.view == view {
+                        return context
+                    }
+                }
+                return nil
+            }
+            trigger.createor = {
+                if let c = finder() {
+                    return .init(data: c.state.value.1, index: c.state.value.0)
+                }
+                return nil
+            }
+            trigger.isBuilding = false
+            c.view = view
+            return c
+        } else {
+            return container.freeMap.removeLast()
         }
     }
 
@@ -177,39 +252,10 @@ extension BoxRecycler where Self: Boxable & UIView, StateType == [Data] {
             if idx < container.usingMap.count {
                 container.usingMap[idx].state.input(value: (idx, element))
             } else {
-                if !container.freeMap.isEmpty {
-                    let last = container.freeMap.removeLast()
-                    last.state.input(value: (idx, element))
-                    container.usingMap.append(last)
-                    addSubview(last.view)
-                } else {
-                    let c = Context<Data>()
-                    c.state.input(value: (idx, element))
-                    let trigger = Trigger<Data>()
-                    let view = builder(c.state.asOutput().map { $0.1 }, trigger)
-
-                    let finder = { [weak view, weak self] () -> Context<Data>? in
-                        guard let view = view, let self = self else {
-                            return nil
-                        }
-                        for context in self.container.usingMap {
-                            if context.view == view {
-                                return context
-                            }
-                        }
-                        return nil
-                    }
-                    trigger.createor = {
-                        if let c = finder() {
-                            return .init(data: c.state.value.1, index: c.state.value.0)
-                        }
-                        return nil
-                    }
-                    trigger.isBuilding = false
-                    c.view = view
-                    container.usingMap.append(c)
-                    addSubview(view)
-                }
+                let context = getContext()
+                context.state.input(value: (idx, element))
+                container.usingMap.append(context)
+                addSubview(context.view)
             }
         }
 
@@ -225,3 +271,14 @@ extension BoxRecycler where Self: Boxable & UIView, StateType == [Data] {
         }
     }
 }
+
+public protocol RecycleIdentifiable {
+    var recycleIdentifier: String { get }
+}
+
+public extension RecycleIdentifiable where Self: CustomStringConvertible {
+    var recycleIdentifier: String { description }
+}
+
+extension String: RecycleIdentifiable {}
+extension Int: RecycleIdentifiable {}

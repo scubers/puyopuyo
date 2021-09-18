@@ -122,7 +122,7 @@ class MessageView: HBox, Stateful, Eventable {
             ZBox().attach($0) {
                 UIImageView().attach($0)
                     .image(output.map(\.icon).then { downloadImage(url: $0) })
-                    .size(50, 50)
+                    .size(40, 40)
                     .cornerRadius(8)
             }
             .style(ShadowStyle())
@@ -140,7 +140,7 @@ class MessageView: HBox, Stateful, Eventable {
                         .text(output.map(\.content))
                         .textColor(isSelf.map { $0 ? UIColor.white : .black })
                 }
-                .width(.wrap(max: 300))
+                .width(.wrap(max: 250))
                 .padding(all: 12)
                 .backgroundColor(isSelf.map { $0 ? Theme.accentColor : .white })
                 .cornerRadius(8)
