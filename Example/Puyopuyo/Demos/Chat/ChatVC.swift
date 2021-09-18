@@ -67,6 +67,10 @@ class ChatVC: BaseVC, UICollectionViewDelegateFlowLayout {
                         this.addMessage(message: text, isSelf: true)
                     case .add:
                         this.addMessage()
+                    case .onStartEdit:
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            this.showLast()
+                        }
                     }
                 }
         }
@@ -154,6 +158,7 @@ class MessageInputView: HBox, Eventable, UITextViewDelegate {
     enum Event {
         case send(String?)
         case add
+        case onStartEdit
     }
 
     var eventProducer = SimpleIO<Event>()
@@ -161,15 +166,15 @@ class MessageInputView: HBox, Eventable, UITextViewDelegate {
     private let text = State("")
 
     override func buildBody() {
-        let hasText = text.map(\.isEmpty).map { !$0 }
+        let hasText = text.map(\.isEmpty).map { !$0 }.distinct()
         attach {
             UIButton().attach($0)
-                .image(UIImage(systemName: "share"))
+                .image(UIImage(systemName: "circle"))
 
             UITextView().attach($0)
                 .size(.fill, .wrap(min: 40))
                 .cornerRadius(8)
-                .backgroundColor(.lightGray.withAlphaComponent(0.4))
+                .backgroundColor(.lightGray.withAlphaComponent(0.2))
                 .textColor(UIColor.black)
                 .fontSize(20)
                 .onText(text)
@@ -179,14 +184,17 @@ class MessageInputView: HBox, Eventable, UITextViewDelegate {
             ZBox().attach($0) {
                 UIButton(type: .contactAdd).attach($0)
                     .bind(event: .touchUpInside, input: eventProducer.asInput { _ in .add })
-                    .visibility(hasText.map { (!$0).py_visibleOrGone() })
+//                    .visibility(hasText.map { (!$0).py_visibleOrGone() })
+                    .alpha(hasText.map { !$0 ? 1 : 0 })
+                    .size(hasText.map { $0 ? Size.fixed(1) : Size(width: .wrap, height: .wrap) })
 
                 Label.demo("Send").attach($0)
                     .onTap(to: self) { this, _ in
                         this.send()
                     }
-                    .size(Size(width: .wrap(min: 60), height: .wrap(min: 40)))
-                    .visibility(hasText.map { $0.py_visibleOrGone() })
+                    .size(hasText.map { !$0 ? Size.fixed(1) : Size(width: .wrap(min: 60), height: .wrap(min: 40)) })
+//                    .visibility(hasText.map { $0.py_visibleOrGone() })
+                    .alpha(hasText.map { $0 ? 1 : 0 })
             }
             .justifyContent(.center)
             .animator(Animators.default)
@@ -207,5 +215,9 @@ class MessageInputView: HBox, Eventable, UITextViewDelegate {
     func send() {
         emmit(.send(text.value.replacingOccurrences(of: "\n", with: "")))
         text.value = ""
+    }
+
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        emmit(.onStartEdit)
     }
 }
