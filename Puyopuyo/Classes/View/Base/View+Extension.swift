@@ -7,13 +7,13 @@
 
 import Foundation
 
-public protocol MeasureHolder {
+public protocol Measureable {
     var py_measure: Measure { get }
 }
 
 // MARK: - MeasureHolder impl
 
-extension UIView: MeasureHolder {
+extension UIView: Measureable {
     public var py_measure: Measure {
         return MeasureFactory.getMeasure(from: self)
     }
