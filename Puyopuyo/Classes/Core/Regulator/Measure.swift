@@ -80,9 +80,9 @@ public class Measure: MeasureDelegate {
     public func calculate(by size: CGSize) -> CGSize {
         return MeasureCalculator.calculate(measure: self, residual: size)
     }
-    
+
     public var diagnosisId: String?
-    
+
     public var extraDiagnosisMessage: String?
 
     public var diagnosisMessage: String {
@@ -97,24 +97,39 @@ public class Measure: MeasureDelegate {
         """
     }
 
-    public var py_size: CGSize {
-        set {
-            if getRealDelegate().py_size != newValue {
-                getRealDelegate().py_size = newValue
-            }
-        }
-        get {
-            return getRealDelegate().py_size
-        }
+    public var py_size: CGSize = .zero
+//    {
+//        set {
+//            if getRealDelegate().py_size != newValue {
+//                getRealDelegate().py_size = newValue
+//            }
+//        }
+//        get {
+//            return getRealDelegate().py_size
+//        }
+//    }
+
+    public var py_center: CGPoint = .zero
+//    {
+//        set {
+//            getRealDelegate().py_center = newValue
+//        }
+//        get {
+//            return getRealDelegate().py_center
+//        }
+//    }
+
+    public func applyPosition() {
+        applyCenter()
+        applySize()
     }
 
-    public var py_center: CGPoint {
-        set {
-            getRealDelegate().py_center = newValue
-        }
-        get {
-            return getRealDelegate().py_center
-        }
+    public func applyCenter() {
+        getRealDelegate().py_center = py_center
+    }
+
+    public func applySize() {
+        getRealDelegate().py_size = py_size
     }
 
     public func py_enumerateChild(_ block: (Measure) -> Void) {

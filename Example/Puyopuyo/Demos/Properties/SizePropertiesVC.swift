@@ -182,7 +182,7 @@ class SizePropertiesVC: BaseVC {
                             .height(30)
                     }
                     .demo()
-                    .width(Outputs.combine($0.py_boundsState(), progress).map { r, v -> SizeDescription in
+                    .width(Outputs.combine($0.py_boundsState().debounce(), progress).map { r, v -> SizeDescription in
                         .fix(r.width * v)
                     })
                     .height(80)
@@ -216,7 +216,7 @@ class SizePropertiesVC: BaseVC {
                 VBox().attach($0) {
                     HBox().attach($0) {
                         Label.demo("change").attach($0)
-                            .width(Outputs.combine($0.py_boundsState(), progress).map { r, v -> SizeDescription in
+                            .width(Outputs.combine($0.py_boundsState().debounce(), progress).map { r, v -> SizeDescription in
                                 .fix(r.width * v)
                             })
                             .height(80)
@@ -274,7 +274,7 @@ class SizePropertiesVC: BaseVC {
                         }
                     }
                     .demo()
-                    .width(Outputs.combine($0.py_boundsState(), progress).map { r, v -> SizeDescription in
+                    .width(Outputs.combine($0.py_boundsState().debounce(), progress).map { r, v -> SizeDescription in
                         .fix(r.width * v)
                     })
                     .space(8)
@@ -363,7 +363,7 @@ class SizePropertiesVC: BaseVC {
                         }
                     }
                     .demo()
-                    .width(Outputs.combine($0.py_boundsState(), progress).map { r, v -> SizeDescription in
+                    .width(Outputs.combine($0.py_boundsState().debounce(), progress).map { r, v -> SizeDescription in
                         .fix(r.width * v)
                     })
                     .space(8)

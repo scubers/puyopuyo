@@ -27,18 +27,22 @@ public class BoxControl<R: Regulator> {
     private func _layoutSubviews(view: UIView, regulator: R) {
         // 父视图为布局
         if isBox(view: view.superview) {
-            // 当父视图为布局，并且当前view可能是wrap的情况下，父布局在计算的时候已经帮子布局计算完成，所以不需要再次计算
-            //
+            /**
+             1. 当父布局为Box视图，并且当前布局可能是包裹，则视为被上层计算时优先计算过了。当前视图可不用重复计算
+             2. 若非包裹，则上层视图时只是用了估算尺寸，需要再次计算子节点
+             */
             if regulator.size.bothNotWrap(), !regulator.calculateChildrenImmediately {
                 let residual = CGSize(width: view.bounds.width + regulator.margin.getHorzTotal(),
                                       height: view.bounds.height + regulator.margin.getVertTotal())
                 _ = Calculator.calculateIntrinsicSize(for: regulator, residual: residual, calculateChildrenImmediately: true)
             }
         } else {
+            // 父视图为普通视图
             if isSizeControl {
-                let parentMeasure = view.superview?.py_measure ?? Measure()
-                // 父视图为普通视图
-                var residual = parentMeasure.py_size
+                /**
+                 当需要控制自身大小时，剩余空间为父视图的所有空间
+                 */
+                var residual = view.superview?.bounds.size ?? .zero
                 if regulator.size.width.isWrap {
                     residual.width = regulator.size.width.max - regulator.margin.getHorzTotal()
                 }
@@ -46,18 +50,38 @@ public class BoxControl<R: Regulator> {
                     residual.height = regulator.size.height.max - regulator.margin.getVertTotal()
                 }
                 regulator.py_size = Calculator.calculateIntrinsicSize(for: regulator, residual: residual, calculateChildrenImmediately: true)
+                regulator.applySize()
             } else {
+                /**
+                 1. 当不需要布局控制自身大小时，意味着外部已经给本布局设置好了尺寸，即可以反推出当前布局可用的剩余空间
+                 2. 因为布局自身已经被限定尺寸大小，所以布局尺寸只能是撑满剩余空间
+                 */
+
                 if !regulator.size.isRatio() {
                     Calculator.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
                     regulator.size = .init(width: .fill, height: .fill)
                 }
-                _ = Calculator.calculateIntrinsicSize(for: regulator, residual: view.bounds.size, calculateChildrenImmediately: true)
+                var residual = view.bounds.size
+                residual.width += regulator.margin.getHorzTotal()
+                residual.height += regulator.margin.getVertTotal()
+
+                _ = Calculator.calculateIntrinsicSize(for: regulator, residual: residual, calculateChildrenImmediately: true)
             }
             if isCenterControl {
-                view.center = CGPoint(x: view.bounds.midX + regulator.margin.left, y: view.bounds.midY + regulator.margin.top)
+                let b = CGRect(origin: .zero, size: regulator.py_size)
+                regulator.py_center = CGPoint(x: b.midX + regulator.margin.left, y: b.midY + regulator.margin.top)
+                regulator.applyCenter()
             }
+
             if isScrollViewControl, let superview = view.superview as? UIScrollView {
                 control(scrollView: superview, by: view, regulator: regulator)
+            }
+        }
+
+        // 处理子节点的位置和大小
+        regulator.py_enumerateChild { m in
+            if m.activated {
+                m.applyPosition()
             }
         }
 

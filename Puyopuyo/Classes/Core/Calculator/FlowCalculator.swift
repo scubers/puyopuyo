@@ -21,11 +21,11 @@ private class VirtualLinearRegulator: LinearRegulator {
         let delta = CGPoint(x: center.x - size.width / 2, y: center.y - size.height / 2)
 
         virtualDelegate.children.forEach { m in
-            let delegate = m.getRealDelegate()
-            var center = delegate.py_center
+//            let delegate = m.getRealDelegate()
+            var center = m.py_center
             center.x += delta.x // - oldDelta.x
             center.y += delta.y // - oldDelta.y
-            delegate.py_center = center
+            m.py_center = center
         }
     }
 }

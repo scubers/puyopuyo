@@ -31,26 +31,41 @@ class TestVC: BaseVC {
         
 //        zboxRatioTest().attach(vRoot)
         
-        let size = State(CGSize(width: 100, height: 100))
-        additionalSafeAreaPadding.value = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        
+        let progress = State(CGFloat(1))
         vRoot.attach {
-            ZBox().attach($0) {
-                UIView().attach($0)
-                    .bind(keyPath: \.frame, size.map { CGRect(origin: .init(x: 10, y: 10), size: $0) })
-                    .size(.fill, .fill)
-                    .diagnosis()
-            }
-            .padding(all: 10)
-            .size(300, 300)
-            
-            ControlPad().attach($0)
-                .onEvent(size.asInput { v in
-                    CGSize(width: 100 + (v.x * 100), height: 100 + (v.y * 100))
-                })
-                .size(200, 200)
+            let progress = State(CGFloat(1))
+            DemoView<CGFloat>(
+                title: "Fixed size will overflow",
+                builder: {
+                    VBox().attach($0) {
+                        HBox().attach($0) {
+                            for i in 0 ..< 10 {
+                                Label.demo(i.description).attach($0)
+                                    .size(100, 100)
+                            }
+                        }
+                        .demo()
+                        .width(Outputs.combine($0.py_boundsState(), progress).map { r, v -> SizeDescription in
+                            .fix(r.width * v)
+                        })
+                        .space(8)
+
+                        UISlider().attach($0)
+                            .bind(keyPath: \.value, progress.map(Float.init))
+                            .onEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
+                            .width(.fill)
+                    }
+                    .width(.fill)
+                    .padding(all: 10)
+                    .view
+
+                },
+                selectors: [],
+                desc: ".fixed(value) size will ignore residual size, and overflow"
+            )
+            .attach($0)
+            .width(.fill)
         }
-        .space(10)
     }
     
     func zboxRatioTest() -> UIView {
