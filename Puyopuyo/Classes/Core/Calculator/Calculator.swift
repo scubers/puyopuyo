@@ -153,7 +153,7 @@ class Calculator {
         let parentCalPadding = parentPadding.getCalEdges(by: direction)
 
         let subCalMargin = measure.margin.getCalEdges(by: direction)
-        let subFixedSize = measure.py_size.getCalFixedSize(by: direction)
+        let subFixedSize = measure.calculatedSize.getCalFixedSize(by: direction)
 
         let subCrossAligment: Alignment = measure.alignment.hasCrossAligment(for: direction) ? measure.alignment : justifyContent
 

@@ -193,7 +193,7 @@ class LinearCalculator {
 
     private func prepareData() {
         // 第一次循环
-        regulator.py_enumerateChild { m in
+        regulator.enumerateChild { m in
             // 未激活的节点不计算
             guard m.activated else { return }
 
@@ -259,7 +259,7 @@ class LinearCalculator {
     /// 把计算好的节点的尺寸累计到统计值
     private func appendChildrenToCalculatedSize(_ measure: Measure) {
         // 计算后把包裹的大小进行累加
-        let subFixedSize = CalFixedSize(cgSize: measure.py_size, direction: regDirection)
+        let subFixedSize = CalFixedSize(cgSize: measure.calculatedSize, direction: regDirection)
         let subCalMargin = measure.margin.getCalEdges(by: regDirection)
         let subCalSize = measure.size.getCalSize(by: regDirection)
         if subCalSize.main.isWrap {
@@ -314,7 +314,7 @@ class LinearCalculator {
     }
 
     private func calculateChild(_ measure: Measure, subResidual: CalFixedSize, msg: String) {
-        measure.py_size = Calculator.calculateIntrinsicSize(for: measure, residual: subResidual.getSize(), calculateChildrenImmediately: regulator.calculateChildrenImmediately, diagnosisMessage: msg)
+        measure.calculatedSize = Calculator.calculateIntrinsicSize(for: measure, residual: subResidual.getSize(), calculateChildrenImmediately: regulator.calculateChildrenImmediately, diagnosisMessage: msg)
     }
 
     private func handleMainShrink() {
@@ -325,7 +325,7 @@ class LinearCalculator {
             mainShrinkChildren.forEach {
                 let calSize = $0.size.getCalSize(by: regDirection)
                 if calSize.main.isWrap, calSize.main.shrink > 0 {
-                    let calFixedSize = $0.py_size.getCalFixedSize(by: regDirection)
+                    let calFixedSize = $0.calculatedSize.getCalFixedSize(by: regDirection)
 
                     let calMargin = $0.margin.getCalEdges(by: regDirection)
                     // 需要压缩的主轴长度
@@ -378,7 +378,7 @@ class LinearCalculator {
             // 复制最后lastEnd
             lastEnd = end
             // 赋值center
-            m.py_center = CalCenter(main: main, cross: cross, direction: regDirection).getPoint()
+            m.calculatedCenter = CalCenter(main: main, cross: cross, direction: regDirection).getPoint()
         }
 
         // 整体偏移
@@ -395,9 +395,9 @@ class LinearCalculator {
             // 如果格式化为靠后，则需要最后重排一遍
             // 计算最后一个需要移动的距离
             measures.forEach { m in
-                var calCenter = m.py_center.getCalCenter(by: regulator.direction)
+                var calCenter = m.calculatedCenter.getCalCenter(by: regulator.direction)
                 calCenter.main += delta
-                m.py_center = calCenter.getPoint()
+                m.calculatedCenter = calCenter.getPoint()
             }
         }
 
@@ -420,7 +420,7 @@ class LinearCalculator {
 
     private func _calculateMainOffset(measure: Measure, idx: Int, lastEnd: CGFloat) -> (CGFloat, CGFloat) {
         let calMargin = CalEdges(insets: measure.margin, direction: regulator.direction)
-        let calFixedSize = CalFixedSize(cgSize: measure.py_size, direction: regulator.direction)
+        let calFixedSize = CalFixedSize(cgSize: measure.calculatedSize, direction: regulator.direction)
         let space = (idx == 0) ? 0 : regulator.space
         // main = end + 间距 + 自身顶部margin + 自身主轴一半
         let main = lastEnd + space + calMargin.start + calFixedSize.main / 2

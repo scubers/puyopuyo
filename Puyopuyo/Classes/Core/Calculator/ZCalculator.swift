@@ -42,7 +42,7 @@ class ZCalculator {
     }
 
     private func prepareData() {
-        regulator.py_enumerateChild { m in
+        regulator.enumerateChild { m in
             if !m.activated { return }
 
             calculateChildren.append(m)
@@ -80,7 +80,7 @@ class ZCalculator {
     }
 
     private func _calculateChild(_ measure: Measure, residual: CGSize, msg: String) {
-        measure.py_size = Calculator.calculateIntrinsicSize(for: measure, residual: residual, calculateChildrenImmediately: regulator.calculateChildrenImmediately, diagnosisMessage: msg)
+        measure.calculatedSize = Calculator.calculateIntrinsicSize(for: measure, residual: residual, calculateChildrenImmediately: regulator.calculateChildrenImmediately, diagnosisMessage: msg)
 
         // 记录当前最大宽高
         appendMaxWidthIfNeeded(measure)
@@ -90,7 +90,7 @@ class ZCalculator {
     private func calculateChildrenCenter(intrinsic: CGSize) {
         for measure in calculateChildren {
             // 计算中心
-            measure.py_center = _calculateCenter(measure, containerSize: intrinsic)
+            measure.calculatedCenter = _calculateCenter(measure, containerSize: intrinsic)
         }
     }
 
@@ -104,13 +104,13 @@ class ZCalculator {
 
     private func appendMaxWidthIfNeeded(_ measure: Measure) {
         if !measure.size.width.isRatio {
-            maxContentSize.width = max(maxContentSize.width, measure.py_size.width + measure.margin.getHorzTotal())
+            maxContentSize.width = max(maxContentSize.width, measure.calculatedSize.width + measure.margin.getHorzTotal())
         }
     }
 
     private func appendMaxHeightIfNeeded(_ measure: Measure) {
         if !measure.size.height.isRatio {
-            maxContentSize.height = max(maxContentSize.height, measure.py_size.height + measure.margin.getVertTotal())
+            maxContentSize.height = max(maxContentSize.height, measure.calculatedSize.height + measure.margin.getVertTotal())
         }
     }
 

@@ -14,18 +14,18 @@ private class VirtualLinearRegulator: LinearRegulator {
     }
 
     func justifyChildrenWithCenter() {
-        let center = py_center
-        let size = py_size
+        let center = calculatedCenter
+        let size = calculatedSize
 
         // 计算虚拟位置的偏移量
         let delta = CGPoint(x: center.x - size.width / 2, y: center.y - size.height / 2)
 
         virtualDelegate.children.forEach { m in
 //            let delegate = m.getRealDelegate()
-            var center = m.py_center
+            var center = m.calculatedCenter
             center.x += delta.x // - oldDelta.x
             center.y += delta.y // - oldDelta.y
-            m.py_center = center
+            m.calculatedCenter = center
         }
     }
 }
@@ -52,7 +52,7 @@ class FlowCalculator {
 
     func calculate() -> CGSize {
         var calculateChildren = [Measure]()
-        regulator.py_enumerateChild { m in
+        regulator.enumerateChild { m in
             if m.activated {
                 calculateChildren.append(m)
             }
@@ -141,7 +141,7 @@ private extension FlowCalculator {
         outside.padding = regulator.padding
         outside.reverse = regulator.reverse
         outside.size = regulator.size
-        outside.py_size = regulator.py_size
+        outside.calculatedSize = regulator.calculatedSize
         return outside
     }
 

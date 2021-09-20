@@ -12,7 +12,7 @@ public protocol MeasureDelegate: AnyObject {
 
     var py_center: CGPoint { get set }
 
-    func py_enumerateChild(_ block: (Measure) -> Void)
+    func enumerateChild(_ block: (Measure) -> Void)
 
     func py_sizeThatFits(_ size: CGSize) -> CGSize
 
@@ -20,7 +20,7 @@ public protocol MeasureDelegate: AnyObject {
 }
 
 /// 描述一个节点相对于父节点的属性
-public class Measure: MeasureDelegate {
+public class Measure {
     /// 虚拟目标计算节点
     var virtualDelegate = VirtualTarget()
 
@@ -97,46 +97,28 @@ public class Measure: MeasureDelegate {
         """
     }
 
-    public var py_size: CGSize = .zero
-//    {
-//        set {
-//            if getRealDelegate().py_size != newValue {
-//                getRealDelegate().py_size = newValue
-//            }
-//        }
-//        get {
-//            return getRealDelegate().py_size
-//        }
-//    }
+    public var calculatedSize: CGSize = .zero
 
-    public var py_center: CGPoint = .zero
-//    {
-//        set {
-//            getRealDelegate().py_center = newValue
-//        }
-//        get {
-//            return getRealDelegate().py_center
-//        }
-//    }
+    public var calculatedCenter: CGPoint = .zero
 
-    public func applyPosition() {
-        applyCenter()
-        applySize()
+    public func applyCalculatedPosition() {
+        applyCalculatedCenter()
+        applyCalculatedSize()
     }
 
-    public func applyCenter() {
-        getRealDelegate().py_center = py_center
+    public func applyCalculatedCenter() {
+        getRealDelegate().py_center = calculatedCenter
     }
 
-    public func applySize() {
-        getRealDelegate().py_size = py_size
+    public func applyCalculatedSize() {
+        getRealDelegate().py_size = calculatedSize
     }
 
-    public func py_enumerateChild(_ block: (Measure) -> Void) {
-        getRealDelegate().py_enumerateChild(block)
+    public func enumerateChild(_ block: (Measure) -> Void) {
+        getRealDelegate().enumerateChild(block)
     }
 
-    public func py_sizeThatFits(_ size: CGSize) -> CGSize {
+    public func sizeThatFits(_ size: CGSize) -> CGSize {
         return getRealDelegate().py_sizeThatFits(size)
     }
 
@@ -157,7 +139,7 @@ class VirtualTarget: MeasureDelegate {
 
     var py_center: CGPoint = .zero
 
-    func py_enumerateChild(_ block: (Measure) -> Void) {
+    func enumerateChild(_ block: (Measure) -> Void) {
         children.forEach(block)
     }
 

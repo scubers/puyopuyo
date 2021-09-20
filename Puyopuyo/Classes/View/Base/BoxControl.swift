@@ -49,8 +49,8 @@ public class BoxControl<R: Regulator> {
                 if regulator.size.height.isWrap {
                     residual.height = regulator.size.height.max - regulator.margin.getVertTotal()
                 }
-                regulator.py_size = Calculator.calculateIntrinsicSize(for: regulator, residual: residual, calculateChildrenImmediately: true)
-                regulator.applySize()
+                regulator.calculatedSize = Calculator.calculateIntrinsicSize(for: regulator, residual: residual, calculateChildrenImmediately: true)
+                regulator.applyCalculatedSize()
             } else {
                 /**
                  1. 当不需要布局控制自身大小时，意味着外部已经给本布局设置好了尺寸，即可以反推出当前布局可用的剩余空间
@@ -68,9 +68,9 @@ public class BoxControl<R: Regulator> {
                 _ = Calculator.calculateIntrinsicSize(for: regulator, residual: residual, calculateChildrenImmediately: true)
             }
             if isCenterControl {
-                let b = CGRect(origin: .zero, size: regulator.py_size)
-                regulator.py_center = CGPoint(x: b.midX + regulator.margin.left, y: b.midY + regulator.margin.top)
-                regulator.applyCenter()
+                let b = CGRect(origin: .zero, size: regulator.calculatedSize)
+                regulator.calculatedCenter = CGPoint(x: b.midX + regulator.margin.left, y: b.midY + regulator.margin.top)
+                regulator.applyCalculatedCenter()
             }
 
             if isScrollViewControl, let superview = view.superview as? UIScrollView {
@@ -79,9 +79,9 @@ public class BoxControl<R: Regulator> {
         }
 
         // 处理子节点的位置和大小
-        regulator.py_enumerateChild { m in
+        regulator.enumerateChild { m in
             if m.activated {
-                m.applyPosition()
+                m.applyCalculatedPosition()
             }
         }
 

@@ -32,16 +32,16 @@ class MeasureCalculator {
         if heightSize.isFixed { maxSize.height = heightSize.fixedValue }
 
         if measure.size.isWrap() {
-            let wrappedSize = measure.py_sizeThatFits(maxSize)
+            let wrappedSize = measure.sizeThatFits(maxSize)
             widthSize = .fix(min(widthSize.getWrapSize(by: wrappedSize.width), maxSize.width))
             heightSize = .fix(min(heightSize.getWrapSize(by: wrappedSize.height), maxSize.height))
 
         } else if widthSize.isWrap {
-            let wrappedCGSize = measure.py_sizeThatFits(maxSize)
+            let wrappedCGSize = measure.sizeThatFits(maxSize)
             widthSize = .fix(min(widthSize.getWrapSize(by: wrappedCGSize.width), maxSize.width))
 
         } else if heightSize.isWrap {
-            let wrappedCGSize = measure.py_sizeThatFits(maxSize)
+            let wrappedCGSize = measure.sizeThatFits(maxSize)
             heightSize = .fix(min(heightSize.getWrapSize(by: wrappedCGSize.height), maxSize.height))
         }
 

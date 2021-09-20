@@ -41,7 +41,7 @@ extension UIView: MeasureDelegate {
         }
     }
 
-    public func py_enumerateChild(_ block: (Measure) -> Void) {
+    public func enumerateChild(_ block: (Measure) -> Void) {
         subviews.map(\.py_measure).forEach(block)
     }
 
