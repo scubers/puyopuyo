@@ -40,7 +40,7 @@ public extension Eventable {
 // MARK: - Animator
 
 public protocol Animator {
-    func animate(view: UIView, layouting: @escaping () -> Void)
+    func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void)
 }
 
 public enum Animators {
@@ -51,14 +51,40 @@ public enum Animators {
     public static let `default`: Animator = DefaultAnimator()
 
     struct NonAnimator: Animator {
-        public func animate(view _: UIView, layouting: @escaping () -> Void) {
-            layouting()
+        func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
+            animations()
         }
     }
 
     struct DefaultAnimator: Animator {
-        func animate(view _: UIView, layouting: @escaping () -> Void) {
-            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 2, initialSpringVelocity: 5, options: .curveEaseOut, animations: layouting, completion: nil)
+        func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
+            UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 2, initialSpringVelocity: 5, options: .curveEaseOut, animations: animations, completion: nil)
+        }
+    }
+}
+
+public struct ExpandAnimator: Animator {
+    public init() {}
+    public func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
+        let realSize = delegate.py_size
+        let realCenter = delegate.py_center
+        let view = delegate as? UIView
+        if realSize != size || realCenter != center {
+            CATransaction.begin()
+            if realSize == .zero, realCenter == .zero {
+                // 第一次布局，center赋值
+                delegate.py_center = center
+                delegate.py_size = CGSize(width: size.width * 0.9, height: size.height * 0.9)
+                view?.layer.transform = CATransform3DMakeRotation(.pi / 8, 0, 0, 1)
+            }
+
+            UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 2, initialSpringVelocity: 5, options: [.curveEaseOut, .beginFromCurrentState, .transitionCrossDissolve, .overrideInheritedDuration], animations: {
+                animations()
+                view?.layer.transform = CATransform3DIdentity
+            }, completion: nil)
+            CATransaction.commit()
+        } else {
+            animations()
         }
     }
 }

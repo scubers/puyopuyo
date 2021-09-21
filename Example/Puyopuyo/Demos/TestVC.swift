@@ -31,41 +31,68 @@ class TestVC: BaseVC {
         
 //        zboxRatioTest().attach(vRoot)
         
-        let progress = State(CGFloat(1))
+        let message = State(false)
+        var v: UIView?
+        var vv: UIView?
+        
         vRoot.attach {
-            let progress = State(CGFloat(1))
-            DemoView<CGFloat>(
-                title: "Fixed size will overflow",
-                builder: {
-                    VBox().attach($0) {
-                        HBox().attach($0) {
-                            for i in 0 ..< 10 {
-                                Label.demo(i.description).attach($0)
-                                    .size(100, 100)
-                            }
-                        }
-                        .demo()
-                        .width(Outputs.combine($0.py_boundsState(), progress).map { r, v -> SizeDescription in
-                            .fix(r.width * v)
-                        })
-                        .space(8)
-
-                        UISlider().attach($0)
-                            .bind(keyPath: \.value, progress.map(Float.init))
-                            .onEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
-                            .width(.fill)
-                    }
-                    .width(.fill)
-                    .padding(all: 10)
-                    .view
-
-                },
-                selectors: [],
-                desc: ".fixed(value) size will ignore residual size, and overflow"
-            )
-            .attach($0)
-            .width(.fill)
+            MySwitch().attach($0)
+                .size(100, 30)
+            v = MessageView().attach($0)
+                .width(.fill)
+                .viewState(message.map { Message(isSelf: $0) })
+                .bind(keyPath: \.regulator.animation, Animators.default)
+                .view
+            
+            vv = UIButton(type: .contactAdd).attach($0)
+                .on(message) { v, value in
+                    v.layer.transform = value ? CATransform3DMakeRotation(CGFloat.pi / 4, 0, 0, 1) : CATransform3DIdentity
+                }
+                .view
         }
+        .onTap {
+//            Animators.default.animate(UIView(), size: .zero, center: .zero) {
+                message.input(value: !message.value)
+//                v?.layoutIfNeeded()
+//            }
+//            vv?.layer.transform = !message.value ? CATransform3DMakeRotation(CGFloat.pi / 4, 0, 0, 1) : CATransform3DIdentity
+        }
+        
+//        let progress = State(CGFloat(1))
+//        vRoot.attach {
+//            let progress = State(CGFloat(1))
+//            DemoView<CGFloat>(
+//                title: "Fixed size will overflow",
+//                builder: {
+//                    VBox().attach($0) {
+//                        HBox().attach($0) {
+//                            for i in 0 ..< 10 {
+//                                Label.demo(i.description).attach($0)
+//                                    .size(100, 100)
+//                            }
+//                        }
+//                        .demo()
+//                        .width(Outputs.combine($0.py_boundsState(), progress).map { r, v -> SizeDescription in
+//                            .fix(r.width * v)
+//                        })
+//                        .space(8)
+//
+//                        UISlider().attach($0)
+//                            .bind(keyPath: \.value, progress.map(Float.init))
+//                            .onEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
+//                            .width(.fill)
+//                    }
+//                    .width(.fill)
+//                    .padding(all: 10)
+//                    .view
+//
+//                },
+//                selectors: [],
+//                desc: ".fixed(value) size will ignore residual size, and overflow"
+//            )
+//            .attach($0)
+//            .width(.fill)
+//        }
     }
     
     func zboxRatioTest() -> UIView {
@@ -431,5 +458,23 @@ class TestVC: BaseVC {
     
     override func shouldRandomColor() -> Bool {
         true
+    }
+}
+
+class MySwitch: ZBox {
+    override func buildBody() {
+        let state = State(false)
+        attach {
+            UIView().attach($0)
+                .attach($0)
+                .size(30, 30)
+                .cornerRadius(15)
+                .backgroundColor(.black)
+                .alignment(state.map { $0 ? .right : .left })
+                .bind(keyPath: \.py_measure.animation, ExpandAnimator())
+        }
+        .onTap {
+            state.value = !state.value
+        }
     }
 }

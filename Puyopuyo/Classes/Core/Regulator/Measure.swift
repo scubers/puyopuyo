@@ -101,9 +101,39 @@ public class Measure {
 
     public var calculatedCenter: CGPoint = .zero
 
+    public var animation: Animator?
+
+    private var sizeChanged: Bool {
+        getRealDelegate().py_size != calculatedSize
+    }
+
+    private var centerChanged: Bool {
+        getRealDelegate().py_center != calculatedCenter
+    }
+
+    public func applyPosition(_ parentAnimator: Animator? = nil) {
+        let ani = animation ?? parentAnimator
+        if let ani = ani {
+            ani.animate(getRealDelegate(), size: calculatedSize, center: calculatedCenter, animations: {
+                self.applyCalculatedCenter()
+                self.applyCalculatedSize()
+            })
+        } else {
+            applyCalculatedCenter()
+            applyCalculatedSize()
+        }
+    }
+
     public func applyCalculatedPosition() {
-        applyCalculatedCenter()
-        applyCalculatedSize()
+        if let animation = animation {
+            animation.animate(getRealDelegate(), size: calculatedSize, center: calculatedCenter, animations: {
+                self.applyCalculatedCenter()
+                self.applyCalculatedSize()
+            })
+        } else {
+            applyCalculatedCenter()
+            applyCalculatedSize()
+        }
     }
 
     public func applyCalculatedCenter() {

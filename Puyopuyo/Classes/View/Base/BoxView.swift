@@ -54,6 +54,15 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable {
         layouting = false
     }
 
+    override open func layoutIfNeeded() {
+        if BoxUtil.isBox(superview), regulator.size.maybeWrap() {
+            // 需要父布局进行计算
+            superview?.layoutIfNeeded()
+        } else {
+            super.layoutIfNeeded()
+        }
+    }
+
     override open func sizeThatFits(_ size: CGSize) -> CGSize {
         return control.sizeThatFits(size, regulator: regulator)
     }

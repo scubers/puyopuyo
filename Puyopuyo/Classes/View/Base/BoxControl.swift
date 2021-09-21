@@ -15,16 +15,7 @@ public class BoxControl<R: Regulator> {
 
     public var animator: Animator = Animators.none
 
-    public func layoutSubviews(view: UIView, regulator: R) {
-        var layouted = false
-        animator.animate(view: view) {
-            self._layoutSubviews(view: view, regulator: regulator)
-            layouted = true
-        }
-        assert(layouted, "\(animator) should call `layouting` block!!!!")
-    }
-
-    private func _layoutSubviews(view: UIView, regulator: R) {
+    func layoutSubviews(view: UIView, regulator: R) {
         // 父视图为布局
         if isBox(view: view.superview) {
             /**
@@ -81,7 +72,7 @@ public class BoxControl<R: Regulator> {
         // 处理子节点的位置和大小
         regulator.enumerateChild { m in
             if m.activated {
-                m.applyCalculatedPosition()
+                m.applyPosition(regulator.animation)
             }
         }
 

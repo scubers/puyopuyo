@@ -231,6 +231,7 @@ class FlowPropertiesVC: BaseVC {
                 .onTap {
                     print("----")
                 }
+                .bind(keyPath: \.py_measure.animation, o.map { $0 % 2 == 0 ? ExpandAnimator() : nil })
                 .attach { v in
                     let doubleTap = UITapGestureRecognizer()
                     doubleTap.numberOfTapsRequired = 2
@@ -257,39 +258,12 @@ class FlowPropertiesVC: BaseVC {
         .view
     }
 
-    func getLabel(idx: Int) -> UIView {
-        let base: CGFloat = 40
-        let width = base + CGFloat(step.value * idx)
-        let v = Label.demo("\(idx + 1)").attach()
-            .backgroundColor(Util.randomColor())
-            .width(blockFix.value ? SizeDescription.fix(width) : .wrap(add: width))
-            .height(blockFix.value ? SizeDescription.fix(width) : .wrap(add: width))
-            .attach { v in
-                let doubleTap = UITapGestureRecognizer()
-                doubleTap.numberOfTapsRequired = 2
-                doubleTap.py_addAction {
-                    $0.view?.removeFromSuperview()
-                }
-                v.addGestureRecognizer(doubleTap)
-
-                let tap = UITapGestureRecognizer()
-                tap.require(toFail: doubleTap)
-                tap.py_addAction { g in
-                    guard let v = g.view else { return }
-                    v.attach().flowEnding(!v.py_measure.flowEnding)
-                }
-                v.addGestureRecognizer(tap)
-            }
-            .view
-
-        return v
-    }
-
     func getDemoFlow() -> UIView {
         UIScrollView().attach {
             getFlow().attach($0)
                 .arrangeCount(arrange)
-                .animator(Animators.default)
+//                .animator(Animators.default)
+                .bind(keyPath: \.regulator.animation, Animators.default)
                 .direction(direction)
                 .width(width)
                 .height(height)
