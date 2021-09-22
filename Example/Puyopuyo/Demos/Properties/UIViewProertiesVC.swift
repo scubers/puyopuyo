@@ -46,7 +46,7 @@ class UIViewProertiesVC: BaseVC {
                 .justifyContent(.center)
                 .size(.fill, 80)
                 .animator(Animators.default)
-                .view
+
             },
             selectors: [Selector(desc: "top", value: .top),
                         Selector(desc: "bottom", value: .bottom),
@@ -92,7 +92,7 @@ class UIViewProertiesVC: BaseVC {
                 .padding(all: 10)
                 .size(.fill, .wrap)
                 .animator(Animators.default)
-                .view
+
             },
             selectors: [Selector(desc: ".wrap", value: .wrap),
                         Selector(desc: ".wrap(add(10))", value: .wrap(add: 10)),
@@ -137,7 +137,7 @@ class UIViewProertiesVC: BaseVC {
                 .padding(all: 10)
                 .size(.fill, 400)
                 .animator(Animators.default)
-                .view
+
             },
             selectors: [Selector(desc: ".wrap", value: .wrap),
                         Selector(desc: ".wrap(add(10))", value: .wrap(add: 10)),
@@ -167,7 +167,6 @@ class UIViewProertiesVC: BaseVC {
                 .justifyContent(.center)
                 .size(.fill, 100)
                 .animator(Animators.default)
-                .view
             },
             selectors: [0, 10, 20, 30, 40].map { Selector(desc: "\($0)", value: $0) },
             selected: margin.value,

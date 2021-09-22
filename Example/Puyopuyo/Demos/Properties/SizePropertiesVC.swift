@@ -69,7 +69,6 @@ class SizePropertiesVC: BaseVC {
                 }
                 .width(.fill)
                 .padding(all: 10)
-                .view
             },
             selectors: [],
             desc: """
@@ -142,7 +141,7 @@ class SizePropertiesVC: BaseVC {
                 }
                 .width(.fill)
                 .padding(all: 10)
-                .view
+
             },
             selectors: [],
             desc: """
@@ -195,7 +194,6 @@ class SizePropertiesVC: BaseVC {
                 }
                 .width(.fill)
                 .padding(all: 10)
-                .view
             },
             selectors: [],
             desc: """
@@ -250,7 +248,7 @@ class SizePropertiesVC: BaseVC {
                 }
                 .width(.fill)
                 .padding(all: 10)
-                .view
+
             },
             selectors: [],
             desc: "Wrap has a priority value, wrap size will be compressed, priority is the value to control which view will be compressed first, the lower priority will be compressed first"
@@ -286,7 +284,7 @@ class SizePropertiesVC: BaseVC {
                 }
                 .width(.fill)
                 .padding(all: 10)
-                .view
+
             },
             selectors: [],
             desc: "Wrap size will wrap the content of the view, and calcaulate by the residual size, if residual size is smaller than content, view will be compress: There is 10 view above"
@@ -312,7 +310,7 @@ class SizePropertiesVC: BaseVC {
                 .width(.fill)
                 .height(80)
                 .space(8)
-                .view
+
             },
             selectors: [],
             desc: "If cross size is ratio, the view will take the part of the residual size, if .ratio(1), will be residual * 1, .ratio(2) will be residual * 2"
@@ -340,7 +338,7 @@ class SizePropertiesVC: BaseVC {
                 .demo()
                 .width(.fill)
                 .space(8)
-                .view
+
             },
             selectors: [],
             desc: ".ratio(value) size will fill up the residual size, if there are multiple ratio size, will separate by the ratio value. .fill == .ratio(1)"
@@ -375,7 +373,6 @@ class SizePropertiesVC: BaseVC {
                 }
                 .width(.fill)
                 .padding(all: 10)
-                .view
 
             },
             selectors: [],

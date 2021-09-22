@@ -65,7 +65,7 @@ class AdvanceVC: BaseVC {
                 .justifyContent(.center)
                 .size(.fill, 60)
                 .animator(Animators.default)
-                .view
+
             },
             selectors: [],
             desc: ""
@@ -91,7 +91,7 @@ class AdvanceVC: BaseVC {
                 .padding(all: 4)
                 .size(.fill, 240)
                 .runRowSize(.fill)
-                .view
+
             },
             selectors: [],
             desc: ""
@@ -130,7 +130,7 @@ class AdvanceVC: BaseVC {
                 .padding(all: 4)
                 .space(4)
                 .size(.fill, .wrap)
-                .view
+
             },
             selectors: [],
             desc: ""
