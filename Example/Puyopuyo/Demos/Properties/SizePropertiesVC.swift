@@ -32,10 +32,65 @@ class SizePropertiesVC: BaseVC {
                 wrapSizeAddMinMax().attach($0)
 
                 aspectRatio().attach($0)
+                complexSize().attach($0)
             }
         )
         .attach(vRoot)
         .size(.fill, .fill)
+    }
+
+    func complexSize() -> UIView {
+        let progress = State<CGFloat>(0.2)
+        let content = progress.map { Int(50 * $0) }.map { (0 ..< $0).map(\.description).joined() }
+
+        return DemoView<SizeDescription>(
+            title: "Complex size demo",
+            builder: {
+                VBox().attach($0) {
+                    HBox().attach($0) {
+                        Label.demo("").attach($0)
+                            .size(30, .fill)
+
+                        Label.demo("").attach($0)
+                            .width(.wrap(shrink: 1))
+                            .text(content.map { "\($0)\($0)" })
+
+                        Label.demo("").attach($0)
+                            .text(content.map { "wrap(min: 50, shrink: 1)\n\($0)" })
+                            .width(.wrap(max: 200, shrink: 1))
+                            .height(.wrap(max: 100))
+                            .aspectRatio(1 / 1)
+
+                        Label.demo("cross\n.fill").attach($0)
+                            .size(.wrap, .fill)
+
+                        Label.demo("stay").attach($0)
+                            .width(.wrap(priority: 2))
+                    }
+                    .demo()
+                    .width(.fill)
+                    .space(8)
+
+                    UISlider().attach($0)
+                        .bind(keyPath: \.value, progress.map(Float.init))
+                        .onEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
+                        .width(.fill)
+                }
+                .width(.fill)
+                .padding(all: 10)
+            },
+            selectors: [],
+            desc: """
+            1. w: 30, h: .fill
+            2. w: wrap(shrink: 1), h: wrap
+            3. w: wrap(max: 200, shrink: 1), h: wrap
+            4. w: wrap, h: fill
+            5. w: wrap(priority: 2), h: wrap
+            """
+        )
+        .attach()
+        .width(.fill)
+        .view
     }
 
     func wrapSizeAddMinMax() -> UIView {
