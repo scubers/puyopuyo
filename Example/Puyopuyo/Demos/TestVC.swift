@@ -41,7 +41,7 @@ class TestVC: BaseVC {
             v = MessageView().attach($0)
                 .width(.fill)
                 .viewState(message.map { Message(isSelf: $0) })
-                .animator(Animators.default)
+                .animator(Animators.default(duration: 1))
                 .view
             
             vv = UIButton(type: .contactAdd).attach($0)
@@ -50,6 +50,7 @@ class TestVC: BaseVC {
                 }
                 .view
         }
+        .animator(Animators.default)
         .onTap {
 //            Animators.default.animate(UIView(), size: .zero, center: .zero) {
             message.input(value: !message.value)

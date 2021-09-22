@@ -41,17 +41,22 @@ public extension Eventable {
 
 public protocol Animator {
     var duration: TimeInterval { get }
+    /// Animation can be nested, if you want a specify animation, make sure override the inheritedOptions,
+    /// see [UIView.AnimationOptions.overrideInheritedDuration, .overrideInherited*]
     func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void)
 }
 
 public extension Animator {
     func runAsNoneAnimation(_ action: @escaping () -> Void) {
-        let d = CATransaction.animationDuration()
-        if d > 0 {
+        if isNestedAnimation {
             UIView.animate(withDuration: 0, delay: 0, options: [.curveLinear, .overrideInheritedCurve, .overrideInheritedDuration], animations: action, completion: nil)
         } else {
             action()
         }
+    }
+
+    var isNestedAnimation: Bool {
+        CATransaction.animationDuration() > 0
     }
 }
 
@@ -61,7 +66,7 @@ public enum Animators {
 
     /// default animation
     public static let `default`: Animator = `default`()
-    
+
     public static func `default`(duration: TimeInterval = 0.3) -> Animator {
         DefaultAnimator(duration: duration)
     }
@@ -76,7 +81,7 @@ public enum Animators {
     struct DefaultAnimator: Animator {
         var duration: TimeInterval
         func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
-            UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 2, initialSpringVelocity: 5, options: .curveEaseOut, animations: animations, completion: nil)
+            UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 2, initialSpringVelocity: 5, options: [.curveEaseOut, .overrideInheritedCurve, .overrideInheritedOptions, .overrideInheritedDuration], animations: animations, completion: nil)
         }
     }
 }
@@ -102,7 +107,7 @@ public struct ExpandAnimator: Animator {
                 }
             }
 
-            UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 2, initialSpringVelocity: 5, options: [.curveEaseOut, .beginFromCurrentState, .transitionCrossDissolve, .overrideInheritedDuration], animations: {
+            UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 2, initialSpringVelocity: 5, options: [.curveEaseOut, .overrideInheritedOptions, .overrideInheritedDuration], animations: {
                 animations()
                 if realSize == .zero, realCenter == .zero {
                     view?.layer.transform = CATransform3DIdentity
