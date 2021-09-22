@@ -31,7 +31,9 @@ public extension Animator {
 }
 
 public enum Animators {
-    /// no animation
+    /// inherited animation
+    public static let inherited: Animator = InheritedAnimator()
+
     public static let none: Animator = NonAnimator()
 
     /// default animation
@@ -45,6 +47,13 @@ public enum Animators {
         var duration: TimeInterval = 0
         func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
             runAsNoneAnimation(animations)
+        }
+    }
+
+    struct InheritedAnimator: Animator {
+        var duration: TimeInterval = 0
+        func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
+            animations()
         }
     }
 

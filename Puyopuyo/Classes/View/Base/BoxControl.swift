@@ -29,7 +29,6 @@ public class BoxControl<R: Regulator> {
             }
         } else {
             // 父视图为普通视图
-            let ani = view.py_animator ?? Animators.none
             if isSizeControl {
                 /**
                  当需要控制自身大小时，剩余空间为父视图的所有空间
@@ -49,7 +48,7 @@ public class BoxControl<R: Regulator> {
                  2. 因为布局自身已经被限定尺寸大小，所以布局尺寸只能是撑满剩余空间
                  */
 
-                if regulator.size != Size(width: .fill, height: .fill) {
+                if !regulator.size.isRatio() {
                     Calculator.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
                     regulator.size = .init(width: .fill, height: .fill)
                 }
@@ -71,7 +70,7 @@ public class BoxControl<R: Regulator> {
         }
 
         // 获取最近的animator
-        let animator = view.py_animator ?? getInheritedBoxAnimator(view) ?? Animators.none
+        let animator = view.py_animator ?? getInheritedBoxAnimator(view) ?? Animators.inherited
         // 处理子节点的位置和大小
         animator.animate(view, size: regulator.calculatedSize, center: regulator.calculatedCenter) {
             view.subviews.forEach { v in
@@ -103,7 +102,7 @@ public class BoxControl<R: Regulator> {
 
         let animator = subView.py_animator
             ?? (animateChildren ? inheritedAnimator : nil)
-            ?? Animators.none
+            ?? Animators.inherited
 
         animator.animate(measure.getRealDelegate(), size: measure.calculatedSize, center: measure.calculatedCenter) {
             measure.applyCalculatedPosition()
