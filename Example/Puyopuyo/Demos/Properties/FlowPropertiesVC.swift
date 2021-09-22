@@ -236,7 +236,14 @@ class FlowPropertiesVC: BaseVC {
                 .onTap {
                     print("----")
                 }
-                .animator(o.map { $0 % 2 == 0 ? (ExpandAnimator() as Animator) : nil })
+                .animator(o.map { v -> Animator? in
+                    switch v % 3 {
+                    case 0: return ExpandAnimator() as Animator
+                    case 1: return SpinAnimator() as Animator
+                    case 2: return nil
+                    default: return nil
+                    }
+                })
                 .attach { v in
                     let doubleTap = UITapGestureRecognizer()
                     doubleTap.numberOfTapsRequired = 2
@@ -267,7 +274,7 @@ class FlowPropertiesVC: BaseVC {
         UIScrollView().attach {
             getFlow().attach($0)
                 .arrangeCount(arrange)
-                .animator(Animators.default(duration: 2))
+                .animator(Animators.default)
                 .direction(direction)
                 .width(width)
                 .height(height)

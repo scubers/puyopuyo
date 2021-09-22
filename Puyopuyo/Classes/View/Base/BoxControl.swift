@@ -72,11 +72,10 @@ public class BoxControl<R: Regulator> {
         // 获取最近的animator
         let animator = view.py_animator ?? getInheritedBoxAnimator(view) ?? Animators.inherited
         // 处理子节点的位置和大小
-        animator.animate(view, size: regulator.calculatedSize, center: regulator.calculatedCenter) {
-            view.subviews.forEach { v in
-                if v.py_measure.activated {
-                    self.applyViewPosition(v)
-                }
+
+        view.subviews.forEach { v in
+            if v.py_measure.activated {
+                self.applyViewPosition(v, inheritedAnimator: animator)
             }
         }
 
@@ -101,7 +100,7 @@ public class BoxControl<R: Regulator> {
         }
 
         let animator = subView.py_animator
-            ?? (animateChildren ? inheritedAnimator : nil)
+            ?? inheritedAnimator
             ?? Animators.inherited
 
         animator.animate(measure.getRealDelegate(), size: measure.calculatedSize, center: measure.calculatedCenter) {

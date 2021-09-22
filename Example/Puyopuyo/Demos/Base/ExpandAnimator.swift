@@ -40,3 +40,26 @@ public struct ExpandAnimator: Animator {
         }
     }
 }
+
+struct SpinAnimator: Animator {
+    var duration: TimeInterval { 0.5 }
+
+    func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
+        let isZero = delegate.isZero
+        let view = delegate as? UIView
+        if isZero {
+            runAsNoneAnimation {
+                delegate.py_center = center
+                delegate.py_size = size
+                view?.layer.transform = CATransform3DMakeRotation(.pi / 2, 0, 1, 0)
+            }
+        }
+
+        UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 2, initialSpringVelocity: 5, options: [.curveEaseOut, .overrideInheritedOptions, .overrideInheritedDuration], animations: {
+            animations()
+            if isZero {
+                view?.layer.transform = CATransform3DIdentity
+            }
+        }, completion: nil)
+    }
+}

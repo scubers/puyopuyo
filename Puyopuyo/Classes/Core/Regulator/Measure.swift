@@ -19,6 +19,10 @@ public protocol MeasureDelegate: AnyObject {
     func py_setNeedsRelayout()
 }
 
+public extension MeasureDelegate {
+    var isZero: Bool { py_center == .zero && py_size == .zero }
+}
+
 /// 描述一个节点相对于父节点的属性
 public class Measure {
     /// 虚拟目标计算节点
