@@ -14,7 +14,7 @@ open class NavigationBox: VBox, Stateful {
         public var navOffset = CGPoint.zero
         public var bodyAvoidNavBar = true
         public var backgroundColor: UIColor = .white
-        public var animator: Animator = Animators.default
+        public var animator: Animator? = Animators.default
         public var alpha: CGFloat = 1
         public var shadowOffset = CGSize(width: 0, height: 1)
         public var shadowColor: UIColor? = UIColor.lightGray.withAlphaComponent(0.5)

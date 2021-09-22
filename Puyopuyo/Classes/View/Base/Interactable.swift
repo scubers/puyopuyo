@@ -40,7 +40,19 @@ public extension Eventable {
 // MARK: - Animator
 
 public protocol Animator {
+    var duration: TimeInterval { get }
     func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void)
+}
+
+public extension Animator {
+    func runAsNoneAnimation(_ action: @escaping () -> Void) {
+        let d = CATransaction.animationDuration()
+        if d > 0 {
+            UIView.animate(withDuration: 0, delay: 0, options: [.curveLinear, .overrideInheritedCurve, .overrideInheritedDuration], animations: action, completion: nil)
+        } else {
+            action()
+        }
+    }
 }
 
 public enum Animators {
@@ -48,23 +60,33 @@ public enum Animators {
     public static let none: Animator = NonAnimator()
 
     /// default animation
-    public static let `default`: Animator = DefaultAnimator()
+    public static let `default`: Animator = `default`()
+    
+    public static func `default`(duration: TimeInterval = 0.3) -> Animator {
+        DefaultAnimator(duration: duration)
+    }
 
     struct NonAnimator: Animator {
+        var duration: TimeInterval = 0
         func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
             animations()
         }
     }
 
     struct DefaultAnimator: Animator {
+        var duration: TimeInterval
         func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
-            UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 2, initialSpringVelocity: 5, options: .curveEaseOut, animations: animations, completion: nil)
+            UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 2, initialSpringVelocity: 5, options: .curveEaseOut, animations: animations, completion: nil)
         }
     }
 }
 
 public struct ExpandAnimator: Animator {
-    public init() {}
+    public init(duration: TimeInterval = 0.3) {
+        self.duration = duration
+    }
+
+    public var duration: TimeInterval
     public func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
         let realSize = delegate.py_size
         let realCenter = delegate.py_center
@@ -73,14 +95,19 @@ public struct ExpandAnimator: Animator {
             CATransaction.begin()
             if realSize == .zero, realCenter == .zero {
                 // 第一次布局，center赋值
-                delegate.py_center = center
-                delegate.py_size = CGSize(width: size.width * 0.9, height: size.height * 0.9)
-                view?.layer.transform = CATransform3DMakeRotation(.pi / 8, 0, 0, 1)
+                runAsNoneAnimation {
+                    delegate.py_center = center
+                    delegate.py_size = CGSize(width: size.width * 0.9, height: size.height * 0.9)
+                    view?.layer.transform = CATransform3DMakeRotation(.pi / 8, 0, 0, 1)
+                }
             }
 
-            UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 2, initialSpringVelocity: 5, options: [.curveEaseOut, .beginFromCurrentState, .transitionCrossDissolve, .overrideInheritedDuration], animations: {
+            UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 2, initialSpringVelocity: 5, options: [.curveEaseOut, .beginFromCurrentState, .transitionCrossDissolve, .overrideInheritedDuration], animations: {
                 animations()
-                view?.layer.transform = CATransform3DIdentity
+                if realSize == .zero, realCenter == .zero {
+                    view?.layer.transform = CATransform3DIdentity
+                }
+
             }, completion: nil)
             CATransaction.commit()
         } else {

@@ -41,7 +41,7 @@ class TestVC: BaseVC {
             v = MessageView().attach($0)
                 .width(.fill)
                 .viewState(message.map { Message(isSelf: $0) })
-                .bind(keyPath: \.regulator.animation, Animators.default)
+                .animator(Animators.default)
                 .view
             
             vv = UIButton(type: .contactAdd).attach($0)
@@ -52,7 +52,7 @@ class TestVC: BaseVC {
         }
         .onTap {
 //            Animators.default.animate(UIView(), size: .zero, center: .zero) {
-                message.input(value: !message.value)
+            message.input(value: !message.value)
 //                v?.layoutIfNeeded()
 //            }
 //            vv?.layer.transform = !message.value ? CATransform3DMakeRotation(CGFloat.pi / 4, 0, 0, 1) : CATransform3DIdentity
@@ -471,7 +471,7 @@ class MySwitch: ZBox {
                 .cornerRadius(15)
                 .backgroundColor(.black)
                 .alignment(state.map { $0 ? .right : .left })
-                .bind(keyPath: \.py_measure.animation, ExpandAnimator())
+                .animator(ExpandAnimator())
         }
         .onTap {
             state.value = !state.value

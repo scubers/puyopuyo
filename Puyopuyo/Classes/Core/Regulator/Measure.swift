@@ -101,47 +101,31 @@ public class Measure {
 
     public var calculatedCenter: CGPoint = .zero
 
-    public var animation: Animator?
-
-    private var sizeChanged: Bool {
+    var sizeChanged: Bool {
         getRealDelegate().py_size != calculatedSize
     }
 
-    private var centerChanged: Bool {
+    var centerChanged: Bool {
         getRealDelegate().py_center != calculatedCenter
     }
 
-    public func applyPosition(_ parentAnimator: Animator? = nil) {
-        let ani = animation ?? parentAnimator
-        if let ani = ani {
-            ani.animate(getRealDelegate(), size: calculatedSize, center: calculatedCenter, animations: {
-                self.applyCalculatedCenter()
-                self.applyCalculatedSize()
-            })
-        } else {
-            applyCalculatedCenter()
-            applyCalculatedSize()
-        }
-    }
-
     public func applyCalculatedPosition() {
-        if let animation = animation {
-            animation.animate(getRealDelegate(), size: calculatedSize, center: calculatedCenter, animations: {
-                self.applyCalculatedCenter()
-                self.applyCalculatedSize()
-            })
-        } else {
+        if sizeChanged || centerChanged {
             applyCalculatedCenter()
             applyCalculatedSize()
         }
     }
 
     public func applyCalculatedCenter() {
-        getRealDelegate().py_center = calculatedCenter
+        if centerChanged {
+            getRealDelegate().py_center = calculatedCenter
+        }
     }
 
     public func applyCalculatedSize() {
-        getRealDelegate().py_size = calculatedSize
+        if sizeChanged {
+            getRealDelegate().py_size = calculatedSize
+        }
     }
 
     public func enumerateChild(_ block: (Measure) -> Void) {

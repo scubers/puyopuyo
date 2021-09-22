@@ -13,7 +13,7 @@ public class BoxControl<R: Regulator> {
     public var isCenterControl = true
     public var isSizeControl = true
 
-    public var animator: Animator = Animators.none
+    public var animateChildren = false
 
     func layoutSubviews(view: UIView, regulator: R) {
         // 父视图为布局
@@ -70,14 +70,29 @@ public class BoxControl<R: Regulator> {
         }
 
         // 处理子节点的位置和大小
-        regulator.enumerateChild { m in
-            if m.activated {
-                m.applyPosition(regulator.animation)
+        view.subviews.forEach { v in
+            if v.py_measure.activated {
+                applyViewPosition(v)
             }
         }
 
         // 更新边线
         _updatingBorders(view: view)
+    }
+
+    private func applyViewPosition(_ subView: UIView, inheritedAnimator: Animator? = nil) {
+        let measure = subView.py_measure
+        guard measure.sizeChanged || measure.centerChanged else {
+            return
+        }
+
+        let animator = subView.py_animator
+            ?? (animateChildren ? inheritedAnimator : nil)
+            ?? Animators.none
+
+        animator.animate(measure.getRealDelegate(), size: measure.calculatedSize, center: measure.calculatedCenter) {
+            measure.applyCalculatedPosition()
+        }
     }
 
     private var positionControlDisposable: Disposer?

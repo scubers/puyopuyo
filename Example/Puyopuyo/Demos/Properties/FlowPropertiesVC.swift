@@ -48,6 +48,9 @@ class FlowPropertiesVC: BaseVC {
     func increase() {
         let last = elements.value.last ?? 0
         elements.value.append(last + 1)
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseOut, animations: {
+            self.flowView?.layoutIfNeeded()
+        }, completion: nil)
     }
 
     func toggleEndings(_ value: Int) {
@@ -208,6 +211,8 @@ class FlowPropertiesVC: BaseVC {
         }
     }
 
+    private var flowView: UIView?
+
     func getFlow() -> FlowBox {
         let this = WeakCatcher(value: self)
         return VFlowRecycle<Int> { [weak self] o, i in
@@ -231,7 +236,8 @@ class FlowPropertiesVC: BaseVC {
                 .onTap {
                     print("----")
                 }
-                .bind(keyPath: \.py_measure.animation, o.map { $0 % 2 == 0 ? ExpandAnimator() : nil })
+//                .animator(o.map { $0 % 2 == 0 ? ExpandAnimator() : nil })
+                .bind(keyPath: \.py_animator, o.map { $0 % 2 == 0 ? ExpandAnimator() : Animators.default(duration: 1) })
                 .attach { v in
                     let doubleTap = UITapGestureRecognizer()
                     doubleTap.numberOfTapsRequired = 2
@@ -262,8 +268,8 @@ class FlowPropertiesVC: BaseVC {
         UIScrollView().attach {
             getFlow().attach($0)
                 .arrangeCount(arrange)
-//                .animator(Animators.default)
-                .bind(keyPath: \.regulator.animation, Animators.default)
+                .animator(Animators.default)
+//                .bind(keyPath: \.py_animator, Animators.default)
                 .direction(direction)
                 .width(width)
                 .height(height)

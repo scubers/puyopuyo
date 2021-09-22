@@ -11,17 +11,6 @@ import Foundation
 
 public extension Puyo where T: Boxable & UIView {
     @discardableResult
-    func animator(_ animator: Animator) -> Self {
-        view.control.animator = animator
-        return self
-    }
-
-    @discardableResult
-    func animator<O: Outputing>(_ animator: O) -> Self where O.OutputType == Animator {
-        bind(keyPath: \T.control.animator, animator)
-    }
-
-    @discardableResult
     func padding(all: CGFloatable? = nil,
                  horz: CGFloatable? = nil,
                  vert: CGFloatable? = nil,

@@ -233,3 +233,17 @@ public extension Puyo where T: UIView {
         bind(keyPath: \T.py_measure.activated, activated)
     }
 }
+
+// MARK: - Animator
+
+public extension Puyo where T: UIView {
+    @discardableResult
+    func animator(_ animator: Animator?) -> Self {
+        bind(keyPath: \T.py_animator, animator)
+    }
+
+    @discardableResult
+    func animator<O: Outputing>(_ animator: O) -> Self where O.OutputType: OptionalableValueType, O.OutputType.Wrap == Animator {
+        bind(keyPath: \T.py_animator, animator.mapWrappedValue())
+    }
+}

@@ -60,6 +60,16 @@ extension UIView: MeasureDelegate {
 // MARK: - UIView ext methods
 
 public extension UIView {
+    private static var py_animatorKey = "py_animatorKey"
+    var py_animator: Animator? {
+        set {
+            objc_setAssociatedObject(self, &UIView.py_animatorKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        get {
+            objc_getAssociatedObject(self, &UIView.py_animatorKey) as? Animator
+        }
+    }
+
     var py_visibility: Visibility {
         set {
             // hidden
