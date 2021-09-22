@@ -18,7 +18,7 @@ class DemoView<T: Equatable>: VBox, Eventable, Stateful {
     var title: String
     var desc: String
     var selectors: [Selector<T>]
-    init(title: String, builder: ViewBuilder, selectors: [Selector<T>], selected: T? = nil, desc: String = "") {
+    init(title: String, builder: (UIView) -> Void, selectors: [Selector<T>], selected: T? = nil, desc: String = "") {
         self.title = title
         self.selectors = selectors
         self.desc = desc
@@ -31,7 +31,7 @@ class DemoView<T: Equatable>: VBox, Eventable, Stateful {
                 .backgroundColor(.black.withAlphaComponent(0.2))
             
             ZBox().attach($0) {
-                builder($0).attach($0)
+                builder($0)
             }
             .backgroundColor(Theme.card)
             .width(.fill)

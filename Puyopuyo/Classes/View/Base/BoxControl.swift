@@ -160,7 +160,7 @@ public class BoxControl<R: Regulator> {
 
     public func control(scrollView: UIScrollView?, by view: UIView, regulator: R) {
         guard let scrollView = scrollView else { return }
-        let newSize = view.bounds.size
+        let newSize = regulator.calculatedSize
         // 控制父视图的scroll
         if regulator.size.width.isWrap {
             scrollView.contentSize.width = newSize.width + regulator.margin.left + regulator.margin.right

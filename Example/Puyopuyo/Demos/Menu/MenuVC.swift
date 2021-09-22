@@ -17,6 +17,7 @@ class MenuVC: BaseVC {
     let dataSrouce: [(String, () -> UIViewController)] = [
         ("Test", { TestVC() }),
         ("Chat", { ChatVC() }),
+        ("Animation", { AnimationVC() }),
         ("Size Properties", { SizePropertiesVC() }),
         ("LinearBox Properties", { LinearPropertiesVC() }),
         ("UIView Properties", { UIViewProertiesVC() }),

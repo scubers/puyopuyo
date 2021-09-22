@@ -15,6 +15,7 @@
 		095E422326F50B0000D6B88C /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095E422226F50B0000D6B88C /* ChatVC.swift */; };
 		0972D40526C576D200210D1C /* ShadowStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0972D40426C576D200210D1C /* ShadowStyle.swift */; };
 		0982C1A02469AF730070F104 /* RecycleBoxPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */; };
+		098AA9F126FB6F0F00C53AA2 /* AnimationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098AA9F026FB6F0F00C53AA2 /* AnimationVC.swift */; };
 		09AD0CBD26DD064E008231F1 /* TestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AD0CBC26DD064E008231F1 /* TestVC.swift */; };
 		09F6FF172471A1F300F97053 /* SequenceBoxPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F6FF162471A1F300F97053 /* SequenceBoxPropertiesVC.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
@@ -63,6 +64,7 @@
 		0972D40426C576D200210D1C /* ShadowStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowStyle.swift; sourceTree = "<group>"; };
 		097B22AE2441F6290043B0A5 /* Puyopuyo_Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Puyopuyo_Example.entitlements; sourceTree = "<group>"; };
 		0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecycleBoxPropertiesVC.swift; sourceTree = "<group>"; };
+		098AA9F026FB6F0F00C53AA2 /* AnimationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationVC.swift; sourceTree = "<group>"; };
 		09AD0CBC26DD064E008231F1 /* TestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVC.swift; sourceTree = "<group>"; };
 		09F6FF162471A1F300F97053 /* SequenceBoxPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequenceBoxPropertiesVC.swift; sourceTree = "<group>"; };
 		3324E3ECDF4649B3EFDB8B1A /* Puyopuyo.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Puyopuyo.podspec; path = ../Puyopuyo.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
@@ -142,6 +144,14 @@
 				095E422226F50B0000D6B88C /* ChatVC.swift */,
 			);
 			path = Chat;
+			sourceTree = "<group>";
+		};
+		098AA9EF26FB6F0400C53AA2 /* Animation */ = {
+			isa = PBXGroup;
+			children = (
+				098AA9F026FB6F0F00C53AA2 /* AnimationVC.swift */,
+			);
+			path = Animation;
 			sourceTree = "<group>";
 		};
 		0C5282B985C6C1A8396298C0 /* Pods */ = {
@@ -260,6 +270,7 @@
 		A8D9430222FF360B002E487F /* Demos */ = {
 			isa = PBXGroup;
 			children = (
+				098AA9EF26FB6F0400C53AA2 /* Animation */,
 				095E422126F50AF900D6B88C /* Chat */,
 				0915661126F46D37007EBB05 /* ShowCase */,
 				0910C08B26E45A2D0048D5C8 /* Feed */,
@@ -362,7 +373,7 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = FJ535WN7FW;
+						DevelopmentTeam = 462J8VB29Y;
 						LastSwiftMigration = 1130;
 					};
 					607FACE41AFB9204008FA782 = {
@@ -503,6 +514,7 @@
 				A84E5CC1239EB5AC0091D39B /* ZPropertiesVC.swift in Sources */,
 				A8E53FB322C8E679000B2B6D /* BaseVC.swift in Sources */,
 				0982C1A02469AF730070F104 /* RecycleBoxPropertiesVC.swift in Sources */,
+				098AA9F126FB6F0F00C53AA2 /* AnimationVC.swift in Sources */,
 				A8E53FB522C8E6BB000B2B6D /* MenuVC.swift in Sources */,
 				A897FCDE230AFBD80061029E /* Util.swift in Sources */,
 				A8D9430922FF3694002E487F /* Label.swift in Sources */,
@@ -667,7 +679,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Puyopuyo_Example.entitlements;
-				DEVELOPMENT_TEAM = FJ535WN7FW;
+				DEVELOPMENT_TEAM = 462J8VB29Y;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Puyopuyo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;

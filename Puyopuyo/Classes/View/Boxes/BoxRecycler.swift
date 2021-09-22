@@ -207,6 +207,10 @@ extension BoxRecycler where Self: Boxable & UIView, StateType == [Data] {
             addSubview(context.view)
             context.state.input(value: (idx, element))
         }
+
+        if diff.isDifferent() {
+            setNeedsLayout()
+        }
     }
 
     private func recycleContext(_ context: Context<Data>) {
@@ -268,6 +272,7 @@ extension BoxRecycler where Self: Boxable & UIView, StateType == [Data] {
                 container.freeMap.append(c)
             }
         }
+        setNeedsLayout()
     }
 }
 
