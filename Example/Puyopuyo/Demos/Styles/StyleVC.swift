@@ -6,23 +6,20 @@
 //  Copyright © 2019 CocoaPods. All rights reserved.
 //
 
-import UIKit
 import Puyopuyo
+import UIKit
 
 class StyleVC: BaseVC {
-    
     var styleSheet: StyleSheet {
         return StyleSheet(styles: [
             (\UIView.layer.cornerRadius).getStyle(with: 10),
             (\UIView.clipsToBounds).getStyle(with: true),
-            (\UIView.backgroundColor).getStyle(with: .brown),
+            (\UIView.backgroundColor).getStyle(with: Theme.accentColor),
             (\UIView.layer.borderWidth).getStyle(with: 1),
-            (\UIView.layer.borderColor).getStyle(with: UIColor.purple.cgColor),
             (\UIView.py_measure.size).getStyle(with: Size(width: .fix(200), height: .fix(50))),
             UIFont.systemFont(ofSize: 16),
             TextColorStyle(value: .black, state: .normal),
-            TextColorStyle(value: .red, state: .highlighted),
-//            TapSelectStyle(animated: true)
+            TextColorStyle(value: .white, state: .highlighted)
         ])
     }
     
@@ -30,60 +27,69 @@ class StyleVC: BaseVC {
     
     var selectableSheet: StyleSheet {
         return StyleSheet(styles: [
-            TapSelectStyle(normal: self.styleSheet,
-                           selected: self.styleSheet.combine([
-                                (\UIView.backgroundColor).getStyle(with: UIColor.purple)
+            TapSelectStyle(normal: styleSheet,
+                           selected: styleSheet.combine([
+                               (\UIView.backgroundColor).getStyle(with: UIColor.systemPink)
                            ]),
-                           toggle: self.toggle.asOutput())
+                           toggle: toggle.asOutput())
         ])
     }
     
     override func configView() {
-        
-        vRoot.attach() {
-            
-            UIButton().attach($0)
-                .text("normal", state: .normal)
-                .onTap(to: self, { (self, _) in
-                    self.toggle.value = !self.toggle.value
-                })
-                .styleSheet(self.styleSheet)
-            
-            UIButton().attach($0)
-                .text("ripple", state: .normal)
-                .styleSheet(self.selectableSheet.combine([
-                    TapRippleStyle()
-                ]))
-                .onTap(to: self, { (self, g) in
-                    print("ripple")
-                })
-            
-            UIButton().attach($0)
-                .text("Cover", state: .normal)
-                .styleSheet(self.selectableSheet.combine([
-                    TapCoverStyle(),
-                ]))
-                .onTap(to: self, { (self, _) in
-                    print("cover")
-                })
-            
-            Label("scale").attach($0)
-                .onTap(to: self, { (self, _) in
-                    print("scale")
-                })
-                .styleSheet(self.selectableSheet.combine([
-                    TapTransformStyle()
-                ]))
-            
-            Label("ripple + Cover + scale").attach($0)
-                .onTap(to: self, { (self, _) in
-                    print("ripple + cover + scale")
-                })
-                .styleSheet(self.selectableSheet.combine([
-                    TapCoverStyle(),
-                    TapRippleStyle(color: UIColor.red.withAlphaComponent(0.5)),
-                    TapTransformStyle()
-                ]))
+        vRoot.attach {
+            DemoScroll {
+                UILabel().attach($0)
+                    .fontSize(20, weight: .bold)
+                    .text("""
+                    Puyo provide a Style protocol to do some decoration works.
+                    """)
+                    .numberOfLines(0)
+                
+                UIButton().attach($0)
+                    .text("normal", state: .normal)
+                    .onTap(to: self) { this, _ in
+                        this.toggle.value = !this.toggle.value
+                    }
+                    .styleSheet(styleSheet)
+                
+                UIButton().attach($0)
+                    .text("ripple", state: .normal)
+                    .styleSheet(selectableSheet.combine([
+                        TapRippleStyle()
+                    ]))
+                    .onTap {
+                        print("ripple")
+                    }
+                
+                UIButton().attach($0)
+                    .text("Cover", state: .normal)
+                    .styleSheet(selectableSheet.combine([
+                        TapCoverStyle()
+                    ]))
+                    .onTap {
+                        print("cover")
+                    }
+                
+                Label("scale").attach($0)
+                    .onTap {
+                        print("scale")
+                    }
+                    .styleSheet(selectableSheet.combine([
+                        TapTransformStyle()
+                    ]))
+                
+                Label("ripple + Cover + scale").attach($0)
+                    .onTap {
+                        print("ripple + cover + scale")
+                    }
+                    .styleSheet(selectableSheet.combine([
+                        TapCoverStyle(),
+                        TapRippleStyle(color: UIColor.red.withAlphaComponent(0.5)),
+                        TapTransformStyle()
+                    ]))
+            }
+            .attach($0)
+            .size(.fill, .fill)
         }
         .styles([
             TapRippleStyle()
@@ -93,16 +99,15 @@ class StyleVC: BaseVC {
         .justifyContent(.center)
     }
     
-
     /*
-    // MARK: - Navigation
+     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
+     // In a storyboard-based application, you will often want to do a little preparation before navigation
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+         // Get the new view controller using segue.destination.
+         // Pass the selected object to the new view controller.
+     }
+     */
 
     override func shouldRandomColor() -> Bool {
         return false

@@ -22,6 +22,7 @@ class MenuVC: BaseVC {
         ("FlowBox Properties", { FlowPropertiesVC() }),
         ("ZBox Properties", { ZPropertiesVC() }),
         ("Animation", { AnimationVC() }),
+        ("Style", { StyleVC() }),
         ("Chat", { ChatVC() }),
         ("Feed", { FeedVC() }),
         ("RecycleBox Properties", { RecycleBoxPropertiesVC() }),
