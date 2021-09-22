@@ -36,13 +36,13 @@ class AnimationVC: BaseVC {
                 """)
                 .numberOfLines(0)
 
+            controlWillAppearAnimation().attach($0)
+
             layoutIfNeededDemo().attach($0)
 
             sizeInsensitiveAnimation().attach($0)
 
             buildInAnimation().attach($0)
-
-            controlWillAppearAnimation().attach($0)
         }
         .attach(vRoot)
         .size(.fill, .fill)
@@ -50,6 +50,7 @@ class AnimationVC: BaseVC {
 
     func controlWillAppearAnimation() -> UIView {
         let elements = State<[Int]>((0 ..< 3).map { $0 })
+        let reverse = State(false)
 
         func increase() {
             elements.value.append(elements.value.count)
@@ -68,6 +69,7 @@ class AnimationVC: BaseVC {
                         .view
                 }
                 .attach($0)
+                .reverse(reverse)
                 .space(4)
                 .viewState(elements)
                 .demo()

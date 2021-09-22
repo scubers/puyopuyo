@@ -114,22 +114,16 @@ public class Measure {
     }
 
     public func applyCalculatedPosition() {
-        if sizeChanged || centerChanged {
-            applyCalculatedCenter()
-            applyCalculatedSize()
-        }
+        applyCalculatedCenter()
+        applyCalculatedSize()
     }
 
     public func applyCalculatedCenter() {
-        if centerChanged {
-            getRealDelegate().py_center = calculatedCenter
-        }
+        getRealDelegate().py_center = calculatedCenter
     }
 
     public func applyCalculatedSize() {
-        if sizeChanged {
-            getRealDelegate().py_size = calculatedSize
-        }
+        getRealDelegate().py_size = calculatedSize
     }
 
     public func enumerateChild(_ block: (Measure) -> Void) {

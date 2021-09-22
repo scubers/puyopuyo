@@ -16,16 +16,16 @@ class MenuVC: BaseVC {
 
     let dataSrouce: [(String, () -> UIViewController)] = [
         ("Test", { TestVC() }),
-        ("Chat", { ChatVC() }),
-        ("Animation", { AnimationVC() }),
-        ("Size Properties", { SizePropertiesVC() }),
-        ("LinearBox Properties", { LinearPropertiesVC() }),
         ("UIView Properties", { UIViewProertiesVC() }),
+        ("LinearBox Properties", { LinearPropertiesVC() }),
+        ("Size Properties", { SizePropertiesVC() }),
         ("FlowBox Properties", { FlowPropertiesVC() }),
         ("ZBox Properties", { ZPropertiesVC() }),
+        ("Animation", { AnimationVC() }),
+        ("Chat", { ChatVC() }),
+        ("Feed", { FeedVC() }),
         ("RecycleBox Properties", { RecycleBoxPropertiesVC() }),
         ("SequenceBox Properties", { SequenceBoxPropertiesVC() }),
-        ("Feed", { FeedVC() }),
         ("Advance Usage", { AdvanceVC() }),
     ]
 

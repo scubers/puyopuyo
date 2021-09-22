@@ -24,8 +24,9 @@ public struct ExpandAnimator: Animator {
                 // 第一次布局，center赋值
                 runAsNoneAnimation {
                     delegate.py_center = center
-                    delegate.py_size = CGSize(width: size.width * 0.9, height: size.height * 0.9)
-                    view?.layer.transform = CATransform3DMakeRotation(.pi / 8, 0, 0, 1)
+                    let scale: CGFloat = 0.5
+                    delegate.py_size = CGSize(width: size.width * scale, height: size.height * scale)
+                    view?.layer.transform = CATransform3DMakeRotation(.pi / 8 + .pi, 0, 0, 1)
                 }
             }
 
