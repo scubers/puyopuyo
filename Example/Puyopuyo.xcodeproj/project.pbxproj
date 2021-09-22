@@ -359,7 +359,7 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = 462J8VB29Y;
+						DevelopmentTeam = FJ535WN7FW;
 						LastSwiftMigration = 1130;
 					};
 					607FACE41AFB9204008FA782 = {
@@ -663,13 +663,13 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Puyopuyo_Example.entitlements;
-				DEVELOPMENT_TEAM = 462J8VB29Y;
+				DEVELOPMENT_TEAM = FJ535WN7FW;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Puyopuyo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.Puyopuyo-Example11122233";
+				PRODUCT_BUNDLE_IDENTIFIER = org.cocoapods.demo.Puyopuyo11;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Puyopuyo/Puyopuyo_Example-Bridging-Header.h";
