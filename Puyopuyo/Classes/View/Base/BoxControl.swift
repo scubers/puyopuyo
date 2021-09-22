@@ -41,7 +41,6 @@ public class BoxControl<R: Regulator> {
                     residual.height = regulator.size.height.max - regulator.margin.getVertTotal()
                 }
                 regulator.calculatedSize = Calculator.calculateIntrinsicSize(for: regulator, residual: residual, calculateChildrenImmediately: true)
-                regulator.applyCalculatedSize()
             } else {
                 /**
                  1. 当不需要布局控制自身大小时，意味着外部已经给本布局设置好了尺寸，即可以反推出当前布局可用的剩余空间
@@ -56,16 +55,26 @@ public class BoxControl<R: Regulator> {
                 residual.width += regulator.margin.getHorzTotal()
                 residual.height += regulator.margin.getVertTotal()
 
-                _ = Calculator.calculateIntrinsicSize(for: regulator, residual: residual, calculateChildrenImmediately: true)
+                regulator.calculatedSize = Calculator.calculateIntrinsicSize(for: regulator, residual: residual, calculateChildrenImmediately: true)
             }
             if isCenterControl {
                 let b = CGRect(origin: .zero, size: regulator.calculatedSize)
                 regulator.calculatedCenter = CGPoint(x: b.midX + regulator.margin.left, y: b.midY + regulator.margin.top)
-                regulator.applyCalculatedCenter()
             }
 
             if isScrollViewControl, let superview = view.superview as? UIScrollView {
                 control(scrollView: superview, by: view, regulator: regulator)
+            }
+
+            let animator = view.py_animator ?? Animators.inherited
+
+            animator.animate(view, size: regulator.calculatedSize, center: regulator.calculatedCenter) {
+                if self.isSizeControl {
+                    regulator.applyCalculatedSize()
+                }
+                if self.isCenterControl {
+                    regulator.applyCalculatedCenter()
+                }
             }
         }
 
