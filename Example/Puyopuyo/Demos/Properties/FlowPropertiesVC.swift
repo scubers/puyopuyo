@@ -278,7 +278,7 @@ class FlowPropertiesVC: BaseVC {
                 .runFormat(runFormat)
                 .justifyContent(justifyContent)
                 .padding(all: padding)
-                .backgroundColor(UIColor.lightGray.withAlphaComponent(0.5))
+                .backgroundColor(.lightGray.withAlphaComponent(0.5))
                 .autoJudgeScroll(true)
         }
         .view

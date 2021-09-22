@@ -29,6 +29,7 @@ public class BoxControl<R: Regulator> {
             }
         } else {
             // 父视图为普通视图
+            let ani = view.py_animator ?? Animators.none
             if isSizeControl {
                 /**
                  当需要控制自身大小时，剩余空间为父视图的所有空间
@@ -48,7 +49,7 @@ public class BoxControl<R: Regulator> {
                  2. 因为布局自身已经被限定尺寸大小，所以布局尺寸只能是撑满剩余空间
                  */
 
-                if !regulator.size.isRatio() {
+                if regulator.size != Size(width: .fill, height: .fill) {
                     Calculator.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
                     regulator.size = .init(width: .fill, height: .fill)
                 }
