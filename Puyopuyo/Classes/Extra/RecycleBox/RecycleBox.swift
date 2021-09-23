@@ -115,7 +115,7 @@ open class RecycleBox: UICollectionView,
         
         super.init(frame: .zero, collectionViewLayout: layout)
         
-        self.enableDiff = diff
+        enableDiff = diff
         delegateProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
         dataSourceProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
         backgroundColor = .clear
@@ -130,10 +130,10 @@ open class RecycleBox: UICollectionView,
             this.reload(sections: s)
         }
         
-        py_boundsState().map(\.size).distinct().safeBind(to: self) { this, _ in
-            DispatchQueue.main.async {
-                this.flowLayout.invalidateLayout()
-            }
+        py_boundsState().map(\.size).distinct().debounce().safeBind(to: self) { this, _ in
+//            DispatchQueue.main.async {
+            this.flowLayout.invalidateLayout()
+//            }
         }
     }
     
