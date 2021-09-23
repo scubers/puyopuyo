@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol SpecificValueable {
+public protocol SpecificValueable: AnyObject {
     associatedtype SpecificValue
-    var specificValue: SpecificValue { get }
+    var specificValue: SpecificValue { get set }
 }

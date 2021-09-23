@@ -16,7 +16,10 @@ public class State<Value>: Outputing, Inputing, UniqueOutputable, OutputingModif
 
     public typealias SpecificValue = Value
 
-    public var specificValue: SpecificValue { value }
+    public var specificValue: SpecificValue {
+        set { value = newValue }
+        get { value }
+    }
 
     public init(_ value: Value) { _value = value }
 
@@ -51,6 +54,15 @@ public class State<Value>: Outputing, Inputing, UniqueOutputable, OutputingModif
         let id = listener.uuid.description
         return Disposers.create { [weak self] in
             self?.inputers.removeAll(where: { $0.uuid.description == id })
+        }
+    }
+}
+
+public extension Inputing where Self: SpecificValueable, SpecificValue == InputType {
+    func asInput<T>(_ kp: WritableKeyPath<InputType, T>) -> Inputs<T> {
+        Inputs<T> { value in
+            self.specificValue[keyPath: kp] = value
+            self.input(value: self.specificValue)
         }
     }
 }
