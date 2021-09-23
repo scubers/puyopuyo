@@ -10,18 +10,27 @@ import Foundation
 // MARK: - Stateful
 
 public protocol Stateful {
-    associatedtype StateType
-    var viewState: State<StateType> { get }
+    associatedtype StateType where
+        StateType: Inputing & Outputing & SpecificValueable,
+        StateType.OutputType == StateType.InputType,
+        StateType.OutputType == StateType.SpecificValue
+
+    /// State is a choice
+    var viewState: StateType { get }
 }
 
 public extension Stateful {
-    var binder: OutputBinder<StateType> { viewState.binder }
+    var binder: OutputBinder<StateType.SpecificValue> { viewState.asOutput().binder }
 }
 
 // MARK: - Eventable
 
 public protocol Eventable {
-    associatedtype EmitterType where EmitterType: Inputing & Outputing, EmitterType.InputType == EmitterType.OutputType
+    associatedtype EmitterType where
+        EmitterType: Inputing & Outputing,
+        EmitterType.InputType == EmitterType.OutputType
+
+    /// SimpleIO is a choice
     var emmiter: EmitterType { get }
 }
 

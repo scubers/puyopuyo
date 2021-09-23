@@ -7,12 +7,16 @@
 
 import Foundation
 
-public class State<Value>: Outputing, Inputing, UniqueOutputable, OutputingModifier {
+public class State<Value>: Outputing, Inputing, UniqueOutputable, OutputingModifier, SpecificValueable {
     public var uniqueDisposable: Disposer?
 
     public typealias OutputType = Value
 
     public typealias InputType = Value
+
+    public typealias SpecificValue = Value
+
+    public var specificValue: SpecificValue { value }
 
     public init(_ value: Value) { _value = value }
 

@@ -76,7 +76,6 @@ struct ListData {
 }
 
 class BaseCell: UITableViewCell, Stateful {
-    typealias StateType = ListData?
     var viewState = State<ListData?>(nil)
     
     var name: Outputs<String?> {

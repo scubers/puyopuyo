@@ -162,7 +162,7 @@ private class Container<T> {
     var freeMap = [Context<T>]()
 }
 
-extension BoxRecycler where Self: Boxable & UIView, StateType == [Data] {
+extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Data] {
     func setup() {
         viewState.safeBind(to: self) { this, dataSource in
             if Data.self is RecycleIdentifiable.Type {
