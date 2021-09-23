@@ -20,6 +20,11 @@ class Person {
 class Cat {
     var name: String?
     var age: Int = 1
+    var dog: Dog?
+}
+
+class Dog {
+    var name: String?
 }
 
 @UIApplicationMain
@@ -35,6 +40,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = NavController(rootViewController: MenuVC())
         window?.makeKeyAndVisible()
 
+        
+        let person = Person()
+        
+        var kp  = \Person.cat!.dog
+        
+        person[keyPath: kp] = Dog()
+        
+
+        
         return true
     }
 

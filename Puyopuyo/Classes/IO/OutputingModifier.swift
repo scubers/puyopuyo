@@ -106,6 +106,10 @@ public extension OutputingModifier where Self: Outputing {
             }
         }
     }
+
+    var binding: OutputBinding<OutputType> {
+        OutputBinding(output: asOutput())
+    }
 }
 
 public extension OutputingModifier where Self: Outputing, Self.OutputType: OptionalableValueType {
