@@ -15,24 +15,18 @@ public protocol Stateful {
 }
 
 public extension Stateful {
-    var output: Outputs<StateType> { viewState.asOutput() }
-
-    func bind<R>(_ keyPath: KeyPath<StateType, R>) -> Outputs<R> {
-        output.map(keyPath)
-    }
-
-    var _state: Outputs<StateType> { output }
+    var binder: OutputBinder<StateType> { viewState.binder }
 }
 
 // MARK: - Eventable
 
 public protocol Eventable {
-    associatedtype EventType
-    var eventProducer: SimpleIO<EventType> { get }
+    associatedtype EmitterType where EmitterType: Inputing & Outputing, EmitterType.InputType == EmitterType.OutputType
+    var emmiter: EmitterType { get }
 }
 
 public extension Eventable {
-    func emmit(_ event: EventType) {
-        eventProducer.input(value: event)
+    func emmit(_ event: EmitterType.OutputType) {
+        emmiter.input(value: event)
     }
 }

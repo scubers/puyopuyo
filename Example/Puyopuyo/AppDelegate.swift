@@ -14,7 +14,7 @@ class NavController: UINavigationController {}
 
 class Person {
     var name: String?
-    var cat: Cat?
+    var cat = Cat()
 }
 
 class Cat {
@@ -40,15 +40,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = NavController(rootViewController: MenuVC())
         window?.makeKeyAndVisible()
 
-        
-        let person = Person()
-        
-        var kp  = \Person.cat!.dog
-        
-        person[keyPath: kp] = Dog()
-        
-
-        
         return true
     }
 

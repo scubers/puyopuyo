@@ -10,7 +10,7 @@ import Foundation
 public protocol OutputingModifier {}
 
 public extension OutputingModifier where Self: Outputing {
-    func bind<T>(_ action: @escaping (OutputType, Inputs<T>) -> Void) -> Outputs<T> {
+    func concat<T>(_ action: @escaping (OutputType, Inputs<T>) -> Void) -> Outputs<T> {
         Outputs<T>({ i in
             self.outputing {
                 action($0, i)
@@ -23,15 +23,15 @@ public extension OutputingModifier where Self: Outputing {
     }
 
     func map<R>(_ block: @escaping (OutputType) -> R) -> Outputs<R> {
-        bind { $1.input(value: block($0)) }
+        concat { $1.input(value: block($0)) }
     }
 
     func map<R>(_ keyPath: KeyPath<OutputType, R>) -> Outputs<R> {
-        bind { $1.input(value: $0[keyPath: keyPath]) }
+        concat { $1.input(value: $0[keyPath: keyPath]) }
     }
 
     func filter(_ filter: @escaping (OutputType) -> Bool) -> Outputs<OutputType> {
-        bind { v, i in
+        concat { v, i in
             if filter(v) { i.input(value: v) }
         }
     }
@@ -75,7 +75,7 @@ public extension OutputingModifier where Self: Outputing {
     }
 
     func then<R>(_ then: @escaping (OutputType) -> Outputs<R>) -> Outputs<R> {
-        bind {
+        concat {
             _ = then($0).send(to: $1)
         }
     }
@@ -85,7 +85,7 @@ public extension OutputingModifier where Self: Outputing {
     }
 
     func dispatchMain() -> Outputs<OutputType> {
-        bind { o, i in
+        concat { o, i in
             DispatchQueue.main.async {
                 i.input(value: o)
             }
@@ -107,14 +107,14 @@ public extension OutputingModifier where Self: Outputing {
         }
     }
 
-    var binding: OutputBinding<OutputType> {
-        OutputBinding(output: asOutput())
+    var binder: OutputBinder<OutputType> {
+        OutputBinder(output: asOutput())
     }
 }
 
 public extension OutputingModifier where Self: Outputing, Self.OutputType: OptionalableValueType {
     func map<R>(_ keyPath: KeyPath<OutputType.Wrap, R>, _ default: R) -> Outputs<R?> {
-        bind {
+        concat {
             if let v = $0.optionalValue {
                 $1.input(value: v[keyPath: keyPath])
             } else {
@@ -124,7 +124,7 @@ public extension OutputingModifier where Self: Outputing, Self.OutputType: Optio
     }
 
     func unwrap(or: OutputType.Wrap) -> Outputs<OutputType.Wrap> {
-        bind { v, i in
+        concat { v, i in
             if let v = v.optionalValue {
                 i.input(value: v)
             } else {

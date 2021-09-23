@@ -114,30 +114,30 @@ class MessageView: HBox, Stateful, Eventable {
     }
 
     var viewState = State<Message>.unstable()
-    var eventProducer = SimpleIO<Event>()
+    var emmiter = SimpleIO<Event>()
 
     override func buildBody() {
-        let isSelf = output.map(\.isSelf)
+        let isSelf = binder.isSelf
         attach {
             ZBox().attach($0) {
                 UIImageView().attach($0)
-                    .image(output.map(\.icon).then { downloadImage(url: $0) })
+                    .image(binder.icon.then { downloadImage(url: $0) })
                     .size(40, 40)
                     .cornerRadius(8)
             }
             .style(ShadowStyle())
-            .onTap(eventProducer.asInput { _ in .tapIcon })
+            .onTap(emmiter.asInput { _ in .tapIcon })
 
             VBox().attach($0) {
                 UILabel().attach($0)
-                    .text(output.map(\.name))
+                    .text(binder.name)
                     .margin(bottom: 4)
                     .visibility(isSelf.map { $0.py_toggled().py_visibleOrGone() })
 
                 ZBox().attach($0) {
                     UILabel().attach($0)
                         .numberOfLines(0)
-                        .text(output.map(\.content))
+                        .text(binder.content)
                         .textColor(isSelf.map { $0 ? UIColor.white : .black })
                 }
                 .width(.wrap(max: 250))
@@ -161,7 +161,7 @@ class MessageInputView: HBox, Eventable, UITextViewDelegate {
         case onStartEdit
     }
 
-    var eventProducer = SimpleIO<Event>()
+    var emmiter = SimpleIO<Event>()
 
     private let text = State("")
 
@@ -183,7 +183,7 @@ class MessageInputView: HBox, Eventable, UITextViewDelegate {
 
             ZBox().attach($0) {
                 UIButton(type: .contactAdd).attach($0)
-                    .bind(event: .touchUpInside, input: eventProducer.asInput { _ in .add })
+                    .bind(event: .touchUpInside, input: emmiter.asInput { _ in .add })
 //                    .visibility(hasText.map { (!$0).py_visibleOrGone() })
                     .alpha(hasText.map { !$0 ? 1 : 0 })
                     .size(hasText.map { $0 ? Size.fixed(1) : Size(width: .wrap, height: .wrap) })

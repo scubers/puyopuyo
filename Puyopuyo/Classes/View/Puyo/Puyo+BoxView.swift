@@ -128,8 +128,8 @@ public extension Puyo where T: Boxable & UIView {
 
 public extension Puyo where T: Eventable {
     @discardableResult
-    func onEvent<I: Inputing>(_ input: I) -> Self where I.InputType == T.EventType {
-        let disposer = view.eventProducer.send(to: input)
+    func onEvent<I: Inputing>(_ input: I) -> Self where I.InputType == T.EmitterType.OutputType {
+        let disposer = view.emmiter.send(to: input)
         if let v = view as? DisposableBag {
             disposer.dispose(by: v)
         }
@@ -137,12 +137,12 @@ public extension Puyo where T: Eventable {
     }
 
     @discardableResult
-    func onEvent(_ event: @escaping (T.EventType) -> Void) -> Self {
+    func onEvent(_ event: @escaping (T.EmitterType.OutputType) -> Void) -> Self {
         onEvent(Inputs(event))
     }
 
     @discardableResult
-    func onEvent<O: AnyObject>(to: O?, _ event: @escaping (O, T.EventType) -> Void) -> Self {
+    func onEvent<O: AnyObject>(to: O?, _ event: @escaping (O, T.EmitterType.OutputType) -> Void) -> Self {
         onEvent(Inputs { [weak to] v in
             if let to = to {
                 event(to, v)

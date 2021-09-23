@@ -18,7 +18,7 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
     private var selection = [Selector<T>]()
 
     var viewState = State<T?>(nil)
-    var eventProducer = SimpleIO<T>()
+    var emmiter = SimpleIO<T>()
 
     init(_ selection: [Selector<T>], selected: T? = nil) {
         self.selection = selection
@@ -33,16 +33,16 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
 
     override func buildBody() {
         attach { v in
-            self.selection.enumerated().forEach { [weak self] arg in
+            selection.enumerated().forEach { [weak self] arg in
                 guard let self = self else { return }
                 let (_, x) = arg
 
                 UIButton(type: .roundedRect).attach(v)
                     .onTap(to: self) { this, _ in
-                        this.eventProducer.input(value: x.value)
+                        this.emmiter.input(value: x.value)
                         this.viewState.value = x.value
                     }
-                    .viewUpdate(on: output) { btn, e in
+                    .viewUpdate(on: binder) { btn, e in
                         if e == x.value {
                             btn.backgroundColor = Theme.accentColor
                             btn.isSelected = true
@@ -71,7 +71,7 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
 class PlainSelectionView<T: Equatable>: ZBox, Eventable, Stateful {
     private var selection = [Selector<T>]()
     var viewState = State<T?>(nil)
-    var eventProducer = SimpleIO<T>()
+    var emmiter = SimpleIO<T>()
 
     init(_ selection: [Selector<T>], selected: T? = nil) {
         self.selection = selection
@@ -94,15 +94,15 @@ class PlainSelectionView<T: Equatable>: ZBox, Eventable, Stateful {
             },
             direction: .x,
             builder: { v in
-                self.selection.forEach { [weak self] x in
+                selection.forEach { [weak self] x in
                     guard let self = self else { return }
 //                    v.subviews.forEach({ $0.removeFromSuperview() })
                     UIButton().attach(v)
                         .onTap(to: self) { this, _ in
-                            this.eventProducer.input(value: x.value)
+                            this.emmiter.input(value: x.value)
                             this.viewState.value = x.value
                         }
-                        .backgroundColor(self.viewState.asOutput().map { e -> UIColor in
+                        .backgroundColor(viewState.asOutput().map { e -> UIColor in
                             if e == x.value {
                                 return Theme.accentColor
                             }

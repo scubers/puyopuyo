@@ -149,7 +149,7 @@ private class Header: VBox, Eventable {
         case change
     }
 
-    var eventProducer = SimpleIO<Event>()
+    var emmiter = SimpleIO<Event>()
     override func buildBody() {
         attach {
             UIImageView().attach($0)
@@ -222,22 +222,22 @@ class ItemView: HBox, Stateful {
             ZBox().attach($0) {
                 UIButton().attach($0)
                     .size(40, 40)
-                    .image(bind(\.icon).distinct().then { downloadImage(url: $0) })
+                    .image(binder.icon.distinct().then { downloadImage(url: $0) })
                     .cornerRadius(4)
             }
             .style(ShadowStyle())
 
             VBox().attach($0) {
                 UILabel().attach($0)
-                    .text(bind(\.name).distinct())
+                    .text(binder.name.distinct())
                     .fontSize(20, weight: .heavy)
 
                 UILabel().attach($0)
-                    .text(bind(\.content).distinct())
+                    .text(binder.content.distinct())
                     .fontSize(14)
                     .numberOfLines(0)
 
-                let images = bind(\.images).unwrap(or: [])
+                let images = binder.images.unwrap(or: [])
 
                 let imageWidth = images.map { list -> CGFloat in
                     if list.count == 1 {
@@ -272,7 +272,7 @@ class ItemView: HBox, Stateful {
 
                 HBox().attach($0) {
                     UILabel().attach($0)
-                        .text(bind(\.createdAt).map { Date(timeIntervalSince1970: Double($0 ?? 0)).description })
+                        .text(binder.createdAt.map { Date(timeIntervalSince1970: Double($0 ?? 0)).description })
 
                     UIButton().attach($0)
                         .text("more")
@@ -283,8 +283,8 @@ class ItemView: HBox, Stateful {
                 .width(.fill)
 
                 VBox().attach($0) {
-                    let likes = bind(\.likes).unwrap(or: [])
-                    let comments = bind(\.comments)
+                    let likes = binder.likes.unwrap(or: [])
+                    let comments = binder.comments
 
                     let likeVisible = likes.map { (!$0.isEmpty).py_visibleOrGone() }
                     let commentVisible = comments.map { (!$0.isEmpty).py_visibleOrGone() }
@@ -335,7 +335,7 @@ class ItemView: HBox, Stateful {
                 }
                 .backgroundColor(UIColor(hexString: "#F6F6F6"))
                 .width(.fill)
-                .visibility(output.map { f in
+                .visibility(binder.map { f in
                     (!(f.comments.isEmpty && (f.likes ?? []).isEmpty)).py_visibleOrGone()
                 })
             }
@@ -365,7 +365,7 @@ func downloadImage(url: String?) -> Outputs<UIImage?> {
 
         return Disposers.create()
     }
-    .bind { o, i in
+    .concat { o, i in
         DispatchQueue.main.async {
             i.input(value: o)
         }

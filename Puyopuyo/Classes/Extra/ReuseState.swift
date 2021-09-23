@@ -23,7 +23,7 @@ public class ReuseState<Data, Event> {
 
     public class Node<Data, Event>: Eventable {
         public let state: State<Data>
-        public let eventProducer = SimpleIO<Event>()
+        public let emmiter = SimpleIO<Event>()
         public init(data: Data) {
             self.state = State(data)
         }
@@ -33,22 +33,21 @@ public class ReuseState<Data, Event> {
 }
 
 public extension ReuseState {
-    
     func generateNode(_ data: Data) -> Node<Data, Event> {
         return .init(data: data)
     }
-    
+
     func set(node: Node<Data, Event>, for key: String) {
         nodes[gen(key: key)] = node
     }
-    
+
     @discardableResult
     func create(by key: String, data: Data) -> Node<Data, Event> {
         let newKey = gen(key: key)
         let node = generateNode(data)
         nodes[newKey] = node
         // 每个事件都绑定到station
-        _ = node.eventProducer
+        _ = node.emmiter
             .asOutput()
             .map { [unowned node] in
                 Context(key: newKey, event: $0, data: node.state.value)
@@ -64,7 +63,6 @@ public extension ReuseState {
     func emmit(event: Event, for key: String) {
         nodes[gen(key: key)]?.emmit(event)
     }
-    
 }
 
 public extension ReuseState {
@@ -73,17 +71,17 @@ public extension ReuseState {
         let key = Unmanaged.passUnretained(object).toOpaque().debugDescription
         return create(by: key, data: data)
     }
-    
+
     func set(node: Node<Data, Event>, for object: AnyObject) {
         let key = Unmanaged.passUnretained(object).toOpaque().debugDescription
         set(node: node, for: key)
     }
-    
+
     func input(data: Data, for object: AnyObject) {
         let key = Unmanaged.passUnretained(object).toOpaque().debugDescription
         input(data: data, for: key)
     }
-    
+
     func emmit(event: Event, for object: AnyObject) {
         let key = Unmanaged.passUnretained(object).toOpaque().debugDescription
         emmit(event: event, for: key)

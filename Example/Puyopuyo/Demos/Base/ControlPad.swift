@@ -16,7 +16,7 @@ class ControlPad: UIView, Stateful, Eventable {
         var y: CGFloat
     }
 
-    var eventProducer = SimpleIO<ViewState>()
+    var emmiter = SimpleIO<ViewState>()
     var viewState = State(ViewState(x: 0.5, y: 0.5))
 
     override init(frame: CGRect) {
@@ -30,7 +30,7 @@ class ControlPad: UIView, Stateful, Eventable {
                 .backgroundColor(UIColor.black)
                 .cornerRadius(w / 2)
                 .frame(
-                    Outputs.combine(py_boundsState(), output)
+                    Outputs.combine(py_boundsState(), binder)
                         .map { rect, point -> CGRect in
                             let x = (rect.width - w) * point.x
                             let y = (rect.height - w) * point.y

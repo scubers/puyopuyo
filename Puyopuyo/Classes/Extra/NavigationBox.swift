@@ -36,16 +36,16 @@ open class NavigationBox: VBox, Stateful {
                         .width(.fill)
                         .alignment(.bottom)
                 }
-                .visibility(bind(\.visible).distinct())
+                .visibility(binder.visible.distinct())
                 .width(.fill)
                 .height($0.py_safeArea().map { SizeDescription.wrap(add: $0.top) })
-                .backgroundColor(bind(\.backgroundColor))
-                .margin(bind(\.navOffset).distinct().map { s in
+                .backgroundColor(binder.backgroundColor)
+                .margin(binder.navOffset.distinct().map { s in
                     UIEdgeInsets(top: s.y, left: s.x, bottom: 0, right: 0)
                 })
-                .alpha(bind(\.alpha).distinct())
+                .alpha(binder.alpha.distinct())
                 .alignment(.top)
-                .viewUpdate(on: output) { v, s in
+                .viewUpdate(on: binder) { v, s in
                     v.layer.shadowOffset = s.shadowOffset
                     v.layer.shadowOpacity = s.shadowOpacity
                     v.layer.shadowRadius = s.shadowRadius
@@ -55,7 +55,7 @@ open class NavigationBox: VBox, Stateful {
 
             let output = Outputs.merge([
                 nav.py_boundsState(),
-                self.output.map { _ in .zero },
+                binder.map { _ in .zero },
             ])
 
             body().attach($0)
@@ -70,7 +70,7 @@ open class NavigationBox: VBox, Stateful {
             nav.attach($0)
         }
         .reverse(true)
-        .animator(bind(\.animator))
+        .animator(binder.animator)
         .justifyContent(.center)
         .size(.fill, .fill)
     }
