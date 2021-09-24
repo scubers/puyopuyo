@@ -259,7 +259,7 @@ private extension SequenceBox {
         footerView.setNeedsDisplay()
         footerView.layoutIfNeeded()
 
-        if enableDiff {
+        if enableDiff && bounds != .zero {
             reloadWithDiff(sections: sections)
         } else {
             self.sections = sections

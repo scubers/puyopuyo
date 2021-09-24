@@ -133,9 +133,7 @@ open class RecycleBox: UICollectionView,
         }
         
         py_boundsState().map(\.size).distinct().debounce().safeBind(to: self) { this, _ in
-//            DispatchQueue.main.async {
             this.flowLayout.invalidateLayout()
-//            }
         }
     }
     
@@ -192,7 +190,7 @@ open class RecycleBox: UICollectionView,
     }
     
     public func reload(sections: [IRecycleSection]) {
-        if enableDiff {
+        if enableDiff && bounds != .zero {
             reloadWithDiff(sections: sections)
         } else {
             self.sections = sections
