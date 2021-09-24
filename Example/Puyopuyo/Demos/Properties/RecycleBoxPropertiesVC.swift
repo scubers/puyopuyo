@@ -16,10 +16,9 @@ class RecycleBoxPropertiesVC: BaseVC {
         vRoot.attach {
             RecycleBox(
                 pinHeader: true,
-                estimatedSize: .init(width: 1, height: 1),
                 sectionInset: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
                 diff: true,
-                sections: self.sections.asOutput()
+                sections: sections.asOutput()
             )
             .attach($0)
             .size(.fill, .fill)
@@ -126,7 +125,6 @@ class RecycleBoxPropertiesVC: BaseVC {
                 data: "header1",
                 items: [
                     BasicRecycleItem<Int>(
-                        //                        id: "a",
                         data: 1,
                         cell: { o, _ in
                             HBox().attach {
@@ -139,7 +137,6 @@ class RecycleBoxPropertiesVC: BaseVC {
                         }
                     ),
                     BasicRecycleItem<Int>(
-                        //                        id: "b",
                         data: 2,
                         cell: { o, _ in
                             VBox().attach {
@@ -154,7 +151,6 @@ class RecycleBoxPropertiesVC: BaseVC {
                 ].asOutput()
             ),
             DataRecycleSection<Int>(
-                //                id: "lskdjfdd",
                 itemSpacing: 10,
                 items: (0..<10).map { $0 }.asOutput(),
                 cell: { o, i in
@@ -186,7 +182,6 @@ class RecycleBoxPropertiesVC: BaseVC {
                 }
             ),
             BasicRecycleSection<String>(
-                //                id: "sldkjf",
                 insets: UIEdgeInsets(top: 10, left: 20, bottom: 30, right: 40),
                 data: "header",
                 items: section1Rows.asOutput(),
