@@ -193,39 +193,42 @@ open class RecycleBox: UICollectionView,
     
     public func reload(sections: [IRecycleSection]) {
         if enableDiff {
-            // section calculating
-            let sectionDiff = Diff(
-                src: (0..<self.sections.count).map { $0 },
-                dest: (0..<sections.count).map { $0 },
-                identifier: { $0.description }
-            )
-            sectionDiff.check()
-            
-            // item calculating
-            
-            let itemDiffs = sections.enumerated().map { idx, section -> Diff<IRecycleItem> in
-                var diff: Diff<IRecycleItem>
-                if idx < self.sections.count {
-                    diff = Diff(src: self.sections[idx].getItems(), dest: section.getItems(), identifier: { $0.getDiff() })
-                } else {
-                    diff = Diff(src: [], dest: section.getItems(), identifier: { $0.getDiff() })
-                }
-                diff.check()
-                return diff
-            }
-            
-            self.sections = sections
-            performBatchUpdates({
-                self.applySectionUpdates(sectionDiff)
-                itemDiffs.enumerated().forEach { section, diff in
-                    self.applyItemUpdates(diff, in: section)
-                }
-            }, completion: nil)
-            
+            reloadWithDiff(sections: sections)
         } else {
             self.sections = sections
             reloadData()
         }
+    }
+    
+    private func reloadWithDiff(sections: [IRecycleSection]) {
+        // section calculating
+        let sectionDiff = Diff(
+            src: (0..<self.sections.count).map { $0 },
+            dest: (0..<sections.count).map { $0 },
+            identifier: { $0.description }
+        )
+        sectionDiff.check()
+        
+        // item calculating
+        
+        let itemDiffs = sections.enumerated().map { idx, section -> Diff<IRecycleItem> in
+            var diff: Diff<IRecycleItem>
+            if idx < self.sections.count {
+                diff = Diff(src: self.sections[idx].getItems(), dest: section.getItems(), identifier: { $0.getDiff() })
+            } else {
+                diff = Diff(src: [], dest: section.getItems(), identifier: { $0.getDiff() })
+            }
+            diff.check()
+            return diff
+        }
+        
+        self.sections = sections
+        performBatchUpdates({
+            self.applySectionUpdates(sectionDiff)
+            itemDiffs.enumerated().forEach { section, diff in
+                self.applyItemUpdates(diff, in: section)
+            }
+        }, completion: nil)
     }
     
     private func updateSectionsWithDiff(sections: [IRecycleSection]) {}

@@ -253,15 +253,49 @@ private extension SequenceBox {
     }
 
     func reloadSections(_ sections: [ISequenceSection]) {
-        self.sections = sections
-
         headerView.setNeedsDisplay()
         headerView.layoutIfNeeded()
 
         footerView.setNeedsDisplay()
         footerView.layoutIfNeeded()
 
-        reloadData()
+        if enableDiff {
+            reloadWithDiff(sections: sections)
+        } else {
+            self.sections = sections
+            reloadData()
+        }
+    }
+
+    private func reloadWithDiff(sections: [ISequenceSection]) {
+        // section calculating
+        let sectionDiff = Diff(
+            src: (0..<self.sections.count).map { $0 },
+            dest: (0..<sections.count).map { $0 },
+            identifier: { $0.description }
+        )
+        sectionDiff.check()
+
+        // item calculating
+
+        let itemDiffs = sections.enumerated().map { idx, section -> Diff<ISequenceItem> in
+            var diff: Diff<ISequenceItem>
+            if idx < self.sections.count {
+                diff = Diff(src: self.sections[idx].getItems(), dest: section.getItems(), identifier: { $0.getDiff() })
+            } else {
+                diff = Diff(src: [], dest: section.getItems(), identifier: { $0.getDiff() })
+            }
+            diff.check()
+            return diff
+        }
+
+        self.sections = sections
+        performBatchUpdates({
+            self.applySectionUpdates(sectionDiff)
+            itemDiffs.enumerated().forEach { section, diff in
+                self.applyItemUpdates(diff, in: section)
+            }
+        }, completion: nil)
     }
 }
 
