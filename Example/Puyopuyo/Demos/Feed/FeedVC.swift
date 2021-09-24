@@ -252,12 +252,12 @@ class ItemView: HBox, Stateful {
                 VFlowRecycle<String>(
                     builder: { o, i in
                         UIImageView().attach()
-                            .image(o.item.then { downloadImage(url: $0) })
+                            .image(o.data.then { downloadImage(url: $0) })
                             .size(imageWidth, imageWidth)
                             .userInteractionEnabled(true)
                             .onTap {
                                 i.inContext { c in
-                                    print(c.indexPath.row)
+                                    print(c.index)
                                 }
                             }
                             .view
@@ -312,7 +312,7 @@ class ItemView: HBox, Stateful {
                         builder: { o, i in
                             HBox().attach {
                                 UILabel().attach($0)
-                                    .text(o.item)
+                                    .text(o.data)
                                     .width(.fill)
                                     .fontSize(12)
                                     .userInteractionEnabled(true)
@@ -321,8 +321,8 @@ class ItemView: HBox, Stateful {
                             .width(.fill)
                             .onTap {
                                 i.inContext { c in
-                                    print(c.indexPath.row)
-                                    print(c.item)
+                                    print(c.index)
+                                    print(c.data)
                                 }
                             }
                             .view

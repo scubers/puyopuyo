@@ -10,9 +10,8 @@ import Foundation
 // MARK: - Base
 
 public struct RecyclerInfo<T> {
-    public var item: T
-    public var items: [T]
-    public var indexPath: IndexPath
+    public var data: T
+    public var index: Int
     public var layoutableSize: CGSize
 }
 
@@ -77,9 +76,8 @@ extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Dat
 
     private func getInfo(index: Int) -> RecyclerInfo<Data> {
         RecyclerInfo(
-            item: viewState.specificValue[index],
-            items: viewState.specificValue,
-            indexPath: .init(row: index, section: 0),
+            data: viewState.specificValue[index],
+            index: index,
             layoutableSize: getLayoutableSize()
         )
     }
@@ -95,7 +93,7 @@ extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Dat
     }
 
     private func reloadWithDiff(dataSource: [Data]) {
-        let diff = Diff(src: container.usingMap.map(\.state.value.item), dest: dataSource, identifier: {
+        let diff = Diff(src: container.usingMap.map(\.state.value.data), dest: dataSource, identifier: {
             ($0 as! RecycleIdentifiable).recycleIdentifier
         })
         diff.check()
@@ -158,7 +156,7 @@ extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Dat
                 return nil
             }
             trigger.createor = { [weak self] in
-                if let c = finder(), let info = self?.getInfo(index: c.state.value.indexPath.row) {
+                if let c = finder(), let info = self?.getInfo(index: c.state.value.index) {
                     return info
                 }
                 return nil
