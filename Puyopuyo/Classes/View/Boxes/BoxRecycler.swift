@@ -11,7 +11,7 @@ import Foundation
 
 public struct RecyclerInfo<T> {
     public var data: T
-    public var index: Int
+    public var indexPath: IndexPath
     public var layoutableSize: CGSize
 }
 
@@ -77,7 +77,7 @@ extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Dat
     private func getInfo(index: Int) -> RecyclerInfo<Data> {
         RecyclerInfo(
             data: viewState.specificValue[index],
-            index: index,
+            indexPath: IndexPath(item: index, section: 0),
             layoutableSize: getLayoutableSize()
         )
     }
@@ -156,7 +156,7 @@ extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Dat
                 return nil
             }
             trigger.createor = { [weak self] in
-                if let c = finder(), let info = self?.getInfo(index: c.state.value.index) {
+                if let c = finder(), let info = self?.getInfo(index: c.state.value.indexPath.item) {
                     return info
                 }
                 return nil

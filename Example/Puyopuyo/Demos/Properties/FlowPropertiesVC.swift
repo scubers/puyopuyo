@@ -249,7 +249,7 @@ class FlowPropertiesVC: BaseVC {
                     doubleTap.numberOfTapsRequired = 2
                     doubleTap.py_addAction { _ in
                         i.inContext { c in
-                            this.value?.elements.value.remove(at: c.index)
+                            this.value?.elements.value.remove(at: c.indexPath.row)
                         }
                     }
                     v.addGestureRecognizer(doubleTap)
@@ -258,7 +258,7 @@ class FlowPropertiesVC: BaseVC {
                     tap.require(toFail: doubleTap)
                     tap.py_addAction { _ in
                         i.inContext { c in
-                            this.value?.toggleEndings(c.index)
+                            this.value?.toggleEndings(c.indexPath.row)
                         }
                     }
                     v.addGestureRecognizer(tap)

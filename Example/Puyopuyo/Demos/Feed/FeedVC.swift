@@ -257,7 +257,7 @@ class ItemView: HBox, Stateful {
                             .userInteractionEnabled(true)
                             .onTap {
                                 i.inContext { c in
-                                    print(c.index)
+                                    print(c.indexPath)
                                 }
                             }
                             .view
@@ -321,7 +321,7 @@ class ItemView: HBox, Stateful {
                             .width(.fill)
                             .onTap {
                                 i.inContext { c in
-                                    print(c.index)
+                                    print(c.indexPath)
                                     print(c.data)
                                 }
                             }
