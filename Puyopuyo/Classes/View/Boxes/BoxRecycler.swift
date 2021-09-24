@@ -240,7 +240,7 @@ extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Dat
     private func getContext() -> Context<Data> {
         if container.freeMap.isEmpty {
             let c = Context<Data>()
-            var trigger = RecyclerTrigger<Data>()
+            let trigger = RecyclerTrigger<Data>()
             let view = builder(c.state.asOutput().binder, trigger)
 
             let finder = { [weak view, weak self] () -> Context<Data>? in
