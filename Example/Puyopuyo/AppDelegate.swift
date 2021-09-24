@@ -39,9 +39,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.rootViewController = NavController(rootViewController: MenuVC())
         window?.makeKeyAndVisible()
-        
-        let person = State(Person())
-        person.asInput(\.cat.name).input(value: "")
 
         return true
     }

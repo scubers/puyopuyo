@@ -7,29 +7,6 @@
 
 import Foundation
 
-public class Trigger<T> {
-    public var isBuilding = true
-
-    var createor: (() -> RecyclerContext<T>?)?
-
-    public var context: RecyclerContext<T>? {
-        ensureNotBuiling()
-        return createor?()
-    }
-
-    public func inContext(_ action: (RecyclerContext<T>) -> Void) {
-        if let context = context {
-            action(context)
-        }
-    }
-
-    private func ensureNotBuiling() {
-        if isBuilding {
-            fatalError("can not call trigger when building")
-        }
-    }
-}
-
 // MARK: - LinearBoxRecycle
 
 public class LinearBoxRecycle<T>: LinearBox, BoxRecycler {
@@ -127,22 +104,47 @@ public class ZBoxRecycle<T>: ZBox, BoxRecycler {
     }
 }
 
-// MARK: - Private
+// MARK: - Base
+
+public struct RecyclerInfo<T> {
+    public var item: T
+    public var items: [T]
+    public var indexPath: IndexPath
+    public var layoutableSize: CGSize
+}
+
+public class RecyclerTrigger<T> {
+    public var isBuilding = true
+
+    var createor: (() -> RecyclerInfo<T>?)?
+
+    public var context: RecyclerInfo<T>? {
+        ensureNotBuiling()
+        return createor?()
+    }
+
+    public func inContext(_ action: (RecyclerInfo<T>) -> Void) {
+        if let context = context {
+            action(context)
+        }
+    }
+
+    private func ensureNotBuiling() {
+        if isBuilding {
+            fatalError("can not call trigger when building")
+        }
+    }
+}
+
+public typealias RecyclerBuilder<T> = (OutputBinder<RecyclerInfo<T>>, RecyclerTrigger<T>) -> UIView
 
 private class Context<T> {
     let id = UUID()
 
     var view: UIView!
 
-    let state = State<RecyclerContext<T>>.unstable()
+    let state = State<RecyclerInfo<T>>.unstable()
 }
-
-public struct RecyclerContext<T> {
-    public var data: T
-    public var index: Int
-}
-
-public typealias RecyclerBuilder<T> = (OutputBinder<RecyclerContext<T>>, Trigger<T>) -> UIView
 
 private protocol BoxRecycler: Stateful {
     associatedtype Data
@@ -157,6 +159,28 @@ private class Container<T> {
 }
 
 extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Data] {
+    func getLayoutableSize() -> CGSize {
+        var width: CGFloat = bounds.width
+        var height: CGFloat = bounds.height
+        let size = regulator.size
+        if size.width.isWrap {
+            width = size.width.max
+        }
+        if size.height.isWrap {
+            height = size.height.max
+        }
+        return CGSize(width: width - regulator.padding.getHorzTotal(), height: height - regulator.padding.getVertTotal())
+    }
+
+    private func getInfo(index: Int) -> RecyclerInfo<Data> {
+        RecyclerInfo(
+            item: viewState.specificValue[index],
+            items: viewState.specificValue,
+            indexPath: .init(row: index, section: 0),
+            layoutableSize: getLayoutableSize()
+        )
+    }
+
     func setup() {
         viewState.safeBind(to: self) { this, dataSource in
             if Data.self is RecycleIdentifiable.Type {
@@ -168,7 +192,7 @@ extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Dat
     }
 
     private func reloadWithDiff(dataSource: [Data]) {
-        let diff = Diff(src: container.usingMap.map(\.state.value.data), dest: dataSource, identifier: {
+        let diff = Diff(src: container.usingMap.map(\.state.value.item), dest: dataSource, identifier: {
             ($0 as! RecycleIdentifiable).recycleIdentifier
         })
         diff.check()
@@ -195,11 +219,11 @@ extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Dat
         }
         container.usingMap = list.map { $0! }
 
-        dataSource.enumerated().forEach { idx, element in
+        dataSource.enumerated().forEach { idx, _ in
             let context = container.usingMap[idx]
             context.view.removeFromSuperview()
             addSubview(context.view)
-            context.state.input(value: .init(data: element, index: idx))
+            context.state.input(value: getInfo(index: idx))
         }
 
         if diff.isDifferent() {
@@ -216,7 +240,7 @@ extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Dat
     private func getContext() -> Context<Data> {
         if container.freeMap.isEmpty {
             let c = Context<Data>()
-            let trigger = Trigger<Data>()
+            var trigger = RecyclerTrigger<Data>()
             let view = builder(c.state.asOutput().binder, trigger)
 
             let finder = { [weak view, weak self] () -> Context<Data>? in
@@ -230,9 +254,9 @@ extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Dat
                 }
                 return nil
             }
-            trigger.createor = {
-                if let c = finder() {
-                    return .init(data: c.state.value.data, index: c.state.value.index)
+            trigger.createor = { [weak self] in
+                if let c = finder(), let info = self?.getInfo(index: c.state.value.indexPath.row) {
+                    return info
                 }
                 return nil
             }
@@ -245,12 +269,13 @@ extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Dat
     }
 
     private func reload(dataSource: [Data]) {
-        dataSource.enumerated().forEach { idx, element in
+        dataSource.enumerated().forEach { idx, _ in
+            let info = getInfo(index: idx)
             if idx < container.usingMap.count {
-                container.usingMap[idx].state.input(value: .init(data: element, index: idx))
+                container.usingMap[idx].state.input(value: info)
             } else {
                 let context = getContext()
-                context.state.input(value: .init(data: element, index: idx))
+                context.state.input(value: info)
                 container.usingMap.append(context)
                 addSubview(context.view)
             }
