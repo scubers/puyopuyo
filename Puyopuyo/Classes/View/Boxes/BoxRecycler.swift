@@ -17,6 +17,10 @@ public struct RecyclerInfo<T> {
 
 public class RecyclerTrigger<T> {
     public var isBuilding = true
+    
+    public init(creator: (() -> RecyclerInfo<T>?)? = nil) {
+        self.createor = creator
+    }
 
     var createor: (() -> RecyclerInfo<T>?)?
 

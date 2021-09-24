@@ -8,7 +8,7 @@
 import Foundation
 
 public class RecycleSection<Section, Data>: BasicRecycleSection<Section> {
-    public typealias ItemContext = RecycleContext<Data, UICollectionView>
+    public typealias ItemContext = RecyclerInfo<Data>
 
     public init(
         id: String? = nil,

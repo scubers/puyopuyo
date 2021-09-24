@@ -21,7 +21,7 @@ public class SequenceSection<Section, Data>: BasicSequenceSection<Section> {
         cellConfig: ((UITableViewCell) -> Void)? = nil,
         header: SequenceViewGenerator<Section>? = nil,
         footer: SequenceViewGenerator<Section>? = nil,
-        didSelect: ((RecycleContext<Data, UITableView>) -> Void)? = nil,
+        didSelect: ((RecyclerInfo<Data>) -> Void)? = nil,
         function: StaticString = #function,
         line: Int = #line,
         column: Int = #column
@@ -68,7 +68,7 @@ public extension SequenceSection where Section == Void {
         cellConfig: ((UITableViewCell) -> Void)? = nil,
         header: SequenceViewGenerator<Section>? = nil,
         footer: SequenceViewGenerator<Section>? = nil,
-        didSelect: ((RecycleContext<Data, UITableView>) -> Void)? = nil,
+        didSelect: ((RecyclerInfo<Data>) -> Void)? = nil,
         function: StaticString = #function,
         line: Int = #line,
         column: Int = #column

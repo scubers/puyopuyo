@@ -7,7 +7,7 @@
 
 import Foundation
 
-public typealias SequenceViewGenerator<D> = (OutputBinder<RecycleContext<D, UITableView>>, ActionTrigger<D, UITableView>) -> UIView?
+public typealias SequenceViewGenerator<D> = (OutputBinder<RecyclerInfo<D>>, RecyclerTrigger<D>) -> UIView?
 
 public class BasicSequenceSection<Data>: ISequenceSection, DisposableBag {
     public init(
@@ -90,8 +90,8 @@ public class BasicSequenceSection<Data>: ISequenceSection, DisposableBag {
         estimatedFooterHeight
     }
     
-    private func getContext() -> RecycleContext<Data, UITableView> {
-        .init(indexPath: IndexPath(row: 0, section: index), index: index, size: getLayoutableContentSize(), data: data, view: box)
+    private func getContext() -> RecyclerInfo<Data> {
+        RecyclerInfo(data: data, indexPath: IndexPath(item: 0, section: index), layoutableSize: getLayoutableContentSize())
     }
     
     private func _get(header: Bool = false, footer: Bool = false) -> (SequenceHeaderFooter<Data>, UIView?) {
@@ -101,7 +101,7 @@ public class BasicSequenceSection<Data>: ISequenceSection, DisposableBag {
         if view == nil {
             view = SequenceHeaderFooter<Data>(id: id)
             if header, let gen = headerGen {
-                let holder = ActionTrigger<Data, UITableView> { [weak self] in
+                let holder = RecyclerTrigger<Data> { [weak self] in
                     if let box = self?.box,
                        let sectionIndex = self?.index,
                        let section = box.getSection(at: sectionIndex) as? BasicSequenceSection<Data>
@@ -116,7 +116,7 @@ public class BasicSequenceSection<Data>: ISequenceSection, DisposableBag {
                 }
                 holder.isBuilding = false
             } else if footer, let gen = footerGen {
-                let holder = ActionTrigger<Data, UITableView> { [weak self] in
+                let holder = RecyclerTrigger<Data> { [weak self] in
                     if let box = self?.box,
                        let sectionIndex = self?.index,
                        let section = box.getSection(at: sectionIndex) as? BasicSequenceSection<Data>
@@ -204,7 +204,7 @@ public class BasicSequenceSection<Data>: ISequenceSection, DisposableBag {
 
 private class SequenceHeaderFooter<D>: UITableViewHeaderFooterView {
     var root: UIView?
-    let state = SimpleIO<RecycleContext<D, UITableView>>()
+    let state = SimpleIO<RecyclerInfo<D>>()
     
     required init(id: String) {
         super.init(reuseIdentifier: id)

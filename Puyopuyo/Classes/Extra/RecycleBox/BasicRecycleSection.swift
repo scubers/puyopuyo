@@ -7,41 +7,14 @@
 
 import Foundation
 
-public class ActionTrigger<D, V: UIView> {
-    var creator: () -> RecycleContext<D, V>?
-    
-    init(creator: @escaping () -> RecycleContext<D, V>?) {
-        self.creator = creator
-    }
-    
-    var isBuilding = true
-    
-    private func ensureNotBuilding() {
-        if isBuilding {
-            fatalError("cannot call trigger when is builing")
-        }
-    }
-    
-    public var context: RecycleContext<D, V>? {
-        ensureNotBuilding()
-        return creator()
-    }
-    
-    public func inContext(_ action: (RecycleContext<D, V>) -> Void) {
-        if let c = context {
-            action(c)
-        }
-    }
-}
-
-public typealias RecycleViewGenerator<D> = (OutputBinder<RecycleContext<D, UICollectionView>>, ActionTrigger<D, UICollectionView>) -> UIView?
+public typealias RecycleViewGenerator<D> = (OutputBinder<RecyclerInfo<D>>, RecyclerTrigger<D>) -> UIView?
 
 public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     public func addDisposer(_ disposer: Disposer, for key: String?) {
         bag.addDisposer(disposer, for: key)
     }
     
-    public typealias Context = RecycleContext<Data, UICollectionView>
+    public typealias Context = RecyclerInfo<Data>
     public init(
         id: String? = nil,
         insets: UIEdgeInsets? = nil,
@@ -202,7 +175,7 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
             var root: UIView?
             let state = view.state
             let box = self.box
-            let holder = ActionTrigger { [weak box, weak view] () -> RecycleContext<Data, UICollectionView>? in
+            let holder = RecyclerTrigger<Data> { [weak box, weak view] in
                 if let view = view,
                    let idx = box?.visibleSupplementaryViews(ofKind: kind).firstIndex(where: { $0 === view }),
                    let indexPathes = box?.indexPathsForVisibleSupplementaryElements(ofKind: kind),
@@ -232,8 +205,8 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
         block(getContext())
     }
     
-    private func getContext() -> RecycleContext<Data, UICollectionView> {
-        .init(indexPath: IndexPath(item: 0, section: index), index: index, size: getLayoutableContentSize(), data: data, view: box)
+    private func getContext() -> RecyclerInfo<Data> {
+        RecyclerInfo(data: data, indexPath: IndexPath(item: 0, section: index), layoutableSize: getLayoutableContentSize())
     }
     
     public func getSectionInsets() -> UIEdgeInsets? {
@@ -251,7 +224,7 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
 
 private class RecycleBoxSupplementaryView<D>: UICollectionReusableView {
     var root: UIView?
-    let state = SimpleIO<RecycleContext<D, UICollectionView>>()
+    let state = SimpleIO<RecyclerInfo<D>>()
     var targetSize: CGSize = .zero
     
     override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority _: UILayoutPriority, verticalFittingPriority _: UILayoutPriority) -> CGSize {

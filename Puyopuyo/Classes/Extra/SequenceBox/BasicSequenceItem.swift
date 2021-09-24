@@ -9,7 +9,7 @@ import Foundation
 
 public class BasicSequenceItem<Data>: ISequenceItem {
     
-    public typealias Context = RecycleContext<Data, UITableView>
+    public typealias Context = RecyclerInfo<Data>
     public init(
         id: String? = nil,
         selectionStyle: UITableViewCell.SelectionStyle = .default,
@@ -83,7 +83,7 @@ public class BasicSequenceItem<Data>: ISequenceItem {
         if cell == nil {
             cell = SequenceBoxCell(id: id)
             let box = section?.box
-            let holder = ActionTrigger<Data, UITableView> { [weak box, weak cell] in
+            let holder = RecyclerTrigger<Data> { [weak box, weak cell] in
                 if let box = box,
                     let cell = cell,
                     let indexpath = box.indexPath(for: cell),
@@ -107,9 +107,9 @@ public class BasicSequenceItem<Data>: ISequenceItem {
         return (cell!, cell!.root)
     }
     
-    private func getContext() -> RecycleContext<Data, UITableView>? {
+    private func getContext() -> RecyclerInfo<Data>? {
         if let section = section {
-            return .init(indexPath: indexPath, index: indexPath.row, size: section.getLayoutableContentSize(), data: data, view: section.box)
+            return RecyclerInfo(data: data, indexPath: indexPath, layoutableSize: section.getLayoutableContentSize())
         }
         return nil
     }
@@ -118,7 +118,7 @@ public class BasicSequenceItem<Data>: ISequenceItem {
 
 private class SequenceBoxCell<Data>: UITableViewCell {
     var root: UIView?
-    let state = SimpleIO<RecycleContext<Data, UITableView>>()
+    let state = SimpleIO<RecyclerInfo<Data>>()
 
     required init(id: String) {
         super.init(style: .value1, reuseIdentifier: id)

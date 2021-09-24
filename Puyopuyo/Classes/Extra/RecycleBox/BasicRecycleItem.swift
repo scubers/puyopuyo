@@ -8,7 +8,7 @@
 import Foundation
 
 public class BasicRecycleItem<Data>: IRecycleItem {
-    public typealias Context = RecycleContext<Data, UICollectionView>
+    public typealias Context = RecyclerInfo<Data>
     public init(
         id: String? = nil,
         data: Data,
@@ -67,9 +67,9 @@ public class BasicRecycleItem<Data>: IRecycleItem {
         }
     }
     
-    private func getContext() -> RecycleContext<Data, UICollectionView>? {
+    private func getContext() -> RecyclerInfo<Data>? {
         if let section = section {
-            return .init(indexPath: indexPath, index: indexPath.item, size: section.getLayoutableContentSize(), data: data, view: section.box)
+            return RecyclerInfo(data: data, indexPath: indexPath, layoutableSize: section.getLayoutableContentSize())
         }
         return nil
     }
@@ -118,7 +118,7 @@ public class BasicRecycleItem<Data>: IRecycleItem {
         cell.targetSize = size
         if cell.root == nil {
             let box = section.box
-            let holder = ActionTrigger { [weak box, weak cell] () -> RecycleContext<Data, UICollectionView>? in
+            let holder = RecyclerTrigger<Data> { [weak box, weak cell] in
                 if let cell = cell,
                     let idx = box?.indexPath(for: cell),
                     let item = box?.getItem(idx) as? BasicRecycleItem<Data> {
@@ -140,7 +140,7 @@ public class BasicRecycleItem<Data>: IRecycleItem {
 
 private class RecycleBoxCell<D>: UICollectionViewCell {
     var root: UIView?
-    let state = SimpleIO<RecycleContext<D, UICollectionView>>()
+    let state = SimpleIO<RecyclerInfo<D>>()
     
     var targetSize: CGSize = .zero
     var cachedSize: CGSize?
