@@ -24,184 +24,81 @@ class RecycleBoxPropertiesVC: BaseVC {
             .size(.fill, .fill)
         }
 
-        reload()
+//        reloadWithMultipleSectionAnimationSeparated()
+        reloadMultipleSectionToOne()
     }
 
-    func getSmallItems(start: Int = 0, count: Int) -> [IRecycleItem] {
-        (start..<start + count).map { v -> IRecycleItem in
-            BasicRecycleItem<Int>(
-                //                id: "1",
-                data: v,
-                differ: { $0.description },
-                cell: { o, i in
-                    VBox().attach {
-                        Label.demo("").attach($0)
-                            .text(o.map { $0.data.description })
-                            .size(50, 50)
-                    }
-                    .padding(all: 10)
-                    .onTap {
-                        if let c = i.context {
-                            print("small item: \(c.data)")
-                        }
-                    }
-                    .borders([.color(Theme.dividerColor)])
-                    .view
-                }
-            )
-        }
-    }
+    func reloadMultipleSectionToOne() {
+        let dataSource = State([(0..<5).map { $0 }, (5..<10).map { $0 }])
 
-    func getBigItems(start: Int = 0, count: Int) -> [IRecycleItem] {
-        (start..<start + count).map { v -> IRecycleItem in
-            BasicRecycleItem<Int>(
-                //                id: "2",
-                data: v,
-                differ: { $0.description },
-                cell: { o, i in
-                    VBox().attach {
-                        Label.demo("").attach($0)
-                            .text(o.map { "\($0.data * 100)" })
-//                            .size(60, 60)
-                            .width(60)
-//                            .aspectRatio(1)
-                            .aspectRatio(2 / 1)
-                    }
-                    .justifyContent(.center)
-                    .aspectRatio(2 / 1)
-                    .padding(all: 10)
-                    .borders([.color(Theme.dividerColor)])
-                    .onTap { _ in
-                        i.inContext { print("big item: \($0.data)") }
-                    }
-                    .view
-                },
-                didSelect: {
-                    print($0)
-                }
-            )
-        }
-    }
-
-    func reload() {
-        let section1Rows = State([IRecycleItem]())
-        let section2Rows = State([IRecycleItem]())
-
-        let sections1 = (0..<10).map { idx -> IRecycleSection in
-            RecycleSection<Int, Int>(
-                //                id: "slkdjfl",
-                sectionData: idx,
-                items: (0..<(idx * 5)).map { $0 * 10 }.asOutput(),
-                cell: { o, _ in
-                    ZBox().attach {
-                        Label.demo("").attach($0)
-                            .text(o.map { $0.data.description })
-                    }
-                    .view
-                },
-                header: { o, i in
-                    HBox().attach {
-                        Label.demo("").attach($0)
-                            .text(o.map { "header: \($0.data + 1)" })
-                    }
-                    .onTap {
-                        i.inContext { print("header tap data: \($0.data), index: \($0.indexPath)") }
-                    }
-                    .view
-                }
-            )
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            dataSource.value = [(0..<10).map { $0 }]
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            section1Rows.value = self.getSmallItems(count: 10)
-            section2Rows.value = self.getBigItems(count: 20)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                section1Rows.value = self.getSmallItems(start: 5, count: 10)
-                section2Rows.value = self.getBigItems(start: 10, count: 20)
+        dataSource.map { sections -> [IRecycleSection] in
+            sections.map { rows in
+                BasicRecycleSection(
+                    data: (),
+                    items: rows.map { row in
+                        BasicRecycleItem(
+                            data: row,
+                            differ: { $0.description },
+                            cell: { o, _ in
+                                Cell().attach()
+                                    .viewState(o.data)
+                                    .view
+                            }
+                        )
+
+                    }.asOutput()
+                )
             }
         }
+        .send(to: sections)
+        .dispose(by: self)
+    }
+
+    func reloadWithMultipleSectionAnimationSeparated() {
+        let section1 = State((0..<5).map { $0 })
+        let section2 = State((6..<10).map { $0 })
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            section1.value = (4..<10).map { $0 }
+            section2.value = (4..<20).map { $0 }
+        }
+
         sections.value = [
-            BasicRecycleSection<String>(
-                data: "header1",
-                items: [
-                    BasicRecycleItem<Int>(
-                        data: 1,
-                        cell: { o, _ in
-                            HBox().attach {
-                                Label.demo("").attach($0)
-                                    .text(o.map { $0.data.description })
-                                Label.demo("").attach($0)
-                                    .text(o.map { $0.data.description })
-                            }
-                            .view
-                        }
-                    ),
-                    BasicRecycleItem<Int>(
-                        data: 2,
-                        cell: { o, _ in
-                            VBox().attach {
-                                Label.demo("").attach($0)
-                                    .text(o.map { $0.data.description })
-                                Label.demo("").attach($0)
-                                    .text(o.map { $0.data.description })
-                            }
-                            .view
-                        }
-                    ),
-                ].asOutput()
-            ),
-            DataRecycleSection<Int>(
-                itemSpacing: 10,
-                items: (0..<10).map { $0 }.asOutput(),
-                cell: { o, i in
-                    VBox().attach {
-                        Label.demo("").attach($0)
-                            .text(o.map { $0.data.description })
-                        Label.demo("").attach($0)
-                            .text(o.map { $0.data.description })
-                        Label.demo("").attach($0)
-                            .text(o.map { $0.data.description })
-                    }
-                    .onTap {
-                        i.inContext { print($0.data) }
-                    }
-                    .view
-                },
-                header: { _, i in
-                    HBox().attach {
-                        Label.demo("header").attach($0)
-                    }
-                    .backgroundColor(UIColor.systemPink)
-                    .onTap { _ in
-                        i.inContext { _ in print("------") }
-                    }
-                    .view
-                },
-                didSelect: {
-                    print($0)
+            DataRecycleSection(
+                items: section1.asOutput(),
+                differ: { $0.description },
+                cell: { o, _ in
+                    Cell().attach()
+                        .viewState(o.data)
+                        .view
                 }
             ),
-            BasicRecycleSection<String>(
-                insets: UIEdgeInsets(top: 10, left: 20, bottom: 30, right: 40),
-                data: "header",
-                items: section1Rows.asOutput(),
-                header: { o, _ in
-                    HBox().attach {
-                        Label.demo("").attach($0)
-                            .text(o.map { "\($0.data)" })
-                    }
-                    .backgroundColor(UIColor.cyan)
-                    .width(.fill)
-                    .view
+            DataRecycleSection(
+                items: section2.asOutput(),
+                differ: { $0.description },
+                cell: { o, _ in
+                    Cell().attach()
+                        .viewState(o.data)
+                        .view
                 }
             ),
-            BasicRecycleSection<String?>(
-                insets: UIEdgeInsets(top: 40, left: 30, bottom: 20, right: 10),
-                lineSpacing: 10,
-                itemSpacing: 20,
-                data: nil,
-                items: section2Rows.asOutput()
-            ),
-        ] + sections1
+        ]
+    }
+}
+
+private class Cell: HBox, Stateful {
+    var viewState = State<Int>.unstable()
+
+    override func buildBody() {
+        attach {
+            Label.demo("").attach($0)
+                .text(binder.description)
+                .size(.wrap(min: 50), .wrap(min: 50))
+        }
+        .padding(all: 10)
     }
 }

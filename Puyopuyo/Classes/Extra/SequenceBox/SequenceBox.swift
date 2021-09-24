@@ -88,7 +88,7 @@ public class SequenceBox: UITableView,
     {
         super.init(frame: .zero, style: style)
 
-        self.enableDiff = diff
+        enableDiff = diff
         delegateProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
         dataSourceProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
 
@@ -271,5 +271,32 @@ public extension Puyo where T: SequenceBox {
         view.wrapContent = wrap
         view.py_setNeedsRelayout()
         return self
+    }
+}
+
+extension UITableView {
+    func applySectionUpdates<T>(_ updates: Diff<T>) {
+        if !updates.delete.isEmpty {
+            // 删除section
+            deleteSections(IndexSet(updates.delete.map { $0.from }), with: .automatic)
+        }
+
+        if !updates.insert.isEmpty {
+            insertSections(IndexSet(updates.insert.map { $0.to }), with: .automatic)
+        }
+    }
+
+    func applyItemUpdates<T>(_ updates: Diff<T>, in section: Int) {
+        if !updates.delete.isEmpty {
+            deleteRows(at: updates.delete.map { IndexPath(row: $0.from, section: section) }, with: .automatic)
+        }
+
+        if !updates.insert.isEmpty {
+            insertRows(at: updates.insert.map { IndexPath(row: $0.to, section: section) }, with: .automatic)
+        }
+
+        updates.move.forEach { c in
+            self.moveRow(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
+        }
     }
 }

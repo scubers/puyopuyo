@@ -89,20 +89,7 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
         if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
             setRecycleItems(items)
             box.performBatchUpdates({
-                if !diff.delete.isEmpty {
-                    box.deleteItems(at: diff.delete.map { IndexPath(row: $0.from, section: section) })
-                }
-                if !diff.insert.isEmpty {
-                    box.insertItems(at: diff.insert.map { IndexPath(row: $0.to, section: section) })
-                }
-                if #available(iOS 14, *) {
-                    // iOS14不知道为啥move会崩溃
-                } else {
-                    diff.move.forEach { c in
-                        box.moveItem(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
-                    }
-                }
-                
+                box.applyItemUpdates(diff, in: section)
             }, completion: nil)
         }
     }

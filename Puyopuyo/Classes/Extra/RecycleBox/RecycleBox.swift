@@ -65,10 +65,12 @@ public protocol IRecycleItem: AnyObject {
     
     var indexPath: IndexPath { get set }
     
+    /// The diff value to calculate diff
     func getDiff() -> String
     
     func getItemViewType() -> AnyClass
     
+    /// The identifier to register cell in collecitonView
     func getItemIdentifier() -> String
     
     func didSelect()
@@ -190,9 +192,43 @@ open class RecycleBox: UICollectionView,
     }
     
     public func reload(sections: [IRecycleSection]) {
-        self.sections = sections
-        reloadData()
+        if enableDiff {
+            // section calculating
+            let sectionDiff = Diff(
+                src: (0..<self.sections.count).map { $0 },
+                dest: (0..<sections.count).map { $0 },
+                identifier: { $0.description }
+            )
+            sectionDiff.check()
+            
+            // item calculating
+            
+            let itemDiffs = sections.enumerated().map { idx, section -> Diff<IRecycleItem> in
+                var diff: Diff<IRecycleItem>
+                if idx < self.sections.count {
+                    diff = Diff(src: self.sections[idx].getItems(), dest: section.getItems(), identifier: { $0.getDiff() })
+                } else {
+                    diff = Diff(src: [], dest: section.getItems(), identifier: { $0.getDiff() })
+                }
+                diff.check()
+                return diff
+            }
+            
+            self.sections = sections
+            performBatchUpdates({
+                self.applySectionUpdates(sectionDiff)
+                itemDiffs.enumerated().forEach { section, diff in
+                    self.applyItemUpdates(diff, in: section)
+                }
+            }, completion: nil)
+            
+        } else {
+            self.sections = sections
+            reloadData()
+        }
     }
+    
+    private func updateSectionsWithDiff(sections: [IRecycleSection]) {}
     
     // UICollectionDelegate, UICollectionDataSource
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -278,6 +314,33 @@ extension RecycleBox {
         if registeredItems[item.getItemIdentifier()] == nil {
             register(item.getItemViewType(), forCellWithReuseIdentifier: item.getItemIdentifier())
             registeredItems[item.getItemIdentifier()] = 1
+        }
+    }
+}
+
+extension UICollectionView {
+    func applySectionUpdates<T>(_ updates: Diff<T>) {
+        if !updates.delete.isEmpty {
+            // 删除section
+            deleteSections(IndexSet(updates.delete.map { $0.from }))
+        }
+        
+        if !updates.insert.isEmpty {
+            insertSections(IndexSet(updates.insert.map { $0.to }))
+        }
+    }
+    
+    func applyItemUpdates<T>(_ updates: Diff<T>, in section: Int) {
+        if !updates.delete.isEmpty {
+            deleteItems(at: updates.delete.map { IndexPath(row: $0.from, section: section) })
+        }
+        
+        if !updates.insert.isEmpty {
+            insertItems(at: updates.insert.map { IndexPath(row: $0.to, section: section) })
+        }
+        
+        updates.move.forEach { c in
+            self.moveItem(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))
         }
     }
 }

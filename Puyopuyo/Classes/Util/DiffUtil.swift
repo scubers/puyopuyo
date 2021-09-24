@@ -30,7 +30,7 @@ public class Diff<T>: CustomStringConvertible {
     public private(set) var move = [Change<T>]()
     public private(set) var stay = [Change<T>]()
 
-    public init(src: [T], dest: [T], identifier: @escaping (T) -> String = { "\($0)" }) {
+    public init(src: [T], dest: [T], identifier: @escaping (T) -> String) {
         self.src = src
         self.dest = dest
         self.identifier = identifier
