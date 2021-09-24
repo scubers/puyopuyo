@@ -10,19 +10,14 @@ import Foundation
 public class Trigger<T> {
     public var isBuilding = true
 
-    public struct Context<T> {
-        public var data: T
-        public var index: Int
-    }
+    var createor: (() -> RecyclerContext<T>?)?
 
-    var createor: (() -> Context<T>?)?
-
-    public var context: Context<T>? {
+    public var context: RecyclerContext<T>? {
         ensureNotBuiling()
         return createor?()
     }
 
-    public func inContext(_ action: (Context<T>) -> Void) {
+    public func inContext(_ action: (RecyclerContext<T>) -> Void) {
         if let context = context {
             action(context)
         }
@@ -42,11 +37,11 @@ public class LinearBoxRecycle<T>: LinearBox, BoxRecycler {
 
     fileprivate var container = Container<T>()
 
-    fileprivate var builder: (Outputs<T>, Trigger<T>) -> UIView
+    fileprivate var builder: RecyclerBuilder<T>
 
     public var viewState = State<[T]>([])
 
-    public required init(builder: @escaping (Outputs<T>, Trigger<T>) -> UIView) {
+    public required init(builder: @escaping RecyclerBuilder<T>) {
         self.builder = builder
         super.init(frame: .zero)
         setup()
@@ -59,14 +54,14 @@ public class LinearBoxRecycle<T>: LinearBox, BoxRecycler {
 }
 
 public class HBoxRecycle<T>: LinearBoxRecycle<T> {
-    public required init(builder: @escaping (Outputs<T>, Trigger<T>) -> UIView) {
+    public required init(builder: @escaping RecyclerBuilder<T>) {
         super.init(builder: builder)
         attach().direction(.x)
     }
 }
 
 public class VBoxRecycle<T>: LinearBoxRecycle<T> {
-    public required init(builder: @escaping (Outputs<T>, Trigger<T>) -> UIView) {
+    public required init(builder: @escaping RecyclerBuilder<T>) {
         super.init(builder: builder)
         attach().direction(.y)
     }
@@ -79,11 +74,11 @@ public class FlowBoxRecycle<T>: FlowBox, BoxRecycler {
 
     fileprivate var container = Container<T>()
 
-    fileprivate var builder: (Outputs<T>, Trigger<T>) -> UIView
+    fileprivate var builder: RecyclerBuilder<T>
 
     public var viewState = State<[T]>([])
 
-    public required init(count: Int, builder: @escaping (Outputs<T>, Trigger<T>) -> UIView) {
+    public required init(count: Int, builder: @escaping RecyclerBuilder<T>) {
         self.builder = builder
         super.init(frame: .zero)
         setup()
@@ -96,14 +91,14 @@ public class FlowBoxRecycle<T>: FlowBox, BoxRecycler {
 }
 
 public class HFlowRecycle<T>: FlowBoxRecycle<T> {
-    public required init(count: Int = 0, builder: @escaping (Outputs<T>, Trigger<T>) -> UIView) {
+    public required init(count: Int = 0, builder: @escaping RecyclerBuilder<T>) {
         super.init(count: count, builder: builder)
         attach().direction(.x).arrangeCount(count)
     }
 }
 
 public class VFlowRecycle<T>: FlowBoxRecycle<T> {
-    public required init(count: Int = 0, builder: @escaping (Outputs<T>, Trigger<T>) -> UIView) {
+    public required init(count: Int = 0, builder: @escaping RecyclerBuilder<T>) {
         super.init(count: count, builder: builder)
         attach().direction(.y)
     }
@@ -116,11 +111,11 @@ public class ZBoxRecycle<T>: ZBox, BoxRecycler {
 
     fileprivate var container = Container<T>()
 
-    fileprivate var builder: (Outputs<T>, Trigger<T>) -> UIView
+    fileprivate var builder: RecyclerBuilder<T>
 
     public var viewState = State<[T]>([])
 
-    public required init(builder: @escaping (Outputs<T>, Trigger<T>) -> UIView) {
+    public required init(builder: @escaping RecyclerBuilder<T>) {
         self.builder = builder
         super.init(frame: .zero)
         setup()
@@ -134,27 +129,26 @@ public class ZBoxRecycle<T>: ZBox, BoxRecycler {
 
 // MARK: - Private
 
-private class Context<T>: Hashable {
-    static func == (lhs: Context<T>, rhs: Context<T>) -> Bool {
-        lhs.id == rhs.id
-    }
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-
+private class Context<T> {
     let id = UUID()
 
     var view: UIView!
 
-    let state = State<(Int, T)>.unstable()
+    let state = State<RecyclerContext<T>>.unstable()
 }
+
+public struct RecyclerContext<T> {
+    public var data: T
+    public var index: Int
+}
+
+public typealias RecyclerBuilder<T> = (OutputBinder<RecyclerContext<T>>, Trigger<T>) -> UIView
 
 private protocol BoxRecycler: Stateful {
     associatedtype Data
 
     var container: Container<Data> { get }
-    var builder: (Outputs<Data>, Trigger<Data>) -> UIView { get }
+    var builder: RecyclerBuilder<Data> { get }
 }
 
 private class Container<T> {
@@ -174,7 +168,7 @@ extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Dat
     }
 
     private func reloadWithDiff(dataSource: [Data]) {
-        let diff = Diff(src: container.usingMap.map(\.state.value).map { $1 }, dest: dataSource, identifier: {
+        let diff = Diff(src: container.usingMap.map(\.state.value.data), dest: dataSource, identifier: {
             ($0 as! RecycleIdentifiable).recycleIdentifier
         })
         diff.check()
@@ -205,7 +199,7 @@ extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Dat
             let context = container.usingMap[idx]
             context.view.removeFromSuperview()
             addSubview(context.view)
-            context.state.input(value: (idx, element))
+            context.state.input(value: .init(data: element, index: idx))
         }
 
         if diff.isDifferent() {
@@ -223,7 +217,7 @@ extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Dat
         if container.freeMap.isEmpty {
             let c = Context<Data>()
             let trigger = Trigger<Data>()
-            let view = builder(c.state.asOutput().map { $0.1 }, trigger)
+            let view = builder(c.state.asOutput().binder, trigger)
 
             let finder = { [weak view, weak self] () -> Context<Data>? in
                 guard let view = view, let self = self else {
@@ -238,7 +232,7 @@ extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Dat
             }
             trigger.createor = {
                 if let c = finder() {
-                    return .init(data: c.state.value.1, index: c.state.value.0)
+                    return .init(data: c.state.value.data, index: c.state.value.index)
                 }
                 return nil
             }
@@ -253,10 +247,10 @@ extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Dat
     private func reload(dataSource: [Data]) {
         dataSource.enumerated().forEach { idx, element in
             if idx < container.usingMap.count {
-                container.usingMap[idx].state.input(value: (idx, element))
+                container.usingMap[idx].state.input(value: .init(data: element, index: idx))
             } else {
                 let context = getContext()
-                context.state.input(value: (idx, element))
+                context.state.input(value: .init(data: element, index: idx))
                 container.usingMap.append(context)
                 addSubview(context.view)
             }

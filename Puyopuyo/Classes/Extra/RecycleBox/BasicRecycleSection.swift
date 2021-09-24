@@ -34,7 +34,7 @@ public class ActionTrigger<D, V: UIView> {
     }
 }
 
-public typealias RecycleViewGenerator<D> = (Outputs<RecycleContext<D, UICollectionView>>, ActionTrigger<D, UICollectionView>) -> UIView?
+public typealias RecycleViewGenerator<D> = (OutputBinder<RecycleContext<D, UICollectionView>>, ActionTrigger<D, UICollectionView>) -> UIView?
 
 public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     public func addDisposer(_ disposer: Disposer, for key: String?) {
@@ -214,9 +214,9 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
             }
             switch kind {
             case UICollectionView.elementKindSectionHeader where headerGen != nil:
-                root = headerGen!(state.asOutput(), holder)
+                root = headerGen!(state.binder, holder)
             case UICollectionView.elementKindSectionFooter where footerGen != nil:
-                root = footerGen!(state.asOutput(), holder)
+                root = footerGen!(state.binder, holder)
             default: break
             }
             view.root = root

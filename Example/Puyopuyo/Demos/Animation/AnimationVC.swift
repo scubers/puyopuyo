@@ -61,7 +61,7 @@ class AnimationVC: BaseVC {
                 VFlowRecycle<Int> { o, _ in
                     Label.demo("").attach()
                         .size(50, 50)
-                        .text(o.map { v -> String in
+                        .text(o.data.map { v -> String in
                             if v == 0 { return "Click" }
                             else { return v.description }
                         })

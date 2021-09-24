@@ -220,23 +220,23 @@ class FlowPropertiesVC: BaseVC {
                 return UIView()
             }
             let base: CGFloat = 40
-            let width = Outputs.combine(o, self.step, self.blockFix).map { idx, step, blockFixed -> SizeDescription in
+            let width = Outputs.combine(o.data, self.step, self.blockFix).map { idx, step, blockFixed -> SizeDescription in
                 let size = base + CGFloat(step) * CGFloat(idx)
                 return blockFixed ? SizeDescription.fix(size) : .wrap(add: size)
             }
 
             return Label.demo("").attach()
-                .text(o.map(\.description))
+                .text(o.data.description)
                 .backgroundColor(Util.randomColor())
                 .width(width)
                 .height(width)
-                .bind(keyPath: \.py_measure.flowEnding, self.endings.combine(o).map { v, idx in
+                .bind(keyPath: \.py_measure.flowEnding, self.endings.combine(o.data).map { v, idx in
                     v.contains(idx)
                 })
                 .onTap {
                     print("----")
                 }
-                .animator(o.map { v -> Animator? in
+                .animator(o.data.map { v -> Animator? in
                     switch v % 3 {
                     case 0: return ExpandAnimator() as Animator
                     case 1: return SpinAnimator() as Animator

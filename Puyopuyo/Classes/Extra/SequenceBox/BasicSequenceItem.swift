@@ -92,7 +92,7 @@ public class BasicSequenceItem<Data>: ISequenceItem {
                 }
                 return nil
             }
-            if let root = cellGen(cell!.state.asOutput(), holder) {
+            if let root = cellGen(cell!.state.binder, holder) {
                 cell?.root = root
                 cell?.contentView.addSubview(root)
             }

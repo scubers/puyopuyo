@@ -126,7 +126,7 @@ public class BasicRecycleItem<Data>: IRecycleItem {
                 }
                 return nil
             }
-            let root = cellGen(cell.state.asOutput(), holder)
+            let root = cellGen(cell.state.binder, holder)
             cell.root = root
             if let root = root {
                 cell.contentView.addSubview(root)

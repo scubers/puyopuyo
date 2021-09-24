@@ -7,7 +7,7 @@
 
 import Foundation
 
-public typealias SequenceViewGenerator<D> = (Outputs<RecycleContext<D, UITableView>>, ActionTrigger<D, UITableView>) -> UIView?
+public typealias SequenceViewGenerator<D> = (OutputBinder<RecycleContext<D, UITableView>>, ActionTrigger<D, UITableView>) -> UIView?
 
 public class BasicSequenceSection<Data>: ISequenceSection, DisposableBag {
     public init(
@@ -110,7 +110,7 @@ public class BasicSequenceSection<Data>: ISequenceSection, DisposableBag {
                     }
                     return nil
                 }
-                if let root = gen(view!.state.asOutput(), holder) {
+                if let root = gen(view!.state.binder, holder) {
                     view?.root = root
                     view?.contentView.addSubview(root)
                 }
@@ -125,7 +125,7 @@ public class BasicSequenceSection<Data>: ISequenceSection, DisposableBag {
                     }
                     return nil
                 }
-                if let root = gen(view!.state.asOutput(), holder) {
+                if let root = gen(view!.state.binder, holder) {
                     view?.root = root
                     view?.contentView.addSubview(root)
                 }
