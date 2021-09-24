@@ -7,103 +7,6 @@
 
 import Foundation
 
-// MARK: - LinearBoxRecycle
-
-public class LinearBoxRecycle<T>: LinearBox, BoxRecycler {
-    typealias Data = T
-
-    fileprivate var container = Container<T>()
-
-    fileprivate var builder: RecyclerBuilder<T>
-
-    public var viewState = State<[T]>([])
-
-    public required init(builder: @escaping RecyclerBuilder<T>) {
-        self.builder = builder
-        super.init(frame: .zero)
-        setup()
-    }
-
-    @available(*, unavailable)
-    required init?(coder argument: NSCoder) {
-        fatalError()
-    }
-}
-
-public class HBoxRecycle<T>: LinearBoxRecycle<T> {
-    public required init(builder: @escaping RecyclerBuilder<T>) {
-        super.init(builder: builder)
-        attach().direction(.x)
-    }
-}
-
-public class VBoxRecycle<T>: LinearBoxRecycle<T> {
-    public required init(builder: @escaping RecyclerBuilder<T>) {
-        super.init(builder: builder)
-        attach().direction(.y)
-    }
-}
-
-// MARK: - FlowBoxRecycle
-
-public class FlowBoxRecycle<T>: FlowBox, BoxRecycler {
-    typealias Data = T
-
-    fileprivate var container = Container<T>()
-
-    fileprivate var builder: RecyclerBuilder<T>
-
-    public var viewState = State<[T]>([])
-
-    public required init(count: Int, builder: @escaping RecyclerBuilder<T>) {
-        self.builder = builder
-        super.init(frame: .zero)
-        setup()
-    }
-
-    @available(*, unavailable)
-    public required init?(coder argument: NSCoder) {
-        fatalError()
-    }
-}
-
-public class HFlowRecycle<T>: FlowBoxRecycle<T> {
-    public required init(count: Int = 0, builder: @escaping RecyclerBuilder<T>) {
-        super.init(count: count, builder: builder)
-        attach().direction(.x).arrangeCount(count)
-    }
-}
-
-public class VFlowRecycle<T>: FlowBoxRecycle<T> {
-    public required init(count: Int = 0, builder: @escaping RecyclerBuilder<T>) {
-        super.init(count: count, builder: builder)
-        attach().direction(.y)
-    }
-}
-
-// MARK: - ZBoxRecycle
-
-public class ZBoxRecycle<T>: ZBox, BoxRecycler {
-    typealias Data = T
-
-    fileprivate var container = Container<T>()
-
-    fileprivate var builder: RecyclerBuilder<T>
-
-    public var viewState = State<[T]>([])
-
-    public required init(builder: @escaping RecyclerBuilder<T>) {
-        self.builder = builder
-        super.init(frame: .zero)
-        setup()
-    }
-
-    @available(*, unavailable)
-    public required init?(coder argument: NSCoder) {
-        fatalError()
-    }
-}
-
 // MARK: - Base
 
 public struct RecyclerInfo<T> {
@@ -305,3 +208,100 @@ public extension RecycleIdentifiable where Self: CustomStringConvertible {
 
 extension String: RecycleIdentifiable {}
 extension Int: RecycleIdentifiable {}
+
+// MARK: - LinearBoxRecycle
+
+public class LinearBoxRecycle<T>: LinearBox, BoxRecycler {
+    typealias Data = T
+
+    fileprivate var container = Container<T>()
+
+    fileprivate var builder: RecyclerBuilder<T>
+
+    public var viewState = State<[T]>([])
+
+    public required init(builder: @escaping RecyclerBuilder<T>) {
+        self.builder = builder
+        super.init(frame: .zero)
+        setup()
+    }
+
+    @available(*, unavailable)
+    required init?(coder argument: NSCoder) {
+        fatalError()
+    }
+}
+
+public class HBoxRecycle<T>: LinearBoxRecycle<T> {
+    public required init(builder: @escaping RecyclerBuilder<T>) {
+        super.init(builder: builder)
+        attach().direction(.x)
+    }
+}
+
+public class VBoxRecycle<T>: LinearBoxRecycle<T> {
+    public required init(builder: @escaping RecyclerBuilder<T>) {
+        super.init(builder: builder)
+        attach().direction(.y)
+    }
+}
+
+// MARK: - FlowBoxRecycle
+
+public class FlowBoxRecycle<T>: FlowBox, BoxRecycler {
+    typealias Data = T
+
+    fileprivate var container = Container<T>()
+
+    fileprivate var builder: RecyclerBuilder<T>
+
+    public var viewState = State<[T]>([])
+
+    public required init(count: Int, builder: @escaping RecyclerBuilder<T>) {
+        self.builder = builder
+        super.init(frame: .zero)
+        setup()
+    }
+
+    @available(*, unavailable)
+    public required init?(coder argument: NSCoder) {
+        fatalError()
+    }
+}
+
+public class HFlowRecycle<T>: FlowBoxRecycle<T> {
+    public required init(count: Int = 0, builder: @escaping RecyclerBuilder<T>) {
+        super.init(count: count, builder: builder)
+        attach().direction(.x).arrangeCount(count)
+    }
+}
+
+public class VFlowRecycle<T>: FlowBoxRecycle<T> {
+    public required init(count: Int = 0, builder: @escaping RecyclerBuilder<T>) {
+        super.init(count: count, builder: builder)
+        attach().direction(.y)
+    }
+}
+
+// MARK: - ZBoxRecycle
+
+public class ZBoxRecycle<T>: ZBox, BoxRecycler {
+    typealias Data = T
+
+    fileprivate var container = Container<T>()
+
+    fileprivate var builder: RecyclerBuilder<T>
+
+    public var viewState = State<[T]>([])
+
+    public required init(builder: @escaping RecyclerBuilder<T>) {
+        self.builder = builder
+        super.init(frame: .zero)
+        setup()
+    }
+
+    @available(*, unavailable)
+    public required init?(coder argument: NSCoder) {
+        fatalError()
+    }
+}
