@@ -125,6 +125,8 @@ public class SequenceBox: UITableView,
         // 监听tableView变化，动态改变TableBox大小
         py_observing(\.contentSize)
             .unwrap(or: .zero)
+            .filter { $0 != .zero }
+            .debounce()
             .safeBind(to: self) { (this, size: CGSize) in
                 if this.wrapContent {
                     this.attach().height(size.height)
@@ -137,6 +139,10 @@ public class SequenceBox: UITableView,
             DispatchQueue.main.async {
                 this.reloadSections(s)
             }
+        }
+
+        py_sizeState().filter { $0 != .zero }.distinct().debounce().safeBind(to: self) { this, _ in
+            this.reloadData()
         }
     }
 
@@ -259,7 +265,7 @@ private extension SequenceBox {
         footerView.setNeedsDisplay()
         footerView.layoutIfNeeded()
 
-        if enableDiff && bounds != .zero {
+        if enableDiff, bounds != .zero {
             reloadWithDiff(sections: sections)
         } else {
             self.sections = sections

@@ -31,6 +31,7 @@ class FeedVC: BaseVC, UITableViewDelegate {
     func recycleBox() -> UIView {
         let this = WeakCatcher(value: self)
         return RecycleBox(
+            estimatedSize: CGSize(width: 100, height: 100),
             sections: [
                 RecycleSection<Void, Feed>(
                     items: dataSource.asOutput(),
@@ -389,7 +390,7 @@ extension RandomValues {
 
 struct Names: RandomValues {
     var values = [
-        "John", "Tom", "Micheal", "Jrwong", "Scubers", "Fedex"
+        "John", "Tom", "Micheal", "Jrwong", "Scubers", "Fedex", "DHL", "YSL", "BMW", "Bence", "Toyota", "iPad", "Android", "Smith"
     ]
 }
 

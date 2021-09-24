@@ -133,7 +133,7 @@ open class RecycleBox: UICollectionView,
         }
         
         py_boundsState().map(\.size).distinct().debounce().safeBind(to: self) { this, _ in
-            this.flowLayout.invalidateLayout()
+            this.reloadData()
         }
     }
     
