@@ -7,51 +7,17 @@
 
 import UIKit
 
-private func belowiOS9() -> Bool {
-    if #available(iOS 9.0, *) {
-        return false
-    }
-    // 先测试，所有都使用自定义layout控制header悬浮
-    return true
-}
-
-public protocol CollectionHeaderPinable {
-    func setSectionHeaderPin(_ pin: Bool)
-}
-
-extension UICollectionViewFlowLayout: CollectionHeaderPinable {
-    @objc public func setSectionHeaderPin(_ pin: Bool) {
-        if !belowiOS9() {
-            if #available(iOS 9.0, *) {
-                sectionHeadersPinToVisibleBounds = pin
-            }
-        }
-    }
-}
-
-/// 负责处理iOS9以下，header悬浮问题
 public class CollectionBoxFlowLayout: UICollectionViewFlowLayout {
-    public override init() {
-        super.init()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    override public func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+        let attrs = super.layoutAttributesForElements(in: rect)
+        return attrs
     }
 
-    var pinHeader = false
-    @objc public override func setSectionHeaderPin(_ pin: Bool) {
-        if !belowiOS9() {
-            super.setSectionHeaderPin(pin)
-        } else {
-            pinHeader = pin
-        }
+    override public func shouldInvalidateLayout(forBoundsChange bounds: CGRect) -> Bool {
+        return true
     }
 
-    public override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        if !belowiOS9() || !pinHeader {
-            return super.layoutAttributesForElements(in: rect)
-        }
+    private func notUse(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         // UICollectionViewLayoutAttributes：称它为collectionView中的item（包括cell和header、footer这些）的《结构信息》
         var attributesArray: [UICollectionViewLayoutAttributes] = []
         if let superAttributesArray = super.layoutAttributesForElements(in: rect) {
@@ -88,7 +54,8 @@ public class CollectionBoxFlowLayout: UICollectionViewFlowLayout {
             let indexPath = IndexPath(row: 0, section: section)
             // 获取当前section在正常情况下已经离开屏幕的header结构信息
             if let attributes =
-                self.layoutAttributesForSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, at: indexPath) {
+                self.layoutAttributesForSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, at: indexPath)
+            {
                 // 如果当前分区确实有因为离开屏幕而被系统回收的header，将该header结构信息重新加入到superArray中去
                 attributesArray.append(attributes)
             }
@@ -167,12 +134,5 @@ public class CollectionBoxFlowLayout: UICollectionViewFlowLayout {
         }
 
         return attributesArray
-    }
-
-    public override func shouldInvalidateLayout(forBoundsChange bounds: CGRect) -> Bool {
-        if !belowiOS9() {
-            return super.shouldInvalidateLayout(forBoundsChange: bounds)
-        }
-        return true
     }
 }

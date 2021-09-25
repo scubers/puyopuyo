@@ -108,7 +108,7 @@ open class RecycleBox: UICollectionView,
         
         layout.minimumInteritemSpacing = itemSpacing
         layout.minimumLineSpacing = lineSpacing
-        layout.setSectionHeaderPin(pinHeader)
+        layout.sectionFootersPinToVisibleBounds = pinHeader
         layout.sectionInset = sectionInset
         layout.estimatedItemSize = estimatedSize
         layout.scrollDirection = direction
@@ -132,7 +132,7 @@ open class RecycleBox: UICollectionView,
             this.reload(sections: s)
         }
         
-        py_boundsState().map(\.size).distinct().debounce().safeBind(to: self) { this, _ in
+        py_boundsState().map(\.size).distinct().debounce(interval: 0.2).safeBind(to: self) { this, _ in
             this.reloadData()
         }
     }
@@ -190,12 +190,12 @@ open class RecycleBox: UICollectionView,
     }
     
     public func reload(sections: [IRecycleSection]) {
-        if enableDiff && bounds != .zero {
-            reloadWithDiff(sections: sections)
-        } else {
-            self.sections = sections
-            reloadData()
-        }
+//        if enableDiff, bounds != .zero {
+//            reloadWithDiff(sections: sections)
+//        } else {
+        self.sections = sections
+        reloadData()
+//        }
     }
     
     private func reloadWithDiff(sections: [IRecycleSection]) {
@@ -226,7 +226,9 @@ open class RecycleBox: UICollectionView,
             itemDiffs.enumerated().forEach { section, diff in
                 self.applyItemUpdates(diff, in: section)
             }
-        }, completion: nil)
+        }, completion: { _ in
+            self.reloadSections(sectionDiff)
+        })
     }
     
     private func updateSectionsWithDiff(sections: [IRecycleSection]) {}
@@ -321,14 +323,24 @@ extension RecycleBox {
 
 extension UICollectionView {
     func applySectionUpdates<T>(_ updates: Diff<T>) {
-        if !updates.delete.isEmpty {
-            // 删除section
-            deleteSections(IndexSet(updates.delete.map { $0.from }))
-        }
+//        self.reloadSections(IndexSet(updates.stay.map { $0.from }))
+        deleteSections(IndexSet(updates.delete.map { $0.from }))
+        insertSections(IndexSet(updates.insert.map { $0.to }))
         
-        if !updates.insert.isEmpty {
-            insertSections(IndexSet(updates.insert.map { $0.to }))
-        }
+        // reload 如果和insert delete在同一个事务，会导致动画失效
+//        DispatchQueue.main.async {
+//            self.performBatchUpdates({
+//                let context = UICollectionViewFlowLayoutInvalidationContext()
+//                let path = updates.stay.map { IndexPath(row: 0, section: $0.from) }
+//                context.invalidateSupplementaryElements(ofKind: UICollectionView.elementKindSectionHeader, at: path)
+//                context.invalidateSupplementaryElements(ofKind: UICollectionView.elementKindSectionFooter, at: path)
+//                self.collectionViewLayout.invalidateLayout(with: context)
+//            }, completion: nil)
+//        }
+    }
+    
+    func reloadSections<T>(_ updates: Diff<T>) {
+//        reloadSections(IndexSet(updates.stay.map { $0.to }))
     }
     
     func applyItemUpdates<T>(_ updates: Diff<T>, in section: Int) {

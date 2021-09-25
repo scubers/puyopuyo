@@ -265,12 +265,12 @@ private extension SequenceBox {
         footerView.setNeedsDisplay()
         footerView.layoutIfNeeded()
 
-        if enableDiff, bounds != .zero {
-            reloadWithDiff(sections: sections)
-        } else {
-            self.sections = sections
-            reloadData()
-        }
+//        if enableDiff, bounds != .zero {
+//            reloadWithDiff(sections: sections)
+//        } else {
+        self.sections = sections
+        reloadData()
+//        }
     }
 
     private func reloadWithDiff(sections: [ISequenceSection]) {

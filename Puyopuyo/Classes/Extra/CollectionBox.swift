@@ -78,7 +78,7 @@ public class CollectionBox: UICollectionView,
         layout.scrollDirection = direction
         layout.minimumLineSpacing = minimumLineSpacing
         layout.minimumInteritemSpacing = minimumInteritemSpacing
-        layout.setSectionHeaderPin(pinHeader)
+        layout.sectionHeadersPinToVisibleBounds = pinHeader
         layout.estimatedItemSize = estimatedSize
         self.layout = layout
         super.init(frame: .zero, collectionViewLayout: layout)

@@ -33,7 +33,8 @@ class Label: UILabel {
         let l = self.title(title)
 //        l.layer.borderColor = Theme.color.cgColor
 //        l.layer.borderWidth = Util.pixel(1)
-        l.attach().width(.wrap(add: 10))
+        l.attach()
+            .size(.wrap(add: 10), .wrap(add: 10))
             .textColor(Theme.antiAccentColor)
             .backgroundColor(Theme.accentColor)
             .cornerRadius(4)
