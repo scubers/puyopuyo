@@ -197,8 +197,17 @@ open class RecycleBox: UICollectionView,
     }
     
     public func reload(sections: [IRecycleSection]) {
+//        if enableDiff {
+//            let old = self.sections.count
+//            let new = sections.count
+//            performBatchUpdates({
+//                self.deleteSections(IndexSet(0..<old))
+//                self.insertSections(IndexSet(0..<new))
+//            }, completion: nil)
+//        } else {
         self.sections = sections
         reloadData()
+//        }
     }
     
     private func updateSectionsWithDiff(sections: [IRecycleSection]) {}
