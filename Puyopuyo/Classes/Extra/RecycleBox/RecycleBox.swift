@@ -96,7 +96,8 @@ open class RecycleBox: UICollectionView,
     // contruct method
     public init(
         direction: UICollectionView.ScrollDirection = .vertical,
-        pinHeader: Bool = false,
+        headerPinToBounds: Bool = false,
+        footerPinToBounds: Bool = false,
         lineSpacing: CGFloat = 0,
         itemSpacing: CGFloat = 0,
         estimatedSize: CGSize = .zero,
@@ -108,7 +109,8 @@ open class RecycleBox: UICollectionView,
         
         layout.minimumInteritemSpacing = itemSpacing
         layout.minimumLineSpacing = lineSpacing
-        layout.sectionFootersPinToVisibleBounds = pinHeader
+        layout.sectionFootersPinToVisibleBounds = headerPinToBounds
+        layout.sectionFootersPinToVisibleBounds = footerPinToBounds
         layout.sectionInset = sectionInset
         layout.estimatedItemSize = estimatedSize
         layout.scrollDirection = direction
@@ -118,6 +120,11 @@ open class RecycleBox: UICollectionView,
         super.init(frame: .zero, collectionViewLayout: layout)
         
         enableDiff = diff
+        
+        if diff {
+            assert(estimatedSize != .zero, "If diff is true, should set estimatedSize")
+        }
+        
         delegateProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
         dataSourceProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
         backgroundColor = .clear
@@ -190,45 +197,8 @@ open class RecycleBox: UICollectionView,
     }
     
     public func reload(sections: [IRecycleSection]) {
-//        if enableDiff, bounds != .zero {
-//            reloadWithDiff(sections: sections)
-//        } else {
         self.sections = sections
         reloadData()
-//        }
-    }
-    
-    private func reloadWithDiff(sections: [IRecycleSection]) {
-        // section calculating
-        let sectionDiff = Diff(
-            src: (0..<self.sections.count).map { $0 },
-            dest: (0..<sections.count).map { $0 },
-            identifier: { $0.description }
-        )
-        sectionDiff.check()
-        
-        // item calculating
-        
-        let itemDiffs = sections.enumerated().map { idx, section -> Diff<IRecycleItem> in
-            var diff: Diff<IRecycleItem>
-            if idx < self.sections.count {
-                diff = Diff(src: self.sections[idx].getItems(), dest: section.getItems(), identifier: { $0.getDiff() })
-            } else {
-                diff = Diff(src: [], dest: section.getItems(), identifier: { $0.getDiff() })
-            }
-            diff.check()
-            return diff
-        }
-        
-        self.sections = sections
-        performBatchUpdates({
-            self.applySectionUpdates(sectionDiff)
-            itemDiffs.enumerated().forEach { section, diff in
-                self.applyItemUpdates(diff, in: section)
-            }
-        }, completion: { _ in
-            self.reloadSections(sectionDiff)
-        })
     }
     
     private func updateSectionsWithDiff(sections: [IRecycleSection]) {}
@@ -322,35 +292,10 @@ extension RecycleBox {
 }
 
 extension UICollectionView {
-    func applySectionUpdates<T>(_ updates: Diff<T>) {
-//        self.reloadSections(IndexSet(updates.stay.map { $0.from }))
-        deleteSections(IndexSet(updates.delete.map { $0.from }))
-        insertSections(IndexSet(updates.insert.map { $0.to }))
-        
-        // reload 如果和insert delete在同一个事务，会导致动画失效
-//        DispatchQueue.main.async {
-//            self.performBatchUpdates({
-//                let context = UICollectionViewFlowLayoutInvalidationContext()
-//                let path = updates.stay.map { IndexPath(row: 0, section: $0.from) }
-//                context.invalidateSupplementaryElements(ofKind: UICollectionView.elementKindSectionHeader, at: path)
-//                context.invalidateSupplementaryElements(ofKind: UICollectionView.elementKindSectionFooter, at: path)
-//                self.collectionViewLayout.invalidateLayout(with: context)
-//            }, completion: nil)
-//        }
-    }
-    
-    func reloadSections<T>(_ updates: Diff<T>) {
-//        reloadSections(IndexSet(updates.stay.map { $0.to }))
-    }
-    
     func applyItemUpdates<T>(_ updates: Diff<T>, in section: Int) {
-        if !updates.delete.isEmpty {
-            deleteItems(at: updates.delete.map { IndexPath(row: $0.from, section: section) })
-        }
+        deleteItems(at: updates.delete.map { IndexPath(row: $0.from, section: section) })
         
-        if !updates.insert.isEmpty {
-            insertItems(at: updates.insert.map { IndexPath(row: $0.to, section: section) })
-        }
+        insertItems(at: updates.insert.map { IndexPath(row: $0.to, section: section) })
         
         updates.move.forEach { c in
             self.moveItem(at: IndexPath(row: c.from, section: section), to: IndexPath(row: c.to, section: section))

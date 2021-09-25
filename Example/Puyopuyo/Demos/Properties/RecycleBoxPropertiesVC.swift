@@ -39,7 +39,7 @@ class RecycleBoxPropertiesVC: BaseVC {
             .width(.fill)
 
             box = RecycleBox(
-                pinHeader: true,
+                headerPinToBounds: true,
                 estimatedSize: CGSize(width: 50, height: 50),
                 sectionInset: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
                 diff: true,
@@ -108,6 +108,7 @@ class RecycleBoxPropertiesVC: BaseVC {
         ]
     }
 
+    var times = 0
     func reloadMultipleSectionToOne() {
         let dataSource = State([
             (0..<5).map { $0 },
@@ -117,12 +118,14 @@ class RecycleBoxPropertiesVC: BaseVC {
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             dataSource.value = [(0..<20).reversed().map { $0 }]
+//            self.times += 1
+//            dataSource.value.shuffle()
         }
 
         dataSource.map { sections -> [IRecycleSection] in
             sections.map { rows in
                 BasicRecycleSection(
-                    data: (),
+                    data: self.times,
                     items: rows.map { row in
                         BasicRecycleItem(
                             data: row,
@@ -137,7 +140,8 @@ class RecycleBoxPropertiesVC: BaseVC {
                     }.asOutput(),
                     header: { o, _ in
                         Header().attach()
-                            .viewState(o.indexPath.section.map { "Section \($0)" })
+//                            .viewState(o.indexPath.section.map { "Section \($0)" })
+                            .viewState(o.map({ "section \($0.indexPath.section), times: \($0.data)"}))
                             .view
                     }
                 )
