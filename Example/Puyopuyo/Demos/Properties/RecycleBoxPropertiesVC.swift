@@ -34,6 +34,10 @@ class RecycleBoxPropertiesVC: BaseVC {
                     .onTap(to: self) { this, _ in
                         this.colorBlocks()
                     }
+                Label.demo("calendar").attach($0)
+                    .onTap(to: self) { this, _ in
+                        this.calendar()
+                    }
             }
             .space(10)
             .width(.fill)
@@ -81,7 +85,7 @@ class RecycleBoxPropertiesVC: BaseVC {
     }
 
     let names = State(Names().random(10))
-    
+
     func randomShuffleAnimation() {
         let this = WeakCatcher(value: self)
         sections.value = [
@@ -108,7 +112,6 @@ class RecycleBoxPropertiesVC: BaseVC {
         ]
     }
 
-    var times = 0
     func reloadMultipleSectionToOne() {
         let dataSource = State([
             (0..<5).map { $0 },
@@ -118,14 +121,12 @@ class RecycleBoxPropertiesVC: BaseVC {
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             dataSource.value = [(0..<20).reversed().map { $0 }]
-//            self.times += 1
-//            dataSource.value.shuffle()
         }
 
         dataSource.map { sections -> [IRecycleSection] in
             sections.map { rows in
                 BasicRecycleSection(
-                    data: self.times,
+                    data: (),
                     items: rows.map { row in
                         BasicRecycleItem(
                             data: row,
@@ -141,7 +142,7 @@ class RecycleBoxPropertiesVC: BaseVC {
                     header: { o, _ in
                         Header().attach()
 //                            .viewState(o.indexPath.section.map { "Section \($0)" })
-                            .viewState(o.map({ "section \($0.indexPath.section), times: \($0.data)"}))
+                            .viewState(o.map { "section \($0.indexPath.section)" })
                             .view
                     }
                 )
@@ -159,7 +160,6 @@ class RecycleBoxPropertiesVC: BaseVC {
             section1.value = (4..<10).map { $0 }
             section2.value = (4..<20).map { $0 }
         }
-        
 
         sections.value = [
             DataRecycleSection(
@@ -188,6 +188,71 @@ class RecycleBoxPropertiesVC: BaseVC {
                     Header().attach()
                         .viewState("Header 2")
                         .view
+                }
+            )
+        ]
+    }
+
+    func calendar() {
+//        let date = Date()
+//        let today = Calendar.current.component(.day, from: date)
+
+        let selected = State(0)
+
+        let appointments = (0..<30).map { _ in
+            Names().random(5)
+        }
+
+        let appointment = State<[String]>([])
+
+        sections.value = [
+            DataRecycleSection(
+                items: (0..<30).map { $0 }.asOutput(),
+                cell: { o, _ in
+                    let w = o.layoutableSize.width.map { $0 / 7 }
+                    return VBox().attach {
+                        UILabel().attach($0)
+                            .text(o.data.map { $0 + 1 }.binder.description)
+                            .width(.fill)
+                            .textAlignment(.center)
+
+                        HBoxRecycle<String> { _, _ in
+                            UIView().attach()
+                                .backgroundColor(.systemBlue)
+                                .size(4, 4)
+                                .cornerRadius(2)
+                                .view
+                        }
+                        .attach($0)
+                        .viewState(o.data.map { appointments[$0] })
+                        .space(4)
+                    }
+                    .justifyContent(.center)
+                    .format(.round)
+                    .size(w, w)
+                    .backgroundColor(Outputs.combine(o.data, selected).map { $0 == $1 }.map { $0 ? UIColor.systemPink : .clear
+                    })
+                    .view
+                },
+                didSelect: { o in
+                    UIView.animate(withDuration: 0.2) {
+                        selected.value = o.data
+                        appointment.value = appointments[o.data]                        
+                    }
+                }
+            ),
+            DataRecycleSection(
+                items: appointment.asOutput(),
+                differ: { $0.description },
+                cell: { o, _ in
+                    HBox().attach {
+                        UILabel().attach($0)
+                            .text(o.data)
+                            .fontSize(20, weight: .bold)
+                    }
+                    .padding(all: 10)
+                    .width(.fill)
+                    .view
                 }
             )
         ]
