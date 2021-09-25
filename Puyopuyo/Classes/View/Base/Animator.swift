@@ -18,11 +18,13 @@ public protocol Animator {
 
 public extension Animator {
     func runAsNoneAnimation(_ action: @escaping () -> Void) {
-        if isNestedAnimation {
-            UIView.animate(withDuration: 0, delay: 0, options: [.curveLinear, .overrideInheritedCurve, .overrideInheritedDuration], animations: action, completion: nil)
-        } else {
-            action()
-        }
+        UIView.performWithoutAnimation(action)
+//        if isNestedAnimation {
+//
+//            UIView.animate(withDuration: 0, delay: 0, options: [.curveLinear, .overrideInheritedCurve, .overrideInheritedDuration], animations: action, completion: nil)
+//        } else {
+//            action()
+//        }
     }
 
     var isNestedAnimation: Bool {
@@ -34,7 +36,7 @@ public enum Animators {
     /// inherited animation
     public static let inherited: Animator = InheritedAnimator()
 
-    public static let none: Animator = NonAnimator()
+    public static let none: Animator = NoneAnimator()
 
     /// default animation
     public static let `default`: Animator = `default`()
@@ -43,10 +45,10 @@ public enum Animators {
         DefaultAnimator(duration: duration, inherited: inherited)
     }
 
-    struct NonAnimator: Animator {
+    struct NoneAnimator: Animator {
         var duration: TimeInterval = 0
         func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
-            runAsNoneAnimation(animations)
+            UIView.performWithoutAnimation(animations)
         }
     }
 
