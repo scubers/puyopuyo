@@ -193,18 +193,17 @@ class RecycleBoxPropertiesVC: BaseVC {
         ]
     }
 
+    let selected = State(0)
+
+    let appointments = (0..<30).map { _ in
+        Names().random(5)
+    }
+
+    let appointment = State<[String]>([])
     func calendar() {
-//        let date = Date()
-//        let today = Calendar.current.component(.day, from: date)
-
-        let selected = State(0)
-
-        let appointments = (0..<30).map { _ in
-            Names().random(5)
-        }
-
-        let appointment = State<[String]>([])
-
+        let selected = selected
+        let appointments = appointments
+        let appointment = appointment
         sections.value = [
             DataRecycleSection(
                 items: (0..<30).map { $0 }.asOutput(),
@@ -237,7 +236,7 @@ class RecycleBoxPropertiesVC: BaseVC {
                 didSelect: { o in
                     UIView.animate(withDuration: 0.2) {
                         selected.value = o.data
-                        appointment.value = appointments[o.data]                        
+                        appointment.value = appointments[o.data]
                     }
                 }
             ),
