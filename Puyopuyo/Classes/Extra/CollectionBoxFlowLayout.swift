@@ -9,12 +9,4 @@ import UIKit
 
 // private class Context: UICollectionViewFlowLayoutInvalidationContext {}
 
-public class CollectionBoxFlowLayout: UICollectionViewFlowLayout {
-    override public func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
-        true
-    }
-
-    override public func layoutAttributesForSupplementaryView(ofKind elementKind: String, at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-        return super.layoutAttributesForSupplementaryView(ofKind: elementKind, at: indexPath)
-    }
-}
+public class CollectionBoxFlowLayout: UICollectionViewFlowLayout {}

@@ -13,18 +13,9 @@ import UIKit
 class FeedVC: BaseVC, UITableViewDelegate {
     let dataSource = State<[Feed]>([])
 
-    let type = State(true)
-
-    func change() {
-        type.value = !type.value
-    }
-
     override func configView() {
         vRoot.attach {
-            sequenceBox().attach($0)
-                .visibility(type.map { $0.py_visibleOrGone() })
             recycleBox().attach($0)
-                .visibility(type.map { $0.py_toggled().py_visibleOrGone() })
         }
     }
 
@@ -49,7 +40,7 @@ class FeedVC: BaseVC, UITableViewDelegate {
                                 case .reload:
                                     this.value?.reload()
                                 case .change:
-                                    this.value?.change()
+                                    break
                                 }
                             }
                             .view
@@ -70,50 +61,6 @@ class FeedVC: BaseVC, UITableViewDelegate {
         )
         .attach()
         .backgroundColor(UIColor.white)
-        .size(.fill, .fill)
-        .view
-    }
-
-    func sequenceBox() -> UIView {
-        let this = WeakCatcher(value: self)
-        return SequenceBox(
-            sections: [
-                SequenceSection<Void, Feed>(
-                    dataSource: dataSource.asOutput(),
-                    cell: { o, _ in
-                        ItemView().attach()
-                            .viewState(o.data)
-                            .width(.fill)
-                            .view
-                    }
-                )
-            ].asOutput(),
-            header: {
-                Header().attach()
-                    .onEvent { e in
-                        switch e {
-                        case .reload:
-                            this.value?.reload()
-                        case .change:
-                            this.value?.change()
-                        }
-                    }
-                    .view
-            },
-            footer: {
-                VBox().attach {
-                    UILabel().attach($0)
-                        .text("It's ending")
-                }
-                .backgroundColor(UIColor.systemPink)
-                .padding(all: 16)
-                .width(.fill)
-                .justifyContent(.center)
-                .view
-            }
-        )
-        .attach()
-        .setDelegate(self)
         .size(.fill, .fill)
         .view
     }
@@ -175,40 +122,20 @@ private class Header: VBox, Eventable {
             .justifyContent(.center)
             .space(8)
 
-            HBox().attach($0) {
-                ZBox().attach($0) {
-                    UILabel().attach($0)
-                        .text("Refresh")
-                        .textColor(UIColor.white)
-                }
-                .padding(all: 8)
-                .cornerRadius(8)
-                .backgroundColor(UIColor.black.withAlphaComponent(0.7))
-                .width(.wrap(add: 20))
-                .alignment(.center)
-                .style(TapRippleStyle())
-                .onTap(to: self) { this, _ in
-                    this.emmit(.reload)
-                }
-
-                ZBox().attach($0) {
-                    UILabel().attach($0)
-                        .text("Change RecycleBox and SequenceBox")
-                        .textColor(UIColor.white)
-                }
-                .padding(all: 8)
-                .cornerRadius(8)
-                .backgroundColor(UIColor.black.withAlphaComponent(0.7))
-                .width(.wrap(add: 20))
-                .alignment(.center)
-                .style(TapRippleStyle())
-                .onTap(to: self) { this, _ in
-                    this.emmit(.change)
-                }
+            ZBox().attach($0) {
+                UILabel().attach($0)
+                    .text("Refresh")
+                    .textColor(UIColor.white)
             }
-            .space(10)
+            .padding(all: 8)
+            .cornerRadius(8)
+            .backgroundColor(UIColor.black.withAlphaComponent(0.7))
+            .width(.wrap(add: 20))
             .alignment(.center)
-            .margin(top: 10)
+            .style(TapRippleStyle())
+            .onTap(to: self) { this, _ in
+                this.emmit(.reload)
+            }
         }
         .justifyContent(.right)
         .width(.fill)

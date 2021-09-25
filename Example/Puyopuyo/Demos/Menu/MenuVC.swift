@@ -26,7 +26,6 @@ class MenuVC: BaseVC {
         ("Chat", { ChatVC() }),
         ("Feed", { FeedVC() }),
         ("RecycleBox Properties", { RecycleBoxPropertiesVC() }),
-        ("SequenceBox Properties", { SequenceBoxPropertiesVC() }),
         ("Advance Usage", { AdvanceVC() }),
     ]
 
