@@ -60,7 +60,7 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
         // 赋值section
         items.enumerated().forEach { idx, item in
             item.section = self
-            item.indexPath = IndexPath(item: idx, section: self.index)
+            item.indexPath = IndexPath(item: idx, section: self.sectionIndex)
         }
         
         // box 还没赋值时，只更新数据源
@@ -84,7 +84,7 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
         
         // 需要做diff运算
         
-        let diff = Diff(src: recycleItems, dest: items, identifier: { $0.getDiff() })
+        let diff = Diff(src: recycleItems, dest: items, identifier: { $0.getDiffableKey() })
         diff.check()
         if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
             recycleItems = items
@@ -109,7 +109,7 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     
     public weak var box: RecycleBox?
     
-    public var index: Int = 0
+    public var sectionIndex: Int = 0
     
     public func getItems() -> [IRecycleItem] {
         return recycleItems
@@ -119,7 +119,7 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
         RecycleBoxSupplementaryView<Data>.self
     }
     
-    public func supplementaryIdentifier(for kind: String) -> String {
+    public func supplementaryViewId(for kind: String) -> String {
         getSectionId(kind: kind)
     }
     
@@ -129,7 +129,7 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     }
     
     private func _getSupplementaryView(for kind: String) -> (RecycleBoxSupplementaryView<Data>, UIView?) {
-        guard let view = box?.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: getSectionId(kind: kind), for: IndexPath(row: 0, section: index)) as? RecycleBoxSupplementaryView<Data> else {
+        guard let view = box?.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: getSectionId(kind: kind), for: IndexPath(row: 0, section: sectionIndex)) as? RecycleBoxSupplementaryView<Data> else {
             fatalError()
         }
         configSupplementaryView(view, kind: kind)
@@ -137,20 +137,10 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     }
     
     public func supplementaryViewSize(for kind: String) -> CGSize {
-//        let (view, rootView): (RecycleBoxSupplementaryView<Data>, UIView?) = {
-//            let id = supplementaryIdentifier(for: kind)
-//            if let view = box?.caculatSupplementaries[id] as? RecycleBoxSupplementaryView<Data> {
-//                return (view, view.root)
-//            }
-//            let view = RecycleBoxSupplementaryView<Data>()
-//            configSupplementaryView(view, kind: kind)
-//            box?.caculatSupplementaries[id] = view
-//            return (view, view.root)
-//        }()
         let (view, rootView) = _getSupplementaryView(for: kind)
         guard let root = rootView else { return .zero }
         let layoutContentSize = getLayoutableContentSize()
-        withContext { view.state.input(value: $0) }
+        view.state.input(value: getContext())
         var size = root.sizeThatFits(layoutContentSize)
         size.width += root.py_measure.margin.getHorzTotal()
         size.height += root.py_measure.margin.getVertTotal()
@@ -186,15 +176,11 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
             }
             holder.isBuilding = false
         }
-        withContext { view.state.input(value: $0) }
-    }
-    
-    private func withContext(_ block: (Context) -> Void) {
-        block(getContext())
+        view.state.input(value: getContext())
     }
     
     private func getContext() -> RecyclerInfo<Data> {
-        RecyclerInfo(data: data, indexPath: IndexPath(item: 0, section: index), layoutableSize: getLayoutableContentSize())
+        RecyclerInfo(data: data, indexPath: IndexPath(item: 0, section: sectionIndex), layoutableSize: getLayoutableContentSize())
     }
     
     public func getSectionInsets() -> UIEdgeInsets? {

@@ -43,16 +43,16 @@ public class BasicRecycleItem<Data>: IRecycleItem {
     
     public var indexPath = IndexPath()
     
-    public func getItemViewType() -> AnyClass {
+    public func getCellType() -> AnyClass {
         RecycleBoxCell<Data>.self
     }
     
-    public func getItemIdentifier() -> String {
-        "\(type(of: self))_\(getItemViewType())_\(id)"
+    public func getCellId() -> String {
+        "\(type(of: self))_\(getCellType())_\(id)"
     }
     
     private lazy var address = Unmanaged.passUnretained(self).toOpaque().debugDescription
-    public func getDiff() -> String {
+    public func getDiffableKey() -> String {
         differ?(data) ?? (address + "\(data)")
     }
     
@@ -83,7 +83,7 @@ public class BasicRecycleItem<Data>: IRecycleItem {
     private func _getCell() -> (RecycleBoxCell<Data>, UIView?) {
         section?.box?.registerItem(self)
         guard let section = section,
-              let cell = section.box?.dequeueReusableCell(withReuseIdentifier: getItemIdentifier(), for: indexPath) as? RecycleBoxCell<Data>
+              let cell = section.box?.dequeueReusableCell(withReuseIdentifier: getCellId(), for: indexPath) as? RecycleBoxCell<Data>
         else {
             fatalError()
         }
@@ -91,7 +91,7 @@ public class BasicRecycleItem<Data>: IRecycleItem {
         return (cell, cell.root)
     }
     
-    public func getItemSize() -> CGSize {
+    public func getCellSize() -> CGSize {
         guard let section = section else {
             return .zero
         }

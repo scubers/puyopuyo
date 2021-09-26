@@ -11,13 +11,13 @@ public protocol IRecycleSection: AnyObject {
     // should be weak reference
     var box: RecycleBox? { get set }
     
-    var index: Int { get set }
+    var sectionIndex: Int { get set }
     
     func getItems() -> [IRecycleItem]
     
     func supplementaryViewType(for kind: String) -> AnyClass
     
-    func supplementaryIdentifier(for kind: String) -> String
+    func supplementaryViewId(for kind: String) -> String
     
     func supplementaryView(for kind: String) -> UICollectionReusableView
     
@@ -43,13 +43,6 @@ public extension IRecycleSection {
         return nil
     }
     
-    func currentIndex() -> Int? {
-        if let sections = box?.sections {
-            return sections.firstIndex(where: { $0 === self })
-        }
-        return nil
-    }
-    
     func getLayoutableContentSize() -> CGSize {
         guard let cv = box else { return .zero }
         let inset = getSectionInsets() ?? box?.flowLayout.sectionInset ?? .zero
@@ -66,24 +59,18 @@ public protocol IRecycleItem: AnyObject {
     var indexPath: IndexPath { get set }
     
     /// The diff value to calculate diff
-    func getDiff() -> String
+    func getDiffableKey() -> String
     
-    func getItemViewType() -> AnyClass
+    func getCellType() -> AnyClass
     
     /// The identifier to register cell in collecitonView
-    func getItemIdentifier() -> String
-    
-    func didSelect()
+    func getCellId() -> String
     
     func getCell() -> UICollectionViewCell
     
-    func getItemSize() -> CGSize
-}
-
-public extension IRecycleItem {
-    func currentIndex() -> Int? {
-        return section?.getItems().firstIndex(where: { $0 === self })
-    }
+    func getCellSize() -> CGSize
+    
+    func didSelect()
 }
 
 open class RecycleBox: UICollectionView,
@@ -232,7 +219,7 @@ open class RecycleBox: UICollectionView,
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        getItem(indexPath).getItemSize()
+        getItem(indexPath).getCellSize()
     }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
@@ -257,7 +244,7 @@ open class RecycleBox: UICollectionView,
     
     func getSection(_ index: Int) -> IRecycleSection {
         let section = sections[index]
-        section.index = index
+        section.sectionIndex = index
         section.box = self
         return section
     }
@@ -275,7 +262,7 @@ extension RecycleBox {
     func prepareSection(_ sections: [IRecycleSection]) {
         sections.enumerated().forEach { idx, s in
             s.box = self
-            s.index = idx
+            s.sectionIndex = idx
             self.registerSection(s)
         }
     }
@@ -283,7 +270,7 @@ extension RecycleBox {
     func registerSection(_ section: IRecycleSection) {
         section.box = self
         [UICollectionView.elementKindSectionHeader, UICollectionView.elementKindSectionFooter].forEach { kind in
-            let id = section.supplementaryIdentifier(for: kind)
+            let id = section.supplementaryViewId(for: kind)
             if registeredSupplementaries["\(kind)_\(id)"] == nil {
                 self.register(section.supplementaryViewType(for: kind), forSupplementaryViewOfKind: kind, withReuseIdentifier: id)
                 registeredSupplementaries["\(kind)_\(id)"] = 1
@@ -292,9 +279,9 @@ extension RecycleBox {
     }
     
     func registerItem(_ item: IRecycleItem) {
-        if registeredItems[item.getItemIdentifier()] == nil {
-            register(item.getItemViewType(), forCellWithReuseIdentifier: item.getItemIdentifier())
-            registeredItems[item.getItemIdentifier()] = 1
+        if registeredItems[item.getCellId()] == nil {
+            register(item.getCellType(), forCellWithReuseIdentifier: item.getCellId())
+            registeredItems[item.getCellId()] = 1
         }
     }
 }
