@@ -33,18 +33,6 @@ public protocol IRecycleSection: AnyObject {
 }
 
 public extension IRecycleSection {
-    func index(for item: IRecycleItem) -> Int? {
-        return getItems().firstIndex(where: { $0 === item })
-    }
-    
-    func item(at index: Int) -> IRecycleItem? {
-        let items = getItems()
-        if items.count > index {
-            return items[index]
-        }
-        return nil
-    }
-    
     func getLayoutableContentSize() -> CGSize {
         guard let cv = box else { return .zero }
         let inset = getSectionInsets() ?? box?.flowLayout.sectionInset ?? .zero
