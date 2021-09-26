@@ -162,9 +162,6 @@ open class RecycleBox: UICollectionView,
     private var registeredSupplementaries = [String: Any]()
     public private(set) var flowLayout: UICollectionViewFlowLayout
     
-    var caculatItems = [String: UICollectionViewCell]()
-    var caculatSupplementaries = [String: UICollectionReusableView]()
-    
     // sections
     public let viewState = State<[IRecycleSection]>([])
     

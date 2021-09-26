@@ -137,16 +137,17 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     }
     
     public func supplementaryViewSize(for kind: String) -> CGSize {
-        let (view, rootView): (RecycleBoxSupplementaryView<Data>, UIView?) = {
-            let id = supplementaryIdentifier(for: kind)
-            if let view = box?.caculatSupplementaries[id] as? RecycleBoxSupplementaryView<Data> {
-                return (view, view.root)
-            }
-            let view = RecycleBoxSupplementaryView<Data>()
-            configSupplementaryView(view, kind: kind)
-            box?.caculatSupplementaries[id] = view
-            return (view, view.root)
-        }()
+//        let (view, rootView): (RecycleBoxSupplementaryView<Data>, UIView?) = {
+//            let id = supplementaryIdentifier(for: kind)
+//            if let view = box?.caculatSupplementaries[id] as? RecycleBoxSupplementaryView<Data> {
+//                return (view, view.root)
+//            }
+//            let view = RecycleBoxSupplementaryView<Data>()
+//            configSupplementaryView(view, kind: kind)
+//            box?.caculatSupplementaries[id] = view
+//            return (view, view.root)
+//        }()
+        let (view, rootView) = _getSupplementaryView(for: kind)
         guard let root = rootView else { return .zero }
         let layoutContentSize = getLayoutableContentSize()
         withContext { view.state.input(value: $0) }

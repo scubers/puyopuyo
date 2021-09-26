@@ -93,15 +93,16 @@ public class BasicRecycleItem<Data>: IRecycleItem {
         guard let section = section else {
             return .zero
         }
-        let (cell, rootView): (RecycleBoxCell<Data>, UIView?) = {
-            if let cell = section.box?.caculatItems[getItemIdentifier()] as? RecycleBoxCell<Data> {
-                return (cell, cell.root)
-            }
-            let cell = RecycleBoxCell<Data>()
-            configCell(cell)
-            section.box?.caculatItems[getItemIdentifier()] = cell
-            return (cell, cell.root)
-        }()
+//        let (cell, rootView): (RecycleBoxCell<Data>, UIView?) = {
+//            if let cell = section.box?.caculatItems[getItemIdentifier()] as? RecycleBoxCell<Data> {
+//                return (cell, cell.root)
+//            }
+//            let cell = RecycleBoxCell<Data>()
+//            configCell(cell)
+//            section.box?.caculatItems[getItemIdentifier()] = cell
+//            return (cell, cell.root)
+//        }()
+        let (cell, rootView) = _getCell()
         guard let root = rootView, let ctx = getContext() else { return .zero }
         
         let layoutContentSize = section.getLayoutableContentSize()
