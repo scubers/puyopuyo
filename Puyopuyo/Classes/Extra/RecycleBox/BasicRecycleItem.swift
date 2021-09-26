@@ -106,12 +106,28 @@ public class BasicRecycleItem<Data>: IRecycleItem {
         return (cell, cell.root)
     }
     
+    private func getCalculateCell() -> RecycleBoxCell<Data> {
+        guard let section = section, let box = section.box else {
+            return RecycleBoxCell<Data>()
+        }
+        
+        var cell = (box.calculateItems[getCellId()] as? RecycleBoxCell<Data>)
+        if cell == nil {
+            cell = RecycleBoxCell<Data>()
+            cell?.root = cellGen(cell!.state.binder, RecyclerTrigger())
+            box.calculateItems[getCellId()] = cell!
+        }
+        
+        return cell!
+    }
+    
     public func getCellSize() -> CGSize {
         guard let section = section else {
             return .zero
         }
-        let (cell, rootView) = getRawCellWithoutData()
-        guard let root = rootView, let ctx = getContext() else { return .zero }
+        
+        let cell = getCalculateCell()
+        guard let root = cell.root, let ctx = getContext() else { return .zero }
         
         let layoutContentSize = section.getLayoutableContentSize()
         
@@ -132,6 +148,7 @@ private class RecycleBoxCell<D>: UICollectionViewCell {
             }
         }
     }
+
     let state = SimpleIO<RecyclerInfo<D>>()
     
     var selfSizingResidualSize: CGSize = .zero

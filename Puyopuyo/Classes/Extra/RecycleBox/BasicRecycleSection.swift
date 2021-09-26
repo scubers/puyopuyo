@@ -162,9 +162,27 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
         return (view, view.root)
     }
     
+    private func getCalculateView(for kind: String) -> RecycleBoxSupplementaryView<Data> {
+        guard let box = box else {
+            return RecycleBoxSupplementaryView<Data>()
+        }
+        
+        var cell = box.calculateSupplementaryViews[getSectionId(kind: kind)] as? RecycleBoxSupplementaryView<Data>
+        if cell == nil {
+            cell = RecycleBoxSupplementaryView<Data>()
+            
+            cell?.root = kind == UICollectionView.elementKindSectionHeader
+                ? (headerGen == nil ? nil : headerGen!(cell!.state.binder, RecyclerTrigger()))
+                : (footerGen == nil ? nil : footerGen!(cell!.state.binder, RecyclerTrigger()))
+            box.calculateSupplementaryViews[getSectionId(kind: kind)] = cell!
+        }
+        
+        return cell!
+    }
+    
     public func supplementaryViewSize(for kind: String) -> CGSize {
-        let (view, rootView) = getRawSupplementaryViewWithoutData(for: kind)
-        guard let root = rootView else { return .zero }
+        let view = getCalculateView(for: kind)
+        guard let root = view.root else { return .zero }
         let layoutContentSize = getLayoutableContentSize()
         view.state.input(value: getContext())
         var size = root.sizeThatFits(layoutContentSize)
