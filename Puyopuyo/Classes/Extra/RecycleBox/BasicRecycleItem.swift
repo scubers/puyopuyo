@@ -88,7 +88,6 @@ public class BasicRecycleItem<Data>: IRecycleItem {
         else {
             fatalError()
         }
-        cell.selfSizingResidualSize = section.getLayoutableContentSize()
         if cell.root == nil {
             let box = section.box
             let holder = RecyclerTrigger<Data> { [weak box, weak cell] in
@@ -103,6 +102,7 @@ public class BasicRecycleItem<Data>: IRecycleItem {
             cell.root = cellGen(cell.state.binder, holder)
             holder.isBuilding = false
         }
+        cell.selfSizingResidual = section.getLayoutableContentSize()
         return (cell, cell.root)
     }
     
@@ -121,9 +121,15 @@ public class BasicRecycleItem<Data>: IRecycleItem {
         return cell!
     }
     
+    private var cachedSize: CGSize?
+    
     public func getCellSize() -> CGSize {
         guard let section = section else {
             return .zero
+        }
+        
+        if let cachedSize = cachedSize {
+            return cachedSize
         }
         
         let cell = getCalculateCell()
@@ -135,7 +141,10 @@ public class BasicRecycleItem<Data>: IRecycleItem {
         var size = root.sizeThatFits(layoutContentSize)
         size.width += root.py_measure.margin.getHorzTotal()
         size.height += root.py_measure.margin.getVertTotal()
-        return CGSize(width: max(0, size.width), height: max(0, size.height))
+        
+        let final = CGSize(width: max(0, size.width), height: max(0, size.height))
+        cachedSize = final
+        return final
     }
 }
 
@@ -151,11 +160,10 @@ private class RecycleBoxCell<D>: UICollectionViewCell {
 
     let state = SimpleIO<RecyclerInfo<D>>()
     
-    var selfSizingResidualSize: CGSize = .zero
+    var selfSizingResidual: CGSize?
     
-    override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority _: UILayoutPriority, verticalFittingPriority _: UILayoutPriority) -> CGSize {
-        let size = selfSizingResidualSize == .zero ? targetSize : selfSizingResidualSize
-        let final = root?.sizeThatFits(size) ?? .zero
-        return final
+    override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
+        let size = selfSizingResidual ?? targetSize
+        return root?.sizeThatFits(size) ?? .zero
     }
 }

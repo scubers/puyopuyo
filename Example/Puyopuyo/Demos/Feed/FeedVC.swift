@@ -22,7 +22,7 @@ class FeedVC: BaseVC, UITableViewDelegate {
     func recycleBox() -> UIView {
         let this = WeakCatcher(value: self)
         return RecycleBox(
-            estimatedSize: CGSize(width: 100, height: 100),
+            estimatedSize: CGSize(width: 100, height: 20),
             sections: [
                 RecycleSection<Void, Feed>(
                     items: dataSource.asOutput(),

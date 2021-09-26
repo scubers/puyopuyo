@@ -158,7 +158,7 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
             view.root = root
             holder.isBuilding = false
         }
-        view.selfSizingResidualSize = getLayoutableContentSize()
+        view.selfSizingResidual = getLayoutableContentSize()
         return (view, view.root)
     }
     
@@ -187,7 +187,13 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
         return view!
     }
     
+    private var headerCachedSize: CGSize?
+    private var footerCachedSize: CGSize?
+    
     public func supplementaryViewSize(for kind: String) -> CGSize {
+        if let cachedSize = getCachedSize(for: kind) {
+            return cachedSize
+        }
         let view = getCalculateView(for: kind)
         guard let root = view.root else { return .zero }
         let layoutContentSize = getLayoutableContentSize()
@@ -195,7 +201,27 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
         var size = root.sizeThatFits(layoutContentSize)
         size.width += root.py_measure.margin.getHorzTotal()
         size.height += root.py_measure.margin.getVertTotal()
-        return CGSize(width: max(0, size.width), height: max(0, size.height))
+        let final = CGSize(width: max(0, size.width), height: max(0, size.height))
+        setCachedSize(for: kind, cachedSize: final)
+        return final
+    }
+    
+    private func getCachedSize(for kind: String) -> CGSize? {
+        switch kind {
+        case UICollectionView.elementKindSectionHeader: return headerCachedSize
+        case UICollectionView.elementKindSectionFooter: return footerCachedSize
+        default: return nil
+        }
+    }
+    
+    private func setCachedSize(for kind: String, cachedSize: CGSize) {
+        switch kind {
+        case UICollectionView.elementKindSectionHeader:
+            headerCachedSize = cachedSize
+        case UICollectionView.elementKindSectionFooter:
+            footerCachedSize = cachedSize
+        default: break
+        }
     }
     
     private func getContext() -> RecyclerInfo<Data> {
@@ -225,11 +251,11 @@ private class RecycleBoxSupplementaryView<D>: UICollectionReusableView {
         }
     }
 
-    var selfSizingResidualSize: CGSize = .zero
     let state = SimpleIO<RecyclerInfo<D>>()
+    var selfSizingResidual: CGSize?
     
-    override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority _: UILayoutPriority, verticalFittingPriority _: UILayoutPriority) -> CGSize {
-        let size = selfSizingResidualSize == .zero ? targetSize : selfSizingResidualSize
+    override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
+        let size = selfSizingResidual ?? targetSize
         return root?.sizeThatFits(size) ?? .zero
     }
 }

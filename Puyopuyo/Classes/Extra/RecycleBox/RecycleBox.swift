@@ -87,6 +87,7 @@ open class RecycleBox: UICollectionView,
         footerPinToBounds: Bool = false,
         lineSpacing: CGFloat = 0,
         itemSpacing: CGFloat = 0,
+        // Use UICollection size prediction
         estimatedSize: CGSize = .zero,
         sectionInset: UIEdgeInsets = .zero,
         diffable: Bool = false,
@@ -103,9 +104,6 @@ open class RecycleBox: UICollectionView,
         layout.scrollDirection = direction
         
         enableDiff = diffable
-        if diffable, estimatedSize == .zero {
-            layout.estimatedItemSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
-        }
         
         flowLayout = layout
         
@@ -136,7 +134,7 @@ open class RecycleBox: UICollectionView,
     }
     
     override open func responds(to aSelector: Selector!) -> Bool {
-        // 判断是否使用自动计算大小
+        // 判断是否使用参考尺寸
         if aSelector == #selector(collectionView(_:layout:sizeForItemAt:)), flowLayout.estimatedItemSize != .zero {
             return false
         }
