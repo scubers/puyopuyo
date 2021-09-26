@@ -146,6 +146,10 @@ public class BasicRecycleItem<Data>: IRecycleItem {
         cachedSize = final
         return final
     }
+    
+    public func didChangeBounds(_ newBounds: CGRect) {
+        cachedSize = nil
+    }
 }
 
 private class RecycleBoxCell<D>: UICollectionViewCell {

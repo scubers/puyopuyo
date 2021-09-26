@@ -239,6 +239,11 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     public func getMinimumItemSpacing() -> CGFloat? {
         itemSpacing
     }
+    
+    public func didChangeBounds(_ newBounds: CGRect) {
+        headerCachedSize = nil
+        footerCachedSize = nil
+    }
 }
 
 private class RecycleBoxSupplementaryView<D>: UICollectionReusableView {

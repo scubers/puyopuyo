@@ -28,6 +28,8 @@ public protocol IRecycleSection: AnyObject {
     func getMinimumLineSpacing() -> CGFloat?
     
     func getMinimumItemSpacing() -> CGFloat?
+    
+    func didChangeBounds(_ newBounds: CGRect)
 }
 
 public extension IRecycleSection {
@@ -71,6 +73,8 @@ public protocol IRecycleItem: AnyObject {
     func getCellSize() -> CGSize
     
     func didSelect()
+    
+    func didChangeBounds(_ newBounds: CGRect)
 }
 
 open class RecycleBox: UICollectionView,
@@ -123,8 +127,18 @@ open class RecycleBox: UICollectionView,
             this.reload(sections: s)
         }
         
-        py_boundsState().map(\.size).distinct().debounce(interval: 0.2).safeBind(to: self) { this, _ in
+        py_boundsState().map(\.size).distinct().debounce(interval: 0.2).safeBind(to: self) { this, size in
+            this.didChangeBounds(CGRect(origin: .zero, size: size))
             this.reloadData()
+        }
+    }
+    
+    private func didChangeBounds(_ newBounds: CGRect) {
+        sections.forEach { section in
+            section.didChangeBounds(newBounds)
+            section.getItems().forEach { item in
+                item.didChangeBounds(newBounds)
+            }
         }
     }
     
@@ -181,17 +195,8 @@ open class RecycleBox: UICollectionView,
     }
     
     public func reload(sections: [IRecycleSection]) {
-//        if enableDiff {
-//            let old = self.sections.count
-//            let new = sections.count
-//            performBatchUpdates({
-//                self.deleteSections(IndexSet(0..<old))
-//                self.insertSections(IndexSet(0..<new))
-//            }, completion: nil)
-//        } else {
         self.sections = sections
         reloadData()
-//        }
     }
     
     private func updateSectionsWithDiff(sections: [IRecycleSection]) {}
