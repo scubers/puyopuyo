@@ -167,17 +167,24 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
             return RecycleBoxSupplementaryView<Data>()
         }
         
-        var cell = box.calculateSupplementaryViews[getSectionId(kind: kind)] as? RecycleBoxSupplementaryView<Data>
-        if cell == nil {
-            cell = RecycleBoxSupplementaryView<Data>()
+        var view = box.calculateSupplementaryViews[getSectionId(kind: kind)] as? RecycleBoxSupplementaryView<Data>
+        if view == nil {
+            view = RecycleBoxSupplementaryView<Data>()
             
-            cell?.root = kind == UICollectionView.elementKindSectionHeader
-                ? (headerGen == nil ? nil : headerGen!(cell!.state.binder, RecyclerTrigger()))
-                : (footerGen == nil ? nil : footerGen!(cell!.state.binder, RecyclerTrigger()))
-            box.calculateSupplementaryViews[getSectionId(kind: kind)] = cell!
+            view?.root = {
+                switch kind {
+                case UICollectionView.elementKindSectionHeader:
+                    return headerGen == nil ? nil : headerGen!(view!.state.binder, RecyclerTrigger())
+                case UICollectionView.elementKindSectionFooter:
+                    return footerGen == nil ? nil : footerGen!(view!.state.binder, RecyclerTrigger())
+                default: return nil
+                }
+            }()
+            
+            box.calculateSupplementaryViews[getSectionId(kind: kind)] = view!
         }
         
-        return cell!
+        return view!
     }
     
     public func supplementaryViewSize(for kind: String) -> CGSize {
