@@ -63,6 +63,11 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     
     private func reload(items: [IRecycleItem]) {
         // 赋值section
+        items.enumerated().forEach { idx, item in
+            item.section = self
+            item.indexPath = IndexPath(item: idx, section: self.index)
+        }
+        
         // box 还没赋值时，只更新数据源
         guard let box = box else {
             setRecycleItems(items)

@@ -25,6 +25,7 @@ public class BasicRecycleItem<Data>: IRecycleItem {
         self.cellGen = cell
         self.differ = differ
         self._didSelect = didSelect
+        self._cellConfig = cellConfig
     }
     
     public let id: String
@@ -40,7 +41,7 @@ public class BasicRecycleItem<Data>: IRecycleItem {
     
     public weak var section: IRecycleSection?
     
-    public var indexPath: IndexPath = IndexPath()
+    public var indexPath = IndexPath()
     
     public func getItemViewType() -> AnyClass {
         RecycleBoxCell<Data>.self
@@ -82,7 +83,8 @@ public class BasicRecycleItem<Data>: IRecycleItem {
     private func _getCell() -> (RecycleBoxCell<Data>, UIView?) {
         section?.box?.registerItem(self)
         guard let section = section,
-            let cell = section.box?.dequeueReusableCell(withReuseIdentifier: getItemIdentifier(), for: indexPath) as? RecycleBoxCell<Data> else {
+              let cell = section.box?.dequeueReusableCell(withReuseIdentifier: getItemIdentifier(), for: indexPath) as? RecycleBoxCell<Data>
+        else {
             fatalError()
         }
         configCell(cell)
@@ -121,8 +123,9 @@ public class BasicRecycleItem<Data>: IRecycleItem {
             let box = section.box
             let holder = RecyclerTrigger<Data> { [weak box, weak cell] in
                 if let cell = cell,
-                    let idx = box?.indexPath(for: cell),
-                    let item = box?.getItem(idx) as? BasicRecycleItem<Data> {
+                   let idx = box?.indexPath(for: cell),
+                   let item = box?.getItem(idx) as? BasicRecycleItem<Data>
+                {
                     return item.getContext()
                 }
                 return nil

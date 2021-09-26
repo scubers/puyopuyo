@@ -273,7 +273,9 @@ open class RecycleBox: UICollectionView,
 
 extension RecycleBox {
     func prepareSection(_ sections: [IRecycleSection]) {
-        sections.forEach { s in
+        sections.enumerated().forEach { idx, s in
+            s.box = self
+            s.index = idx
             self.registerSection(s)
         }
     }
