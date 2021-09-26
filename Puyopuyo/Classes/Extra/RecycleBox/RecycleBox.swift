@@ -89,7 +89,7 @@ open class RecycleBox: UICollectionView,
         itemSpacing: CGFloat = 0,
         estimatedSize: CGSize = .zero,
         sectionInset: UIEdgeInsets = .zero,
-        diff: Bool = false,
+        diffable: Bool = false,
         sections: Outputs<[IRecycleSection]> = [].asOutput()
     ) {
         let layout = CollectionBoxFlowLayout()
@@ -102,8 +102,8 @@ open class RecycleBox: UICollectionView,
         layout.estimatedItemSize = estimatedSize
         layout.scrollDirection = direction
         
-        enableDiff = diff
-        if diff, estimatedSize == .zero {
+        enableDiff = diffable
+        if diffable, estimatedSize == .zero {
             layout.estimatedItemSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
         }
         

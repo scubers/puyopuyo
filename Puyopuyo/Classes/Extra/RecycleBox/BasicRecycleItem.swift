@@ -12,7 +12,7 @@ public class BasicRecycleItem<Data>: IRecycleItem {
     public init(
         id: String? = nil,
         data: Data,
-        differ: ((Data) -> String)? = nil,
+        diffableKey: ((Data) -> String)? = nil,
         cell: @escaping RecycleViewGenerator<Data>,
         cellConfig: ((UICollectionViewCell) -> Void)? = nil,
         didSelect: ((Context) -> Void)? = nil,
@@ -23,7 +23,7 @@ public class BasicRecycleItem<Data>: IRecycleItem {
         self.id = id ?? "\(line)\(column)\(function)"
         self.data = data
         self.cellGen = cell
-        self.differ = differ
+        self.differ = diffableKey
         self._didSelect = didSelect
         self._cellConfig = cellConfig
     }
@@ -100,11 +100,7 @@ public class BasicRecycleItem<Data>: IRecycleItem {
                 }
                 return nil
             }
-            let root = cellGen(cell.state.binder, holder)
-            cell.root = root
-            if let root = root {
-                cell.contentView.addSubview(root)
-            }
+            cell.root = cellGen(cell.state.binder, holder)
             holder.isBuilding = false
         }
         return (cell, cell.root)
@@ -128,7 +124,14 @@ public class BasicRecycleItem<Data>: IRecycleItem {
 }
 
 private class RecycleBoxCell<D>: UICollectionViewCell {
-    var root: UIView?
+    var root: UIView? {
+        didSet {
+            oldValue?.removeFromSuperview()
+            if let view = root {
+                contentView.addSubview(view)
+            }
+        }
+    }
     let state = SimpleIO<RecyclerInfo<D>>()
     
     var selfSizingResidualSize: CGSize = .zero

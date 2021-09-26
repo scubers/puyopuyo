@@ -34,7 +34,7 @@ class ChatVC: BaseVC, UICollectionViewDelegateFlowLayout {
         vRoot.attach {
             box = RecycleBox(
                 estimatedSize: CGSize(width: 100, height: 100),
-                diff: true,
+                diffable: true,
                 sections: [
                     DataRecycleSection(
                         items: messages.asOutput(),

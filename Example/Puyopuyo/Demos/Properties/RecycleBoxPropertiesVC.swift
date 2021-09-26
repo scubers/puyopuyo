@@ -45,7 +45,7 @@ class RecycleBoxPropertiesVC: BaseVC {
             box = RecycleBox(
                 headerPinToBounds: true,
                 sectionInset: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
-                diff: true,
+                diffable: true,
                 sections: sections.asOutput()
             )
             .attach($0)
@@ -129,7 +129,7 @@ class RecycleBoxPropertiesVC: BaseVC {
                     items: rows.map { row in
                         BasicRecycleItem(
                             data: row,
-                            differ: { $0.description },
+                            diffableKey: { $0.description },
                             cell: { o, _ in
                                 SquareCell().attach()
                                     .viewState(o.data.description)

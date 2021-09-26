@@ -124,12 +124,12 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     }
     
     public func supplementaryView(for kind: String) -> UICollectionReusableView {
-        let (view, _) = _getSupplementaryView(for: kind)
+        let (view, _) = getRawSupplementaryViewWithoutData(for: kind)
         view.state.input(value: getContext())
         return view
     }
     
-    private func _getSupplementaryView(for kind: String) -> (RecycleBoxSupplementaryView<Data>, UIView?) {
+    private func getRawSupplementaryViewWithoutData(for kind: String) -> (RecycleBoxSupplementaryView<Data>, UIView?) {
         guard let view = box?.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: getSectionId(kind: kind), for: IndexPath(row: 0, section: sectionIndex)) as? RecycleBoxSupplementaryView<Data> else {
             fatalError()
         }
@@ -163,7 +163,7 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     }
     
     public func supplementaryViewSize(for kind: String) -> CGSize {
-        let (view, rootView) = _getSupplementaryView(for: kind)
+        let (view, rootView) = getRawSupplementaryViewWithoutData(for: kind)
         guard let root = rootView else { return .zero }
         let layoutContentSize = getLayoutableContentSize()
         view.state.input(value: getContext())
