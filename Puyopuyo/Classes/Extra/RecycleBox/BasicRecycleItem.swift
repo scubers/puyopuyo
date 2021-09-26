@@ -76,49 +76,19 @@ public class BasicRecycleItem<Data>: IRecycleItem {
     }
     
     public func getCell() -> UICollectionViewCell {
-        let (cell, _) = _getCell()
+        let (cell, _) = getRawCellWithoutData()
+        withContext { cell.state.input(value: $0) }
         return cell
     }
     
-    private func _getCell() -> (RecycleBoxCell<Data>, UIView?) {
+    private func getRawCellWithoutData() -> (RecycleBoxCell<Data>, UIView?) {
         section?.box?.registerItem(self)
         guard let section = section,
               let cell = section.box?.dequeueReusableCell(withReuseIdentifier: getCellId(), for: indexPath) as? RecycleBoxCell<Data>
         else {
             fatalError()
         }
-        configCell(cell)
-        return (cell, cell.root)
-    }
-    
-    public func getCellSize() -> CGSize {
-        guard let section = section else {
-            return .zero
-        }
-//        let (cell, rootView): (RecycleBoxCell<Data>, UIView?) = {
-//            if let cell = section.box?.caculatItems[getItemIdentifier()] as? RecycleBoxCell<Data> {
-//                return (cell, cell.root)
-//            }
-//            let cell = RecycleBoxCell<Data>()
-//            configCell(cell)
-//            section.box?.caculatItems[getItemIdentifier()] = cell
-//            return (cell, cell.root)
-//        }()
-        let (cell, rootView) = _getCell()
-        guard let root = rootView, let ctx = getContext() else { return .zero }
-        
-        let layoutContentSize = section.getLayoutableContentSize()
-        cell.state.input(value: ctx)
-        var size = root.sizeThatFits(layoutContentSize)
-        size.width += root.py_measure.margin.getHorzTotal()
-        size.height += root.py_measure.margin.getVertTotal()
-        return CGSize(width: max(0, size.width), height: max(0, size.height))
-    }
-    
-    private func configCell(_ cell: RecycleBoxCell<Data>) {
-        guard let section = section, let ctx = getContext() else { return }
-        let size = section.getLayoutableContentSize()
-        cell.targetSize = size
+        cell.selfSizingResidualSize = section.getLayoutableContentSize()
         if cell.root == nil {
             let box = section.box
             let holder = RecyclerTrigger<Data> { [weak box, weak cell] in
@@ -137,8 +107,23 @@ public class BasicRecycleItem<Data>: IRecycleItem {
             }
             holder.isBuilding = false
         }
+        return (cell, cell.root)
+    }
+    
+    public func getCellSize() -> CGSize {
+        guard let section = section else {
+            return .zero
+        }
+        let (cell, rootView) = getRawCellWithoutData()
+        guard let root = rootView, let ctx = getContext() else { return .zero }
+        
+        let layoutContentSize = section.getLayoutableContentSize()
+        
         cell.state.input(value: ctx)
-        _cellConfig?(cell)
+        var size = root.sizeThatFits(layoutContentSize)
+        size.width += root.py_measure.margin.getHorzTotal()
+        size.height += root.py_measure.margin.getVertTotal()
+        return CGSize(width: max(0, size.width), height: max(0, size.height))
     }
 }
 
@@ -146,12 +131,10 @@ private class RecycleBoxCell<D>: UICollectionViewCell {
     var root: UIView?
     let state = SimpleIO<RecyclerInfo<D>>()
     
-    var targetSize: CGSize = .zero
-    var cachedSize: CGSize?
+    var selfSizingResidualSize: CGSize = .zero
     
     override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority _: UILayoutPriority, verticalFittingPriority _: UILayoutPriority) -> CGSize {
-        if let cached = cachedSize { return cached }
-        let size = self.targetSize == .zero ? targetSize : self.targetSize
+        let size = selfSizingResidualSize == .zero ? targetSize : selfSizingResidualSize
         let final = root?.sizeThatFits(size) ?? .zero
         return final
     }

@@ -125,6 +125,7 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     
     public func supplementaryView(for kind: String) -> UICollectionReusableView {
         let (view, _) = _getSupplementaryView(for: kind)
+        view.state.input(value: getContext())
         return view
     }
     
@@ -132,23 +133,7 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
         guard let view = box?.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: getSectionId(kind: kind), for: IndexPath(row: 0, section: sectionIndex)) as? RecycleBoxSupplementaryView<Data> else {
             fatalError()
         }
-        configSupplementaryView(view, kind: kind)
-        return (view, view.root)
-    }
-    
-    public func supplementaryViewSize(for kind: String) -> CGSize {
-        let (view, rootView) = _getSupplementaryView(for: kind)
-        guard let root = rootView else { return .zero }
-        let layoutContentSize = getLayoutableContentSize()
-        view.state.input(value: getContext())
-        var size = root.sizeThatFits(layoutContentSize)
-        size.width += root.py_measure.margin.getHorzTotal()
-        size.height += root.py_measure.margin.getVertTotal()
-        return CGSize(width: max(0, size.width), height: max(0, size.height))
-    }
-    
-    private func configSupplementaryView(_ view: RecycleBoxSupplementaryView<Data>, kind: String) {
-        view.targetSize = getLayoutableContentSize()
+        // 初始化
         if view.root == nil {
             var root: UIView?
             let state = view.state
@@ -171,12 +156,21 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
             default: break
             }
             view.root = root
-            if let root = root {
-                view.addSubview(root)
-            }
             holder.isBuilding = false
         }
+        view.selfSizingResidualSize = getLayoutableContentSize()
+        return (view, view.root)
+    }
+    
+    public func supplementaryViewSize(for kind: String) -> CGSize {
+        let (view, rootView) = _getSupplementaryView(for: kind)
+        guard let root = rootView else { return .zero }
+        let layoutContentSize = getLayoutableContentSize()
         view.state.input(value: getContext())
+        var size = root.sizeThatFits(layoutContentSize)
+        size.width += root.py_measure.margin.getHorzTotal()
+        size.height += root.py_measure.margin.getVertTotal()
+        return CGSize(width: max(0, size.width), height: max(0, size.height))
     }
     
     private func getContext() -> RecyclerInfo<Data> {
@@ -197,12 +191,20 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
 }
 
 private class RecycleBoxSupplementaryView<D>: UICollectionReusableView {
-    var root: UIView?
+    var root: UIView? {
+        didSet {
+            oldValue?.removeFromSuperview()
+            if let view = root {
+                addSubview(view)
+            }
+        }
+    }
+
+    var selfSizingResidualSize: CGSize = .zero
     let state = SimpleIO<RecyclerInfo<D>>()
-    var targetSize: CGSize = .zero
     
     override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority _: UILayoutPriority, verticalFittingPriority _: UILayoutPriority) -> CGSize {
-        let size = self.targetSize == .zero ? targetSize : self.targetSize
+        let size = selfSizingResidualSize == .zero ? targetSize : selfSizingResidualSize
         return root?.sizeThatFits(size) ?? .zero
     }
 }
