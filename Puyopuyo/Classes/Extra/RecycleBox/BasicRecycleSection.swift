@@ -44,7 +44,7 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     }
     
     private let bag = NSObject()
-    public let recycleItems = State<[IRecycleItem]>([])
+    private var recycleItems = [IRecycleItem]()
     public var sectionInsets: UIEdgeInsets?
     public var lineSpacing: CGFloat?
     public var itemSpacing: CGFloat?
@@ -56,11 +56,6 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     
     // MARK: - private
     
-    private func setRecycleItems(_ items: [IRecycleItem]) {
-        recycleItems.value = items
-//        items.forEach { $0.section = self }
-    }
-    
     private func reload(items: [IRecycleItem]) {
         // 赋值section
         items.enumerated().forEach { idx, item in
@@ -70,29 +65,29 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
         
         // box 还没赋值时，只更新数据源
         guard let box = box else {
-            setRecycleItems(items)
+            recycleItems = items
             return
         }
         
         // iOS低版本当bounds == zero 进行 增量更新的时候，会出现崩溃，高版本会警告
         guard box.bounds != .zero else {
-            setRecycleItems(items)
+            recycleItems = items
             box.reloadData()
             return
         }
         
         guard box.enableDiff else {
-            setRecycleItems(items)
+            recycleItems = items
             box.reloadData()
             return
         }
         
         // 需要做diff运算
         
-        let diff = Diff(src: recycleItems.value, dest: items, identifier: { $0.getDiff() })
+        let diff = Diff(src: recycleItems, dest: items, identifier: { $0.getDiff() })
         diff.check()
         if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
-            setRecycleItems(items)
+            recycleItems = items
             box.performBatchUpdates({
                 box.applyItemUpdates(diff, in: section)
             }, completion: nil)
@@ -100,8 +95,8 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     }
     
     func getItem(_ index: Int) -> IRecycleItem? {
-        if index < recycleItems.value.count {
-            return recycleItems.value[index]
+        if index < recycleItems.count {
+            return recycleItems[index]
         }
         return nil
     }
@@ -117,7 +112,7 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     public var index: Int = 0
     
     public func getItems() -> [IRecycleItem] {
-        return recycleItems.value
+        return recycleItems
     }
     
     public func supplementaryViewType(for _: String) -> AnyClass {
