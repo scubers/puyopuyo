@@ -102,15 +102,14 @@ open class RecycleBox: UICollectionView,
         layout.estimatedItemSize = estimatedSize
         layout.scrollDirection = direction
         
+        enableDiff = diff
+        if diff, estimatedSize == .zero {
+            layout.estimatedItemSize = CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+        }
+        
         flowLayout = layout
         
         super.init(frame: .zero, collectionViewLayout: layout)
-        
-        enableDiff = diff
-        
-        if diff {
-            assert(estimatedSize != .zero, "If diff is true, should set estimatedSize")
-        }
         
         delegateProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
         dataSourceProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)

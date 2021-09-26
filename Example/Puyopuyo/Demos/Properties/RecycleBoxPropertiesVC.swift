@@ -44,7 +44,6 @@ class RecycleBoxPropertiesVC: BaseVC {
 
             box = RecycleBox(
                 headerPinToBounds: true,
-                estimatedSize: CGSize(width: 50, height: 50),
                 sectionInset: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
                 diff: true,
                 sections: sections.asOutput()
