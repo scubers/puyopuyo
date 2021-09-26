@@ -38,6 +38,10 @@ class RecycleBoxPropertiesVC: BaseVC {
                     .onTap(to: self) { this, _ in
                         this.calendar()
                     }
+                Label.demo("mix").attach($0)
+                    .onTap(to: self) { this, _ in
+                        this.mixedDataDemo()
+                    }
             }
             .space(10)
             .width(.fill)
@@ -60,13 +64,100 @@ class RecycleBoxPropertiesVC: BaseVC {
 //        colorBlocks()
     }
 
+    let mixedDataState = State<[IRecycleItem]>([])
+    func mixedDataDemo() {
+        func titleItem() -> IRecycleItem {
+            BasicRecycleItem(
+                data: Names().get(),
+                diffableKey: { $0 },
+                cell: { o, _ in
+                    HBox().attach {
+                        UILabel().attach($0)
+                            .text(o.data)
+                    }
+                    .width(.fill)
+                    .padding(all: 10)
+                    .view
+                }
+            )
+        }
+
+        func colorItem() -> IRecycleItem {
+            BasicRecycleItem(
+                data: Util.randomColor(),
+                diffableKey: { $0.description },
+                cell: { o, _ in
+                    let w = o.layoutableSize.width.map { floor($0 / 3) }
+                    return HBox().attach()
+                        .size(w, w.map { $0 / 2 })
+                        .backgroundColor(o.data)
+                        .view
+                }
+            )
+        }
+
+        let items = [
+            titleItem(),
+
+            colorItem(),
+            colorItem(),
+            colorItem(),
+
+            titleItem(),
+
+            colorItem(),
+            colorItem(),
+            colorItem(),
+
+            titleItem(),
+
+            colorItem(),
+            colorItem(),
+            colorItem()
+        ]
+
+        mixedDataState.value = items
+
+        let this = WeakCatcher(value: self)
+
+        sections.value = [
+            BasicRecycleSection(data: (), items: [
+                BasicRecycleItem(data: 1, cell: { _, _ in
+                    HBox().attach {
+                        Label.demo("All").attach($0)
+                            .onTap {
+                                this.value?.mixedDataState.value = items
+                            }
+
+                        Label.demo("Text").attach($0)
+                            .onTap {
+                                this.value?.mixedDataState.value = items.filter { $0 is BasicRecycleItem<String> }
+                            }
+
+                        Label.demo("Color").attach($0)
+                            .onTap {
+                                this.value?.mixedDataState.value = items.filter { $0 is BasicRecycleItem<UIColor> }
+                            }
+                    }
+                    .space(10)
+                    .width(.fill)
+                    .view
+                })
+            ].asOutput()),
+            BasicRecycleSection(
+                data: (),
+                items: mixedDataState.asOutput()
+            )
+        ]
+    }
+
     func colorBlocks() {
         let color = Util.randomColor()
         sections.value = [
             DataRecycleSection(
                 lineSpacing: 10,
                 itemSpacing: 10,
-                items: (0..<6).map { $0 }.asOutput(),
+                items: (0..<20).map { $0 }.asOutput(),
                 cell: { o, _ in
                     let w = o.layoutableSize.width.map {
                         ($0 - 3 * 10) / 3
@@ -208,28 +299,41 @@ class RecycleBoxPropertiesVC: BaseVC {
                 items: (0..<30).map { $0 }.asOutput(),
                 cell: { o, _ in
                     let w = o.layoutableSize.width.map { $0 / 7 }
-                    return VBox().attach {
-                        UILabel().attach($0)
-                            .text(o.data.map { $0 + 1 }.binder.description)
-                            .width(.fill)
-                            .textAlignment(.center)
+                    let selected = Outputs.combine(o.data, selected).map { $0 == $1 }
+                    return ZBox().attach {
+                        UIView().attach($0).attach($0)
+                            .size(.fill, .fill)
+                            .clipToBounds(true)
+                            .backgroundColor(selected.map { $0 ? UIColor.systemPink : .clear })
+                            .margin(all: 5)
+                            .attach {
+                                $0.py_sizeState().binder.width.distinct().safeBind(to: $0) { v, s in
+                                    v.layer.cornerRadius = s / 2
+                                }
+                            }
+                        VBox().attach($0) {
+                            UILabel().attach($0)
+                                .width(.fill)
+                                .text(o.data.map { $0 + 1 }.binder.description)
+                                .textAlignment(.center)
+                                .textColor(selected.map { $0 ? UIColor.white : .black })
 
-                        HBoxRecycle<String> { _, _ in
-                            UIView().attach()
-                                .backgroundColor(.systemBlue)
-                                .size(4, 4)
-                                .cornerRadius(2)
-                                .view
+                            HBoxRecycle<String> { _, _ in
+                                UIView().attach()
+                                    .backgroundColor(.systemBlue)
+                                    .size(4, 4)
+                                    .cornerRadius(2)
+                                    .view
+                            }
+                            .attach($0)
+                            .viewState(o.data.map { appointments[$0] })
+                            .space(4)
                         }
-                        .attach($0)
-                        .viewState(o.data.map { appointments[$0] })
-                        .space(4)
+                        .justifyContent(.center)
+                        .format(.round)
+                        .size(.fill, .fill)
                     }
-                    .justifyContent(.center)
-                    .format(.round)
                     .size(w, w)
-                    .backgroundColor(Outputs.combine(o.data, selected).map { $0 == $1 }.map { $0 ? UIColor.systemPink : .clear
-                    })
                     .view
                 },
                 didSelect: { o in

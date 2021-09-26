@@ -16,6 +16,7 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable {
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
+        addSubview(dummyView)
         buildBody()
     }
 
@@ -38,6 +39,15 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable {
         if !initializing, !layouting {
             super.setNeedsLayout()
             control.setNeedsLayout(view: self, regulator: regulator)
+        }
+    }
+
+    /// If subviews.count == 0, will not call layoutSubviews, provide a dummy view to avoid it
+    private let dummyView = UIView().attach().activated(false).view
+
+    override open func didAddSubview(_ subview: UIView) {
+        if subview != dummyView, dummyView.superview == nil {
+            addSubview(dummyView)
         }
     }
 

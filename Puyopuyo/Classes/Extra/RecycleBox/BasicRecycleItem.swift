@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class BasicRecycleItem<Data>: IRecycleItem {
+public class BasicRecycleItem<Data>: IRecycleItem, DisposableBag {
     public typealias Context = RecyclerInfo<Data>
     public init(
         id: String? = nil,
@@ -36,6 +36,11 @@ public class BasicRecycleItem<Data>: IRecycleItem {
     private var differ: ((Data) -> String)?
     
     // MARK: - methods
+
+    private let bag = NSObject()
+    public func addDisposer(_ disposer: Disposer, for key: String?) {
+        bag.addDisposer(disposer, for: key)
+    }
     
     // MARK: - IRecycleItem methods
     
