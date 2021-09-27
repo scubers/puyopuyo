@@ -76,10 +76,11 @@ class RecycleBoxPropertiesVC: BaseVC {
                 data: Util.randomColor(),
                 diffableKey: { $0.description },
                 cell: { o, _ in
-                    let w = o.layoutableSize.width.map { floor($0 / 3) }
+                    let w = o.contentSize.width.map { floor(($0 / 3) * 100) / 100 }
                     return HBox().attach()
                         .size(w, w.map { $0 / 2 })
                         .backgroundColor(o.data)
+                        .diagnosis()
                         .view
                 }
             )
@@ -149,7 +150,7 @@ class RecycleBoxPropertiesVC: BaseVC {
                 itemSpacing: 10,
                 items: (0..<20).map { $0 }.asOutput(),
                 cell: { o, _ in
-                    let w = o.layoutableSize.width.map {
+                    let w = o.contentSize.width.map {
                         ($0 - 3 * 10) / 3
                     }
                     return HBox().attach {
@@ -298,9 +299,9 @@ class RecycleBoxPropertiesVC: BaseVC {
             DataRecycleSection(
                 items: (0..<30).map { $0 }.asOutput(),
                 cell: { o, _ in
-                    let w = o.layoutableSize.width.map { $0 / 7 }
+                    let w = o.contentSize.width.map { $0 / 7 }
                     let selected = Outputs.combine(o.data, selected).map { $0 == $1 }
-                    let width: CGFloat = 40
+                    let width: CGFloat = 30
                     return VBox().attach {
                         UILabel().attach($0)
                             .size(width, width)
@@ -310,6 +311,9 @@ class RecycleBoxPropertiesVC: BaseVC {
                             .cornerRadius(width / 2)
                             .backgroundColor(selected.map { $0 ? UIColor.systemPink : .clear })
                             .clipToBounds(true)
+//                            .animator(selected.map { $0 ? (FatAnimator() as Animator) : nil })
+//                            .animator(FatAnimator())
+                            .diagnosis()
 
                         HBoxRecycle<String> { _, _ in
                             UIView().attach()
@@ -322,9 +326,13 @@ class RecycleBoxPropertiesVC: BaseVC {
                         .viewState(o.data.map { appointments[$0] })
                         .space(4)
                     }
+                    .animator(selected.map { $0 ? (FatAnimator() as Animator) : nil })
                     .justifyContent(.center)
                     .format(.round)
                     .size(w, w)
+                    .attach {
+                        selected.safeBind(to: $0) { if $1 { $0.setNeedsLayout() }}
+                    }
                     .view
                 },
                 didSelect: { o in
@@ -408,5 +416,22 @@ private class Header: HBox, Stateful {
                 .text(binder)
                 .size(.wrap(add: 10), .wrap(add: 10))
         }
+    }
+}
+
+private struct FatAnimator: Animator {
+    var duration: TimeInterval { 0.3 }
+    func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
+        let view = delegate as? UIView
+        runAsNoneAnimation {
+            delegate.py_center = center
+            delegate.py_size = size
+            view?.layer.transform = CATransform3DMakeScale(1.2, 1.2, 1)
+        }
+
+        UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 2, initialSpringVelocity: 2, options: [.curveEaseInOut, .overrideInheritedOptions, .overrideInheritedDuration, .overrideInheritedCurve], animations: {
+            view?.layer.transform = CATransform3DIdentity
+            animations()
+        }, completion: nil)
     }
 }

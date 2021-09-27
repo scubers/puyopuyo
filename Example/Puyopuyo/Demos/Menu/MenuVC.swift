@@ -43,7 +43,7 @@ class MenuVC: BaseVC {
                                 .textAlignment(.left)
                                 .text(o.map(\.data.0))
                         }
-                        .size(.fill, .wrap)
+                        .width(o.contentSize.width)
                         .padding(all: 16)
                         .backgroundColor(UIColor.white)
                         .styles([TapTransformStyle(), ShadowStyle()])

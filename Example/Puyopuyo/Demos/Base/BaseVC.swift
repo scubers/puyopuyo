@@ -9,7 +9,7 @@
 import Puyopuyo
 import UIKit
 
-class BaseVC: UIViewController, UIScrollViewDelegate {
+class BaseVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizerDelegate {
     var navState = State(NavigationBox.ViewState())
     var navHeight = State<SizeDescription>(.fix(44))
     let additionalSafeAreaPadding = State(UIEdgeInsets.zero)
@@ -51,11 +51,19 @@ class BaseVC: UIViewController, UIScrollViewDelegate {
         navigationController?.navigationBar.isTranslucent = false
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "back", style: .plain, target: self, action: #selector(BaseVC.back))
         view.backgroundColor = Theme.background
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
 
         configView()
         if shouldRandomColor() {
             Util.randomViewColor(view: view)
         }
+    }
+
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer == navigationController?.interactivePopGestureRecognizer {
+            return true
+        }
+        return false
     }
 
     override func viewWillAppear(_ animated: Bool) {

@@ -75,7 +75,7 @@ public class BasicRecycleItem<Data>: IRecycleItem, DisposableBag {
     
     private func getContext() -> RecyclerInfo<Data>? {
         if let section = section {
-            return RecyclerInfo(data: data, indexPath: indexPath, layoutableSize: section.getLayoutableContentSize())
+            return RecyclerInfo(data: data, indexPath: indexPath, contentSize: section.getLayoutableContentSize())
         }
         return nil
     }
@@ -140,10 +140,18 @@ public class BasicRecycleItem<Data>: IRecycleItem, DisposableBag {
         let cell = getCalculateCell()
         guard let root = cell.root, let ctx = getContext() else { return .zero }
         
-        let layoutContentSize = section.getLayoutableContentSize()
+        var residual = section.getLayoutableContentSize()
+        
+        let measureSize = root.py_measure.size
+        if measureSize.width.isWrap {
+            residual.width = .greatestFiniteMagnitude
+        }
+        if measureSize.height.isWrap {
+            residual.height = .greatestFiniteMagnitude
+        }
         
         cell.state.input(value: ctx)
-        var size = root.sizeThatFits(layoutContentSize)
+        var size = root.sizeThatFits(residual)
         size.width += root.py_measure.margin.getHorzTotal()
         size.height += root.py_measure.margin.getVertTotal()
         
@@ -172,7 +180,17 @@ private class RecycleBoxCell<D>: UICollectionViewCell {
     var selfSizingResidual: CGSize?
     
     override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
-        let size = selfSizingResidual ?? targetSize
-        return root?.sizeThatFits(size) ?? .zero
+        guard let root = root else {
+            return .zero
+        }
+        var size = selfSizingResidual ?? targetSize
+        let measureSize = root.py_measure.size
+        if measureSize.width.isWrap {
+            size.width = .greatestFiniteMagnitude
+        }
+        if measureSize.height.isWrap {
+            size.height = .greatestFiniteMagnitude
+        }
+        return root.sizeThatFits(size)
     }
 }

@@ -12,7 +12,7 @@ import Foundation
 public struct RecyclerInfo<T> {
     public var data: T
     public var indexPath: IndexPath
-    public var layoutableSize: CGSize
+    public var contentSize: CGSize
 }
 
 public class RecyclerTrigger<T> {
@@ -82,7 +82,7 @@ extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Dat
         RecyclerInfo(
             data: viewState.specificValue[index],
             indexPath: IndexPath(item: index, section: 0),
-            layoutableSize: getLayoutableSize()
+            contentSize: getLayoutableSize()
         )
     }
 

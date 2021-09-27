@@ -13,10 +13,8 @@ class AdvanceVC: BaseVC {
     override func configView() {
         DemoScroll(
             builder: {
-                wrapPriority().attach($0)
                 numberPad().attach($0)
                 superviewRatio().attach($0)
-                widthEqualToHeight().attach($0)
             }
         )
         .attach(vRoot)
@@ -29,7 +27,7 @@ class AdvanceVC: BaseVC {
     func superviewRatio() -> UIView {
 //        let aligment = State<SizeDescription>()
         return DemoView<Alignment>(
-            title: "宽度为父view的0.8",
+            title: "Width is parent's 80%",
             builder: {
                 HBox().attach($0) {
                     Label.demo("1").attach($0)
@@ -41,34 +39,11 @@ class AdvanceVC: BaseVC {
                 .justifyContent(.center)
                 .size(.fill, 60)
                 .animator(Animators.default)
-                .view
             },
             selectors: [],
-            desc: ""
-        )
-        .attach()
-        .view
-    }
-
-    func widthEqualToHeight() -> UIView {
-//        let aligment = State<SizeDescription>()
-        return DemoView<Alignment>(
-            title: "宽度等于高度",
-            builder: {
-                HBox().attach($0) {
-                    Label.demo("1").attach($0)
-                        .height(.fill)
-                        .widthEqualToHeight()
-                }
-                .space(2)
-                .padding(all: 10)
-                .justifyContent(.center)
-                .size(.fill, 60)
-                .animator(Animators.default)
-
-            },
-            selectors: [],
-            desc: ""
+            desc: """
+            All use the kvo's size will not correct calculate in on runloop
+            """
         )
         .attach()
         .view
@@ -76,7 +51,7 @@ class AdvanceVC: BaseVC {
 
     func numberPad() -> UIView {
         DemoView<Alignment>(
-            title: "数字键盘",
+            title: "Number pad",
             builder: {
                 VFlow(count: 3).attach($0) {
                     for i in 0 ..< 10 {

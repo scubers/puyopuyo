@@ -9,6 +9,16 @@ import Foundation
 
 public typealias RecycleViewGenerator<D> = (OutputBinder<RecyclerInfo<D>>, RecyclerTrigger<D>) -> UIView?
 
+func recycleViewChecker<D>(_ generator: @escaping RecycleViewGenerator<D>) -> RecycleViewGenerator<D> {
+    return { o, i in
+        if let view = generator(o, i) {
+//            assert(!view.py_measure.size.maybeRatio(), "Recycle view size can not be ratio")
+            return view
+        }
+        return nil
+    }
+}
+
 public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     public func addDisposer(_ disposer: Disposer, for key: String?) {
         bag.addDisposer(disposer, for: key)
@@ -204,9 +214,21 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
         }
         let view = getCalculateView(for: kind)
         guard let root = view.root else { return .zero }
-        let layoutContentSize = getLayoutableContentSize()
+        
         view.state.input(value: getContext())
-        var size = root.sizeThatFits(layoutContentSize)
+        
+        var residual = getLayoutableContentSize()
+        
+        let measureSize = root.py_measure.size
+        if measureSize.width.isWrap {
+            residual.width = .greatestFiniteMagnitude
+        }
+        if measureSize.height.isWrap {
+            residual.height = .greatestFiniteMagnitude
+        }
+        
+        var size = root.sizeThatFits(residual)
+        
         size.width += root.py_measure.margin.getHorzTotal()
         size.height += root.py_measure.margin.getVertTotal()
         let final = CGSize(width: max(0, size.width), height: max(0, size.height))
@@ -233,7 +255,7 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     }
     
     private func getContext() -> RecyclerInfo<Data> {
-        RecyclerInfo(data: data, indexPath: IndexPath(item: 0, section: sectionIndex), layoutableSize: getLayoutableContentSize())
+        RecyclerInfo(data: data, indexPath: IndexPath(item: 0, section: sectionIndex), contentSize: getLayoutableContentSize())
     }
     
     public func getSectionInsets() -> UIEdgeInsets? {
@@ -268,7 +290,17 @@ private class RecycleBoxSupplementaryView<D>: UICollectionReusableView {
     var selfSizingResidual: CGSize?
     
     override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
-        let size = selfSizingResidual ?? targetSize
-        return root?.sizeThatFits(size) ?? .zero
+        guard let root = root else {
+            return .zero
+        }
+        var size = selfSizingResidual ?? targetSize
+        let measureSize = root.py_measure.size
+        if measureSize.width.isWrap {
+            size.width = .greatestFiniteMagnitude
+        }
+        if measureSize.height.isWrap {
+            size.height = .greatestFiniteMagnitude
+        }
+        return root.sizeThatFits(size)
     }
 }

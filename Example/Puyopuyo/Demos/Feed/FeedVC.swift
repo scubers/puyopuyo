@@ -118,7 +118,7 @@ private class Header: VBox, Eventable {
                     .size(100, 100)
                     .cornerRadius(8)
             }
-            .margin(top: -70, right: 40)
+            .margin(top: -70, right: 20)
             .justifyContent(.center)
             .space(8)
 

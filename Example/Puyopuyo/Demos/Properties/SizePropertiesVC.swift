@@ -18,6 +18,7 @@ class SizePropertiesVC: BaseVC {
                     Rotate your device to landscape, get more space
                     """)
                     .fontSize(20, weight: .bold)
+                    .numberOfLines(0)
                     .width(.fill)
 
                 fixedSizeWillOverflow().attach($0)
