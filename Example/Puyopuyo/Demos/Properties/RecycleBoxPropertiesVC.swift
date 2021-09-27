@@ -13,38 +13,30 @@ class RecycleBoxPropertiesVC: BaseVC {
     let sections = State<[IRecycleSection]>([])
     var box: RecycleBox?
 
+    struct MenuItem {
+        var name: String
+        var action: () -> Void
+    }
+
     override func configView() {
+        let this = WeakCatcher(value: self)
+
+        let actions = [
+            MenuItem(name: "demo1", action: { this.value?.reloadWithMultipleSectionAnimationSeparated() }),
+            MenuItem(name: "demo2", action: { this.value?.sectionDiff() }),
+            MenuItem(name: "demo3", action: { this.value?.randomShuffleAnimation() }),
+            MenuItem(name: "demo4", action: { this.value?.colorBlocks() }),
+            MenuItem(name: "calendar", action: { this.value?.calendar() }),
+            MenuItem(name: "mix", action: { this.value?.mixedDataDemo() })
+        ]
+
         vRoot.attach {
-            HBox().attach($0) {
-                Label.demo("demo1").attach($0)
-                    .onTap(to: self) { this, _ in
-                        this.reloadWithMultipleSectionAnimationSeparated()
-                    }
-
-                Label.demo("demo2").attach($0)
-                    .onTap(to: self) { this, _ in
-                        this.sectionDiff()
-                    }
-                Label.demo("demo3").attach($0)
-                    .onTap(to: self) { this, _ in
-                        this.randomShuffleAnimation()
-                    }
-
-                Label.demo("demo4").attach($0)
-                    .onTap(to: self) { this, _ in
-                        this.colorBlocks()
-                    }
-                Label.demo("calendar").attach($0)
-                    .onTap(to: self) { this, _ in
-                        this.calendar()
-                    }
-                Label.demo("mix").attach($0)
-                    .onTap(to: self) { this, _ in
-                        this.mixedDataDemo()
-                    }
-            }
-            .space(10)
-            .width(.fill)
+            UISegmentedControl(items: actions.map(\.name)).attach($0)
+                .bind(keyPath: \.selectedSegmentIndex, 0)
+                .bind(event: .valueChanged, input: Inputs {
+                    actions[$0.selectedSegmentIndex].action()
+                })
+                .size(.fill, 40)
 
             box = RecycleBox(
                 headerPinToBounds: true,
@@ -58,10 +50,7 @@ class RecycleBoxPropertiesVC: BaseVC {
         }
         .space(10)
 
-//        reloadWithMultipleSectionAnimationSeparated()
-//        reloadMultipleSectionToOne()
-//        randomShuffleAnimation()
-//        colorBlocks()
+        actions.first?.action()
     }
 
     let mixedDataState = State<[IRecycleItem]>([])
@@ -120,26 +109,27 @@ class RecycleBoxPropertiesVC: BaseVC {
 
         let this = WeakCatcher(value: self)
 
+        let actions = [
+            MenuItem(name: "All", action: { this.value?.mixedDataState.value = items }),
+            MenuItem(name: "Color", action: {
+                this.value?.mixedDataState.value = items.filter { $0 is BasicRecycleItem<UIColor> }
+            }),
+            MenuItem(name: "Text", action: {
+                this.value?.mixedDataState.value = items.filter { $0 is BasicRecycleItem<String> }
+            })
+        ]
+
         sections.value = [
             BasicRecycleSection(data: (), items: [
                 BasicRecycleItem(data: 1, cell: { _, _ in
                     HBox().attach {
-                        Label.demo("All").attach($0)
-                            .onTap {
-                                this.value?.mixedDataState.value = items
-                            }
-
-                        Label.demo("Text").attach($0)
-                            .onTap {
-                                this.value?.mixedDataState.value = items.filter { $0 is BasicRecycleItem<String> }
-                            }
-
-                        Label.demo("Color").attach($0)
-                            .onTap {
-                                this.value?.mixedDataState.value = items.filter { $0 is BasicRecycleItem<UIColor> }
-                            }
+                        UISegmentedControl(items: actions.map(\.name)).attach($0)
+                            .size(.fill, 40)
+                            .bind(keyPath: \.selectedSegmentIndex, 0)
+                            .bind(event: .valueChanged, input: Inputs {
+                                actions[$0.selectedSegmentIndex].action()
+                            })
                     }
-                    .space(10)
                     .width(.fill)
                     .view
                 })
@@ -231,14 +221,19 @@ class RecycleBoxPropertiesVC: BaseVC {
                         )
 
                     }.asOutput(),
-                    header: { o, _ in
+                    header: { _, _ in
                         Header().attach()
-//                            .viewState(o.indexPath.section.map { "Section \($0)" })
-                            .viewState(o.map { "section \($0.indexPath.section)" })
+                            .viewState("Header")
                             .view
                     }
                 )
             }
+        }
+        .map {
+            [getDescSection(title: """
+            Section can be calculate diff, the diffable key of the section and item should be provide at the same time.
+            Item animation will lost when section animation is occured.
+            """)] + $0
         }
         .send(to: sections)
         .dispose(by: self)
@@ -254,6 +249,9 @@ class RecycleBoxPropertiesVC: BaseVC {
         }
 
         sections.value = [
+            getDescSection(title: """
+            Change specific section's dataSource, auto calculate diff and animate.
+            """),
             DataRecycleSection(
                 items: section1.asOutput(),
                 differ: { $0.description },
@@ -361,6 +359,27 @@ class RecycleBoxPropertiesVC: BaseVC {
             )
         ]
     }
+}
+
+private func getDescSection(title: String) -> IRecycleSection {
+    BasicRecycleSection(
+        data: (),
+        items: [
+            BasicRecycleItem(
+                data: title,
+                cell: { o, _ in
+                    HBox().attach {
+                        UILabel().attach($0)
+                            .text(o.data)
+                            .fontSize(20, weight: .bold)
+                            .numberOfLines(0)
+                    }
+                    .width(.fill)
+                    .view
+                }
+            )
+        ].asOutput()
+    )
 }
 
 private class SquareCell: HBox, Stateful {
