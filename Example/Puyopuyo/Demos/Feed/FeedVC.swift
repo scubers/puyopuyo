@@ -311,7 +311,18 @@ extension RandomValues {
     }
 
     func random(_ max: Int) -> [V] {
-        (0 ..< Int.random(in: 0 ..< max)).map { _ in values[Int.random(in: 0 ..< values.count)] }
+        var list = [V]()
+        let totalCount = Int.random(in: 0 ..< max)
+        var content = values
+        while list.count < totalCount {
+            if content.isEmpty {
+                content = values
+            }
+            let index = Int.random(in: 0 ..< content.count)
+            list.append(content[index])
+            content.remove(at: index)
+        }
+        return list
     }
 }
 

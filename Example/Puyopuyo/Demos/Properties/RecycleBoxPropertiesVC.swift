@@ -300,39 +300,30 @@ class RecycleBoxPropertiesVC: BaseVC {
                 cell: { o, _ in
                     let w = o.layoutableSize.width.map { $0 / 7 }
                     let selected = Outputs.combine(o.data, selected).map { $0 == $1 }
-                    return ZBox().attach {
-                        UIView().attach($0).attach($0)
-                            .size(.fill, .fill)
-                            .clipToBounds(true)
+                    let width: CGFloat = 40
+                    return VBox().attach {
+                        UILabel().attach($0)
+                            .size(width, width)
+                            .text(o.data.map { $0 + 1 }.binder.description)
+                            .textAlignment(.center)
+                            .textColor(selected.map { $0 ? UIColor.white : .black })
+                            .cornerRadius(width / 2)
                             .backgroundColor(selected.map { $0 ? UIColor.systemPink : .clear })
-                            .margin(all: 5)
-                            .attach {
-                                $0.py_sizeState().binder.width.distinct().safeBind(to: $0) { v, s in
-                                    v.layer.cornerRadius = s / 2
-                                }
-                            }
-                        VBox().attach($0) {
-                            UILabel().attach($0)
-                                .width(.fill)
-                                .text(o.data.map { $0 + 1 }.binder.description)
-                                .textAlignment(.center)
-                                .textColor(selected.map { $0 ? UIColor.white : .black })
+                            .clipToBounds(true)
 
-                            HBoxRecycle<String> { _, _ in
-                                UIView().attach()
-                                    .backgroundColor(.systemBlue)
-                                    .size(4, 4)
-                                    .cornerRadius(2)
-                                    .view
-                            }
-                            .attach($0)
-                            .viewState(o.data.map { appointments[$0] })
-                            .space(4)
+                        HBoxRecycle<String> { _, _ in
+                            UIView().attach()
+                                .backgroundColor(.systemBlue)
+                                .size(4, 4)
+                                .cornerRadius(2)
+                                .view
                         }
-                        .justifyContent(.center)
-                        .format(.round)
-                        .size(.fill, .fill)
+                        .attach($0)
+                        .viewState(o.data.map { appointments[$0] })
+                        .space(4)
                     }
+                    .justifyContent(.center)
+                    .format(.round)
                     .size(w, w)
                     .view
                 },
