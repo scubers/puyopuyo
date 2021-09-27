@@ -315,7 +315,7 @@ class RecycleBoxPropertiesVC: BaseVC {
 //                            .animator(FatAnimator())
                             .diagnosis()
 
-                        HBoxRecycle<String> { _, _ in
+                        HBoxBuilder<String> { _, _ in
                             UIView().attach()
                                 .backgroundColor(.systemBlue)
                                 .size(4, 4)

@@ -193,7 +193,7 @@ class ItemView: HBox, Stateful {
                 )
                 .attach($0)
                 .arrangeCount(images.map { $0.count < 5 ? 2 : 3 }.distinct())
-                .space(8)
+                .space(4)
                 .margin(top: 8)
                 .viewState(images)
                 .visibility(images.map { $0.isEmpty ? .gone : .visible })
@@ -236,7 +236,7 @@ class ItemView: HBox, Stateful {
                             (v1 == .visible && v2 == .visible).py_visibleOrGone()
                         })
 
-                    VBoxRecycle<String>(
+                    VBoxBuilder<String>(
                         builder: { o, i in
                             HBox().attach {
                                 UILabel().attach($0)

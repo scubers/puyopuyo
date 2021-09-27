@@ -17,7 +17,7 @@ public struct RecyclerInfo<T> {
 
 public class RecyclerTrigger<T> {
     public var isBuilding = true
-    
+
     public init(creator: (() -> RecyclerInfo<T>?)? = nil) {
         self.createor = creator
     }
@@ -213,7 +213,7 @@ extension Int: RecycleIdentifiable {}
 
 // MARK: - LinearBoxRecycle
 
-public class LinearBoxRecycle<T>: LinearBox, BoxRecycler {
+public class LinearBoxBuilder<T>: LinearBox, BoxRecycler {
     typealias Data = T
 
     fileprivate var container = Container<T>()
@@ -234,14 +234,14 @@ public class LinearBoxRecycle<T>: LinearBox, BoxRecycler {
     }
 }
 
-public class HBoxRecycle<T>: LinearBoxRecycle<T> {
+public class HBoxBuilder<T>: LinearBoxBuilder<T> {
     public required init(builder: @escaping RecyclerBuilder<T>) {
         super.init(builder: builder)
         attach().direction(.x)
     }
 }
 
-public class VBoxRecycle<T>: LinearBoxRecycle<T> {
+public class VBoxBuilder<T>: LinearBoxBuilder<T> {
     public required init(builder: @escaping RecyclerBuilder<T>) {
         super.init(builder: builder)
         attach().direction(.y)
@@ -250,7 +250,7 @@ public class VBoxRecycle<T>: LinearBoxRecycle<T> {
 
 // MARK: - FlowBoxRecycle
 
-public class FlowBoxRecycle<T>: FlowBox, BoxRecycler {
+public class FlowBoxBuilder<T>: FlowBox, BoxRecycler {
     typealias Data = T
 
     fileprivate var container = Container<T>()
@@ -271,14 +271,14 @@ public class FlowBoxRecycle<T>: FlowBox, BoxRecycler {
     }
 }
 
-public class HFlowRecycle<T>: FlowBoxRecycle<T> {
+public class HFlowBuilder<T>: FlowBoxBuilder<T> {
     public required init(count: Int = 0, builder: @escaping RecyclerBuilder<T>) {
         super.init(count: count, builder: builder)
         attach().direction(.x).arrangeCount(count)
     }
 }
 
-public class VFlowRecycle<T>: FlowBoxRecycle<T> {
+public class VFlowRecycle<T>: FlowBoxBuilder<T> {
     public required init(count: Int = 0, builder: @escaping RecyclerBuilder<T>) {
         super.init(count: count, builder: builder)
         attach().direction(.y)
@@ -287,7 +287,7 @@ public class VFlowRecycle<T>: FlowBoxRecycle<T> {
 
 // MARK: - ZBoxRecycle
 
-public class ZBoxRecycle<T>: ZBox, BoxRecycler {
+public class ZBoxBuilder<T>: ZBox, BoxRecycler {
     typealias Data = T
 
     fileprivate var container = Container<T>()
