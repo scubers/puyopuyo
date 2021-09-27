@@ -13,6 +13,9 @@ public protocol IRecycleSection: AnyObject {
     
     var sectionIndex: Int { get set }
     
+    /// The diff value to calculate diff
+    func getDiffableKey() -> String
+    
     func getItems() -> [IRecycleItem]
     
     func supplementaryViewType(for kind: String) -> AnyClass
@@ -109,7 +112,7 @@ open class RecycleBox: UICollectionView,
         
         sections.send(to: viewState).dispose(by: self)
         
-        viewState.safeBind(to: self) { this, s in
+        viewState.debounce().safeBind(to: self) { this, s in
             // 注册view类型
             this.prepareSection(s)
             this.reload(sections: s)
@@ -183,11 +186,31 @@ open class RecycleBox: UICollectionView,
     }
     
     public func reload(sections: [IRecycleSection]) {
-        self.sections = sections
-        reloadData()
+        if enableDiff, bounds != .zero {
+            updateSectionsWithDiff(sections: sections)
+        } else {
+            self.sections = sections
+            reloadData()
+        }
     }
     
-    private func updateSectionsWithDiff(sections: [IRecycleSection]) {}
+    private func updateSectionsWithDiff(sections: [IRecycleSection]) {
+        // 全量计算section
+        let sectionDiff = Diff(
+            src: self.sections.map { $0.getDiffableKey() + $0.getItems().map { $0.getDiffableKey() }.joined() },
+            dest: sections.map { $0.getDiffableKey() + $0.getItems().map { $0.getDiffableKey() }.joined() },
+            identifier: { $0 }
+        )
+        
+        sectionDiff.check()
+        
+        self.sections = sections
+        performBatchUpdates({
+            self.deleteSections(IndexSet(sectionDiff.delete.map { $0.from }))
+            self.insertSections(IndexSet(sectionDiff.insert.map { $0.to }))
+            sectionDiff.move.forEach { self.moveSection($0.from, toSection: $0.to) }
+        }, completion: nil)
+    }
     
     // UICollectionDelegate, UICollectionDataSource
     public func numberOfSections(in collectionView: UICollectionView) -> Int {

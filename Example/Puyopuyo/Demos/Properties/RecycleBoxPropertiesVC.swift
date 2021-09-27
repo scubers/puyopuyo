@@ -23,7 +23,7 @@ class RecycleBoxPropertiesVC: BaseVC {
 
                 Label.demo("demo2").attach($0)
                     .onTap(to: self) { this, _ in
-                        this.reloadMultipleSectionToOne()
+                        this.sectionDiff()
                     }
                 Label.demo("demo3").attach($0)
                     .onTap(to: self) { this, _ in
@@ -202,7 +202,7 @@ class RecycleBoxPropertiesVC: BaseVC {
         ]
     }
 
-    func reloadMultipleSectionToOne() {
+    func sectionDiff() {
         let dataSource = State([
             (0..<5).map { $0 },
             (5..<10).map { $0 },
@@ -210,13 +210,15 @@ class RecycleBoxPropertiesVC: BaseVC {
         ])
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            dataSource.value = [(0..<20).reversed().map { $0 }]
+            dataSource.value.remove(at: 0) // remove first
+            dataSource.value[1] = (3..<10).map { $0 } // change second
         }
 
         dataSource.map { sections -> [IRecycleSection] in
-            sections.map { rows in
+            sections.enumerated().map { _, rows in
                 BasicRecycleSection(
                     data: (),
+                    diffableKey: { "1" }, // Make sure just use item for diffing
                     items: rows.map { row in
                         BasicRecycleItem(
                             data: row,

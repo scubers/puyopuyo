@@ -22,6 +22,7 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
         itemSpacing: CGFloat? = nil,
         
         data: Data,
+        diffableKey: ((Data) -> String)? = nil,
         items: Outputs<[IRecycleItem]> = [].asOutput(),
         
         header: RecycleViewGenerator<Data>? = nil,
@@ -38,6 +39,7 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
         headerGen = header
         footerGen = footer
         self.data = data
+        differ = diffableKey
         items.safeBind(to: self) { this, items in
             this.reload(items: items)
         }
@@ -45,6 +47,7 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     
     private let bag = NSObject()
     private var recycleItems = [IRecycleItem]()
+    private var differ: ((Data) -> String)?
     public var sectionInsets: UIEdgeInsets?
     public var lineSpacing: CGFloat?
     public var itemSpacing: CGFloat?
@@ -110,6 +113,11 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     public weak var box: RecycleBox?
     
     public var sectionIndex: Int = 0
+    
+    private lazy var address = Unmanaged.passUnretained(self).toOpaque().debugDescription
+    public func getDiffableKey() -> String {
+        differ?(data) ?? (address + "\(data)")
+    }
     
     public func getItems() -> [IRecycleItem] {
         return recycleItems
