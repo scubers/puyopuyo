@@ -9,17 +9,7 @@ import Foundation
 
 public typealias RecycleViewGenerator<D> = (OutputBinder<RecyclerInfo<D>>, RecyclerTrigger<D>) -> UIView?
 
-func recycleViewChecker<D>(_ generator: @escaping RecycleViewGenerator<D>) -> RecycleViewGenerator<D> {
-    return { o, i in
-        if let view = generator(o, i) {
-//            assert(!view.py_measure.size.maybeRatio(), "Recycle view size can not be ratio")
-            return view
-        }
-        return nil
-    }
-}
-
-public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
+open class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     public func addDisposer(_ disposer: Disposer, for key: String?) {
         bag.addDisposer(disposer, for: key)
     }
@@ -67,64 +57,12 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     private var headerGen: RecycleViewGenerator<Data>?
     private var footerGen: RecycleViewGenerator<Data>?
     
-    // MARK: - private
-    
-    private func reload(items: [IRecycleItem]) {
-        // 赋值section
-        items.enumerated().forEach { idx, item in
-            item.section = self
-            item.indexPath = IndexPath(item: idx, section: self.sectionIndex)
-        }
-        
-        // box 还没赋值时，只更新数据源
-        guard let box = box else {
-            recycleItems = items
-            return
-        }
-        
-        // iOS低版本当bounds == zero 进行 增量更新的时候，会出现崩溃，高版本会警告
-        guard box.bounds != .zero else {
-            recycleItems = items
-            box.reloadData()
-            return
-        }
-        
-        guard box.enableDiff else {
-            recycleItems = items
-            box.reloadData()
-            return
-        }
-        
-        // 需要做diff运算
-        
-        let diff = Diff(src: recycleItems, dest: items, identifier: { $0.getDiffableKey() })
-        diff.check()
-        if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
-            recycleItems = items
-            box.performBatchUpdates({
-                box.applyItemUpdates(diff, in: section)
-            }, completion: nil)
-        }
-    }
-    
-    func getItem(_ index: Int) -> IRecycleItem? {
-        if index < recycleItems.count {
-            return recycleItems[index]
-        }
-        return nil
-    }
-    
-    public func getSectionId(kind: String? = nil) -> String {
-        "\(type(of: self))_\(id ?? "")_\(kind ?? "")"
-    }
-    
     // MARK: - IRecycleSection methods
     
     public weak var box: RecycleBox?
     
     public var sectionIndex: Int = 0
     
-    private lazy var address = Unmanaged.passUnretained(self).toOpaque().debugDescription
     public func getDiffableKey() -> String {
         differ?(data) ?? (address + "\(data)")
     }
@@ -147,6 +85,25 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
         return view
     }
     
+    public func getSectionInsets() -> UIEdgeInsets? {
+        sectionInsets
+    }
+    
+    public func getMinimumLineSpacing() -> CGFloat? {
+        lineSpacing
+    }
+    
+    public func getMinimumItemSpacing() -> CGFloat? {
+        itemSpacing
+    }
+    
+    public func didChangeBounds(_ newBounds: CGRect) {
+        headerCachedSize = nil
+        footerCachedSize = nil
+    }
+    
+    // MARK: - Private
+
     private func getRawSupplementaryViewWithoutData(for kind: String) -> (RecycleBoxSupplementaryView<Data>, UIView?) {
         guard let view = box?.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: getSectionId(kind: kind), for: IndexPath(row: 0, section: sectionIndex)) as? RecycleBoxSupplementaryView<Data> else {
             fatalError()
@@ -160,7 +117,7 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
                 if let view = view,
                    let idx = box?.visibleSupplementaryViews(ofKind: kind).firstIndex(where: { $0 === view }),
                    let indexPathes = box?.indexPathsForVisibleSupplementaryElements(ofKind: kind),
-                   let section = box?.getSection(indexPathes[idx].section) as? BasicRecycleSection<Data>
+                   let section = box?.getSection(indexPathes[idx].section) as? Self
                 {
                     return section.getContext()
                 }
@@ -207,6 +164,7 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
     
     private var headerCachedSize: CGSize?
     private var footerCachedSize: CGSize?
+    private lazy var address = Unmanaged.passUnretained(self).toOpaque().debugDescription
     
     public func supplementaryViewSize(for kind: String) -> CGSize {
         if let cachedSize = getCachedSize(for: kind) {
@@ -258,21 +216,53 @@ public class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
         RecyclerInfo(data: data, indexPath: IndexPath(item: 0, section: sectionIndex), contentSize: getLayoutableContentSize())
     }
     
-    public func getSectionInsets() -> UIEdgeInsets? {
-        sectionInsets
+    private func reload(items: [IRecycleItem]) {
+        // 赋值section
+        items.enumerated().forEach { idx, item in
+            item.section = self
+            item.indexPath = IndexPath(item: idx, section: self.sectionIndex)
+        }
+        
+        // box 还没赋值时，只更新数据源
+        guard let box = box else {
+            recycleItems = items
+            return
+        }
+        
+        // iOS低版本当bounds == zero 进行 增量更新的时候，会出现崩溃，高版本会警告
+        guard box.bounds != .zero else {
+            recycleItems = items
+            box.reloadData()
+            return
+        }
+        
+        guard box.enableDiff else {
+            recycleItems = items
+            box.reloadData()
+            return
+        }
+        
+        // 需要做diff运算
+        
+        let diff = Diff(src: recycleItems, dest: items, identifier: { $0.getDiffableKey() })
+        diff.check()
+        if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
+            recycleItems = items
+            box.performBatchUpdates({
+                box.applyItemUpdates(diff, in: section)
+            }, completion: nil)
+        }
     }
     
-    public func getMinimumLineSpacing() -> CGFloat? {
-        lineSpacing
+    func getItem(_ index: Int) -> IRecycleItem? {
+        if index < recycleItems.count {
+            return recycleItems[index]
+        }
+        return nil
     }
     
-    public func getMinimumItemSpacing() -> CGFloat? {
-        itemSpacing
-    }
-    
-    public func didChangeBounds(_ newBounds: CGRect) {
-        headerCachedSize = nil
-        footerCachedSize = nil
+    public func getSectionId(kind: String? = nil) -> String {
+        "\(type(of: self))_\(id ?? "")_\(kind ?? "")"
     }
 }
 

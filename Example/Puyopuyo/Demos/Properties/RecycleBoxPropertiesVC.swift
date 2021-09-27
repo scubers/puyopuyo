@@ -55,55 +55,59 @@ class RecycleBoxPropertiesVC: BaseVC {
 
     let mixedDataState = State<[IRecycleItem]>([])
     func mixedDataDemo() {
-        func titleItem() -> IRecycleItem {
-            BasicRecycleItem(
-                data: Names().get(),
-                diffableKey: { $0 },
-                cell: { o, _ in
-                    HBox().attach {
-                        UILabel().attach($0)
-                            .text(o.data)
-                    }
-                    .width(.fill)
-                    .padding(all: 10)
-                    .view
-                }
-            )
-        }
-
-        func colorItem() -> IRecycleItem {
-            BasicRecycleItem(
-                data: Util.randomColor(),
-                diffableKey: { $0.description },
-                cell: { o, _ in
-                    let w = o.contentSize.width.map { floor(($0 / 3) * 100) / 100 }
-                    return HBox().attach()
-                        .size(w, w.map { $0 / 2 })
-                        .backgroundColor(o.data)
-                        .diagnosis()
+        class TitleItem: BasicRecycleItem<String> {
+            init() {
+                super.init(
+                    data: Names().get(),
+                    diffableKey: { $0 },
+                    cell: { o, _ in
+                        HBox().attach {
+                            UILabel().attach($0)
+                                .text(o.data)
+                        }
+                        .width(.fill)
+                        .padding(all: 10)
                         .view
-                }
-            )
+                    }
+                )
+            }
         }
 
-        let items = [
-            titleItem(),
+        class ColorItem: BasicRecycleItem<UIColor> {
+            init() {
+                super.init(
+                    data: Util.randomColor(),
+                    diffableKey: { $0.description },
+                    cell: { o, _ in
+                        let w = o.contentSize.width.map { floor(($0 / 3) * 100) / 100 }
+                        return HBox().attach()
+                            .size(w, w.map { $0 / 2 })
+                            .backgroundColor(o.data)
+                            .diagnosis()
+                            .view
+                    }
+                )
+            }
+        }
 
-            colorItem(),
-            colorItem(),
-            colorItem(),
+        let items: [IRecycleItem] = [
+            TitleItem(),
 
-            titleItem(),
+            ColorItem(),
+            ColorItem(),
+            ColorItem(),
 
-            colorItem(),
-            colorItem(),
-            colorItem(),
+            TitleItem(),
 
-            titleItem(),
+            ColorItem(),
+            ColorItem(),
+            ColorItem(),
 
-            colorItem(),
-            colorItem(),
-            colorItem()
+            TitleItem(),
+
+            ColorItem(),
+            ColorItem(),
+            ColorItem()
         ]
 
         mixedDataState.value = items
@@ -113,10 +117,10 @@ class RecycleBoxPropertiesVC: BaseVC {
         let actions = [
             MenuItem(name: "All", action: { this.value?.mixedDataState.value = items }),
             MenuItem(name: "Color", action: {
-                this.value?.mixedDataState.value = items.filter { $0 is BasicRecycleItem<UIColor> }
+                this.value?.mixedDataState.value = items.filter { $0 is ColorItem }
             }),
             MenuItem(name: "Text", action: {
-                this.value?.mixedDataState.value = items.filter { $0 is BasicRecycleItem<String> }
+                this.value?.mixedDataState.value = items.filter { $0 is TitleItem }
             })
         ]
 
@@ -430,5 +434,22 @@ private struct FatAnimator: Animator {
             view?.layer.transform = CATransform3DIdentity
             animations()
         }, completion: nil)
+    }
+}
+
+class ColorSection: BasicRecycleItem<UIColor> {
+    init() {
+        super.init(
+            data: Util.randomColor(),
+            diffableKey: { $0.description },
+            cell: { o, _ in
+                let w = o.contentSize.width.map { floor(($0 / 3) * 100) / 100 }
+                return HBox().attach()
+                    .size(w, w.map { $0 / 2 })
+                    .backgroundColor(o.data)
+                    .diagnosis()
+                    .view
+            }
+        )
     }
 }

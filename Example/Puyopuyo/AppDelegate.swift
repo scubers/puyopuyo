@@ -27,6 +27,8 @@ class Dog {
     var name: String?
 }
 
+//class MySection: BasicRecycleSection<Void> {}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?

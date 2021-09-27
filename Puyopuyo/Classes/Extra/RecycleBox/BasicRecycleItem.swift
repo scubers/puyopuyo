@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class BasicRecycleItem<Data>: IRecycleItem, DisposableBag {
+open class BasicRecycleItem<Data>: IRecycleItem, DisposableBag {
     public typealias Context = RecyclerInfo<Data>
     public init(
         id: String? = nil,
@@ -98,7 +98,7 @@ public class BasicRecycleItem<Data>: IRecycleItem, DisposableBag {
             let holder = RecyclerTrigger<Data> { [weak box, weak cell] in
                 if let cell = cell,
                    let idx = box?.indexPath(for: cell),
-                   let item = box?.getItem(idx) as? BasicRecycleItem<Data>
+                   let item = box?.getItem(idx) as? Self
                 {
                     return item.getContext()
                 }
