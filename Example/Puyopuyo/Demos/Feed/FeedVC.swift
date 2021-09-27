@@ -177,7 +177,8 @@ class ItemView: HBox, Stateful {
                     return 90
                 }
 
-                VFlowRecycle<String>(
+                VFlowBuilder<String>(
+                    items: images,
                     builder: { o, i in
                         UIImageView().attach()
                             .image(o.data.then { downloadImage(url: $0) })
@@ -195,7 +196,6 @@ class ItemView: HBox, Stateful {
                 .arrangeCount(images.map { $0.count < 5 ? 2 : 3 }.distinct())
                 .space(4)
                 .margin(top: 8)
-                .viewState(images)
                 .visibility(images.map { $0.isEmpty ? .gone : .visible })
 
                 HBox().attach($0) {
@@ -237,6 +237,7 @@ class ItemView: HBox, Stateful {
                         })
 
                     VBoxBuilder<String>(
+                        items: comments.asOutput(),
                         builder: { o, i in
                             HBox().attach {
                                 UILabel().attach($0)
@@ -258,7 +259,6 @@ class ItemView: HBox, Stateful {
                     )
                     .attach($0)
                     .width(.fill)
-                    .viewState(comments)
                     .visibility(commentVisible)
                 }
                 .backgroundColor(UIColor(hexString: "#F6F6F6"))

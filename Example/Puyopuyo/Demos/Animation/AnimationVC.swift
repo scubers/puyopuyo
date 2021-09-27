@@ -58,7 +58,7 @@ class AnimationVC: BaseVC {
         return DemoView<Int>(
             title: "Will appear animation",
             builder: {
-                VFlowRecycle<Int> { o, _ in
+                VFlowBuilder<Int>(items: elements.asOutput()) { o, _ in
                     Label.demo("").attach()
                         .size(50, 50)
                         .text(o.data.map { v -> String in
@@ -71,7 +71,6 @@ class AnimationVC: BaseVC {
                 .attach($0)
                 .reverse(reverse)
                 .space(4)
-                .viewState(elements)
                 .demo()
                 .width(.fill)
                 .padding(all: 10)

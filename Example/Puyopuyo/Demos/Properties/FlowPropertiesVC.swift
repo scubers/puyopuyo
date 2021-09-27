@@ -215,7 +215,7 @@ class FlowPropertiesVC: BaseVC {
 
     func getFlow() -> FlowBox {
         let this = WeakCatcher(value: self)
-        return VFlowRecycle<Int> { [weak self] o, i in
+        return VFlowBuilder<Int>(items: elements.asOutput()) { [weak self] o, i in
             guard let self = self else {
                 return UIView()
             }
@@ -266,7 +266,6 @@ class FlowPropertiesVC: BaseVC {
                 .view
         }
         .attach()
-        .viewState(elements)
         .view
     }
 

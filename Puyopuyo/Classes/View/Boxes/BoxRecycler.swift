@@ -222,9 +222,10 @@ public class LinearBoxBuilder<T>: LinearBox, BoxRecycler {
 
     public var viewState = State<[T]>([])
 
-    public required init(builder: @escaping RecyclerBuilder<T>) {
+    public required init(items: Outputs<[T]>, builder: @escaping RecyclerBuilder<T>) {
         self.builder = builder
         super.init(frame: .zero)
+        items.send(to: viewState).dispose(by: self)
         setup()
     }
 
@@ -235,15 +236,15 @@ public class LinearBoxBuilder<T>: LinearBox, BoxRecycler {
 }
 
 public class HBoxBuilder<T>: LinearBoxBuilder<T> {
-    public required init(builder: @escaping RecyclerBuilder<T>) {
-        super.init(builder: builder)
+    public required init(items: Outputs<[T]>, builder: @escaping RecyclerBuilder<T>) {
+        super.init(items: items, builder: builder)
         attach().direction(.x)
     }
 }
 
 public class VBoxBuilder<T>: LinearBoxBuilder<T> {
-    public required init(builder: @escaping RecyclerBuilder<T>) {
-        super.init(builder: builder)
+    public required init(items: Outputs<[T]>, builder: @escaping RecyclerBuilder<T>) {
+        super.init(items: items, builder: builder)
         attach().direction(.y)
     }
 }
@@ -259,9 +260,10 @@ public class FlowBoxBuilder<T>: FlowBox, BoxRecycler {
 
     public var viewState = State<[T]>([])
 
-    public required init(count: Int, builder: @escaping RecyclerBuilder<T>) {
+    public required init(arrange: Int, items: Outputs<[T]>, builder: @escaping RecyclerBuilder<T>) {
         self.builder = builder
         super.init(frame: .zero)
+        items.send(to: viewState).dispose(by: self)
         setup()
     }
 
@@ -272,15 +274,15 @@ public class FlowBoxBuilder<T>: FlowBox, BoxRecycler {
 }
 
 public class HFlowBuilder<T>: FlowBoxBuilder<T> {
-    public required init(count: Int = 0, builder: @escaping RecyclerBuilder<T>) {
-        super.init(count: count, builder: builder)
-        attach().direction(.x).arrangeCount(count)
+    public required init(arrange: Int = 0, items: Outputs<[T]>, builder: @escaping RecyclerBuilder<T>) {
+        super.init(arrange: arrange, items: items, builder: builder)
+        attach().direction(.x).arrangeCount(arrange)
     }
 }
 
-public class VFlowRecycle<T>: FlowBoxBuilder<T> {
-    public required init(count: Int = 0, builder: @escaping RecyclerBuilder<T>) {
-        super.init(count: count, builder: builder)
+public class VFlowBuilder<T>: FlowBoxBuilder<T> {
+    public required init(arrange: Int = 0, items: Outputs<[T]>, builder: @escaping RecyclerBuilder<T>) {
+        super.init(arrange: arrange, items: items, builder: builder)
         attach().direction(.y)
     }
 }
