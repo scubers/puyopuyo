@@ -99,7 +99,7 @@ class LinearCalculator {
     /// 不包含布局的padding
     var totalSubMain: CGFloat {
         // 间隙 + 主轴固定 + 主轴非压缩包裹 + 主轴压缩包裹 + 主轴margin
-        totalSpace + totalMainFixedSize + totalMainPrioritiedWrapSize + totalMainShrinkWrapSize + totalMainMarginSize
+        totalSpace + totalMainFixedSize + totalMainPrioritiedWrapSize + totalMainFlexWrapSize + totalMainMarginSize
     }
 
     /// 主轴比例剩余空间
@@ -128,8 +128,8 @@ class LinearCalculator {
     var totalMainMarginSize: CGFloat = 0
     /// 总主轴非压缩包裹尺寸
     var totalMainPrioritiedWrapSize: CGFloat = 0
-    /// 主轴压缩包裹尺寸
-    var totalMainShrinkWrapSize: CGFloat = 0
+    /// 主轴弹性包裹尺寸
+    var totalMainFlexWrapSize: CGFloat = 0
 
     /// 记录计算好的最大次轴
     var maxSubCross: CGFloat = 0
@@ -140,11 +140,15 @@ class LinearCalculator {
     var calculateChildren = [Measure]()
     /// 主轴压缩分母
     var totalShrink: CGFloat = 0
+    /// 主轴成长分母
+    var totalGrow: CGFloat = 0
 
     /// 次轴需要修正的子节点
     private lazy var crossRatioChildren = [Measure]()
     /// 主轴需要压缩的子节点
     private lazy var mainShrinkChildren = [Measure]()
+    /// 主轴需要成长的子节点
+    private lazy var mainGrowChildren = [Measure]()
 
     /// 是否可用format，主轴为包裹，或者存在主轴比例的子节点时，则不能使用
     var formattable: Bool = true
@@ -173,8 +177,11 @@ class LinearCalculator {
             calculateChild($0, msg: "LinearCalculator \(isIntrinsic ? "intrinsic" : "first time") calculating")
         }
 
+        // 主轴压缩和成长必定互斥
         // 处理主轴压缩
-        handleMainShrink()
+        handleMainShrinkIfNeeded()
+        // 处理主轴成长
+        hendleMainGrowIfNeeded()
 
         // 重新获取最新计算值
         resetMainWrapSizeAndMaxSubCross()
@@ -231,10 +238,16 @@ class LinearCalculator {
                 mainShrinkChildren.append(m)
             }
 
+            if subCalSize.main.grow > 0 {
+                mainGrowChildren.append(m)
+            }
+
             // 统计主轴比例总和
             totalMainRatio += subCalSize.main.ratio
             // 统计主轴压缩总和
             totalShrink += subCalSize.main.shrink
+            // 统计主轴成长总和
+            totalGrow += subCalSize.main.grow
             // 添加计算子节点
             calculateChildren.append(m)
         }
@@ -251,7 +264,7 @@ class LinearCalculator {
 
     private func resetMainWrapSizeAndMaxSubCross() {
         totalMainPrioritiedWrapSize = 0
-        totalMainShrinkWrapSize = 0
+        totalMainFlexWrapSize = 0
         maxSubCross = 0
         calculateChildren.forEach(appendChildrenToCalculatedSize(_:))
     }
@@ -263,8 +276,8 @@ class LinearCalculator {
         let subCalMargin = measure.margin.getCalEdges(by: regDirection)
         let subCalSize = measure.size.getCalSize(by: regDirection)
         if subCalSize.main.isWrap {
-            if subCalSize.main.shrink > 0 {
-                totalMainShrinkWrapSize += subFixedSize.main
+            if subCalSize.main.isFlex {
+                totalMainFlexWrapSize += subFixedSize.main
             } else {
                 totalMainPrioritiedWrapSize += subFixedSize.main
             }
@@ -287,8 +300,8 @@ class LinearCalculator {
             mainResidual = calSubSize.main.fixedValue + subCalMargin.mainFixed
         case .wrap:
 
-            // 当允许压缩时，不限制剩余空间，优先算出总长度，下一步在进行处理压缩
-            if calSubSize.main.shrink > 0 {
+            // 当允许弹性时，不限制剩余空间，优先算出总长度，下一步在进行处理压缩
+            if calSubSize.main.isFlex {
                 mainResidual = .greatestFiniteMagnitude
             } else {
                 // 包裹时就是当前剩余空间
@@ -317,7 +330,37 @@ class LinearCalculator {
         measure.calculatedSize = Calculator.calculateIntrinsicSize(for: measure, residual: subResidual.getSize(), calculateChildrenImmediately: regulator.calculateChildrenImmediately, diagnosisMessage: msg)
     }
 
-    private func handleMainShrink() {
+    private func hendleMainGrowIfNeeded() {
+        // 子节点有剩余空间，并且没有ratio节点时，处理成长
+        if totalGrow > 0, totalSubMain < regChildrenResidualCalSize.main, totalMainRatio == 0 {
+            let residualSize = totalRatioResidual
+            mainGrowChildren.forEach { m in
+                let calSize = m.size.getCalSize(by: regDirection)
+                let calMargin = m.margin.getCalEdges(by: regDirection)
+                let calFixedSize = m.calculatedSize.getCalFixedSize(by: regDirection)
+
+                // 被分配的扩展长度
+                let delta = residualSize * calSize.main.grow / totalGrow
+
+                let mainResidual = calFixedSize.main + delta + calMargin.mainFixed
+                var residual = getCurrentChildResidualCalFixedSize(m)
+                residual.main = mainResidual
+
+                // 当前节点需要重新计算，所以先把累计值减去
+                totalMainFlexWrapSize -= calFixedSize.main
+                // 重新计算
+                calculateChild(m, subResidual: residual, msg: "LinearCalculator grow calculating")
+                // 成长计算时，最后计算值可能小于成长值，需要手动赋值
+                var finalCalFixedSize = m.calculatedSize.getCalFixedSize(by: regDirection)
+                finalCalFixedSize.main = calFixedSize.main + delta
+                m.calculatedSize = finalCalFixedSize.getSize()
+                // 重新累计
+                appendChildrenToCalculatedSize(m)
+            }
+        }
+    }
+
+    private func handleMainShrinkIfNeeded() {
         // 子节点超出剩余空间并且存在可压缩节点时，处理主轴压缩
         if totalShrink > 0, totalSubMain > regChildrenResidualCalSize.main {
             let overflowSize = totalSubMain - regChildrenResidualCalSize.main
@@ -337,7 +380,7 @@ class LinearCalculator {
                     residual.main = mainResidual
 
                     // 当前节点需要重新计算，所以先把累计值减去
-                    totalMainShrinkWrapSize -= calFixedSize.main
+                    totalMainFlexWrapSize -= calFixedSize.main
                     // 重新计算
                     calculateChild($0, subResidual: residual, msg: "LinearCalculator shrink calculating")
                     // 重新累计

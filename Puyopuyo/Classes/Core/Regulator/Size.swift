@@ -48,17 +48,23 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
     public let max: CGFloat
     public let priority: CGFloat
     public let shrink: CGFloat
+    public let grow: CGFloat
 
     public static func fix(_ value: CGFloat) -> SizeDescription {
-        return SizeDescription(sizeType: .fixed, fixedValue: value, ratio: 0, add: 0, min: 0, max: .greatestFiniteMagnitude, priority: 0, shrink: 0)
+        SizeDescription(sizeType: .fixed, fixedValue: value, ratio: 0, add: 0, min: 0, max: .greatestFiniteMagnitude, priority: 0, shrink: 0, grow: 0)
     }
 
     public static func ratio(_ value: CGFloat) -> SizeDescription {
-        return SizeDescription(sizeType: .ratio, fixedValue: 0, ratio: value, add: 0, min: 0, max: .greatestFiniteMagnitude, priority: 0, shrink: 0)
+        SizeDescription(sizeType: .ratio, fixedValue: 0, ratio: value, add: 0, min: 0, max: .greatestFiniteMagnitude, priority: 0, shrink: 0, grow: 0)
     }
 
-    public static func wrap(add: CGFloat = 0, min: CGFloat = 0, max: CGFloat = .greatestFiniteMagnitude, priority: CGFloat = 0, shrink: CGFloat = 0) -> SizeDescription {
-        return SizeDescription(sizeType: .wrap, fixedValue: 0, ratio: 0, add: add, min: min, max: max, priority: priority, shrink: shrink)
+    public static func wrap(add: CGFloat = 0, min: CGFloat = 0, max: CGFloat = .greatestFiniteMagnitude, priority: CGFloat = 0, shrink: CGFloat = 0, grow: CGFloat = 0) -> SizeDescription {
+        SizeDescription(sizeType: .wrap, fixedValue: 0, ratio: 0, add: add, min: min, max: grow > 0 ? .greatestFiniteMagnitude : max, priority: priority, shrink: shrink, grow: grow)
+    }
+
+    public static func flex(_ value: CGFloat? = nil, shrink: CGFloat = 1, grow: CGFloat = 0) -> SizeDescription {
+        assert(shrink > 0 || grow > 0)
+        return SizeDescription(sizeType: .wrap, fixedValue: 0, ratio: 0, add: 0, min: value ?? 0, max: value ?? .greatestFiniteMagnitude, priority: 0, shrink: shrink, grow: grow)
     }
 
     public static var wrap: SizeDescription {
@@ -79,6 +85,10 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
 
     public var isRatio: Bool {
         return sizeType == .ratio
+    }
+
+    public var isFlex: Bool {
+        sizeType == .wrap && (grow > 0 || shrink > 0)
     }
 
     public func getWrapSize(by wrappedValue: CGFloat) -> CGFloat {

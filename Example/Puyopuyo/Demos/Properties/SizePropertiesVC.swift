@@ -28,6 +28,7 @@ class SizePropertiesVC: BaseVC {
                 wrapSizeWillBeCompress().attach($0)
                 wrapSizePriority().attach($0)
                 wrapSizeShrink().attach($0)
+                wrapSizeGrow().attach($0)
 
                 wrapSizeAddMinMax().attach($0)
 
@@ -254,6 +255,54 @@ class SizePropertiesVC: BaseVC {
             desc: """
             Wrap size will be compressed when residual size is not enough, set shrink value make wrap size view can shrink by seprate the overflow value, if overflow size is 600, then shrink(3) will compress 300 px, shrink(2) will compress 200 px, shrink(1) will be 100 px.
             Shrink view maybe overflow out of the layout box, because of each view will shrink the overflow size, but some view is too small to shrink
+            """
+        )
+        .attach()
+        .width(.fill)
+        .view
+    }
+
+    func wrapSizeGrow() -> UIView {
+        let progress = State<CGFloat>(1)
+        return DemoView<SizeDescription>(
+            title: "Wrap size grow",
+            builder: {
+                VBox().attach($0) {
+                    HBox().attach($0) {
+                        Label.demo("g(1)").attach($0)
+                            .numberOfLines(1)
+                            .width(.flex(grow: 1))
+                            .height(30)
+
+                        Label.demo("g(2)").attach($0)
+                            .width(.flex(grow: 2))
+                            .numberOfLines(1)
+                            .height(30)
+
+                        Label.demo("g(3)").attach($0)
+                            .width(.flex(grow: 3))
+                            .numberOfLines(1)
+                            .height(30)
+                    }
+                    .demo()
+                    .width(Outputs.combine($0.py_boundsState().debounce(), progress).map { r, v -> SizeDescription in
+                        .fix(r.width * v)
+                    })
+                    .height(80)
+                    .space(8)
+
+                    UISlider().attach($0)
+                        .bind(keyPath: \.value, progress.map(Float.init))
+                        .onEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
+                        .width(.fill)
+                }
+                .width(.fill)
+                .padding(all: 10)
+            },
+            selectors: [],
+            desc: """
+            Wrap size can be grew with the grow value, but it will not work when view has one or more main ratio sibling.
+            Grow is the the other side with shrink, which will stretch the view to share the rest of the residual size.
             """
         )
         .attach()
