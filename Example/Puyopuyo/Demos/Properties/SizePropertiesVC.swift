@@ -271,16 +271,16 @@ class SizePropertiesVC: BaseVC {
                     HBox().attach($0) {
                         Label.demo("g(1)").attach($0)
                             .numberOfLines(1)
-                            .width(.flex(grow: 1))
+                            .width(.wrap(shrink: 1, grow: 1))
                             .height(30)
 
                         Label.demo("g(2)").attach($0)
-                            .width(.flex(grow: 2))
+                            .width(.wrap(shrink: 1, grow: 2))
                             .numberOfLines(1)
                             .height(30)
 
                         Label.demo("g(3)").attach($0)
-                            .width(.flex(grow: 3))
+                            .width(.wrap(shrink: 1, grow: 3))
                             .numberOfLines(1)
                             .height(30)
                     }

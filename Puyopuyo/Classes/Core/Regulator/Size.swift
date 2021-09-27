@@ -25,7 +25,7 @@ extension UInt64: SizeDescriptible { public var sizeDescription: SizeDescription
 public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Outputing, Equatable {
     init(sizeType: SizeDescription.SizeType, fixedValue: CGFloat, ratio: CGFloat, add: CGFloat, min: CGFloat, max: CGFloat, priority: CGFloat, shrink: CGFloat, grow: CGFloat) {
         if grow > 0 {
-            assert(max == .greatestFiniteMagnitude)
+            assert(max == .greatestFiniteMagnitude, "Grow size should not have a max value")
         }
 
         self.sizeType = sizeType
@@ -76,11 +76,6 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
 
     public static func wrap(add: CGFloat = 0, min: CGFloat = 0, max: CGFloat = .greatestFiniteMagnitude, priority: CGFloat = 0, shrink: CGFloat = 0, grow: CGFloat = 0) -> SizeDescription {
         SizeDescription(sizeType: .wrap, fixedValue: 0, ratio: 0, add: add, min: min, max: grow > 0 ? .greatestFiniteMagnitude : max, priority: priority, shrink: shrink, grow: grow)
-    }
-
-    public static func flex(_ value: CGFloat? = nil, shrink: CGFloat = 1, grow: CGFloat = 0) -> SizeDescription {
-        assert(shrink > 0 || grow > 0)
-        return SizeDescription(sizeType: .wrap, fixedValue: 0, ratio: 0, add: 0, min: value ?? 0, max: value ?? .greatestFiniteMagnitude, priority: 0, shrink: shrink, grow: grow)
     }
 
     public static var wrap: SizeDescription {
