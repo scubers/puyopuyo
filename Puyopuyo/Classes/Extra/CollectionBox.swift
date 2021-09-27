@@ -67,7 +67,7 @@ public class CollectionBox: UICollectionView,
         return super.responds(to: aSelector)
     }
 
-    public init(layout: UICollectionViewFlowLayout = CollectionBoxFlowLayout(),
+    public init(layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout(),
                 direction: UICollectionView.ScrollDirection = .vertical,
                 estimatedSize: CGSize = .zero,
                 minimumLineSpacing: CGFloat = 0,

@@ -88,7 +88,7 @@ open class RecycleBox: UICollectionView,
         diffable: Bool = false,
         sections: Outputs<[IRecycleSection]> = [].asOutput()
     ) {
-        let layout = CollectionBoxFlowLayout()
+        let layout = UICollectionViewFlowLayout()
         
         layout.minimumInteritemSpacing = itemSpacing
         layout.minimumLineSpacing = lineSpacing
