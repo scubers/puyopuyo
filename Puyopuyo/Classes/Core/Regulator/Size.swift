@@ -23,6 +23,22 @@ extension UInt64: SizeDescriptible { public var sizeDescription: SizeDescription
 
 /// 描述一个测量长度
 public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Outputing, Equatable {
+    init(sizeType: SizeDescription.SizeType, fixedValue: CGFloat, ratio: CGFloat, add: CGFloat, min: CGFloat, max: CGFloat, priority: CGFloat, shrink: CGFloat, grow: CGFloat) {
+        if grow > 0 {
+            assert(max == .greatestFiniteMagnitude)
+        }
+
+        self.sizeType = sizeType
+        self.fixedValue = fixedValue
+        self.ratio = ratio
+        self.add = add
+        self.min = min
+        self.max = max
+        self.priority = priority
+        self.shrink = shrink
+        self.grow = grow
+    }
+
     public typealias OutputType = SizeDescription
 
     public var sizeDescription: SizeDescription {
