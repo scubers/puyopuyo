@@ -114,7 +114,7 @@ class MessageView: HBox, Stateful, Eventable {
     }
 
     var viewState = State<Message>.unstable()
-    var emmiter = SimpleIO<Event>()
+    var emitter = SimpleIO<Event>()
 
     override func buildBody() {
         let isSelf = binder.isSelf
@@ -126,7 +126,7 @@ class MessageView: HBox, Stateful, Eventable {
                     .cornerRadius(8)
             }
             .style(ShadowStyle())
-            .onTap(emmiter.asInput { _ in .tapIcon })
+            .onTap(emitter.asInput { _ in .tapIcon })
 
             VBox().attach($0) {
                 UILabel().attach($0)
@@ -161,7 +161,7 @@ class MessageInputView: HBox, Eventable, UITextViewDelegate {
         case onStartEdit
     }
 
-    var emmiter = SimpleIO<Event>()
+    var emitter = SimpleIO<Event>()
 
     private let text = State("")
 
@@ -183,7 +183,7 @@ class MessageInputView: HBox, Eventable, UITextViewDelegate {
 
             ZBox().attach($0) {
                 UIButton(type: .contactAdd).attach($0)
-                    .bind(event: .touchUpInside, input: emmiter.asInput { _ in .add })
+                    .bind(event: .touchUpInside, input: emitter.asInput { _ in .add })
 //                    .visibility(hasText.map { (!$0).py_visibleOrGone() })
                     .alpha(hasText.map { !$0 ? 1 : 0 })
                     .size(hasText.map { $0 ? Size.fixed(1) : Size(width: .wrap, height: .wrap) })
@@ -213,11 +213,11 @@ class MessageInputView: HBox, Eventable, UITextViewDelegate {
     }
 
     func send() {
-        emmit(.send(text.value.replacingOccurrences(of: "\n", with: "")))
+        emit(.send(text.value.replacingOccurrences(of: "\n", with: "")))
         text.value = ""
     }
 
     func textViewDidBeginEditing(_ textView: UITextView) {
-        emmit(.onStartEdit)
+        emit(.onStartEdit)
     }
 }

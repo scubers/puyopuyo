@@ -16,7 +16,7 @@ class NavBar: ZBox, Eventable {
         case tapTitle
     }
 
-    var emmiter = SimpleIO<Event>()
+    var emitter = SimpleIO<Event>()
 
     init(title: @escaping ViewBuilder,
          leading: ViewBuilder? = nil,
@@ -30,7 +30,7 @@ class NavBar: ZBox, Eventable {
             }
             .alignment(.left)
             .onTap(to: self) { s, _ in
-                s.emmiter.input(value: .tapLeading)
+                s.emitter.input(value: .tapLeading)
             }
 
             VBox().attach($0) {
@@ -39,7 +39,7 @@ class NavBar: ZBox, Eventable {
             }
             .alignment(.center)
             .onTap(to: self) { s, _ in
-                s.emmiter.input(value: .tapTitle)
+                s.emitter.input(value: .tapTitle)
             }
 
             VBox().attach($0) {
@@ -47,7 +47,7 @@ class NavBar: ZBox, Eventable {
             }
             .alignment(.right)
             .onTap(to: self) { s, _ in
-                s.emmiter.input(value: .tapTrailing)
+                s.emitter.input(value: .tapTrailing)
             }
         }
         .justifyContent(.vertCenter)

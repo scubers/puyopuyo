@@ -22,9 +22,7 @@ pod 'Puyopuyo'
 
 ## 使用
 
-强烈建议clone项目到本地运行查看实际Demo。
-
-一个简单的菜单Cell，可以如下实现，根据不同的布局规则，子节点将根据规则自动布局。
+一个简单的菜单Cell，可以如下实现，根据不同的布局规则，子节点将根据规则自动布局。遵循FlexBox布局逻辑。
 
 ```swift
 
@@ -66,6 +64,22 @@ VFlow(count: 3).attach {
 
 ```
 
+### 框架内提供三种布局方式
+
+`LinearBox`, `FlowBox`, `ZBox`. 继承关系如下：
+```swift
+BoxView
+    |-- ZBox
+    |-- LinearBox
+        |-- HBox
+        |-- VBox
+        |-- FlowBox
+            |-- HFlow
+            |-- VFlow
+    
+```
+
+
 布局的核心是UI节点描述  `Measure` `Regulator`
 
 ### Measure 属性
@@ -74,7 +88,7 @@ VFlow(count: 3).attach {
 |--|--|--|
 |*margin*|描述本节点的外边距| `UIEdgeInset`, default: .zero|
 |*alignment*|描述本节在父布局的偏移位置|`.none, .left, .top, .bottom, .vertCenter, .horzCenter`, default: .none|
-|*size*|描述本节点尺寸| `SizeDescription`, `.fixed` 固定尺寸, `.wrap` 包裹所有子节点的尺寸, `.ratio` 占剩余空间的比例；default: `.wrap`|
+|*size*|描述本节点尺寸| `SizeDescription`, `.fixed` 固定尺寸, `.wrap` 包裹所有子节点的尺寸, `.ratio` 占剩余空间的比例；default: `.wrap`, 详情查看Demo：Size Properties|
 |*flowEnding*|当前节点在 `FlowBox` 中，并且`arrangeCount = 0`才会生效，标记当前节点是否为当前行最后一个节点| `Bool`, default: false |
 |*activated*|描述本节点是否参与计算| `Bool`, default: false|
 
@@ -140,11 +154,155 @@ func getDescription() -> Observable<String> {
     // get some description by network or other async works
 }
 
+// use in view declare
 UILabel().attach($0)
     .text(getDescription())
 ```
 
 *注意：数据驱动的所有逻辑遵循RxSwift的使用逻辑，请注意内存泄露*
+
+## 动画
+
+View提供一个扩展属性 `view.py_animator`. 类型为 `protocol Animator {}`
+
+在BoxView进行布局后，给子view进行位置进行赋值时，会调用该对象的`animate`方法，并且会给对应的view创建独立的动画。
+
+*当子view没有设置动画，会沿用其父布局（BoxView）的动画*
+
+```swift
+
+struct ExpandAnimator: Animator {
+    var duration: TimeInterval { 0.3 }
+    func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
+        let realSize = delegate.py_size
+        let realCenter = delegate.py_center
+        let view = delegate as? UIView
+        if realSize != size || realCenter != center {
+            // if the first time assgining
+            if realSize == .zero, realCenter == .zero {
+                // move to the right position without animation
+                runAsNoneAnimation {
+                    delegate.py_center = center
+                    let scale: CGFloat = 0.5
+                    delegate.py_size = CGSize(width: size.width * scale, height: size.height * scale)
+                    view?.layer.transform = CATransform3DMakeRotation(.pi / 8 + .pi, 0, 0, 1)
+                }
+            }
+
+            UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 2, initialSpringVelocity: 5, options: [.curveEaseOut, .overrideInheritedOptions, .overrideInheritedDuration], animations: {
+                // call animations finally to set the right size and position
+                animations()
+                if realSize == .zero, realCenter == .zero {
+                    view?.layer.transform = CATransform3DIdentity
+                }
+            }, completion: nil)
+        } else {
+            animations()
+        }
+    }
+}
+```
+
+具体查看 Demo: Animation
+
+## 自定义View
+
+因为布局自身也是一个view，所以在自定义view时，可以直接继承相应的Box。降低view层级。
+
+```swift
+class MyView: VBox {
+    override func buildBody() {
+        // do your view declare here
+    }
+}
+```
+
+### 自定义view的状态与事件管理
+
+一个复杂的View通常以输入数据进行展示，通过抛出事件进行交互。在UIKit里面通常体现为 `DataSource, Delegate`.
+
+在系统里，提供了一个交互模式，进行定义。
+
+```swift
+class MyView: VBox, Stateful, Eventable {
+    // declare your dataSource you need
+    struct ViewState {
+        var name: String?
+        var title: String?
+    }
+    // declare event that will occured
+    enum Event {
+        case onConfirmed
+    }
+    /// declare in Stateful implement by this class
+    let viewState = State(ViewState())
+    /// declare in Eventable implement by this class
+    let emitter = SimpleIO<Event>()
+
+    override func buildBody() {
+        attach {
+            UILabel().attach($0)
+                .text(viewState.map(\.name)) // use map to transform value
+
+            UILabel().attach($0)
+                .text(binder.title) // use binder dynamic member lookup to find value
+
+            UIButton().attach($0)
+                .text("Confirm")
+                .bind(event: .touchUpInside, input: emitter.asInput { _ in .onConfirmed })
+        }
+    }
+}
+
+// Use view
+
+let state = State(MyView.ViewState())
+
+MyView().attach($0)
+    .viewState(state) // bind your data source
+    .onEvent(Inputs { event in
+        // do your logic when event occured
+    })
+    
+```
+
+## 样式
+
+系统提供 `Decorable, Style` 两个接口，进行定义样式。并给UIView提供属性 `py_styleSheet` 进行样式的设置。
+
+详情见Demo: Style
+
+```swift
+// declare style
+let styles: [Style] = [
+    (\UIView.backgroundColor).getStyle(with: .white),
+    TapRippleStyle(),
+    (\UILabel.text).getStyle(with: "Click"),
+    (\UIView.isUserInteractionEnabled).getStyle(with: true)
+]
+// Use style
+UILabel().attach()
+    .styles(styles)
+```
+
+## 扩展Puyo
+
+根据常用操作，系统已经提供了声明式中常用的API，详情见 `Puyo+xxxx.swift`. 如下：
+
+```swift
+public extension Puyo where T: Eventable {
+    @discardableResult
+    func onEvent<I: Inputing>(_ input: I) -> Self where I.InputType == T.EmitterType.OutputType {
+        let disposer = view.emmiter.send(to: input)
+        if let v = view as? DisposableBag {
+            disposer.dispose(by: v)
+        }
+        return self
+    }
+}
+```
+
+若有更多需求，可自行扩展Puyo，期待您的贡献
 
 ## Author
 

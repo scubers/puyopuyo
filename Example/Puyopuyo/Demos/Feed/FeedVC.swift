@@ -97,7 +97,7 @@ private class Header: VBox, Eventable {
         case change
     }
 
-    var emmiter = SimpleIO<Event>()
+    var emitter = SimpleIO<Event>()
     override func buildBody() {
         attach {
             UIImageView().attach($0)
@@ -134,7 +134,7 @@ private class Header: VBox, Eventable {
             .alignment(.center)
             .style(TapRippleStyle())
             .onTap(to: self) { this, _ in
-                this.emmit(.reload)
+                this.emit(.reload)
             }
         }
         .justifyContent(.right)

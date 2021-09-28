@@ -12,7 +12,7 @@ import UIKit
 typealias ViewBuilder = (UIView) -> UIView
 
 class DemoView<T: Equatable>: VBox, Eventable, Stateful {
-    var emmiter = SimpleIO<T>()
+    var emitter = SimpleIO<T>()
     var viewState = State<T?>(nil)
     
     var title: String
@@ -40,7 +40,7 @@ class DemoView<T: Equatable>: VBox, Eventable, Stateful {
                 .topBorder([.color(UIColor.black.withAlphaComponent(0.2)), .thick(Util.pixel(1))])
                 .size(.fill, .wrap)
                 .visibility(self.selectors.count > 0 ? .visible : .gone)
-                .onEvent(emmiter)
+                .onEvent(emitter)
             
             UIView().attach($0).size(.fill, Util.pixel(1))
                 .backgroundColor(Theme.dividerColor)

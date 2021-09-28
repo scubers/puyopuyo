@@ -18,7 +18,7 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
     private var selection = [Selector<T>]()
 
     var viewState = State<T?>(nil)
-    var emmiter = SimpleIO<T>()
+    var emitter = SimpleIO<T>()
 
     init(_ selection: [Selector<T>], selected: T? = nil) {
         self.selection = selection
@@ -39,7 +39,7 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
 
                 UIButton(type: .roundedRect).attach(v)
                     .onTap(to: self) { this, _ in
-                        this.emmiter.input(value: x.value)
+                        this.emitter.input(value: x.value)
                         this.viewState.value = x.value
                     }
                     .viewUpdate(on: binder) { btn, e in
@@ -71,7 +71,7 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
 class PlainSelectionView<T: Equatable>: ZBox, Eventable, Stateful {
     private var selection = [Selector<T>]()
     var viewState = State<T?>(nil)
-    var emmiter = SimpleIO<T>()
+    var emitter = SimpleIO<T>()
 
     init(_ selection: [Selector<T>], selected: T? = nil) {
         self.selection = selection
@@ -99,7 +99,7 @@ class PlainSelectionView<T: Equatable>: ZBox, Eventable, Stateful {
 //                    v.subviews.forEach({ $0.removeFromSuperview() })
                     UIButton().attach(v)
                         .onTap(to: self) { this, _ in
-                            this.emmiter.input(value: x.value)
+                            this.emitter.input(value: x.value)
                             this.viewState.value = x.value
                         }
                         .backgroundColor(viewState.asOutput().map { e -> UIColor in

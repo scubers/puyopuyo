@@ -33,7 +33,7 @@ class MenuVC: BaseVC {
         let this = WeakCatcher(value: self)
         RecycleBox(
             sections: [
-                DataRecycleSection<(String, () -> UIViewController)>(
+                DataRecycleSection(
                     insets: UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16),
                     lineSpacing: 16,
                     items: dataSrouce.asOutput(),

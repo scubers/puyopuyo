@@ -31,11 +31,11 @@ public protocol Eventable {
         EmitterType.InputType == EmitterType.OutputType
 
     /// SimpleIO is a choice
-    var emmiter: EmitterType { get }
+    var emitter: EmitterType { get }
 }
 
 public extension Eventable {
-    func emmit(_ event: EmitterType.OutputType) {
-        emmiter.input(value: event)
+    func emit(_ event: EmitterType.OutputType) {
+        emitter.input(value: event)
     }
 }

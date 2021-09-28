@@ -23,7 +23,7 @@ public class ReuseState<Data, Event> {
 
     public class Node<Data, Event>: Eventable {
         public let state: State<Data>
-        public let emmiter = SimpleIO<Event>()
+        public let emitter = SimpleIO<Event>()
         public init(data: Data) {
             self.state = State(data)
         }
@@ -47,7 +47,7 @@ public extension ReuseState {
         let node = generateNode(data)
         nodes[newKey] = node
         // 每个事件都绑定到station
-        _ = node.emmiter
+        _ = node.emitter
             .asOutput()
             .map { [unowned node] in
                 Context(key: newKey, event: $0, data: node.state.value)
@@ -61,7 +61,7 @@ public extension ReuseState {
     }
 
     func emmit(event: Event, for key: String) {
-        nodes[gen(key: key)]?.emmit(event)
+        nodes[gen(key: key)]?.emit(event)
     }
 }
 
