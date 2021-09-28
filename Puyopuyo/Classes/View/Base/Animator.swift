@@ -19,12 +19,6 @@ public protocol Animator {
 public extension Animator {
     func runAsNoneAnimation(_ action: @escaping () -> Void) {
         UIView.performWithoutAnimation(action)
-//        if isNestedAnimation {
-//
-//            UIView.animate(withDuration: 0, delay: 0, options: [.curveLinear, .overrideInheritedCurve, .overrideInheritedDuration], animations: action, completion: nil)
-//        } else {
-//            action()
-//        }
     }
 
     var isNestedAnimation: Bool {
