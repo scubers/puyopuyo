@@ -73,9 +73,9 @@ BoxView
     |-- LinearBox
         |-- HBox
         |-- VBox
-        |-- FlowBox
-            |-- HFlow
-            |-- VFlow
+    |-- FlowBox
+        |-- HFlow
+        |-- VFlow
     
 ```
 
