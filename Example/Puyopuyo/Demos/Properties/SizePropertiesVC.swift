@@ -112,8 +112,8 @@ class SizePropertiesVC: BaseVC {
                             .size(.wrap(add: 50, shrink: 2), .wrap(add: 50))
 
                         Label.demo("").attach($0)
-                            .text(content.map { "wrap(min: 50, shrink: 1)\n\($0)" })
-                            .size(.wrap(min: 50, shrink: 1), .wrap(min: 50))
+                            .text(content.map { "min(100)\n\($0)" })
+                            .size(.wrap(min: 100, shrink: 1), .wrap(min: 100))
                     }
                     .demo()
                     .width(.fill)

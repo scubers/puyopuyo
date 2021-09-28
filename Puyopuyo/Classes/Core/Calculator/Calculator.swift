@@ -46,7 +46,9 @@ class Calculator {
             return max(0, residual - margin)
         } else {
             if let value = wrapValue, let padding = padding {
-                return sizeDesc.getWrapSize(by: value + padding)
+                let length = sizeDesc.getWrapSize(by: value + padding)
+                // 若剩余空间比最小值还小，则取剩余空间值
+                return max(0, min(length, residual - margin))
             } else {
                 fatalError("when size is wrap, wrap value and padding must not be nil")
             }
