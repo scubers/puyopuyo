@@ -21,6 +21,7 @@ class MenuVC: BaseVC {
         ("Size Properties", { SizePropertiesVC() }),
         ("FlowBox Properties", { FlowPropertiesVC() }),
         ("ZBox Properties", { ZPropertiesVC() }),
+        ("Scroll view", { ScrollVC() }),
         ("Animation", { AnimationVC() }),
         ("Style", { StyleVC() }),
         ("Chat", { ChatVC() }),
