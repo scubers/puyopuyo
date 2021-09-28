@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-                        A reactive layout library for swift.
+                        A reactive layout library for UIKit written in swift.
                        DESC
 
   s.homepage         = 'https://github.com/Jrwong/Puyopuyo'
@@ -26,46 +26,22 @@ Pod::Spec.new do |s|
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Jrwong' => 'jr-wong@qq.com' }
   s.source           = { :git => 'https://github.com/scubers/puyopuyo.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  
 
   s.ios.deployment_target = '9.0'
   s.swift_version = '5.1'
   
-  s.public_header_files = 'Puyopuyo/Classes/**/*.h'
-  s.source_files = [
-    'Puyopuyo/Classes/**/*.{h,m,swift}',
-  ]
-  # s.subspec 'Util' do |c|
-  #   c.public_header_files = 'Puyopuyo/Classes/Util/**/*.h'
-  #   c.source_files = 'Puyopuyo/Classes/Util/**/*.{h,m,swift}'
-  # end
+  s.subspec 'Core' do |c|
+    c.public_header_files = 'Puyopuyo/Classes/**/*.h'
+    c.source_files = 'Puyopuyo/Classes/**/*.{h,m,swift}'
+  end
   
-  # s.subspec 'Core' do |c|
-  #   c.source_files = 'Puyopuyo/Classes/Core/**/*.{h,m,swift}'
-  #   c.dependency 'Puyopuyo/Util'
-  # end
+  s.subspec 'Extra' do |c|
+    c.public_header_files = 'Puyopuyo/Extra/**/*.h'
+    c.source_files = 'Puyopuyo/Extra/**/*.{h,m,swift}'
+    c.dependency 'Puyopuyo/Core'
+  end
   
-  # s.subspec 'View' do |c|
-  #   c.source_files = 'Puyopuyo/Classes/View/**/*.{h,m,swift}'
-  #   c.dependency 'Puyopuyo/Core'
-  # end
-  
-  # s.default_subspec = 'View'
-  
-  # s.subspec 'TangramKit' do |c|
-  #     c.source_files = 'Puyopuyo/Classes/TangramKit/**/*.{h,m,swift}'
-  #     c.dependency 'Puyopuyo/View'
-  #     c.dependency 'TangramKit'
-  # end
-  
-  
-  # s.resource_bundles = {
-  #   'Puyopuyo' => ['Puyopuyo/Assets/*.png']
-  # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
-#  s.dependency 'YogaKit', '~> 1.14.0'
+   s.default_subspec = 'Core'
 
 end

@@ -41,7 +41,7 @@ class LinearPropertiesVC: BaseVC {
                 .justifyContent(justifyContent)
                 .size(.fill, 60)
                 .animator(Animators.default)
-                
+
             },
             selectors: [
                 Selector(desc: "top", value: .top),
@@ -75,7 +75,6 @@ class LinearPropertiesVC: BaseVC {
                 .justifyContent(justifyContent)
                 .size(.fill, 60)
                 .animator(Animators.default)
-                .view
             },
             selectors: [
                 Selector(desc: "top", value: .top),
@@ -116,7 +115,7 @@ class LinearPropertiesVC: BaseVC {
                 .size(.fill, 60)
                 .animator(Animators.default)
                 .format(format)
-                
+
             },
             selectors: [
                 Selector(desc: "leading", value: .leading),
@@ -149,7 +148,7 @@ class LinearPropertiesVC: BaseVC {
                 .size(.fill, 80)
                 .animator(Animators.default)
                 .direction(direction)
-                
+
             },
             selectors: [
                 Selector(desc: "x", value: .x),
@@ -180,7 +179,7 @@ class LinearPropertiesVC: BaseVC {
                 .justifyContent(.center)
                 .size(.fill, 100)
                 .animator(Animators.default)
-                
+
             },
             selectors: [0, 10, 20, 30, 40].map { Selector(desc: "\($0)", value: $0) },
             selected: padding.value,
@@ -206,7 +205,7 @@ class LinearPropertiesVC: BaseVC {
                 .size(.fill, 60)
                 .space(space)
                 .animator(Animators.default)
-                
+
             },
             selectors: [Selector(desc: "0", value: 0),
                         Selector(desc: "10", value: 10),
@@ -237,7 +236,7 @@ class LinearPropertiesVC: BaseVC {
                 .space(30)
                 .reverse(reverse)
                 .animator(Animators.default)
-                
+
             },
             selectors: [Selector(desc: "true", value: true),
                         Selector(desc: "false", value: false)],

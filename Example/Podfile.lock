@@ -1,11 +1,13 @@
 PODS:
-  - Puyopuyo (1.1.1)
+  - Puyopuyo/Core (1.1.1)
+  - Puyopuyo/Extra (1.1.1):
+    - Puyopuyo/Core
   - RxSwift (5.0.0)
   - SnapKit (4.2.0)
   - TangramKit (1.4.0)
 
 DEPENDENCIES:
-  - Puyopuyo (from `../`)
+  - Puyopuyo/Extra (from `../`)
   - RxSwift
   - SnapKit
   - TangramKit
@@ -21,11 +23,11 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Puyopuyo: 1a106dd28c62d7c70e91aa5ac281c116650e716d
+  Puyopuyo: 15ea668abe08ff6216deb4e0a0048d2bf22eb80e
   RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   TangramKit: 15ccb6480f0e32c284f0a076542a607226e158dd
 
-PODFILE CHECKSUM: 2892f062f4a4931eef0b868147ca18390b835548
+PODFILE CHECKSUM: b472772072bc6c9a70984f8506870e4f0f5fa432
 
 COCOAPODS: 1.11.2

@@ -7,7 +7,8 @@ platform :ios, '9.0'
 
 target 'Puyopuyo_Example' do
 # pod 'Puyopuyo/TangramKit', :path => '../'
- pod 'Puyopuyo', :path => '../'
+  pod 'Puyopuyo/Extra', :path => '../'
+# pod 'Puyopuyo', :path => '../'
   pod 'TangramKit'
   pod 'RxSwift'
   pod 'SnapKit', :inhibit_warnings => true

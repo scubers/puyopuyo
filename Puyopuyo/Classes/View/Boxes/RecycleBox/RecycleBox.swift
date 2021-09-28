@@ -313,3 +313,19 @@ extension UICollectionView {
         }
     }
 }
+
+extension PYProxyChain: UICollectionViewDelegate, UICollectionViewDataSource {
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        guard let target = target(with: #selector(UICollectionViewDataSource.collectionView(_:numberOfItemsInSection:))) as? UICollectionViewDataSource else {
+            return 0
+        }
+        return target.collectionView(collectionView, numberOfItemsInSection: section)
+    }
+
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let target = target(with: #selector(UICollectionViewDataSource.collectionView(_:cellForItemAt:))) as? UICollectionViewDataSource else {
+            return UICollectionViewCell()
+        }
+        return target.collectionView(collectionView, cellForItemAt: indexPath)
+    }
+}
