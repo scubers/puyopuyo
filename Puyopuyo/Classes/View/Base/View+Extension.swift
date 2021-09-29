@@ -64,6 +64,9 @@ public extension UIView {
     var py_animator: Animator? {
         set {
             objc_setAssociatedObject(self, &UIView.py_animatorKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            if newValue != nil {
+                py_setNeedsRelayout()
+            }
         }
         get {
             objc_getAssociatedObject(self, &UIView.py_animatorKey) as? Animator

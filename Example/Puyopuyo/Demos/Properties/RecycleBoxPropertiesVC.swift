@@ -315,7 +315,7 @@ class RecycleBoxPropertiesVC: BaseVC {
                             .cornerRadius(width / 2)
                             .backgroundColor(selected.map { $0 ? UIColor.systemPink : .clear })
                             .clipToBounds(true)
-                            .diagnosis()
+                            .animator(selected.map { $0 ? (FatAnimator() as Animator) : nil })
 
                         HBoxBuilder<String>(items: o.data.map { appointments[$0] }) { _, _ in
                             UIView().attach()
@@ -327,13 +327,13 @@ class RecycleBoxPropertiesVC: BaseVC {
                         .attach($0)
                         .space(4)
                     }
-                    .animator(selected.map { $0 ? (FatAnimator() as Animator) : nil })
+//                    .animator(selected.map { $0 ? (FatAnimator() as Animator) : nil })
                     .justifyContent(.center)
                     .format(.round)
                     .size(w, w)
-                    .attach {
-                        selected.safeBind(to: $0) { if $1 { $0.setNeedsLayout() }}
-                    }
+//                    .attach {
+//                        selected.safeBind(to: $0) { if $1 { $0.setNeedsLayout() }}
+//                    }
                     .view
                 },
                 didSelect: { o in

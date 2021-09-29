@@ -57,6 +57,12 @@ public enum Animators {
         var duration: TimeInterval
         var inherited: Bool = false
         func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
+            guard delegate.py_center != center || delegate.py_size != size else {
+                // if size and position has not change, do not animate
+                animations()
+                return
+            }
+
             var options: [UIView.AnimationOptions] = [.curveEaseOut]
             if !inherited {
                 options.append(contentsOf: [.overrideInheritedDuration, .overrideInheritedCurve, .overrideInheritedOptions])

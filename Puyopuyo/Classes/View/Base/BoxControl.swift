@@ -104,9 +104,6 @@ public class BoxControl<R: Regulator> {
 
     private func applyViewPosition(_ subView: UIView, inheritedAnimator: Animator? = nil) {
         let measure = subView.py_measure
-        guard measure.sizeChanged || measure.centerChanged else {
-            return
-        }
 
         let animator = subView.py_animator
             ?? inheritedAnimator

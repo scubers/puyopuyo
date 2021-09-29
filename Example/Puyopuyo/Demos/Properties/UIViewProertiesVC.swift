@@ -16,11 +16,55 @@ class UIViewProertiesVC: BaseVC {
                 alignment().attach($0)
                 crossSize().attach($0)
                 mainSize().attach($0)
+                visible().attach($0)
                 margin().attach($0)
             }
         )
         .attach(vRoot)
         .size(.fill, .fill)
+    }
+
+    func visible() -> UIView {
+        let a = State(Visibility.visible)
+        return DemoView<Visibility>(
+            title: "Visibility",
+            builder: {
+                HBox().attach($0) {
+                    Label.demo("").attach($0)
+                        .size(50, 50)
+
+                    Label.demo("").attach($0)
+                        .backgroundColor(.systemPink)
+                        .visibility(a)
+                        .size(60, 60)
+
+                    Label.demo("").attach($0)
+                        .size(50, 50)
+                }
+                .space(2)
+                .padding(all: 10)
+                .justifyContent(.center)
+                .size(.fill, 100)
+                .animator(Animators.default)
+
+            },
+            selectors: [
+                Selector(desc: "Visible", value: .visible),
+                Selector(desc: "invisible", value: .invisible),
+                Selector(desc: "gone", value: .gone),
+                Selector(desc: "free", value: .free),
+            ],
+            selected: a.value,
+            desc: """
+            visible: Calculate by boxview
+            invisible: Calculate by boxview but view.isHidden = true
+            gone: Will not be calculate, and view.isHidden = true
+            free: Will not be calculate, and view.isHidden = false, you can set any frame as you want
+            """
+        )
+        .attach()
+        .onEvent(a)
+        .view
     }
 
     func alignment() -> UIView {
@@ -44,7 +88,7 @@ class UIViewProertiesVC: BaseVC {
                 .space(2)
                 .padding(all: 10)
                 .justifyContent(.center)
-                .size(.fill, 80)
+                .size(.fill, 100)
                 .animator(Animators.default)
 
             },
@@ -53,7 +97,7 @@ class UIViewProertiesVC: BaseVC {
                         Selector(desc: "center", value: .center)],
             selected: a.value,
             desc: """
-            覆盖Box.justfyContent, 单独设置自己的偏移
+            Control self alignment in box, override the boxview's justifyContent
             """
         )
         .attach()
