@@ -276,12 +276,51 @@ class ItemView: HBox, Stateful {
     }
 }
 
+func saveImage(url: String, data: Data) {
+    let dir = "\(NSTemporaryDirectory())/puyo_images/"
+    var isDir: ObjCBool = false
+    if !FileManager.default.fileExists(atPath: dir, isDirectory: &isDir) {
+        do {
+            try FileManager.default.createDirectory(at: URL(fileURLWithPath: dir), withIntermediateDirectories: true, attributes: nil)
+        } catch {
+            print(error)
+        }
+    }
+    let path = dir + Util.MD5(url)
+    do {
+        try data.write(to: URL(fileURLWithPath: path))
+    } catch {
+        print(error)
+    }
+}
+
+func getImage(url: String) -> UIImage? {
+    let file = "\(NSTemporaryDirectory())/puyo_images/\(Util.MD5(url))"
+    if let data = FileManager.default.contents(atPath: file) {
+        return UIImage(data: data)
+    }
+    return nil
+}
+
 func downloadImage(url: String?) -> Outputs<UIImage?> {
     return Outputs { i in
-        if let URL = URL(string: url ?? "") {
+
+        guard let url = url else {
+            i.input(value: nil)
+            return Disposers.create()
+        }
+
+        if let image = getImage(url: url) {
+            i.input(value: image)
+            return Disposers.create()
+        }
+
+        if let URL = URL(string: url) {
             let task = URLSession.shared.downloadTask(with: URL) { u, _, _ in
                 if let u = u, let data = try? Data(contentsOf: u) {
-                    i.input(value: UIImage(data: data))
+                    let image = UIImage(data: data)
+                    i.input(value: image)
+                    saveImage(url: url, data: data)
                 } else {
                     i.input(value: nil)
                 }
