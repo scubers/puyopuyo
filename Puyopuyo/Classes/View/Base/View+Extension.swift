@@ -16,38 +16,23 @@ public extension UIView {
 // MARK: - MeasureTargetable impl
 
 extension UIView: MeasureDelegate {
-    public var py_size: CGSize {
-        get {
-            return bounds.size
-        }
-        set {
-            bounds.size = CGSize(width: max(newValue.width, 0), height: max(newValue.height, 0))
-        }
+    public func children(for measure: Measure) -> [Measure] {
+        subviews.map { $0.py_measure }
     }
 
-    public var py_center: CGPoint {
-        get {
-            return center
-        }
-        set {
-            center = newValue
-            didChangeValue(forKey: #keyPath(UIView.center))
-        }
+    public func measure(_ measure: Measure, sizeThatFits size: CGSize) -> CGSize {
+        sizeThatFits(size)
     }
 
-    public func enumerateChild(_ block: (Measure) -> Void) {
-        subviews.map(\.py_measure).forEach(block)
-    }
-
-    public func py_sizeThatFits(_ size: CGSize) -> CGSize {
-        return sizeThatFits(size)
-    }
-
-    public func py_setNeedsRelayout() {
+    public func needsRelayout(for measure: Measure) {
         setNeedsLayout()
-        if let superview = superview, BoxUtil.isBox(superview) {
-            superview.setNeedsLayout()
+        if BoxUtil.isBox(superview) {
+            superview?.setNeedsLayout()
         }
+    }
+
+    func py_setNeedsRelayout() {
+        needsRelayout(for: py_measure)
     }
 }
 

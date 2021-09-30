@@ -8,21 +8,18 @@
 import UIKit
 
 public protocol MeasureDelegate: AnyObject {
-    func enumerateChild(_ block: (Measure) -> Void)
+    func children(for measure: Measure) -> [Measure]
 
-    func py_sizeThatFits(_ size: CGSize) -> CGSize
+    func measure(_ measure: Measure, sizeThatFits size: CGSize) -> CGSize
 
-    func py_setNeedsRelayout()
+    func needsRelayout(for measure: Measure)
 }
 
 public class Measure {
-//    var virtualDelegate = VirtualTarget()
-
     public weak var delegate: MeasureDelegate?
 
     public init(delegate: MeasureDelegate?) {
         self.delegate = delegate
-//        virtualDelegate.children = children
     }
 
     public var margin = UIEdgeInsets.zero {
@@ -94,14 +91,14 @@ public class Measure {
     public var calculatedCenter: CGPoint = .zero
 
     public func enumerateChild(_ block: (Measure) -> Void) {
-        delegate?.enumerateChild(block)
+        delegate?.children(for: self).forEach(block)
     }
 
     public func sizeThatFits(_ size: CGSize) -> CGSize {
-        delegate?.py_sizeThatFits(size) ?? .zero
+        delegate?.measure(self, sizeThatFits: size) ?? .zero
     }
 
     public func py_setNeedsRelayout() {
-        delegate?.py_setNeedsRelayout()
+        delegate?.needsRelayout(for: self)
     }
 }

@@ -108,7 +108,7 @@ class FlowCalculator {
 
 private extension FlowCalculator {
     func getVirtualRegulator(children: [Measure]) -> VirtualLinearRegulator {
-        let outside = VirtualLinearRegulator(delegate: VirtualTarget(children: children))
+        let outside = VirtualLinearRegulator(delegate: VirtualDelegate(children: children))
         outside.justifyContent = regulator.justifyContent
         outside.alignment = regulator.alignment
         outside.direction = regDirection
@@ -123,7 +123,7 @@ private extension FlowCalculator {
     }
 
     func getVirtualLine(children: [Measure], index: Int) -> VirtualLinearRegulator {
-        let line = VirtualLinearRegulator(delegate: VirtualTarget(children: children))
+        let line = VirtualLinearRegulator(delegate: VirtualDelegate(children: children))
         line.justifyContent = regulator.justifyContent
         line.direction = getOppsiteDirection()
         line.space = regulator.itemSpace
@@ -170,7 +170,8 @@ private class VirtualLinearRegulator: LinearRegulator {
         // 计算虚拟位置的偏移量
         let delta = CGPoint(x: center.x - size.width / 2, y: center.y - size.height / 2)
 
-        delegate?.enumerateChild { m in
+        delegate?.children(for: self).forEach { m in
+
             var center = m.calculatedCenter
             center.x += delta.x
             center.y += delta.y
@@ -179,20 +180,20 @@ private class VirtualLinearRegulator: LinearRegulator {
     }
 }
 
-private class VirtualTarget: MeasureDelegate {
+private class VirtualDelegate: MeasureDelegate {
+    func children(for measure: Measure) -> [Measure] {
+        children
+    }
+
+    func measure(_ measure: Measure, sizeThatFits size: CGSize) -> CGSize {
+        size
+    }
+
+    func needsRelayout(for measure: Measure) {}
+
     init(children: [Measure]) {
         self.children = children
     }
 
-    func enumerateChild(_ block: (Measure) -> Void) {
-        children.forEach(block)
-    }
-
-    func py_sizeThatFits(_ size: CGSize) -> CGSize {
-        return size
-    }
-
     var children = [Measure]()
-
-    func py_setNeedsRelayout() {}
 }
