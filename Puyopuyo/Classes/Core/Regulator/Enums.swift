@@ -21,7 +21,7 @@ public enum Format: CaseIterable, Outputing {
     case trailing
 }
 
-public struct Alignment: OptionSet, CustomStringConvertible, Outputing {
+public struct Alignment: OptionSet, Equatable, CustomStringConvertible, Outputing {
     public typealias OutputType = Alignment
     public var description: String {
         let all = [Alignment.top, .left, .bottom, .right, .horzCenter, .vertCenter]
@@ -33,8 +33,8 @@ public struct Alignment: OptionSet, CustomStringConvertible, Outputing {
                 case .left: return "left"
                 case .bottom: return "bottom"
                 case .right: return "right"
-                case .vertCenter: return "vertCenter"
-                case .horzCenter: return "horzCenter"
+                case .vertCenter: return "vertCenter(\(centerRatio.y))"
+                case .horzCenter: return "horzCenter(\(centerRatio.x))"
                 default: return ""
                 }
             }.joined(separator: ",")
@@ -67,15 +67,15 @@ public struct Alignment: OptionSet, CustomStringConvertible, Outputing {
 public extension Alignment {
     static let center = Alignment.vertCenter.union(.horzCenter)
 
-    static func center(x: CGFloat = 0, y: CGFloat = 0) -> Alignment {
-        .init(rawValue: center.rawValue, ratio: .init(x: x, y: y))
+    static func center(_ xRatio: CGFloat = 0, _ yRatio: CGFloat = 0) -> Alignment {
+        .init(rawValue: center.rawValue, ratio: .init(x: xRatio, y: yRatio))
     }
 
-    static func horzCenter(ratio: CGFloat = 0) -> Alignment {
+    static func horzCenter(_ ratio: CGFloat = 0) -> Alignment {
         .init(rawValue: horzCenter.rawValue, ratio: .init(x: ratio, y: 0))
     }
 
-    static func vertCenter(ratio: CGFloat = 0) -> Alignment {
+    static func vertCenter(_ ratio: CGFloat = 0) -> Alignment {
         .init(rawValue: vertCenter.rawValue, ratio: .init(x: 0, y: ratio))
     }
 

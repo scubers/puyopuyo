@@ -92,9 +92,13 @@ class UIViewProertiesVC: BaseVC {
                 .animator(Animators.default)
 
             },
-            selectors: [Selector(desc: "top", value: .top),
-                        Selector(desc: "bottom", value: .bottom),
-                        Selector(desc: "center", value: .center)],
+            selectors: [
+                Selector(desc: "top", value: .top),
+                Selector(desc: "bottom", value: .bottom),
+                Selector(desc: "center", value: .center),
+                Selector(desc: "vertCenter(0.5)", value: .vertCenter(0.5)),
+                Selector(desc: "vertCenter(-0.5)", value: .vertCenter(-0.5)),
+            ],
             selected: a.value,
             desc: """
             Control self alignment in box, override the boxview's justifyContent

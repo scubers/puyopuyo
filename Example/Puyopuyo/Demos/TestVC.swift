@@ -96,7 +96,7 @@ class TestVC: BaseVC {
         ZBox().attach {
             Label.demo("test").attach($0)
 //                .alignment(.vertCenter(ratio: 1.5))
-                .alignment(.center(x: -0.8, y: 0.8))
+                .alignment(.center(-0.8, 0.8))
         }
         .size(.fill, 100)
         .view
