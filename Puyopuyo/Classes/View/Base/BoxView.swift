@@ -37,8 +37,8 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable {
 
     override open func setNeedsLayout() {
         if !initializing, !layouting {
-            super.setNeedsLayout()
             control.setNeedsLayout(view: self, regulator: regulator)
+            super.setNeedsLayout()
         }
     }
 

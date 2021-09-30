@@ -29,7 +29,7 @@ class FlowCalculator {
 
     func calculate() -> CGSize {
         var calculateChildren = [Measure]()
-        regulator.enumerateChild { m in
+        regulator.enumerateChildren { m in
             if m.activated {
                 calculateChildren.append(m)
             }

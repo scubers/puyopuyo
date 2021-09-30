@@ -90,7 +90,7 @@ public class Measure {
 
     public var calculatedCenter: CGPoint = .zero
 
-    public func enumerateChild(_ block: (Measure) -> Void) {
+    public func enumerateChildren(_ block: (Measure) -> Void) {
         delegate?.children(for: self).forEach(block)
     }
 

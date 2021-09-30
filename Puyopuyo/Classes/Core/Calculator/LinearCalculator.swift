@@ -200,7 +200,7 @@ class LinearCalculator {
 
     private func prepareData() {
         // 第一次循环
-        regulator.enumerateChild { m in
+        regulator.enumerateChildren { m in
             // 未激活的节点不计算
             guard m.activated else { return }
 

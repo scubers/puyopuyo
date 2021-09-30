@@ -42,7 +42,7 @@ class ZCalculator {
     }
 
     private func prepareData() {
-        regulator.enumerateChild { m in
+        regulator.enumerateChildren { m in
             if !m.activated { return }
 
             calculateChildren.append(m)

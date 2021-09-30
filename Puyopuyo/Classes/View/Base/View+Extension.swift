@@ -25,10 +25,10 @@ extension UIView: MeasureDelegate {
     }
 
     public func needsRelayout(for measure: Measure) {
-        setNeedsLayout()
         if BoxUtil.isBox(superview) {
             superview?.setNeedsLayout()
         }
+        setNeedsLayout()
     }
 
     func py_setNeedsRelayout() {
