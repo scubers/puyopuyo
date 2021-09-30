@@ -73,7 +73,7 @@ class LinearPropertiesVC: BaseVC {
                 .space(2)
                 .padding(all: 10)
                 .justifyContent(justifyContent)
-                .size(.fill, 60)
+                .size(.fill, 100)
                 .animator(Animators.default)
             },
             selectors: [

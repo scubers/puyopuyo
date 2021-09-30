@@ -16,13 +16,13 @@ public protocol MeasureDelegate: AnyObject {
 }
 
 public class Measure {
-    var virtualDelegate = VirtualTarget()
+//    var virtualDelegate = VirtualTarget()
 
     public weak var delegate: MeasureDelegate?
 
-    public init(delegate: MeasureDelegate? = nil, children: [Measure] = []) {
+    public init(delegate: MeasureDelegate?) {
         self.delegate = delegate
-        virtualDelegate.children = children
+//        virtualDelegate.children = children
     }
 
     public var margin = UIEdgeInsets.zero {
@@ -79,7 +79,7 @@ public class Measure {
 
     public var diagnosisMessage: String {
         """
-        [\(type(of: self)), delegate: \(getRealDelegate())]
+        [\(type(of: self)), delegate: \(String(describing: delegate))]
         - id: [\(diagnosisId ?? "")]
         - extra: [\(extraDiagnosisMessage ?? "")]
         - size: [width: \(size.width), height: \(size.height)]
@@ -94,35 +94,14 @@ public class Measure {
     public var calculatedCenter: CGPoint = .zero
 
     public func enumerateChild(_ block: (Measure) -> Void) {
-        getRealDelegate().enumerateChild(block)
+        delegate?.enumerateChild(block)
     }
 
     public func sizeThatFits(_ size: CGSize) -> CGSize {
-        return getRealDelegate().py_sizeThatFits(size)
-    }
-
-    func getRealDelegate() -> MeasureDelegate {
-        if let target = delegate {
-            return target
-        }
-        return virtualDelegate
+        delegate?.py_sizeThatFits(size) ?? .zero
     }
 
     public func py_setNeedsRelayout() {
-        getRealDelegate().py_setNeedsRelayout()
+        delegate?.py_setNeedsRelayout()
     }
-}
-
-class VirtualTarget: MeasureDelegate {
-    func enumerateChild(_ block: (Measure) -> Void) {
-        children.forEach(block)
-    }
-
-    func py_sizeThatFits(_ size: CGSize) -> CGSize {
-        return size
-    }
-
-    var children = [Measure]()
-
-    func py_setNeedsRelayout() {}
 }

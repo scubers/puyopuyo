@@ -7,29 +7,6 @@
 
 import Foundation
 
-private class VirtualLinearRegulator: LinearRegulator {
-    override init(delegate: MeasureDelegate? = nil, children: [Measure] = []) {
-        super.init(delegate: delegate, children: children)
-        calculateChildrenImmediately = true
-    }
-
-    func justifyChildrenWithCenter() {
-        let center = calculatedCenter
-        let size = calculatedSize
-
-        // 计算虚拟位置的偏移量
-        let delta = CGPoint(x: center.x - size.width / 2, y: center.y - size.height / 2)
-
-        virtualDelegate.children.forEach { m in
-//            let delegate = m.getRealDelegate()
-            var center = m.calculatedCenter
-            center.x += delta.x // - oldDelta.x
-            center.y += delta.y // - oldDelta.y
-            m.calculatedCenter = center
-        }
-    }
-}
-
 class FlowCalculator {
     init(_ regulator: FlowRegulator, residual: CGSize) {
         self.regulator = regulator
@@ -131,7 +108,7 @@ class FlowCalculator {
 
 private extension FlowCalculator {
     func getVirtualRegulator(children: [Measure]) -> VirtualLinearRegulator {
-        let outside = VirtualLinearRegulator(delegate: nil, children: children)
+        let outside = VirtualLinearRegulator(delegate: VirtualTarget(children: children))
         outside.justifyContent = regulator.justifyContent
         outside.alignment = regulator.alignment
         outside.direction = regDirection
@@ -146,7 +123,7 @@ private extension FlowCalculator {
     }
 
     func getVirtualLine(children: [Measure], index: Int) -> VirtualLinearRegulator {
-        let line = VirtualLinearRegulator(children: children)
+        let line = VirtualLinearRegulator(delegate: VirtualTarget(children: children))
         line.justifyContent = regulator.justifyContent
         line.direction = getOppsiteDirection()
         line.space = regulator.itemSpace
@@ -175,4 +152,47 @@ private extension FlowCalculator {
     func getOppsiteDirection() -> Direction {
         return regDirection == .x ? .y : .x
     }
+}
+
+private class VirtualLinearRegulator: LinearRegulator {
+    private var virtualDelegate: MeasureDelegate?
+
+    override init(delegate: MeasureDelegate?) {
+        super.init(delegate: delegate)
+        virtualDelegate = delegate
+        calculateChildrenImmediately = true
+    }
+
+    func justifyChildrenWithCenter() {
+        let center = calculatedCenter
+        let size = calculatedSize
+
+        // 计算虚拟位置的偏移量
+        let delta = CGPoint(x: center.x - size.width / 2, y: center.y - size.height / 2)
+
+        delegate?.enumerateChild { m in
+            var center = m.calculatedCenter
+            center.x += delta.x
+            center.y += delta.y
+            m.calculatedCenter = center
+        }
+    }
+}
+
+private class VirtualTarget: MeasureDelegate {
+    init(children: [Measure]) {
+        self.children = children
+    }
+
+    func enumerateChild(_ block: (Measure) -> Void) {
+        children.forEach(block)
+    }
+
+    func py_sizeThatFits(_ size: CGSize) -> CGSize {
+        return size
+    }
+
+    var children = [Measure]()
+
+    func py_setNeedsRelayout() {}
 }
