@@ -8,19 +8,11 @@
 import UIKit
 
 public protocol MeasureDelegate: AnyObject {
-    var py_size: CGSize { get set }
-
-    var py_center: CGPoint { get set }
-
     func enumerateChild(_ block: (Measure) -> Void)
 
     func py_sizeThatFits(_ size: CGSize) -> CGSize
 
     func py_setNeedsRelayout()
-}
-
-public extension MeasureDelegate {
-    var isZero: Bool { py_center == .zero && py_size == .zero }
 }
 
 public class Measure {
@@ -100,27 +92,6 @@ public class Measure {
     public var calculatedSize: CGSize = .zero
 
     public var calculatedCenter: CGPoint = .zero
-
-    var sizeChanged: Bool {
-        getRealDelegate().py_size != calculatedSize
-    }
-
-    var centerChanged: Bool {
-        getRealDelegate().py_center != calculatedCenter
-    }
-
-    func applyCalculatedPosition() {
-        applyCalculatedCenter()
-        applyCalculatedSize()
-    }
-
-    func applyCalculatedCenter() {
-        getRealDelegate().py_center = calculatedCenter
-    }
-
-    func applyCalculatedSize() {
-        getRealDelegate().py_size = calculatedSize
-    }
 
     public func enumerateChild(_ block: (Measure) -> Void) {
         getRealDelegate().enumerateChild(block)

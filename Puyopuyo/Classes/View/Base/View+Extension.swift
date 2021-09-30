@@ -148,3 +148,9 @@ public extension Bool {
 
     func py_toggled() -> Bool { !self }
 }
+
+public extension UIView {
+    var isPositionZero: Bool {
+        bounds.size == .zero && center == .zero
+    }
+}

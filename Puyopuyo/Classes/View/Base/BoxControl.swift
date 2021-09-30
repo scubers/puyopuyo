@@ -75,10 +75,10 @@ public class BoxControl<R: Regulator> {
 
             animator.animate(view, size: regulator.calculatedSize, center: regulator.calculatedCenter) {
                 if self.isSizeControl {
-                    regulator.applyCalculatedSize()
+                    view.bounds.size = regulator.calculatedSize
                 }
                 if self.isCenterControl {
-                    regulator.applyCalculatedCenter()
+                    view.center = regulator.calculatedCenter
                 }
             }
         }
@@ -114,8 +114,9 @@ public class BoxControl<R: Regulator> {
             ?? inheritedAnimator
             ?? Animators.inherited
 
-        animator.animate(measure.getRealDelegate(), size: measure.calculatedSize, center: measure.calculatedCenter) {
-            measure.applyCalculatedPosition()
+        animator.animate(subView, size: measure.calculatedSize, center: measure.calculatedCenter) {
+            subView.bounds.size = measure.calculatedSize
+            subView.center = measure.calculatedCenter
         }
     }
 

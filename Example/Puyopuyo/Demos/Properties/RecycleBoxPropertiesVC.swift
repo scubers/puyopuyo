@@ -422,16 +422,15 @@ private class Header: HBox, Stateful {
 
 private struct FatAnimator: Animator {
     var duration: TimeInterval { 0.3 }
-    func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
-        let view = delegate as? UIView
+    func animate(_ view: UIView, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
         runAsNoneAnimation {
-            delegate.py_center = center
-            delegate.py_size = size
-            view?.layer.transform = CATransform3DMakeScale(1.2, 1.2, 1)
+            view.center = center
+            view.bounds.size = size
+            view.layer.transform = CATransform3DMakeScale(1.2, 1.2, 1)
         }
 
         UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 2, initialSpringVelocity: 2, options: [.curveEaseInOut, .overrideInheritedOptions, .overrideInheritedDuration, .overrideInheritedCurve], animations: {
-            view?.layer.transform = CATransform3DIdentity
+            view.layer.transform = CATransform3DIdentity
             animations()
         }, completion: nil)
     }

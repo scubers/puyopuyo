@@ -9,13 +9,12 @@ import Foundation
 
 // MARK: - Animator
 
-
 /// Provide a protocol to animate view when BoxView is layouting
 public protocol Animator {
     var duration: TimeInterval { get }
     /// Animation can be nested, if you want a specify animation, make sure override the inheritedOptions,
     /// see [UIView.AnimationOptions.overrideInheritedDuration, .overrideInherited*]
-    func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void)
+    func animate(_ view: UIView, size: CGSize, center: CGPoint, animations: @escaping () -> Void)
 }
 
 public extension Animator {
@@ -43,14 +42,14 @@ public enum Animators {
 
     struct NoneAnimator: Animator {
         var duration: TimeInterval = 0
-        func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
+        func animate(_ view: UIView, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
             UIView.performWithoutAnimation(animations)
         }
     }
 
     struct InheritedAnimator: Animator {
         var duration: TimeInterval = 0
-        func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
+        func animate(_ view: UIView, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
             animations()
         }
     }
@@ -58,8 +57,8 @@ public enum Animators {
     struct DefaultAnimator: Animator {
         var duration: TimeInterval
         var inherited: Bool = false
-        func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
-            guard delegate.py_center != center || delegate.py_size != size else {
+        func animate(_ view: UIView, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
+            guard view.center != center || view.bounds.size != size else {
                 // if size and position has not change, do not animate
                 animations()
                 return
