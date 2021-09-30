@@ -62,6 +62,10 @@ public struct Alignment: OptionSet, Equatable, CustomStringConvertible, Outputin
 
     /// (-1, -1) < point < (1, 1)
     public let centerRatio: CGPoint
+
+    public static func == (lhs: Alignment, rhs: Alignment) -> Bool {
+        lhs.rawValue == rhs.rawValue && lhs.centerRatio == rhs.centerRatio
+    }
 }
 
 public extension Alignment {
