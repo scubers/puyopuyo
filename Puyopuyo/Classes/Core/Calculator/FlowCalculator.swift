@@ -186,7 +186,7 @@ private class VirtualDelegate: MeasureDelegate {
     }
 
     func measure(_ measure: Measure, sizeThatFits size: CGSize) -> CGSize {
-        size
+        fatalError("should not come here")
     }
 
     func needsRelayout(for measure: Measure) {}
