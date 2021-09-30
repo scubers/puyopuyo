@@ -114,10 +114,6 @@ public class Measure {
 }
 
 class VirtualTarget: MeasureDelegate {
-    var py_size: CGSize = .zero
-
-    var py_center: CGPoint = .zero
-
     func enumerateChild(_ block: (Measure) -> Void) {
         children.forEach(block)
     }
