@@ -171,11 +171,8 @@ private class VirtualLinearRegulator: LinearRegulator {
         let delta = CGPoint(x: center.x - size.width / 2, y: center.y - size.height / 2)
 
         delegate?.children(for: self).forEach { m in
-
-            var center = m.calculatedCenter
-            center.x += delta.x
-            center.y += delta.y
-            m.calculatedCenter = center
+            m.calculatedCenter.x += delta.x
+            m.calculatedCenter.y += delta.y
         }
     }
 }
