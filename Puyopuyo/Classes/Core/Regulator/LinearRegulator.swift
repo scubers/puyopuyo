@@ -13,6 +13,8 @@ public class LinearRegulator: Regulator {
         justifyContent = [.left, .top]
     }
 
+    ///
+    /// Layout direction
     public var direction: Direction = .x {
         didSet {
             if oldValue != direction {
@@ -21,7 +23,8 @@ public class LinearRegulator: Regulator {
         }
     }
 
-    /// 间隔
+    ///
+    /// Space between items
     public var space: CGFloat = 0 {
         didSet {
             if oldValue != space {
@@ -30,7 +33,8 @@ public class LinearRegulator: Regulator {
         }
     }
 
-    /// 主轴格式
+    ///
+    /// Tell layout how to place the subview in main direction
     public var format: Format = .leading {
         didSet {
             if oldValue != format {
@@ -39,7 +43,8 @@ public class LinearRegulator: Regulator {
         }
     }
 
-    /// 是否根据子节点进行反向遍历布局
+    ///
+    /// Reverse the chilren
     public var reverse = false {
         didSet {
             if oldValue != reverse {

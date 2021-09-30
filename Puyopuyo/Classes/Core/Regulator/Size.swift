@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - SizeDescriptible
+
 public protocol SizeDescriptible {
     var sizeDescription: SizeDescription { get }
 }
@@ -21,7 +23,10 @@ extension UInt32: SizeDescriptible { public var sizeDescription: SizeDescription
 extension Int64: SizeDescriptible { public var sizeDescription: SizeDescription { return .fix(CGFloat(self)) } }
 extension UInt64: SizeDescriptible { public var sizeDescription: SizeDescription { return .fix(CGFloat(self)) } }
 
-/// 描述一个测量长度
+// MARK: - SizeDescription
+
+///
+/// Measure a size in one dimension
 public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Outputing, Equatable {
     init(sizeType: SizeDescription.SizeType, fixedValue: CGFloat, ratio: CGFloat, add: CGFloat, min: CGFloat, max: CGFloat, priority: CGFloat, shrink: CGFloat, grow: CGFloat) {
         if grow > 0 {
@@ -46,11 +51,11 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
     }
 
     public enum SizeType {
-        // 固有尺寸
+        /// Fixed size
         case fixed
-        // 依赖父视图
+        /// Depende on residual size
         case ratio
-        // 依赖子视图
+        /// Depende on content
         case wrap
     }
 
@@ -86,26 +91,6 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
         return .ratio(1)
     }
 
-    public var isWrap: Bool {
-        return sizeType == .wrap
-    }
-
-    public var isFixed: Bool {
-        return sizeType == .fixed
-    }
-
-    public var isRatio: Bool {
-        return sizeType == .ratio
-    }
-
-    public var isFlex: Bool {
-        sizeType == .wrap && (grow > 0 || shrink > 0)
-    }
-
-    public func getWrapSize(by wrappedValue: CGFloat) -> CGFloat {
-        return Swift.min(Swift.max(wrappedValue + add, min), max)
-    }
-
     public var description: String {
         if isRatio {
             return "ratio(\(ratio))"
@@ -123,7 +108,30 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
     }
 }
 
-/// 描述一个测量宽高
+extension SizeDescription {
+    var isWrap: Bool {
+        return sizeType == .wrap
+    }
+
+    var isFixed: Bool {
+        return sizeType == .fixed
+    }
+
+    var isRatio: Bool {
+        return sizeType == .ratio
+    }
+
+    var isFlex: Bool {
+        sizeType == .wrap && (grow > 0 || shrink > 0)
+    }
+
+    func getWrapSize(by wrappedValue: CGFloat) -> CGFloat {
+        return Swift.min(Swift.max(wrappedValue + add, min), max)
+    }
+}
+
+// MARK: - Size
+
 public struct Size: Equatable, Outputing {
     public typealias OutputType = Size
     public var width: SizeDescription
@@ -145,46 +153,48 @@ public struct Size: Equatable, Outputing {
     public static func fixed(_ value: CGFloat = 0) -> Size {
         Size(width: .fix(value), height: .fix(value))
     }
+}
 
-    public func isFixed() -> Bool {
+extension Size {
+    func isFixed() -> Bool {
         return width.isFixed && height.isFixed
     }
 
-    public func isRatio() -> Bool {
+    func isRatio() -> Bool {
         return width.isRatio && height.isRatio
     }
 
-    public func isWrap() -> Bool {
+    func isWrap() -> Bool {
         return width.isWrap && height.isWrap
     }
 
-    public func getMain(direction: Direction) -> SizeDescription {
+    func getMain(direction: Direction) -> SizeDescription {
         if case .x = direction {
             return width
         }
         return height
     }
 
-    public func getCross(direction: Direction) -> SizeDescription {
+    func getCross(direction: Direction) -> SizeDescription {
         if case .x = direction {
             return height
         }
         return width
     }
 
-    public func bothNotWrap() -> Bool {
+    func bothNotWrap() -> Bool {
         return !maybeWrap()
     }
 
-    public func maybeWrap() -> Bool {
+    func maybeWrap() -> Bool {
         return width.isWrap || height.isWrap
     }
 
-    public func maybeRatio() -> Bool {
+    func maybeRatio() -> Bool {
         return width.isRatio || height.isRatio
     }
 
-    public func maybeFixed() -> Bool {
+    func maybeFixed() -> Bool {
         return width.isFixed || height.isFixed
     }
 }

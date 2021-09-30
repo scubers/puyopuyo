@@ -7,13 +7,20 @@
 
 import Foundation
 
-/// 布局方向，x为水平方向，y为竖直方向
 public enum Direction: CaseIterable, Outputing {
     public typealias OutputType = Direction
     case x, y
 }
 
-/// 偏移枚举，可组合
+public enum Format: CaseIterable, Outputing {
+    public typealias OutputType = Format
+    case leading
+    case center
+    case between
+    case round
+    case trailing
+}
+
 public struct Alignment: OptionSet, CustomStringConvertible, Outputing {
     public typealias OutputType = Alignment
     public var description: String {

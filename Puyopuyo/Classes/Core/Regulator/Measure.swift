@@ -23,12 +23,9 @@ public extension MeasureDelegate {
     var isZero: Bool { py_center == .zero && py_size == .zero }
 }
 
-/// 描述一个节点相对于父节点的属性
 public class Measure {
-    /// 虚拟目标计算节点
     var virtualDelegate = VirtualTarget()
 
-    /// 真实计算节点
     public weak var delegate: MeasureDelegate?
 
     public init(delegate: MeasureDelegate? = nil, children: [Measure] = []) {
@@ -36,7 +33,6 @@ public class Measure {
         virtualDelegate.children = children
     }
 
-    /// 计算节点外边距
     public var margin = UIEdgeInsets.zero {
         didSet {
             if oldValue != margin {
@@ -45,7 +41,6 @@ public class Measure {
         }
     }
 
-    /// 计算节点偏移
     public var alignment: Alignment = .none {
         didSet {
             if oldValue != alignment {
@@ -54,7 +49,6 @@ public class Measure {
         }
     }
 
-    /// 计算节点大小描述
     public var size = Size(width: .wrap, height: .wrap) {
         didSet {
             if oldValue != size {
@@ -63,7 +57,8 @@ public class Measure {
         }
     }
 
-    /// 只有在flowbox中生效
+    ///
+    /// Only works in `FlowRegulator`
     public var flowEnding = false {
         didSet {
             if oldValue != flowEnding {
@@ -72,7 +67,8 @@ public class Measure {
         }
     }
 
-    /// 是否激活本节点
+    ///
+    /// Join the layout's calculation
     public var activated = true {
         didSet {
             if oldValue != activated {
@@ -113,16 +109,16 @@ public class Measure {
         getRealDelegate().py_center != calculatedCenter
     }
 
-    public func applyCalculatedPosition() {
+    func applyCalculatedPosition() {
         applyCalculatedCenter()
         applyCalculatedSize()
     }
 
-    public func applyCalculatedCenter() {
+    func applyCalculatedCenter() {
         getRealDelegate().py_center = calculatedCenter
     }
 
-    public func applyCalculatedSize() {
+    func applyCalculatedSize() {
         getRealDelegate().py_size = calculatedSize
     }
 

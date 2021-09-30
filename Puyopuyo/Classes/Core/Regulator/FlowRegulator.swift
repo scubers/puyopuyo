@@ -7,9 +7,20 @@
 
 import Foundation
 
-/// 流式布局
+/// Flow layout
+/// Place subview in flow way,
+/// HFlow         VFlow
+///   | Run         -> Run
+///   V
+/// |----------|  |----------|
+/// |0  1  2  3|  |0  3  6  9|
+/// |4  5  6  7|  |1  4  7   |
+/// |8  9      |  |2  5  8   |
+/// |----------|  |----------|
+///
 public class FlowRegulator: LinearRegulator {
-    /// 每排的数量，若设置为0，则根据内容排列
+    /// The view count in every row.
+    /// When set to `0`, it will auto calculate by content
     public var arrange: Int = 0 {
         didSet {
             if oldValue != arrange {
@@ -18,7 +29,8 @@ public class FlowRegulator: LinearRegulator {
         }
     }
 
-    // 单排内item的检具
+    ///
+    /// Subview's space in single row
     public var itemSpace: CGFloat = 0 {
         didSet {
             if oldValue != itemSpace {
@@ -27,7 +39,8 @@ public class FlowRegulator: LinearRegulator {
         }
     }
 
-    // 每排的间距
+    ///
+    /// Space between rows
     public var runSpace: CGFloat = 0 {
         didSet {
             if oldValue != runSpace {
@@ -36,7 +49,8 @@ public class FlowRegulator: LinearRegulator {
         }
     }
 
-    /// 同时设置item & run space
+    ///
+    /// Set item space and runSpace at the same time
     override public var space: CGFloat {
         didSet {
             itemSpace = space
@@ -44,6 +58,8 @@ public class FlowRegulator: LinearRegulator {
         }
     }
 
+    ///
+    /// Row's format
     public var runFormat: Format = .leading {
         didSet {
             if oldValue != runFormat {
@@ -52,6 +68,8 @@ public class FlowRegulator: LinearRegulator {
         }
     }
 
+    ///
+    /// Every row's size in `run` direction
     public var runRowSize: (Int) -> SizeDescription = { _ in SizeDescription.wrap(shrink: 1) } {
         didSet {
             py_setNeedsRelayout()
