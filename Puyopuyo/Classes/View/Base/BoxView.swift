@@ -58,7 +58,7 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable {
         if layouting { return }
         layouting = true
 
-        control.layoutSubviews(view: self, regulator: regulator)
+        control.layoutSubviews(for: self, regulator: regulator)
 
         initializing = false
         layouting = false

@@ -20,7 +20,7 @@ public class BoxControl<R: Regulator> {
     /// Control `size` when superview is not BoxView
     public var isSizeControl = true
 
-    func layoutSubviews(view: UIView, regulator: R) {
+    func layoutSubviews(for view: UIView, regulator: R) {
         // 父视图为布局
         if isBox(view: view.superview) {
             /**
