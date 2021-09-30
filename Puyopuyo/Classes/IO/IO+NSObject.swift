@@ -8,6 +8,7 @@
 import Foundation
 
 public extension _KeyValueCodingAndObserving where Self: DisposableBag {
+    /// Create a KVO listening, auto dispose when Self is deinit
     func py_observing<R>(_ keyPath: KeyPath<Self, R>) -> Outputs<R?> {
         return Outputs { i in
             let observer = observe(keyPath, options: .initial.union(.new)) { _, v in
@@ -84,6 +85,8 @@ extension NSObject: DisposableBag {
         }
     }
 }
+
+// MARK: - Private
 
 private class _Observer<Value>: NSObject {
     var key: String = ""

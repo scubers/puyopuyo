@@ -8,6 +8,8 @@
 import Foundation
 
 public extension Outputs where OutputType == Any {
+    ///
+    /// Create a Notification listening. Should KEEP the Disposer ALIVE, when continue listening
     static func listen(to name: Notification.Name, object: Any? = nil, queue: OperationQueue? = nil) -> Outputs<Notification> {
         return Outputs<Notification> { i in
             let binder = NotificationCenter.default.addObserver(forName: name, object: object, queue: queue) {

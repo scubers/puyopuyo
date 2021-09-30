@@ -10,7 +10,7 @@ import Foundation
 // MARK: - Disposable
 
 public typealias Unbinder = Disposer
-/// 解绑器
+
 public protocol Disposer {
     func dispose()
 }
