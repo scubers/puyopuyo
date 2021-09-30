@@ -15,15 +15,20 @@ public protocol Stateful {
         StateType.OutputType == StateType.SpecificValue
 
     /// `State` is a choice
+    /// ```
     /// protocol MyView: UIView, Stateful {
-    ///     var viewState = State<String>("")
+    ///     var state = State<String>("")
     /// }
+    /// ```
     ///
-    var viewState: StateType { get }
+    var state: StateType { get }
 }
 
 public extension Stateful {
-    var binder: OutputBinder<StateType.OutputType> { viewState.asOutput().binder }
+    var binder: OutputBinder<StateType.OutputType> { state.asOutput().binder }
+
+    @available(*, deprecated, message: "Use [state]")
+    var viewState: StateType { state }
 }
 
 // MARK: - Eventable
@@ -32,10 +37,11 @@ public protocol Eventable {
     associatedtype EmitterType where EmitterType: Inputing & Outputing, EmitterType.InputType == EmitterType.OutputType
 
     /// `SimpleIO` is a choice
-    ///
+    /// ```
     /// protocol MyView: UIView, Eventable {
     ///     var emitter = SimpleIO<String>()
     /// }
+    /// ```
     ///
     var emitter: EmitterType { get }
 }

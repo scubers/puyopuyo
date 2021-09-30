@@ -17,12 +17,12 @@ struct Selector<T> {
 class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
     private var selection = [Selector<T>]()
 
-    var viewState = State<T?>(nil)
+    var state = State<T?>(nil)
     var emitter = SimpleIO<T>()
 
     init(_ selection: [Selector<T>], selected: T? = nil) {
         self.selection = selection
-        viewState.value = selected
+        state.value = selected
         super.init(frame: .zero)
     }
 
@@ -40,7 +40,7 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
                 UIButton(type: .roundedRect).attach(v)
                     .onTap(to: self) { this, _ in
                         this.emitter.input(value: x.value)
-                        this.viewState.value = x.value
+                        this.state.value = x.value
                     }
                     .viewUpdate(on: binder) { btn, e in
                         if e == x.value {
@@ -70,12 +70,12 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
 
 class PlainSelectionView<T: Equatable>: ZBox, Eventable, Stateful {
     private var selection = [Selector<T>]()
-    var viewState = State<T?>(nil)
+    var state = State<T?>(nil)
     var emitter = SimpleIO<T>()
 
     init(_ selection: [Selector<T>], selected: T? = nil) {
         self.selection = selection
-        viewState.value = selected
+        state.value = selected
         super.init(frame: .zero)
     }
 
@@ -100,9 +100,9 @@ class PlainSelectionView<T: Equatable>: ZBox, Eventable, Stateful {
                     UIButton().attach(v)
                         .onTap(to: self) { this, _ in
                             this.emitter.input(value: x.value)
-                            this.viewState.value = x.value
+                            this.state.value = x.value
                         }
-                        .backgroundColor(viewState.asOutput().map { e -> UIColor in
+                        .backgroundColor(state.asOutput().map { e -> UIColor in
                             if e == x.value {
                                 return Theme.accentColor
                             }

@@ -17,7 +17,7 @@ class ControlPad: UIView, Stateful, Eventable {
     }
 
     var emitter = SimpleIO<ViewState>()
-    var viewState = State(ViewState(x: 0.5, y: 0.5))
+    var state = State(ViewState(x: 0.5, y: 0.5))
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -47,10 +47,10 @@ class ControlPad: UIView, Stateful, Eventable {
                         let deltaX = point.x / self.frame.width
                         let deltaY = point.y / self.frame.height
                         pan.setTranslation(.zero, in: self)
-                        let p = CGPoint(x: self.viewState.value.x + deltaX, y: self.viewState.value.y + deltaY)
-                        self.viewState.value = .init(x: max(0, min(1, p.x)), y: max(0, min(1, p.y)))
+                        let p = CGPoint(x: self.state.value.x + deltaX, y: self.state.value.y + deltaY)
+                        self.state.value = .init(x: max(0, min(1, p.x)), y: max(0, min(1, p.y)))
 
-                        self.emit(self.viewState.value)
+                        self.emit(self.state.value)
                     }
                     $0.addGestureRecognizer(pan)
                 }

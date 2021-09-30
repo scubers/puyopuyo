@@ -143,7 +143,7 @@ private class Header: VBox, Eventable {
 }
 
 class ItemView: HBox, Stateful {
-    var viewState = State<Feed>.unstable()
+    var state = State<Feed>.unstable()
 
     override func buildBody() {
         attach {

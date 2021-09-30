@@ -110,9 +110,9 @@ open class RecycleBox: UICollectionView,
         delegate = delegateProxy
         dataSource = dataSourceProxy
         
-        sections.send(to: viewState).dispose(by: self)
+        sections.send(to: state).dispose(by: self)
         
-        viewState.debounce().safeBind(to: self) { this, s in
+        state.debounce().safeBind(to: self) { this, s in
             // 注册view类型
             this.prepareSection(s)
             this.reload(sections: s)
@@ -155,7 +155,7 @@ open class RecycleBox: UICollectionView,
     var calculateSupplementaryViews = [String: UICollectionReusableView]()
     
     // sections
-    public let viewState = State<[IRecycleSection]>([])
+    public let state = State<[IRecycleSection]>([])
     
     public private(set) var sections = [IRecycleSection]()
     

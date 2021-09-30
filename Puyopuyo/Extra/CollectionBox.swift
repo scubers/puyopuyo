@@ -41,7 +41,7 @@ public class CollectionBox: UICollectionView,
     UICollectionViewDelegateFlowLayout,
     UICollectionViewDataSource
 {
-    public let viewState = State<[CollectionBoxSection]>([])
+    public let state = State<[CollectionBoxSection]>([])
 
     private var delegateProxy: DelegateProxy<UICollectionViewDelegateFlowLayout>! {
         didSet {
@@ -86,7 +86,7 @@ public class CollectionBox: UICollectionView,
         lineSpacing = minimumLineSpacing
         interactSpacing = minimumInteritemSpacing
 
-        viewState.value = sections
+        state.value = sections
 
         delegateProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
         dataSourceProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
@@ -95,7 +95,7 @@ public class CollectionBox: UICollectionView,
         delegate = delegateProxy
         dataSource = dataSourceProxy
 
-        viewState.safeBind(to: self) { this, sections in
+        state.safeBind(to: self) { this, sections in
             sections.forEach { section in
                 section.collectionBox = this
                 this.register(section.cellType(), forCellWithReuseIdentifier: section.cellIdentifier())
@@ -131,53 +131,53 @@ public class CollectionBox: UICollectionView,
     // MARK: - UICollectionViewDelegate, UICollectionViewDataSource
 
     public func numberOfSections(in _: UICollectionView) -> Int {
-        return viewState.value.count
+        return state.value.count
     }
 
     public func collectionView(_: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return viewState.value[section].numberOfItems()
+        return state.value[section].numberOfItems()
     }
 
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        return viewState.value[indexPath.section].cell(for: collectionView, at: indexPath)
+        return state.value[indexPath.section].cell(for: collectionView, at: indexPath)
     }
 
     public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        viewState.value[indexPath.section].willDisplay(cell: cell, in: collectionView, at: indexPath)
+        state.value[indexPath.section].willDisplay(cell: cell, in: collectionView, at: indexPath)
         delegateProxy.backup?.value?.collectionView?(collectionView, willDisplay: cell, forItemAt: indexPath)
     }
 
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        viewState.value[indexPath.section].didSelect(item: indexPath.row)
+        state.value[indexPath.section].didSelect(item: indexPath.row)
         delegateProxy.backup?.value?.collectionView?(collectionView, didSelectItemAt: indexPath)
     }
 
     public func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        return viewState.value[indexPath.section].view(for: collectionView, supplementary: kind, at: indexPath)
+        return state.value[indexPath.section].view(for: collectionView, supplementary: kind, at: indexPath)
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        viewState.value[indexPath.section].size(for: collectionView, layout: collectionViewLayout, at: indexPath)
+        state.value[indexPath.section].size(for: collectionView, layout: collectionViewLayout, at: indexPath)
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return viewState.value[section].headerSize(for: collectionView, layout: collectionViewLayout, at: section)
+        return state.value[section].headerSize(for: collectionView, layout: collectionViewLayout, at: section)
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        return viewState.value[section].footerSize(for: collectionView, layout: collectionViewLayout, at: section)
+        return state.value[section].footerSize(for: collectionView, layout: collectionViewLayout, at: section)
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        viewState.value[section].insets(for: collectionView, layout: collectionViewLayout, at: section)
+        state.value[section].insets(for: collectionView, layout: collectionViewLayout, at: section)
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        viewState.value[section].lineSpacing(for: collectionView, layout: collectionViewLayout, at: section)
+        state.value[section].lineSpacing(for: collectionView, layout: collectionViewLayout, at: section)
     }
 
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        viewState.value[section].interactSpacing(for: collectionView, layout: collectionViewLayout, at: section)
+        state.value[section].interactSpacing(for: collectionView, layout: collectionViewLayout, at: section)
     }
 }
 
@@ -471,7 +471,7 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
 
         let diff = Diff(src: dataIds, dest: newDataIds, identifier: { $0 })
         diff.check()
-        if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
+        if diff.isDifferent(), let section = box.state.value.firstIndex(where: { $0 === self }) {
             setDataSource(data)
             box.performBatchUpdates({
                 if !diff.delete.isEmpty {

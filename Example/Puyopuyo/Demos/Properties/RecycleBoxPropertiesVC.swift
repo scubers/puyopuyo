@@ -383,7 +383,7 @@ private func getDescSection(title: String) -> IRecycleSection {
 }
 
 private class SquareCell: HBox, Stateful {
-    var viewState = State<String>.unstable()
+    var state = State<String>.unstable()
 
     override func buildBody() {
         attach {
@@ -396,7 +396,7 @@ private class SquareCell: HBox, Stateful {
 }
 
 private class HorzFillCell: HBox, Stateful {
-    var viewState = State<String>.unstable()
+    var state = State<String>.unstable()
 
     override func buildBody() {
         attach {
@@ -410,7 +410,7 @@ private class HorzFillCell: HBox, Stateful {
 }
 
 private class Header: HBox, Stateful {
-    var viewState = State<String>.unstable()
+    var state = State<String>.unstable()
     override func buildBody() {
         attach {
             Label.demo("").attach($0)

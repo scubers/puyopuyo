@@ -26,7 +26,7 @@ public class TableBox: UITableView,
     DataSourceable,
     UITableViewDelegate,
     UITableViewDataSource {
-    public let viewState = State<[TableBoxSection]>([])
+    public let state = State<[TableBoxSection]>([])
     public var wrapContent = false
 
     fileprivate var heightCache = [IndexPath: CGFloat]()
@@ -63,7 +63,7 @@ public class TableBox: UITableView,
 
         self.separatorStyle = separatorStyle
 
-        viewState.value = sections
+        state.value = sections
         dataSource = dataSourceProxy
         delegate = delegateProxy
         estimatedRowHeight = 60
@@ -73,7 +73,7 @@ public class TableBox: UITableView,
         sectionHeaderHeight = UITableView.automaticDimension
         sectionFooterHeight = UITableView.automaticDimension
 
-        viewState.safeBind(to: self) { this, sections in
+        state.safeBind(to: self) { this, sections in
             sections.forEach { s in
                 s.tableBox = this
             }
@@ -131,15 +131,15 @@ public class TableBox: UITableView,
     // MARK: - UITableViewDelegate, DataSource
 
     public func numberOfSections(in _: UITableView) -> Int {
-        return viewState.value.count
+        return state.value.count
     }
 
     public func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewState.value[section].numberOfRows()
+        return state.value[section].numberOfRows()
     }
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let section = viewState.value[indexPath.section]
+        let section = state.value[indexPath.section]
         return section.cell(for: tableView, at: indexPath)
     }
 
@@ -155,7 +155,7 @@ public class TableBox: UITableView,
     }
 
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let sec = viewState.value[section]
+        let sec = state.value[section]
         return sec.header(for: tableView, at: section)
     }
 
@@ -164,7 +164,7 @@ public class TableBox: UITableView,
     }
 
     public func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let sec = viewState.value[section]
+        let sec = state.value[section]
         return sec.footer(for: tableView, at: section)
     }
 
@@ -172,7 +172,7 @@ public class TableBox: UITableView,
 
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        viewState.value[indexPath.section].didSelect(row: indexPath.row)
+        state.value[indexPath.section].didSelect(row: indexPath.row)
         delegateProxy.backup?.value?.tableView?(tableView, didSelectRowAt: indexPath)
     }
 
@@ -420,7 +420,7 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
         let diff = Diff(src: dataIds, dest: newDataIds, identifier: { $0 })
         diff.check()
 
-        if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
+        if diff.isDifferent(), let section = box.state.value.firstIndex(where: { $0 === self }) {
             setDataSource(data)
             func animations() {
                 if !diff.delete.isEmpty {

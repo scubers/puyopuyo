@@ -110,7 +110,7 @@ class MessageView: HBox, Stateful, Eventable {
         case tapIcon
     }
 
-    var viewState = State<Message>.unstable()
+    var state = State<Message>.unstable()
     var emitter = SimpleIO<Event>()
 
     override func buildBody() {

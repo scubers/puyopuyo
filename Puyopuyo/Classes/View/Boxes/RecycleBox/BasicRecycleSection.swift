@@ -246,7 +246,7 @@ open class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
         
         let diff = Diff(src: recycleItems, dest: items, identifier: { $0.getDiffableKey() })
         diff.check()
-        if diff.isDifferent(), let section = box.viewState.value.firstIndex(where: { $0 === self }) {
+        if diff.isDifferent(), let section = box.state.value.firstIndex(where: { $0 === self }) {
             recycleItems = items
             box.performBatchUpdates({
                 box.applyItemUpdates(diff, in: section)

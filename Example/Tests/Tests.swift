@@ -42,7 +42,7 @@ class Tests: XCTestCase {
                 let count = 50
                 let cell = TestPuyoView(count: count)
 //                let cell = TestAutoLayout(count: count)
-                cell.viewState.input(value: ListData(name: "slkdjflksdjflkjsdf", text: "来看房来看房龙看房龙蛋飞龙扽静", time: "lskdj"))
+                cell.state.input(value: ListData(name: "slkdjflksdjflkjsdf", text: "来看房来看房龙看房龙蛋飞龙扽静", time: "lskdj"))
                 _ = cell.sizeThatFits(CGSize(width: 320, height: 0))
 //                _ = cell.systemLayoutSizeFitting(CGSize(width: 320, height: 0))
             }
@@ -79,18 +79,18 @@ struct ListData {
 }
 
 class BaseCell: UITableViewCell, Stateful {
-    var viewState = State<ListData?>(nil)
+    var state = State<ListData?>(nil)
     
     var name: Outputs<String?> {
-        return self.viewState.asOutput().map { $0?.name }
+        return self.state.asOutput().map { $0?.name }
     }
 
     var textData: Outputs<String?> {
-        return self.viewState.asOutput().map { $0?.text }
+        return self.state.asOutput().map { $0?.text }
     }
 
     var time: Outputs<String?> {
-        return self.viewState.asOutput().map { $0?.time }
+        return self.state.asOutput().map { $0?.time }
     }
 }
 

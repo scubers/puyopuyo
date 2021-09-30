@@ -68,7 +68,7 @@ public class ScrollingBox<Linear: Boxable & UIView>:
         }
     }
 
-    public var viewState = State(ViewState())
+    public var state = State(ViewState())
 
     public typealias DelegateType = UIScrollViewDelegate
 
@@ -99,14 +99,14 @@ public class ScrollingBox<Linear: Boxable & UIView>:
             .autoJudgeScroll(true)
         }
         // 绑定方向
-        _ = viewState.safeBind(to: self) { $0.handleDirection($1.direction) }
+        _ = state.safeBind(to: self) { $0.handleDirection($1.direction) }
 
 //        viewState.value.direction = direction
         setScrollDirection(direction)
     }
 
     public func setScrollDirection(_ direction: ScrollDirection) {
-        viewState.value.direction = direction
+        state.value.direction = direction
     }
 
     func handleDirection(_ direction: ScrollDirection) {

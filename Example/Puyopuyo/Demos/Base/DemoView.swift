@@ -13,7 +13,7 @@ typealias ViewBuilder = (UIView) -> UIView
 
 class DemoView<T: Equatable>: VBox, Eventable, Stateful {
     var emitter = SimpleIO<T>()
-    var viewState = State<T?>(nil)
+    var state = State<T?>(nil)
     
     var title: String
     var desc: String

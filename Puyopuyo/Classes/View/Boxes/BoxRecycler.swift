@@ -80,14 +80,14 @@ extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Dat
 
     private func getInfo(index: Int) -> RecyclerInfo<Data> {
         RecyclerInfo(
-            data: viewState.specificValue[index],
+            data: state.specificValue[index],
             indexPath: IndexPath(item: index, section: 0),
             contentSize: getLayoutableSize()
         )
     }
 
     func setup() {
-        viewState.safeBind(to: self) { this, dataSource in
+        state.safeBind(to: self) { this, dataSource in
             if Data.self is RecycleIdentifiable.Type {
                 this.reloadWithDiff(dataSource: dataSource)
             } else {
@@ -220,12 +220,12 @@ public class LinearBoxBuilder<T>: LinearBox, BoxRecycler {
 
     fileprivate var builder: RecyclerBuilder<T>
 
-    public var viewState = State<[T]>([])
+    public var state = State<[T]>([])
 
     public required init(items: Outputs<[T]>, builder: @escaping RecyclerBuilder<T>) {
         self.builder = builder
         super.init(frame: .zero)
-        items.send(to: viewState).dispose(by: self)
+        items.send(to: state).dispose(by: self)
         setup()
     }
 
@@ -258,12 +258,12 @@ public class FlowBoxBuilder<T>: FlowBox, BoxRecycler {
 
     fileprivate var builder: RecyclerBuilder<T>
 
-    public var viewState = State<[T]>([])
+    public var state = State<[T]>([])
 
     public required init(arrange: Int, items: Outputs<[T]>, builder: @escaping RecyclerBuilder<T>) {
         self.builder = builder
         super.init(frame: .zero)
-        items.send(to: viewState).dispose(by: self)
+        items.send(to: state).dispose(by: self)
         setup()
     }
 
@@ -296,7 +296,7 @@ public class ZBoxBuilder<T>: ZBox, BoxRecycler {
 
     fileprivate var builder: RecyclerBuilder<T>
 
-    public var viewState = State<[T]>([])
+    public var state = State<[T]>([])
 
     public required init(builder: @escaping RecyclerBuilder<T>) {
         self.builder = builder

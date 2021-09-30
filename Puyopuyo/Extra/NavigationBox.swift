@@ -22,7 +22,7 @@ open class NavigationBox: VBox, Stateful {
         public var shadowRadius: CGFloat = 0
     }
 
-    public var viewState = State(ViewState())
+    public var state = State(ViewState())
 
     public init(navBar: BoxGenerator<UIView>,
                 body: BoxGenerator<UIView>)
@@ -62,7 +62,7 @@ open class NavigationBox: VBox, Stateful {
                 .size(.fill, .fill)
                 .margin(output.map { [weak self, weak nav] _ -> UIEdgeInsets in
                     guard let self = self, let nav = nav else { return .zero }
-                    if self.viewState.value.bodyAvoidNavBar { return .zero }
+                    if self.state.value.bodyAvoidNavBar { return .zero }
                     return .init(top: -nav.bounds.height, left: 0, bottom: 0, right: 0)
                 })
                 .alignment(.bottom)

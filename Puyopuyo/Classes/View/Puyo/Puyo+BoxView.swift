@@ -165,7 +165,7 @@ public extension Puyo where T: Eventable, T.EmitterType.OutputType: Equatable {
 public extension Puyo where T: Stateful {
     @discardableResult
     func viewState<O: Outputing>(_ output: O, unbindable: DisposableBag) -> Self where O.OutputType == T.StateType.OutputType {
-        output.send(to: view.viewState).dispose(by: unbindable)
+        output.send(to: view.state).dispose(by: unbindable)
         return self
     }
 }
@@ -173,7 +173,7 @@ public extension Puyo where T: Stateful {
 public extension Puyo where T: Stateful, T: NSObject {
     @discardableResult
     func viewState<O: Outputing>(_ output: O) -> Self where O.OutputType == T.StateType.OutputType {
-        output.send(to: view.viewState).dispose(by: view)
+        output.send(to: view.state).dispose(by: view)
         return self
     }
 }
