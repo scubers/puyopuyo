@@ -31,7 +31,7 @@ class MenuVC: BaseVC {
     ]
 
     func menu() {
-        let this = WeakCatcher(value: self)
+        let this = WeakableObject(value: self)
         RecycleBox(
             sections: [
                 DataRecycleSection(

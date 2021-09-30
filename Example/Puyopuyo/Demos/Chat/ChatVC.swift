@@ -30,7 +30,7 @@ class ChatVC: BaseVC, UICollectionViewDelegateFlowLayout {
     }
 
     override func configView() {
-        let this = WeakCatcher(value: self)
+        let this = WeakableObject(value: self)
         vRoot.attach {
             box = RecycleBox(
                 diffable: true,

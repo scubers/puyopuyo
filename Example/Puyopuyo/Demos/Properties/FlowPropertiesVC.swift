@@ -214,7 +214,7 @@ class FlowPropertiesVC: BaseVC {
     private var flowView: UIView?
 
     func getFlow() -> FlowBox {
-        let this = WeakCatcher(value: self)
+        let this = WeakableObject(value: self)
         return VFlowBuilder<Int>(items: elements.asOutput()) { [weak self] o, i in
             guard let self = self else {
                 return UIView()

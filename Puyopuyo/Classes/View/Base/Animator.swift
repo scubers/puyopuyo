@@ -9,6 +9,8 @@ import Foundation
 
 // MARK: - Animator
 
+
+/// Provide a protocol to animate view when BoxView is layouting
 public protocol Animator {
     var duration: TimeInterval { get }
     /// Animation can be nested, if you want a specify animation, make sure override the inheritedOptions,

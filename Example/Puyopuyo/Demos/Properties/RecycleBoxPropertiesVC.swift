@@ -19,7 +19,7 @@ class RecycleBoxPropertiesVC: BaseVC {
     }
 
     override func configView() {
-        let this = WeakCatcher(value: self)
+        let this = WeakableObject(value: self)
 
         let actions = [
             MenuItem(name: "demo1", action: { this.value?.reloadWithMultipleSectionAnimationSeparated() }),
@@ -112,7 +112,7 @@ class RecycleBoxPropertiesVC: BaseVC {
 
         mixedDataState.value = items
 
-        let this = WeakCatcher(value: self)
+        let this = WeakableObject(value: self)
 
         let actions = [
             MenuItem(name: "All", action: { this.value?.mixedDataState.value = items }),
@@ -172,7 +172,7 @@ class RecycleBoxPropertiesVC: BaseVC {
     let names = State(Names().random(10))
 
     func randomShuffleAnimation() {
-        let this = WeakCatcher(value: self)
+        let this = WeakableObject(value: self)
         sections.value = [
             DataRecycleSection(
                 items: names.asOutput(),

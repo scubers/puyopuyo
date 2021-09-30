@@ -18,16 +18,16 @@ public struct Borders {
     }
 
     public var top: Border?
-    weak var topLayer: CAShapeLayer?
+    private weak var topLayer: CAShapeLayer?
 
     public var left: Border?
-    weak var leftLayer: CAShapeLayer?
+    private weak var leftLayer: CAShapeLayer?
 
     public var bottom: Border?
-    weak var bottomLayer: CAShapeLayer?
+    private weak var bottomLayer: CAShapeLayer?
 
     public var right: Border?
-    weak var rightLayer: CAShapeLayer?
+    private weak var rightLayer: CAShapeLayer?
 
     mutating func updateTop(to superLayer: CALayer) {
         topLayer?.removeFromSuperlayer()
@@ -100,7 +100,7 @@ public struct Borders {
         layer.strokeStart = 0
         layer.strokeEnd = 1
         layer.zPosition = 1000
-        layer.lineDashPattern = border.dash.map({ NSNumber(value: Float($0)) })
+        layer.lineDashPattern = border.dash.map { NSNumber(value: Float($0)) }
         return layer
     }
 

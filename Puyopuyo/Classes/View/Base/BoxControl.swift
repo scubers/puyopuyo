@@ -8,12 +8,17 @@
 import UIKit
 
 public class BoxControl<R: Regulator> {
+    ///
+    /// Control `contentSize` when superview is UIScrollView
     public var isScrollViewControl = false
 
+    ///
+    /// Control `center` when superview is not BoxView
     public var isCenterControl = true
-    public var isSizeControl = true
 
-    public var animateChildren = false
+    ///
+    /// Control `size` when superview is not BoxView
+    public var isSizeControl = true
 
     func layoutSubviews(view: UIView, regulator: R) {
         // 父视图为布局
