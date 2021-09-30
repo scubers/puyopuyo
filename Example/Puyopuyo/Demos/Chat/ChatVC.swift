@@ -42,11 +42,8 @@ class ChatVC: BaseVC, UICollectionViewDelegateFlowLayout {
                             MessageView().attach()
                                 .viewState(o.map(\.data))
                                 .width(.fill)
-                                .onEvent { e in
-                                    switch e {
-                                    case .tapIcon:
-                                        this.value?.navigationController?.pushViewController(FeedVC(), animated: true)
-                                    }
+                                .onEvent(.tapIcon) {
+                                    this.value?.navigationController?.pushViewController(FeedVC(), animated: true)
                                 }
                                 .view
                         }

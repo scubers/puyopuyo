@@ -151,6 +151,17 @@ public extension Puyo where T: Eventable {
     }
 }
 
+public extension Puyo where T: Eventable, T.EmitterType.OutputType: Equatable {
+    @discardableResult
+    func onEvent(_ eventType: T.EmitterType.OutputType, _ event: @escaping () -> Void) -> Self {
+        onEvent(Inputs {
+            if eventType == $0 {
+                event()
+            }
+        })
+    }
+}
+
 public extension Puyo where T: Stateful {
     @discardableResult
     func viewState<O: Outputing>(_ output: O, unbindable: DisposableBag) -> Self where O.OutputType == T.StateType.OutputType {
