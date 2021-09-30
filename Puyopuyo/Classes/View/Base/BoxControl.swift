@@ -40,10 +40,10 @@ public class BoxControl<R: Regulator> {
                  */
                 var residual = view.superview?.bounds.size ?? .zero
                 if regulator.size.width.isWrap {
-                    residual.width = regulator.size.width.max - regulator.margin.getHorzTotal()
+                    residual.width = regulator.size.width.max + regulator.margin.getHorzTotal()
                 }
                 if regulator.size.height.isWrap {
-                    residual.height = regulator.size.height.max - regulator.margin.getVertTotal()
+                    residual.height = regulator.size.height.max + regulator.margin.getVertTotal()
                 }
                 regulator.calculatedSize = Calculator.calculateIntrinsicSize(for: regulator, residual: residual, calculateChildrenImmediately: true)
             } else {
