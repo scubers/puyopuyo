@@ -168,7 +168,7 @@ class TestVC: BaseVC {
                     .width(.wrap(shrink: 1))
                     .observe(\.bounds, input: label1Rect)
                     .margin(left: 10)
-                    .bind(keyPath: \.lineBreakMode, .byClipping)
+                    .set(\.lineBreakMode, .byClipping)
 
                 UILabel().attach($0)
                     .numberOfLines(0)
@@ -176,7 +176,7 @@ class TestVC: BaseVC {
                     .width(.wrap(max: 200, shrink: 1))
                     .observe(\.bounds, input: label2Rect)
                     .margin(left: 10)
-                    .bind(keyPath: \.lineBreakMode, .byClipping)
+                    .set(\.lineBreakMode, .byClipping)
                     .height(.wrap(max: 100))
                     .aspectRatio(1)
                     .diagnosis("control pad")

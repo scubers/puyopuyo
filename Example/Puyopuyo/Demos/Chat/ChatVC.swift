@@ -51,7 +51,7 @@ class ChatVC: BaseVC, UICollectionViewDelegateFlowLayout {
                 ].asOutput()
             )
             .attach($0)
-            .bind(keyPath: \.showsVerticalScrollIndicator, false)
+            .set(\.showsVerticalScrollIndicator, false)
             .size(.fill, .fill)
             .setDelegate(self)
             .view
@@ -180,7 +180,7 @@ class MessageInputView: HBox, Eventable, UITextViewDelegate {
 
             ZBox().attach($0) {
                 UIButton(type: .contactAdd).attach($0)
-                    .bind(event: .touchUpInside, input: emitter.asInput { _ in .add })
+                    .onControlEvent(.touchUpInside, emitter.asInput { _ in .add })
 //                    .visibility(hasText.map { (!$0).py_visibleOrGone() })
                     .alpha(hasText.map { !$0 ? 1 : 0 })
                     .size(hasText.map { $0 ? Size.fixed(1) : Size(width: .wrap, height: .wrap) })

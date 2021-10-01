@@ -122,7 +122,7 @@ class FlowPropertiesVC: BaseVC {
                 }
                 .attach($0)
                 .scrollDirection(.x)
-                .alwaysHorzBounds(true)
+                .set(\.alwaysBounceHorizontal, true)
                 .size(.fill, 40)
 
                 getSelectionView(title: "step",
@@ -230,7 +230,7 @@ class FlowPropertiesVC: BaseVC {
                 .backgroundColor(Util.randomColor())
                 .width(width)
                 .height(width)
-                .bind(keyPath: \.py_measure.flowEnding, self.endings.combine(o.data).map { v, idx in
+                .set(\.py_measure.flowEnding, self.endings.combine(o.data).map { v, idx in
                     v.contains(idx)
                 })
                 .onTap {

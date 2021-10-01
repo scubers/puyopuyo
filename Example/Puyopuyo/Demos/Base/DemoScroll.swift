@@ -10,20 +10,20 @@ import Puyopuyo
 import UIKit
 
 class DemoScroll: UIScrollView {
-//    var builder: (UIView) -> Void
     init(builder: (UIView) -> Void) {
-//        self.builder = builder
         super.init(frame: .zero)
 
-        attach()
-            .flatBox(.y)
-            .padding(all: 16)
-            .animator(Animators.default)
-            .space(20)
-            .attach {
-//                box($0)
-                _ = builder($0)
-            }
+        attach {
+            VBox().attach($0)
+                .padding(all: 16)
+                .animator(Animators.default)
+                .space(20)
+                .size(.fill, .wrap)
+                .autoJudgeScroll(true)
+                .attach {
+                    builder($0)
+                }
+        }
     }
 
     @available(*, unavailable)

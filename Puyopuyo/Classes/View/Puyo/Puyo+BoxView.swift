@@ -26,101 +26,82 @@ public extension Puyo where T: Boxable & UIView {
     @discardableResult
     func padding<S: Outputing>(all: S? = nil, horz: S? = nil, vert: S? = nil, top: S? = nil, left: S? = nil, bottom: S? = nil, right: S? = nil) -> Self where S.OutputType: CGFloatable {
         if let s = all {
-            s.safeBind(to: view) { v, a in
-                PuyoHelper.padding(for: v, all: a.cgFloatValue)
-            }
+            doOn(s) { PuyoHelper.padding(for: $0, all: $1.cgFloatValue) }
         }
         if let s = top {
-            s.safeBind(to: view) { v, a in
-                PuyoHelper.padding(for: v, top: a.cgFloatValue)
-            }
+            doOn(s) { PuyoHelper.padding(for: $0, top: $1.cgFloatValue) }
         }
         if let s = horz {
-            s.safeBind(to: view) { v, a in
-                PuyoHelper.padding(for: v, horz: a.cgFloatValue)
-            }
+            doOn(s) { PuyoHelper.padding(for: $0, horz: $1.cgFloatValue) }
         }
         if let s = vert {
-            s.safeBind(to: view) { v, a in
-                PuyoHelper.padding(for: v, vert: a.cgFloatValue)
-            }
+            doOn(s) { PuyoHelper.padding(for: $0, vert: $1.cgFloatValue) }
         }
         if let s = left {
-            s.safeBind(to: view) { v, a in
-                PuyoHelper.padding(for: v, left: a.cgFloatValue)
-            }
+            doOn(s) { PuyoHelper.padding(for: $0, left: $1.cgFloatValue) }
         }
         if let s = bottom {
-            s.safeBind(to: view) { v, a in
-                PuyoHelper.padding(for: v, bottom: a.cgFloatValue)
-            }
+            doOn(s) { PuyoHelper.padding(for: $0, bottom: $1.cgFloatValue) }
         }
         if let s = right {
-            s.safeBind(to: view) { v, a in
-                PuyoHelper.padding(for: v, right: a.cgFloatValue)
-            }
+            doOn(s) { PuyoHelper.padding(for: $0, right: $1.cgFloatValue) }
         }
         return self
     }
 
     @discardableResult
     func padding<O: Outputing>(_ padding: O) -> Self where O.OutputType == UIEdgeInsets {
-        bind(keyPath: \T.regulator.padding, padding)
+        set(\T.regulator.padding, padding)
     }
 
     @discardableResult
     func justifyContent(_ alignment: Alignment) -> Self {
-        bind(keyPath: \T.regulator.justifyContent, alignment)
+        set(\T.regulator.justifyContent, alignment)
     }
 
     @discardableResult
     func justifyContent<O: Outputing>(_ alignment: O) -> Self where O.OutputType == Alignment {
-        bind(keyPath: \T.regulator.justifyContent, alignment)
+        set(\T.regulator.justifyContent, alignment)
     }
 
     @discardableResult
     func autoJudgeScroll(_ judge: Bool) -> Self {
-        bind(keyPath: \T.control.isScrollViewControl, judge)
+        set(\T.control.isScrollViewControl, judge)
     }
 
     @discardableResult
     func isCenterControl(_ control: Bool) -> Self {
-        bind(keyPath: \T.control.isCenterControl, control)
+        set(\T.control.isCenterControl, control)
     }
 
     @discardableResult
     func isSizeControl(_ control: Bool) -> Self {
-        bind(keyPath: \T.control.isSizeControl, control)
+        set(\T.control.isSizeControl, control)
     }
 
     @discardableResult
     func borders(_ options: [BorderOptions]) -> Self {
-        view.control.borders = Borders.all(Border(options: options))
-        return self
+        set(\T.control.borders, Borders.all(Border(options: options)))
     }
 
     @discardableResult
     func topBorder(_ options: [BorderOptions]) -> Self {
-        view.control.borders.top = Border(options: options)
-        return self
+        set(\T.control.borders.top, Border(options: options))
     }
 
     @discardableResult
     func leftBorder(_ options: [BorderOptions]) -> Self {
-        view.control.borders.left = Border(options: options)
-        return self
+        set(\T.control.borders.left, Border(options: options))
     }
 
     @discardableResult
     func bottomBorder(_ options: [BorderOptions]) -> Self {
-        view.control.borders.bottom = Border(options: options)
-        return self
+        set(\T.control.borders.bottom, Border(options: options))
     }
 
     @discardableResult
     func rightBorder(_ options: [BorderOptions]) -> Self {
-        view.control.borders.right = Border(options: options)
-        return self
+        set(\T.control.borders.right, Border(options: options))
     }
 }
 
@@ -168,7 +149,7 @@ public extension Puyo where T: Eventable, T.EmitterType.OutputType: Equatable {
 public extension Puyo where T: Stateful & DisposableBag {
     @discardableResult
     func state<O: Outputing>(_ output: O) -> Self where O.OutputType == T.StateType.OutputType {
-        bind(keyPath: \T.state.specificValue, output)
+        doOn(output) { $0.state.input(value: $1) }
     }
 }
 

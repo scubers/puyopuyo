@@ -32,8 +32,8 @@ class RecycleBoxPropertiesVC: BaseVC {
 
         vRoot.attach {
             UISegmentedControl(items: actions.map(\.name)).attach($0)
-                .bind(keyPath: \.selectedSegmentIndex, 0)
-                .bind(event: .valueChanged, input: Inputs {
+                .set(\.selectedSegmentIndex, 0)
+                .onControlEvent(.valueChanged, Inputs {
                     actions[$0.selectedSegmentIndex].action()
                 })
                 .size(.fill, 40)
@@ -130,8 +130,8 @@ class RecycleBoxPropertiesVC: BaseVC {
                     HBox().attach {
                         UISegmentedControl(items: actions.map(\.name)).attach($0)
                             .size(.fill, 40)
-                            .bind(keyPath: \.selectedSegmentIndex, 0)
-                            .bind(event: .valueChanged, input: Inputs {
+                            .set(\.selectedSegmentIndex, 0)
+                            .onControlEvent(.valueChanged, Inputs {
                                 actions[$0.selectedSegmentIndex].action()
                             })
                     }
@@ -186,7 +186,7 @@ class RecycleBoxPropertiesVC: BaseVC {
                     HBox().attach {
                         UIButton().attach($0)
                             .image(UIImage(systemName: "play.fill"))
-                            .bind(event: .touchUpInside, input: Inputs { _ in
+                            .onControlEvent(.touchUpInside, Inputs { _ in
                                 this.value?.names.value.shuffle()
                             })
                     }

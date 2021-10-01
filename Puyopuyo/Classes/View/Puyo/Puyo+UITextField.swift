@@ -8,18 +8,12 @@
 import Foundation
 
 public extension Puyo where T: UITextField {
-    @discardableResult
-    func textDelegate<S: Outputing>(_ delegate: S) -> Self where S.OutputType == UITextFieldDelegate? {
-        bind(keyPath: \T.delegate, delegate.asOutput().map(\.optionalValue))
-    }
-
-    /// 若TextField可能包裹，则每次输入都会重新布局，若非必要，不要设置
+    /// Needs relayout while textfield editing
     @discardableResult
     func resizeByContent() -> Self {
-        bind(to: view, event: .editingChanged) { v, _ in
-            v.py_setNeedsLayoutIfMayBeWrap()
-        }
-        return self
+        onControlEvent(.editingChanged, Inputs { [weak view] _ in
+            view?.py_setNeedsLayoutIfMayBeWrap()
+        })
     }
 
     @discardableResult
@@ -30,27 +24,18 @@ public extension Puyo where T: UITextField {
             v.py_setNeedsLayoutIfMayBeWrap()
         }
 
-        bind(to: view, event: .editingChanged) { _, v in
-            text.input(value: v.text as! S.InputType)
-        }
+        texting(text)
+
         return self
     }
 
     @discardableResult
     func texting<S: Inputing>(_ text: S) -> Self where S.InputType: OptionalableValueType, S.InputType.Wrap == String {
-        bind(to: view, event: .editingChanged) { _, v in
-            text.input(value: v.text as! S.InputType)
-        }
-        return self
+        onControlEvent(.editingChanged, text.asInput { $0.text as! S.InputType })
     }
 
     @discardableResult
     func placeholder<S: Outputing>(_ text: S) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == String {
-        bind(keyPath: \T.placeholder, text.asOutput().map(\.optionalValue))
-    }
-
-    @discardableResult
-    func clearButtonMode(_ mode: UITextField.ViewMode) -> Self {
-        bind(keyPath: \T.clearButtonMode, State(mode))
+        set(\T.placeholder, text.asOutput().map(\.optionalValue))
     }
 }

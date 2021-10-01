@@ -35,7 +35,7 @@ public extension Puyo where T: DisposableBag {
     ///   - state: state description
     ///   - action: action description
     @discardableResult
-    func on<O: Outputing, R>(_ state: O, _ action: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
+    func doOn<O: Outputing, R>(_ state: O, _ action: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
         state.safeBind(to: view, action)
         return self
     }
@@ -50,19 +50,13 @@ public extension Puyo where T: UIView {
         assert(!view.py_measure.activated, msg)
     }
 
-    @discardableResult
-    func assign(to pointer: UnsafeMutablePointer<T>) -> Self {
-        pointer.pointee = view
-        return self
-    }
-
     /// 接收一个outputing，并且绑定到view上，持续接收action，后，重新布局
     /// - Parameters:
     ///   - state: state description
     ///   - action: action description
     @discardableResult
     func viewUpdate<O: Outputing, R>(on state: O, _ action: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
-        return on(state) { v, r in
+        doOn(state) { v, r in
             action(v, r)
             v.py_setNeedsRelayout()
         }

@@ -74,8 +74,8 @@ class SizePropertiesVC: BaseVC {
                     .space(8)
 
                     UISlider().attach($0)
-                        .bind(keyPath: \.value, progress.map(Float.init))
-                        .onEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
+                        .set(\.value, progress.map(Float.init))
+                        .onControlEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
                         .width(.fill)
                 }
                 .width(.fill)
@@ -120,8 +120,8 @@ class SizePropertiesVC: BaseVC {
                     .space(8)
 
                     UISlider().attach($0)
-                        .bind(keyPath: \.value, progress.map(Float.init))
-                        .onEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
+                        .set(\.value, progress.map(Float.init))
+                        .onControlEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
                         .width(.fill)
                 }
                 .width(.fill)
@@ -192,8 +192,8 @@ class SizePropertiesVC: BaseVC {
                         })
 
                     UISlider().attach($0)
-                        .bind(keyPath: \.value, progress.map(Float.init))
-                        .onEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
+                        .set(\.value, progress.map(Float.init))
+                        .onControlEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
                         .width(.fill)
                 }
                 .width(.fill)
@@ -245,8 +245,8 @@ class SizePropertiesVC: BaseVC {
                     .space(8)
 
                     UISlider().attach($0)
-                        .bind(keyPath: \.value, progress.map(Float.init))
-                        .onEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
+                        .set(\.value, progress.map(Float.init))
+                        .onControlEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
                         .width(.fill)
                 }
                 .width(.fill)
@@ -293,8 +293,8 @@ class SizePropertiesVC: BaseVC {
                     .space(8)
 
                     UISlider().attach($0)
-                        .bind(keyPath: \.value, progress.map(Float.init))
-                        .onEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
+                        .set(\.value, progress.map(Float.init))
+                        .onControlEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
                         .width(.fill)
                 }
                 .width(.fill)
@@ -347,8 +347,8 @@ class SizePropertiesVC: BaseVC {
                     .space(8)
 
                     UISlider().attach($0)
-                        .bind(keyPath: \.value, progress.map(Float.init))
-                        .onEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
+                        .set(\.value, progress.map(Float.init))
+                        .onControlEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
                         .width(.fill)
                 }
                 .width(.fill)
@@ -383,8 +383,8 @@ class SizePropertiesVC: BaseVC {
                     .space(8)
 
                     UISlider().attach($0)
-                        .bind(keyPath: \.value, progress.map(Float.init))
-                        .onEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
+                        .set(\.value, progress.map(Float.init))
+                        .onControlEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
                         .width(.fill)
                 }
                 .width(.fill)
@@ -472,8 +472,8 @@ class SizePropertiesVC: BaseVC {
                     .space(8)
 
                     UISlider().attach($0)
-                        .bind(keyPath: \.value, progress.map(Float.init))
-                        .onEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
+                        .set(\.value, progress.map(Float.init))
+                        .onControlEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
                         .width(.fill)
                 }
                 .width(.fill)

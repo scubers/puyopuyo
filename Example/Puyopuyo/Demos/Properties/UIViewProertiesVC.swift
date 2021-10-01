@@ -217,8 +217,7 @@ class UIViewProertiesVC: BaseVC {
                 .animator(Animators.default)
             },
             selectors: [0, 10, 20, 30, 40].map { Selector(desc: "\($0)", value: $0) },
-            selected: margin.value,
-            desc: "布局系统内，子view的外边局"
+            selected: margin.value
         )
         .attach()
         .onEvent(margin)
