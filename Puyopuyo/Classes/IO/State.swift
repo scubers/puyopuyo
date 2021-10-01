@@ -38,7 +38,8 @@ public class State<Value>: Outputing, Inputing, UniqueOutputable, OutputingModif
 
     private var inputers = [Listener<Value>]()
 
-    /// 返回一个没有初始值的state，此时如果调用value方法会崩溃
+    /// Create a state without initial value, you can not use the value before set.
+    /// Neither use keyPath to access value before set
     public static func unstable() -> State<Value> { State<Value>() }
 
     public func resend() { input(value: value) }

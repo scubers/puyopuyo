@@ -9,21 +9,6 @@ import Foundation
 
 public extension Puyo where T: UIControl {
     @discardableResult
-    func isSelected<S: Outputing>(_ isSelected: S) -> Self where S.OutputType == Bool {
-        set(\T.isSelected, isSelected)
-    }
-
-    @discardableResult
-    func isEnabled<S: Outputing>(_ isEnabled: S) -> Self where S.OutputType == Bool {
-        set(\T.isEnabled, isEnabled)
-    }
-
-    @discardableResult
-    func isHighlighted<S: Outputing>(_ isHighlighted: S) -> Self where S.OutputType == Bool {
-        set(\T.isHighlighted, isHighlighted)
-    }
-
-    @discardableResult
     func onControlEvent<I: Inputing>(_ event: UIControl.Event, _ input: I) -> Self where I.InputType == T {
         view.py_addAction(for: event) { control in
             input.input(value: control as! T)
