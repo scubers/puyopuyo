@@ -54,9 +54,30 @@ public extension Puyo where T: UITextView {
         return self
     }
 
+    @discardableResult
     func onEndEditing<I: Inputing>(_ input: I) -> Self where I.InputType == String? {
         let output = Outputs<String?> { input -> Disposer in
             let obj = NotificationCenter.default.addObserver(forName: UITextView.textDidEndEditingNotification, object: self.view, queue: OperationQueue.main) { noti in
+                if let tv = noti.object as? UITextView {
+                    input.input(value: tv.text)
+                    tv.py_setNeedsLayoutIfMayBeWrap()
+                } else {
+                    input.input(value: nil)
+                }
+            }
+            return Disposers.create {
+                NotificationCenter.default.removeObserver(obj)
+            }
+        }
+        let disposer = output.distinct().send(to: input)
+        view.addDisposer(disposer, for: nil)
+        return self
+    }
+
+    @discardableResult
+    func onBeginEditing<I: Inputing>(_ input: I) -> Self where I.InputType == String? {
+        let output = Outputs<String?> { input -> Disposer in
+            let obj = NotificationCenter.default.addObserver(forName: UITextView.textDidBeginEditingNotification, object: self.view, queue: OperationQueue.main) { noti in
                 if let tv = noti.object as? UITextView {
                     input.input(value: tv.text)
                     tv.py_setNeedsLayoutIfMayBeWrap()
