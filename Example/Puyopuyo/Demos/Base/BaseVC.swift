@@ -40,7 +40,7 @@ class BaseVC: UIViewController, UIScrollViewDelegate, UIGestureRecognizerDelegat
         )
         .attach(view)
         .size(.fill, .fill)
-        .viewState(navState)
+        .state(navState)
 
         navState.value.shadowOpacity = 1
     }

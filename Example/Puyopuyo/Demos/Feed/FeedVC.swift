@@ -28,7 +28,7 @@ class FeedVC: BaseVC, UITableViewDelegate {
                     items: dataSource.asOutput(),
                     cell: { o, _ in
                         ItemView().attach()
-                            .viewState(o.data)
+                            .state(o.data)
                             .width(.fill)
                             .bottomBorder([.color(UIColor.lightGray.withAlphaComponent(0.3)), .lead(20)])
                             .view

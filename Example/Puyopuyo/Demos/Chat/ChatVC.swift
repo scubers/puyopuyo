@@ -40,7 +40,7 @@ class ChatVC: BaseVC, UICollectionViewDelegateFlowLayout {
                         differ: { $0.chatId.description },
                         cell: { o, _ in
                             MessageView().attach()
-                                .viewState(o.map(\.data))
+                                .state(o.map(\.data))
                                 .width(.fill)
                                 .onEvent(.tapIcon) {
                                     this.value?.navigationController?.pushViewController(FeedVC(), animated: true)

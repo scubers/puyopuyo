@@ -179,7 +179,7 @@ class RecycleBoxPropertiesVC: BaseVC {
                 differ: { $0 },
                 cell: { o, _ in
                     HorzFillCell().attach()
-                        .viewState(o.data)
+                        .state(o.data)
                         .view
                 },
                 header: { _, _ in
@@ -220,7 +220,7 @@ class RecycleBoxPropertiesVC: BaseVC {
                             diffableKey: { $0.description },
                             cell: { o, _ in
                                 SquareCell().attach()
-                                    .viewState(o.data.description)
+                                    .state(o.data.description)
                                     .view
                             }
                         )
@@ -228,7 +228,7 @@ class RecycleBoxPropertiesVC: BaseVC {
                     }.asOutput(),
                     header: { _, _ in
                         Header().attach()
-                            .viewState("Header")
+                            .state("Header")
                             .view
                     }
                 )
@@ -262,12 +262,12 @@ class RecycleBoxPropertiesVC: BaseVC {
                 differ: { $0.description },
                 cell: { o, _ in
                     SquareCell().attach()
-                        .viewState(o.data.description)
+                        .state(o.data.description)
                         .view
                 },
                 header: { _, _ in
                     Header().attach()
-                        .viewState("Header 1")
+                        .state("Header 1")
                         .view
                 }
             ),
@@ -276,12 +276,12 @@ class RecycleBoxPropertiesVC: BaseVC {
                 differ: { $0.description },
                 cell: { o, _ in
                     SquareCell().attach()
-                        .viewState(o.data.description)
+                        .state(o.data.description)
                         .view
                 },
                 header: { _, _ in
                     Header().attach()
-                        .viewState("Header 2")
+                        .state("Header 2")
                         .view
                 }
             )

@@ -124,8 +124,9 @@ public extension Puyo where T: Boxable & UIView {
     }
 }
 
-// MARK: - Statful & Eventable
+// MARK: - Eventable
 
+/// When `T` is Eventable, call when emitter emit some events
 public extension Puyo where T: Eventable {
     @discardableResult
     func onEvent<I: Inputing>(_ input: I) -> Self where I.InputType == T.EmitterType.OutputType {
@@ -162,19 +163,12 @@ public extension Puyo where T: Eventable, T.EmitterType.OutputType: Equatable {
     }
 }
 
-public extension Puyo where T: Stateful {
-    @discardableResult
-    func viewState<O: Outputing>(_ output: O, unbindable: DisposableBag) -> Self where O.OutputType == T.StateType.OutputType {
-        output.send(to: view.state).dispose(by: unbindable)
-        return self
-    }
-}
+// MARK: - Stateful
 
-public extension Puyo where T: Stateful, T: NSObject {
+public extension Puyo where T: Stateful & DisposableBag {
     @discardableResult
-    func viewState<O: Outputing>(_ output: O) -> Self where O.OutputType == T.StateType.OutputType {
-        output.send(to: view.state).dispose(by: view)
-        return self
+    func state<O: Outputing>(_ output: O) -> Self where O.OutputType == T.StateType.OutputType {
+        bind(keyPath: \T.state.specificValue, output)
     }
 }
 
