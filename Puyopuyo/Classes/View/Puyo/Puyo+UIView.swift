@@ -8,6 +8,18 @@
 import Foundation
 
 public extension Puyo where T: UIView {
+    /// Set diagnosis id, system will print the view's info in every calculate cycle
+    @discardableResult
+    func diagnosis(_ id: String? = "") -> Self {
+        set(\T.py_measure.diagnosisId, id)
+    }
+
+    /// Set extra diagnosis message
+    @discardableResult
+    func diagnosisMessage(_ msg: String?) -> Self {
+        set(\T.py_measure.extraDiagnosisMessage, msg)
+    }
+
     @discardableResult
     func backgroundColor<O: Outputing>(_ color: O) -> Self where O.OutputType: OptionalableValueType, O.OutputType.Wrap == UIColor {
         set(\.backgroundColor, color.asOutput().map(\.optionalValue))

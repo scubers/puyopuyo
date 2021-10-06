@@ -34,6 +34,12 @@ extension UIView: MeasureDelegate {
     func py_setNeedsRelayout() {
         needsRelayout(for: py_measure)
     }
+
+    func py_setNeedsLayoutIfMayBeWrap() {
+        if py_measure.size.maybeWrap() {
+            py_setNeedsRelayout()
+        }
+    }
 }
 
 // MARK: - UIView ext methods

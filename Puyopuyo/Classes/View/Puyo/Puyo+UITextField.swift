@@ -18,10 +18,9 @@ public extension Puyo where T: UITextField {
 
     @discardableResult
     func onText<S: Outputing & Inputing>(_ text: S) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == String, S.InputType == S.OutputType {
-        text.safeBind(to: view) { v, a in
+        viewUpdate(on: text, strategy: .maybeWrap) { v, a in
             guard a.optionalValue != v.text else { return }
             v.text = a.optionalValue
-            v.py_setNeedsLayoutIfMayBeWrap()
         }
 
         texting(text)

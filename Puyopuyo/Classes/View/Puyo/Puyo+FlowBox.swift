@@ -43,9 +43,7 @@ public extension Puyo where T: Boxable & UIView, T.RegulatorType: FlowRegulator 
 
     @discardableResult
     func runRowSize<O: Outputing>(_ size: O) -> Self where O.OutputType: SizeDescriptible {
-        doOn(size.asOutput().map(\.sizeDescription).distinct()) { v, a in
-            v.regulator.runRowSize = { _ in a }
-        }
+        set(\T.regulator.runRowSize, size.asOutput().map(\.sizeDescription).map { s in { _ in s }})
     }
 
     @discardableResult

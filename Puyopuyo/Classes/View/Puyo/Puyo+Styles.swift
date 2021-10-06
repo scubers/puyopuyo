@@ -51,20 +51,20 @@ public extension Puyo where T: TextAlignmentDecorable & UIView {
 public extension Puyo where T: TextLinesDecorable & UIView {
     @discardableResult
     func numberOfLines<S: Outputing>(_ lines: S) -> Self where S.OutputType == Int {
-        viewUpdate(on: lines) { $0.applyNumberOfLine($1) }
+        viewUpdate(on: lines, strategy: .maybeWrap) { $0.applyNumberOfLine($1) }
     }
 }
 
 public extension Puyo where T: FontDecorable & UIView {
     @discardableResult
     func font<S: Outputing>(_ font: S) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIFont {
-        viewUpdate(on: font) { $0.applyFont($1.optionalValue) }
+        viewUpdate(on: font, strategy: .maybeWrap) { $0.applyFont($1.optionalValue) }
     }
 
     @available(iOS 8.2, *)
     @discardableResult
     func fontSize<S: Outputing>(_ font: S, weight: UIFont.Weight = .regular) -> Self where S.OutputType: CGFloatable {
-        viewUpdate(on: font) { $0.applyFont(.systemFont(ofSize: $1.cgFloatValue, weight: weight)) }
+        viewUpdate(on: font, strategy: .maybeWrap) { $0.applyFont(.systemFont(ofSize: $1.cgFloatValue, weight: weight)) }
     }
 }
 
@@ -78,12 +78,12 @@ public extension Puyo where T: TextColorDecorable & UIView {
 public extension Puyo where T: TextDecorable & UIView {
     @discardableResult
     func text<S: Outputing>(_ text: S, state: UIControl.State = .normal) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == String {
-        viewUpdate(on: text.mapWrappedValue().distinct()) { $0.applyText($1, state: state) }
+        viewUpdate(on: text.mapWrappedValue().distinct(), strategy: .maybeWrap) { $0.applyText($1, state: state) }
     }
 
     @discardableResult
     func attrText<S: Outputing>(_ text: S, state: UIControl.State = .normal) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == NSAttributedString {
-        viewUpdate(on: text.mapWrappedValue().distinct()) { $0.applyAttrText($1, state: state) }
+        viewUpdate(on: text.mapWrappedValue().distinct(), strategy: .maybeWrap) { $0.applyAttrText($1, state: state) }
     }
 }
 

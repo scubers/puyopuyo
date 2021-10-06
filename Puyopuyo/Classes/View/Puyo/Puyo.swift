@@ -46,15 +46,27 @@ public extension Puyo where T: UIView {
         assert(!view.py_measure.activated, msg)
     }
 
+    enum UpdateStrategy {
+        /// Call setNeedsRelayout after action
+        case all
+        /// Call setNeedsRelayout after action if view's size maybe wrap
+        case maybeWrap
+    }
+
     /// Accept an Outputing as a trigger, call [view.py_setNeedsRelayout] after action
     /// - Parameters:
     ///   - state: state description
     ///   - action: action description
     @discardableResult
-    func viewUpdate<O: Outputing, R>(on state: O, _ action: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
+    func viewUpdate<O: Outputing, R>(on state: O, strategy: UpdateStrategy = .all, _ action: @escaping (T, R) -> Void) -> Self where O.OutputType == R {
         doOn(state) { v, r in
             action(v, r)
-            v.py_setNeedsRelayout()
+            switch strategy {
+            case .all:
+                v.py_setNeedsRelayout()
+            case .maybeWrap:
+                v.py_setNeedsLayoutIfMayBeWrap()
+            }
         }
     }
 }
@@ -99,10 +111,4 @@ public extension PuyoAttacher where Self: ViewDisplayable {
 
 extension UIViewController: PuyoAttacher {}
 
-extension UIView: PuyoAttacher {
-    func py_setNeedsLayoutIfMayBeWrap() {
-        if py_measure.size.maybeWrap() {
-            py_setNeedsRelayout()
-        }
-    }
-}
+extension UIView: PuyoAttacher {}

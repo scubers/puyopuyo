@@ -78,22 +78,31 @@ public extension Puyo where T: UIView {
 
     // MARK: - Second layoutable methods
 
+    /// Observe the given view's size to config view
+    /// Due to use kvo, the size will not effect in one layout cycle.
+    /// So it will take two layout cycle to get correct frame
     @discardableResult
-    func width(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
-        if let s = view?.py_boundsState().distinct().dispatchMain() {
+    func width(on view: UIView?, _ block: @escaping (CGSize) -> SizeDescription) -> Self {
+        if let s = view?.py_sizeState().distinct().dispatchMain() {
             return width(s.map(block).debounce())
         }
         return self
     }
 
+    /// Observe the given view's size to config view
+    /// Due to use kvo, the size will not effect in one layout cycle.
+    /// So it will take two layout cycle to get correct frame
     @discardableResult
-    func height(on view: UIView?, _ block: @escaping (CGRect) -> SizeDescription) -> Self {
-        if let s = view?.py_boundsState().distinct().dispatchMain() {
+    func height(on view: UIView?, _ block: @escaping (CGSize) -> SizeDescription) -> Self {
+        if let s = view?.py_sizeState().distinct().dispatchMain() {
             height(s.map(block).debounce())
         }
         return self
     }
 
+    /// Observe the self's size to config view
+    /// Due to use kvo, the size will not effect in one layout cycle.
+    /// So it will take two layout cycle to get correct frame
     @discardableResult
     func widthEqualToHeight(add: CGFloat = 0, multiply: CGFloat = 1) -> Self {
         width(
@@ -106,6 +115,9 @@ public extension Puyo where T: UIView {
         )
     }
 
+    /// Observe the self's size to config view
+    /// Due to use kvo, the size will not effect in one layout cycle.
+    /// So it will take two layout cycle to get correct frame
     @discardableResult
     func heightEqualToWidth(add: CGFloat = 0, multiply: CGFloat = 1) -> Self {
         height(
@@ -116,16 +128,6 @@ public extension Puyo where T: UIView {
             .map { SizeDescription.wrap(min: $0, max: $0) }
             .debounce()
         )
-    }
-
-    @discardableResult
-    func diagnosis(_ id: String? = "") -> Self {
-        set(\T.py_measure.diagnosisId, id)
-    }
-
-    @discardableResult
-    func diagnosisExtraMessage(_ msg: String?) -> Self {
-        set(\T.py_measure.extraDiagnosisMessage, msg)
     }
 }
 

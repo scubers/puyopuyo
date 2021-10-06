@@ -18,12 +18,10 @@ class TestVC: BaseVC {
 //        demo4().attach(vRoot)
 //        demo5().attach(vRoot)
 //        demo6().attach(vRoot)
-        shrinkDeadLoopTest().attach(vRoot)
-//        flowCompactTest().attach(vRoot)
+//        shrinkDeadLoopTest().attach(vRoot)
+        flowCompactTest().attach(vRoot)
         
 //        zboxFillAndWrapTest().attach(vRoot)
-        
-//        crossAlignmentRatio().attach(vRoot)
         
 //        flowRatioWrapTest().attach(vRoot)
         
@@ -180,7 +178,7 @@ class TestVC: BaseVC {
                     .height(.wrap(max: 100))
                     .aspectRatio(1)
                     .diagnosis("control pad")
-                    .diagnosisExtraMessage("good job")
+                    .diagnosisMessage("good job")
                 
                 UILabel().attach($0)
                     .text("100")
