@@ -235,14 +235,14 @@ class MyView: VBox, Stateful, Eventable {
         case onConfirmed
     }
     /// declare in Stateful implement by this class
-    let viewState = State(ViewState())
+    let state = State(ViewState())
     /// declare in Eventable implement by this class
     let emitter = SimpleIO<Event>()
 
     override func buildBody() {
         attach {
             UILabel().attach($0)
-                .text(viewState.map(\.name)) // use map to transform value
+                .text(state.map(\.name)) // use map to transform value
 
             UILabel().attach($0)
                 .text(binder.title) // use binder dynamic member lookup to find value
