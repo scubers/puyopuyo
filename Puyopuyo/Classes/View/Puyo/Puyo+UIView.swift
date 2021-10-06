@@ -75,48 +75,43 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func top<O: Outputing>(_ top: O) -> Self where O.OutputType: CGFloatable {
-        top.safeBind(to: view) { v, a in
+        doOn(top) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
             f.origin.y = a.cgFloatValue
             f.size.height = max(0, v.frame.maxY - a.cgFloatValue)
             v.frame = f
         }
-        return self
     }
 
     @discardableResult
     func left<O: Outputing>(_ left: O) -> Self where O.OutputType: CGFloatable {
-        left.safeBind(to: view) { v, a in
+        doOn(left) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
             f.origin.x = a.cgFloatValue
             f.size.width = max(0, v.frame.maxX - a.cgFloatValue)
             v.frame = f
         }
-        return self
     }
 
     @discardableResult
     func bottom<O: Outputing>(_ bottom: O) -> Self where O.OutputType: CGFloatable {
-        bottom.safeBind(to: view) { v, a in
+        doOn(bottom) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
             f.size.height = max(0, a.cgFloatValue - v.frame.origin.y)
             v.frame = f
         }
-        return self
     }
 
     @discardableResult
     func right<O: Outputing>(_ right: O) -> Self where O.OutputType: CGFloatable {
-        right.safeBind(to: view) { v, a in
+        doOn(right) { v, a in
             Puyo.ensureInactivate(v, "can only apply when view is inactiveted!!!")
             var f = v.frame
             f.size.width = max(0, a.cgFloatValue - v.frame.origin.x)
             v.frame = f
         }
-        return self
     }
-
 }

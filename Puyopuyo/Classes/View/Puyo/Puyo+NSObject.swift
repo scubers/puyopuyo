@@ -10,10 +10,7 @@ import Foundation
 public extension Puyo where T: DisposableBag {
     @discardableResult
     func set<O: Outputing>(_ keyPath: ReferenceWritableKeyPath<T, O.OutputType>, _ output: O) -> Self {
-        output.safeBind(to: view) {
-            $0[keyPath: keyPath] = $1
-        }
-        return self
+        doOn(output) { $0[keyPath: keyPath] = $1 }
     }
 
     @discardableResult

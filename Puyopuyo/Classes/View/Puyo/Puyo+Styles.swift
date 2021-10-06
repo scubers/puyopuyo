@@ -27,8 +27,7 @@ public extension Puyo where T: ImageDecorable & UIView {
 
     @discardableResult
     func renderingImage<S: Outputing>(_ image: S, mode: UIImage.RenderingMode = .alwaysTemplate, state: UIControl.State = .normal) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIImage {
-        self.image(image.asOutput().map { $0.optionalValue?.withRenderingMode(mode) },
-                   state: state)
+        doOn(image.asOutput().map { $0.optionalValue?.withRenderingMode(mode) }, { $0.applyImage($1, state: state) })
     }
 
     @discardableResult
