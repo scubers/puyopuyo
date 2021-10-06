@@ -4,9 +4,11 @@
 [![Version](https://img.shields.io/cocoapods/v/Puyopuyo.svg?style=flat)](https://cocoapods.org/pods/Puyopuyo)
 [![Platform](https://img.shields.io/cocoapods/p/Puyopuyo.svg?style=flat)](https://cocoapods.org/pods/Puyopuyo)
 
-## Description
+## 描述
 
-A declaretive layout library for UIKit base on data driven written in swift.
+基于数据驱动的声明式UIKit
+
+Puyopuyo是基于Frame进行布局，并且提供了一套响应式的数据驱动开发模型的UI框架。
 
 ## Requirements
 
@@ -18,9 +20,9 @@ swift 5.1
 pod 'Puyopuyo'
 ```
 
-## Usage
+## 使用
 
-A simple cell can be implemented like below. The subviews will be layout by specific rules. The buildin box follow the FlexBox rules.
+一个简单的菜单Cell，可以如下实现，根据不同的布局规则，子节点将根据规则自动布局。内建的布局Box遵循FlexBox规则。
 
 ```swift
 
@@ -62,9 +64,9 @@ VFlow(count: 3).attach {
 
 ```
 
-### Library provide three buildin layout
+### 框架内提供三种布局方式
 
-`LinearBox`, `FlowBox`, `ZBox`
+`LinearBox`, `FlowBox`, `ZBox`. 继承关系如下：
 ```swift
 BoxView
     |-- ZBox
@@ -77,54 +79,55 @@ BoxView
     
 ```
 
-The core of the layout is the description of View nodes. `Measure` `Regulator`
 
-### Measure properties
+布局的核心是UI节点描述  `Measure` `Regulator`
 
-|Property|Description|Value|
+### Measure 属性
+
+|属性|描述|值|
 |--|--|--|
-|*margin*|Current view's margin| `UIEdgeInset`, default: .zero|
-|*alignment*|The alignment in superview|`.none, .left, .top, .bottom, .vertCenter, .horzCenter`, default: .none|
-|*size*|Size description| `SizeDescription`, `.fixed` `.wrap`, `.ratio` fill up the residual space ratio；default: `.wrap`, Demo：Size Properties|
-|*flowEnding*|Only works in `FlowBox`, and the `arranceCount = 0`, it means that current view is the last view in the row| `Bool`, default: false |
-|*activated*|If will be calculate by parent box| `Bool`, default: false|
+|*margin*|描述本节点的外边距| `UIEdgeInset`, default: .zero|
+|*alignment*|描述本节在父布局的偏移位置|`.none, .left, .top, .bottom, .vertCenter, .horzCenter`, default: .none|
+|*size*|描述本节点尺寸| `SizeDescription`, `.fixed` 固定尺寸, `.wrap` 包裹所有子节点的尺寸, `.ratio` 占剩余空间的比例；default: `.wrap`, 详情查看Demo：Size Properties|
+|*flowEnding*|当前节点在 `FlowBox` 中，并且`arrangeCount = 0`才会生效，标记当前节点是否为当前行最后一个节点| `Bool`, default: false |
+|*activated*|描述本节点是否参与计算| `Bool`, default: false|
 
-### Regulator & ZBox properties
+### Regulator & ZBox 属性
 
-`ZBox` extends `Regulator`
+`ZBox` 继承于 `Regulator`
 
-|Property|Description|Value|
+|属性|描述|值|
 |--|--|--|
-|*justifyContent*|Control all subview's alignment, if subview has set an alignment value, will be override by alignment| `.left, .top, .bottom, .vertCenter, .horzCenter`, default: .none |
-|*padding*|Current box's padding| `UIEdgeInset`, default: .zero|
+|*justifyContent*|控制所有子节点在Box内的偏移位置，当子节点设置了 `alignment` 时，则优先使用 `alignment`| `.left, .top, .bottom, .vertCenter, .horzCenter`, default: .none |
+|*padding*|控制当前布局的内边距| `UIEdgeInset`, default: .zero|
 
-### LinearRegulator properties
+### LinearRegulator 属性
 
-`LinearRegulator` extends `Regulator`
+`LinearRegulator` 继承于 `Regulator`
 
-|Property|Description|Value|
+|属性|描述|值|
 |--|--|--|
-|*space*|Control the space between subviews | `CGFloat`, default: 0|
-|*format*|Control the main axis alignment of subviews| `.leading, .center, .between, .round, .trailing`, default: .leading|
-|*reverse*|If reverse the order from adding| `Bool` default: false|
+|*space*|控制布局内子节点之间的间距| `CGFloat`, default: 0|
+|*format*|控制子节点在主轴上的分布方式| `.leading, .center, .between, .round, .trailing`, default: .leading|
+|*reverse*|控制子节点的排列方式是否于添加顺序相反| `Bool` default: false|
 
 
-### FlowRegulator properties
+### FlowRegulator 属性
 
-`FlowRegulator` extends `LinearRegulator`
+`FlowRegulator` 继承于 `LinearRegulator`
 
-|Property|Description|Value|
+|属性|描述|值|
 |--|--|--|
-|*arrange*|Control the arrange count in each row, when `arrange = 0`, will be separate by contents| `Int`, default: 0|
-|*itemSpace*|The space between items| `CGFloat`, default: 0|
-|*runSpace*|The space between rows| `CGFloat`, default: 0|
-|*format*|The format of the each row| `.leading, .center, .between, .round, .trailing`, default: .leading|
-|*runFormat*|The format of rows| `.leading, .center, .between, .round, .trailing`, default: .leading|
-|*runRowSize*|The row size in run direction| `(Int) -> SizeDescription`, default: .wrap(shrink: 1)|
+|*arrange*|控制布局内每一列的数量，当 `arrange = 0` 时，则根据内容来自动决定是否换行| `Int`, default: 0|
+|*itemSpace*|控制布局单列内的节点间距| `CGFloat`, default: 0|
+|*runSpace*|控制布局内每列之间的间距| `CGFloat`, default: 0|
+|*format*|控制子节点在单列上的分布方式| `.leading, .center, .between, .round, .trailing`, default: .leading|
+|*runFormat*|控制布局内列的分布方式| `.leading, .center, .between, .round, .trailing`, default: .leading|
+|*runRowSize*|控制布局内列的分布方式| `(Int) -> SizeDescription`, default: .wrap(shrink: 1)|
 
-## DataDriven
+## 数据驱动
 
-Library provide a data driven api, to keep your UI always representing the right data. And relayout when something changes.
+声明式的UI进行布局之后，当数据变化后，UI将自动根据需要重新布局。
 
 ```swift
 let text = State("")
@@ -156,15 +159,15 @@ UILabel().attach($0)
     .text(getDescription())
 ```
 
-*PS: The dataDriven api is follow the RxSwift's logic, Be aware of the memory leaks*
+*注意：数据驱动的所有逻辑遵循RxSwift的使用逻辑，请注意内存泄露*
 
-## Animations
+## 动画
 
-`UIView` has an extension property, is an instance of `protocol Animator {}`
+View提供一个扩展属性 `view.py_animator`. 类型为 `protocol Animator {}`
 
-After BoxView layout, each subview's `center`, `bounds` will be assigned, The box will create animation for each view if needed.
+在BoxView进行布局后，给子view进行位置进行赋值时，会调用该对象的`animate`方法，并且会给对应的view创建独立的动画。
 
-*PS: If subview has no animation, will use the nearest superview's animation, the superview must be instance of BoxView*
+*当子view没有设置动画，会沿用其父布局（BoxView）的动画*
 
 ```swift
 
@@ -200,11 +203,11 @@ struct ExpandAnimator: Animator {
 }
 ```
 
-Demo: Animation
+具体查看 Demo: Animation
 
-## Custom View
+## 自定义View
 
-Because of the BoxView also a view, feel free to subclassing a Box, to reduce the view's hierarchy
+因为布局自身也是一个view，所以在自定义view时，可以直接继承相应的Box。降低view层级。
 
 ```swift
 class MyView: VBox {
@@ -214,11 +217,11 @@ class MyView: VBox {
 }
 ```
 
-### State and Event
+### 自定义view的状态与事件管理
 
-A complex view also need to be provide a data, and create some events, like click. In UIKit, also call `DataSource` and `Delegate`
+一个复杂的View通常以输入数据进行展示，通过抛出事件进行交互。在UIKit里面通常体现为 `DataSource, Delegate`.
 
-Library provide a code pattern to defind a data and emit events.
+在系统里，提供了一个交互模式，进行定义。
 
 ```swift
 class MyView: VBox, Stateful, Eventable {
@@ -263,9 +266,11 @@ MyView().attach($0)
     
 ```
 
-## Styles
+## 样式
 
-Demo: Style
+系统提供 `Decorable, Style` 两个接口，进行定义样式。并给UIView提供属性 `py_styleSheet` 进行样式的设置。
+
+详情见Demo: Style
 
 ```swift
 // declare style
@@ -280,9 +285,9 @@ UILabel().attach()
     .styles(styles)
 ```
 
-## Extension
+## 扩展Puyo
 
-See `Puyo+xxx.swift`
+根据常用操作，系统已经提供了声明式中常用的API，详情见 `Puyo+xxxx.swift`. 如下：
 
 ```swift
 public extension Puyo where T: Eventable {
@@ -297,7 +302,7 @@ public extension Puyo where T: Eventable {
 }
 ```
 
-You can extension more depende on your needs, expect your contribution
+若有更多需求，可自行扩展Puyo，期待您的贡献
 
 ## Author
 
