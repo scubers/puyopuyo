@@ -10,10 +10,7 @@ import Foundation
 public extension Puyo where T: TintColorDecorable & UIView {
     @discardableResult
     func tintColor<S: Outputing>(_ color: S, state: UIControl.State = .normal) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIColor {
-        color.safeBind(to: view) { v, a in
-            v.applyTintColor(a.optionalValue, state: state)
-        }
-        return self
+        doOn(color) { $0.applyTintColor($1.optionalValue, state: state) }
     }
 
     @discardableResult
@@ -25,10 +22,7 @@ public extension Puyo where T: TintColorDecorable & UIView {
 public extension Puyo where T: ImageDecorable & UIView {
     @discardableResult
     func image<S: Outputing>(_ image: S, state: UIControl.State = .normal) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIImage {
-        image.safeBind(to: view) { v, a in
-            v.applyImage(a.optionalValue, state: state)
-        }
-        return self
+        doOn(image) { $0.applyImage($1.optionalValue, state: state) }
     }
 
     @discardableResult
@@ -46,10 +40,7 @@ public extension Puyo where T: ImageDecorable & UIView {
 public extension Puyo where T: TextAlignmentDecorable & UIView {
     @discardableResult
     func textAlignment<S: Outputing>(_ alignment: S) -> Self where S.OutputType == NSTextAlignment {
-        alignment.safeBind(to: view) { v, a in
-            v.applyTextAlignment(a, state: .normal)
-        }
-        return self
+        doOn(alignment) { $0.applyTextAlignment($1, state: .normal) }
     }
 
     @discardableResult
@@ -61,82 +52,53 @@ public extension Puyo where T: TextAlignmentDecorable & UIView {
 public extension Puyo where T: TextLinesDecorable & UIView {
     @discardableResult
     func numberOfLines<S: Outputing>(_ lines: S) -> Self where S.OutputType == Int {
-        lines.safeBind(to: view) { v, a in
-            v.applyNumberOfLine(a)
-            v.py_setNeedsRelayout()
-        }
-        return self
+        viewUpdate(on: lines) { $0.applyNumberOfLine($1) }
     }
 }
 
 public extension Puyo where T: FontDecorable & UIView {
     @discardableResult
     func font<S: Outputing>(_ font: S) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIFont {
-        font.safeBind(to: view) { v, a in
-            v.applyFont(a.optionalValue)
-            v.py_setNeedsLayoutIfMayBeWrap()
-        }
-        return self
+        viewUpdate(on: font) { $0.applyFont($1.optionalValue) }
     }
 
     @available(iOS 8.2, *)
     @discardableResult
     func fontSize<S: Outputing>(_ font: S, weight: UIFont.Weight = .regular) -> Self where S.OutputType: CGFloatable {
-        font.safeBind(to: view) { v, a in
-            v.applyFont(UIFont.systemFont(ofSize: a.cgFloatValue, weight: weight))
-            v.py_setNeedsLayoutIfMayBeWrap()
-        }
-        return self
+        viewUpdate(on: font) { $0.applyFont(.systemFont(ofSize: $1.cgFloatValue, weight: weight)) }
     }
 }
 
 public extension Puyo where T: TextColorDecorable & UIView {
     @discardableResult
     func textColor<S: Outputing>(_ color: S, state: UIControl.State = .normal) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIColor {
-        color.safeBind(to: view) { v, a in
-            v.applyTextColor(a.optionalValue, state: state)
-        }
-        return self
+        doOn(color) { $0.applyTextColor($1.optionalValue, state: state) }
     }
 }
 
 public extension Puyo where T: TextDecorable & UIView {
     @discardableResult
     func text<S: Outputing>(_ text: S, state: UIControl.State = .normal) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == String {
-        text.mapWrappedValue().distinct().safeBind(to: view) { v, a in
-            v.applyText(a, state: state)
-            v.py_setNeedsLayoutIfMayBeWrap()
-        }
-        return self
+        viewUpdate(on: text.mapWrappedValue().distinct()) { $0.applyText($1, state: state) }
     }
 
     @discardableResult
     func attrText<S: Outputing>(_ text: S, state: UIControl.State = .normal) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == NSAttributedString {
-        text.mapWrappedValue().distinct().safeBind(to: view) { v, a in
-            v.applyAttrText(a, state: state)
-            v.py_setNeedsLayoutIfMayBeWrap()
-        }
-        return self
+        viewUpdate(on: text.mapWrappedValue().distinct()) { $0.applyAttrText($1, state: state) }
     }
 }
 
 public extension Puyo where T: BgImageDecorable & UIView {
     @discardableResult
     func backgroundImage<S: Outputing>(_ image: S, state: UIControl.State = .normal) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == UIImage {
-        image.safeBind(to: view) { v, a in
-            v.applyBgImage(a.optionalValue, state: state)
-        }
-        return self
+        doOn(image) { $0.applyBgImage($1.optionalValue, state: state) }
     }
 }
 
 public extension Puyo where T: KeyboardTypeDecorable & UIView {
     @discardableResult
     func keyboardType<S: Outputing>(_ type: S) -> Self where S.OutputType == UIKeyboardType {
-        type.safeBind(to: view) { v, a in
-            v.applyKeyboardType(a)
-        }
-        return self
+        doOn(type) { $0.applyKeyboardType($1) }
     }
 
     @discardableResult

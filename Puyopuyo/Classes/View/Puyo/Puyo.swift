@@ -30,7 +30,7 @@ public class Puyo<T: AnyObject> {
 }
 
 public extension Puyo where T: DisposableBag {
-    /// 接收一个outputing，并且绑定到view上，持续接收action
+    /// Accept an outputing as a trigger, do actions
     /// - Parameters:
     ///   - state: state description
     ///   - action: action description
@@ -42,15 +42,11 @@ public extension Puyo where T: DisposableBag {
 }
 
 public extension Puyo where T: UIView {
-    func setNeedsLayout() {
-        view.py_setNeedsRelayout()
-    }
-
     static func ensureInactivate(_ view: UIView, _ msg: String = "") {
         assert(!view.py_measure.activated, msg)
     }
 
-    /// 接收一个outputing，并且绑定到view上，持续接收action，后，重新布局
+    /// Accept an Outputing as a trigger, call [view.py_setNeedsRelayout] after action
     /// - Parameters:
     ///   - state: state description
     ///   - action: action description
@@ -59,15 +55,6 @@ public extension Puyo where T: UIView {
         doOn(state) { v, r in
             action(v, r)
             v.py_setNeedsRelayout()
-        }
-    }
-
-    @discardableResult
-    func viewUpdate<O: Outputing, R, Object: AnyObject>(on state: O, to object: Object, _ action: @escaping (Object, T, R) -> Void) -> Self where O.OutputType == R {
-        return viewUpdate(on: state) { [weak object] t, r in
-            if let o = object {
-                action(o, t, r)
-            }
         }
     }
 }
