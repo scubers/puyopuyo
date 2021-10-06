@@ -4,6 +4,8 @@
 [![Version](https://img.shields.io/cocoapods/v/Puyopuyo.svg?style=flat)](https://cocoapods.org/pods/Puyopuyo)
 [![Platform](https://img.shields.io/cocoapods/p/Puyopuyo.svg?style=flat)](https://cocoapods.org/pods/Puyopuyo)
 
+[中文](./README-chinese.md)
+
 ## Description
 
 A declaretive layout library for UIKit base on data driven written in swift.
