@@ -7,7 +7,10 @@
 [中文](./README-chinese.md)
 
 Introduce: 
+
 Youtube: [https://youtu.be/3MOBCtIfRFA](https://youtu.be/3MOBCtIfRFA)
+
+Bilibili: [https://www.bilibili.com/video/BV1Kh411J7vJ](https://www.bilibili.com/video/BV1Kh411J7vJ/)
 
 ## Description
 
