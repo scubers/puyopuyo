@@ -6,6 +6,13 @@
 
 [English](./README.md)
 
+
+介绍: 
+
+Youtube: [https://youtu.be/3MOBCtIfRFA](https://youtu.be/3MOBCtIfRFA)
+
+Bilibili: [https://www.bilibili.com/video/BV1Kh411J7vJ](https://www.bilibili.com/video/BV1Kh411J7vJ/)
+
 ## 描述
 
 基于数据驱动的声明式UIKit
