@@ -11,7 +11,6 @@ import Puyopuyo
 
 class RecycleBoxPropertiesVC: BaseVC {
     let sections = State<[IRecycleSection]>([])
-    var box: RecycleBox?
 
     struct MenuItem {
         var name: String
@@ -38,7 +37,7 @@ class RecycleBoxPropertiesVC: BaseVC {
                 })
                 .size(.fill, 40)
 
-            box = RecycleBox(
+            RecycleBox(
                 headerPinToBounds: true,
                 sectionInset: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10),
                 diffable: true,
@@ -46,7 +45,6 @@ class RecycleBoxPropertiesVC: BaseVC {
             )
             .attach($0)
             .size(.fill, .fill)
-            .view
         }
         .space(10)
 
@@ -125,20 +123,18 @@ class RecycleBoxPropertiesVC: BaseVC {
         ]
 
         sections.value = [
-            BasicRecycleSection(data: (), items: [
-                BasicRecycleItem(data: 1, cell: { _, _ in
-                    HBox().attach {
-                        UISegmentedControl(items: actions.map(\.name)).attach($0)
-                            .size(.fill, 40)
-                            .set(\.selectedSegmentIndex, 0)
-                            .onControlEvent(.valueChanged, Inputs {
-                                actions[$0.selectedSegmentIndex].action()
-                            })
-                    }
-                    .width(.fill)
-                    .view
-                })
-            ].asOutput()),
+            SingleItemSection(item: 1.asOutput()) { _, _ in
+                HBox().attach {
+                    UISegmentedControl(items: actions.map(\.name)).attach($0)
+                        .size(.fill, 40)
+                        .set(\.selectedSegmentIndex, 0)
+                        .onControlEvent(.valueChanged, Inputs {
+                            actions[$0.selectedSegmentIndex].action()
+                        })
+                }
+                .width(.fill)
+                .view
+            },
             BasicRecycleSection(
                 data: (),
                 items: mixedDataState.asOutput()
