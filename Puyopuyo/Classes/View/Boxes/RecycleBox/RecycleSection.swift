@@ -10,7 +10,6 @@ import Foundation
 public typealias DataRecycleSection = ListRecycleSection
 
 public class ListRecycleSection<Data>: BasicRecycleSection<Void> {
-    public typealias ItemContext = RecyclerInfo<Data>
 
     public init(
         id: String? = nil,
@@ -22,7 +21,7 @@ public class ListRecycleSection<Data>: BasicRecycleSection<Void> {
         cell: @escaping RecycleViewGenerator<Data>,
         header: RecycleViewGenerator<Void>? = nil,
         footer: RecycleViewGenerator<Void>? = nil,
-        didSelect: ((ItemContext) -> Void)? = nil,
+        didSelect: ((RecyclerInfo<Data>) -> Void)? = nil,
         function: StaticString = #function,
         line: Int = #line,
         column: Int = #column
@@ -56,7 +55,7 @@ public class SingleItemSection<Data>: ListRecycleSection<Data> {
         cell: @escaping RecycleViewGenerator<Data>,
         header: RecycleViewGenerator<Void>? = nil,
         footer: RecycleViewGenerator<Void>? = nil,
-        didSelect: ((ItemContext) -> Void)? = nil,
+        didSelect: ((RecyclerInfo<Data>) -> Void)? = nil,
         function: StaticString = #function,
         line: Int = #line,
         column: Int = #column
