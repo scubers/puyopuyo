@@ -1,5 +1,5 @@
 //
-//  WeakCatcher.swift
+//  WeakableObject.swift
 //  Puyopuyo
 //
 //  Created by Jrwong on 2019/12/20.

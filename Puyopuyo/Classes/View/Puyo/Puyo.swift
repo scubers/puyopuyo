@@ -69,6 +69,23 @@ public extension Puyo where T: UIView {
             }
         }
     }
+
+    @discardableResult
+    func viewUpdate<O: Outputing, R, Object: AnyObject>(on state: O, to object: Object?, strategy: UpdateStrategy = .all, _ action: @escaping (Object, T, R) -> Void) -> Self where O.OutputType == R {
+        doOn(state) { [weak object] v, r in
+            guard let object = object else {
+                return
+            }
+
+            action(object, v, r)
+            switch strategy {
+            case .all:
+                v.py_setNeedsRelayout()
+            case .maybeWrap:
+                v.py_setNeedsLayoutIfMayBeWrap()
+            }
+        }
+    }
 }
 
 public extension Puyo where T: ViewDisplayable {

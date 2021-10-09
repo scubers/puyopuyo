@@ -265,7 +265,7 @@ class MyView: VBox, Stateful, Eventable {
 
 // Use view
 
-let state = State(MyView.state())
+let state = State(MyView.ViewState())
 
 MyView().attach($0)
     .state(state) // bind your data source
