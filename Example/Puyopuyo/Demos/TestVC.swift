@@ -114,7 +114,7 @@ class TestVC: BaseVC {
     func testRecycleBox() -> UIView {
         RecycleBox(
             sections: [
-                DataRecycleSection(items: [].asOutput(), cell: { _, _ in
+                ListRecycleSection(items: [].asOutput(), cell: { _, _ in
                     Label.title("")
                 })
             ].asOutput()

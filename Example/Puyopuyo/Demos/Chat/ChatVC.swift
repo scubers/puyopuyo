@@ -35,9 +35,9 @@ class ChatVC: BaseVC, UICollectionViewDelegateFlowLayout {
             box = RecycleBox(
                 diffable: true,
                 sections: [
-                    DataRecycleSection(
+                    ListRecycleSection(
                         items: messages.asOutput(),
-                        differ: { $0.chatId.description },
+                        diffableKey: { $0.chatId.description },
                         cell: { o, _ in
                             MessageView().attach()
                                 .state(o.map(\.data))

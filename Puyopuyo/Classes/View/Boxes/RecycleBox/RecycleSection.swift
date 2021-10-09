@@ -7,7 +7,9 @@
 
 import Foundation
 
-public class RecycleSection<Section, Data>: BasicRecycleSection<Section> {
+public typealias DataRecycleSection = ListRecycleSection
+
+public class ListRecycleSection<Data>: BasicRecycleSection<Void> {
     public typealias ItemContext = RecyclerInfo<Data>
 
     public init(
@@ -15,23 +17,20 @@ public class RecycleSection<Section, Data>: BasicRecycleSection<Section> {
         insets: UIEdgeInsets? = nil,
         lineSpacing: CGFloat? = nil,
         itemSpacing: CGFloat? = nil,
-        sectionData: Section,
-        sectionDiffableKey: ((Section) -> String)? = nil,
         items: Outputs<[Data]>,
         diffableKey: ((Data) -> String)? = nil,
         cell: @escaping RecycleViewGenerator<Data>,
-        cellConfig: ((UICollectionViewCell) -> Void)? = nil,
-        header: RecycleViewGenerator<Section>? = nil,
-        footer: RecycleViewGenerator<Section>? = nil,
+        header: RecycleViewGenerator<Void>? = nil,
+        footer: RecycleViewGenerator<Void>? = nil,
         didSelect: ((ItemContext) -> Void)? = nil,
         function: StaticString = #function,
         line: Int = #line,
         column: Int = #column
     ) {
         let state = State([IRecycleItem]())
-        super.init(id: id, insets: insets, lineSpacing: lineSpacing, itemSpacing: itemSpacing, data: sectionData, items: state.asOutput(), header: header, footer: footer, function: function, line: line, column: column)
+        super.init(id: id, insets: insets, lineSpacing: lineSpacing, itemSpacing: itemSpacing, data: (), items: state.asOutput(), header: header, footer: footer, function: function, line: line, column: column)
 
-        let itemId = "\(self.getSectionId())_buildin_item"
+        let itemId = "\(getSectionId())_buildin_item"
         items.map {
             $0.map { data in
                 BasicRecycleItem<Data>(
@@ -39,7 +38,6 @@ public class RecycleSection<Section, Data>: BasicRecycleSection<Section> {
                     data: data,
                     diffableKey: diffableKey,
                     cell: cell,
-                    cellConfig: cellConfig,
                     didSelect: didSelect,
                     function: function,
                     line: line,
@@ -52,42 +50,17 @@ public class RecycleSection<Section, Data>: BasicRecycleSection<Section> {
     }
 }
 
-public typealias DataRecycleSection<Data> = RecycleSection<Void, Data>
-
-public extension RecycleSection where Section == Void {
-    convenience init(
-        id: String? = nil,
-        insets: UIEdgeInsets? = nil,
-        lineSpacing: CGFloat? = nil,
-        itemSpacing: CGFloat? = nil,
-        items: Outputs<[Data]>,
-        differ: ((Data) -> String)? = nil,
+public class SingleItemSection<Data>: ListRecycleSection<Data> {
+    public init(
+        item: Outputs<Data>,
         cell: @escaping RecycleViewGenerator<Data>,
-        cellConfig: ((UICollectionViewCell) -> Void)? = nil,
-        header: RecycleViewGenerator<Section>? = nil,
-        footer: RecycleViewGenerator<Section>? = nil,
+        header: RecycleViewGenerator<Void>? = nil,
+        footer: RecycleViewGenerator<Void>? = nil,
         didSelect: ((ItemContext) -> Void)? = nil,
         function: StaticString = #function,
         line: Int = #line,
         column: Int = #column
     ) {
-        self.init(
-            id: id,
-            insets: insets,
-            lineSpacing: lineSpacing,
-            itemSpacing: itemSpacing,
-            sectionData: (),
-            sectionDiffableKey: { "" },
-            items: items,
-            diffableKey: differ,
-            cell: cell,
-            cellConfig: cellConfig,
-            header: header,
-            footer: footer,
-            didSelect: didSelect,
-            function: function,
-            line: line,
-            column: column
-        )
+        super.init(id: nil, insets: nil, lineSpacing: nil, itemSpacing: nil, items: item.map { [$0] }, diffableKey: nil, cell: cell, header: header, footer: footer, didSelect: didSelect, function: function, line: line, column: column)
     }
 }

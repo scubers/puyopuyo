@@ -24,7 +24,7 @@ class FeedVC: BaseVC, UITableViewDelegate {
         return RecycleBox(
             estimatedSize: CGSize(width: 100, height: 20),
             sections: [
-                RecycleSection<Void, Feed>(
+                ListRecycleSection<Feed>(
                     items: dataSource.asOutput(),
                     cell: { o, _ in
                         ItemView().attach()

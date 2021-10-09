@@ -149,7 +149,7 @@ class RecycleBoxPropertiesVC: BaseVC {
     func colorBlocks() {
         let color = Util.randomColor()
         sections.value = [
-            DataRecycleSection(
+            ListRecycleSection(
                 lineSpacing: 10,
                 itemSpacing: 10,
                 items: (0..<20).map { $0 }.asOutput(),
@@ -174,9 +174,9 @@ class RecycleBoxPropertiesVC: BaseVC {
     func randomShuffleAnimation() {
         let this = WeakableObject(value: self)
         sections.value = [
-            DataRecycleSection(
+            ListRecycleSection(
                 items: names.asOutput(),
-                differ: { $0 },
+                diffableKey: { $0 },
                 cell: { o, _ in
                     HorzFillCell().attach()
                         .state(o.data)
@@ -257,9 +257,9 @@ class RecycleBoxPropertiesVC: BaseVC {
             getDescSection(title: """
             Change specific section's dataSource, auto calculate diff and animate.
             """),
-            DataRecycleSection(
+            ListRecycleSection(
                 items: section1.asOutput(),
-                differ: { $0.description },
+                diffableKey: { $0.description },
                 cell: { o, _ in
                     SquareCell().attach()
                         .state(o.data.description)
@@ -271,9 +271,9 @@ class RecycleBoxPropertiesVC: BaseVC {
                         .view
                 }
             ),
-            DataRecycleSection(
+            ListRecycleSection(
                 items: section2.asOutput(),
-                differ: { $0.description },
+                diffableKey: { $0.description },
                 cell: { o, _ in
                     SquareCell().attach()
                         .state(o.data.description)
@@ -300,7 +300,7 @@ class RecycleBoxPropertiesVC: BaseVC {
         let appointments = appointments
         let appointment = appointment
         sections.value = [
-            DataRecycleSection(
+            ListRecycleSection(
                 items: (0..<30).map { $0 }.asOutput(),
                 cell: { o, _ in
                     let w = o.contentSize.width.map { $0 / 7 }
@@ -343,9 +343,9 @@ class RecycleBoxPropertiesVC: BaseVC {
                     }
                 }
             ),
-            DataRecycleSection(
+            ListRecycleSection(
                 items: appointment.asOutput(),
-                differ: { $0.description },
+                diffableKey: { $0.description },
                 cell: { o, _ in
                     HBox().attach {
                         UILabel().attach($0)
@@ -362,24 +362,16 @@ class RecycleBoxPropertiesVC: BaseVC {
 }
 
 private func getDescSection(title: String) -> IRecycleSection {
-    BasicRecycleSection(
-        data: (),
-        items: [
-            BasicRecycleItem(
-                data: title,
-                cell: { o, _ in
-                    HBox().attach {
-                        UILabel().attach($0)
-                            .text(o.data)
-                            .fontSize(20, weight: .bold)
-                            .numberOfLines(0)
-                    }
-                    .width(.fill)
-                    .view
-                }
-            )
-        ].asOutput()
-    )
+    SingleItemSection(item: title.asOutput()) { o, _ in
+        HBox().attach {
+            UILabel().attach($0)
+                .text(o.data)
+                .fontSize(20, weight: .bold)
+                .numberOfLines(0)
+        }
+        .width(.fill)
+        .view
+    }
 }
 
 private class SquareCell: HBox, Stateful {
