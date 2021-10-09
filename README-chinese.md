@@ -29,6 +29,58 @@ swift 5.1
 pod 'Puyopuyo'
 ```
 
+## 迁移 
+
+### 1.0 -> 2.0
+
+- *Stateful*
+
+1. 属性 viewState -> state
+2. Puyo.viewState -> Puyo.state
+3. 移除 [ _St ]
+
+- *Eventable*
+
+1. 属性 eventProducer -> emitter
+2. 方法 emmit -> emit
+3. Puyo.onEventProduced -> Puyo.onEvent
+
+- *Puyo*
+
+1. 一些方便的属性方法 比如 Puyo.backgroundColor(xxx) -> Puyo.set(\.backgroundColor, xxx)
+2. Puyo.on -> Puyo.doOn
+
+- *View Extension*
+
+1. py_frameStateByKVO() -> py_frameState()
+
+- *IO*
+
+1. Outputingx协议返回 [Unbinder] -> Disposer
+2. py_unbind() 方法 -> dispose()
+
+- *Puyo+UIControl*
+
+1. onEvent -> onControlEvent
+2. 移除 Simulator
+3. Simulator.ego 使用 aspectRatio 代替，aspectRatio只能应用在 非 fix 的size中，若存在fix，请自行计算
+
+- *Box*
+
+1. boxHelper -> control
+
+- *FlowBox*
+
+1. 去掉 vSpace, hSpace, hFormat, vFormat
+2. 增加 itemSpace, runSpace, runFormat
+
+- *View*
+
+1. 去除 Spacer
+
+- *WeakCacher -> WeakableObject*
+
+
 ## 使用
 
 一个简单的菜单Cell，可以如下实现，根据不同的布局规则，子节点将根据规则自动布局。内建的布局Box遵循FlexBox规则。
