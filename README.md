@@ -264,7 +264,7 @@ class MyView: VBox, Stateful, Eventable {
 let state = State(MyView.ViewState())
 
 MyView().attach($0)
-    .viewState(state) // bind your data source
+    .state(state) // bind your data source
     .onEvent(Inputs { event in
         // do your logic when event occured
     })
