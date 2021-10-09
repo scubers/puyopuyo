@@ -265,10 +265,10 @@ class MyView: VBox, Stateful, Eventable {
 
 // Use view
 
-let state = State(MyView.ViewState())
+let state = State(MyView.state())
 
 MyView().attach($0)
-    .viewState(state) // bind your data source
+    .state(state) // bind your data source
     .onEvent(Inputs { event in
         // do your logic when event occured
     })
@@ -302,7 +302,7 @@ UILabel().attach()
 public extension Puyo where T: Eventable {
     @discardableResult
     func onEvent<I: Inputing>(_ input: I) -> Self where I.InputType == T.EmitterType.OutputType {
-        let disposer = view.emmiter.send(to: input)
+        let disposer = view.emitter.send(to: input)
         if let v = view as? DisposableBag {
             disposer.dispose(by: v)
         }
