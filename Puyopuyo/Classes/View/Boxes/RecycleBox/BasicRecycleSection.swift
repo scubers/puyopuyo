@@ -28,11 +28,12 @@ open class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
         header: RecycleViewGenerator<Data>? = nil,
         footer: RecycleViewGenerator<Data>? = nil,
         
+        file: StaticString = #file,
         function: StaticString = #function,
         line: Int = #line,
         column: Int = #column
     ) {
-        self.id = id ?? "\(line)\(column)\(function)"
+        self.id = id ?? "\(file)_\(line)_\(column)_\(function)"
         sectionInsets = insets
         self.lineSpacing = lineSpacing
         self.itemSpacing = itemSpacing

@@ -22,12 +22,13 @@ public class ListRecycleSection<Data>: BasicRecycleSection<Void> {
         header: RecycleViewGenerator<Void>? = nil,
         footer: RecycleViewGenerator<Void>? = nil,
         didSelect: ((RecyclerInfo<Data>) -> Void)? = nil,
+        file: StaticString = #file,
         function: StaticString = #function,
         line: Int = #line,
         column: Int = #column
     ) {
         let state = State([IRecycleItem]())
-        super.init(id: id, insets: insets, lineSpacing: lineSpacing, itemSpacing: itemSpacing, data: (), items: state.asOutput(), header: header, footer: footer, function: function, line: line, column: column)
+        super.init(id: id, insets: insets, lineSpacing: lineSpacing, itemSpacing: itemSpacing, data: (), items: state.asOutput(), header: header, footer: footer, file: file, function: function, line: line, column: column)
 
         let itemId = "\(getSectionId())_buildin_item"
         items.map {
@@ -56,10 +57,11 @@ public class SingleItemSection<Data>: ListRecycleSection<Data> {
         header: RecycleViewGenerator<Void>? = nil,
         footer: RecycleViewGenerator<Void>? = nil,
         didSelect: ((RecyclerInfo<Data>) -> Void)? = nil,
+        file: StaticString = #file,
         function: StaticString = #function,
         line: Int = #line,
         column: Int = #column
     ) {
-        super.init(id: nil, insets: nil, lineSpacing: nil, itemSpacing: nil, items: item.map { [$0] }, diffableKey: nil, cell: cell, header: header, footer: footer, didSelect: didSelect, function: function, line: line, column: column)
+        super.init(id: nil, insets: nil, lineSpacing: nil, itemSpacing: nil, items: item.map { [$0] }, diffableKey: nil, cell: cell, header: header, footer: footer, didSelect: didSelect, file: file, function: function, line: line, column: column)
     }
 }
