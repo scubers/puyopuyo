@@ -12,6 +12,12 @@ Youtube: [https://youtu.be/3MOBCtIfRFA](https://youtu.be/3MOBCtIfRFA)
 
 Bilibili: [https://www.bilibili.com/video/BV1Kh411J7vJ](https://www.bilibili.com/video/BV1Kh411J7vJ/)
 
+Communicate:
+
+Telegram: [https://t.me/swift_puyopuyo](https://t.me/swift_puyopuyo)
+
+QQ: 830599565
+
 ## Description
 
 A declaretive layout library for UIKit base on data driven written in swift.

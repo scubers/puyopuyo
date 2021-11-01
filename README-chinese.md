@@ -13,6 +13,12 @@ Youtube: [https://youtu.be/3MOBCtIfRFA](https://youtu.be/3MOBCtIfRFA)
 
 Bilibili: [https://www.bilibili.com/video/BV1Kh411J7vJ](https://www.bilibili.com/video/BV1Kh411J7vJ/)
 
+交流:
+
+Telegram: [https://t.me/swift_puyopuyo](https://t.me/swift_puyopuyo)
+
+QQ: 830599565
+
 ## 描述
 
 基于数据驱动的声明式UIKit
