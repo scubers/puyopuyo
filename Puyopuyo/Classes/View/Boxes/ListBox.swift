@@ -171,7 +171,7 @@ public class ListBox: UITableView,
 
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        viewState.value[indexPath.section].didSelect(row: indexPath.row)
+        getSection(indexPath.section)?.didSelect(row: indexPath.row)
         delegateProxy.backup?.value?.tableView?(tableView, didSelectRowAt: indexPath)
     }
 
@@ -188,6 +188,13 @@ public class ListBox: UITableView,
     public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
         (view as? UITableViewHeaderFooterView)?.contentView.backgroundColor = backgroundColor
         delegateProxy.backup?.value?.tableView?(tableView, willDisplayFooterView: view, forSection: section)
+    }
+    
+    fileprivate func getSection(_ section: Int) -> ListBoxSection? {
+        if section < viewState.value.count {
+            return viewState.value[section]
+        }
+        return nil
     }
 }
 
@@ -241,7 +248,9 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
     }
 
     public func didSelect(row: Int) {
-        onCellEvent(.didSelect(row, dataSource.value[row]))
+        if row < dataSource.value.count {
+            onCellEvent(.didSelect(row, dataSource.value[row]))
+        }
     }
 
     func cellIdentifier() -> String {
