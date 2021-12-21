@@ -8,6 +8,9 @@ extension UIView {
     var fh: CGFloat { frame.height }
     var fx: CGFloat { frame.origin.x }
     var fy: CGFloat { frame.origin.y }
+
+    var maxX: CGFloat { frame.width + frame.origin.x }
+    var maxY: CGFloat { frame.height + frame.origin.y }
 }
 
 class Tests: XCTestCase {
@@ -234,6 +237,117 @@ class Tests: XCTestCase {
 
         XCTAssertTrue(box.fw == v1.fw + v2.fw + v3.fw)
         XCTAssertTrue(box.fh == [v1.fh, v2.fh, v3.fh].max())
+    }
+
+    func testAlignmentWorks() {
+        var views = [UIView]()
+        let alignment = State(Alignment.top)
+        let box = HBox().attach {
+            let v = UILabel().attach($0)
+                .size(50, 50)
+                .alignment(alignment)
+                .view
+            views.append(v)
+        }
+        .size(1000, 100)
+        .view
+
+        alignment.value = .top
+        box.layoutIfNeeded()
+        XCTAssertTrue(views[0].fy == 0)
+
+        alignment.value = .center
+        box.layoutIfNeeded()
+        XCTAssertTrue(views[0].center.y == box.fh / 2)
+
+        alignment.value = .bottom
+        box.layoutIfNeeded()
+        XCTAssertTrue(views[0].maxY == box.fh)
+    }
+
+    func testPaddingMarginWorks() {
+        let padding = State(UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
+        let margin = State(UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4))
+        var v1: UIView!
+        let box = HBox().attach {
+            v1 = UILabel().attach($0)
+                .size(50, 50)
+                .margin(margin)
+                .view
+        }
+        .padding(padding)
+        .view
+
+        box.layoutIfNeeded()
+        XCTAssertTrue(box.fw == v1.fw + padding.value.getHorzTotal() + margin.value.getHorzTotal())
+        XCTAssertTrue(box.fh == v1.fh + padding.value.getVertTotal() + margin.value.getVertTotal())
+    }
+
+    func testFormatAndReverseWorks() {
+        let format = State(Format.leading)
+        let reverse = State(false)
+        let boxWidth = State(SizeDescription.wrap)
+        let boxHeight = State(SizeDescription.wrap)
+        var views = [UIView]()
+        let count = 9
+        let box = HBox().attach {
+            for _ in 0 ..< count {
+                let v = UILabel().attach($0)
+                    .size(50, 50)
+                    .view
+                views.append(v)
+            }
+        }
+        .size(boxWidth, boxHeight)
+        .reverse(reverse)
+        .format(format)
+        .view
+
+        format.value = .trailing
+        boxWidth.value = .fix(3000)
+        boxHeight.value = .wrap
+        box.layoutIfNeeded()
+
+        XCTAssertTrue(abs(views[count - 1].maxX - box.fw) < 0.1)
+
+        format.value = .between
+        box.layoutIfNeeded()
+        XCTAssertTrue(views[0].fx == 0)
+        XCTAssertTrue(abs(views[count - 1].maxX - box.fw) < 0.1)
+        print(views[count / 2].center.x)
+        print(box.fw / 2)
+        XCTAssertTrue(abs(views[count / 2].center.x - box.fw / 2) < 0.1)
+
+        format.value = .round
+        box.layoutIfNeeded()
+        XCTAssertTrue(views[0].fx > 0)
+        XCTAssertTrue(views.last!.maxX < box.fw)
+        XCTAssertTrue(abs(views[count / 2].center.x - box.fw / 2) < 0.1)
+
+        // reversed
+        reverse.value = true
+        views = views.reversed()
+
+        format.value = .trailing
+        boxWidth.value = .fix(3000)
+        boxHeight.value = .wrap
+        box.layoutIfNeeded()
+
+        XCTAssertTrue(abs(views[count - 1].maxX - box.fw) < 0.1)
+
+        format.value = .between
+        box.layoutIfNeeded()
+        XCTAssertTrue(views[0].fx == 0)
+        XCTAssertTrue(abs(views[count - 1].maxX - box.fw) < 0.1)
+        print(views[count / 2].center.x)
+        print(box.fw / 2)
+        XCTAssertTrue(abs(views[count / 2].center.x - box.fw / 2) < 0.1)
+
+        format.value = .round
+        box.layoutIfNeeded()
+        XCTAssertTrue(views[0].fx > 0)
+        XCTAssertTrue(views.last!.maxX < box.fw)
+        XCTAssertTrue(abs(views[count / 2].center.x - box.fw / 2) < 0.1)
     }
 
     // MARK: FlowBox
