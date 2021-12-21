@@ -265,6 +265,31 @@ class Tests: XCTestCase {
         XCTAssertTrue(views[0].maxY == box.fh)
     }
 
+    func testJustifyContentWorks() {
+        let alignment = State(Alignment.top)
+        var v1: UIView!
+        let box = HBox().attach {
+            v1 = UILabel().attach($0)
+                .size(50, 50)
+                .view
+        }
+        .justifyContent(alignment)
+        .size(1000, 100)
+        .view
+
+        alignment.value = .top
+        box.layoutIfNeeded()
+        XCTAssertTrue(v1.fy == 0)
+
+        alignment.value = .center
+        box.layoutIfNeeded()
+        XCTAssertTrue(v1.center.y == box.fh / 2)
+
+        alignment.value = .bottom
+        box.layoutIfNeeded()
+        XCTAssertTrue(v1.maxY == box.fh)
+    }
+
     func testPaddingMarginWorks() {
         let padding = State(UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
         let margin = State(UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4))
@@ -348,6 +373,60 @@ class Tests: XCTestCase {
         XCTAssertTrue(views[0].fx > 0)
         XCTAssertTrue(views.last!.maxX < box.fw)
         XCTAssertTrue(abs(views[count / 2].center.x - box.fw / 2) < 0.1)
+    }
+
+    func testLBDirectionWorks() {
+        let d = State(Direction.x)
+        let box = LinearBox().attach {
+            UILabel().attach($0)
+                .size(50, 50)
+            UILabel().attach($0)
+                .size(50, 50)
+            UILabel().attach($0)
+                .size(50, 50)
+        }
+        .direction(d)
+        .view
+
+        box.layoutIfNeeded()
+
+        XCTAssertTrue(box.fw == 50 * 3)
+        XCTAssertTrue(box.fh == 50)
+
+        d.value = .y
+        box.layoutIfNeeded()
+
+        XCTAssertTrue(box.fh == 50 * 3)
+        XCTAssertTrue(box.fw == 50)
+    }
+
+    func testLBSpaceWorks() {
+        var v1: UIView!
+        var v2: UIView!
+        var v3: UIView!
+        let box = HBox().attach {
+            v1 = UILabel().attach($0)
+                .text("i am label 1")
+                .width(.wrap)
+                .view
+            v2 = UILabel().attach($0)
+                .text("i am label 1")
+                .width(.wrap)
+                .view
+            v3 = UILabel().attach($0)
+                .text("i am label 1")
+                .width(.wrap)
+                .view
+        }
+        .space(20)
+        .view
+
+        box.layoutIfNeeded()
+        
+        print(box.fw)
+        print(v1.fw)
+
+        XCTAssertTrue(box.fw == v1.fw + v2.fw + v3.fw + 20 * 2)
     }
 
     // MARK: FlowBox
