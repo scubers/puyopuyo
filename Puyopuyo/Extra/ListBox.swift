@@ -246,7 +246,9 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
     }
 
     public func didSelect(row: Int) {
-        onCellEvent(.didSelect(row, dataSource.value[row]))
+        if row < dataSource.value.count {
+            onCellEvent(.didSelect(row, dataSource.value[row]))
+        }
     }
 
     func cellIdentifier() -> String {

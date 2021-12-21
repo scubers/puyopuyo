@@ -1,6 +1,6 @@
 PODS:
-  - Puyopuyo/Core (2.0.2)
-  - Puyopuyo/Extra (2.0.2):
+  - Puyopuyo/Core (2.0.3)
+  - Puyopuyo/Extra (2.0.3):
     - Puyopuyo/Core
   - RxSwift (5.0.0)
   - SnapKit (4.2.0)
@@ -23,7 +23,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Puyopuyo: 3c8ccce91f88cca1e861edb0465089bfc84db3b8
+  Puyopuyo: d98375da1e46bca9657eb7cf8e5cc471a36669e3
   RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   TangramKit: 15ccb6480f0e32c284f0a076542a607226e158dd

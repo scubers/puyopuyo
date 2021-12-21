@@ -29,6 +29,9 @@ public extension Stateful {
 
     @available(*, deprecated, message: "Use [state]")
     var viewState: StateType { state }
+
+    @available(*, deprecated, message: "Use [state]")
+    var _state: StateType { state }
 }
 
 // MARK: - Eventable
@@ -50,4 +53,12 @@ public extension Eventable {
     func emit(_ event: EmitterType.OutputType) {
         emitter.input(value: event)
     }
+
+    @available(*, deprecated, message: "Use [emit]")
+    func emmit(_ event: EmitterType.OutputType) {
+        emit(event)
+    }
+
+    @available(*, deprecated, message: "Use [emitter]")
+    var eventProducer: EmitterType { emitter }
 }

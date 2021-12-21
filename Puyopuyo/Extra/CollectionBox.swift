@@ -297,8 +297,10 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
     }
 
     public func didSelect(item: Int) {
-        trigger(event: .didSelect, idx: item)
-        onCellEvent(.didSelect(item, dataSource.value[item]))
+        if item < dataSource.value.count {
+            trigger(event: .didSelect, idx: item)
+            onCellEvent(.didSelect(item, dataSource.value[item]))
+        }
     }
 
     public func willDisplay(cell _: UICollectionViewCell, in _: UICollectionView, at _: IndexPath) {

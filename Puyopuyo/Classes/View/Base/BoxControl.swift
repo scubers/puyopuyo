@@ -193,6 +193,11 @@ public protocol Boxable {
     var regulator: RegulatorType { get }
 }
 
+public extension Boxable {
+    @available(*, deprecated, message: "Use [control]")
+    var boxHelper: BoxControl<RegulatorType> { control }
+}
+
 enum BoxUtil {
     static func isBox(_ view: UIView?) -> Bool {
         guard let v = view else { return false }

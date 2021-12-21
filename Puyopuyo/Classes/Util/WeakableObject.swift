@@ -16,6 +16,9 @@ public struct WeakableObject<T: AnyObject> {
     }
 }
 
+@available(*, deprecated, message: "Use [WeakableObject]")
+public typealias WeakCacher = WeakableObject
+
 public extension WeakableObject {
     func `do`<Result>(_ action: (T) -> Result, fallback: Result) -> Result {
         if let value = value {

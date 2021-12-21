@@ -267,8 +267,10 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
     }
 
     public func didSelect(row: Int) {
-        trigger(event: .didSelect, idx: row)
-        onCellEvent(.didSelect(row, dataSource.value[row]))
+        if row < dataSource.value.count {
+            trigger(event: .didSelect, idx: row)
+            onCellEvent(.didSelect(row, dataSource.value[row]))
+        }
     }
 
     func cellIdentifier() -> String {
