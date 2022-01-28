@@ -5,12 +5,18 @@
 //  Created by Jrwong on 2019/6/29.
 //
 
-import Foundation
+public protocol RegulatorView {
+    func createRegulator() -> Regulator
+}
 
-open class BoxView<RegulatorType: Regulator>: UIView, Boxable {
+open class BoxView<RegulatorType: Regulator>: UIView, Boxable, RegulatorView {
     public var control = BoxControl<RegulatorType>()
 
     public var regulator: RegulatorType { py_measure as! RegulatorType }
+
+    public func createRegulator() -> Regulator {
+        fatalError("subclass impl")
+    }
 
     // MARK: - init
 
@@ -65,7 +71,12 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable {
     }
 
     override open func layoutIfNeeded() {
-        if BoxUtil.isBox(superview), regulator.size.maybeWrap() {
+        if let spv = superview,
+           BoxUtil.isBox(spv),
+           spv.py_measure.activated,
+           regulator.activated,
+           regulator.size.maybeWrap()
+        {
             // 需要父布局进行计算
             superview?.layoutIfNeeded()
         } else {
