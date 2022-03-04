@@ -7,4 +7,8 @@
 
 import Foundation
 
-open class ZBox: BoxView<ZRegulator> {}
+open class ZBox: BoxView<ZRegulator> {
+    override public func createRegulator() -> Regulator {
+        ZRegulator(delegate: self)
+    }
+}

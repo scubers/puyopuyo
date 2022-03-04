@@ -8,16 +8,21 @@
 
 import Foundation
 
-open class LinearBox: BoxView<LinearRegulator> {}
+open class LinearBox: BoxView<LinearRegulator> {
+    override public func createRegulator() -> Regulator {
+        LinearRegulator(delegate: self)
+    }
+}
 
 open class HBox: LinearBox {}
 
 open class VBox: LinearBox {
-    public override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         attach().direction(.y)
     }
 
+    @available(*, unavailable)
     public required init?(coder _: NSCoder) {
         fatalError()
     }

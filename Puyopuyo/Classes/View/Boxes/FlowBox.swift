@@ -12,16 +12,21 @@ open class FlowBox: BoxView<FlowRegulator> {
         self.init()
         attach().arrangeCount(count)
     }
+
+    override public func createRegulator() -> Regulator {
+        FlowRegulator(delegate: self)
+    }
 }
 
 open class HFlow: FlowBox {}
 
 open class VFlow: FlowBox {
-    public override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
         attach().direction(.y)
     }
 
+    @available(*, unavailable)
     public required init?(coder _: NSCoder) {
         fatalError()
     }
