@@ -422,7 +422,7 @@ class Tests: XCTestCase {
         .view
 
         box.layoutIfNeeded()
-        
+
         print(box.fw)
         print(v1.fw)
 

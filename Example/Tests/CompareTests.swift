@@ -2,7 +2,7 @@
 //  CompareTests.swift
 //  Puyopuyo_Tests
 //
-//  Created by J on 2022/3/2.
+//  Created by J on 2022/3/4.
 //  Copyright © 2022 CocoaPods. All rights reserved.
 //
 
@@ -19,113 +19,47 @@ class CompareTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testCompareLinearBox() throws {
-        let pv = PuyoTestHBox()
-        let tv = TKTestLinearLayout()
-        let total = 200
-        let pi = measureTimes("puyo") {
-            for _ in 0 ..< total {
-                _ = pv.sizeThatFits(.zero)
-            }
+    func testCompareLinearLayout() throws {
+        let pv = PuyoLinearLayoutView()
+        let tv = TKLinearLayoutView(frame: .zero, orientation: .horz)
+
+        let times = 500
+
+        let pi = profileTime(label: "puyo", times: times) {
+            _ = pv.sizeThatFits(.zero)
+        }
+        let ti = profileTime(label: "tk", times: times) {
+            _ = tv.sizeThatFits(.zero)
         }
 
-        let ti = measureTimes("tk") {
-            for _ in 0 ..< total {
-                _ = tv.sizeThatFits(.zero)
-            }
+        print("p / t = \(pi / ti)")
+    }
+
+    func testCompareFlowLayout() throws {
+        let arrange = 0
+
+        let pv = PuyoFlowLayoutView().attach()
+            .arrangeCount(arrange)
+            .view
+        let tv = TKFlowLayoutView(frame: .zero, orientation: .vert)
+        tv.tg_arrangedCount = arrange
+
+        let times = 100
+
+        let pi = profileTime(label: "puyo", times: times) {
+            _ = pv.sizeThatFits(.zero)
+        }
+        let ti = profileTime(label: "tk", times: times) {
+            _ = tv.sizeThatFits(.zero)
         }
 
-        print("puyo / tangramkit = \(pi / ti)")
+        print("p / t = \(pi / ti)")
     }
 
-    func testCompareFlowBox() throws {
-        let pv = PuyoTestFlowBox()
-        let tv = TKTestFlow()
-        let total = 1
-        let pi = measureTimes("puyo") {
-            for _ in 0 ..< total {
-                _ = pv.sizeThatFits(.zero)
-            }
+    func testPerformanceExample() throws {
+        // This is an example of a performance test case.
+        self.measure {
+            // Put the code you want to measure the time of here.
         }
-
-        let ti = measureTimes("tk") {
-            for _ in 0 ..< total {
-                _ = tv.sizeThatFits(.zero)
-            }
-        }
-
-        print("puyo / tangramkit = \(pi / ti)")
-    }
-
-    private func measureTimes(_ label: String?, _ block: () -> Void) -> TimeInterval {
-        let start = Date().timeIntervalSince1970
-        block()
-        let interval = Date().timeIntervalSince1970 - start
-        print("\(label == nil ? "" : "\(label!) ")总耗时: \(interval) s")
-        return interval
-    }
-}
-
-private func createViews() -> [UIView] {
-    var list = [UIView]()
-    for idx in 0 ..< 100 {
-        let label = UILabel().attach().text("test label: \(idx)").view
-        list.append(label)
-    }
-    return list
-}
-
-class PuyoTestHBox: HBox {
-    override func buildBody() {
-        attach {
-            for v in createViews() {
-                v.attach($0)
-            }
-        }
-    }
-}
-
-class TKTestLinearLayout: TGLinearLayout {
-    init() {
-        super.init(frame: .zero, orientation: .horz)
-
-        createViews().forEach { v in
-            addSubview(v)
-            v.tg_size(width: .wrap, height: .wrap)
-        }
-
-        tg_size(width: .wrap, height: .wrap)
-    }
-
-    @available(*, unavailable)
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-class PuyoTestFlowBox: VFlow {
-    override func buildBody() {
-        attach {
-            for v in createViews() {
-                v.attach($0)
-            }
-        }
-        .width(300)
-        .arrangeCount(0)
-    }
-}
-
-class TKTestFlow: TGFlowLayout {
-    init() {
-        super.init(frame: .zero, orientation: .vert, arrangedCount: 0)
-        for v in createViews() {
-            addSubview(v)
-        }
-        tg_size(width: 300, height: .wrap)
-    }
-
-    @available(*, unavailable)
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }
