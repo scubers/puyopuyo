@@ -230,11 +230,7 @@
 				607FACEB1AFB9204008FA782 /* Tests.swift */,
 				09A4725E27D2607F00FD9813 /* CompareTests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
-<<<<<<< HEAD
-				093A6B5127CF68C600F86217 /* CompareTests.swift */,
-=======
 				09A4726027D2645C00FD9813 /* CompareViews.swift */,
->>>>>>> b4d91dcf94bd6a4f147c5f407d4d2738597f0739
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -555,12 +551,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
-<<<<<<< HEAD
-				093A6B5227CF68C600F86217 /* CompareTests.swift in Sources */,
-=======
 				09A4726127D2645C00FD9813 /* CompareViews.swift in Sources */,
 				09A4725F27D2607F00FD9813 /* CompareTests.swift in Sources */,
->>>>>>> b4d91dcf94bd6a4f147c5f407d4d2738597f0739
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
