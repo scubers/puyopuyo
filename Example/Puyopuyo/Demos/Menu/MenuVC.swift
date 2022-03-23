@@ -42,7 +42,7 @@ class MenuVC: BaseVC {
                         HBox().attach {
                             Label("").attach($0)
                                 .textAlignment(.left)
-                                .text(o.map(\.data.0))
+                                .text(o.data.0)
                         }
                         .width(o.contentSize.width)
                         .padding(all: 16)
