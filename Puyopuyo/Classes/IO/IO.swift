@@ -11,44 +11,6 @@ import Foundation
 
 public typealias Unbinder = Disposer
 
-public protocol Disposer {
-    func dispose()
-}
-
-public extension Disposer {
-    func dispose(by: DisposableBag, id: String? = nil) {
-        by.addDisposer(self, for: id)
-    }
-}
-
-public protocol DisposableBag {
-    func addDisposer(_ disposer: Disposer, for key: String?)
-}
-
-public typealias Unbinders = Disposers
-public struct Disposers {
-    private init() {}
-    public static func create(_ block: @escaping () -> Void = {}) -> Disposer {
-        return DisposableImpl(block)
-    }
-
-    public static func createBag() -> DisposableBag {
-        NSObject()
-    }
-
-    private class DisposableImpl: NSObject, Disposer {
-        private var block: () -> Void
-
-        init(_ block: @escaping () -> Void) {
-            self.block = block
-        }
-
-        func dispose() {
-            block()
-            block = {}
-        }
-    }
-}
 
 // MARK: - Inputing
 
@@ -77,7 +39,7 @@ public extension Outputing {
 
     /// 对象销毁时则移除绑定
     @discardableResult
-    func safeBind<Object: DisposableBag & AnyObject>(to object: Object, id: String? = nil, _ action: @escaping (Object, OutputType) -> Void) -> Disposer {
+    func safeBind<Object: AutoDisposable>(to object: Object, id: String? = nil, _ action: @escaping (Object, OutputType) -> Void) -> Disposer {
         let disposer = outputing { [weak object] v in
             if let object = object {
                 action(object, v)

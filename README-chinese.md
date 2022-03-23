@@ -361,7 +361,7 @@ public extension Puyo where T: Eventable {
     @discardableResult
     func onEvent<I: Inputing>(_ input: I) -> Self where I.InputType == T.EmitterType.OutputType {
         let disposer = view.emitter.send(to: input)
-        if let v = view as? DisposableBag {
+        if let v = view as? AutoDisposable {
             disposer.dispose(by: v)
         }
         return self

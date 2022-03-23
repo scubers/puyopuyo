@@ -7,7 +7,7 @@
 
 import Foundation
 
-public extension Puyo where T: DisposableBag {
+public extension Puyo where T: AutoDisposable {
     @discardableResult
     func set<O: Outputing>(_ keyPath: ReferenceWritableKeyPath<T, O.OutputType>, _ output: O) -> Self {
         doOn(output) { $0[keyPath: keyPath] = $1 }
@@ -20,7 +20,7 @@ public extension Puyo where T: DisposableBag {
     }
 }
 
-public extension Puyo where T: _KeyValueCodingAndObserving & DisposableBag {
+public extension Puyo where T: _KeyValueCodingAndObserving & AutoDisposable {
     @discardableResult
     func observe<I: Inputing, R>(_ keyPath: KeyPath<T, R>, input: I) -> Self where I.InputType == R? {
         view.py_observing(keyPath).send(to: input).dispose(by: view)

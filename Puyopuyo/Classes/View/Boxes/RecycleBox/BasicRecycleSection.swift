@@ -9,7 +9,7 @@ import Foundation
 
 public typealias RecycleViewGenerator<D> = (OutputBinder<RecyclerInfo<D>>, RecyclerTrigger<D>) -> UIView?
 
-open class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
+open class BasicRecycleSection<Data>: IRecycleSection, AutoDisposable {
     public func addDisposer(_ disposer: Disposer, for key: String?) {
         bag.addDisposer(disposer, for: key)
     }
@@ -46,7 +46,7 @@ open class BasicRecycleSection<Data>: IRecycleSection, DisposableBag {
         }
     }
     
-    private let bag = NSObject()
+    private let bag = Disposers.createBag()
     private var recycleItems = [IRecycleItem]()
     private var differ: ((Data) -> String)?
     public var sectionInsets: UIEdgeInsets?

@@ -7,24 +7,24 @@
 
 import Foundation
 
-public extension _KeyValueCodingAndObserving where Self: DisposableBag {
+public extension _KeyValueCodingAndObserving where Self: AutoDisposable {
     /// Create a KVO listening, auto dispose when Self is deinit
     func py_observing<R>(_ keyPath: KeyPath<Self, R>) -> Outputs<R?> {
         return Outputs { i in
-            let observer = observe(keyPath, options: .initial.union(.new)) { _, v in
+            let observer = self.observe(keyPath, options: .initial.union(.new)) { _, v in
                 i.input(value: v.newValue)
             }
             let disposer = Disposers.create {
                 observer.invalidate()
             }
-            addDisposer(disposer, for: nil)
+            self.addDisposer(disposer, for: nil)
             return disposer
         }
     }
 }
 
-extension NSObject: DisposableBag {
-    public func py_observing<Value: Equatable>(for keyPath: String) -> Outputs<Value?> {
+public extension NSObject {
+    func py_observing<Value: Equatable>(for keyPath: String) -> Outputs<Value?> {
         return Outputs<Value?> { i -> Disposer in
             var lastValue: Value?
             let observer = _Observer<Value>(key: keyPath) { rect in
@@ -40,49 +40,6 @@ extension NSObject: DisposableBag {
             return disposer
         }
         .distinct()
-    }
-
-    public func addDisposer(_ disposer: Disposer, for key: String?) {
-        py_disposerContainer.setDisposable(disposer, for: key)
-    }
-
-    @discardableResult
-    private func py_removeDisposable(for key: String) -> Disposer? {
-        return py_disposerContainer.removeDisposable(for: key)
-    }
-
-    private static var py_disposableContainerKey = "py_puyoDisposable"
-    private var py_disposerContainer: DisposableContainer {
-        var container = objc_getAssociatedObject(self, &NSObject.py_disposableContainerKey)
-        if container == nil {
-            container = DisposableContainer()
-            objc_setAssociatedObject(self, &NSObject.py_disposableContainerKey, container, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-        return container as! DisposableContainer
-    }
-
-    private class DisposableContainer: NSObject {
-        private var disposers = [String: Disposer]()
-        private var list = [Disposer]()
-
-        func setDisposable(_ disposer: Disposer, for key: String?) {
-            if let key = key {
-                let old = disposers[key]
-                old?.dispose()
-                disposers[key] = disposer
-            } else {
-                list.append(disposer)
-            }
-        }
-
-        func removeDisposable(for key: String) -> Disposer? {
-            return disposers.removeValue(forKey: key)
-        }
-
-        deinit {
-            disposers.forEach { $1.dispose() }
-            list.forEach { $0.dispose() }
-        }
     }
 }
 

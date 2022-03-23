@@ -29,7 +29,7 @@ public class Puyo<T: AnyObject> {
     }
 }
 
-public extension Puyo where T: DisposableBag {
+public extension Puyo where T: AutoDisposable {
     /// Accept an outputing as a trigger, do actions
     /// - Parameters:
     ///   - state: state description

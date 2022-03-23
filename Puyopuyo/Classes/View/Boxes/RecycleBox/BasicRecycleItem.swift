@@ -7,7 +7,7 @@
 
 import Foundation
 
-open class BasicRecycleItem<Data>: IRecycleItem, DisposableBag {
+open class BasicRecycleItem<Data>: IRecycleItem, AutoDisposable {
     public typealias Context = RecyclerInfo<Data>
     public init(
         id: String? = nil,
