@@ -75,6 +75,10 @@ public class ListBox: UITableView,
         sectionHeaderHeight = UITableView.automaticDimension
         sectionFooterHeight = UITableView.automaticDimension
 
+        if #available(iOS 15, *) {
+            sectionHeaderTopPadding = 0
+        }
+
         state.safeBind(to: self) { this, sections in
             sections.forEach { s in
                 s.listBox = this

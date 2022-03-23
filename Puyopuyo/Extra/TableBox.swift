@@ -25,7 +25,8 @@ public class TableBox: UITableView,
     Delegatable,
     DataSourceable,
     UITableViewDelegate,
-    UITableViewDataSource {
+    UITableViewDataSource
+{
     public let state = State<[TableBoxSection]>([])
     public var wrapContent = false
 
@@ -38,7 +39,8 @@ public class TableBox: UITableView,
                 separatorStyle: UITableViewCell.SeparatorStyle = .singleLine,
                 sections: [TableBoxSection] = [],
                 header: BoxGenerator<UIView>? = nil,
-                footer: BoxGenerator<UIView>? = nil) {
+                footer: BoxGenerator<UIView>? = nil)
+    {
         super.init(frame: .zero, style: style)
 
         delegateProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
@@ -73,6 +75,10 @@ public class TableBox: UITableView,
         sectionHeaderHeight = UITableView.automaticDimension
         sectionFooterHeight = UITableView.automaticDimension
 
+        if #available(iOS 15, *) {
+            sectionHeaderTopPadding = 0
+        }
+
         state.safeBind(to: self) { this, sections in
             sections.forEach { s in
                 s.tableBox = this
@@ -90,6 +96,7 @@ public class TableBox: UITableView,
             }
     }
 
+    @available(*, unavailable)
     public required init?(coder _: NSCoder) {
         fatalError()
     }
@@ -228,7 +235,8 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
                 _header: @escaping HeaderFooterGenerator<RecycleContext<[Data], UITableView>, CellEvent> = { _, _ in EmptyView() },
                 _footer: @escaping HeaderFooterGenerator<RecycleContext<[Data], UITableView>, CellEvent> = { _, _ in EmptyView() },
                 _event: @escaping OnCellEvent<Event> = { _ in },
-                _onEvent: @escaping OnBoxEvent = { _ in }) {
+                _onEvent: @escaping OnBoxEvent = { _ in })
+    {
         self.identifier = identifier
         cellGenerator = _cell
         cellUpdater = _cellUpdater
@@ -461,11 +469,12 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
             contentView.addSubview(root)
             backgroundColor = .clear
             contentView.backgroundColor = .clear
-            event.safeBind(to: self) { (this, e) in
+            event.safeBind(to: self) { this, e in
                 this.onEvent(e)
             }
         }
 
+        @available(*, unavailable)
         required init?(coder _: NSCoder) {
             fatalError()
         }
@@ -478,7 +487,7 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
     }
 
     public class EmptyView: UIView {
-        public override func sizeThatFits(_: CGSize) -> CGSize {
+        override public func sizeThatFits(_: CGSize) -> CGSize {
             return CGSize(width: 0, height: 0.1)
         }
     }
@@ -500,11 +509,12 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
             let v = UIView()
             v.backgroundColor = .clear
             backgroundView = v
-            event.safeBind(to: self) { (this, e) in
+            event.safeBind(to: self) { this, e in
                 this.onEvent(e)
             }
         }
 
+        @available(*, unavailable)
         required init?(coder _: NSCoder) {
             fatalError()
         }
