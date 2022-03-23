@@ -9,6 +9,12 @@
 import Puyopuyo
 import UIKit
 
+class MyView: UIView {
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        return .init(width: 400, height: 20)
+    }
+}
+
 class TestVC: BaseVC {
     let text = State("")
     override func configView() {
@@ -19,7 +25,7 @@ class TestVC: BaseVC {
 //        demo5().attach(vRoot)
 //        demo6().attach(vRoot)
 //        shrinkDeadLoopTest().attach(vRoot)
-        flowCompactTest().attach(vRoot)
+//        flowCompactTest().attach(vRoot)
         
 //        zboxFillAndWrapTest().attach(vRoot)
         
@@ -28,6 +34,20 @@ class TestVC: BaseVC {
 //        zboxAspectRatioTest().attach(vRoot)
         
 //        zboxRatioTest().attach(vRoot)
+        
+        ZBox().attach(vRoot) {
+            MyView().attach($0)
+//                .size(.fill, .fill)
+//                .width(.fill)
+                .aspectRatio(2 / 4)
+                .cornerRadius(10)
+//                .diagnosis("my view")
+        }
+        .padding(all: 10)
+        .width(.fill)
+        .margin(all: 10)
+        .height(.fill)
+        .aspectRatio(1 / 1)
     }
     
     func zboxRatioTest() -> UIView {

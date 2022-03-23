@@ -64,7 +64,7 @@ class Calculator {
         var finalSize = CGSize(width: width, height: height)
 
         if let aspectRatio = size.aspectRatio /* , !(height == 0 && width == 0) */ {
-            finalSize = getAspectRatioSize(CGSize(width: width, height: height), aspectRatio: aspectRatio, transform: .max)
+            finalSize = getAspectRatioSize(CGSize(width: width, height: height), aspectRatio: aspectRatio, transform: .expand)
         }
         return finalSize
     }
@@ -86,7 +86,7 @@ class Calculator {
         var finalSize = CGSize(width: width, height: height)
 
         if let aspectRatio = size.aspectRatio, !regulator.size.maybeFixed() {
-            finalSize = getAspectRatioSize(CGSize(width: width, height: height), aspectRatio: aspectRatio, transform: .max)
+            finalSize = getAspectRatioSize(CGSize(width: width, height: height), aspectRatio: aspectRatio, transform: .expand)
         }
         return finalSize
     }
@@ -98,7 +98,7 @@ class Calculator {
     ///   - calculateChildrenImmediately: 是否立即计算下一个层级
     /// - Returns: 节点固有尺寸
     static func calculateIntrinsicSize(for measure: Measure, residual: CGSize, calculateChildrenImmediately: Bool, diagnosisMessage: String? = nil) -> CGSize {
-        let finalResidual = Calculator.getAspectRatioResidual(for: measure, residual: residual, transform: .min)
+        let finalResidual = Calculator.getAspectRatioResidual(for: measure, residual: residual, transform: .collapse)
         var intrinsic: CGSize
         if measure.size.maybeWrap() || calculateChildrenImmediately {
             intrinsic = measure.calculate(by: finalResidual)
@@ -173,8 +173,8 @@ class Calculator {
     }
 
     enum AspectRatioTransform {
-        case max
-        case min
+        case expand
+        case collapse
     }
 
     /// 根据提供的尺寸和宽高比，获取合理的尺寸
@@ -199,17 +199,17 @@ class Calculator {
 
         if currentAspectRatio > aspectRatio {
             switch transform {
-            case .max:
+            case .expand:
                 finalResidual.height = size.width / aspectRatio
-            case .min:
+            case .collapse:
                 finalResidual.width = size.height * aspectRatio
             }
 
         } else if currentAspectRatio < aspectRatio {
             switch transform {
-            case .max:
+            case .expand:
                 finalResidual.width = size.height * aspectRatio
-            case .min:
+            case .collapse:
                 finalResidual.height = size.width / aspectRatio
             }
         }

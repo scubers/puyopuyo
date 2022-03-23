@@ -21,6 +21,7 @@
 		09A4726127D2645C00FD9813 /* CompareViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A4726027D2645C00FD9813 /* CompareViews.swift */; };
 		09AD0CBD26DD064E008231F1 /* TestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AD0CBC26DD064E008231F1 /* TestVC.swift */; };
 		09E58F0527EAEC9C007CE7BF /* CompareViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A4726027D2645C00FD9813 /* CompareViews.swift */; };
+		09F8BD8027EB633900402D96 /* CalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F8BD7F27EB633900402D96 /* CalculatorTests.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
@@ -72,6 +73,7 @@
 		09A4725E27D2607F00FD9813 /* CompareTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareTests.swift; sourceTree = "<group>"; };
 		09A4726027D2645C00FD9813 /* CompareViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareViews.swift; sourceTree = "<group>"; };
 		09AD0CBC26DD064E008231F1 /* TestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVC.swift; sourceTree = "<group>"; };
+		09F8BD7F27EB633900402D96 /* CalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorTests.swift; sourceTree = "<group>"; };
 		3324E3ECDF4649B3EFDB8B1A /* Puyopuyo.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Puyopuyo.podspec; path = ../Puyopuyo.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		607FACD01AFB9204008FA782 /* Puyopuyo_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Puyopuyo_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -230,6 +232,7 @@
 				09A4725E27D2607F00FD9813 /* CompareTests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
 				09A4726027D2645C00FD9813 /* CompareViews.swift */,
+				09F8BD7F27EB633900402D96 /* CalculatorTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -551,6 +554,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
+				09F8BD8027EB633900402D96 /* CalculatorTests.swift in Sources */,
 				09A4726127D2645C00FD9813 /* CompareViews.swift in Sources */,
 				09A4725F27D2607F00FD9813 /* CompareTests.swift in Sources */,
 			);
