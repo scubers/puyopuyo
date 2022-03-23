@@ -145,7 +145,7 @@ class LinearPropertiesVC: BaseVC {
                 .space(2)
                 .padding(all: 10)
                 .justifyContent(.center)
-                .size(.fill, 80)
+                .size(.fill, .wrap)
                 .animator(Animators.default)
                 .direction(direction)
 
