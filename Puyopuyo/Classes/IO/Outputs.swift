@@ -116,12 +116,17 @@ public extension Outputs where Self.OutputType == Any {
     }
 
     static func combine<O>(_ outputs: [O]) -> Outputs<[O.OutputType]> where O: Outputing {
-        Outputs<[O.OutputType]> { i in
-            var dones = Array(repeating: false, count: outputs.count)
+        let total: Int = 64
+        assert(outputs.count < total)
+        return Outputs<[O.OutputType]> { i in
+
+            let flag: UInt64 = ~0
+            var result: UInt64 = (flag << outputs.count)
+
             var values: [O.OutputType?] = Array(repeating: nil, count: outputs.count)
 
             func executeNext() {
-                if dones.firstIndex(where: { !$0 }) == nil {
+                if flag == result {
                     i.input(value: values.map { $0! })
                 }
             }
@@ -129,7 +134,7 @@ public extension Outputs where Self.OutputType == Any {
             let dos = outputs.enumerated().map { offset, element in
                 element.outputing { o in
                     values[offset] = o
-                    dones[offset] = true
+                    result |= (1 << offset)
                     executeNext()
                 }
             }
