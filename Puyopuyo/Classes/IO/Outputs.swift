@@ -117,25 +117,29 @@ public extension Outputs where Self.OutputType == Any {
 
     static func combine<O>(_ outputs: [O]) -> Outputs<[O.OutputType]> where O: Outputing {
         let total: Int = 64
-        assert(outputs.count < total)
+        assert(outputs.count <= total)
         return Outputs<[O.OutputType]> { i in
 
             let flag: UInt64 = ~0
+
             var result: UInt64 = (flag << outputs.count)
 
             var values: [O.OutputType?] = Array(repeating: nil, count: outputs.count)
 
-            func executeNext() {
-                if flag == result {
-                    i.input(value: values.map { $0! })
-                }
-            }
+            let lock = NSObject()
 
             let dos = outputs.enumerated().map { offset, element in
                 element.outputing { o in
+
+                    objc_sync_enter(lock)
+                    defer { objc_sync_exit(lock) }
+
                     values[offset] = o
                     result |= (1 << offset)
-                    executeNext()
+
+                    if flag == result {
+                        i.input(value: values.map { $0! })
+                    }
                 }
             }
 
