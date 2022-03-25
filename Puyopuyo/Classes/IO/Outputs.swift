@@ -117,7 +117,9 @@ public extension Outputs where Self.OutputType == Any {
 
     static func combine<O>(_ outputs: [O]) -> Outputs<[O.OutputType]> where O: Outputing {
         let total: Int = 64
-        assert(outputs.count <= total)
+        if outputs.count > total {
+            fatalError("Outputs.combine(outputs) can not more than \(total), current: \(outputs.count)")
+        }
         return Outputs<[O.OutputType]> { i in
 
             let flag: UInt64 = ~0
