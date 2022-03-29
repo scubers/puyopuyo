@@ -80,7 +80,6 @@ class CalculateUtil {
         }
 
         if let aspectRatio = size.aspectRatio {
-            //            assert(residual.width / residual.height == aspectRatio, "Residual must match aspectRatio")
             if width == nil {
                 width = height! * aspectRatio
             } else if height == nil {
@@ -89,10 +88,6 @@ class CalculateUtil {
         }
 
         let finalSize = CGSize(width: width!, height: height!)
-
-        //        if let aspectRatio = size.aspectRatio {
-        //            finalSize = getAspectRatioSize(finalSize, aspectRatio: aspectRatio, transform: .expand)
-        //        }
         return finalSize
     }
 
@@ -143,23 +138,11 @@ class CalculateUtil {
     /// - Returns: description
     static func calculateEstimateSize(for measure: Measure, residual: CGSize, diagnosisMessage: String? = nil) -> CGSize {
         let size = calculateInAspectRatioContext(residual: residual, aspectRatio: measure.size.aspectRatio) { finalResidual in
-            var size: CGSize
             if measure.size.maybeWrap() {
-                size = measure.calculate(by: finalResidual)
+                return measure.calculate(by: finalResidual)
             } else {
-                var width = getIntrinsicLength(measure.size.width, residual: finalResidual.width, margin: measure.margin.getHorzTotal())
-                var height = getIntrinsicLength(measure.size.height, residual: finalResidual.height, margin: measure.margin.getVertTotal())
-
-                assert(!(width == nil && height == nil))
-
-                if let aspectRatio = measure.size.aspectRatio {
-                    if height == nil { height = width! / aspectRatio }
-                    if width == nil { width = height! * aspectRatio }
-                }
-
-                size = CGSize(width: width!, height: height!)
+                return getIntrinsicSize(margin: measure.margin, residual: finalResidual, size: measure.size)
             }
-            return size
         }
         startCalculateDiagnosis(measure: measure, residual: residual, intrinsic: size, msg: diagnosisMessage)
         return size
