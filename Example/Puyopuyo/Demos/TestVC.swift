@@ -7,6 +7,7 @@
 //
 
 import Puyopuyo
+import TangramKit
 import UIKit
 
 class MyView: UIView {
@@ -18,36 +19,56 @@ class MyView: UIView {
 class TestVC: BaseVC {
     let text = State("")
     override func configView() {
-//        demo1().attach(vRoot)
-//        demo2().attach(vRoot)
-//        demo3().attach(vRoot)
-//        demo4().attach(vRoot)
-//        demo5().attach(vRoot)
-//        demo6().attach(vRoot)
-//        shrinkDeadLoopTest().attach(vRoot)
-//        flowCompactTest().attach(vRoot)
-        
-//        zboxFillAndWrapTest().attach(vRoot)
-        
-//        flowRatioWrapTest().attach(vRoot)
-        
-//        zboxAspectRatioTest().attach(vRoot)
-        
-//        zboxRatioTest().attach(vRoot)
-        
-        ZBox().attach(vRoot) {
-            MyView().attach($0)
-//                .size(.fill, .fill)
-//                .width(.fill)
-                .aspectRatio(2 / 4)
-                .cornerRadius(10)
-//                .diagnosis("my view")
+        vRoot.attach {
+            tgTestView().attach($0)
+            
+            //        demo1().attach($0)
+            //        demo2().attach($0)
+            //        demo3().attach($0)
+            //        demo4().attach($0)
+            //        demo5().attach($0)
+            //        demo6().attach($0)
+            //        shrinkDeadLoopTest().attach($0)
+            //        flowCompactTest().attach($0)
+                    
+            //        zboxFillAndWrapTest().attach($0)
+                    
+            //        flowRatioWrapTest().attach($0)
+                    
+            //        zboxAspectRatioTest().attach($0)
+                    
+            //        zboxRatioTest().attach($0)
         }
-        .padding(all: 10)
-        .width(.fill)
-        .margin(all: 10)
-        .height(.fill)
-        .aspectRatio(1 / 1)
+    }
+    
+    func tgTestView() -> UIView {
+        UIView().attach {
+            TGLinearLayout(.vert).attach($0)
+                .attach {
+                    $0.tg_size(width: .fill, height: .fill)
+                    $0.tg_padding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+                    
+                    TGLinearLayout(.horz).attach($0)
+                        .attach {
+                            $0.tg_size(width: .fill, height: .wrap)
+                            $0.tg_padding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+                            
+                            UILabel().attach($0)
+                                .text("abc")
+                                .attach {
+                                    $0.tg_size(width: .wrap, height: .wrap)
+                                    $0.tg_height.equal($0.tg_width)
+                                }
+                            UILabel().attach($0)
+                                .text("def")
+                                .attach {
+                                    $0.tg_size(width: .fill, height: .wrap)
+                                }
+                        }
+                }
+        }
+        .size(.fill, .fill)
+        .view
     }
     
     func zboxRatioTest() -> UIView {
