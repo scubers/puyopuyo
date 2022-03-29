@@ -90,7 +90,7 @@ class _FlowCalculator {
         if !currentLine.isEmpty {
             virtualLines.append(getVirtualLine(children: currentLine, index: virtualLines.count))
         }
-        let size = getVirtualRegulator(children: virtualLines).calculate(by: residual)
+        let size = getVirtualRegulator(children: virtualLines).calculate(by: regChildrenResidualCalSize.getSize())
         virtualLines.forEach { $0.justifyChildrenWithCenter() }
         return size
     }
@@ -106,7 +106,7 @@ class _FlowCalculator {
         }
 
         let virtualRegulator = getVirtualRegulator(children: fakeLines)
-        let size = virtualRegulator.calculate(by: residual)
+        let size = virtualRegulator.calculate(by: regChildrenResidualCalSize.getSize())
         fakeLines.forEach { $0.justifyChildrenWithCenter() }
         return size
     }

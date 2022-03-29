@@ -17,7 +17,7 @@ class MeasureCalculator: Calculator {
             // 非包裹，可以直接返回预估值
             return CalculateUtil.calculateEstimateSize(for: measure, residual: residual)
         }
-        
+
         let margin = measure.margin
 
         let parentSize = CGSize(
@@ -49,7 +49,7 @@ class MeasureCalculator: Calculator {
         case .ratio:
             contentSize.width = aspectResidual.width
         case .wrap:
-            contentSize.width = measure.size.width.getWrapSize(by: contentSize.width)
+            contentSize.width = min(measure.size.width.getWrapSize(by: contentSize.width), aspectResidual.width)
         case .aspectRatio:
             break
         }
@@ -61,7 +61,7 @@ class MeasureCalculator: Calculator {
         case .ratio:
             contentSize.height = aspectResidual.height
         case .wrap:
-            contentSize.height = measure.size.height.getWrapSize(by: contentSize.height)
+            contentSize.height = min(measure.size.height.getWrapSize(by: contentSize.height), aspectResidual.height)
         case .aspectRatio:
             break
         }

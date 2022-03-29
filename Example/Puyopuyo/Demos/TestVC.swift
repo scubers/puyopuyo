@@ -30,13 +30,13 @@ class TestVC: BaseVC {
 //            demo6().attach($0)
 //            shrinkDeadLoopTest().attach($0)
             flowCompactTest().attach($0)
-//                    
+//
 //            zboxFillAndWrapTest().attach($0)
-//                    
+//
 //            flowRatioWrapTest().attach($0)
-//                    
+//
 //            zboxAspectRatioTest().attach($0)
-//                    
+//
 //            zboxRatioTest().attach($0)
         }
     }
