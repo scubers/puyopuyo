@@ -12,6 +12,12 @@ class MeasureCalculator: Calculator {
         if !measure.activated || !measure.size.isCalculable {
             return .zero
         }
+
+        if measure.size.bothNotWrap() {
+            // 非包裹，可以直接返回预估值
+            return CalculateUtil.calculateEstimateSize(for: measure, residual: residual)
+        }
+        
         let margin = measure.margin
 
         let parentSize = CGSize(
@@ -22,11 +28,6 @@ class MeasureCalculator: Calculator {
         if measure.size.maybeWrap(), parentSize.width == 0 || parentSize.height == 0 {
             // 若自身尺寸是包裹，并且剩余空间存在0，则不计算
             return .zero
-        }
-
-        if measure.size.bothNotWrap() {
-            // 非包裹，可以直接返回预估值
-            return CalculateUtil.calculateEstimateSize(for: measure, residual: residual)
         }
 
         let tempMaxSize = CGSize(

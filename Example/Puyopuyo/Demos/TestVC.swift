@@ -26,7 +26,7 @@ class TestVC: BaseVC {
 //            demo2().attach($0)
 //            demo3().attach($0)
 //            demo4().attach($0)
-            demo5().attach($0)
+//            demo5().attach($0)
             demo6().attach($0)
 //            shrinkDeadLoopTest().attach($0)
 //            flowCompactTest().attach($0)
@@ -305,7 +305,7 @@ class TestVC: BaseVC {
                 
             UIView().attach($0)
                 .width(.fill)
-                .margin(left: 30)
+                .margin(left: 10, right: 10)
                 .height(10)
                 
             UILabel().attach($0)
@@ -315,6 +315,7 @@ class TestVC: BaseVC {
 //        .space(10)
 //        .padding(all: 10)
         .height(.wrap)
+        .diagnosis("abc")
         .width(.fill)
         .view
     }

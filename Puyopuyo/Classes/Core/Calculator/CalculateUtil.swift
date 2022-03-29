@@ -131,7 +131,7 @@ class CalculateUtil {
             if measure.size.maybeWrap() {
                 return measure.calculate(by: finalResidual)
             } else {
-                return getIntrinsicSize(margin: measure.margin, residual: finalResidual, size: measure.size)
+                return getIntrinsicSize(margin: .zero, residual: finalResidual, size: measure.size)
             }
         }
         startCalculateDiagnosis(measure: measure, residual: residual, intrinsic: size, msg: diagnosisMessage)
