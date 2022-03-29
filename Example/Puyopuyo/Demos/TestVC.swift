@@ -93,11 +93,13 @@ class TestVC: BaseVC {
         VBox().attach {
             ZBox().attach($0) {
                 Label.demo("100").attach($0)
-                    .aspectRatio(2 / 1)
+                    .size(.wrap, .aspectRatio(2 / 1))
+//                    .aspectRatio(2 / 1)
                     .alignment([.top, .right])
             }
             .padding(all: 10)
-            .aspectRatio(1)
+            .height(.aspectRatio(1))
+//            .aspectRatio(1)
         }
         .view
     }
@@ -217,7 +219,8 @@ class TestVC: BaseVC {
                     .margin(left: 10)
                     .set(\.lineBreakMode, .byClipping)
                     .height(.wrap(max: 100))
-                    .aspectRatio(1)
+//                    .aspectRatio(1)
+                    .width(.aspectRatio(1 / 1))
                     .diagnosis("control pad")
                     .diagnosisMessage("good job")
                 

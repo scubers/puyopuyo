@@ -60,8 +60,9 @@ class SizePropertiesVC: BaseVC {
                         Label.demo("").attach($0)
                             .text(content.map { "wrap(min: 50, shrink: 1)\n\($0)" })
                             .width(.wrap(max: 200, shrink: 1))
-                            .height(.wrap(max: 100))
-                            .aspectRatio(1 / 1)
+//                            .height(.wrap(max: 100))
+                            .height(.aspectRatio(1))
+//                            .aspectRatio(1 / 1)
 
                         Label.demo("cross\n.fill").attach($0)
                             .size(.wrap, .fill)
@@ -150,20 +151,26 @@ class SizePropertiesVC: BaseVC {
                         1 : 1
                         height(.fill)
                         """).attach($0)
-                            .aspectRatio(1 / 1)
-                            .height(.fill)
+                            .size(.aspectRatio(1), .fill)
+                            .diagnosis("0")
+//                            .aspectRatio(1 / 1)
+//                            .height(.fill)
 
                         Label.demo("""
                         1 : 2
                         height(.wrap)
                         """).attach($0)
-                            .aspectRatio(1 / 2)
+                            .width(.aspectRatio(1 / 2))
+                            .diagnosis("1")
+//                            .aspectRatio(1 / 2)
 
                         Label.demo("""
                         2 : 1
                         height(.wrap)
                         """).attach($0)
-                            .aspectRatio(2 / 1)
+                            .diagnosis("2")
+//                            .aspectRatio(2 / 1)
+                            .width(.aspectRatio(2 / 1))
 
                         Label.demo("""
                         1 : 3
@@ -171,15 +178,16 @@ class SizePropertiesVC: BaseVC {
                         """).attach($0)
                             .height(90)
                             .backgroundColor(.systemPink)
-                            .aspectRatio(1 / 3)
+                            //                            .aspectRatio(1 / 3)
+                            .width(.aspectRatio(1 / 3))
 
-                        Label.demo("""
-                        1 : 100
-                        fixed
-                        """).attach($0)
-                            .size(100, 100)
-                            .aspectRatio(1 / 100)
-                            .backgroundColor(.systemPink)
+//                        Label.demo("""
+//                        1 : 100
+//                        fixed
+//                        """).attach($0)
+//                            .size(100, 100)
+//                            .aspectRatio(1 / 100)
+//                            .backgroundColor(.systemPink)
                     }
                     .demo()
                     .height(height.map { SizeDescription.fix($0) })

@@ -216,15 +216,18 @@ class Tests: XCTestCase {
         let box = HBox().attach {
             v1 = UILabel().attach($0)
                 .text("i am label 1")
-                .aspectRatio(1 / 2)
+//                .aspectRatio(1 / 2)
+                .size(.wrap, .aspectRatio(1 / 2))
                 .view
             v2 = UILabel().attach($0)
                 .text("i am label 1")
-                .aspectRatio(1)
+//                .aspectRatio(1)
+                .size(.wrap, .aspectRatio(1))
                 .view
             v3 = UILabel().attach($0)
                 .text("i am label 1")
-                .aspectRatio(3 / 1)
+//                .aspectRatio(3 / 1)
+                .size(.wrap, .aspectRatio(3 / 1))
                 .view
         }
         .view

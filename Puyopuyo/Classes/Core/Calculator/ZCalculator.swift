@@ -7,7 +7,13 @@
 
 import Foundation
 
-class ZCalculator {
+class ZCalculator: Calculator {
+    func calculate(_ measure: Measure, residual: CGSize) -> CGSize {
+        _ZCalculator(measure as! ZRegulator, residual: residual).calculate()
+    }
+}
+
+private class _ZCalculator {
     let regulator: ZRegulator
     let residual: CGSize
     init(_ regulator: ZRegulator, residual: CGSize) {
@@ -18,7 +24,7 @@ class ZCalculator {
     lazy var regFixedWidth: CGFloat = regulator.padding.left + regulator.padding.right
     lazy var regFixedHeight: CGFloat = regulator.padding.top + regulator.padding.bottom
     lazy var regChildrenResidualSize: CGSize = {
-        Calculator.getChildrenTotalResidul(for: regulator, regulatorResidual: residual)
+        CalculateUtil.getChildrenTotalResidul(for: regulator, regulatorResidual: residual)
     }()
 
     var maxContentSize: CGSize = .zero
@@ -34,7 +40,7 @@ class ZCalculator {
 
         handleRatioChildrenIfNeeded()
 
-        let intrinsicSize = Calculator.getRegulatorIntrinsicSize(regulator, residual: residual, contentSize: maxContentSize)
+        let intrinsicSize = CalculateUtil.getRegulatorIntrinsicSizeByContentSize(regulator, residual: residual, contentSize: maxContentSize)
 
         calculateChildrenCenter(intrinsic: intrinsicSize)
 
@@ -80,7 +86,7 @@ class ZCalculator {
     }
 
     private func _calculateChild(_ measure: Measure, residual: CGSize, msg: String) {
-        measure.calculatedSize = Calculator.calculateIntrinsicSize(for: measure, residual: residual, calculateChildrenImmediately: regulator.calculateChildrenImmediately, diagnosisMessage: msg)
+        measure.calculatedSize = CalculateUtil.calculateIntrinsicSize(for: measure, residual: residual, strategy: .estimate, diagnosisMessage: msg)
 
         // 记录当前最大宽高
         appendMaxWidthIfNeeded(measure)
@@ -115,8 +121,8 @@ class ZCalculator {
     }
 
     private func _calculateCenter(_ measure: Measure, containerSize: CGSize) -> CGPoint {
-        let x = Calculator.calculateCrossAlignmentOffset(measure, direction: .y, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: containerSize)
-        let y = Calculator.calculateCrossAlignmentOffset(measure, direction: .x, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: containerSize)
+        let x = CalculateUtil.calculateCrossAlignmentOffset(measure, direction: .y, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: containerSize)
+        let y = CalculateUtil.calculateCrossAlignmentOffset(measure, direction: .x, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: containerSize)
         return CGPoint(x: x, y: y)
     }
 

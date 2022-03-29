@@ -7,8 +7,8 @@
 
 import Foundation
 
-class MeasureCalculator {
-    static func calculate(measure: Measure, residual: CGSize) -> CGSize {
+class MeasureCalculator: Calculator {
+    func calculate(_ measure: Measure, residual: CGSize) -> CGSize {
         if !measure.activated {
             return .zero
         }
@@ -45,7 +45,8 @@ class MeasureCalculator {
             heightSize = .fix(min(heightSize.getWrapSize(by: wrappedCGSize.height), maxSize.height))
         }
 
-        let size = Size(width: widthSize, height: heightSize, aspectRatio: measure.size.maybeFixed() ? nil : measure.size.aspectRatio)
-        return Calculator.getIntrinsicSize(margin: measure.margin, residual: residual, size: size)
+        // TODO: 处理aspectRatio
+        let size = Size(width: widthSize, height: heightSize)
+        return CalculateUtil.getIntrinsicSize(margin: measure.margin, residual: residual, size: size)
     }
 }

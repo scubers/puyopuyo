@@ -40,6 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.rootViewController = NavController(rootViewController: MenuVC())
+//        window?.rootViewController = NavController(rootViewController: UIViewController())
         window?.makeKeyAndVisible()
 
         return true

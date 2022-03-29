@@ -28,7 +28,7 @@ extension UInt64: SizeDescriptible { public var sizeDescription: SizeDescription
 ///
 /// Measure a size in one dimension
 public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Outputing, Equatable {
-    init(sizeType: SizeDescription.SizeType, fixedValue: CGFloat, ratio: CGFloat, add: CGFloat, min: CGFloat, max: CGFloat, priority: CGFloat, shrink: CGFloat, grow: CGFloat) {
+    init(sizeType: SizeDescription.SizeType, fixedValue: CGFloat, ratio: CGFloat, aspectRatio: CGFloat, add: CGFloat, min: CGFloat, max: CGFloat, priority: CGFloat, shrink: CGFloat, grow: CGFloat) {
         if grow > 0 {
             assert(max == .greatestFiniteMagnitude, "Grow size should not have a max value")
         }
@@ -42,6 +42,7 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
         self.priority = priority
         self.shrink = shrink
         self.grow = grow
+        self.aspectRatio = aspectRatio
     }
 
     public typealias OutputType = SizeDescription
@@ -57,6 +58,8 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
         case ratio
         /// Depende on content
         case wrap
+
+        case aspectRatio
     }
 
     public let sizeType: SizeType
@@ -70,17 +73,18 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
     public let priority: CGFloat
     public let shrink: CGFloat
     public let grow: CGFloat
+    public let aspectRatio: CGFloat
 
     public static func fix(_ value: CGFloat) -> SizeDescription {
-        SizeDescription(sizeType: .fixed, fixedValue: value, ratio: 0, add: 0, min: 0, max: .greatestFiniteMagnitude, priority: 0, shrink: 0, grow: 0)
+        SizeDescription(sizeType: .fixed, fixedValue: value, ratio: 0, aspectRatio: 0, add: 0, min: 0, max: .greatestFiniteMagnitude, priority: 0, shrink: 0, grow: 0)
     }
 
     public static func ratio(_ value: CGFloat) -> SizeDescription {
-        SizeDescription(sizeType: .ratio, fixedValue: 0, ratio: value, add: 0, min: 0, max: .greatestFiniteMagnitude, priority: 0, shrink: 0, grow: 0)
+        SizeDescription(sizeType: .ratio, fixedValue: 0, ratio: value, aspectRatio: 0, add: 0, min: 0, max: .greatestFiniteMagnitude, priority: 0, shrink: 0, grow: 0)
     }
 
     public static func wrap(add: CGFloat = 0, min: CGFloat = 0, max: CGFloat = .greatestFiniteMagnitude, priority: CGFloat = 0, shrink: CGFloat = 0, grow: CGFloat = 0) -> SizeDescription {
-        SizeDescription(sizeType: .wrap, fixedValue: 0, ratio: 0, add: add, min: min, max: grow > 0 ? .greatestFiniteMagnitude : max, priority: priority, shrink: shrink, grow: grow)
+        SizeDescription(sizeType: .wrap, fixedValue: 0, ratio: 0, aspectRatio: 0, add: add, min: min, max: grow > 0 ? .greatestFiniteMagnitude : max, priority: priority, shrink: shrink, grow: grow)
     }
 
     public static var wrap: SizeDescription {
@@ -89,6 +93,10 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
 
     public static var fill: SizeDescription {
         return .ratio(1)
+    }
+
+    public static func aspectRatio(_ value: CGFloat) -> SizeDescription {
+        SizeDescription(sizeType: .aspectRatio, fixedValue: value, ratio: 0, aspectRatio: value, add: 0, min: 0, max: .greatestFiniteMagnitude, priority: 0, shrink: 0, grow: 0)
     }
 
     public var description: String {
@@ -102,6 +110,8 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
             if priority != 0 { text.append("priority:\(priority)") }
             if shrink != 0 { text.append("shrink:\(shrink)") }
             return "wrap(\(text.joined(separator: ", ")))"
+        } else if isAspectRatio {
+            return "aspect(\(aspectRatio))"
         } else {
             return "fix(\(fixedValue))"
         }
@@ -110,19 +120,23 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
 
 extension SizeDescription {
     var isWrap: Bool {
-        return sizeType == .wrap
+        sizeType == .wrap
     }
 
     var isFixed: Bool {
-        return sizeType == .fixed
+        sizeType == .fixed
     }
 
     var isRatio: Bool {
-        return sizeType == .ratio
+        sizeType == .ratio
     }
 
     var isFlex: Bool {
         sizeType == .wrap && (grow > 0 || shrink > 0)
+    }
+
+    var isAspectRatio: Bool {
+        sizeType == .aspectRatio
     }
 
     func getWrapSize(by wrappedValue: CGFloat) -> CGFloat {
@@ -137,21 +151,28 @@ public struct Size: Equatable, Outputing {
     public var width: SizeDescription
     public var height: SizeDescription
 
-    /// width / height
-    public var aspectRatio: CGFloat?
-
     public static func == (lhs: Self, rhs: Self) -> Bool {
         return lhs.width == rhs.width && lhs.height == rhs.height
     }
 
-    public init(width: SizeDescription = .fix(0), height: SizeDescription = .fix(0), aspectRatio: CGFloat? = nil) {
+    public init(width: SizeDescription = .fix(0), height: SizeDescription = .fix(0)) {
         self.width = width
         self.height = height
-        self.aspectRatio = aspectRatio
     }
 
     public static func fixed(_ value: CGFloat = 0) -> Size {
         Size(width: .fix(value), height: .fix(value))
+    }
+
+    public var isCalculable: Bool {
+        !(width.sizeType == .aspectRatio && height.sizeType == .aspectRatio)
+    }
+
+    /// width / height
+    public var aspectRatio: CGFloat? {
+        if width.isAspectRatio { return width.aspectRatio }
+        if height.isAspectRatio { return height.aspectRatio }
+        return nil
     }
 }
 
@@ -168,20 +189,6 @@ extension Size {
         return width.isWrap && height.isWrap
     }
 
-    func getMain(direction: Direction) -> SizeDescription {
-        if case .x = direction {
-            return width
-        }
-        return height
-    }
-
-    func getCross(direction: Direction) -> SizeDescription {
-        if case .x = direction {
-            return height
-        }
-        return width
-    }
-
     func bothNotWrap() -> Bool {
         return !maybeWrap()
     }
@@ -196,5 +203,37 @@ extension Size {
 
     func maybeFixed() -> Bool {
         return width.isFixed || height.isFixed
+    }
+
+    func getMain(direction: Direction) -> SizeDescription {
+        if case .x = direction {
+            return width
+        }
+        return height
+    }
+
+    func getCross(direction: Direction) -> SizeDescription {
+        if case .x = direction {
+            return height
+        }
+        return width
+    }
+
+    func getMainCrossRatio(direction: Direction) -> CGFloat? {
+        var value: CGFloat?
+        if width.isAspectRatio {
+            value = width.aspectRatio
+        } else if height.isAspectRatio {
+            value = height.aspectRatio
+        }
+        if let value = value {
+            switch direction {
+            case .x:
+                return value
+            case .y:
+                return 1 / value
+            }
+        }
+        return nil
     }
 }

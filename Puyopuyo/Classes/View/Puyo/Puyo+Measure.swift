@@ -66,15 +66,15 @@ public extension Puyo where T: UIView {
 
     // MARK: - AspectRatio
 
-    @discardableResult
-    func aspectRatio(_ ratio: CGFloat?) -> Self {
-        set(\T.py_measure.size.aspectRatio, ratio)
-    }
-
-    @discardableResult
-    func aspectRatio<O: Outputing>(_ ratio: O) -> Self where O.OutputType: OptionalableValueType, O.OutputType.Wrap == CGFloat {
-        set(\T.py_measure.size.aspectRatio, ratio.mapWrappedValue())
-    }
+//    @discardableResult
+//    func aspectRatio(_ ratio: CGFloat?) -> Self {
+//        set(\T.py_measure.size.aspectRatio, ratio)
+//    }
+//
+//    @discardableResult
+//    func aspectRatio<O: Outputing>(_ ratio: O) -> Self where O.OutputType: OptionalableValueType, O.OutputType.Wrap == CGFloat {
+//        set(\T.py_measure.size.aspectRatio, ratio.mapWrappedValue())
+//    }
 
     // MARK: - Second layoutable methods
 

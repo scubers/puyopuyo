@@ -66,10 +66,6 @@ public class Measure {
         }
     }
 
-    public func calculate(by size: CGSize) -> CGSize {
-        return MeasureCalculator.calculate(measure: self, residual: size)
-    }
-
     public var diagnosisId: String?
 
     public var extraDiagnosisMessage: String?
@@ -100,5 +96,9 @@ public class Measure {
 
     public func py_setNeedsRelayout() {
         delegate?.needsRelayout(for: self)
+    }
+
+    public func calculate(by residual: CGSize) -> CGSize {
+        return MeasureCalculator().calculate(self, residual: residual)
     }
 }

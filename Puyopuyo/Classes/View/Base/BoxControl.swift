@@ -30,7 +30,7 @@ public class BoxControl<R: Regulator> {
             if regulator.size.bothNotWrap(), !regulator.calculateChildrenImmediately {
                 let residual = CGSize(width: view.bounds.width + regulator.margin.getHorzTotal(),
                                       height: view.bounds.height + regulator.margin.getVertTotal())
-                _ = Calculator.calculateIntrinsicSize(for: regulator, residual: residual, calculateChildrenImmediately: true)
+                _ = CalculateUtil.calculateIntrinsicSize(for: regulator, residual: residual, strategy: .intrinsic)
             }
         } else {
             // 父视图为普通视图
@@ -45,7 +45,7 @@ public class BoxControl<R: Regulator> {
                 if regulator.size.height.isWrap {
                     residual.height = regulator.size.height.max + regulator.margin.getVertTotal()
                 }
-                regulator.calculatedSize = Calculator.calculateIntrinsicSize(for: regulator, residual: residual, calculateChildrenImmediately: true)
+                regulator.calculatedSize = CalculateUtil.calculateIntrinsicSize(for: regulator, residual: residual, strategy: .intrinsic)
             } else {
                 /**
                  1. 当不需要布局控制自身大小时，意味着外部已经给本布局设置好了尺寸，即可以反推出当前布局可用的剩余空间
@@ -53,14 +53,14 @@ public class BoxControl<R: Regulator> {
                  */
 
                 if !regulator.size.isRatio() {
-                    Calculator.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
+                    CalculateUtil.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
                     regulator.size = .init(width: .fill, height: .fill)
                 }
                 var residual = view.bounds.size
                 residual.width += regulator.margin.getHorzTotal()
                 residual.height += regulator.margin.getVertTotal()
 
-                regulator.calculatedSize = Calculator.calculateIntrinsicSize(for: regulator, residual: residual, calculateChildrenImmediately: true)
+                regulator.calculatedSize = CalculateUtil.calculateIntrinsicSize(for: regulator, residual: residual, strategy: .intrinsic)
             }
             if isCenterControl {
                 let b = CGRect(origin: .zero, size: regulator.calculatedSize)
@@ -158,7 +158,7 @@ public class BoxControl<R: Regulator> {
     }
 
     public func sizeThatFits(_ size: CGSize, regulator: R) -> CGSize {
-        return Calculator.sizeThatFit(size: size, to: regulator)
+        return CalculateUtil.sizeThatFit(size: size, to: regulator)
     }
 
     public func control(scrollView: UIScrollView?, by view: UIView, regulator: R) {
