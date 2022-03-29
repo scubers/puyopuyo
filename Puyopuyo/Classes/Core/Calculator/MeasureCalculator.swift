@@ -24,6 +24,11 @@ class MeasureCalculator: Calculator {
             return .zero
         }
 
+        if measure.size.bothNotWrap() {
+            // 非包裹，可以直接返回预估值
+            return CalculateUtil.calculateEstimateSize(for: measure, residual: residual)
+        }
+
         var widthSize = measure.size.width
         var heightSize = measure.size.height
 

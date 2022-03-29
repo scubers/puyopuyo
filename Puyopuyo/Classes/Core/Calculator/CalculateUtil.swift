@@ -115,21 +115,6 @@ class CalculateUtil {
         }
 
         return getIntrinsicSize(margin: margin, residual: residual, size: regSize)
-
-//        let width = getIntrinsicLength(size.width, residual: residual.width, margin: margin.getHorzTotal(), padding: padding.getHorzTotal(), wrapValue: contentSize.width)
-//        let height = getIntrinsicLength(size.height, residual: residual.height, margin: margin.getVertTotal(), padding: padding.getVertTotal(), wrapValue: contentSize.height)
-//
-//        var finalSize = CGSize(width: width, height: height)
-//
-//        if let aspectRatio = size.aspectRatio {
-//            finalSize = getAspectRatioSize(CGSize(width: width, height: height), aspectRatio: aspectRatio, transform: .expand)
-//        }
-//        return finalSize
-    }
-
-    enum CalculateSizeStrategy {
-        case intrinsic
-        case estimate
     }
 
     /// 计算一个节点的固有尺寸
@@ -138,34 +123,52 @@ class CalculateUtil {
     ///   - residual: 节点可用剩余尺寸
     ///   - strategy: 是否立即计算下一个层级，如果存在包裹尺寸则会立即计算下一层级
     /// - Returns: 节点固有尺寸
-    static func calculateIntrinsicSize(for measure: Measure, residual: CGSize, strategy: CalculateSizeStrategy, diagnosisMessage: String? = nil) -> CGSize {
+    static func calculateIntrinsicSize(for measure: Measure, residual: CGSize, diagnosisMessage: String? = nil) -> CGSize {
         ///
         /// 1. 处理剩余空间坍缩 匹配 aspectRatio
         /// 2. 计算大小
         /// 3. 处理大小扩充 匹配 aspectRatio
 
-        let aspectRatio = measure.size.aspectRatio
-        let finalResidual = CalculateUtil.getAspectRatioSize(residual, aspectRatio: aspectRatio, transform: .collapse)
-
-        var size: CGSize
-        if measure.size.maybeWrap() || strategy == .intrinsic {
-            size = measure.calculate(by: finalResidual)
-        } else {
-            var width = getIntrinsicLength(measure.size.width, residual: finalResidual.width, margin: measure.margin.getHorzTotal())
-            var height = getIntrinsicLength(measure.size.height, residual: finalResidual.height, margin: measure.margin.getVertTotal())
-
-            assert(!(width == nil && height == nil))
-
-            if let aspectRatio = aspectRatio {
-                if height == nil { height = width! / aspectRatio }
-                if width == nil { width = height! * aspectRatio }
-            }
-
-            size = CGSize(width: width!, height: height!)
+        let size = calculateInAspectRatioContext(residual: residual, aspectRatio: measure.size.aspectRatio) {
+            measure.calculate(by: $0)
         }
+        startCalculateDiagnosis(measure: measure, residual: residual, intrinsic: size, msg: diagnosisMessage)
+        return size
+    }
 
+    /// 获取节点的预估尺寸，此时不一定会进行布局计算
+    /// - Parameters:
+    ///   - measure: measure description
+    ///   - residual: residual description
+    /// - Returns: description
+    static func calculateEstimateSize(for measure: Measure, residual: CGSize, diagnosisMessage: String? = nil) -> CGSize {
+        let size = calculateInAspectRatioContext(residual: residual, aspectRatio: measure.size.aspectRatio) { finalResidual in
+            var size: CGSize
+            if measure.size.maybeWrap() {
+                size = measure.calculate(by: finalResidual)
+            } else {
+                var width = getIntrinsicLength(measure.size.width, residual: finalResidual.width, margin: measure.margin.getHorzTotal())
+                var height = getIntrinsicLength(measure.size.height, residual: finalResidual.height, margin: measure.margin.getVertTotal())
+
+                assert(!(width == nil && height == nil))
+
+                if let aspectRatio = measure.size.aspectRatio {
+                    if height == nil { height = width! / aspectRatio }
+                    if width == nil { width = height! * aspectRatio }
+                }
+
+                size = CGSize(width: width!, height: height!)
+            }
+            return size
+        }
+        startCalculateDiagnosis(measure: measure, residual: residual, intrinsic: size, msg: diagnosisMessage)
+        return size
+    }
+
+    private static func calculateInAspectRatioContext(residual: CGSize, aspectRatio: CGFloat?, calculation: (CGSize) -> CGSize) -> CGSize {
+        let finalResidual = CalculateUtil.getAspectRatioSize(residual, aspectRatio: aspectRatio, transform: .collapse)
+        let size = calculation(finalResidual)
         let finalSize = CalculateUtil.getAspectRatioSize(size, aspectRatio: aspectRatio, transform: .expand)
-        startCalculateDiagnosis(measure: measure, residual: residual, intrinsic: finalSize, msg: diagnosisMessage)
         return finalSize
     }
 
@@ -191,7 +194,7 @@ class CalculateUtil {
         var residual = size
         if residual.width == 0 { residual.width = .greatestFiniteMagnitude }
         if residual.height == 0 { residual.height = .greatestFiniteMagnitude }
-        return calculateIntrinsicSize(for: measure, residual: residual, strategy: .estimate)
+        return calculateEstimateSize(for: measure, residual: residual)
     }
 
     static func constraintConflict(crash: Bool, _ msg: String) {

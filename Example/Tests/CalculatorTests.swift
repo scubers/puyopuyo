@@ -92,6 +92,10 @@ class CalculatorTests: XCTestCase {
         XCTAssertTrue(size.width == 1600)
         XCTAssertTrue(size.height == 400)
         
+        // inf
+        size = CalculateUtil.getAspectRatioSize(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude), aspectRatio: 1 / 2, transform: .collapse)
+        XCTAssertTrue(size.width / size.height == 1 / 2)
+        
     }
 
     func testPerformanceExample() throws {

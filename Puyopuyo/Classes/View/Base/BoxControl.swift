@@ -27,10 +27,10 @@ public class BoxControl<R: Regulator> {
              1. 当父布局为Box视图，并且当前布局可能是包裹，则视为被上层计算时优先计算过了。当前视图可不用重复计算
              2. 若非包裹，则上层视图时只是用了估算尺寸，需要再次计算子节点
              */
-            if regulator.size.bothNotWrap(), !regulator.calculateChildrenImmediately {
+            if regulator.size.bothNotWrap() {
                 let residual = CGSize(width: view.bounds.width + regulator.margin.getHorzTotal(),
                                       height: view.bounds.height + regulator.margin.getVertTotal())
-                _ = CalculateUtil.calculateIntrinsicSize(for: regulator, residual: residual, strategy: .intrinsic)
+                _ = CalculateUtil.calculateIntrinsicSize(for: regulator, residual: residual)
             }
         } else {
             // 父视图为普通视图
@@ -45,7 +45,7 @@ public class BoxControl<R: Regulator> {
                 if regulator.size.height.isWrap {
                     residual.height = regulator.size.height.max + regulator.margin.getVertTotal()
                 }
-                regulator.calculatedSize = CalculateUtil.calculateIntrinsicSize(for: regulator, residual: residual, strategy: .intrinsic)
+                regulator.calculatedSize = CalculateUtil.calculateIntrinsicSize(for: regulator, residual: residual)
             } else {
                 /**
                  1. 当不需要布局控制自身大小时，意味着外部已经给本布局设置好了尺寸，即可以反推出当前布局可用的剩余空间
@@ -60,7 +60,7 @@ public class BoxControl<R: Regulator> {
                 residual.width += regulator.margin.getHorzTotal()
                 residual.height += regulator.margin.getVertTotal()
 
-                regulator.calculatedSize = CalculateUtil.calculateIntrinsicSize(for: regulator, residual: residual, strategy: .intrinsic)
+                regulator.calculatedSize = CalculateUtil.calculateIntrinsicSize(for: regulator, residual: residual)
             }
             if isCenterControl {
                 let b = CGRect(origin: .zero, size: regulator.calculatedSize)

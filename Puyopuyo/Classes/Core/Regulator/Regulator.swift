@@ -27,20 +27,11 @@ public class Regulator: Measure {
         }
     }
 
-    public var calculateChildrenImmediately = false {
-        didSet {
-            if oldValue != calculateChildrenImmediately {
-                py_setNeedsRelayout()
-            }
-        }
-    }
-
     override public var diagnosisMessage: String {
         """
         \(super.diagnosisMessage)
         - padding: [top: \(padding.top), left: \(padding.left), bottom: \(padding.bottom), right: \(padding.right)]
         - justifyContent: [\(justifyContent)]
-        - calculateChildrenImmediately: [\(calculateChildrenImmediately)]
         """
     }
 }

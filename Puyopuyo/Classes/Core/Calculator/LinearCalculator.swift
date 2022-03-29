@@ -347,7 +347,7 @@ class LinearCalculator {
     }
 
     private func calculateChild(_ measure: Measure, subResidual: CalFixedSize, msg: String) {
-        measure.calculatedSize = CalculateUtil.calculateIntrinsicSize(for: measure, residual: subResidual.getSize(), strategy: .estimate, diagnosisMessage: msg)
+        measure.calculatedSize = CalculateUtil.calculateEstimateSize(for: measure, residual: subResidual.getSize(), diagnosisMessage: msg)
     }
 
     private func hendleMainGrowIfNeeded() {

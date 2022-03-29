@@ -86,7 +86,7 @@ private class _ZCalculator {
     }
 
     private func _calculateChild(_ measure: Measure, residual: CGSize, msg: String) {
-        measure.calculatedSize = CalculateUtil.calculateIntrinsicSize(for: measure, residual: residual, strategy: .estimate, diagnosisMessage: msg)
+        measure.calculatedSize = CalculateUtil.calculateEstimateSize(for: measure, residual: residual, diagnosisMessage: msg)
 
         // 记录当前最大宽高
         appendMaxWidthIfNeeded(measure)

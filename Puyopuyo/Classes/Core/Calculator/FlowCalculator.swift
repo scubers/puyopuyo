@@ -49,7 +49,7 @@ class FlowCalculator {
 
         children.forEach { m in
             let subCalSize = m.size.getCalSize(by: regDirection)
-            let subCalFixedSize = CalculateUtil.calculateIntrinsicSize(for: m, residual: regChildrenResidualCalSize.getSize(), strategy: .estimate, diagnosisMessage: "FlowCalculator content test calculating").getCalFixedSize(by: regDirection)
+            let subCalFixedSize = CalculateUtil.calculateEstimateSize(for: m, residual: regChildrenResidualCalSize.getSize(), diagnosisMessage: "FlowCalculator content test calculating").getCalFixedSize(by: regDirection)
             let subCalMargin = CalEdges(insets: m.margin, direction: regDirection)
 
             let space = CGFloat(min(1, currentLine.count)) * regulator.itemSpace
@@ -160,7 +160,6 @@ private class VirtualLinearRegulator: LinearRegulator {
     override init(delegate: MeasureDelegate?) {
         super.init(delegate: delegate)
         virtualDelegate = delegate
-        calculateChildrenImmediately = true
     }
 
     func justifyChildrenWithCenter() {
