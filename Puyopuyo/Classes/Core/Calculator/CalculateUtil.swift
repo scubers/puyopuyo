@@ -166,9 +166,9 @@ class CalculateUtil {
     }
 
     private static func calculateInAspectRatioContext(residual: CGSize, aspectRatio: CGFloat?, calculation: (CGSize) -> CGSize) -> CGSize {
-        let finalResidual = CalculateUtil.getAspectRatioSize(residual, aspectRatio: aspectRatio, transform: .collapse)
+        let finalResidual = CalculateUtil.fit(residual, aspectRatio: aspectRatio, strategy: .collapse)
         let size = calculation(finalResidual)
-        let finalSize = CalculateUtil.getAspectRatioSize(size, aspectRatio: aspectRatio, transform: .expand)
+        let finalSize = CalculateUtil.fit(size, aspectRatio: aspectRatio, strategy: .expand)
         return finalSize
     }
 
@@ -233,7 +233,7 @@ class CalculateUtil {
         return position
     }
 
-    enum AspectRatioTransform {
+    enum FitAspectRatioStrategy {
         case expand
         case collapse
     }
@@ -245,7 +245,7 @@ class CalculateUtil {
     ///   - aspectRatio: aspectRatio
     ///   - expand: if true, return the max size, otherwise the min size
     /// - Returns: The result size
-    static func getAspectRatioSize(_ size: CGSize, aspectRatio: CGFloat?, transform: AspectRatioTransform) -> CGSize {
+    static func fit(_ size: CGSize, aspectRatio: CGFloat?, strategy: FitAspectRatioStrategy) -> CGSize {
         guard let aspectRatio = aspectRatio, aspectRatio > 0 else {
             return size
         }
@@ -259,7 +259,7 @@ class CalculateUtil {
         var finalResidual = size
 
         if currentAspectRatio > aspectRatio {
-            switch transform {
+            switch strategy {
             case .expand:
                 finalResidual.height = size.width / aspectRatio
             case .collapse:
@@ -267,7 +267,7 @@ class CalculateUtil {
             }
 
         } else if currentAspectRatio < aspectRatio {
-            switch transform {
+            switch strategy {
             case .expand:
                 finalResidual.width = size.height * aspectRatio
             case .collapse:
@@ -276,15 +276,5 @@ class CalculateUtil {
         }
 
         return finalResidual
-    }
-
-    /// 根据宽高比获取合理的尺寸
-    static func getAspectRatioResidual(for measure: Measure, residual: CGSize, transform: AspectRatioTransform) -> CGSize {
-        guard let aspectRatio = measure.size.aspectRatio, !measure.size.maybeFixed() else {
-            return residual
-        }
-        let margin = measure.margin
-        let size = getAspectRatioSize(CGSize(width: residual.width - margin.getHorzTotal(), height: residual.height - margin.getVertTotal()), aspectRatio: aspectRatio, transform: transform)
-        return CGSize(width: size.width + margin.getHorzTotal(), height: size.height + margin.getVertTotal())
     }
 }
