@@ -20,24 +20,24 @@ class TestVC: BaseVC {
     let text = State("")
     override func configView() {
         vRoot.attach {
-            tgTestView().attach($0)
+//            tgTestView().attach($0)
             
-            //        demo1().attach($0)
-            //        demo2().attach($0)
-            //        demo3().attach($0)
-            //        demo4().attach($0)
-            //        demo5().attach($0)
-            //        demo6().attach($0)
-            //        shrinkDeadLoopTest().attach($0)
-            //        flowCompactTest().attach($0)
-                    
-            //        zboxFillAndWrapTest().attach($0)
-                    
-            //        flowRatioWrapTest().attach($0)
-                    
-            //        zboxAspectRatioTest().attach($0)
-                    
-            //        zboxRatioTest().attach($0)
+//            demo1().attach($0)
+//            demo2().attach($0)
+//            demo3().attach($0)
+//            demo4().attach($0)
+            demo5().attach($0)
+            demo6().attach($0)
+//            shrinkDeadLoopTest().attach($0)
+//            flowCompactTest().attach($0)
+//                    
+//            zboxFillAndWrapTest().attach($0)
+//                    
+//            flowRatioWrapTest().attach($0)
+//                    
+//            zboxAspectRatioTest().attach($0)
+//                    
+//            zboxRatioTest().attach($0)
         }
     }
     
@@ -310,13 +310,12 @@ class TestVC: BaseVC {
                 
             UILabel().attach($0)
                 .text("Stay")
-                .width(.wrap)
-//            }
+//                .width(.wrap)
         }
 //        .space(10)
 //        .padding(all: 10)
         .height(.wrap)
-        .width(500)
+        .width(.fill)
         .view
     }
     
@@ -410,7 +409,7 @@ class TestVC: BaseVC {
                
                 UILabel().attach($0)
                     .numberOfLines(0)
-                    .size(.wrap, 40)
+                    .size(.wrap, 50)
                     .text(text.map { "W_F\n\($0)" })
                
                 UILabel().attach($0)

@@ -74,7 +74,14 @@ import Foundation
  3. 包裹尺寸计算时候会根据优先级进行排序，但是若布局为包裹，子节点有个特殊包裹(w_r)不会.wrap(priority:)影响
 
  */
-class LinearCalculator {
+
+struct LinearCalculator: Calculator {
+    @inlinable func calculate(_ measure: Measure, residual: CGSize) -> CGSize {
+        _LinearCalculator(measure as! LinearRegulator, residual: residual, isIntrinsic: false).calculate()
+    }
+}
+
+class _LinearCalculator {
     let regulator: LinearRegulator
     let residual: CGSize
     let isIntrinsic: Bool
@@ -195,7 +202,7 @@ class LinearCalculator {
                 cross: intrinsic.cross + regCalMargin.crossFixed,
                 direction: regDirection
             )
-            LinearCalculator(regulator, residual: residual.getSize(), isIntrinsic: true).calculateChildrenSize()
+            _LinearCalculator(regulator, residual: residual.getSize(), isIntrinsic: true).calculateChildrenSize()
         }
     }
 
@@ -292,8 +299,6 @@ class LinearCalculator {
         let calSubSize = measure.size.getCalSize(by: regDirection)
         let subCalMargin = measure.margin.getCalEdges(by: regDirection)
 
-        let mainCrossRatio = measure.size.getMainCrossRatio(direction: regDirection)
-
         // 总剩余空间 - 主轴固定长度 + 当前节点主轴margin
         var mainResidual: CGFloat?
         var crossResidual: CGFloat?
@@ -316,7 +321,7 @@ class LinearCalculator {
                 // 子主轴比重，需要根据当前剩余空间 & 比重进行计算
                 mainResidual = totalRatioResidual * (calSubSize.main.ratio / totalMainRatio) + subCalMargin.mainFixed
             case .aspectRatio:
-                mainResidual = min(crossResidual! * mainCrossRatio!, totalRatioResidual + subCalMargin.mainFixed)
+                mainResidual = totalRatioResidual + subCalMargin.mainFixed
             }
         }
 
@@ -330,7 +335,7 @@ class LinearCalculator {
             case .ratio:
                 crossResidual = (regChildrenResidualCalSize.cross) * calSubSize.cross.ratio
             case .aspectRatio:
-                crossResidual = min(mainResidual! / mainCrossRatio!, regChildrenResidualCalSize.cross)
+                crossResidual = regChildrenResidualCalSize.cross
             }
         }
 

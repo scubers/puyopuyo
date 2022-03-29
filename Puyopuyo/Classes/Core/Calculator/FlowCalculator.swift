@@ -7,7 +7,13 @@
 
 import Foundation
 
-class FlowCalculator {
+struct FlowCalculator: Calculator {
+    func calculate(_ measure: Measure, residual: CGSize) -> CGSize {
+        _FlowCalculator(measure as! FlowRegulator, residual: residual).calculate()
+    }
+}
+
+class _FlowCalculator {
     init(_ regulator: FlowRegulator, residual: CGSize) {
         self.regulator = regulator
         self.residual = residual
@@ -106,7 +112,7 @@ class FlowCalculator {
     }
 }
 
-private extension FlowCalculator {
+private extension _FlowCalculator {
     func getVirtualRegulator(children: [Measure]) -> VirtualLinearRegulator {
         let outside = VirtualLinearRegulator(delegate: VirtualDelegate(children: children))
         outside.justifyContent = regulator.justifyContent

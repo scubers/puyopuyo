@@ -9,7 +9,7 @@ import Foundation
 
 class MeasureCalculator: Calculator {
     func calculate(_ measure: Measure, residual: CGSize) -> CGSize {
-        if !measure.activated {
+        if !measure.activated || !measure.size.isCalculable {
             return .zero
         }
         let margin = measure.margin
@@ -29,29 +29,43 @@ class MeasureCalculator: Calculator {
             return CalculateUtil.calculateEstimateSize(for: measure, residual: residual)
         }
 
-        var widthSize = measure.size.width
-        var heightSize = measure.size.height
+        let tempMaxSize = CGSize(
+            width: min(parentSize.width, measure.size.width.max),
+            height: min(parentSize.height, measure.size.height.max)
+        )
 
-        var maxSize = CGSize(width: min(parentSize.width, widthSize.max), height: min(parentSize.height, heightSize.max))
-        if widthSize.isFixed { maxSize.width = widthSize.fixedValue }
-        if heightSize.isFixed { maxSize.height = heightSize.fixedValue }
+        // 后续提供计算的最终可用剩余空间
+        let aspectResidual = CalculateUtil.fit(tempMaxSize, aspectRatio: measure.size.aspectRatio, strategy: .collapse)
 
-        if measure.size.isWrap() {
-            let wrappedSize = measure.sizeThatFits(maxSize)
-            widthSize = .fix(min(widthSize.getWrapSize(by: wrappedSize.width), maxSize.width))
-            heightSize = .fix(min(heightSize.getWrapSize(by: wrappedSize.height), maxSize.height))
+        var contentSize = measure.sizeThatFits(aspectResidual)
+        contentSize.width = Swift.min(contentSize.width, aspectResidual.width)
+        contentSize.height = Swift.min(contentSize.height, aspectResidual.height)
 
-        } else if widthSize.isWrap {
-            let wrappedCGSize = measure.sizeThatFits(maxSize)
-            widthSize = .fix(min(widthSize.getWrapSize(by: wrappedCGSize.width), maxSize.width))
-
-        } else if heightSize.isWrap {
-            let wrappedCGSize = measure.sizeThatFits(maxSize)
-            heightSize = .fix(min(heightSize.getWrapSize(by: wrappedCGSize.height), maxSize.height))
+        // handl width
+        switch measure.size.width.sizeType {
+        case .fixed:
+            contentSize.width = measure.size.width.fixedValue
+        case .ratio:
+            contentSize.width = aspectResidual.width
+        case .wrap:
+            contentSize.width = measure.size.width.getWrapSize(by: contentSize.width)
+        case .aspectRatio:
+            break
         }
 
-        // TODO: 处理aspectRatio
-        let size = Size(width: widthSize, height: heightSize)
-        return CalculateUtil.getIntrinsicSize(margin: measure.margin, residual: residual, size: size)
+        // handle height
+        switch measure.size.height.sizeType {
+        case .fixed:
+            contentSize.height = measure.size.height.fixedValue
+        case .ratio:
+            contentSize.height = aspectResidual.height
+        case .wrap:
+            contentSize.height = measure.size.height.getWrapSize(by: contentSize.height)
+        case .aspectRatio:
+            break
+        }
+
+        let finalSize = CalculateUtil.fit(contentSize, aspectRatio: measure.size.aspectRatio, strategy: .expand)
+        return finalSize
     }
 }

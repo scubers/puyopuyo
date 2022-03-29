@@ -65,7 +65,7 @@ class NavBar: ZBox, Eventable {
             }, leading: {
                 UIButton().attach($0)
                     .image(UIImage(systemName: "arrow.backward.circle.fill"))
-                    .margin(all: 10, left: 0)
+                    .margin(right: 10)
                     .view
             }
         )

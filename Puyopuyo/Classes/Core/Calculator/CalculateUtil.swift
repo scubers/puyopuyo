@@ -18,25 +18,16 @@ class CalculateUtil {
         let margin = regulator.margin
         let padding = regulator.padding
 
-        func getLength(_ sizeDesc: SizeDescription, residual: CGFloat, margin: CGFloat, padding: CGFloat) -> CGFloat {
-            if sizeDesc.isFixed {
-                // 子布局剩余空间为固有尺寸 - 当前布局内边距
-                return max(0, sizeDesc.fixedValue - padding)
-            } else if sizeDesc.isRatio {
-                // 子布局剩余空间为所有剩余空间
-                return max(0, residual - padding - margin)
-            } else if sizeDesc.isWrap {
-                // 若存在最大值max，需要和最终算出的剩余空间取个最小值
-                return max(sizeDesc.min, max(0, min(sizeDesc.max - padding, residual - padding - margin)))
-            } else {
-                fatalError()
-            }
-        }
+        var layoutResidual = CGSize(
+            width: max(regulatorResidual.width - margin.getHorzTotal(), 0),
+            height: max(regulatorResidual.height - margin.getVertTotal(), 0)
+        )
+        layoutResidual = fit(layoutResidual, aspectRatio: regSize.aspectRatio, strategy: .collapse)
 
-        let width = getLength(regSize.width, residual: regulatorResidual.width, margin: margin.getHorzTotal(), padding: padding.getHorzTotal())
-        let height = getLength(regSize.height, residual: regulatorResidual.height, margin: margin.getVertTotal(), padding: padding.getVertTotal())
-
-        return CGSize(width: width, height: height)
+        return CGSize(
+            width: max(layoutResidual.width - padding.getHorzTotal(), 0),
+            height: max(layoutResidual.height - padding.getVertTotal(), 0)
+        )
     }
 
     private static func getIntrinsicLength(_ sizeDesc: SizeDescription, residual: CGFloat, margin: CGFloat, padding: CGFloat = 0, wrapValue: CGFloat? = nil) -> CGFloat? {
@@ -65,8 +56,7 @@ class CalculateUtil {
     ///   - size: size description
     /// - Returns: intrinsic size
     static func getIntrinsicSize(margin: UIEdgeInsets, residual: CGSize, size: Size) -> CGSize {
-        assert(size.width.isFixed || size.width.isRatio)
-        assert(size.height.isFixed || size.height.isRatio)
+        assert(size.bothNotWrap())
 
         if residual == .zero {
             return .zero
@@ -124,7 +114,7 @@ class CalculateUtil {
         /// 2. 计算大小
         /// 3. 处理大小扩充 匹配 aspectRatio
 
-        let size = calculateInAspectRatioContext(residual: residual, aspectRatio: measure.size.aspectRatio) {
+        let size = calculateInAspectRatioContext(residual: residual, margin: measure.margin, aspectRatio: measure.size.aspectRatio) {
             measure.calculate(by: $0)
         }
         startCalculateDiagnosis(measure: measure, residual: residual, intrinsic: size, msg: diagnosisMessage)
@@ -137,7 +127,7 @@ class CalculateUtil {
     ///   - residual: residual description
     /// - Returns: description
     static func calculateEstimateSize(for measure: Measure, residual: CGSize, diagnosisMessage: String? = nil) -> CGSize {
-        let size = calculateInAspectRatioContext(residual: residual, aspectRatio: measure.size.aspectRatio) { finalResidual in
+        let size = calculateInAspectRatioContext(residual: residual, margin: measure.margin, aspectRatio: measure.size.aspectRatio) { finalResidual in
             if measure.size.maybeWrap() {
                 return measure.calculate(by: finalResidual)
             } else {
@@ -148,8 +138,9 @@ class CalculateUtil {
         return size
     }
 
-    private static func calculateInAspectRatioContext(residual: CGSize, aspectRatio: CGFloat?, calculation: (CGSize) -> CGSize) -> CGSize {
-        let finalResidual = CalculateUtil.fit(residual, aspectRatio: aspectRatio, strategy: .collapse)
+    static func calculateInAspectRatioContext(residual: CGSize, margin: UIEdgeInsets, aspectRatio: CGFloat?, calculation: (CGSize) -> CGSize) -> CGSize {
+        let contentResidual = CGSize(width: residual.width - margin.getHorzTotal(), height: residual.height - margin.getVertTotal())
+        let finalResidual = CalculateUtil.fit(contentResidual, aspectRatio: aspectRatio, strategy: .collapse)
         let size = calculation(finalResidual)
         let finalSize = CalculateUtil.fit(size, aspectRatio: aspectRatio, strategy: .expand)
         return finalSize
