@@ -27,9 +27,9 @@ class TestVC: BaseVC {
 //            demo3().attach($0)
 //            demo4().attach($0)
 //            demo5().attach($0)
-            demo6().attach($0)
+//            demo6().attach($0)
 //            shrinkDeadLoopTest().attach($0)
-//            flowCompactTest().attach($0)
+            flowCompactTest().attach($0)
 //                    
 //            zboxFillAndWrapTest().attach($0)
 //                    
