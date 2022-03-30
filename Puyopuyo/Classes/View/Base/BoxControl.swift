@@ -60,11 +60,9 @@ public class BoxControl<R: Regulator> {
                     DiagnosisUitl.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
                     regulator.size = .init(width: .fill, height: .fill)
                 }
-                var residual = view.bounds.size
-                residual.width += regulator.margin.getHorzTotal()
-                residual.height += regulator.margin.getVertTotal()
 
-                regulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: residual, strategy: .positive)
+                let layoutResidual = view.bounds.size
+                regulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: layoutResidual, strategy: .positive)
             }
             if isCenterControl {
                 let b = CGRect(origin: .zero, size: regulator.calculatedSize)
