@@ -21,20 +21,20 @@ class SizePropertiesVC: BaseVC {
                     .numberOfLines(0)
                     .width(.fill)
 
-//                fixedSizeWillOverflow().attach($0)
-//
-//                mainRatioSizeWillFillResidual().attach($0)
-//                crossRatioSizeWillOcuppyResidual().attach($0)
-//
-//                wrapSizeWillBeCompress().attach($0)
-//                wrapSizePriority().attach($0)
-//                wrapSizeShrink().attach($0)
-//                wrapSizeGrow().attach($0)
+                fixedSizeWillOverflow().attach($0)
 
-//                wrapSizeAddMinMax().attach($0)
+                mainRatioSizeWillFillResidual().attach($0)
+                crossRatioSizeWillOcuppyResidual().attach($0)
+
+                wrapSizeWillBeCompress().attach($0)
+                wrapSizePriority().attach($0)
+                wrapSizeShrink().attach($0)
+                wrapSizeGrow().attach($0)
+
+                wrapSizeAddMinMax().attach($0)
 
                 aspectRatio().attach($0)
-//                complexSize().attach($0)
+                complexSize().attach($0)
             }
         )
         .attach(vRoot)

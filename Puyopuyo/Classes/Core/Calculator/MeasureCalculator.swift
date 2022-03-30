@@ -8,7 +8,7 @@
 import Foundation
 
 class MeasureCalculator: Calculator {
-    func calculate(_ measure: Measure, layoutResidual layoutResidual: CGSize) -> CGSize {
+    func calculate(_ measure: Measure, layoutResidual: CGSize) -> CGSize {
         if !measure.activated || !measure.size.isCalculable {
             return .zero
         }

@@ -258,16 +258,16 @@ class CalculateUtil {
 }
 
 enum _CalculateUtil {
-    static func getContentResidual(from layoutResidual: CGSize, for measure: Measure) -> CGSize {
+    static func getContentResidual(from layoutResidual: CGSize, margin: UIEdgeInsets, contentAspectRatio: CGFloat?) -> CGSize {
         let size = CGSize.ensureNotNegative(
-            width: layoutResidual.width - measure.margin.getHorzTotal(),
-            height: layoutResidual.height - measure.margin.getVertTotal()
+            width: layoutResidual.width - margin.getHorzTotal(),
+            height: layoutResidual.height - margin.getVertTotal()
         )
-        return size.collapse(to: measure.size.aspectRatio)
+        return size.collapse(to: contentAspectRatio)
     }
 
     static func getChildrenLayoutResidual(from regulatorLayoutResidual: CGSize, for regulator: Regulator) -> CGSize {
-        let regulatorContentResidual = getContentResidual(from: regulatorLayoutResidual, for: regulator)
+        let regulatorContentResidual = getContentResidual(from: regulatorLayoutResidual, margin: regulator.margin, contentAspectRatio: regulator.size.aspectRatio)
         return CGSize.ensureNotNegative(
             width: regulatorContentResidual.width - regulator.padding.getHorzTotal(),
             height: regulatorContentResidual.height - regulator.padding.getVertTotal()
@@ -277,16 +277,18 @@ enum _CalculateUtil {
     static func getIntrinsicSize(from calculableSize: Size, margin: UIEdgeInsets, layoutResidual: CGSize) -> CGSize {
         assert(calculableSize.bothNotWrap(), "Ensure size is calculable!!!")
 
-        if layoutResidual.width == 0 || layoutResidual.height == 0 {
+        let contentResidual = getContentResidual(from: layoutResidual, margin: margin, contentAspectRatio: calculableSize.aspectRatio)
+
+        if contentResidual.width == 0 || contentResidual.height == 0 {
             return .zero
         }
 
-        func getIntrinsicLength(_ sizeDesc: SizeDescription, residual: CGFloat, margin: CGFloat) -> CGFloat? {
+        func getIntrinsicLength(_ sizeDesc: SizeDescription, contentResidual: CGFloat) -> CGFloat? {
             switch sizeDesc.sizeType {
             case .fixed:
                 return max(0, sizeDesc.fixedValue)
             case .ratio:
-                return max(0, residual - margin)
+                return max(0, contentResidual)
             case .wrap:
                 fatalError("SizeType error: \(sizeDesc.sizeType)")
             case .aspectRatio:
@@ -294,12 +296,8 @@ enum _CalculateUtil {
             }
         }
 
-        var intrinsicWidth = getIntrinsicLength(
-            calculableSize.width, residual: layoutResidual.width, margin: margin.getHorzTotal()
-        )
-        var intrinsicHeight = getIntrinsicLength(
-            calculableSize.height, residual: layoutResidual.height, margin: margin.getVertTotal()
-        )
+        var intrinsicWidth = getIntrinsicLength(calculableSize.width, contentResidual: contentResidual.width)
+        var intrinsicHeight = getIntrinsicLength(calculableSize.height, contentResidual: contentResidual.height)
 
         if intrinsicWidth == nil, intrinsicHeight == nil {
             fatalError("Cannot get intrinsic size !!")
@@ -319,7 +317,7 @@ enum _CalculateUtil {
     static func getWrappedContentSize(for regulator: Regulator, layoutResidual: CGSize, childrenContentSize: CGSize) -> CGSize {
         let padding = regulator.padding
         var size = regulator.size
-        let contentResidual = getContentResidual(from: layoutResidual, for: regulator)
+        let contentResidual = getContentResidual(from: layoutResidual, margin: regulator.margin, contentAspectRatio: size.aspectRatio)
 
         if size.width.isWrap {
             size.width = .fix(
@@ -332,7 +330,8 @@ enum _CalculateUtil {
             )
         }
 
-        let contentSize = getIntrinsicSize(from: size, margin: regulator.margin, layoutResidual: layoutResidual)
+        var contentSize = getIntrinsicSize(from: size, margin: regulator.margin, layoutResidual: layoutResidual)
+        contentSize = contentSize.expand(to: size.aspectRatio)
         return contentSize
     }
 }
@@ -366,6 +365,10 @@ extension CGSize {
 
     func collapse(to aspectRatio: CGFloat?) -> CGSize {
         CGSize.fit(self, aspectRatio: aspectRatio, strategy: .collapse)
+    }
+
+    func clipIfNeeded(by clipper: CGSize) -> CGSize {
+        CGSize.ensureNotNegative(width: min(width, clipper.width), height: min(height, clipper.height))
     }
 
     private enum FitAspectRatioStrategy {
