@@ -28,8 +28,10 @@ public class BoxControl<R: Regulator> {
              2. 若非包裹，则上层视图时只是用了估算尺寸，需要再次计算子节点
              */
             if regulator.size.bothNotWrap() {
-                let residual = CGSize(width: view.bounds.width + regulator.margin.getHorzTotal(),
-                                      height: view.bounds.height + regulator.margin.getVertTotal())
+                let residual = CGSize(
+                    width: view.bounds.width + regulator.margin.getHorzTotal(),
+                    height: view.bounds.height + regulator.margin.getVertTotal()
+                )
                 _ = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: residual, strategy: .positive)
             }
         } else {
@@ -39,6 +41,7 @@ public class BoxControl<R: Regulator> {
                  当需要控制自身大小时，剩余空间为父视图的所有空间
                  */
                 var residual = view.superview?.bounds.size ?? .zero
+
                 if regulator.size.width.isWrap {
                     residual.width = regulator.size.width.max + regulator.margin.getHorzTotal()
                 }

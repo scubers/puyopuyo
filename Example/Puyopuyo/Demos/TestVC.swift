@@ -20,6 +20,7 @@ class TestVC: BaseVC {
     let text = State("")
     override func configView() {
         vRoot.attach {
+            UIView().attach($0).activated(false)
 //            tgTestView().attach($0)
             
 //            demo1().attach($0)
@@ -37,7 +38,7 @@ class TestVC: BaseVC {
 //
 //            zboxAspectRatioTest().attach($0)
 //
-            zboxRatioTest().attach($0)
+//            zboxRatioTest().attach($0)
         }
     }
     

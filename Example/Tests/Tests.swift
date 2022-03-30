@@ -71,8 +71,8 @@ class Tests: XCTestCase {
         var v1: UIView!
         var v2: UIView!
         let box = HBox().attach {
-            v1 = UILabel().attach($0).width(.fill).view
-            v2 = UILabel().attach($0).width(.fill).view
+            v1 = UILabel().attach($0).text("abc").width(.fill).view
+            v2 = UILabel().attach($0).text("abc").width(.fill).view
         }
         .width(100)
         .view
