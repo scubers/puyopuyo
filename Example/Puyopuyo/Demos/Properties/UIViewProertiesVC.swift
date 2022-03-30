@@ -14,10 +14,10 @@ class UIViewProertiesVC: BaseVC {
         DemoScroll(
             builder: {
                 alignment().attach($0)
-                crossSize().attach($0)
-                mainSize().attach($0)
-                visible().attach($0)
-                margin().attach($0)
+//                crossSize().attach($0)
+//                mainSize().attach($0)
+//                visible().attach($0)
+//                margin().attach($0)
             }
         )
         .attach(vRoot)

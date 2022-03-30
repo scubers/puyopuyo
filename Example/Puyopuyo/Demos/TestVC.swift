@@ -21,6 +21,14 @@ class TestVC: BaseVC {
     override func configView() {
         vRoot.attach {
             UIView().attach($0).activated(false)
+            
+            SelectionView([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14].map { Selector(desc: "\($0)", value: String($0)) }, selected: "5").attach($0)
+                .topBorder([.color(UIColor.black.withAlphaComponent(0.2)), .thick(Util.pixel(1))])
+                .size(.fill, .wrap)
+                .diagnosis("1")
+            
+            Label("abc").attach($0)
+                .size(.fill, .wrap)
 //            tgTestView().attach($0)
             
 //            demo1().attach($0)

@@ -41,12 +41,12 @@ public class BoxControl<R: Regulator> {
                  当需要控制自身大小时，剩余空间为父视图的所有空间
                  */
 
-                var layoutResidual: CGSize = .zero
+                var layoutResidual = CalculateUtil.getInitialLayoutResidual(for: regulator)
+
                 if let spv = view.superview {
-                    layoutResidual = spv.bounds.size
-                } else {
-                    // 没有父view，则需要构造剩余空间
-                    layoutResidual = CalculateUtil.getInitialLayoutResidual(for: regulator)
+                    let spvBounds = spv.bounds.size
+                    if regulator.size.width.isRatio { layoutResidual.width = spvBounds.width }
+                    if regulator.size.height.isRatio { layoutResidual.height = spvBounds.height }
                 }
 
                 regulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: layoutResidual, strategy: .positive)

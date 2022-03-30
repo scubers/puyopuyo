@@ -23,7 +23,7 @@ class CompareTests: XCTestCase {
         let pv = PuyoLinearLayoutView()
         let tv = TKLinearLayoutView(frame: .zero, orientation: .horz)
 
-        let times = 100
+        let times = 50
 
         let pi = profileTime(label: "puyo", times: times) {
             _ = pv.sizeThatFits(.zero)
@@ -44,7 +44,7 @@ class CompareTests: XCTestCase {
         let tv = TKFlowLayoutView(frame: .zero, orientation: .vert)
         tv.tg_arrangedCount = arrange
 
-        let times = 100
+        let times = 50
 
         let pi = profileTime(label: "puyo", times: times) {
             _ = pv.sizeThatFits(.zero)
