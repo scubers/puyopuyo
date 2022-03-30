@@ -158,7 +158,7 @@ public class BoxControl<R: Regulator> {
     }
 
     public func sizeThatFits(_ size: CGSize, regulator: R) -> CGSize {
-        return CalculateUtil.sizeThatFit(size: size, to: regulator)
+        return CalHelper.sizeThatFit(size: size, to: regulator)
     }
 
     public func control(scrollView: UIScrollView?, by view: UIView, regulator: R) {
