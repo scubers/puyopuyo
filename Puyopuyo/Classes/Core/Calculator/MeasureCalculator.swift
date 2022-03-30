@@ -15,7 +15,7 @@ class MeasureCalculator: Calculator {
 
         if measure.size.bothNotWrap() {
             // 非包裹，可以直接返回预估值
-            return CalHelper.calculateIntrinsicSize(for: measure, layoutResidual: layoutResidual, strategy: .negative)
+            return CalHelper.calculateIntrinsicSize(for: measure, layoutResidual: layoutResidual, strategy: .lazy)
         }
 
         // 下面计算逻辑一定包含wrap

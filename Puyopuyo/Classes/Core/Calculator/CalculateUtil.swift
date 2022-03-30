@@ -141,7 +141,7 @@ class CalculateUtil {
 
 enum CalHelper {
     enum CalculateStrategy {
-        case negative
+        case lazy
         case positive
     }
 
@@ -169,7 +169,7 @@ enum CalHelper {
         var layoutResidual = size
         if layoutResidual.width == 0 { layoutResidual.width = .greatestFiniteMagnitude }
         if layoutResidual.height == 0 { layoutResidual.height = .greatestFiniteMagnitude }
-        return calculateIntrinsicSize(for: measure, layoutResidual: layoutResidual, strategy: .negative)
+        return calculateIntrinsicSize(for: measure, layoutResidual: layoutResidual, strategy: .lazy)
     }
 }
 
@@ -179,18 +179,18 @@ extension CGSize {
     }
 
     func expand(to aspectRatio: CGFloat?) -> CGSize {
-        CGSize.fit(self, aspectRatio: aspectRatio, strategy: .expand)
+        fit(aspectRatio: aspectRatio, strategy: .expand)
     }
 
     func collapse(to aspectRatio: CGFloat?) -> CGSize {
-        CGSize.fit(self, aspectRatio: aspectRatio, strategy: .collapse)
+        fit(aspectRatio: aspectRatio, strategy: .collapse)
     }
 
     func clipIfNeeded(by clipper: CGSize) -> CGSize {
         CGSize.ensureNotNegative(width: min(width, clipper.width), height: min(height, clipper.height))
     }
 
-    private enum FitAspectRatioStrategy {
+    enum FitAspectRatioStrategy {
         case expand
         case collapse
     }
@@ -202,33 +202,33 @@ extension CGSize {
     ///   - aspectRatio: aspectRatio
     ///   - expand: if true, return the max size, otherwise the min size
     /// - Returns: The result size
-    private static func fit(_ size: CGSize, aspectRatio: CGFloat?, strategy: FitAspectRatioStrategy) -> CGSize {
+    func fit(aspectRatio: CGFloat?, strategy: FitAspectRatioStrategy) -> CGSize {
         guard let aspectRatio = aspectRatio, aspectRatio > 0 else {
-            return size
+            return self
         }
 
-        if size.width == 0 || size.height == 0 { return size }
+        if width == 0 || height == 0 { return self }
 
-        let currentAspectRatio = size.width / size.height
+        let currentAspectRatio = width / height
 
-        if currentAspectRatio == aspectRatio { return size }
+        if currentAspectRatio == aspectRatio { return self }
 
-        var finalResidual = size
+        var finalResidual = self
 
         if currentAspectRatio > aspectRatio {
             switch strategy {
             case .expand:
-                finalResidual.height = size.width / aspectRatio
+                finalResidual.height = width / aspectRatio
             case .collapse:
-                finalResidual.width = size.height * aspectRatio
+                finalResidual.width = height * aspectRatio
             }
 
         } else if currentAspectRatio < aspectRatio {
             switch strategy {
             case .expand:
-                finalResidual.width = size.height * aspectRatio
+                finalResidual.width = height * aspectRatio
             case .collapse:
-                finalResidual.height = size.width / aspectRatio
+                finalResidual.height = width / aspectRatio
             }
         }
 

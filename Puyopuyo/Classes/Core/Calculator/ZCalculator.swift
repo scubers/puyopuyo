@@ -88,7 +88,7 @@ private class _ZCalculator {
     }
 
     private func _calculateChild(_ measure: Measure, residual: CGSize, msg: String) {
-        measure.calculatedSize = CalHelper.calculateIntrinsicSize(for: measure, layoutResidual: residual, strategy: .negative)
+        measure.calculatedSize = CalHelper.calculateIntrinsicSize(for: measure, layoutResidual: residual, strategy: .lazy)
 
         // 记录当前最大宽高
         appendMaxWidthIfNeeded(measure)

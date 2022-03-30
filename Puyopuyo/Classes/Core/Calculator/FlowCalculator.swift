@@ -56,7 +56,7 @@ class _FlowCalculator {
         children.forEach { m in
             let subCalSize = m.size.getCalSize(by: regDirection)
 
-            let subCalFixedSize = CalHelper.calculateIntrinsicSize(for: m, layoutResidual: regChildrenResidualCalSize.getSize(), strategy: .negative, diagnosisMsg: "FlowCalculator content test calculating").getCalFixedSize(by: regDirection)
+            let subCalFixedSize = CalHelper.calculateIntrinsicSize(for: m, layoutResidual: regChildrenResidualCalSize.getSize(), strategy: .lazy, diagnosisMsg: "FlowCalculator content test calculating").getCalFixedSize(by: regDirection)
             let subCalMargin = CalEdges(insets: m.margin, direction: regDirection)
 
             let space = CGFloat(min(1, currentLine.count)) * regulator.itemSpace
