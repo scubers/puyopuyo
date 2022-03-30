@@ -20,13 +20,13 @@ private class _ZCalculator {
     init(_ regulator: ZRegulator, layoutResidual: CGSize) {
         self.regulator = regulator
         self.layoutResidual = layoutResidual
-        self.contentResidual = _CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: regulator.margin, contentAspectRatio: regulator.size.aspectRatio)
+        self.contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: regulator.margin, contentAspectRatio: regulator.size.aspectRatio)
     }
 
     lazy var regFixedWidth: CGFloat = regulator.padding.left + regulator.padding.right
     lazy var regFixedHeight: CGFloat = regulator.padding.top + regulator.padding.bottom
     lazy var regChildrenResidualSize: CGSize = {
-        _CalculateUtil.getChildrenLayoutResidual(for: regulator, regulatorLayoutResidual: layoutResidual)
+        CalculateUtil.getChildrenLayoutResidual(for: regulator, regulatorLayoutResidual: layoutResidual)
     }()
 
     var maxContentSize: CGSize = .zero
@@ -42,7 +42,7 @@ private class _ZCalculator {
 
         handleRatioChildrenIfNeeded()
 
-        let intrinsicSize = _CalculateUtil.getWrappedContentSize(for: regulator, padding: regulator.padding, contentResidual: contentResidual, childrenContentSize: maxContentSize)
+        let intrinsicSize = CalculateUtil.getWrappedContentSize(for: regulator, padding: regulator.padding, contentResidual: contentResidual, childrenContentSize: maxContentSize)
 
         calculateChildrenCenter(intrinsic: intrinsicSize)
 
@@ -88,7 +88,7 @@ private class _ZCalculator {
     }
 
     private func _calculateChild(_ measure: Measure, residual: CGSize, msg: String) {
-        measure.calculatedSize = CalculateUtil.calculateEstimateSize(for: measure, residual: residual, diagnosisMessage: msg)
+        measure.calculatedSize = CalHelper.calculateIntrinsicSize(for: measure, layoutResidual: residual, strategy: .negative)
 
         // 记录当前最大宽高
         appendMaxWidthIfNeeded(measure)

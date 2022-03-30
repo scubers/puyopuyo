@@ -15,12 +15,12 @@ class MeasureCalculator: Calculator {
 
         if measure.size.bothNotWrap() {
             // 非包裹，可以直接返回预估值
-            return CalculateUtil.calculateEstimateSize(for: measure, residual: layoutResidual)
+            return CalHelper.calculateIntrinsicSize(for: measure, layoutResidual: layoutResidual, strategy: .negative)
         }
 
         // 下面计算逻辑一定包含wrap
 
-        let contentResidual = _CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: measure.margin, contentAspectRatio: measure.size.aspectRatio)
+        let contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: measure.margin, contentAspectRatio: measure.size.aspectRatio)
 
         if contentResidual.width == 0 || contentResidual.height == 0 {
             // 若自身尺寸是包裹，并且剩余空间存在0，则不计算

@@ -30,7 +30,7 @@ public class BoxControl<R: Regulator> {
             if regulator.size.bothNotWrap() {
                 let residual = CGSize(width: view.bounds.width + regulator.margin.getHorzTotal(),
                                       height: view.bounds.height + regulator.margin.getVertTotal())
-                _ = CalculateUtil.calculateIntrinsicSize(for: regulator, residual: residual)
+                _ = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: residual, strategy: .positive)
             }
         } else {
             // 父视图为普通视图
@@ -45,7 +45,7 @@ public class BoxControl<R: Regulator> {
                 if regulator.size.height.isWrap {
                     residual.height = regulator.size.height.max + regulator.margin.getVertTotal()
                 }
-                regulator.calculatedSize = CalculateUtil.calculateIntrinsicSize(for: regulator, residual: residual)
+                regulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: residual, strategy: .positive)
             } else {
                 /**
                  1. 当不需要布局控制自身大小时，意味着外部已经给本布局设置好了尺寸，即可以反推出当前布局可用的剩余空间
@@ -53,14 +53,14 @@ public class BoxControl<R: Regulator> {
                  */
 
                 if !regulator.size.isRatio() {
-                    CalculateUtil.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
+                    DiagnosisUitl.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
                     regulator.size = .init(width: .fill, height: .fill)
                 }
                 var residual = view.bounds.size
                 residual.width += regulator.margin.getHorzTotal()
                 residual.height += regulator.margin.getVertTotal()
 
-                regulator.calculatedSize = CalculateUtil.calculateIntrinsicSize(for: regulator, residual: residual)
+                regulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: residual, strategy: .positive)
             }
             if isCenterControl {
                 let b = CGRect(origin: .zero, size: regulator.calculatedSize)

@@ -90,12 +90,12 @@ class _LinearCalculator {
         self.regulator = regulator
         self.layoutResidual = layoutResidual
         self.isIntrinsic = isIntrinsic
-        self.contentResidual = _CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: regulator.margin, contentAspectRatio: regulator.size.aspectRatio)
+        self.contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: regulator.margin, contentAspectRatio: regulator.size.aspectRatio)
     }
 
     /// 当前剩余尺寸，需要根据属性进行计算，由于当前计算即所有剩余尺寸，所以ratio为比例相同
     lazy var regChildrenResidualCalSize: CalFixedSize = {
-        let size = _CalculateUtil.getChildrenLayoutResidual(for: regulator, regulatorLayoutResidual: layoutResidual)
+        let size = CalculateUtil.getChildrenLayoutResidual(for: regulator, regulatorLayoutResidual: layoutResidual)
         return CalFixedSize(cgSize: size, direction: regulator.direction)
     }()
 
@@ -176,7 +176,7 @@ class _LinearCalculator {
 
     func calculateRegulatorSize() -> CGSize {
         let contentSize = CalFixedSize(main: totalSubMain, cross: maxSubCross, direction: regDirection)
-        return _CalculateUtil.getWrappedContentSize(for: regulator, padding: regulator.padding, contentResidual: contentResidual, childrenContentSize: contentSize.getSize())
+        return CalculateUtil.getWrappedContentSize(for: regulator, padding: regulator.padding, contentResidual: contentResidual, childrenContentSize: contentSize.getSize())
     }
 
     func calculateChildrenSize() {
@@ -354,7 +354,7 @@ class _LinearCalculator {
     }
 
     private func calculateChild(_ measure: Measure, subResidual: CalFixedSize, msg: String) {
-        measure.calculatedSize = CalculateUtil.calculateEstimateSize(for: measure, residual: subResidual.getSize(), diagnosisMessage: msg)
+        measure.calculatedSize = CalHelper.calculateIntrinsicSize(for: measure, layoutResidual: subResidual.getSize(), strategy: .negative, diagnosisMsg: msg)
     }
 
     private func hendleMainGrowIfNeeded() {
