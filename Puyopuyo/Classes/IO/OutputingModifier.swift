@@ -67,9 +67,9 @@ public extension OutputingModifier where Self: Outputing {
         Outputs { i in
             var times: Int = 0
             return self.outputing { v in
+                times += 1
                 guard times > count else { return }
                 i.input(value: v)
-                times += 1
             }
         }
     }
