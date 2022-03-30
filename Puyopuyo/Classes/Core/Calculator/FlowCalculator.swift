@@ -8,8 +8,8 @@
 import Foundation
 
 struct FlowCalculator: Calculator {
-    func calculate(_ measure: Measure, residual: CGSize) -> CGSize {
-        _FlowCalculator(measure as! FlowRegulator, residual: residual).calculate()
+    func calculate(_ measure: Measure, layoutResidual: CGSize) -> CGSize {
+        _FlowCalculator(measure as! FlowRegulator, residual: layoutResidual).calculate()
     }
 }
 

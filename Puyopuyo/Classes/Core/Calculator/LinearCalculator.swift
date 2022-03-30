@@ -76,8 +76,8 @@ import Foundation
  */
 
 struct LinearCalculator: Calculator {
-    @inlinable func calculate(_ measure: Measure, residual: CGSize) -> CGSize {
-        _LinearCalculator(measure as! LinearRegulator, residual: residual, isIntrinsic: false).calculate()
+    func calculate(_ measure: Measure, layoutResidual: CGSize) -> CGSize {
+        _LinearCalculator(measure as! LinearRegulator, residual: layoutResidual, isIntrinsic: false).calculate()
     }
 }
 

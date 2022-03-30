@@ -7,6 +7,10 @@
 
 import Foundation
 
+///
+/// 相关概念：
+/// layoutResidual: 提供给 布局 参与布局的空间（包含margin）
+/// contentResidual: View 实际可用的最大空间（不包含margin）
 class CalculateUtil {
     /// 获取Box在布局子节点时，子节点可使用的最大尺寸
     /// - Parameters:
@@ -250,5 +254,181 @@ class CalculateUtil {
         }
 
         return finalResidual
+    }
+}
+
+enum _CalculateUtil {
+    static func getContentResidual(from layoutResidual: CGSize, for measure: Measure) -> CGSize {
+        let size = CGSize.ensureNotNegative(
+            width: layoutResidual.width - measure.margin.getHorzTotal(),
+            height: layoutResidual.height - measure.margin.getVertTotal()
+        )
+        return size.collapse(to: measure.size.aspectRatio)
+    }
+
+    static func getChildrenLayoutResidual(from regulatorLayoutResidual: CGSize, for regulator: Regulator) -> CGSize {
+        let regulatorContentResidual = getContentResidual(from: regulatorLayoutResidual, for: regulator)
+        return CGSize.ensureNotNegative(
+            width: regulatorContentResidual.width - regulator.padding.getHorzTotal(),
+            height: regulatorContentResidual.height - regulator.padding.getVertTotal()
+        )
+    }
+
+    static func getIntrinsicSize(from calculableSize: Size, margin: UIEdgeInsets, layoutResidual: CGSize) -> CGSize {
+        assert(calculableSize.bothNotWrap(), "Ensure size is calculable!!!")
+
+        if layoutResidual.width == 0 || layoutResidual.height == 0 {
+            return .zero
+        }
+
+        func getIntrinsicLength(_ sizeDesc: SizeDescription, residual: CGFloat, margin: CGFloat) -> CGFloat? {
+            switch sizeDesc.sizeType {
+            case .fixed:
+                return max(0, sizeDesc.fixedValue)
+            case .ratio:
+                return max(0, residual - margin)
+            case .wrap:
+                fatalError("SizeType error: \(sizeDesc.sizeType)")
+            case .aspectRatio:
+                return nil
+            }
+        }
+
+        var intrinsicWidth = getIntrinsicLength(
+            calculableSize.width, residual: layoutResidual.width, margin: margin.getHorzTotal()
+        )
+        var intrinsicHeight = getIntrinsicLength(
+            calculableSize.height, residual: layoutResidual.height, margin: margin.getVertTotal()
+        )
+
+        if intrinsicWidth == nil, intrinsicHeight == nil {
+            fatalError("Cannot get intrinsic size !!")
+        }
+
+        if let aspectRatio = calculableSize.aspectRatio {
+            if intrinsicWidth == nil {
+                intrinsicWidth = intrinsicHeight! * aspectRatio
+            } else if intrinsicHeight == nil {
+                intrinsicHeight = intrinsicWidth! / aspectRatio
+            }
+        }
+        let finalSize = CGSize(width: intrinsicWidth!, height: intrinsicHeight!)
+        return finalSize
+    }
+
+    static func getWrappedContentSize(for regulator: Regulator, layoutResidual: CGSize, childrenContentSize: CGSize) -> CGSize {
+        let padding = regulator.padding
+        var size = regulator.size
+        let contentResidual = getContentResidual(from: layoutResidual, for: regulator)
+
+        if size.width.isWrap {
+            size.width = .fix(
+                min(contentResidual.width, size.width.getWrapSize(by: childrenContentSize.width + padding.getHorzTotal()))
+            )
+        }
+        if size.height.isWrap {
+            size.height = .fix(
+                min(contentResidual.height, size.height.getWrapSize(by: childrenContentSize.height + padding.getVertTotal()))
+            )
+        }
+
+        let contentSize = getIntrinsicSize(from: size, margin: regulator.margin, layoutResidual: layoutResidual)
+        return contentSize
+    }
+}
+
+enum CalHelper {
+    enum CalculateStrategy {
+        case estimate
+        case intrinsic
+    }
+
+    static func calculateIntrinsicSize(for measure: Measure, layoutResidual: CGSize, strategy: CalculateStrategy, diagnosisMsg: String? = nil) -> CGSize {
+        var size: CGSize
+        if measure.size.maybeWrap() || strategy == .intrinsic {
+            size = measure.calculate(by: layoutResidual)
+        } else {
+            size = _CalculateUtil.getIntrinsicSize(from: measure.size, margin: measure.margin, layoutResidual: layoutResidual)
+        }
+        DiagnosisUitl.startDiagnosis(measure: measure, residual: layoutResidual, intrinsic: size, msg: diagnosisMsg)
+        return size
+    }
+}
+
+extension CGSize {
+    static func ensureNotNegative(width: CGFloat, height: CGFloat) -> CGSize {
+        .init(width: max(0, width), height: min(0, height))
+    }
+
+    func expand(to aspectRatio: CGFloat?) -> CGSize {
+        CGSize.fit(self, aspectRatio: aspectRatio, strategy: .expand)
+    }
+
+    func collapse(to aspectRatio: CGFloat?) -> CGSize {
+        CGSize.fit(self, aspectRatio: aspectRatio, strategy: .collapse)
+    }
+
+    private enum FitAspectRatioStrategy {
+        case expand
+        case collapse
+    }
+
+    /// 根据提供的尺寸和宽高比，获取合理的尺寸
+    ///
+    /// - Parameters:
+    ///   - size: Original size
+    ///   - aspectRatio: aspectRatio
+    ///   - expand: if true, return the max size, otherwise the min size
+    /// - Returns: The result size
+    private static func fit(_ size: CGSize, aspectRatio: CGFloat?, strategy: FitAspectRatioStrategy) -> CGSize {
+        guard let aspectRatio = aspectRatio, aspectRatio > 0 else {
+            return size
+        }
+
+        if size.width == 0 || size.height == 0 { return size }
+
+        let currentAspectRatio = size.width / size.height
+
+        if currentAspectRatio == aspectRatio { return size }
+
+        var finalResidual = size
+
+        if currentAspectRatio > aspectRatio {
+            switch strategy {
+            case .expand:
+                finalResidual.height = size.width / aspectRatio
+            case .collapse:
+                finalResidual.width = size.height * aspectRatio
+            }
+
+        } else if currentAspectRatio < aspectRatio {
+            switch strategy {
+            case .expand:
+                finalResidual.width = size.height * aspectRatio
+            case .collapse:
+                finalResidual.height = size.width / aspectRatio
+            }
+        }
+
+        return finalResidual
+    }
+}
+
+enum DiagnosisUitl {
+    static func startDiagnosis(measure: Measure, residual: CGSize, intrinsic: CGSize, msg: String?) {
+        #if DEBUG
+        guard measure.diagnosisId != nil else { return }
+        let content = """
+
+        >>>>>>>>>> [Calculation diagnosis\(msg == nil ? "" : ": \(msg!)")] >>>>>>>>>>
+        \(measure.diagnosisMessage)
+        >>>>>>>>>> Result
+        - Residual: [width: \(residual.width), height: \(residual.height)]
+        - Intrinsic: [width: \(intrinsic.width), height: \(intrinsic.height)]
+        >>>>>>>>>> [Calculation diagnosis] >>>>>>>>>>
+
+        """
+        print(content)
+        #endif
     }
 }

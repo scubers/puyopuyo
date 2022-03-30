@@ -77,7 +77,7 @@ public class FlowRegulator: LinearRegulator {
     }
 
     override public func calculate(by residual: CGSize) -> CGSize {
-        return FlowCalculator().calculate(self, residual: residual)
+        return FlowCalculator().calculate(self, layoutResidual: residual)
     }
 
     override public var diagnosisMessage: String {

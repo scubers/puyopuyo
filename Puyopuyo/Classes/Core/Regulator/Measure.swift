@@ -99,6 +99,6 @@ public class Measure {
     }
 
     public func calculate(by residual: CGSize) -> CGSize {
-        return MeasureCalculator().calculate(self, residual: residual)
+        return MeasureCalculator().calculate(self, layoutResidual: residual)
     }
 }

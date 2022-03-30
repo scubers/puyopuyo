@@ -8,5 +8,5 @@
 import Foundation
 
 protocol Calculator {
-    func calculate(_ measure: Measure, residual: CGSize) -> CGSize
+    func calculate(_ measure: Measure, layoutResidual: CGSize) -> CGSize
 }

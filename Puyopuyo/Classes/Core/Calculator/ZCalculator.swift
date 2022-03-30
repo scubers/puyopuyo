@@ -8,8 +8,8 @@
 import Foundation
 
 class ZCalculator: Calculator {
-    func calculate(_ measure: Measure, residual: CGSize) -> CGSize {
-        _ZCalculator(measure as! ZRegulator, residual: residual).calculate()
+    func calculate(_ measure: Measure, layoutResidual: CGSize) -> CGSize {
+        _ZCalculator(measure as! ZRegulator, residual: layoutResidual).calculate()
     }
 }
 

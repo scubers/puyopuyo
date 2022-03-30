@@ -8,21 +8,21 @@
 import Foundation
 
 class MeasureCalculator: Calculator {
-    func calculate(_ measure: Measure, residual: CGSize) -> CGSize {
+    func calculate(_ measure: Measure, layoutResidual layoutResidual: CGSize) -> CGSize {
         if !measure.activated || !measure.size.isCalculable {
             return .zero
         }
 
         if measure.size.bothNotWrap() {
             // 非包裹，可以直接返回预估值
-            return CalculateUtil.calculateEstimateSize(for: measure, residual: residual)
+            return CalculateUtil.calculateEstimateSize(for: measure, residual: layoutResidual)
         }
 
         let margin = measure.margin
 
         let parentSize = CGSize(
-            width: max(0, residual.width - margin.getHorzTotal()),
-            height: max(0, residual.height - margin.getVertTotal())
+            width: max(0, layoutResidual.width - margin.getHorzTotal()),
+            height: max(0, layoutResidual.height - margin.getVertTotal())
         )
 
         if measure.size.maybeWrap(), parentSize.width == 0 || parentSize.height == 0 {
