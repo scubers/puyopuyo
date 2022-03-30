@@ -12,11 +12,38 @@ import Foundation
 /// layoutResidual: 提供给 布局 参与布局的空间（包含margin）
 /// contentResidual: View 实际可用的最大空间（不包含margin），且必须满足 size.aspectRatio 的宽高比
 class CalculateUtil {
+    static func getInitialLayoutResidual(for measure: Measure) -> CGSize {
+        func getInitialContentResidual(for sizeDesc: SizeDescription) -> CGFloat {
+            switch sizeDesc.sizeType {
+            case .fixed:
+                return sizeDesc.fixedValue
+            case .ratio:
+                return 0
+            case .wrap:
+                return sizeDesc.max
+            case .aspectRatio:
+                return .greatestFiniteMagnitude
+            }
+        }
+
+        let contentResidual = CGSize.ensureNotNegative(
+            width: getInitialContentResidual(for: measure.size.width),
+            height: getInitialContentResidual(for: measure.size.height)
+        )
+
+        return CGSize.ensureNotNegative(
+            width: contentResidual.width + measure.margin.getHorzTotal(),
+            height: contentResidual.height + measure.margin.getVertTotal()
+        )
+    }
+
     static func getContentResidual(layoutResidual: CGSize, margin: UIEdgeInsets, size: Size) -> CGSize {
         var residual = CGSize.ensureNotNegative(
             width: layoutResidual.width - margin.getHorzTotal(),
             height: layoutResidual.height - margin.getVertTotal()
         )
+        if size.width.isFixed { residual.width = size.width.fixedValue }
+        if size.height.isFixed { residual.height = size.height.fixedValue }
         // 可能被最大值约束
         residual = residual.clipIfNeeded(by: CGSize(width: size.width.max, height: size.height.max))
         return residual.collapse(to: size.aspectRatio)
