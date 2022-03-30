@@ -86,41 +86,38 @@ class _LinearCalculator {
     let layoutResidual: CGSize
     let contentResidual: CGSize
     let isIntrinsic: Bool
+    let childrenLayoutResidual: CGSize
     init(_ regulator: LinearRegulator, layoutResidual: CGSize, isIntrinsic: Bool) {
         self.regulator = regulator
         self.layoutResidual = layoutResidual
         self.isIntrinsic = isIntrinsic
         self.contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: regulator.margin, size: regulator.size)
+        self.childrenLayoutResidual = CalculateUtil.getChildrenLayoutResidual(for: regulator, regulatorLayoutResidual: layoutResidual)
     }
 
     /// 当前剩余尺寸，需要根据属性进行计算，由于当前计算即所有剩余尺寸，所以ratio为比例相同
-    lazy var regChildrenResidualCalSize: CalFixedSize = {
-        let size = CalculateUtil.getChildrenLayoutResidual(for: regulator, regulatorLayoutResidual: layoutResidual)
-        return CalFixedSize(cgSize: size, direction: regulator.direction)
-    }()
-
+    var regCalChildrenResidual: CalFixedSize { CalFixedSize(cgSize: childrenLayoutResidual, direction: regulator.direction) }
     var regCalMargin: CalEdges { CalEdges(insets: regulator.margin, direction: regulator.direction) }
     var regCalPadding: CalEdges { CalEdges(insets: regulator.padding, direction: regulator.direction) }
     var regCalSize: CalSize { CalSize(size: regulator.size, direction: regulator.direction) }
-
     var regDirection: Direction { regulator.direction }
 
     /// 不包含布局的padding
     var totalSubMain: CGFloat {
         // 间隙 + 主轴固定 + 主轴非压缩包裹 + 主轴压缩包裹 + 主轴margin
-        totalSpace + totalMainFixedSize + totalMainPrioritiedWrapSize + totalMainFlexWrapSize + totalMainMarginSize
+        totalSpace + totalMainFixedSize + totalMainPrioritiedWrapSize + totalMainFlexWrapSize + totalMargin
     }
 
     /// 主轴比例剩余空间
     var totalRatioResidual: CGFloat {
         // 剩余 - 已占用
-        regChildrenResidualCalSize.main - totalSubMain
+        regCalChildrenResidual.main - totalSubMain
     }
 
     /// 主轴非压缩包裹可使用剩余空间
     var totalPrioritedWrapResidual: CGFloat {
         // 剩余 - 总间隙 - 总固定 - 总margin
-        regChildrenResidualCalSize.main - totalSpace - totalMainFixedSize - totalMainMarginSize
+        regCalChildrenResidual.main - totalSpace - totalMainFixedSize - totalMargin
     }
 
     /// 主轴压缩包裹可使用空间
@@ -130,28 +127,31 @@ class _LinearCalculator {
 
     /// 总间隙
     var totalSpace: CGFloat = 0
-
+    /// 总主轴margin
+    var totalMargin: CGFloat = 0
+    
+    /// 总主轴 子节点计算后占用尺寸
+    var totalMainCalculatedSize: CGFloat = 0
+    
     /// 总主轴固定尺寸
     var totalMainFixedSize: CGFloat = 0
-    /// 总主轴margin
-    var totalMainMarginSize: CGFloat = 0
     /// 总主轴非压缩包裹尺寸
     var totalMainPrioritiedWrapSize: CGFloat = 0
     /// 主轴弹性包裹尺寸
     var totalMainFlexWrapSize: CGFloat = 0
 
     /// 记录计算好的最大次轴
-    var maxSubCross: CGFloat = 0
+    var maxContentCross: CGFloat = 0
 
     /// 主轴比例分母
     var totalMainRatio: CGFloat = 0
-    /// 需要计算的子节点
-    var calculateChildren = [Measure]()
     /// 主轴压缩分母
     var totalShrink: CGFloat = 0
     /// 主轴成长分母
     var totalGrow: CGFloat = 0
 
+    /// 需要计算的子节点
+    var calculateChildren = [Measure]()
     /// 次轴需要修正的子节点
     private lazy var crossRatioChildren = [Measure]()
     /// 主轴需要压缩的子节点
@@ -175,7 +175,7 @@ class _LinearCalculator {
     }
 
     func calculateRegulatorSize() -> CGSize {
-        let contentSize = CalFixedSize(main: totalSubMain, cross: maxSubCross, direction: regDirection)
+        let contentSize = CalFixedSize(main: totalSubMain, cross: maxContentCross, direction: regDirection)
         return CalculateUtil.getWrappedContentSize(for: regulator, padding: regulator.padding, contentResidual: contentResidual, childrenContentSize: contentSize.getSize())
     }
 
@@ -199,12 +199,12 @@ class _LinearCalculator {
         // 具备条件进行复算尺寸: 存在次轴父子依赖，并且当前为非固有尺寸模式
         if !isIntrinsic, !crossRatioChildren.isEmpty, regCalSize.cross.isWrap {
             let intrinsic = calculateRegulatorSize().getCalFixedSize(by: regDirection)
-            let residual = CalFixedSize(
+            let recalLayoutResidual = CalFixedSize(
                 main: intrinsic.main + regCalMargin.mainFixed,
                 cross: intrinsic.cross + regCalMargin.crossFixed,
                 direction: regDirection
             )
-            _LinearCalculator(regulator, layoutResidual: residual.getSize(), isIntrinsic: true).calculateChildrenSize()
+            _ = _LinearCalculator(regulator, layoutResidual: recalLayoutResidual.getSize(), isIntrinsic: true).calculate()
         }
     }
 
@@ -228,16 +228,17 @@ class _LinearCalculator {
                 formattable = false
             }
 
-            // 累加主轴固定尺寸 & 主轴margin
+            // 累加主轴固定尺寸
             if subCalSize.main.isFixed {
                 totalMainFixedSize += subCalSize.main.fixedValue
             }
 
-            totalMainMarginSize += subCalMargin.mainFixed
+            // 累加主轴margin
+            totalMargin += subCalMargin.mainFixed
 
             // 记录次轴最大值: 固定次轴尺寸 + 次轴margin
             if subCalSize.cross.isFixed {
-                maxSubCross = max(maxSubCross, subCalSize.cross.fixedValue + subCalMargin.crossFixed)
+                maxContentCross = max(maxContentCross, subCalSize.cross.fixedValue + subCalMargin.crossFixed)
             }
 
             if subCalSize.cross.isRatio {
@@ -263,7 +264,7 @@ class _LinearCalculator {
         }
 
         // 累加space到totalSpace
-        totalSpace += (CGFloat(calculateChildren.count - 1) * regulator.space)
+        totalSpace = CGFloat(calculateChildren.count - 1) * regulator.space
     }
 
     private func calculateChild(_ measure: Measure, msg: String) {
@@ -275,7 +276,7 @@ class _LinearCalculator {
     private func resetMainWrapSizeAndMaxSubCross() {
         totalMainPrioritiedWrapSize = 0
         totalMainFlexWrapSize = 0
-        maxSubCross = 0
+        maxContentCross = 0
         calculateChildren.forEach(appendChildrenToCalculatedSize(_:))
     }
 
@@ -293,12 +294,12 @@ class _LinearCalculator {
             }
         }
         if !subCalSize.cross.isRatio {
-            maxSubCross = max(maxSubCross, subFixedSize.cross + subCalMargin.crossFixed)
+            maxContentCross = max(maxContentCross, subFixedSize.cross + subCalMargin.crossFixed)
         }
     }
 
     private func getCurrentChildResidualCalFixedSize(_ measure: Measure) -> CalFixedSize {
-        let calSubSize = measure.size.getCalSize(by: regDirection)
+        let subCalSize = measure.size.getCalSize(by: regDirection)
         let subCalMargin = measure.margin.getCalEdges(by: regDirection)
 
         // 总剩余空间 - 主轴固定长度 + 当前节点主轴margin
@@ -306,14 +307,14 @@ class _LinearCalculator {
         var crossResidual: CGFloat?
 
         func calculateMainResidual() {
-            switch calSubSize.main.sizeType {
+            switch subCalSize.main.sizeType {
             case .fixed:
                 // 子主轴固定时，剩余空间需要减去当前固定尺寸
-                mainResidual = calSubSize.main.fixedValue + subCalMargin.mainFixed
+                mainResidual = subCalSize.main.fixedValue + subCalMargin.mainFixed
             case .wrap:
 
                 // 当允许弹性时，不限制剩余空间，优先算出总长度，下一步在进行处理压缩
-                if calSubSize.main.isFlex {
+                if subCalSize.main.isFlex {
                     mainResidual = .greatestFiniteMagnitude
                 } else {
                     // 包裹时就是当前剩余空间
@@ -321,7 +322,7 @@ class _LinearCalculator {
                 }
             case .ratio:
                 // 子主轴比重，需要根据当前剩余空间 & 比重进行计算
-                mainResidual = totalRatioResidual * (calSubSize.main.ratio / totalMainRatio) + subCalMargin.mainFixed
+                mainResidual = totalRatioResidual * (subCalSize.main.ratio / totalMainRatio) + subCalMargin.mainFixed
             case .aspectRatio:
                 mainResidual = totalRatioResidual + subCalMargin.mainFixed
             }
@@ -329,20 +330,20 @@ class _LinearCalculator {
 
         func calculateCrossResidual() {
             // 次轴上父子依赖的时候，剩余空间取当前已计算的最大次轴
-            switch calSubSize.cross.sizeType {
+            switch subCalSize.cross.sizeType {
             case .fixed:
-                crossResidual = calSubSize.cross.fixedValue + subCalMargin.crossFixed
+                crossResidual = subCalSize.cross.fixedValue + subCalMargin.crossFixed
             case .wrap:
-                crossResidual = regChildrenResidualCalSize.cross
+                crossResidual = regCalChildrenResidual.cross
             case .ratio:
-                crossResidual = (regChildrenResidualCalSize.cross) * calSubSize.cross.ratio
+                crossResidual = (regCalChildrenResidual.cross) * subCalSize.cross.ratio
             case .aspectRatio:
-                crossResidual = regChildrenResidualCalSize.cross
+                crossResidual = regCalChildrenResidual.cross
             }
         }
 
         // 根据宽高比来规定计算顺序
-        if calSubSize.cross.isAspectRatio {
+        if subCalSize.cross.isAspectRatio {
             calculateMainResidual()
             calculateCrossResidual()
         } else {
@@ -359,7 +360,7 @@ class _LinearCalculator {
 
     private func hendleMainGrowIfNeeded() {
         // 子节点有剩余空间，并且没有ratio节点时，处理成长
-        if totalGrow > 0, totalSubMain < regChildrenResidualCalSize.main, totalMainRatio == 0 {
+        if totalGrow > 0, totalSubMain < regCalChildrenResidual.main, totalMainRatio == 0 {
             let residualSize = totalRatioResidual
             mainGrowChildren.forEach { m in
                 let calSize = m.size.getCalSize(by: regDirection)
@@ -389,8 +390,8 @@ class _LinearCalculator {
 
     private func handleMainShrinkIfNeeded() {
         // 子节点超出剩余空间并且存在可压缩节点时，处理主轴压缩
-        if totalShrink > 0, totalSubMain > regChildrenResidualCalSize.main {
-            let overflowSize = totalSubMain - regChildrenResidualCalSize.main
+        if totalShrink > 0, totalSubMain > regCalChildrenResidual.main {
+            let overflowSize = totalSubMain - regCalChildrenResidual.main
 
             mainShrinkChildren.forEach {
                 let calSize = $0.size.getCalSize(by: regDirection)
@@ -439,9 +440,9 @@ class _LinearCalculator {
             switch format {
             // between 和 main 会忽略space的作用
             case .between where calculateIndex != 0:
-                delta = (regChildrenResidualCalSize.main - totalSubMain + totalSpace) / CGFloat(measures.count - 1) - regulator.space
+                delta = (regCalChildrenResidual.main - totalSubMain + totalSpace) / CGFloat(measures.count - 1) - regulator.space
             case .round:
-                delta = (regChildrenResidualCalSize.main - totalSubMain + totalSpace) / CGFloat(measures.count + 1) - (calculateIndex == 0 ? 0 : regulator.space)
+                delta = (regCalChildrenResidual.main - totalSubMain + totalSpace) / CGFloat(measures.count + 1) - (calculateIndex == 0 ? 0 : regulator.space)
             default: break
             }
             let (main, end) = _calculateMainOffset(measure: m, idx: calculateIndex, lastEnd: lastEnd + delta)
@@ -455,9 +456,9 @@ class _LinearCalculator {
         var delta: CGFloat = 0
         switch format {
         case .trailing:
-            delta = regChildrenResidualCalSize.main - regCalPadding.end - lastEnd + regCalPadding.mainFixed
+            delta = regCalChildrenResidual.main - regCalPadding.end - lastEnd + regCalPadding.mainFixed
         case .center:
-            delta = regChildrenResidualCalSize.main / 2 - totalSubMain / 2
+            delta = regCalChildrenResidual.main / 2 - totalSubMain / 2
         default: break
         }
 
@@ -478,14 +479,10 @@ class _LinearCalculator {
         let list = children.sorted {
             let size0 = $0.size.getCalSize(by: regDirection)
             let size1 = $1.size.getCalSize(by: regDirection)
-            return size0.getPriority() < size1.getPriority()
+//            return size0.getPriority() < size1.getPriority()
+            return LinearCalculatePriority.create(size0) < LinearCalculatePriority.create(size1)
         }
-//        printPriority(list)
         return list
-    }
-
-    private func printPriority(_ children: [Measure]) {
-        print(children.map { $0.size.getCalSize(by: regDirection).getSizeType().getDesc() }.joined(separator: ","))
     }
 
     private func _calculateMainOffset(measure: Measure, idx: Int, lastEnd: CGFloat) -> (CGFloat, CGFloat) {
@@ -574,3 +571,50 @@ extension CalSize {
         return .level3()
     }
 }
+
+struct LinearCalculatePriority: Comparable {
+    static func < (lhs: LinearCalculatePriority, rhs: LinearCalculatePriority) -> Bool {
+        if lhs.level == rhs.level {
+            if lhs.wrapPriority == rhs.wrapPriority {
+                return lhs.shrink < rhs.shrink
+            } else {
+                return lhs.wrapPriority > rhs.wrapPriority
+            }
+        }
+        return lhs.level < rhs.level
+    }
+
+    let level: Int
+
+    let wrapPriority: CGFloat
+    let shrink: CGFloat
+
+    static func create(_ calSize: CalSize) -> LinearCalculatePriority {
+        if calSize.main.sizeType == .aspectRatio {
+            if calSize.cross.isWrap {
+                return getLevel(.wrap)
+            } else {
+                return getLevel(calSize.cross)
+            }
+        } else {
+            return getLevel(calSize.main)
+        }
+    }
+
+    private static func getLevel(_ sizeDesc: SizeDescription) -> LinearCalculatePriority {
+        switch sizeDesc.sizeType {
+        case .fixed: return LinearCalculatePriority(level: 0, wrapPriority: 0, shrink: 0)
+        case .wrap: return LinearCalculatePriority(level: 10, wrapPriority: sizeDesc.priority, shrink: sizeDesc.shrink)
+        case .ratio: return LinearCalculatePriority(level: 20, wrapPriority: 0, shrink: 0)
+        case .aspectRatio: fatalError()
+        }
+    }
+}
+
+/**
+ 子节点计算优先级
+ 主轴：能确定大小 > 包裹大小 > 比重
+ F > W > R
+
+ A depend on cross
+ */
