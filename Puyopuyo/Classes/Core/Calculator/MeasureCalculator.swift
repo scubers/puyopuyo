@@ -28,35 +28,8 @@ class MeasureCalculator: Calculator {
         }
 
         // 后续提供计算的最终可用剩余空间
-
-        var contentSize = measure.sizeThatFits(contentResidual)
-
-        // handl width
-        switch measure.size.width.sizeType {
-        case .fixed:
-            contentSize.width = measure.size.width.fixedValue
-        case .ratio:
-            contentSize.width = contentResidual.width
-        case .wrap:
-            contentSize.width = min(measure.size.width.getWrapSize(by: contentSize.width), contentResidual.width)
-        case .aspectRatio:
-            break
-        }
-
-        // handle height
-        switch measure.size.height.sizeType {
-        case .fixed:
-            contentSize.height = measure.size.height.fixedValue
-        case .ratio:
-            contentSize.height = contentResidual.height
-        case .wrap:
-            contentSize.height = min(measure.size.height.getWrapSize(by: contentSize.height), contentResidual.height)
-        case .aspectRatio:
-            break
-        }
-
-//        let finalSize = CalculateUtil.fit(contentSize, aspectRatio: measure.size.aspectRatio, strategy: .expand)
-        let finalSize = contentSize.expand(to: measure.size.aspectRatio)
+        let contentSize = measure.sizeThatFits(contentResidual)
+        let finalSize = CalculateUtil.getWrappedContentSize(for: measure, padding: .zero, contentResidual: contentResidual, childrenContentSize: contentSize)
         return finalSize
     }
 }

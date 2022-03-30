@@ -10,7 +10,7 @@ import Foundation
 ///
 /// 相关概念：
 /// layoutResidual: 提供给 布局 参与布局的空间（包含margin）
-/// contentResidual: View 实际可用的最大空间（不包含margin）
+/// contentResidual: View 实际可用的最大空间（不包含margin），且必须满足 size.aspectRatio 的宽高比
 class CalculateUtil {
     static func getContentResidual(layoutResidual: CGSize, margin: UIEdgeInsets, contentAspectRatio: CGFloat?) -> CGSize {
         let size = CGSize.ensureNotNegative(
@@ -67,22 +67,34 @@ class CalculateUtil {
     }
 
     static func getWrappedContentSize(for measure: Measure, padding: UIEdgeInsets, contentResidual: CGSize, childrenContentSize: CGSize) -> CGSize {
-        var size = measure.size
+        var contentSize = CGSize(width: childrenContentSize.width + padding.getHorzTotal(), height: childrenContentSize.height + padding.getVertTotal())
 
-        if size.width.isWrap {
-            size.width = .fix(
-                min(contentResidual.width, size.width.getWrapSize(by: childrenContentSize.width + padding.getHorzTotal()))
-            )
-        }
-        if size.height.isWrap {
-            size.height = .fix(
-                min(contentResidual.height, size.height.getWrapSize(by: childrenContentSize.height + padding.getVertTotal()))
-            )
+        // handl width
+        switch measure.size.width.sizeType {
+        case .fixed:
+            contentSize.width = measure.size.width.fixedValue
+        case .ratio:
+            contentSize.width = contentResidual.width
+        case .wrap:
+            contentSize.width = min(measure.size.width.getWrapSize(by: contentSize.width), contentResidual.width)
+        case .aspectRatio:
+            break
         }
 
-        var contentSize = getIntrinsicSize(fromCalculableSize: size, contentResidual: contentResidual)
-        contentSize = contentSize.expand(to: size.aspectRatio)
-        return contentSize
+        // handle height
+        switch measure.size.height.sizeType {
+        case .fixed:
+            contentSize.height = measure.size.height.fixedValue
+        case .ratio:
+            contentSize.height = contentResidual.height
+        case .wrap:
+            contentSize.height = min(measure.size.height.getWrapSize(by: contentSize.height), contentResidual.height)
+        case .aspectRatio:
+            break
+        }
+
+        let finalSize = contentSize.expand(to: measure.size.aspectRatio)
+        return finalSize
     }
 
     static func calculateCrossAlignmentOffset(_ measure: Measure,
