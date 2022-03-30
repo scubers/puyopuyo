@@ -175,6 +175,16 @@ enum CalHelper {
     }
 }
 
+extension Comparable {
+    mutating func replaceIfLarger(_ value: Self) {
+        self = Swift.max(value, self)
+    }
+
+    mutating func replaceIfSmaller(_ value: Self) {
+        self = Swift.min(value, self)
+    }
+}
+
 extension CGSize {
     static func ensureNotNegative(width: CGFloat, height: CGFloat) -> CGSize {
         .init(width: max(0, width), height: max(0, height))

@@ -25,14 +25,11 @@ private class _ZCalculator {
         self.childrenLayoutResidual = CalculateUtil.getChildrenLayoutResidual(for: regulator, regulatorLayoutResidual: layoutResidual)
     }
 
-    lazy var regFixedWidth: CGFloat = regulator.padding.left + regulator.padding.right
-    lazy var regFixedHeight: CGFloat = regulator.padding.top + regulator.padding.bottom
-
     var maxChildContentSize: CGSize = .zero
 
-    var calculateChildren = [Measure]()
+    var calculateChildren = LinkList<Measure>()
 
-    lazy var maybeRatioChildren = [Measure]()
+    lazy var maybeRatioChildren = LinkList<Measure>()
 
     func calculate() -> CGSize {
         prepareData()
@@ -71,8 +68,7 @@ private class _ZCalculator {
 
     private func calculateChildrenSize() {
         calculateChildren.forEach { m in
-            let childLayoutResidual = getLayoutResidual(forChild: m)
-            _calculateChild(m, childLayoutResidual: childLayoutResidual, msg: "ZCalculator first time calculating")
+            _calculateChild(m, msg: "ZCalculator first time calculating")
         }
     }
 
@@ -80,13 +76,14 @@ private class _ZCalculator {
         // 当布局包裹时，需要最后拉伸子填充节点
         if regulator.size.maybeWrap() {
             maybeRatioChildren.forEach { m in
-                let currentChildResidual = getLayoutResidual(forChild: m)
-                _calculateChild(m, childLayoutResidual: currentChildResidual, msg: "ZCalculator ratio fill up calculating")
+                _calculateChild(m, msg: "ZCalculator ratio fill up calculating")
             }
         }
     }
 
-    private func _calculateChild(_ measure: Measure, childLayoutResidual: CGSize, msg: String) {
+    private func _calculateChild(_ measure: Measure, msg: String) {
+        let childLayoutResidual = getLayoutResidual(forChild: measure)
+
         measure.calculatedSize = CalHelper.calculateIntrinsicSize(for: measure, layoutResidual: childLayoutResidual, strategy: .lazy)
 
         // 记录当前最大宽高
@@ -95,29 +92,21 @@ private class _ZCalculator {
     }
 
     private func calculateChildrenCenter(intrinsic: CGSize) {
-        for measure in calculateChildren {
+        calculateChildren.forEach { measure in
             // 计算中心
             measure.calculatedCenter = _calculateCenter(measure, containerSize: intrinsic)
         }
     }
 
-    private func resetMaxContentSize() {
-        maxChildContentSize = .zero
-        calculateChildren.forEach { m in
-            appendMaxWidthIfNeeded(m)
-            appendMaxHeightIfNeeded(m)
-        }
-    }
-
     private func appendMaxWidthIfNeeded(_ measure: Measure) {
         if !measure.size.width.isRatio {
-            maxChildContentSize.width = max(maxChildContentSize.width, measure.calculatedSize.width + measure.margin.getHorzTotal())
+            maxChildContentSize.width.replaceIfLarger(measure.calculatedSizeWithMargin.width)
         }
     }
 
     private func appendMaxHeightIfNeeded(_ measure: Measure) {
         if !measure.size.height.isRatio {
-            maxChildContentSize.height = max(maxChildContentSize.height, measure.calculatedSize.height + measure.margin.getVertTotal())
+            maxChildContentSize.height.replaceIfLarger(measure.calculatedSizeWithMargin.height)
         }
     }
 
