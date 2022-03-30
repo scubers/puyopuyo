@@ -84,11 +84,13 @@ struct LinearCalculator: Calculator {
 class _LinearCalculator {
     let regulator: LinearRegulator
     let layoutResidual: CGSize
+    let contentResidual: CGSize
     let isIntrinsic: Bool
     init(_ regulator: LinearRegulator, layoutResidual: CGSize, isIntrinsic: Bool) {
         self.regulator = regulator
         self.layoutResidual = layoutResidual
         self.isIntrinsic = isIntrinsic
+        self.contentResidual = _CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: regulator.margin, contentAspectRatio: regulator.size.aspectRatio)
     }
 
     /// 当前剩余尺寸，需要根据属性进行计算，由于当前计算即所有剩余尺寸，所以ratio为比例相同
@@ -174,7 +176,7 @@ class _LinearCalculator {
 
     func calculateRegulatorSize() -> CGSize {
         let contentSize = CalFixedSize(main: totalSubMain, cross: maxSubCross, direction: regDirection)
-        return CalculateUtil.getRegulatorIntrinsicSizeByContentSize(regulator, residual: layoutResidual, contentSize: contentSize.getSize())
+        return _CalculateUtil.getWrappedContentSize(for: regulator, padding: regulator.padding, contentResidual: contentResidual, childrenContentSize: contentSize.getSize())
     }
 
     func calculateChildrenSize() {

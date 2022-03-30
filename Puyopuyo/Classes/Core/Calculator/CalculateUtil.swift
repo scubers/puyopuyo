@@ -91,7 +91,7 @@ class CalculateUtil {
     ///   - residual: 布局可用剩余尺寸
     ///   - contentSize: 布局内部内容尺寸
     /// - Returns: 固有尺寸
-    static func getRegulatorIntrinsicSizeByContentSize(_ regulator: Regulator, residual: CGSize, contentSize: CGSize) -> CGSize {
+    private static func getRegulatorIntrinsicSizeByContentSize(_ regulator: Regulator, residual: CGSize, contentSize: CGSize) -> CGSize {
         let margin = regulator.margin
         let padding = regulator.padding
         var regSize = regulator.size
