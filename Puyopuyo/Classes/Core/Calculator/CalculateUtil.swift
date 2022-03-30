@@ -12,16 +12,18 @@ import Foundation
 /// layoutResidual: 提供给 布局 参与布局的空间（包含margin）
 /// contentResidual: View 实际可用的最大空间（不包含margin），且必须满足 size.aspectRatio 的宽高比
 class CalculateUtil {
-    static func getContentResidual(layoutResidual: CGSize, margin: UIEdgeInsets, contentAspectRatio: CGFloat?) -> CGSize {
-        let size = CGSize.ensureNotNegative(
+    static func getContentResidual(layoutResidual: CGSize, margin: UIEdgeInsets, size: Size) -> CGSize {
+        var residual = CGSize.ensureNotNegative(
             width: layoutResidual.width - margin.getHorzTotal(),
             height: layoutResidual.height - margin.getVertTotal()
         )
-        return size.collapse(to: contentAspectRatio)
+        // 可能被最大值约束
+        residual = residual.clipIfNeeded(by: CGSize(width: size.width.max, height: size.height.max))
+        return residual.collapse(to: size.aspectRatio)
     }
 
     static func getChildrenLayoutResidual(for regulator: Regulator, regulatorLayoutResidual: CGSize) -> CGSize {
-        let regulatorContentResidual = getContentResidual(layoutResidual: regulatorLayoutResidual, margin: regulator.margin, contentAspectRatio: regulator.size.aspectRatio)
+        let regulatorContentResidual = getContentResidual(layoutResidual: regulatorLayoutResidual, margin: regulator.margin, size: regulator.size)
         return CGSize.ensureNotNegative(
             width: regulatorContentResidual.width - regulator.padding.getHorzTotal(),
             height: regulatorContentResidual.height - regulator.padding.getVertTotal()
@@ -158,7 +160,7 @@ enum CalHelper {
         if measure.size.maybeWrap() || strategy == .positive {
             size = measure.calculate(by: layoutResidual)
         } else {
-            let contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: measure.margin, contentAspectRatio: measure.size.aspectRatio)
+            let contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: measure.margin, size: measure.size)
             size = CalculateUtil.getIntrinsicSize(fromCalculableSize: measure.size, contentResidual: contentResidual)
         }
         DiagnosisUitl.startDiagnosis(measure: measure, residual: layoutResidual, intrinsic: size, msg: diagnosisMsg)

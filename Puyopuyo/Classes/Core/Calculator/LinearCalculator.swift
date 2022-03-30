@@ -90,7 +90,7 @@ class _LinearCalculator {
         self.regulator = regulator
         self.layoutResidual = layoutResidual
         self.isIntrinsic = isIntrinsic
-        self.contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: regulator.margin, contentAspectRatio: regulator.size.aspectRatio)
+        self.contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: regulator.margin, size: regulator.size)
     }
 
     /// 当前剩余尺寸，需要根据属性进行计算，由于当前计算即所有剩余尺寸，所以ratio为比例相同

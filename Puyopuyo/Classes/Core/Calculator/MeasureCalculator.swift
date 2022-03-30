@@ -20,7 +20,7 @@ class MeasureCalculator: Calculator {
 
         // 下面计算逻辑一定包含wrap
 
-        let contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: measure.margin, contentAspectRatio: measure.size.aspectRatio)
+        let contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: measure.margin, size: measure.size)
 
         if contentResidual.width == 0 || contentResidual.height == 0 {
             // 若自身尺寸是包裹，并且剩余空间存在0，则不计算

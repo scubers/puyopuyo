@@ -136,8 +136,10 @@ class MessageView: HBox, Stateful, Eventable {
                         .numberOfLines(0)
                         .text(binder.content)
                         .textColor(isSelf.map { $0 ? UIColor.white : .black })
+                        .diagnosis("1")
                 }
                 .width(.wrap(max: 250))
+                .diagnosis("2")
                 .padding(all: 12)
                 .backgroundColor(isSelf.map { $0 ? Theme.accentColor : .white })
                 .cornerRadius(8)
