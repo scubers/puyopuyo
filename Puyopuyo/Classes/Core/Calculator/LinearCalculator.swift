@@ -432,7 +432,7 @@ class _LinearCalculator {
             // 获取计算对象，根据是否反转获取
             let m = reversed ? measures[measures.count - calculateIndex - 1] : measures[calculateIndex]
             // 计算cross偏移
-            let cross = CalculateUtil.calculateCrossAlignmentOffset(m, direction: regDirection, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: intrinsic)
+            let cross = CalculateUtil.getCalculatedChildCrossAlignmentOffset(m, direction: regDirection, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: intrinsic)
             // 计算main偏移
             // 1. 计算之前，需要根据format计算补充间距
             var delta: CGFloat = 0

@@ -123,8 +123,8 @@ private class _ZCalculator {
     }
 
     private func _calculateCenter(_ measure: Measure, containerSize: CGSize) -> CGPoint {
-        let x = CalculateUtil.calculateCrossAlignmentOffset(measure, direction: .y, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: containerSize)
-        let y = CalculateUtil.calculateCrossAlignmentOffset(measure, direction: .x, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: containerSize)
+        let x = CalculateUtil.getCalculatedChildCrossAlignmentOffset(measure, direction: .y, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: containerSize)
+        let y = CalculateUtil.getCalculatedChildCrossAlignmentOffset(measure, direction: .x, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: containerSize)
         return CGPoint(x: x, y: y)
     }
 

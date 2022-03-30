@@ -97,11 +97,11 @@ class CalculateUtil {
         return finalSize
     }
 
-    static func calculateCrossAlignmentOffset(_ measure: Measure,
-                                              direction: Direction,
-                                              justifyContent: Alignment,
-                                              parentPadding: UIEdgeInsets,
-                                              parentSize: CGSize) -> CGFloat
+    static func getCalculatedChildCrossAlignmentOffset(_ measure: Measure,
+                                                       direction: Direction,
+                                                       justifyContent: Alignment,
+                                                       parentPadding: UIEdgeInsets,
+                                                       parentSize: CGSize) -> CGFloat
     {
         let parentCalSize = parentSize.getCalFixedSize(by: direction)
         let parentCalPadding = parentPadding.getCalEdges(by: direction)
