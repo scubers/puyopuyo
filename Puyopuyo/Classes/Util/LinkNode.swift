@@ -13,11 +13,17 @@ class LinkList<T> {
 
     private(set) var count: Int = 0
 
+    var isEmpty: Bool { count == 0 }
+
+    var first: T? { leading?.value }
+    var last: T? { trailing?.value }
+
     func append(_ value: T) {
         let node = Node(value)
         if let last = trailing {
             last.next = node
             node.previous = last
+            trailing = node
         } else {
             leading = node
             trailing = node
