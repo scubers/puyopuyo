@@ -221,8 +221,6 @@ class TestVC: BaseVC {
                     .height(.wrap(max: 100))
 //                    .aspectRatio(1)
                     .width(.aspectRatio(1 / 1))
-                    .diagnosis("control pad")
-                    .diagnosisMessage("good job")
                 
                 UILabel().attach($0)
                     .text("100")
@@ -315,7 +313,6 @@ class TestVC: BaseVC {
 //        .space(10)
 //        .padding(all: 10)
         .height(.wrap)
-        .diagnosis("abc")
         .width(.fill)
         .view
     }

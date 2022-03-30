@@ -77,23 +77,23 @@ import Foundation
 
 struct LinearCalculator: Calculator {
     func calculate(_ measure: Measure, layoutResidual: CGSize) -> CGSize {
-        _LinearCalculator(measure as! LinearRegulator, residual: layoutResidual, isIntrinsic: false).calculate()
+        _LinearCalculator(measure as! LinearRegulator, layoutResidual: layoutResidual, isIntrinsic: false).calculate()
     }
 }
 
 class _LinearCalculator {
     let regulator: LinearRegulator
-    let residual: CGSize
+    let layoutResidual: CGSize
     let isIntrinsic: Bool
-    init(_ regulator: LinearRegulator, residual: CGSize, isIntrinsic: Bool) {
+    init(_ regulator: LinearRegulator, layoutResidual: CGSize, isIntrinsic: Bool) {
         self.regulator = regulator
-        self.residual = residual
+        self.layoutResidual = layoutResidual
         self.isIntrinsic = isIntrinsic
     }
 
     /// 当前剩余尺寸，需要根据属性进行计算，由于当前计算即所有剩余尺寸，所以ratio为比例相同
     lazy var regChildrenResidualCalSize: CalFixedSize = {
-        let size = CalculateUtil.getChildrenTotalResidul(for: regulator, regulatorResidual: residual)
+        let size = _CalculateUtil.getChildrenLayoutResidual(for: regulator, regulatorLayoutResidual: layoutResidual)
         return CalFixedSize(cgSize: size, direction: regulator.direction)
     }()
 
@@ -174,7 +174,7 @@ class _LinearCalculator {
 
     func calculateRegulatorSize() -> CGSize {
         let contentSize = CalFixedSize(main: totalSubMain, cross: maxSubCross, direction: regDirection)
-        return CalculateUtil.getRegulatorIntrinsicSizeByContentSize(regulator, residual: residual, contentSize: contentSize.getSize())
+        return CalculateUtil.getRegulatorIntrinsicSizeByContentSize(regulator, residual: layoutResidual, contentSize: contentSize.getSize())
     }
 
     func calculateChildrenSize() {
@@ -202,7 +202,7 @@ class _LinearCalculator {
                 cross: intrinsic.cross + regCalMargin.crossFixed,
                 direction: regDirection
             )
-            _LinearCalculator(regulator, residual: residual.getSize(), isIntrinsic: true).calculateChildrenSize()
+            _LinearCalculator(regulator, layoutResidual: residual.getSize(), isIntrinsic: true).calculateChildrenSize()
         }
     }
 

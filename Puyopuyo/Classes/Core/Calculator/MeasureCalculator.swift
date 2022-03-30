@@ -18,38 +18,27 @@ class MeasureCalculator: Calculator {
             return CalculateUtil.calculateEstimateSize(for: measure, residual: layoutResidual)
         }
 
-        let margin = measure.margin
+        // 下面计算逻辑一定包含wrap
 
-        let parentSize = CGSize(
-            width: max(0, layoutResidual.width - margin.getHorzTotal()),
-            height: max(0, layoutResidual.height - margin.getVertTotal())
-        )
+        let contentResidual = _CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: measure.margin, contentAspectRatio: measure.size.aspectRatio)
 
-        if measure.size.maybeWrap(), parentSize.width == 0 || parentSize.height == 0 {
+        if contentResidual.width == 0 || contentResidual.height == 0 {
             // 若自身尺寸是包裹，并且剩余空间存在0，则不计算
             return .zero
         }
 
-        let tempMaxSize = CGSize(
-            width: min(parentSize.width, measure.size.width.max),
-            height: min(parentSize.height, measure.size.height.max)
-        )
-
         // 后续提供计算的最终可用剩余空间
-        let aspectResidual = CalculateUtil.fit(tempMaxSize, aspectRatio: measure.size.aspectRatio, strategy: .collapse)
 
-        var contentSize = measure.sizeThatFits(aspectResidual)
-        contentSize.width = Swift.min(contentSize.width, aspectResidual.width)
-        contentSize.height = Swift.min(contentSize.height, aspectResidual.height)
+        var contentSize = measure.sizeThatFits(contentResidual)
 
         // handl width
         switch measure.size.width.sizeType {
         case .fixed:
             contentSize.width = measure.size.width.fixedValue
         case .ratio:
-            contentSize.width = aspectResidual.width
+            contentSize.width = contentResidual.width
         case .wrap:
-            contentSize.width = min(measure.size.width.getWrapSize(by: contentSize.width), aspectResidual.width)
+            contentSize.width = min(measure.size.width.getWrapSize(by: contentSize.width), contentResidual.width)
         case .aspectRatio:
             break
         }
@@ -59,14 +48,15 @@ class MeasureCalculator: Calculator {
         case .fixed:
             contentSize.height = measure.size.height.fixedValue
         case .ratio:
-            contentSize.height = aspectResidual.height
+            contentSize.height = contentResidual.height
         case .wrap:
-            contentSize.height = min(measure.size.height.getWrapSize(by: contentSize.height), aspectResidual.height)
+            contentSize.height = min(measure.size.height.getWrapSize(by: contentSize.height), contentResidual.height)
         case .aspectRatio:
             break
         }
 
-        let finalSize = CalculateUtil.fit(contentSize, aspectRatio: measure.size.aspectRatio, strategy: .expand)
+//        let finalSize = CalculateUtil.fit(contentSize, aspectRatio: measure.size.aspectRatio, strategy: .expand)
+        let finalSize = contentSize.expand(to: measure.size.aspectRatio)
         return finalSize
     }
 }

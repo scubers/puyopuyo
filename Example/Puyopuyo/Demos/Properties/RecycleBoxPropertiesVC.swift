@@ -81,7 +81,6 @@ class RecycleBoxPropertiesVC: BaseVC {
                         return HBox().attach()
                             .size(w, w.map { $0 / 2 })
                             .backgroundColor(o.data)
-                            .diagnosis()
                             .view
                     }
                 )
@@ -434,7 +433,6 @@ class ColorSection: BasicRecycleItem<UIColor> {
                 return HBox().attach()
                     .size(w, w.map { $0 / 2 })
                     .backgroundColor(o.data)
-                    .diagnosis()
                     .view
             }
         )

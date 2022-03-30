@@ -152,7 +152,6 @@ class SizePropertiesVC: BaseVC {
                         height(.fill)
                         """).attach($0)
                             .size(.aspectRatio(1), .fill)
-                            .diagnosis("0")
 //                            .aspectRatio(1 / 1)
 //                            .height(.fill)
 
@@ -161,14 +160,12 @@ class SizePropertiesVC: BaseVC {
                         height(.wrap)
                         """).attach($0)
                             .width(.aspectRatio(1 / 2))
-                            .diagnosis("1")
 //                            .aspectRatio(1 / 2)
 
                         Label.demo("""
                         2 : 1
                         height(.wrap)
                         """).attach($0)
-                            .diagnosis("2")
 //                            .aspectRatio(2 / 1)
                             .width(.aspectRatio(2 / 1))
 

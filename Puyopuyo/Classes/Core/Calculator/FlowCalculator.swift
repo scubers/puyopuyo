@@ -9,24 +9,24 @@ import Foundation
 
 struct FlowCalculator: Calculator {
     func calculate(_ measure: Measure, layoutResidual: CGSize) -> CGSize {
-        _FlowCalculator(measure as! FlowRegulator, residual: layoutResidual).calculate()
+        _FlowCalculator(measure as! FlowRegulator, layoutResidual: layoutResidual).calculate()
     }
 }
 
 class _FlowCalculator {
-    init(_ regulator: FlowRegulator, residual: CGSize) {
+    init(_ regulator: FlowRegulator, layoutResidual: CGSize) {
         self.regulator = regulator
-        self.residual = residual
+        self.layoutResidual = layoutResidual
     }
 
     let regulator: FlowRegulator
-    let residual: CGSize
+    let layoutResidual: CGSize
     var arrange: Int { regulator.arrange }
 
     var regDirection: Direction { regulator.direction }
 
     lazy var regChildrenResidualCalSize: CalFixedSize = {
-        let size = CalculateUtil.getChildrenTotalResidul(for: regulator, regulatorResidual: residual)
+        let size = _CalculateUtil.getChildrenLayoutResidual(for: regulator, regulatorLayoutResidual: layoutResidual)
         return CalFixedSize(cgSize: size, direction: regDirection)
     }()
 

@@ -17,7 +17,7 @@ class CalculateUtil {
     ///   - regulator: regulator
     ///   - regulatorResidual: 布局自身可使用的尺寸
     /// - Returns: 子节点布局可以使用的尺寸
-    static func getChildrenTotalResidul(for regulator: Regulator, regulatorResidual: CGSize) -> CGSize {
+    private static func getChildrenTotalResidul(for regulator: Regulator, regulatorResidual: CGSize) -> CGSize {
         let regSize = regulator.size
         let margin = regulator.margin
         let padding = regulator.padding
@@ -59,7 +59,7 @@ class CalculateUtil {
     ///   - residual: residual
     ///   - size: size description
     /// - Returns: intrinsic size
-    static func getIntrinsicSize(margin: UIEdgeInsets, residual: CGSize, size: Size) -> CGSize {
+    private static func getIntrinsicSize(margin: UIEdgeInsets, residual: CGSize, size: Size) -> CGSize {
         assert(size.bothNotWrap())
 
         if residual == .zero {
@@ -274,10 +274,8 @@ enum _CalculateUtil {
         )
     }
 
-    static func getIntrinsicSize(fromCalculableSize calculableSize: Size, margin: UIEdgeInsets, layoutResidual: CGSize) -> CGSize {
+    static func getIntrinsicSize(fromCalculableSize calculableSize: Size, contentResidual: CGSize) -> CGSize {
         assert(calculableSize.bothNotWrap(), "Ensure size is calculable!!!")
-
-        let contentResidual = getContentResidual(layoutResidual: layoutResidual, margin: margin, contentAspectRatio: calculableSize.aspectRatio)
 
         if contentResidual.width == 0 || contentResidual.height == 0 {
             return .zero
@@ -314,10 +312,8 @@ enum _CalculateUtil {
         return finalSize
     }
 
-    static func getWrappedContentSize(for regulator: Regulator, layoutResidual: CGSize, childrenContentSize: CGSize) -> CGSize {
-        let padding = regulator.padding
-        var size = regulator.size
-        let contentResidual = getContentResidual(layoutResidual: layoutResidual, margin: regulator.margin, contentAspectRatio: size.aspectRatio)
+    static func getWrappedContentSize(for measure: Measure, padding: UIEdgeInsets, contentResidual: CGSize, childrenContentSize: CGSize) -> CGSize {
+        var size = measure.size
 
         if size.width.isWrap {
             size.width = .fix(
@@ -330,7 +326,7 @@ enum _CalculateUtil {
             )
         }
 
-        var contentSize = getIntrinsicSize(fromCalculableSize: size, margin: regulator.margin, layoutResidual: layoutResidual)
+        var contentSize = getIntrinsicSize(fromCalculableSize: size, contentResidual: contentResidual)
         contentSize = contentSize.expand(to: size.aspectRatio)
         return contentSize
     }
@@ -355,7 +351,8 @@ enum CalHelper {
         if measure.size.maybeWrap() || strategy == .positive {
             size = measure.calculate(by: layoutResidual)
         } else {
-            size = _CalculateUtil.getIntrinsicSize(fromCalculableSize: measure.size, margin: measure.margin, layoutResidual: layoutResidual)
+            let contentResidual = _CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: measure.margin, contentAspectRatio: measure.size.aspectRatio)
+            size = _CalculateUtil.getIntrinsicSize(fromCalculableSize: measure.size, contentResidual: contentResidual)
         }
         DiagnosisUitl.startDiagnosis(measure: measure, residual: layoutResidual, intrinsic: size, msg: diagnosisMsg)
         return size
@@ -364,7 +361,7 @@ enum CalHelper {
 
 extension CGSize {
     static func ensureNotNegative(width: CGFloat, height: CGFloat) -> CGSize {
-        .init(width: max(0, width), height: min(0, height))
+        .init(width: max(0, width), height: max(0, height))
     }
 
     func expand(to aspectRatio: CGFloat?) -> CGSize {

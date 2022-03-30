@@ -9,22 +9,22 @@ import Foundation
 
 class ZCalculator: Calculator {
     func calculate(_ measure: Measure, layoutResidual: CGSize) -> CGSize {
-        _ZCalculator(measure as! ZRegulator, residual: layoutResidual).calculate()
+        _ZCalculator(measure as! ZRegulator, layoutResidual: layoutResidual).calculate()
     }
 }
 
 private class _ZCalculator {
     let regulator: ZRegulator
-    let residual: CGSize
-    init(_ regulator: ZRegulator, residual: CGSize) {
+    let layoutResidual: CGSize
+    init(_ regulator: ZRegulator, layoutResidual: CGSize) {
         self.regulator = regulator
-        self.residual = residual
+        self.layoutResidual = layoutResidual
     }
 
     lazy var regFixedWidth: CGFloat = regulator.padding.left + regulator.padding.right
     lazy var regFixedHeight: CGFloat = regulator.padding.top + regulator.padding.bottom
     lazy var regChildrenResidualSize: CGSize = {
-        CalculateUtil.getChildrenTotalResidul(for: regulator, regulatorResidual: residual)
+        _CalculateUtil.getChildrenLayoutResidual(for: regulator, regulatorLayoutResidual: layoutResidual)
     }()
 
     var maxContentSize: CGSize = .zero
@@ -40,7 +40,7 @@ private class _ZCalculator {
 
         handleRatioChildrenIfNeeded()
 
-        let intrinsicSize = CalculateUtil.getRegulatorIntrinsicSizeByContentSize(regulator, residual: residual, contentSize: maxContentSize)
+        let intrinsicSize = CalculateUtil.getRegulatorIntrinsicSizeByContentSize(regulator, residual: layoutResidual, contentSize: maxContentSize)
 
         calculateChildrenCenter(intrinsic: intrinsicSize)
 
