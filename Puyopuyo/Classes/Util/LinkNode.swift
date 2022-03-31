@@ -47,6 +47,13 @@ class LinkList<T> {
         }
     }
 
+    func toArray() -> [T] {
+        var list = [T]()
+        list.reserveCapacity(count)
+        forEach { list.append($0) }
+        return list
+    }
+
     private class Node<T> {
         init(_ value: T) {
             self.value = value

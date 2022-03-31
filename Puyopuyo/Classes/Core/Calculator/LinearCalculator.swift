@@ -7,74 +7,6 @@
 
 import Foundation
 
-/**
-
- =============== 线性布局主轴原则 =================
- 1. 最优先保证 固有尺寸 的大小，允许超过剩余空间：固有尺寸包括padding，margin，space，fixedSize
- 2. 根据 wrap 的 priority 保证 wrap 的大小，不允许超过剩余空间
- 3. 最后根据剩余空间分配 ratio
-
- =============== 线性布局次轴原则 =================
- 1. 次轴计算将每次都会判断并记录当前最大次轴，允许超过剩余空间（固定 or ratio 都可以）
- 2. 次轴 ratio 取值为当前计算的最大max
- 3. 完成整体布局计算后，将所有次轴ratio额外设置为当前最大次轴
-
- =============== 线性布局计算逻辑 =================
-
- -- 预处理 --
- 1. 若布局非包裹cross，则最大cross由剩余空间cross确定(maxCross)
-
- -- 第一次循环 --
- 1. 筛选计算节点
-    1.1 activate = true
-    1.2 当布局主轴 wrap，子节点主轴 ratio 不参与计算
- 2. 校验是否可以format
- 3. 累加主轴比例总和 (totalMainRatio)
- 4. 累加主轴固定尺寸（表征当前布局的节点中，必然会使用的主轴尺寸：padding，margin，space，fix）
- 5. 记录最大次轴固定尺寸
- 6. 保存需要计算的子节点
-
- -- 第二次循环 --
- 1. 根据子节点的size的计算优先级进行排序
-
-     主_次
-
-     f_f, f_w: 必须最先计算，主轴固定尺寸优先级最高
-
-     w_f, w_w, w_r: 下一步根据 主轴 w 的 priority 以及 shrink 的优先级计算
-
-     r_w, f_r, r_f, r_r: 必须最后计算，主次都依赖剩余空间, f 不依赖其他参数
-
- -- 第三次循环 --
- 1. 计算子节点的大小
-
-     1.1 每次循环获取剩余空间大小
-     1.2 计算节点大小
-
- 2. 处理主轴压缩 maybe +1 loop
- 3. 如果存在次轴父子依赖：父wrap，子ratio
-    3.1 进行二次复算
-
- -- 第四次循环 --
- 1. 根据计算结果py_size, 重置wrap and maxSubCross值
-
- -- 第五次循环 --
- 1. 计算根据format(.between, .leading, .round)计算center值
-
- -- 可能存在的第六次循环 --
- 1. 若format值 == .trailing || .center,则需要第五次循环计算format的偏移量
-
- =============== 线性布局子节点计算逻辑说明 ===============
- 1. 子节点Size(width,height) 会根据direction来转换为 CalSize(main,cross)来进行计算
-    main为direction主轴方向，cross为垂直于main的次轴方向。
- 2. Size会有三种描述 (fix, ratio, wrap), 对应宽高的组合，则有 9 种搭配方式: (main|cross)
-    (f_f),(w_w, w_f, f_w),(w_r, r_w),(r_f, f_r),(r_r)
-    对应的计算顺序参考枚举 @see CalPriority，枚举值越小，优先计算
-    具体计算逻辑参考 @see LinearCalculator.regulateChild(_:)
- 3. 包裹尺寸计算时候会根据优先级进行排序，但是若布局为包裹，子节点有个特殊包裹(w_r)不会.wrap(priority:)影响
-
- */
-
 struct LinearCalculator: Calculator {
     func calculate(_ measure: Measure, layoutResidual: CGSize) -> CGSize {
         _LinearCalculator(measure as! LinearRegulator, layoutResidual: layoutResidual, isIntrinsic: false).calculate()
@@ -106,29 +38,6 @@ class _LinearCalculator {
     var regCalSize: CalSize { CalSize(size: regulator.size, direction: regulator.direction) }
     var regDirection: Direction { regulator.direction }
 
-//    /// 不包含布局的padding
-//    var totalSubMain: CGFloat {
-//        // 间隙 + 主轴固定 + 主轴非压缩包裹 + 主轴压缩包裹 + 主轴margin
-//        totalSpace + totalMainFixedSize + totalMainPrioritiedWrapSize + totalMainFlexWrapSize + totalMargin
-//    }
-//
-//    /// 主轴比例剩余空间
-//    var totalRatioResidual: CGFloat {
-//        // 剩余 - 已占用
-//        regCalChildrenResidual.main - totalSubMain
-//    }
-//
-//    /// 主轴非压缩包裹可使用剩余空间
-//    var totalPrioritedWrapResidual: CGFloat {
-//        // 剩余 - 总间隙 - 总固定 - 总margin
-//        regCalChildrenResidual.main - totalSpace - totalMainFixedSize - totalMargin
-//    }
-//
-//    /// 主轴压缩包裹可使用空间
-//    var totalShrinkWrapResidual: CGFloat {
-//        totalPrioritedWrapResidual - totalMainPrioritiedWrapSize
-//    }
-
     var totalMainChildrenContent: CGFloat {
         totalMargin + totalSpace + totalMainCalculatedSize
     }
@@ -147,13 +56,6 @@ class _LinearCalculator {
     /// 总主轴 子节点计算后占用尺寸
     var totalMainCalculatedSize: CGFloat = 0
 
-//    /// 总主轴固定尺寸
-//    var totalMainFixedSize: CGFloat = 0
-//    /// 总主轴非压缩包裹尺寸
-//    var totalMainPrioritiedWrapSize: CGFloat = 0
-//    /// 主轴弹性包裹尺寸
-//    var totalMainFlexWrapSize: CGFloat = 0
-
     /// 记录计算好的最大次轴
     var maxCrossChildrenContent: CGFloat = 0
 
@@ -167,11 +69,11 @@ class _LinearCalculator {
     /// 需要计算的子节点
     var calculateChildren = [Measure]()
     /// 次轴需要修正的子节点
-    private lazy var crossRatioChildren = [Measure]()
+    private lazy var crossRatioChildren = LinkList<Measure>()
     /// 主轴需要压缩的子节点
-    private lazy var mainShrinkChildren = [Measure]()
+    private lazy var mainShrinkChildren = LinkList<Measure>()
     /// 主轴需要成长的子节点
-    private lazy var mainGrowChildren = [Measure]()
+    private lazy var mainGrowChildren = LinkList<Measure>()
 
     /// 是否可用format，主轴为包裹，或者存在主轴比例的子节点时，则不能使用
     var formattable: Bool = true
@@ -203,12 +105,14 @@ class _LinearCalculator {
 
         // 主轴压缩和成长必定互斥
         // 处理主轴压缩
-        handleMainShrinkIfNeeded()
+        let shinkHandled = handleMainShrinkIfNeeded()
         // 处理主轴成长
-        hendleMainGrowIfNeeded()
+        let growHandled = hendleMainGrowIfNeeded()
 
-        // 重新获取最新计算值
-        resetMainWrapSizeAndMaxSubCross()
+        if shinkHandled || growHandled {
+            // 重新获取最新计算值
+            resetMainWrapSizeAndMaxSubCross()
+        }
 
         // 具备条件进行复算尺寸: 存在次轴父子依赖，并且当前为非固有尺寸模式
         if !isIntrinsic, !crossRatioChildren.isEmpty, regCalSize.cross.isWrap {
@@ -391,64 +295,68 @@ class _LinearCalculator {
         measure.calculatedSize = CalHelper.calculateIntrinsicSize(for: measure, layoutResidual: subResidual.getSize(), strategy: .lazy, diagnosisMsg: msg)
     }
 
-    private func hendleMainGrowIfNeeded() {
+    private func hendleMainGrowIfNeeded() -> Bool {
         // 子节点有剩余空间，并且没有ratio节点时，处理成长
-        if totalGrow > 0, totalMainRatio == 0, totalMainCalculatedSize < regCalChildrenLayoutResidual.main {
-            let residualSize = totalMainRatioLayoutResidual
-            mainGrowChildren.forEach { m in
-                let calSize = m.size.getCalSize(by: regDirection)
-                let calMargin = m.margin.getCalEdges(by: regDirection)
-                let calFixedSize = m.calculatedSize.getCalFixedSize(by: regDirection)
+        guard totalGrow > 0, totalMainRatio == 0, totalMainCalculatedSize < regCalChildrenLayoutResidual.main else {
+            return false
+        }
+        let residualSize = totalMainRatioLayoutResidual
+        mainGrowChildren.forEach { m in
+            let calSize = m.size.getCalSize(by: regDirection)
+            let calMargin = m.margin.getCalEdges(by: regDirection)
+            let calFixedSize = m.calculatedSize.getCalFixedSize(by: regDirection)
 
-                // 被分配的扩展长度
-                let delta = residualSize * calSize.main.grow / totalGrow
+            // 被分配的扩展长度
+            let delta = residualSize * calSize.main.grow / totalGrow
 
-                let newMainResidual = calFixedSize.main + delta + calMargin.mainFixed
-                var calLayoutResidual = getCurrentChildLayoutResidualCalFixedSize(m)
+            let newMainResidual = calFixedSize.main + delta + calMargin.mainFixed
+            var calLayoutResidual = getCurrentChildLayoutResidualCalFixedSize(m)
+            calLayoutResidual.main = newMainResidual
+
+            // 当前节点需要重新计算，所以先把累计值减去
+            totalMainCalculatedSize -= calFixedSize.main
+            // 重新计算
+            calculateChild(m, subResidual: calLayoutResidual, msg: "LinearCalculator grow calculating")
+            // 成长计算时，最后计算值可能小于成长值，需要手动赋值
+            var finalCalFixedSize = m.calculatedSize.getCalFixedSize(by: regDirection)
+            finalCalFixedSize.main = calFixedSize.main + delta
+            m.calculatedSize = finalCalFixedSize.getSize()
+            // 重新累计
+            appendChildrenToCalculatedSize(m)
+        }
+        return true
+    }
+
+    private func handleMainShrinkIfNeeded() -> Bool {
+        // 子节点超出剩余空间并且存在可压缩节点时，处理主轴压缩
+        let overflowSize = totalMainChildrenContent - regCalChildrenLayoutResidual.main
+
+        guard totalShrink > 0, overflowSize > 0 else {
+            return false
+        }
+        mainShrinkChildren.forEach {
+            let calSize = $0.size.getCalSize(by: regDirection)
+            if calSize.main.isWrap, calSize.main.shrink > 0 {
+                let calFixedSize = $0.calculatedSize.getCalFixedSize(by: regDirection)
+
+                let calMargin = $0.margin.getCalEdges(by: regDirection)
+                // 需要压缩的主轴长度
+                let delta = overflowSize * (calSize.main.shrink / totalShrink)
+
+                let newMainResidual = max(0, calFixedSize.main - delta) + calMargin.mainFixed
+
+                var calLayoutResidual = getCurrentChildLayoutResidualCalFixedSize($0)
                 calLayoutResidual.main = newMainResidual
 
                 // 当前节点需要重新计算，所以先把累计值减去
                 totalMainCalculatedSize -= calFixedSize.main
                 // 重新计算
-                calculateChild(m, subResidual: calLayoutResidual, msg: "LinearCalculator grow calculating")
-                // 成长计算时，最后计算值可能小于成长值，需要手动赋值
-                var finalCalFixedSize = m.calculatedSize.getCalFixedSize(by: regDirection)
-                finalCalFixedSize.main = calFixedSize.main + delta
-                m.calculatedSize = finalCalFixedSize.getSize()
+                calculateChild($0, subResidual: calLayoutResidual, msg: "LinearCalculator shrink calculating")
                 // 重新累计
-                appendChildrenToCalculatedSize(m)
+                appendChildrenToCalculatedSize($0)
             }
         }
-    }
-
-    private func handleMainShrinkIfNeeded() {
-        // 子节点超出剩余空间并且存在可压缩节点时，处理主轴压缩
-        let overflowSize = totalMainChildrenContent - regCalChildrenLayoutResidual.main
-
-        if totalShrink > 0, overflowSize > 0 {
-            mainShrinkChildren.forEach {
-                let calSize = $0.size.getCalSize(by: regDirection)
-                if calSize.main.isWrap, calSize.main.shrink > 0 {
-                    let calFixedSize = $0.calculatedSize.getCalFixedSize(by: regDirection)
-
-                    let calMargin = $0.margin.getCalEdges(by: regDirection)
-                    // 需要压缩的主轴长度
-                    let delta = overflowSize * (calSize.main.shrink / totalShrink)
-
-                    let newMainResidual = max(0, calFixedSize.main - delta) + calMargin.mainFixed
-
-                    var calLayoutResidual = getCurrentChildLayoutResidualCalFixedSize($0)
-                    calLayoutResidual.main = newMainResidual
-
-                    // 当前节点需要重新计算，所以先把累计值减去
-                    totalMainCalculatedSize -= calFixedSize.main
-                    // 重新计算
-                    calculateChild($0, subResidual: calLayoutResidual, msg: "LinearCalculator shrink calculating")
-                    // 重新累计
-                    appendChildrenToCalculatedSize($0)
-                }
-            }
-        }
+        return true
     }
 
     /// 这里为measures的大小都计算好，需要计算每个节点的center
