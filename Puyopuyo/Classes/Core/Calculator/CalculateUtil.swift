@@ -45,7 +45,7 @@ class CalculateUtil {
         if size.width.isFixed { residual.width = size.width.fixedValue }
         if size.height.isFixed { residual.height = size.height.fixedValue }
         // 可能被最大值约束
-        residual = residual.clipIfNeeded(by: CGSize(width: size.width.max, height: size.height.max))
+        residual = residual.clip(by: CGSize(width: size.width.max, height: size.height.max))
         return residual.collapse(to: size.aspectRatio)
     }
 
@@ -97,6 +97,9 @@ class CalculateUtil {
 
     static func getWrappedContentSize(for measure: Measure, padding: UIEdgeInsets, contentResidual: CGSize, childrenContentSize: CGSize) -> CGSize {
         var contentSize = CGSize(width: childrenContentSize.width + padding.getHorzTotal(), height: childrenContentSize.height + padding.getVertTotal())
+
+        // 内容不能超过 内容剩余空间
+        contentSize = contentSize.clip(by: contentResidual)
 
         // handl width
         switch measure.size.width.sizeType {
@@ -225,7 +228,7 @@ extension CGSize {
         fit(aspectRatio: aspectRatio, strategy: .collapse)
     }
 
-    func clipIfNeeded(by clipper: CGSize) -> CGSize {
+    func clip(by clipper: CGSize) -> CGSize {
         CGSize.ensureNotNegative(width: min(width, clipper.width), height: min(height, clipper.height))
     }
 

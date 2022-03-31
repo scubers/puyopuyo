@@ -28,7 +28,7 @@ class MeasureCalculator: Calculator {
         }
 
         // 后续提供计算的最终可用剩余空间
-        let contentSize = measure.sizeThatFits(contentResidual)
+        let contentSize = measure.sizeThatFits(contentResidual).clip(by: contentResidual)
         let finalSize = CalculateUtil.getWrappedContentSize(for: measure, padding: .zero, contentResidual: contentResidual, childrenContentSize: contentSize)
         return finalSize
     }
