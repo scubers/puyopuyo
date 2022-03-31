@@ -218,7 +218,7 @@ class _LinearCalculator {
                 cross: intrinsic.cross + regCalMargin.crossFixed,
                 direction: regDirection
             )
-            _ = _LinearCalculator(regulator, layoutResidual: recalLayoutResidual.getSize(), isIntrinsic: true).calculate()
+            _LinearCalculator(regulator, layoutResidual: recalLayoutResidual.getSize(), isIntrinsic: true).calculateChildrenSize()
         }
     }
 
@@ -243,11 +243,6 @@ class _LinearCalculator {
             if formattable, regCalSize.main.isWrap || subCalSize.main.isRatio, regulator.format != .leading {
                 formattable = false
             }
-
-            // 累加主轴固定尺寸
-//            if subCalSize.main.isFixed {
-//                totalMainFixedSize += subCalSize.main.fixedValue
-//            }
 
             // 累加主轴margin
             totalMargin += subCalMargin.mainFixed
@@ -301,18 +296,11 @@ class _LinearCalculator {
         let subFixedSize = CalFixedSize(cgSize: measure.calculatedSize, direction: regDirection)
         let subCalMargin = measure.margin.getCalEdges(by: regDirection)
         let subCalSize = measure.size.getCalSize(by: regDirection)
-//        if subCalSize.main.isWrap {
-//            if subCalSize.main.isFlex {
-//                totalMainFlexWrapSize += subFixedSize.main
-//            } else {
-//                totalMainPrioritiedWrapSize += subFixedSize.main
-//            }
-//        }
         if mainAppendableCalSize(subCalSize) {
             totalMainCalculatedSize += subFixedSize.main
         }
 
-        if !subCalSize.cross.isRatio {
+        if crossReplacableCalSize(subCalSize) {
             maxCrossChildrenContent = max(maxCrossChildrenContent, subFixedSize.cross + subCalMargin.crossFixed)
         }
     }
@@ -325,6 +313,17 @@ class _LinearCalculator {
             return false
         case .aspectRatio:
             return [SizeDescription.SizeType.wrap, .fixed].contains(calSize.cross.sizeType)
+        }
+    }
+
+    private func crossReplacableCalSize(_ calSize: CalSize) -> Bool {
+        switch calSize.cross.sizeType {
+        case .fixed, .wrap:
+            return true
+        case .ratio:
+            return false
+        case .aspectRatio:
+            return [SizeDescription.SizeType.wrap, .fixed].contains(calSize.main.sizeType)
         }
     }
 
@@ -371,7 +370,6 @@ class _LinearCalculator {
                 } else {
                     crossLayoutResidual = 0 // 非复算 并且处于依赖冲突，则不参与计算，剩余空间为0
                 }
-
             case .aspectRatio:
                 crossLayoutResidual = regCalChildrenLayoutResidual.cross
             }
@@ -530,99 +528,17 @@ class _LinearCalculator {
     }
 }
 
-extension CalSize {
-    struct Priority: Comparable {
-        static func < (lhs: CalSize.Priority, rhs: CalSize.Priority) -> Bool {
-            if lhs.level == rhs.level {
-                if lhs.priority == rhs.priority {
-                    return lhs.shrink < rhs.shrink
-                } else {
-                    return lhs.priority > rhs.priority
-                }
-            }
-            return lhs.level < rhs.level
-        }
-
-        var level: Int
-        var priority: CGFloat
-        var shrink: CGFloat
-
-        static func level1() -> Priority {
-            .init(level: 0, priority: 0, shrink: 0)
-        }
-
-        static func level2(priority: CGFloat, shrink: CGFloat) -> Priority {
-            .init(level: 10, priority: priority, shrink: shrink)
-        }
-
-        static func level3() -> Priority {
-            .init(level: 20, priority: 0, shrink: 0)
-        }
-    }
-
-    enum SizeType {
-        case f_f
-        case f_w
-
-        case w_f
-        case w_w
-        case w_r
-
-        case r_w
-        case f_r
-        case r_f
-        case r_r
-
-        func getDesc() -> String {
-            "\(self)".split(separator: ".").last!.description
-        }
-    }
-
-    func getSizeType() -> SizeType {
-        if main.isFixed, cross.isFixed { return .f_f }
-        if main.isFixed, cross.isWrap { return .f_w }
-
-        if main.isWrap, cross.isFixed { return .w_f }
-        if main.isWrap, cross.isWrap { return .w_w }
-        if main.isWrap, cross.isRatio { return .w_r }
-
-        if main.isRatio, cross.isWrap { return .r_w }
-        if main.isFixed, cross.isRatio { return .f_r }
-        if main.isRatio, cross.isFixed { return .r_f }
-        if main.isRatio, cross.isRatio { return .r_r }
-        return .f_f
-    }
-
-    func getPriority() -> Priority {
-        // level 1: f_f, f_w
-        if main.isFixed, cross.isFixed || cross.isWrap {
-            return .level1()
-        }
-        // level 2: w_f, w_w, w_r
-        if main.isWrap {
-            return .level2(priority: main.priority, shrink: main.shrink)
-        }
-        // level 3: r_w, f_r, r_f, r_r
-        return .level3()
-    }
-}
-
 struct LinearCalculatePriority: Comparable {
     static func < (lhs: LinearCalculatePriority, rhs: LinearCalculatePriority) -> Bool {
         if lhs.level == rhs.level {
-            if lhs.wrapPriority == rhs.wrapPriority {
-                return lhs.shrink < rhs.shrink
-            } else {
-                return lhs.wrapPriority > rhs.wrapPriority
-            }
+            return lhs.priority > rhs.priority
         }
         return lhs.level < rhs.level
     }
 
     let level: Int
 
-    let wrapPriority: CGFloat
-    let shrink: CGFloat
+    let priority: CGFloat
 
     static func create(_ calSize: CalSize) -> LinearCalculatePriority {
         if calSize.main.sizeType == .aspectRatio {
@@ -638,9 +554,9 @@ struct LinearCalculatePriority: Comparable {
 
     private static func getLevel(_ sizeDesc: SizeDescription) -> LinearCalculatePriority {
         switch sizeDesc.sizeType {
-        case .fixed: return LinearCalculatePriority(level: 0, wrapPriority: 0, shrink: 0)
-        case .wrap: return LinearCalculatePriority(level: 10, wrapPriority: sizeDesc.priority, shrink: sizeDesc.shrink)
-        case .ratio: return LinearCalculatePriority(level: 20, wrapPriority: 0, shrink: 0)
+        case .fixed: return LinearCalculatePriority(level: 0, priority: 0)
+        case .wrap: return LinearCalculatePriority(level: 10, priority: sizeDesc.priority)
+        case .ratio: return LinearCalculatePriority(level: 20, priority: 0)
         case .aspectRatio: fatalError()
         }
     }

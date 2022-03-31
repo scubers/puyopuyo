@@ -59,10 +59,7 @@ class SizePropertiesVC: BaseVC {
 
                         Label.demo("").attach($0)
                             .text(content.map { "wrap(min: 50, shrink: 1)\n\($0)" })
-                            .width(.wrap(max: 200, shrink: 1))
-//                            .height(.wrap(max: 100))
-                            .height(.aspectRatio(1))
-//                            .aspectRatio(1 / 1)
+                            .width(.wrap(min: 50, shrink: 1))
 
                         Label.demo("cross\n.fill").attach($0)
                             .size(.wrap, .fill)
@@ -175,16 +172,7 @@ class SizePropertiesVC: BaseVC {
                         """).attach($0)
                             .height(90)
                             .backgroundColor(.systemPink)
-                            //                            .aspectRatio(1 / 3)
                             .width(.aspectRatio(1 / 3))
-
-//                        Label.demo("""
-//                        1 : 100
-//                        fixed
-//                        """).attach($0)
-//                            .size(100, 100)
-//                            .aspectRatio(1 / 100)
-//                            .backgroundColor(.systemPink)
                     }
                     .demo()
                     .height(height.map { SizeDescription.fix($0) })
@@ -207,7 +195,7 @@ class SizePropertiesVC: BaseVC {
             },
             selectors: [],
             desc: """
-            AspectRatio means view's ratio value of width / height. It will not work if the size maybe fixed (width or height is fixed); Slide to change the height of box
+            AspectRatio means view's ratio value of width / height. Slide to change the height of box
             """
         )
         .attach()
