@@ -34,18 +34,19 @@ public class BoxControl<R: Regulator> {
             }
         } else {
             // 父视图为普通视图
+            var residual: CGSize
             if isSizeControl {
                 /**
                  当需要控制自身大小时，剩余空间为父视图的所有空间
                  */
-                var residual = view.superview?.bounds.size ?? .zero
+                residual = view.superview?.bounds.size ?? .zero
                 if regulator.size.width.isWrap {
                     residual.width = regulator.size.width.max + regulator.margin.getHorzTotal()
                 }
                 if regulator.size.height.isWrap {
                     residual.height = regulator.size.height.max + regulator.margin.getVertTotal()
                 }
-                regulator.calculatedSize = Calculator.calculateIntrinsicSize(for: regulator, residual: residual, calculateChildrenImmediately: true)
+                regulator.calculatedSize = Calculator.calculateIntrinsicSize(for: regulator, residual: residual, calculateChildrenImmediately: false)
             } else {
                 /**
                  1. 当不需要布局控制自身大小时，意味着外部已经给本布局设置好了尺寸，即可以反推出当前布局可用的剩余空间
@@ -56,11 +57,11 @@ public class BoxControl<R: Regulator> {
                     Calculator.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
                     regulator.size = .init(width: .fill, height: .fill)
                 }
-                var residual = view.bounds.size
+                residual = view.bounds.size
                 residual.width += regulator.margin.getHorzTotal()
                 residual.height += regulator.margin.getVertTotal()
 
-                regulator.calculatedSize = Calculator.calculateIntrinsicSize(for: regulator, residual: residual, calculateChildrenImmediately: true)
+                regulator.calculatedSize = Calculator.calculateIntrinsicSize(for: regulator, residual: residual, calculateChildrenImmediately: false)
             }
             if isCenterControl {
                 let b = CGRect(origin: .zero, size: regulator.calculatedSize)
@@ -80,6 +81,10 @@ public class BoxControl<R: Regulator> {
                 if self.isCenterControl {
                     view.center = regulator.calculatedCenter
                 }
+            }
+            
+            if regulator.size.bothNotWrap() {
+                _ = Calculator.calculateIntrinsicSize(for: regulator, residual: residual, calculateChildrenImmediately: true)
             }
         }
 
