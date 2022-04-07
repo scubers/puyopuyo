@@ -9,7 +9,7 @@ import Foundation
 
 struct LinearCalculator: Calculator {
     func calculate(_ measure: Measure, layoutResidual: CGSize) -> CGSize {
-        _LinearCalculator(measure as! LinearRegulator, layoutResidual: layoutResidual, isIntrinsic: false).calculate()
+        _LinearCalculator(measure as! LinearRegulator, layoutResidual: layoutResidual).calculate()
     }
 }
 
@@ -19,12 +19,10 @@ class _LinearCalculator {
     let regulator: LinearRegulator
     let layoutResidual: CGSize
     let contentResidual: CGSize
-    let isIntrinsic: Bool
     let childrenLayoutResidual: CGSize
-    init(_ regulator: LinearRegulator, layoutResidual: CGSize, isIntrinsic: Bool) {
+    init(_ regulator: LinearRegulator, layoutResidual: CGSize) {
         self.regulator = regulator
         self.layoutResidual = layoutResidual
-        self.isIntrinsic = isIntrinsic
         self.contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: regulator.margin, size: regulator.size)
         self.childrenLayoutResidual = CalculateUtil.getChildrenLayoutResidual(for: regulator, regulatorLayoutResidual: layoutResidual)
     }
@@ -65,6 +63,8 @@ class _LinearCalculator {
     var totalShrink: CGFloat = 0
     /// 主轴成长分母
     var totalGrow: CGFloat = 0
+    /// 是否可用format，主轴为包裹，或者存在主轴比例的子节点时，则不能使用
+    var formattable: Bool = true
 
     /// 需要计算的子节点
     var calculateChildren = [Measure]()
@@ -75,13 +75,14 @@ class _LinearCalculator {
     /// 主轴需要成长的子节点
     private lazy var mainGrowChildren = LinkList<Measure>()
 
-    /// 是否可用format，主轴为包裹，或者存在主轴比例的子节点时，则不能使用
-    var formattable: Bool = true
-
     /// 计算本身布局属性，可能返回的size 为 .fixed, .ratio, 不可能返回wrap
     func calculate() -> CGSize {
+        // 准备初始化计算数据
+        prepareData()
         // 需要同时计算子节点
-        calculateChildrenSize()
+        calculateChildrenSize(estimateCross: nil)
+        // 次轴冲突修正计算，需要避免此类冲突，可能造成O(n2)的复杂度
+        crossConfictCalculate()
 
         let finalSize = calculateRegulatorSize()
 
@@ -95,38 +96,57 @@ class _LinearCalculator {
         return CalculateUtil.getWrappedContentSize(for: regulator, padding: regulator.padding, contentResidual: contentResidual, childrenContentSize: contentSize.getSize())
     }
 
-    func calculateChildrenSize() {
-        prepareData()
+    func calculateChildrenSize(estimateCross: CGFloat?) {
+        // 清空计算值
+        totalMainCalculatedSize = 0
+        maxCrossChildrenContent = 0
 
         // 根据优先级计算
         getSortedChildren(calculateChildren).forEach {
-            calculateChild($0, msg: "LinearCalculator \(isIntrinsic ? "intrinsic" : "first time") calculating")
+            calculateChild($0, estimateCross: estimateCross, msg: "LinearCalculator calculating")
         }
 
         // 主轴压缩和成长必定互斥
         // 处理主轴压缩
-        let shinkHandled = handleMainShrinkIfNeeded()
+        let shinkHandled = handleMainShrinkIfNeeded(estimateCross: estimateCross)
         // 处理主轴成长
-        let growHandled = hendleMainGrowIfNeeded()
+        let growHandled = hendleMainGrowIfNeeded(estimateCross: estimateCross)
 
         if shinkHandled || growHandled {
             // 重新获取最新计算值
-            resetMainWrapSizeAndMaxSubCross()
-        }
-
-        // 具备条件进行复算尺寸: 存在次轴父子依赖，并且当前为非固有尺寸模式
-        if !isIntrinsic, !crossRatioChildren.isEmpty, regCalSize.cross.isWrap {
-            let intrinsic = calculateRegulatorSize().getCalFixedSize(by: regDirection)
-            let recalLayoutResidual = CalFixedSize(
-                main: intrinsic.main + regCalMargin.mainFixed,
-                cross: intrinsic.cross + regCalMargin.crossFixed,
-                direction: regDirection
-            )
-            _LinearCalculator(regulator, layoutResidual: recalLayoutResidual.getSize(), isIntrinsic: true).calculateChildrenSize()
+            totalMainCalculatedSize = 0
+            maxCrossChildrenContent = 0
+            calculateChildren.forEach(appendChildrenToCalculatedSize(_:))
         }
     }
 
     // MARK: - Private funcs
+
+    private func crossConfictCalculate() {
+        // 具备条件进行复算尺寸: 存在次轴父子依赖，并且当前为非固有尺寸模式
+        if !crossRatioChildren.isEmpty, regCalSize.cross.isWrap {
+            var compareCross = maxCrossChildrenContent
+
+            var count = 0
+            while true {
+                count += 1
+                print(">>>>>> count: \(count), cross: \(compareCross)")
+                calculateChildrenSize(estimateCross: compareCross)
+
+                let delta = maxCrossChildrenContent - compareCross
+                if abs(delta) < 1 {
+                    // 推算误差小于1像素
+                    compareCross = Swift.max(maxCrossChildrenContent, compareCross)
+                    calculateChildrenSize(estimateCross: compareCross)
+                    maxCrossChildrenContent = compareCross
+                    break
+                } else {
+                    // 推算有差距，二分法缩小差距
+                    compareCross += (delta / 2)
+                }
+            }
+        }
+    }
 
     private func prepareData() {
         // 第一次循环
@@ -182,16 +202,10 @@ class _LinearCalculator {
         totalSpace = CGFloat(calculateChildren.count - 1) * regulator.space
     }
 
-    private func calculateChild(_ measure: Measure, msg: String) {
-        let subResidual = getCurrentChildLayoutResidualCalFixedSize(measure)
+    private func calculateChild(_ measure: Measure, estimateCross: CGFloat?, msg: String) {
+        let subResidual = getCurrentChildLayoutResidualCalFixedSize(measure, estimateCross: estimateCross)
         calculateChild(measure, subResidual: subResidual, msg: msg)
         appendChildrenToCalculatedSize(measure)
-    }
-
-    private func resetMainWrapSizeAndMaxSubCross() {
-        totalMainCalculatedSize = 0
-        maxCrossChildrenContent = 0
-        calculateChildren.forEach(appendChildrenToCalculatedSize(_:))
     }
 
     /// 把计算好的节点的尺寸累计到统计值
@@ -231,7 +245,7 @@ class _LinearCalculator {
         }
     }
 
-    private func getCurrentChildLayoutResidualCalFixedSize(_ measure: Measure) -> CalFixedSize {
+    private func getCurrentChildLayoutResidualCalFixedSize(_ measure: Measure, estimateCross: CGFloat?) -> CalFixedSize {
         let subCalSize = measure.size.getCalSize(by: regDirection)
         let subCalMargin = measure.margin.getCalEdges(by: regDirection)
 
@@ -269,7 +283,9 @@ class _LinearCalculator {
             case .wrap:
                 crossLayoutResidual = regCalChildrenLayoutResidual.cross
             case .ratio:
-                if isIntrinsic || !regCalSize.cross.isWrap {
+                if let estimateCross = estimateCross {
+                    crossLayoutResidual = estimateCross
+                } else if !regCalSize.cross.isWrap {
                     crossLayoutResidual = (regCalChildrenLayoutResidual.cross) * subCalSize.cross.ratio
                 } else {
                     crossLayoutResidual = 0 // 非复算 并且处于依赖冲突，则不参与计算，剩余空间为0
@@ -295,7 +311,7 @@ class _LinearCalculator {
         measure.calculatedSize = CalHelper.calculateIntrinsicSize(for: measure, layoutResidual: subResidual.getSize(), strategy: .lazy, diagnosisMsg: msg)
     }
 
-    private func hendleMainGrowIfNeeded() -> Bool {
+    private func hendleMainGrowIfNeeded(estimateCross: CGFloat?) -> Bool {
         // 子节点有剩余空间，并且没有ratio节点时，处理成长
         guard totalGrow > 0, totalMainRatio == 0, totalMainCalculatedSize < regCalChildrenLayoutResidual.main else {
             return false
@@ -310,7 +326,7 @@ class _LinearCalculator {
             let delta = residualSize * calSize.main.grow / totalGrow
 
             let newMainResidual = calFixedSize.main + delta + calMargin.mainFixed
-            var calLayoutResidual = getCurrentChildLayoutResidualCalFixedSize(m)
+            var calLayoutResidual = getCurrentChildLayoutResidualCalFixedSize(m, estimateCross: estimateCross)
             calLayoutResidual.main = newMainResidual
 
             // 当前节点需要重新计算，所以先把累计值减去
@@ -327,7 +343,7 @@ class _LinearCalculator {
         return true
     }
 
-    private func handleMainShrinkIfNeeded() -> Bool {
+    private func handleMainShrinkIfNeeded(estimateCross: CGFloat?) -> Bool {
         // 子节点超出剩余空间并且存在可压缩节点时，处理主轴压缩
         let overflowSize = totalMainChildrenContent - regCalChildrenLayoutResidual.main
 
@@ -345,7 +361,7 @@ class _LinearCalculator {
 
                 let newMainResidual = max(0, calFixedSize.main - delta) + calMargin.mainFixed
 
-                var calLayoutResidual = getCurrentChildLayoutResidualCalFixedSize($0)
+                var calLayoutResidual = getCurrentChildLayoutResidualCalFixedSize($0, estimateCross: estimateCross)
                 calLayoutResidual.main = newMainResidual
 
                 // 当前节点需要重新计算，所以先把累计值减去

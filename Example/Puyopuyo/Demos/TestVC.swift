@@ -22,6 +22,35 @@ class TestVC: BaseVC {
         vRoot.attach {
             UIView().attach($0).activated(false)
             
+            let progress = State<CGFloat>(0)
+            HBox().attach($0) {
+                Label("").attach($0)
+                    .text(progress.map { v -> String in
+                        let total = Int(v * 50)
+                        return (0 ..< total).map { "\($0)" }.joined(separator: "")
+                    })
+                    .size(.wrap(shrink: 1, grow: 1), .fill)
+                
+                Label("").attach($0)
+                    .text(progress.map { v -> String in
+                        let total = Int(v * 100)
+                        return (0 ..< total).map { "\($0)" }.joined(separator: "")
+                    })
+                    .width(.wrap(shrink: 2, grow: 2))
+//                    .size(.wrap, .aspectRatio(1 / 1))
+                
+//                UIView().attach($0)
+//                    .size(100, 50)
+            }
+            .padding(all: 10)
+            .size(.fill, .wrap)
+            
+            UISlider().attach($0)
+                .width(.fill)
+                .onControlEvent(.valueChanged, Inputs {
+                    progress.value = CGFloat($0.value)
+                })
+            
 //            SelectionView([1, 2, 3, 4, 5].map { Selector(desc: "\($0)", value: String($0)) }, selected: "5").attach($0)
 //                .topBorder([.color(UIColor.black.withAlphaComponent(0.2)), .thick(Util.pixel(1))])
 //                .size(.fill, .wrap)
@@ -71,7 +100,6 @@ class TestVC: BaseVC {
                         .attach {
                             $0.tg_size(width: .fill, height: 70)
                             $0.tg_padding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-                            
                             
 //                            UILabel().attach($0)
 //                                .text("def")
