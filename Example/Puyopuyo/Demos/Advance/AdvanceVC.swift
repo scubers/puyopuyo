@@ -60,10 +60,12 @@ class AdvanceVC: BaseVC {
                             .size(.fill, .fill)
                             .textAlignment(.center)
                             .backgroundColor(Util.randomColor())
+                            .userInteractionEnabled(true)
+                            .style(TapTransformStyle())
                     }
                 }
-//                .space(4)
-                .padding(all: 20)
+                .space(4)
+                .padding(all: 4)
                 .size(.fill, 240)
                 .runRowSize(.fill)
 

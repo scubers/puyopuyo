@@ -91,7 +91,7 @@ class _FlowCalculator {
         if !currentLine.isEmpty {
             virtualLines.append(getVirtualLine(children: currentLine, index: virtualLines.count))
         }
-        let size = getVirtualRegulator(children: virtualLines).calculate(by: regChildrenResidualCalSize.getSize())
+        let size = getVirtualRegulator(children: virtualLines).calculate(by: layoutResidual)
         virtualLines.forEach { $0.justifyChildrenWithCenter() }
         return size
     }
@@ -107,7 +107,7 @@ class _FlowCalculator {
         }
 
         let virtualRegulator = getVirtualRegulator(children: fakeLines)
-        let size = virtualRegulator.calculate(by: regChildrenResidualCalSize.getSize())
+        let size = virtualRegulator.calculate(by: layoutResidual)
         fakeLines.forEach { $0.justifyChildrenWithCenter() }
         return size
     }
@@ -125,7 +125,7 @@ private extension _FlowCalculator {
         outside.padding = regulator.padding
         outside.reverse = regulator.reverse
         outside.size = regulator.size
-        outside.calculatedSize = regulator.calculatedSize
+//        outside.calculatedSize = regulator.calculatedSize
         return outside
     }
 
@@ -202,5 +202,5 @@ private class VirtualDelegate: MeasureDelegate {
         self.children = children
     }
 
-    var children = [Measure]()
+    let children: [Measure]
 }
