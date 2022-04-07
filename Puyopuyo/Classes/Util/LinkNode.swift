@@ -8,42 +8,79 @@
 import Foundation
 
 class LinkList<T> {
-    private var leading: Node<T>?
-    private var trailing: Node<T>?
-
     private(set) var count: Int = 0
 
     var isEmpty: Bool { count == 0 }
 
-    var first: T? { leading?.value }
-    var last: T? { trailing?.value }
+    private var headNode = Node<T>()
+    private var lastNode: Node<T>?
+
+    private var appendingNode: Node<T> { lastNode ?? headNode }
+
+    private var enumeratingCount = 0
+
+    var first: T? { headNode.next?.value }
+    var last: T? { lastNode?.value }
 
     func append(_ value: T) {
         let node = Node(value)
-        if let last = trailing {
-            last.next = node
-            node.previous = last
-            trailing = node
-        } else {
-            leading = node
-            trailing = node
-        }
+
+        appendingNode.next = node
+        node.previous = appendingNode
+        lastNode = node
+
         count += 1
     }
 
     func forEach(_ block: (T) -> Void) {
-        var current = leading
-        while current != nil {
-            block(current!.value)
-            current = current?.next
+        _forEachNode { block($0.value) }
+    }
+
+    private func _forEachNode(_ block: (Node<T>) -> Void) {
+        doEnumerate {
+            var current = headNode.next
+            while current != nil {
+                block(current!)
+                current = current?.next
+            }
         }
     }
 
+    private func _reverseForEachNode(_ block: (Node<T>) -> Void) {
+        doEnumerate {
+            var current = lastNode
+            while current != nil, current !== headNode {
+                block(current!)
+                current = current?.previous
+            }
+        }
+    }
+
+    private func doEnumerate(_ block: () -> Void) {
+        enumeratingCount += 1
+        block()
+        enumeratingCount -= 1
+    }
+
     func reverseForEach(_ block: (T) -> Void) {
-        var current = trailing
-        while current != nil {
-            block(current!.value)
-            current = current?.previous
+        _reverseForEachNode { block($0.value) }
+    }
+
+    func removeAll(where: (T) -> Bool = { _ in true }) {
+        assert(enumeratingCount == 0)
+        var pre: Node<T>?
+        _forEachNode { node in
+            if `where`(node.value) {
+                node.previous?.next = node.next
+                node.next?.previous = node.previous
+                count -= 1
+            } else {
+                pre = node
+            }
+        }
+
+        if pre !== lastNode {
+            lastNode = pre
         }
     }
 
@@ -59,7 +96,9 @@ class LinkList<T> {
             self.value = value
         }
 
-        var value: T
+        fileprivate init() {}
+
+        var value: T!
         var next: Node<T>?
 
         weak var previous: Node<T>?

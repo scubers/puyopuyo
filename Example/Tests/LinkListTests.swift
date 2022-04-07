@@ -18,6 +18,40 @@ class LinkListTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
+    func testRemove() throws {
+        let list = LinkList<Int>()
+
+        XCTAssert(list.isEmpty)
+
+        let nums = [0, 1, 2, 3, 4]
+
+        nums.forEach { list.append($0) }
+
+        list.removeAll(where: { $0 == 0 })
+
+        XCTAssert(list.first == 1)
+        XCTAssert(list.last == 4)
+        XCTAssert(list.count == nums.count - 1)
+
+        list.removeAll(where: { $0 == 4 })
+
+        XCTAssert(list.first == 1)
+        XCTAssert(list.last == 3)
+        XCTAssert(list.count == nums.count - 2)
+
+        list.removeAll(where: { $0 == 2 })
+
+        XCTAssert(list.first == 1)
+        XCTAssert(list.last == 3)
+        XCTAssert(list.count == nums.count - 3)
+
+        list.removeAll()
+        
+        XCTAssert(list.first == nil)
+        XCTAssert(list.last == nil)
+        XCTAssert(list.count == 0)
+    }
+
     func testLinkList() throws {
         let list = LinkList<Int>()
 

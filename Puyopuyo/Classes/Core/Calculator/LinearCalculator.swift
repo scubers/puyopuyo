@@ -127,10 +127,7 @@ class _LinearCalculator {
         if !crossRatioChildren.isEmpty, regCalSize.cross.isWrap {
             var compareCross = maxCrossChildrenContent
 
-            var count = 0
             while true {
-                count += 1
-                print(">>>>>> count: \(count), cross: \(compareCross)")
                 calculateChildrenSize(estimateCross: compareCross)
 
                 let delta = maxCrossChildrenContent - compareCross

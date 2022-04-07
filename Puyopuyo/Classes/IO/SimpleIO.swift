@@ -17,7 +17,7 @@ public class SimpleIO<Value>: Inputing, Outputing, UniqueOutputable, OutputingMo
     public typealias OutputType = Value
     public var uniqueDisposable: Disposer?
 
-    private var inputers = [Listener<Value>]()
+    private var inputers = LinkList<Listener<Value>>() // [Listener<Value>]()
 
     public init() {}
 

@@ -36,7 +36,7 @@ public class State<Value>: Outputing, Inputing, UniqueOutputable, OutputingModif
         didSet { inputers.forEach { $0.input.input(value: _value) } }
     }
 
-    private var inputers = [Listener<Value>]()
+    private var inputers = LinkList<Listener<Value>>()// [Listener<Value>]()
 
     /// Create a state without initial value, you can not use the value before set.
     /// Neither use keyPath to access value before set

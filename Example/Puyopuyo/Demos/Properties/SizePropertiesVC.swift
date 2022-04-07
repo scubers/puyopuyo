@@ -62,7 +62,7 @@ class SizePropertiesVC: BaseVC {
                             .width(.wrap(min: 50, shrink: 1))
 
                         Label.demo("cross\n.fill").attach($0)
-                            .size(.wrap, .fill)
+                            .size(.wrap(priority: 10), .fill)
 
                         Label.demo("stay").attach($0)
                             .width(.wrap(priority: 2))
@@ -111,7 +111,7 @@ class SizePropertiesVC: BaseVC {
 
                         Label.demo("").attach($0)
                             .text(content.map { "min(100)\n\($0)" })
-                            .size(.wrap(min: 100, shrink: 1), .wrap(min: 100))
+                            .size(.wrap(min: 100, shrink: 2), .wrap(min: 100))
                     }
                     .demo()
                     .width(.fill)
