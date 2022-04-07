@@ -35,13 +35,14 @@ public class BoxControl<R: Regulator> {
                 _ = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: layoutResidual, strategy: .positive)
             }
         } else {
+            var layoutResidual: CGSize
             // 父视图为普通视图
             if isSizeControl {
                 /**
                  当需要控制自身大小时，剩余空间为父视图的所有空间
                  */
 
-                var layoutResidual = CalculateUtil.getInitialLayoutResidual(for: regulator)
+                layoutResidual = CalculateUtil.getInitialLayoutResidual(for: regulator)
 
                 if let spv = view.superview {
                     let spvBounds = spv.bounds.size
@@ -49,7 +50,7 @@ public class BoxControl<R: Regulator> {
                     if regulator.size.height.isRatio { layoutResidual.height = spvBounds.height }
                 }
 
-                regulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: layoutResidual, strategy: .positive)
+                regulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: layoutResidual, strategy: .lazy)
             } else {
                 /**
                  1. 当不需要布局控制自身大小时，意味着外部已经给本布局设置好了尺寸，即可以反推出当前布局可用的剩余空间
@@ -61,9 +62,10 @@ public class BoxControl<R: Regulator> {
                     regulator.size = .init(width: .fill, height: .fill)
                 }
 
-                let layoutResidual = view.bounds.size
-                regulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: layoutResidual, strategy: .positive)
+                layoutResidual = view.bounds.size
+                regulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: layoutResidual, strategy: .lazy)
             }
+            
             if isCenterControl {
                 let b = CGRect(origin: .zero, size: regulator.calculatedSize)
                 regulator.calculatedCenter = CGPoint(x: b.midX + regulator.margin.left, y: b.midY + regulator.margin.top)
@@ -82,6 +84,11 @@ public class BoxControl<R: Regulator> {
                 if self.isCenterControl {
                     view.center = regulator.calculatedCenter
                 }
+            }
+
+            if regulator.size.bothNotWrap() {
+                // 非包裹，必须获取当前尺寸后再次布局子系统
+                _ = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: layoutResidual, strategy: .positive)
             }
         }
 
