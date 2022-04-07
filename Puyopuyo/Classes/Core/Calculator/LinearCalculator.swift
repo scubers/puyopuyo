@@ -8,8 +8,9 @@
 import Foundation
 
 struct LinearCalculator: Calculator {
+    let estimateChildren: Bool
     func calculate(_ measure: Measure, layoutResidual: CGSize) -> CGSize {
-        _LinearCalculator(measure as! LinearRegulator, layoutResidual: layoutResidual).calculate()
+        _LinearCalculator(measure as! LinearRegulator, layoutResidual: layoutResidual, estimateChildren: estimateChildren).calculate()
     }
 }
 
@@ -20,7 +21,9 @@ class _LinearCalculator {
     let layoutResidual: CGSize
     let contentResidual: CGSize
     let childrenLayoutResidual: CGSize
-    init(_ regulator: LinearRegulator, layoutResidual: CGSize) {
+    let estimateChildren: Bool
+    init(_ regulator: LinearRegulator, layoutResidual: CGSize, estimateChildren: Bool) {
+        self.estimateChildren = estimateChildren
         self.regulator = regulator
         self.layoutResidual = layoutResidual
         self.contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: regulator.margin, size: regulator.size)
@@ -305,7 +308,7 @@ class _LinearCalculator {
     }
 
     private func calculateChild(_ measure: Measure, subResidual: CalFixedSize, msg: String) {
-        measure.calculatedSize = CalHelper.calculateIntrinsicSize(for: measure, layoutResidual: subResidual.getSize(), strategy: .lazy, diagnosisMsg: msg)
+        measure.calculatedSize = CalHelper.calculateIntrinsicSize(for: measure, layoutResidual: subResidual.getSize(), strategy: estimateChildren ? .lazy : .positive, diagnosisMsg: msg)
     }
 
     private func hendleMainGrowIfNeeded(estimateCross: CGFloat?) -> Bool {

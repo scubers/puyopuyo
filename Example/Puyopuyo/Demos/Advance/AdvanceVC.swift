@@ -62,8 +62,8 @@ class AdvanceVC: BaseVC {
                             .backgroundColor(Util.randomColor())
                     }
                 }
-                .space(4)
-                .padding(all: 4)
+//                .space(4)
+                .padding(all: 20)
                 .size(.fill, 240)
                 .runRowSize(.fill)
 

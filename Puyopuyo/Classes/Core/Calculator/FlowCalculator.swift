@@ -181,6 +181,10 @@ private class VirtualLinearRegulator: LinearRegulator {
             m.calculatedCenter.y += delta.y
         }
     }
+
+    override func calculate(by residual: CGSize) -> CGSize {
+        return LinearCalculator(estimateChildren: false).calculate(self, layoutResidual: residual)
+    }
 }
 
 private class VirtualDelegate: MeasureDelegate {
