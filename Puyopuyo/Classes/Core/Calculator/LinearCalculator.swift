@@ -102,7 +102,7 @@ class _LinearCalculator {
         prepareData()
         // 需要同时计算子节点
         calculateChildrenSize(estimateCross: nil)
-        // 次轴冲突修正计算，需要避免此类冲突，可能造成O(n2)的复杂度
+        // 次轴冲突修正计算，需要避免此类冲突，可能造成O(n^2)的复杂度
         crossConfictCalculate()
 
         let finalSize = calculateRegulatorSize()
