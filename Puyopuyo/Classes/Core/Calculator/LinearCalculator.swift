@@ -408,9 +408,9 @@ class _LinearCalculator {
             switch format {
             // between 和 main 会忽略space的作用
             case .between where calculateIndex != 0:
-                delta = (regCalChildrenLayoutResidual.main - totalMainCalculatedSize + totalSpace) / CGFloat(measures.count - 1) - regulator.space
+                delta = (regCalChildrenLayoutResidual.main - totalMainChildrenContent + totalSpace) / CGFloat(measures.count - 1) - regulator.space
             case .round:
-                delta = (regCalChildrenLayoutResidual.main - totalMainCalculatedSize + totalSpace) / CGFloat(measures.count + 1) - (calculateIndex == 0 ? 0 : regulator.space)
+                delta = (regCalChildrenLayoutResidual.main - totalMainChildrenContent + totalSpace) / CGFloat(measures.count + 1) - (calculateIndex == 0 ? 0 : regulator.space)
             default: break
             }
             let (main, end) = _calculateMainOffset(measure: m, idx: calculateIndex, lastEnd: lastEnd + delta)
@@ -426,7 +426,7 @@ class _LinearCalculator {
         case .trailing:
             delta = regCalChildrenLayoutResidual.main - regCalPadding.end - lastEnd + regCalPadding.mainFixed
         case .center:
-            delta = regCalChildrenLayoutResidual.main / 2 - totalMainCalculatedSize / 2
+            delta = regCalChildrenLayoutResidual.main / 2 - totalMainChildrenContent / 2
         default: break
         }
 

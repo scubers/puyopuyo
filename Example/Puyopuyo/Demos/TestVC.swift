@@ -27,39 +27,6 @@ class TestVC: BaseVC {
         vRoot.attach {
             UIView().attach($0).activated(false)
             
-            let state = State(false)
-            
-            UISwitch().attach($0)
-                .isOn(state)
-                .onControlEvent(.valueChanged, Inputs {
-                    state.value = $0.isOn
-                })
-            
-            VBox().attach($0) {
-                Label(".fill, 50").attach($0)
-                    .size(.fill, 50)
-                
-                Label(".fill, .fill 正方形").attach($0)
-                    .width(.fill)
-                    .height(.aspectRatio(1))
-                    .visibility(state.binder.visibleOrGone)
-                
-                Label(".fill, .wrap Some content").attach($0)
-                    .size(.fill, .wrap)
-                    .visibility(state.binder.visibleOrGone)
-                
-                Label(".fill, .fill MarksView").attach($0)
-                    .size(.fill, .fill)
-                    .visibility(state.binder.visibleOrNot)
-                
-                Label(".wrap, .wrap BottomView").attach($0)
-            }
-            .justifyContent(.center)
-            .size(200, 400)
-            .padding(all: 10)
-            .space(5)
-            .alignment(.center)
-            
 //            HBox().attach($0) {
 //                for idx in 0 ..< 10 {
 //                    Label("\(idx)").attach($0)
@@ -92,7 +59,65 @@ class TestVC: BaseVC {
 //            zboxRatioTest().attach($0)
             
 //            crossConflictView().attach($0)
+            
+//            jkProblem1().attach($0)
+            
+            let state = State("")
+            HBox().attach($0) {
+                state.safeBind(to: $0) { this, _ in
+                    UIView().attach(this)
+                        .backgroundColor(Util.randomColor())
+                        .size(50, 50)
+                }
+            }
+            .onTap {
+                state.input(value: "")
+            }
+            .alignment(.center)
+            .format(.round)
+            .space(10)
+            .padding(all: 10)
+            .size(200, .wrap)
         }
+    }
+    
+    func jkProblem1() -> UIView {
+        VBox().attach {
+            let state = State(false)
+            
+            UISwitch().attach($0)
+                .isOn(state)
+                .onControlEvent(.valueChanged, Inputs {
+                    state.value = $0.isOn
+                })
+            
+            VBox().attach($0) {
+                Label(".fill, 50").attach($0)
+                    .size(.fill, 50)
+                
+                Label(".fill, .fill 正方形").attach($0)
+                    .width(.fill)
+                    .height(.aspectRatio(1))
+                    .visibility(state.binder.visibleOrGone)
+                
+                Label(".fill, .wrap Some content").attach($0)
+                    .size(.fill, .wrap)
+                    .visibility(state.binder.visibleOrGone)
+                
+                Label(".fill, .fill MarksView").attach($0)
+                    .size(.fill, .fill)
+                    .visibility(state.binder.visibleOrNot)
+                
+                Label(".wrap, .wrap BottomView").attach($0)
+            }
+            .justifyContent(.center)
+            .size(200, 400)
+            .padding(all: 10)
+            .space(5)
+            .alignment(.center)
+        }
+        .size(.fill, .fill)
+        .view
     }
     
     func crossConflictView() -> UIView {
