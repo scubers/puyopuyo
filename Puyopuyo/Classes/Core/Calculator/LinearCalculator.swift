@@ -14,6 +14,14 @@ struct LinearCalculator: Calculator {
     }
 }
 
+/**
+ 子节点计算优先级
+ 主轴：能确定大小 > 包裹大小 > 比重
+ F, A_F > W, A_W > A_R > R
+
+ A depend on cross
+ */
+
 class _LinearCalculator {
     // MARK: - Properties
 
@@ -71,6 +79,16 @@ class _LinearCalculator {
 
     /// 需要计算的子节点
     var calculateChildren = [Measure]()
+    /// 按照计算大小优先级排序好的子节点
+    lazy var sortedChildren: [Measure] = {
+        let list = calculateChildren.sorted {
+            let size0 = $0.size.getCalSize(by: regDirection)
+            let size1 = $1.size.getCalSize(by: regDirection)
+            return LinearItemLevel.create(size0) < LinearItemLevel.create(size1)
+        }
+        return list
+    }()
+
     /// 次轴需要修正的子节点
     private lazy var crossRatioChildren = LinkList<Measure>()
     /// 主轴需要压缩的子节点
@@ -105,7 +123,7 @@ class _LinearCalculator {
         maxCrossChildrenContent = 0
 
         // 根据优先级计算
-        getSortedChildren(calculateChildren).forEach {
+        sortedChildren.forEach {
             calculateChild($0, estimateCross: estimateCross, msg: "LinearCalculator calculating")
         }
 
@@ -224,14 +242,7 @@ class _LinearCalculator {
     }
 
     private func mainAppendableCalSize(_ calSize: CalSize) -> Bool {
-        switch calSize.main.sizeType {
-        case .fixed, .wrap:
-            return true
-        case .ratio:
-            return false
-        case .aspectRatio:
-            return [SizeDescription.SizeType.wrap, .fixed].contains(calSize.cross.sizeType)
-        }
+        LinearItemLevel.create(calSize).level != .mainRatio
     }
 
     private func crossReplacableCalSize(_ calSize: CalSize) -> Bool {
@@ -428,18 +439,6 @@ class _LinearCalculator {
                 m.calculatedCenter = calCenter.getPoint()
             }
         }
-
-//        return lastEnd
-    }
-
-    private func getSortedChildren(_ children: [Measure]) -> [Measure] {
-        let list = children.sorted {
-            let size0 = $0.size.getCalSize(by: regDirection)
-            let size1 = $1.size.getCalSize(by: regDirection)
-//            return size0.getPriority() < size1.getPriority()
-            return LinearCalculatePriority.create(size0) < LinearCalculatePriority.create(size1)
-        }
-        return list
     }
 
     private func _calculateMainOffset(measure: Measure, idx: Int, lastEnd: CGFloat) -> (CGFloat, CGFloat) {
@@ -452,19 +451,34 @@ class _LinearCalculator {
     }
 }
 
-struct LinearCalculatePriority: Comparable {
-    static func < (lhs: LinearCalculatePriority, rhs: LinearCalculatePriority) -> Bool {
+struct LinearItemLevel: Comparable {
+    static func < (lhs: LinearItemLevel, rhs: LinearItemLevel) -> Bool {
         if lhs.level == rhs.level {
             return lhs.priority > rhs.priority
         }
         return lhs.level < rhs.level
     }
 
-    let level: Int
+    let level: Level
 
     let priority: CGFloat
 
-    static func create(_ calSize: CalSize) -> LinearCalculatePriority {
+    enum Level: Int, Comparable {
+        static func < (lhs: LinearItemLevel.Level, rhs: LinearItemLevel.Level) -> Bool {
+            lhs.rawValue < rhs.rawValue
+        }
+
+        case mainFixOrDependsOnFix = 0
+        case mainWrapOrDependsOnWrap = 1
+        case mainDependsOnRatio = 2
+        case mainRatio = 3
+    }
+
+    static func create(_ calSize: CalSize) -> LinearItemLevel {
+        if calSize.isMainAspectRatioDependsOnRatio {
+            return LinearItemLevel(level: .mainDependsOnRatio, priority: 0)
+        }
+
         if calSize.main.sizeType == .aspectRatio {
             if calSize.cross.isWrap {
                 return getLevel(.wrap)
@@ -476,20 +490,18 @@ struct LinearCalculatePriority: Comparable {
         }
     }
 
-    private static func getLevel(_ sizeDesc: SizeDescription) -> LinearCalculatePriority {
+    private static func getLevel(_ sizeDesc: SizeDescription) -> LinearItemLevel {
         switch sizeDesc.sizeType {
-        case .fixed: return LinearCalculatePriority(level: 0, priority: 0)
-        case .wrap: return LinearCalculatePriority(level: 10, priority: sizeDesc.priority)
-        case .ratio: return LinearCalculatePriority(level: 20, priority: 0)
+        case .fixed: return LinearItemLevel(level: .mainFixOrDependsOnFix, priority: 0)
+        case .wrap: return LinearItemLevel(level: .mainWrapOrDependsOnWrap, priority: sizeDesc.priority)
+        case .ratio: return LinearItemLevel(level: .mainRatio, priority: 0)
         case .aspectRatio: fatalError()
         }
     }
 }
 
-/**
- 子节点计算优先级
- 主轴：能确定大小 > 包裹大小 > 比重
- F > W > R
-
- A depend on cross
- */
+private extension CalSize {
+    var isMainAspectRatioDependsOnRatio: Bool {
+        main.sizeType == .aspectRatio && cross.sizeType == .ratio
+    }
+}

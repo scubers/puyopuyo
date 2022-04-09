@@ -54,12 +54,12 @@ class SizePropertiesVC: BaseVC {
                             .size(30, .fill)
 
                         Label.demo("").attach($0)
-                            .width(.wrap(shrink: 1))
-                            .text(content.map { "\($0)\($0)" })
+                            .width(.wrap(shrink: 2))
+                            .text(content.map { "shrink: 2, \($0)\($0)" })
 
                         Label.demo("").attach($0)
-                            .text(content.map { "wrap(min: 50, shrink: 1)\n\($0)" })
-                            .width(.wrap(min: 50, shrink: 1))
+                            .text(content.map { "wrap(shrink: 1)\n\($0)" })
+                            .width(.wrap(shrink: 1))
 
                         Label.demo("cross\n.fill").attach($0)
                             .size(.wrap(priority: 10), .fill)

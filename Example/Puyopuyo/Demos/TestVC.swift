@@ -16,46 +16,50 @@ class MyView: UIView {
     }
 }
 
+extension Bool {
+    var visibleOrGone: Visibility { self ? .visible : .gone }
+    var visibleOrNot: Visibility { self ? .visible : .invisible }
+}
+
 class TestVC: BaseVC {
     let text = State("")
     override func configView() {
         vRoot.attach {
             UIView().attach($0).activated(false)
             
-            let progress = State<CGFloat>(0)
-            HBox().attach($0) {
-                Label("").attach($0)
-                    .text(progress.map { v -> String in
-                        let total = Int(v * 50)
-                        return (0 ..< total).map { "\($0)" }.joined(separator: "")
-                    })
-                    .size(.wrap(shrink: 1, grow: 1), .fill)
-                
-                Label("").attach($0)
-                    .text(progress.map { v -> String in
-                        let total = Int(v * 100)
-                        return (0 ..< total).map { "\($0)" }.joined(separator: "")
-                    })
-                    .width(.wrap(shrink: 2, grow: 2))
-//                    .size(.wrap, .aspectRatio(1 / 1))
-                
-//                UIView().attach($0)
-//                    .size(100, 50)
-            }
-            .padding(all: 10)
-            .size(.fill, .wrap)
+            let state = State(false)
             
-            UISlider().attach($0)
-                .width(.fill)
+            UISwitch().attach($0)
+                .isOn(state)
                 .onControlEvent(.valueChanged, Inputs {
-                    progress.value = CGFloat($0.value)
+                    state.value = $0.isOn
                 })
             
-//            SelectionView([1, 2, 3, 4, 5].map { Selector(desc: "\($0)", value: String($0)) }, selected: "5").attach($0)
-//                .topBorder([.color(UIColor.black.withAlphaComponent(0.2)), .thick(Util.pixel(1))])
-//                .size(.fill, .wrap)
-//                .diagnosis("1")
-//
+            VBox().attach($0) {
+                Label(".fill, 50").attach($0)
+                    .size(.fill, 50)
+                
+                Label(".fill, .fill 正方形").attach($0)
+                    .width(.fill)
+                    .height(.aspectRatio(1))
+                    .visibility(state.binder.visibleOrGone)
+                
+                Label(".fill, .wrap Some content").attach($0)
+                    .size(.fill, .wrap)
+                    .visibility(state.binder.visibleOrGone)
+                
+                Label(".fill, .fill MarksView").attach($0)
+                    .size(.fill, .fill)
+                    .visibility(state.binder.visibleOrNot)
+                
+                Label(".wrap, .wrap BottomView").attach($0)
+            }
+            .justifyContent(.center)
+            .size(200, 400)
+            .padding(all: 10)
+            .space(5)
+            .alignment(.center)
+            
 //            HBox().attach($0) {
 //                for idx in 0 ..< 10 {
 //                    Label("\(idx)").attach($0)
@@ -68,7 +72,7 @@ class TestVC: BaseVC {
 //
 //            Label("abc").attach($0)
 //                .size(.fill, .wrap)
-            tgTestView().attach($0)
+//            tgTestView().attach($0)
             
 //            demo1().attach($0)
 //            demo2().attach($0)
@@ -86,7 +90,47 @@ class TestVC: BaseVC {
 //            zboxAspectRatioTest().attach($0)
 //
 //            zboxRatioTest().attach($0)
+            
+//            crossConflictView().attach($0)
         }
+    }
+    
+    func crossConflictView() -> UIView {
+        VBox().attach {
+            let progress = State<CGFloat>(0)
+            HBox().attach($0) {
+                Label("").attach($0)
+                    .text(progress.map { v -> String in
+                        let total = Int(v * 50)
+                        return (0 ..< total).map { "\($0)" }.joined(separator: "")
+                    })
+//                    .size(.wrap(shrink: 1, grow: 1), .fill)
+                    .width(.wrap(shrink: 1))
+                    .height(.fill)
+                
+                Label("").attach($0)
+                    .text(progress.map { v -> String in
+                        let total = Int(v * 100)
+                        return (0 ..< total).map { "\($0)" }.joined(separator: "")
+                    })
+                    .width(.wrap(shrink: 2))
+//                    .width(.wrap(shrink: 2, grow: 2))
+//                    .size(.wrap, .aspectRatio(1 / 1))
+                
+//                UIView().attach($0)
+//                    .size(100, 50)
+            }
+            .padding(all: 10)
+            .size(.fill, .wrap)
+            
+            UISlider().attach($0)
+                .width(.fill)
+                .onControlEvent(.valueChanged, Inputs {
+                    progress.value = CGFloat($0.value)
+                })
+        }
+        .width(.fill)
+        .view
     }
     
     func tgTestView() -> UIView {
