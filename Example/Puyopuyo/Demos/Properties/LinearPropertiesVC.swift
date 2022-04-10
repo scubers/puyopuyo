@@ -122,7 +122,7 @@ class LinearPropertiesVC: BaseVC {
                 Selector(desc: "between", value: .between),
                 Selector(desc: "center", value: .center),
                 Selector(desc: "round", value: .round),
-                Selector(desc: "traing", value: .trailing),
+                Selector(desc: "trailing", value: .trailing),
             ],
             selected: format.value,
             desc: "All subviews formation at main axis"

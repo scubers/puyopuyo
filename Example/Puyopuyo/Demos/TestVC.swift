@@ -58,9 +58,9 @@ class TestVC: BaseVC {
 //
 //            zboxRatioTest().attach($0)
             
-//            crossConflictView().attach($0)
+            crossConflictView().attach($0)
             
-//            jkProblem1().attach($0)
+            jkProblem1().attach($0)
             
             let state = State("")
             HBox().attach($0) {
@@ -68,6 +68,7 @@ class TestVC: BaseVC {
                     UIView().attach(this)
                         .backgroundColor(Util.randomColor())
                         .size(50, 50)
+//                        .margin(left: 10)
                 }
             }
             .onTap {
@@ -87,9 +88,6 @@ class TestVC: BaseVC {
             
             UISwitch().attach($0)
                 .isOn(state)
-                .onControlEvent(.valueChanged, Inputs {
-                    state.value = $0.isOn
-                })
             
             VBox().attach($0) {
                 Label(".fill, 50").attach($0)

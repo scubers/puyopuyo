@@ -393,61 +393,46 @@ class _LinearCalculator {
     /// - Returns: 返回最后节点的end(包括最后一个节点的margin.end)
     private func calculateChildrenCenter(intrinsic: CGSize) {
         let measures = calculateChildren
+        let trailingDelta = regCalChildrenLayoutResidual.main - totalMainChildrenContent
+        let centerDelta = trailingDelta / 2
+        let betweenDelta = (regCalChildrenLayoutResidual.main - totalMainChildrenContent + totalSpace) / CGFloat(measures.count - 1)
+        let roundDelta = (regCalChildrenLayoutResidual.main - totalMainChildrenContent + totalSpace) / CGFloat(measures.count + 1)
+        let spaceDelta = regulator.space
 
-        var lastEnd: CGFloat = regCalPadding.start
-        let reversed = regulator.reverse
-        let format = formattable ? regulator.format : .leading
-        for calculateIndex in 0 ..< measures.count {
+        var standardLastEnd: CGFloat = 0
+        for index in 0 ..< measures.count {
             // 获取计算对象，根据是否反转获取
-            let m = reversed ? measures[measures.count - calculateIndex - 1] : measures[calculateIndex]
+            let m = regulator.reverse ? measures[measures.count - index - 1] : measures[index]
             // 计算cross偏移
             let cross = CalculateUtil.getCalculatedChildCrossAlignmentOffset(m, direction: regDirection, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: intrinsic)
-            // 计算main偏移
-            // 1. 计算之前，需要根据format计算补充间距
-            var delta: CGFloat = 0
-            switch format {
-            // between 和 main 会忽略space的作用
-            case .between where calculateIndex != 0:
-                delta = (regCalChildrenLayoutResidual.main - totalMainChildrenContent + totalSpace) / CGFloat(measures.count - 1) - regulator.space
+
+            let calMargin = CalEdges(insets: m.margin, direction: regulator.direction)
+            let calFixedSize = CalFixedSize(cgSize: m.calculatedSize, direction: regulator.direction)
+            let standardMain = standardLastEnd + calMargin.start + calFixedSize.main / 2
+            standardLastEnd = standardMain + calFixedSize.main / 2 + calMargin.end
+
+            // 通过标准位置叠加padding和space来计算具体位置
+            let calIndex = CGFloat(index)
+            let itemSpaceDelta = spaceDelta * calIndex
+
+            var main = standardMain + regCalMargin.start + regCalPadding.start
+            switch regulator.format {
+            case .leading:
+                main += itemSpaceDelta
+            case .trailing:
+                main += (itemSpaceDelta + trailingDelta)
+            case .center:
+                main += (itemSpaceDelta + centerDelta)
+            case .between:
+                if index != 0 {
+                    main += betweenDelta * calIndex
+                }
             case .round:
-                delta = (regCalChildrenLayoutResidual.main - totalMainChildrenContent + totalSpace) / CGFloat(measures.count + 1) - (calculateIndex == 0 ? 0 : regulator.space)
-            default: break
+                main += roundDelta * (calIndex + 1)
             }
-            let (main, end) = _calculateMainOffset(measure: m, idx: calculateIndex, lastEnd: lastEnd + delta)
-            // 复制最后lastEnd
-            lastEnd = end
-            // 赋值center
+
             m.calculatedCenter = CalCenter(main: main, cross: cross, direction: regDirection).getPoint()
         }
-
-        // 整体偏移
-        var delta: CGFloat = 0
-        switch format {
-        case .trailing:
-            delta = regCalChildrenLayoutResidual.main - regCalPadding.end - lastEnd + regCalPadding.mainFixed
-        case .center:
-            delta = regCalChildrenLayoutResidual.main / 2 - totalMainChildrenContent / 2
-        default: break
-        }
-
-        if delta != 0 {
-            // 如果格式化为靠后，则需要最后重排一遍
-            // 计算最后一个需要移动的距离
-            measures.forEach { m in
-                var calCenter = m.calculatedCenter.getCalCenter(by: regulator.direction)
-                calCenter.main += delta
-                m.calculatedCenter = calCenter.getPoint()
-            }
-        }
-    }
-
-    private func _calculateMainOffset(measure: Measure, idx: Int, lastEnd: CGFloat) -> (CGFloat, CGFloat) {
-        let calMargin = CalEdges(insets: measure.margin, direction: regulator.direction)
-        let calFixedSize = CalFixedSize(cgSize: measure.calculatedSize, direction: regulator.direction)
-        let space = (idx == 0) ? 0 : regulator.space
-        // main = end + 间距 + 自身顶部margin + 自身主轴一半
-        let main = lastEnd + space + calMargin.start + calFixedSize.main / 2
-        return (main, main + calFixedSize.main / 2 + calMargin.end)
     }
 }
 
