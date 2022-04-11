@@ -415,7 +415,7 @@ class _LinearCalculator {
             let calIndex = CGFloat(index)
             let itemSpaceDelta = spaceDelta * calIndex
 
-            var main = standardMain + regCalMargin.start + regCalPadding.start
+            var main = standardMain + regCalPadding.start
             let format = formattable ? regulator.format : .leading
             switch format {
             case .leading:
