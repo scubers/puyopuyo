@@ -416,7 +416,8 @@ class _LinearCalculator {
             let itemSpaceDelta = spaceDelta * calIndex
 
             var main = standardMain + regCalMargin.start + regCalPadding.start
-            switch regulator.format {
+            let format = formattable ? regulator.format : .leading
+            switch format {
             case .leading:
                 main += itemSpaceDelta
             case .trailing:
