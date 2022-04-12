@@ -11,6 +11,25 @@ extension UIView {
 
     var maxX: CGFloat { frame.width + frame.origin.x }
     var maxY: CGFloat { frame.height + frame.origin.y }
+
+    var calFrame: CGRect { py_measure.calculatedFrame }
+}
+
+class WrapSizeView: UIView {
+    var contentSize: CGSize = .zero
+    init(_ width: CGFloat = 0, _ height: CGFloat = 0) {
+        contentSize = .init(width: width, height: height)
+        super.init(frame: .zero)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        return contentSize
+    }
 }
 
 class Tests: XCTestCase {
@@ -24,7 +43,7 @@ class Tests: XCTestCase {
         super.tearDown()
     }
 
-    // MARK: Measure
+    // MARK: - Measure
 
     func testActive() {
         let state = State(false)
@@ -51,7 +70,7 @@ class Tests: XCTestCase {
         XCTAssertTrue(box.frame != .zero)
     }
 
-    // MARK: LinearBox
+    // MARK: - LinearBox
 
     func testLBWidthFixed() {
         var v1: UIView!
@@ -408,16 +427,13 @@ class Tests: XCTestCase {
         var v2: UIView!
         var v3: UIView!
         let box = HBox().attach {
-            v1 = UILabel().attach($0)
-                .text("i am label 1")
+            v1 = WrapSizeView(100, 100).attach($0)
                 .width(.wrap)
                 .view
-            v2 = UILabel().attach($0)
-                .text("i am label 1")
+            v2 = WrapSizeView(100, 100).attach($0)
                 .width(.wrap)
                 .view
-            v3 = UILabel().attach($0)
-                .text("i am label 1")
+            v3 = WrapSizeView(100, 100).attach($0)
                 .width(.wrap)
                 .view
         }
@@ -426,13 +442,39 @@ class Tests: XCTestCase {
 
         box.layoutIfNeeded()
 
-        print(box.fw)
-        print(v1.fw)
-
         XCTAssertTrue(box.fw == v1.fw + v2.fw + v3.fw + 20 * 2)
+        print(v1.calFrame)
+        print(v2.calFrame)
+        XCTAssertTrue(v1.calFrame.minX == 0)
+        XCTAssertTrue(v2.calFrame.minX == v1.calFrame.maxX + 20)
+        XCTAssertTrue(v3.calFrame.minX == v2.calFrame.maxX + 20)
     }
 
-    // MARK: FlowBox
+    func testCrossConflictRecalculating() {
+        var v1: UIView!
+        var v2: UIView!
+        var v3: UIView!
+        let box = HBox().attach {
+            v1 = WrapSizeView(100, 100).attach($0)
+                .height(.fill)
+                .view
+            v2 = WrapSizeView(100, 200).attach($0)
+                .view
+            v3 = WrapSizeView(100, 200).attach($0)
+                .height(.fill)
+                .view
+        }
+        .view
 
-    // MARK: ZBox
+        box.layoutIfNeeded()
+
+        XCTAssertTrue(box.calFrame.width == 300)
+        XCTAssertTrue(box.calFrame.height == v2.calFrame.height)
+        XCTAssertTrue(v1.calFrame.height == v2.calFrame.height)
+        XCTAssertTrue(v3.calFrame.height == v2.calFrame.height)
+    }
+
+    // MARK: - FlowBox
+
+    // MARK: - ZBox
 }

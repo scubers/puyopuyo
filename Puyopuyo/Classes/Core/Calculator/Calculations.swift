@@ -104,7 +104,7 @@ public extension UIEdgeInsets {
     }
 }
 
-public struct CalCenter {
+public struct CalPoint {
     public var direction: Direction
     public var main: CGFloat = 0
     public var cross: CGFloat = 0
@@ -135,8 +135,8 @@ public struct CalCenter {
 }
 
 extension CGPoint {
-    func getCalCenter(by direction: Direction) -> CalCenter {
-        return CalCenter(point: self, direction: direction)
+    func getCalCenter(by direction: Direction) -> CalPoint {
+        return CalPoint(point: self, direction: direction)
     }
 }
 

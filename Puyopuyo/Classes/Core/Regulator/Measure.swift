@@ -84,6 +84,16 @@ public class Measure {
 
     public var calculatedSize: CGSize = .zero
 
+    public var calculatedFrame: CGRect {
+        CGRect(
+            origin: CGPoint(
+                x: calculatedCenter.x - calculatedSize.width / 2,
+                y: calculatedCenter.y - calculatedSize.height / 2
+            ),
+            size: calculatedSize
+        )
+    }
+
     public var calculatedCenter: CGPoint = .zero
 
     public var calculatedSizeWithMargin: CGSize {

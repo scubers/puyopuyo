@@ -14,14 +14,6 @@ struct LinearCalculator: Calculator {
     }
 }
 
-/**
- 子节点计算优先级
- 主轴：能确定大小 > 包裹大小 > 比重
- F, A_F > W, A_W > A_R > R
-
- A depend on cross
- */
-
 class _LinearCalculator {
     // MARK: - Properties
 
@@ -54,6 +46,8 @@ class _LinearCalculator {
     var totalMainRatioLayoutResidual: CGFloat {
         max(regCalChildrenLayoutResidual.main - totalMainChildrenContent, 0)
     }
+
+    var regCalFormat: Format { formattable ? regulator.format : .leading }
 
     // MARK: - Calculation helper props
 
@@ -242,18 +236,12 @@ class _LinearCalculator {
     }
 
     private func mainAppendableCalSize(_ calSize: CalSize) -> Bool {
-        LinearItemLevel.create(calSize).level != .mainRatio
+//        LinearItemLevel.create(calSize).level != .mainRatio
+        calSize.main.sizeType != .ratio
     }
 
     private func crossReplacableCalSize(_ calSize: CalSize) -> Bool {
-        switch calSize.cross.sizeType {
-        case .fixed, .wrap:
-            return true
-        case .ratio:
-            return false
-        case .aspectRatio:
-            return [SizeDescription.SizeType.wrap, .fixed].contains(calSize.main.sizeType)
-        }
+        calSize.cross.sizeType != .ratio
     }
 
     private func getCurrentChildLayoutResidualCalFixedSize(_ measure: Measure, estimateCross: CGFloat?) -> CalFixedSize {
@@ -416,8 +404,7 @@ class _LinearCalculator {
             let itemSpaceDelta = spaceDelta * calIndex
 
             var main = standardMain + regCalPadding.start
-            let format = formattable ? regulator.format : .leading
-            switch format {
+            switch regCalFormat {
             case .leading:
                 main += itemSpaceDelta
             case .trailing:
@@ -432,11 +419,18 @@ class _LinearCalculator {
                 main += roundDelta * (calIndex + 1)
             }
 
-            m.calculatedCenter = CalCenter(main: main, cross: cross, direction: regDirection).getPoint()
+            m.calculatedCenter = CalPoint(main: main, cross: cross, direction: regDirection).getPoint()
         }
     }
 }
 
+/**
+ 子节点计算优先级
+ 主轴：能确定大小 > 包裹大小 > 比重
+ F, A_F > W, A_W > A_R > R
+
+ A depend on cross
+ */
 struct LinearItemLevel: Comparable {
     static func < (lhs: LinearItemLevel, rhs: LinearItemLevel) -> Bool {
         if lhs.level == rhs.level {
