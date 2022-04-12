@@ -22,7 +22,6 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable, RegulatorView {
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(dummyView)
         buildBody()
     }
 
@@ -44,18 +43,18 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable, RegulatorView {
     override open func setNeedsLayout() {
         if !initializing, !layouting {
             control.setNeedsLayout(view: self, regulator: regulator)
+
             super.setNeedsLayout()
+
+            if regulator.size.maybeWrap() {
+                invalidateIntrinsicContentSize()
+            }
         }
     }
 
+    private class DummyView: UIView {}
     /// If subviews.count == 0, will not call layoutSubviews, provide a dummy view to avoid it
-    private let dummyView = UIView().attach().activated(false).view
-
-    override open func didAddSubview(_ subview: UIView) {
-        if subview != dummyView, dummyView.superview == nil {
-            addSubview(dummyView)
-        }
-    }
+    private lazy var dummyView = DummyView().attach().activated(false).view
 
     /// indicate if view is calling method layoutSubviews()
     private var layouting = false
@@ -90,5 +89,25 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable, RegulatorView {
 
     override open func didMoveToSuperview() {
         control.didMoveToSuperview(view: self, regulator: regulator)
+        if subviews.isEmpty {
+            addSubview(dummyView)
+        }
+    }
+
+    override open func willRemoveSubview(_ subview: UIView) {
+        let count = subviews.count
+        if count == 1, subview != dummyView, dummyView.superview == nil {
+            // 避免box一个子view都没有
+            addSubview(dummyView)
+        }
+        super.willRemoveSubview(subview)
+        
+    }
+
+    override open func addSubview(_ view: UIView) {
+        super.addSubview(view)
+        if view != dummyView {
+            dummyView.removeFromSuperview()
+        }
     }
 }

@@ -62,6 +62,7 @@ class TestVC: BaseVC {
 //
 //            jkProblem1().attach($0)
 //            formatTest().attach($0)
+        }
     }
     
     func formatTest() -> UIView {

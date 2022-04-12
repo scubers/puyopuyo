@@ -65,7 +65,7 @@ public class BoxControl<R: Regulator> {
                 layoutResidual = view.bounds.size
                 regulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: layoutResidual, strategy: .lazy)
             }
-            
+
             if isCenterControl {
                 let b = CGRect(origin: .zero, size: regulator.calculatedSize)
                 regulator.calculatedCenter = CGPoint(x: b.midX + regulator.margin.left, y: b.midY + regulator.margin.top)
@@ -133,24 +133,16 @@ public class BoxControl<R: Regulator> {
     public func didMoveToSuperview(view: UIView, regulator: R) {
         positionControlDisposable?.dispose()
         if isCenterControl, let spv = view.superview, !isBox(view: spv) {
-            let frameSize = spv
-                .py_observing(\.frame)
-                .map(\.size, .zero)
-
             let boundsSize = spv
                 .py_observing(\.bounds)
                 .map(\.size, .zero)
 
-            positionControlDisposable =
-                Outputs
-                    .merge([frameSize, boundsSize])
-                    .distinct()
-                    .outputing { [weak view] _ in
-                        guard let view = view else { return }
-                        if regulator.size.maybeRatio() {
-                            view.setNeedsLayout()
-                        }
-                    }
+            positionControlDisposable = boundsSize.distinct().outputing { [weak view] _ in
+                guard let view = view else { return }
+                if regulator.size.maybeRatio() {
+                    view.setNeedsLayout()
+                }
+            }
         }
     }
 
