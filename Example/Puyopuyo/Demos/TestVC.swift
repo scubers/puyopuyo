@@ -58,28 +58,31 @@ class TestVC: BaseVC {
 //
 //            zboxRatioTest().attach($0)
             
-            crossConflictView().attach($0)
-            
-            jkProblem1().attach($0)
-            
-            let state = State("")
-            HBox().attach($0) {
-                state.safeBind(to: $0) { this, _ in
-                    UIView().attach(this)
-                        .backgroundColor(Util.randomColor())
-                        .size(50, 50)
+//            crossConflictView().attach($0)
+//
+//            jkProblem1().attach($0)
+//            formatTest().attach($0)
+    }
+    
+    func formatTest() -> UIView {
+        let state = State("")
+        return HBox().attach {
+            state.safeBind(to: $0) { this, _ in
+                UIView().attach(this)
+                    .backgroundColor(Util.randomColor())
+                    .size(50, 50)
 //                        .margin(left: 10)
-                }
             }
-            .onTap {
-                state.input(value: "")
-            }
-            .alignment(.center)
-            .format(.round)
-            .space(10)
-            .padding(all: 10)
-            .size(200, .wrap)
         }
+        .onTap {
+            state.input(value: "")
+        }
+        .alignment(.center)
+        .format(.round)
+        .space(10)
+        .padding(all: 10)
+        .size(200, .wrap)
+        .view
     }
     
     func jkProblem1() -> UIView {
@@ -137,13 +140,13 @@ class TestVC: BaseVC {
                         return (0 ..< total).map { "\($0)" }.joined(separator: "")
                     })
                     .width(.wrap(shrink: 2))
-//                    .width(.wrap(shrink: 2, grow: 2))
-//                    .size(.wrap, .aspectRatio(1 / 1))
-                
+
 //                UIView().attach($0)
-//                    .size(100, 50)
+//                    .size(.fill, .aspectRatio(2))
             }
             .padding(all: 10)
+            .justifyContent(.center)
+            .format(.between)
             .size(.fill, .wrap)
             
             UISlider().attach($0)
