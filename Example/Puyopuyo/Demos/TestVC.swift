@@ -7,6 +7,7 @@
 //
 
 import Puyopuyo
+import SnapKit
 import TangramKit
 import UIKit
 
@@ -26,19 +27,7 @@ class TestVC: BaseVC {
     override func configView() {
         vRoot.attach {
             UIView().attach($0).activated(false)
-            
-//            HBox().attach($0) {
-//                for idx in 0 ..< 10 {
-//                    Label("\(idx)").attach($0)
-//                }
-//            }
-//            .padding(all: 10)
-//            .margin(all: 5)
-//            .space(5)
-//            .width(.fill)
-//
-//            Label("abc").attach($0)
-//                .size(.fill, .wrap)
+
 //            tgTestView().attach($0)
             
 //            demo1().attach($0)
@@ -61,7 +50,7 @@ class TestVC: BaseVC {
 //            crossConflictView().attach($0)
 //
 //            jkProblem1().attach($0)
-//            formatTest().attach($0)
+            formatTest().attach($0)
         }
     }
     
@@ -79,7 +68,7 @@ class TestVC: BaseVC {
             state.input(value: "")
         }
         .alignment(.center)
-        .format(.round)
+        .format(.between)
         .space(10)
         .padding(all: 10)
         .size(200, .wrap)

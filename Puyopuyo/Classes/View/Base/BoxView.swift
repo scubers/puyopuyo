@@ -5,6 +5,8 @@
 //  Created by Jrwong on 2019/6/29.
 //
 
+import UIKit
+
 public protocol RegulatorView {
     func createRegulator() -> Regulator
 }
@@ -52,9 +54,8 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable, RegulatorView {
         }
     }
 
-    private class DummyView: UIView {}
     /// If subviews.count == 0, will not call layoutSubviews, provide a dummy view to avoid it
-    private lazy var dummyView = DummyView().attach().activated(false).view
+    private lazy var dummyView = _DummyView().attach().activated(false).view
 
     /// indicate if view is calling method layoutSubviews()
     private var layouting = false
@@ -101,7 +102,6 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable, RegulatorView {
             addSubview(dummyView)
         }
         super.willRemoveSubview(subview)
-        
     }
 
     override open func addSubview(_ view: UIView) {
@@ -110,4 +110,17 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable, RegulatorView {
             dummyView.removeFromSuperview()
         }
     }
+
+    override open var intrinsicContentSize: CGSize {
+        if regulator.size.isRatio() { return .zero }
+        if !regulator.size.isRatio() { return sizeThatFits(.zero) }
+        if regulator.size.maybeFixed() {
+            let height: CGFloat = regulator.size.height.isFixed ? regulator.size.height.fixedValue : 0
+            let width: CGFloat = regulator.size.width.isFixed ? regulator.size.width.fixedValue : 0
+            return CGSize(width: width, height: height)
+        }
+        return .zero
+    }
 }
+
+private class _DummyView: UIView {}

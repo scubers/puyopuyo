@@ -62,7 +62,7 @@ public class BoxControl<R: Regulator> {
                     regulator.size = .init(width: .fill, height: .fill)
                 }
 
-                layoutResidual = view.bounds.size
+                layoutResidual = CalculateUtil.getLayoutResidual(for: regulator, fromContentResidual: view.bounds.size)
                 regulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: layoutResidual, strategy: .lazy)
             }
 
