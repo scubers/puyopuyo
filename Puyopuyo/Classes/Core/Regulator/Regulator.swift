@@ -34,4 +34,8 @@ public class Regulator: Measure {
         - justifyContent: [\(justifyContent)]
         """
     }
+
+    override public func createCalculator() -> Calculator {
+        fatalError("subclass impl")
+    }
 }

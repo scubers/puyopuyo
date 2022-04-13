@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol Calculator {
+public protocol Calculator {
     func calculate(_ measure: Measure, layoutResidual: CGSize) -> CGSize
 }

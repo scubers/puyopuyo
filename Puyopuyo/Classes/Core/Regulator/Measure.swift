@@ -112,7 +112,14 @@ public class Measure {
         delegate?.needsRelayout(for: self)
     }
 
-    public func calculate(by residual: CGSize) -> CGSize {
-        return MeasureCalculator().calculate(self, layoutResidual: residual)
+    public func calculate(by layoutResidual: CGSize) -> CGSize {
+        calculator.calculate(self, layoutResidual: layoutResidual)
+    }
+    
+    private lazy var calculator = createCalculator()
+
+    /// subclass should override
+    public func createCalculator() -> Calculator {
+        MeasureCalculator()
     }
 }

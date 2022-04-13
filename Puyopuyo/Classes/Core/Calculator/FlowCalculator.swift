@@ -181,8 +181,8 @@ private class VirtualLinearRegulator: LinearRegulator {
         }
     }
 
-    override func calculate(by residual: CGSize) -> CGSize {
-        return LinearCalculator(estimateChildren: false).calculate(self, layoutResidual: residual)
+    override func createCalculator() -> Calculator {
+        LinearCalculator(estimateChildren: false)
     }
 }
 

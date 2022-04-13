@@ -57,8 +57,8 @@ public class LinearRegulator: Regulator {
         return CalEdges(insets: padding, direction: direction)
     }
 
-    override public func calculate(by residual: CGSize) -> CGSize {
-        return LinearCalculator(estimateChildren: true).calculate(self, layoutResidual: residual)
+    override public func createCalculator() -> Calculator {
+        LinearCalculator(estimateChildren: true)
     }
 
     override public var diagnosisMessage: String {
