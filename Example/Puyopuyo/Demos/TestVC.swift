@@ -10,6 +10,7 @@ import Puyopuyo
 import SnapKit
 import TangramKit
 import UIKit
+import YogaKit
 
 class MyView: UIView {
     override func sizeThatFits(_ size: CGSize) -> CGSize {
@@ -27,6 +28,39 @@ class TestVC: BaseVC {
     override func configView() {
         vRoot.attach {
             UIView().attach($0).activated(false)
+            
+            
+            
+            UIView().attach($0) {
+                
+                let v = $0
+                v.configureLayout { l in
+                    l.isEnabled = true
+                    l.flexDirection = .row
+                    l.width = 100
+                    l.flexWrap = .wrap
+                }
+                
+                Label("Label").attach($0)
+                    .set(\.yoga.isEnabled, true)
+                Label("Label").attach($0)
+                    .set(\.yoga.isEnabled, true)
+                Label("Label").attach($0)
+                    .set(\.yoga.isEnabled, true)
+                Label("Label").attach($0)
+                    .set(\.yoga.isEnabled, true)
+                    
+                
+                
+//                createYogaRecursiveView().attach($0)
+                $0.yoga.applyLayout(preservingOrigin: false, dimensionFlexibility: .flexibleHeight)
+                
+                YogaFlowView().attach($0)
+            }
+//            .size(.fill, .fill)
+            .activated(false)
+//            .view.sizeToFit()
+//            .size(.fill, .fill)
 
 //            tgTestView().attach($0)
             

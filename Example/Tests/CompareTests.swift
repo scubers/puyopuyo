@@ -22,6 +22,8 @@ class CompareTests: XCTestCase {
     func testCompareLinearLayout() throws {
         let pv = PuyoLinearLayoutView()
         let tv = TKLinearLayoutView(frame: .zero, orientation: .horz)
+        let sv = CocoaStackView()
+        let yv = YogaLinearView()
 
         let times = 50
 
@@ -31,8 +33,52 @@ class CompareTests: XCTestCase {
         let ti = profileTime(label: "tk", times: times) {
             _ = tv.sizeThatFits(.zero)
         }
+        let si = profileTime(label: "stackview", times: times) {
+            _ = sv.sizeThatFits(.zero)
+        }
 
-        print("p / t = \(pi / ti)")
+        let yi = profileTime(label: "yoga", times: times) {
+            if yv.yoga.flexDirection == .column {
+                yv.yoga.flexDirection = .row
+            } else {
+                yv.yoga.flexDirection = .column
+            }
+            yv.yoga.applyLayout(preservingOrigin: false, dimensionFlexibility: .flexibleHeight.union(.flexibleWidth))
+        }
+
+        print("=======LinearLayout profiles======")
+        print("p / tg = \(pi / ti)")
+        print("p / stackview = \(pi / si)")
+        print("p / yoga = \(pi / yi)")
+    }
+
+    func testLinearRecusiveLayout() throws {
+        let count = 50
+        let pv = createPuyopuyoRecursiveView(times: count)
+        let tv = createTGRecursiveView(times: count)
+        let yv = createYogaRecursiveView(times: count)
+        
+        let times = 50
+
+        let pi = profileTime(label: "puyo", times: times) {
+            _ = pv.sizeThatFits(.zero)
+        }
+        let ti = profileTime(label: "tk", times: times) {
+            _ = tv.sizeThatFits(.zero)
+        }
+
+        let yi = profileTime(label: "yoga", times: times) {
+            if yv.yoga.flexDirection == .column {
+                yv.yoga.flexDirection = .row
+            } else {
+                yv.yoga.flexDirection = .column
+            }
+            yv.yoga.applyLayout(preservingOrigin: false, dimensionFlexibility: .flexibleHeight.union(.flexibleWidth))
+        }
+
+        print("=======Linear recursive layout profiles======")
+        print("p / tg = \(pi / ti)")
+        print("p / yoga = \(pi / yi)")
     }
 
     func testCompareFlowLayout() throws {
@@ -43,6 +89,8 @@ class CompareTests: XCTestCase {
             .view
         let tv = TKFlowLayoutView(frame: .zero, orientation: .vert)
         tv.tg_arrangedCount = arrange
+        
+        let yv = YogaFlowView()
 
         let times = 50
 
@@ -52,7 +100,18 @@ class CompareTests: XCTestCase {
         let ti = profileTime(label: "tk", times: times) {
             _ = tv.sizeThatFits(.zero)
         }
+        let yi = profileTime(label: "yoga", times: times) {
+            if yv.yoga.flexDirection == .column {
+                yv.yoga.flexDirection = .row
+            } else {
+                yv.yoga.flexDirection = .column
+            }
+            yv.yoga.isDirty
+            yv.yoga.applyLayout(preservingOrigin: false, dimensionFlexibility: .flexibleHeight.union(.flexibleHeight))
+        }
 
-        print("p / t = \(pi / ti)")
+        print("=======FlowLayout profiles======")
+        print("p / tg = \(pi / ti)")
+        print("p / yoga = \(pi / yi)")
     }
 }

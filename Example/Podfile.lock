@@ -1,33 +1,42 @@
 PODS:
-  - Puyopuyo/Core (2.1.1)
-  - Puyopuyo/Extra (2.1.1):
+  - Puyopuyo/Core (2.3.0)
+  - Puyopuyo/Extra (2.3.0):
     - Puyopuyo/Core
   - RxSwift (5.0.0)
   - SnapKit (4.2.0)
   - TangramKit (1.4.0)
+  - Yoga (1.14.0)
+  - YogaKit (1.18.1):
+    - Yoga (~> 1.14)
 
 DEPENDENCIES:
   - Puyopuyo/Extra (from `../`)
   - RxSwift
   - SnapKit
   - TangramKit
+  - YogaKit
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - RxSwift
     - SnapKit
     - TangramKit
+  trunk:
+    - Yoga
+    - YogaKit
 
 EXTERNAL SOURCES:
   Puyopuyo:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Puyopuyo: 931c16007ffe0f0f7623d01371c15acf511dd90a
+  Puyopuyo: 095d1eff96eb27c9bb4433d7ed5410630889b7af
   RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
   TangramKit: 15ccb6480f0e32c284f0a076542a607226e158dd
+  Yoga: cff67a400f6b74dc38eb0bad4f156673d9aa980c
+  YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 710d60d14e3fc79894fa17d580b8f443c8b5ea97
+PODFILE CHECKSUM: ca3a8a5cd388a3c9750acbba884a88548b5e3e18
 
 COCOAPODS: 1.11.2
