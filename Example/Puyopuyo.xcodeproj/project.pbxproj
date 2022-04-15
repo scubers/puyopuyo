@@ -22,12 +22,14 @@
 		09A4726127D2645C00FD9813 /* CompareViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A4726027D2645C00FD9813 /* CompareViews.swift */; };
 		09AD0CBD26DD064E008231F1 /* TestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AD0CBC26DD064E008231F1 /* TestVC.swift */; };
 		09E58F0527EAEC9C007CE7BF /* CompareViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A4726027D2645C00FD9813 /* CompareViews.swift */; };
+		09EF918A2809AA30007BCCF5 /* ZBoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EF91892809AA30007BCCF5 /* ZBoxTests.swift */; };
+		09EF918C2809AE16007BCCF5 /* DataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EF918B2809AE16007BCCF5 /* DataTests.swift */; };
 		09F8BD8027EB633900402D96 /* CalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F8BD7F27EB633900402D96 /* CalculatorTests.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
-		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		607FACEC1AFB9204008FA782 /* LinearBoxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* LinearBoxTests.swift */; };
 		A81CE1492312EE6900E19E6B /* OptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A81CE1482312EE6900E19E6B /* OptionView.swift */; };
 		A84E5CC1239EB5AC0091D39B /* ZPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A84E5CC0239EB5AC0091D39B /* ZPropertiesVC.swift */; };
 		A8698302239CF98E00B3D514 /* _Scaffold.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8698301239CF98E00B3D514 /* _Scaffold.swift */; };
@@ -75,6 +77,8 @@
 		09A4725E27D2607F00FD9813 /* CompareTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareTests.swift; sourceTree = "<group>"; };
 		09A4726027D2645C00FD9813 /* CompareViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompareViews.swift; sourceTree = "<group>"; };
 		09AD0CBC26DD064E008231F1 /* TestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVC.swift; sourceTree = "<group>"; };
+		09EF91892809AA30007BCCF5 /* ZBoxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZBoxTests.swift; sourceTree = "<group>"; };
+		09EF918B2809AE16007BCCF5 /* DataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTests.swift; sourceTree = "<group>"; };
 		09F8BD7F27EB633900402D96 /* CalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorTests.swift; sourceTree = "<group>"; };
 		3324E3ECDF4649B3EFDB8B1A /* Puyopuyo.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Puyopuyo.podspec; path = ../Puyopuyo.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		607FACD01AFB9204008FA782 /* Puyopuyo_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Puyopuyo_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -85,7 +89,7 @@
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		607FACE51AFB9204008FA782 /* Puyopuyo_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Puyopuyo_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
+		607FACEB1AFB9204008FA782 /* LinearBoxTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinearBoxTests.swift; sourceTree = "<group>"; };
 		77FB953E25BC3D91DC89F5C7 /* Pods-Puyopuyo_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Puyopuyo_Example.release.xcconfig"; path = "Target Support Files/Pods-Puyopuyo_Example/Pods-Puyopuyo_Example.release.xcconfig"; sourceTree = "<group>"; };
 		A81CE1482312EE6900E19E6B /* OptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionView.swift; sourceTree = "<group>"; };
 		A84E5CC0239EB5AC0091D39B /* ZPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZPropertiesVC.swift; sourceTree = "<group>"; };
@@ -230,12 +234,14 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				607FACEB1AFB9204008FA782 /* Tests.swift */,
+				607FACEB1AFB9204008FA782 /* LinearBoxTests.swift */,
 				09A4725E27D2607F00FD9813 /* CompareTests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
 				09A4726027D2645C00FD9813 /* CompareViews.swift */,
 				09F8BD7F27EB633900402D96 /* CalculatorTests.swift */,
 				0986B15927F47C8000907B3A /* LinkListTests.swift */,
+				09EF91892809AA30007BCCF5 /* ZBoxTests.swift */,
+				09EF918B2809AE16007BCCF5 /* DataTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -400,7 +406,7 @@
 					};
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = FJ535WN7FW;
+						DevelopmentTeam = 462J8VB29Y;
 						LastSwiftMigration = 1250;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
@@ -560,10 +566,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
+				607FACEC1AFB9204008FA782 /* LinearBoxTests.swift in Sources */,
 				0986B15A27F47C8000907B3A /* LinkListTests.swift in Sources */,
+				09EF918C2809AE16007BCCF5 /* DataTests.swift in Sources */,
 				09F8BD8027EB633900402D96 /* CalculatorTests.swift in Sources */,
 				09A4726127D2645C00FD9813 /* CompareViews.swift in Sources */,
+				09EF918A2809AA30007BCCF5 /* ZBoxTests.swift in Sources */,
 				09A4725F27D2607F00FD9813 /* CompareTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -759,7 +767,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 029D039CF2FB7AD03311F02E /* Pods-Puyopuyo_Tests.debug.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = FJ535WN7FW;
+				DEVELOPMENT_TEAM = 462J8VB29Y;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -782,7 +790,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D8C53925C3060B52FD197F06 /* Pods-Puyopuyo_Tests.release.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = FJ535WN7FW;
+				DEVELOPMENT_TEAM = 462J8VB29Y;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",

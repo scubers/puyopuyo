@@ -11,13 +11,18 @@ import Puyopuyo
 import TangramKit
 import YogaKit
 
-func profileTime(label: String? = nil, times: Int = 1, _ block: () -> Void) -> TimeInterval {
+protocol CountedTestView {
+    var count: Int { get }
+    init(count: Int)
+}
+
+func profileTime(label: String? = nil, times: Int = 1, _ block: (Int) -> Void) -> TimeInterval {
     let start = Date().timeIntervalSince1970
-    for _ in 0 ..< times {
-        block()
+    for i in 0 ..< times {
+        block(i)
     }
-    let time = Date().timeIntervalSince1970 - start
-    print("Profile \(label ?? "") times: \(times): cost: \(time)s, \(time / Double(times)) s/time")
+    let time = TimeInterval(Int((Date().timeIntervalSince1970 - start) * 1000 * 10000)) / 10000
+    print("Profile \(label ?? "") times: \(times): cost: \(time) ms, \(time / Double(times)) ms/time")
     return time
 }
 
@@ -25,11 +30,12 @@ func createViews(count: Int = 1000) -> [UIView] {
     (0 ..< count).map { UILabel().attach().text("\($0) test label").view }
 }
 
-class CocoaStackView: UIStackView {
-    override init(frame: CGRect) {
+class CocoaStackView: UIStackView, CountedTestView {
+    let count: Int
+    required init(count: Int = 50) {
+        self.count = count
         super.init(frame: .zero)
-
-        createViews().forEach { v in
+        createViews(count: count).forEach { v in
             addArrangedSubview(v)
         }
     }
@@ -45,12 +51,13 @@ class CocoaStackView: UIStackView {
 }
 
 class YogaLinearView: UIView {
-    override init(frame: CGRect) {
+    let count: Int
+    init(count: Int = 50) {
+        self.count = count
         super.init(frame: .zero)
-
         yoga.flexDirection = .row
         yoga.isEnabled = true
-        createViews().forEach { v in
+        createViews(count: count).forEach { v in
             addSubview(v)
             v.yoga.isEnabled = true
         }
@@ -60,12 +67,30 @@ class YogaLinearView: UIView {
     required init?(coder: NSCoder) {
         fatalError()
     }
+
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        var s = size
+        if s.width == 0 { s.width = .nan }
+        if s.height == 0 { s.height = .nan }
+        return yoga.calculateLayout(with: s)
+    }
 }
 
 class PuyoLinearLayoutView: LinearBox {
+    let count: Int
+    init(count: Int = 50) {
+        self.count = count
+        super.init(frame: .zero)
+    }
+
+    @available(*, unavailable)
+    required init?(coder argument: NSCoder) {
+        fatalError()
+    }
+
     override func buildBody() {
         attach {
-            for view in createViews() {
+            for view in createViews(count: count) {
                 view.attach($0)
             }
         }
@@ -81,10 +106,12 @@ class PuyoLinearLayoutView: LinearBox {
     }
 }
 
-class TKLinearLayoutView: TGLinearLayout {
-    override init(frame: CGRect, orientation: TGOrientation) {
-        super.init(frame: frame, orientation: orientation)
-        createViews().forEach { view in
+class TKLinearLayoutView: TGLinearLayout, CountedTestView {
+    let count: Int
+    required init(count: Int = 50) {
+        self.count = count
+        super.init(frame: .zero, orientation: .horz)
+        createViews(count: count).forEach { view in
             addSubview(view)
             view.tg_size(width: .wrap, height: .wrap)
         }
@@ -97,10 +124,21 @@ class TKLinearLayoutView: TGLinearLayout {
     }
 }
 
-class PuyoFlowLayoutView: FlowBox {
+class PuyoFlowLayoutView: FlowBox, CountedTestView {
+    let count: Int
+    required init(count: Int = 50) {
+        self.count = count
+        super.init(frame: .zero)
+    }
+
+    @available(*, unavailable)
+    required init?(coder argument: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func buildBody() {
         attach {
-            for v in createViews() {
+            for v in createViews(count: count) {
                 v.attach($0)
                     .size(.wrap, .wrap)
             }
@@ -112,9 +150,11 @@ class PuyoFlowLayoutView: FlowBox {
 }
 
 class TKFlowLayoutView: TGFlowLayout {
-    override init(frame: CGRect, orientation: TGOrientation = TGOrientation.vert, arrangedCount: Int = 0) {
-        super.init(frame: frame, orientation: orientation, arrangedCount: arrangedCount)
-        createViews().forEach { v in
+    let count: Int
+    required init(count: Int = 50) {
+        self.count = count
+        super.init(frame: .zero, orientation: .vert, arrangedCount: 0)
+        createViews(count: count).forEach { v in
             addSubview(v)
             v.tg_size(width: .wrap, height: .wrap)
         }
@@ -127,20 +167,19 @@ class TKFlowLayoutView: TGFlowLayout {
     }
 }
 
-class YogaFlowView: UIView {
-    override init(frame: CGRect) {
+class YogaFlowView: UIView, CountedTestView {
+    let count: Int
+    required init(count: Int = 50) {
+        self.count = count
         super.init(frame: .zero)
-
         yoga.isEnabled = true
         yoga.flexWrap = .wrap
         yoga.width = 500
         yoga.flexDirection = .row
-        createViews().forEach { v in
+        createViews(count: count).forEach { v in
             addSubview(v)
             v.yoga.isEnabled = true
         }
-        
-//        yoga.applyLayout(preservingOrigin: false, dimensionFlexibility: .flexibleHeight)
     }
 
     @available(*, unavailable)

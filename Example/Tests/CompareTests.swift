@@ -12,7 +12,7 @@ import XCTest
 
 class CompareTests: XCTestCase {
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        _ = PuyoFlowLayoutView().sizeThatFits(.zero)
     }
 
     override func tearDownWithError() throws {
@@ -21,29 +21,29 @@ class CompareTests: XCTestCase {
 
     func testCompareLinearLayout() throws {
         let pv = PuyoLinearLayoutView()
-        let tv = TKLinearLayoutView(frame: .zero, orientation: .horz)
+        let tv = TKLinearLayoutView()
         let sv = CocoaStackView()
         let yv = YogaLinearView()
 
-        let times = 50
+        let times = 1
 
-        let pi = profileTime(label: "puyo", times: times) {
+        let pi = profileTime(label: "puyo", times: times) { _ in
             _ = pv.sizeThatFits(.zero)
         }
-        let ti = profileTime(label: "tk", times: times) {
+        let ti = profileTime(label: "tk", times: times) { _ in
             _ = tv.sizeThatFits(.zero)
         }
-        let si = profileTime(label: "stackview", times: times) {
+        let si = profileTime(label: "stackview", times: times) { _ in
             _ = sv.sizeThatFits(.zero)
         }
 
-        let yi = profileTime(label: "yoga", times: times) {
-            if yv.yoga.flexDirection == .column {
-                yv.yoga.flexDirection = .row
+        let yi = profileTime(label: "yoga", times: times) { _ in
+            if yv.yoga.flexDirection == .row {
+                yv.yoga.flexDirection = .rowReverse
             } else {
-                yv.yoga.flexDirection = .column
+                yv.yoga.flexDirection = .row
             }
-            yv.yoga.applyLayout(preservingOrigin: false, dimensionFlexibility: .flexibleHeight.union(.flexibleWidth))
+            yv.yoga.calculateLayout(with: CGSize(width: CGFloat.nan, height: .nan))
         }
 
         print("=======LinearLayout profiles======")
@@ -54,26 +54,21 @@ class CompareTests: XCTestCase {
 
     func testLinearRecusiveLayout() throws {
         let count = 50
+        let times = 1
+
         let pv = createPuyopuyoRecursiveView(times: count)
         let tv = createTGRecursiveView(times: count)
         let yv = createYogaRecursiveView(times: count)
-        
-        let times = 50
 
-        let pi = profileTime(label: "puyo", times: times) {
+        let pi = profileTime(label: "puyo", times: times) { _ in
             _ = pv.sizeThatFits(.zero)
         }
-        let ti = profileTime(label: "tk", times: times) {
+        let ti = profileTime(label: "tk", times: times) { _ in
             _ = tv.sizeThatFits(.zero)
         }
 
-        let yi = profileTime(label: "yoga", times: times) {
-            if yv.yoga.flexDirection == .column {
-                yv.yoga.flexDirection = .row
-            } else {
-                yv.yoga.flexDirection = .column
-            }
-            yv.yoga.applyLayout(preservingOrigin: false, dimensionFlexibility: .flexibleHeight.union(.flexibleWidth))
+        let yi = profileTime(label: "yoga", times: times) { _ in
+            yv.yoga.calculateLayout(with: CGSize(width: CGFloat.nan, height: .nan))
         }
 
         print("=======Linear recursive layout profiles======")
@@ -82,32 +77,40 @@ class CompareTests: XCTestCase {
     }
 
     func testCompareFlowLayout() throws {
+        let count = 50
         let arrange = 0
+        let times = 1
+        let width: CGFloat = 500
 
-        let pv = PuyoFlowLayoutView().attach()
+        let pv = PuyoFlowLayoutView(count: count).attach()
             .arrangeCount(arrange)
+            .direction(.y)
             .view
-        let tv = TKFlowLayoutView(frame: .zero, orientation: .vert)
-        tv.tg_arrangedCount = arrange
-        
-        let yv = YogaFlowView()
-
-        let times = 50
-
-        let pi = profileTime(label: "puyo", times: times) {
-            _ = pv.sizeThatFits(.zero)
+        let tv = TKFlowLayoutView(count: count).attach().attach {
+            $0.tg_arrangedCount = 0
+            $0.tg_orientation = .vert
         }
-        let ti = profileTime(label: "tk", times: times) {
-            _ = tv.sizeThatFits(.zero)
+        .view
+
+        let yv = YogaFlowView(count: count).attach().attach {
+            $0.yoga.flexDirection = .row
+            $0.yoga.flexWrap = .wrap
         }
-        let yi = profileTime(label: "yoga", times: times) {
-            if yv.yoga.flexDirection == .column {
-                yv.yoga.flexDirection = .row
+        .view
+
+        let pi = profileTime(label: "puyo", times: times) { _ in
+            _ = pv.sizeThatFits(CGSize(width: 0, height: 0))
+        }
+        let ti = profileTime(label: "tk", times: times) { _ in
+            _ = tv.sizeThatFits(CGSize(width: 0, height: 0))
+        }
+        let yi = profileTime(label: "yoga", times: times) { i in
+            if yv.yoga.flexDirection == .row {
+                yv.yoga.flexDirection = .rowReverse
             } else {
-                yv.yoga.flexDirection = .column
+                yv.yoga.flexDirection = .row
             }
-            yv.yoga.isDirty
-            yv.yoga.applyLayout(preservingOrigin: false, dimensionFlexibility: .flexibleHeight.union(.flexibleHeight))
+            yv.yoga.calculateLayout(with: CGSize(width: width + CGFloat(i), height: .nan))
         }
 
         print("=======FlowLayout profiles======")

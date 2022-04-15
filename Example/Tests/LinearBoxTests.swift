@@ -13,6 +13,10 @@ extension UIView {
     var maxY: CGFloat { frame.height + frame.origin.y }
 
     var calFrame: CGRect { py_measure.calculatedFrame }
+
+    var calSize: CGSize { calFrame.size }
+
+    var celCenter: CGPoint { py_measure.calculatedCenter }
 }
 
 class WrapSizeView: UIView {
@@ -32,7 +36,7 @@ class WrapSizeView: UIView {
     }
 }
 
-class Tests: XCTestCase {
+class LinearBoxTests: XCTestCase {
     override func setUp() {
         super.setUp()
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -361,8 +365,6 @@ class Tests: XCTestCase {
         box.layoutIfNeeded()
         XCTAssertTrue(views[0].fx == 0)
         XCTAssertTrue(abs(views[count - 1].maxX - box.fw) < 0.1)
-        print(views[count / 2].center.x)
-        print(box.fw / 2)
         XCTAssertTrue(abs(views[count / 2].center.x - box.fw / 2) < 0.1)
 
         format.value = .round
@@ -386,8 +388,6 @@ class Tests: XCTestCase {
         box.layoutIfNeeded()
         XCTAssertTrue(views[0].fx == 0)
         XCTAssertTrue(abs(views[count - 1].maxX - box.fw) < 0.1)
-        print(views[count / 2].center.x)
-        print(box.fw / 2)
         XCTAssertTrue(abs(views[count / 2].center.x - box.fw / 2) < 0.1)
 
         format.value = .round
