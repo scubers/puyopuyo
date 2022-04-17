@@ -46,7 +46,7 @@ class LinkListTests: XCTestCase {
         XCTAssert(list.count == nums.count - 3)
 
         list.removeAll()
-        
+
         XCTAssert(list.first == nil)
         XCTAssert(list.last == nil)
         XCTAssert(list.count == 0)
@@ -71,10 +71,40 @@ class LinkListTests: XCTestCase {
         XCTAssert(list.last == nums.last)
     }
 
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
+    func testCompareArray() throws {
+        var array = [Int]()
+        let list = LinkList<Int>()
+
+        let lt = profileTime(label: "List", times: times) { c in
+            list.append(c)
+        }
+        let at = profileTime(label: "Array", times: times) { c in
+            array.append(c)
+        }
+
+        print("list / array = \(lt / at)")
+    }
+
+    private let times = 1000
+
+    func testListPerformance() throws {
         self.measure {
-            // Put the code you want to measure the time of here.
+//            var list = [Int]()
+            let list = LinkList<Int>()
+
+            for i in 0 ..< times {
+                list.append(i)
+            }
+        }
+    }
+
+    func testArrayPerformance() throws {
+        self.measure {
+            var list = [Int]()
+
+            for i in 0 ..< times {
+                list.append(i)
+            }
         }
     }
 }

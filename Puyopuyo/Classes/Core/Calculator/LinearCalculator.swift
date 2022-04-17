@@ -84,11 +84,11 @@ class _LinearCalculator {
     }()
 
     /// 次轴需要修正的子节点
-    private lazy var crossRatioChildren = LinkList<Measure>()
+    private lazy var crossRatioChildren = [Measure]()
     /// 主轴需要压缩的子节点
-    private lazy var mainShrinkChildren = LinkList<Measure>()
+    private lazy var mainShrinkChildren = [Measure]()
     /// 主轴需要成长的子节点
-    private lazy var mainGrowChildren = LinkList<Measure>()
+    private lazy var mainGrowChildren = [Measure]()
 
     /// 计算本身布局属性，可能返回的size 为 .fixed, .ratio, 不可能返回wrap
     func calculate() -> CGSize {
@@ -161,6 +161,7 @@ class _LinearCalculator {
     }
 
     private func prepareData() {
+        calculateChildren.reserveCapacity(regulator.children.count)
         // 第一次循环
         regulator.enumerateChildren { m in
             // 未激活的节点不计算

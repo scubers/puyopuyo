@@ -193,7 +193,7 @@ func createPuyopuyoRecursiveView(times: Int = 3) -> UIView {
         if times == 0 { return view }
 
         view.attach {
-            for _ in 0 ..< times {
+            for _ in 0 ..< 5 {
                 UILabel().attach($0).text("Label")
             }
 
@@ -211,7 +211,7 @@ func createTGRecursiveView(times: Int = 3) -> UIView {
 
         view.attach {
             $0.tg_size(width: .wrap, height: .wrap)
-            for _ in 0 ..< times {
+            for _ in 0 ..< 5 {
                 UILabel().attach($0).text("Label").attach { $0.tg_size(width: .wrap, height: .wrap) }
             }
 
@@ -233,7 +233,7 @@ func createYogaRecursiveView(times: Int = 3) -> UIView {
                 l.isEnabled = true
                 l.flexDirection = .row
             }
-            for _ in 0 ..< times {
+            for _ in 0 ..< 5 {
                 UILabel().attach($0).text("Label")
                     .set(\.yoga.isEnabled, true)
             }

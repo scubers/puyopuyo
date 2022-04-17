@@ -28,20 +28,13 @@ public class BoxControl<R: Regulator> {
              2. 若非包裹，则上层视图时只是用了估算尺寸，需要再次计算子节点
              */
             if regulator.size.bothNotWrap() {
-                let layoutResidual = CGSize(
-                    width: view.bounds.width + regulator.margin.getHorzTotal(),
-                    height: view.bounds.height + regulator.margin.getVertTotal()
-                )
+                let layoutResidual = CalculateUtil.getLayoutResidual(for: regulator, fromContentResidual: view.bounds.size)
                 _ = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: layoutResidual, strategy: .positive)
             }
         } else {
             var layoutResidual: CGSize
             // 父视图为普通视图
             if isSizeControl {
-                /**
-                 当需要控制自身大小时，剩余空间为父视图的所有空间
-                 */
-
                 layoutResidual = CalculateUtil.getInitialLayoutResidual(for: regulator)
 
                 if let spv = view.superview {

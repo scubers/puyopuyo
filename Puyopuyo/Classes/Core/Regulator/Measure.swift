@@ -122,4 +122,8 @@ public class Measure {
     public func createCalculator() -> Calculator {
         MeasureCalculator()
     }
+    
+    public var children: [Measure] {
+        delegate?.children(for: self) ?? []
+    }
 }

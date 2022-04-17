@@ -64,7 +64,7 @@ class DataTests: XCTestCase {
         var tgTime = [(Int, TimeInterval)]()
         var yogaTime = [(Int, TimeInterval)]()
 
-        [2, 4, 6, 8, 10, 12, 14, 16, 18].forEach { count in
+        [4, 8, 12, 16, 20, 24, 28, 32, 36, 40].forEach { count in
             var v: UIView = createPuyopuyoRecursiveView(times: count)
             puyoTime.append((count, profileTime { _ in
                 _ = v.sizeThatFits(.zero)

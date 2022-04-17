@@ -27,9 +27,9 @@ private class _ZCalculator {
 
     var maxChildContentSize: CGSize = .zero
 
-    var calculateChildren = LinkList<Measure>()
+    var calculateChildren = [Measure]()
 
-    lazy var maybeRatioChildren = LinkList<Measure>()
+    lazy var maybeRatioChildren = [Measure]()
 
     func calculate() -> CGSize {
         prepareData()
@@ -46,6 +46,8 @@ private class _ZCalculator {
     }
 
     private func prepareData() {
+        calculateChildren.reserveCapacity(regulator.children.count)
+        
         regulator.enumerateChildren { m in
             if !m.activated { return }
 

@@ -15,7 +15,12 @@ class LinkList<T> {
     private var headNode = Node<T>()
     private var lastNode: Node<T>?
 
-    private var appendingNode: Node<T> { lastNode ?? headNode }
+    private var appendingNode: Node<T> {
+        guard let lastNode = lastNode else {
+            return headNode
+        }
+        return lastNode
+    }
 
     private var enumeratingCount = 0
 

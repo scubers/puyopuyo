@@ -35,6 +35,7 @@ class _FlowCalculator {
 
     func calculate() -> CGSize {
         var calculateChildren = [Measure]()
+        calculateChildren.reserveCapacity(regulator.children.count)
         regulator.enumerateChildren { m in
             if m.activated {
                 calculateChildren.append(m)
