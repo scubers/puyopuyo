@@ -181,13 +181,20 @@ class _LinearCalculator {
                 formattable = false
             }
 
-            // 累加主轴margin
-            totalMargin += subCalMargin.mainFixed
-
             // 记录次轴最大值: 固定次轴尺寸 + 次轴margin
             if subCalSize.cross.isFixed {
                 maxCrossChildrenContent = max(maxCrossChildrenContent, subCalSize.cross.fixedValue + subCalMargin.crossFixed)
             }
+
+            // 累加主轴margin
+            totalMargin += subCalMargin.mainFixed
+
+            // 统计主轴比例总和
+            totalMainRatio += subCalSize.main.ratio
+            // 统计主轴压缩总和
+            totalShrink += subCalSize.main.shrink
+            // 统计主轴成长总和
+            totalGrow += subCalSize.main.grow
 
             if subCalSize.cross.isRatio {
                 crossRatioChildren.append(m)
@@ -201,12 +208,6 @@ class _LinearCalculator {
                 mainGrowChildren.append(m)
             }
 
-            // 统计主轴比例总和
-            totalMainRatio += subCalSize.main.ratio
-            // 统计主轴压缩总和
-            totalShrink += subCalSize.main.shrink
-            // 统计主轴成长总和
-            totalGrow += subCalSize.main.grow
             // 添加计算子节点
             calculateChildren.append(m)
         }
