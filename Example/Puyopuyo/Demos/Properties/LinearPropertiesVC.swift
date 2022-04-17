@@ -9,8 +9,10 @@
 import Puyopuyo
 import UIKit
 
-class LinearPropertiesVC: BaseVC {
-    override func configView() {
+class LinearPropertiesVC: BaseViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
         DemoScroll(
             builder: {
                 direction().attach($0)
@@ -22,7 +24,7 @@ class LinearPropertiesVC: BaseVC {
                 padding().attach($0)
             }
         )
-        .attach(vRoot)
+        .attach(view)
         .size(.fill, .fill)
     }
 
@@ -104,7 +106,7 @@ class LinearPropertiesVC: BaseVC {
 
                     UIView().attach($0)
                         .activated(false)
-                        .backgroundColor(UIColor.black)
+                        .backgroundColor(UIColor.label)
                         .set(\.center, $0.py_boundsState().map { CGPoint(x: $0.width / 2, y: $0.height / 2) })
                         .set(\.frame.size.height, $0.py_boundsState().map { $0.height })
                         .frame(w: 1)
@@ -246,9 +248,5 @@ class LinearPropertiesVC: BaseVC {
         .attach()
         .onEvent(reverse)
         .view
-    }
-
-    override func shouldRandomColor() -> Bool {
-        return false
     }
 }

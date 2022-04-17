@@ -28,16 +28,17 @@ class DemoView<T: Equatable>: VBox, Eventable, Stateful {
             Label(self.title).attach($0)
                 .size(.fill, 40)
                 .textAlignment(.center)
-                .backgroundColor(.black.withAlphaComponent(0.2))
+                .backgroundColor(UIColor.tertiarySystemBackground)
             
             ZBox().attach($0) {
                 builder($0)
             }
-            .backgroundColor(Theme.card)
+            .topBorder([.color(UIColor.separator), .thick(Util.pixel(1))])
+            .backgroundColor(UIColor.systemBackground)
             .width(.fill)
             
             SelectionView(self.selectors, selected: selected).attach($0)
-                .topBorder([.color(UIColor.black.withAlphaComponent(0.2)), .thick(Util.pixel(1))])
+                .topBorder([.color(UIColor.separator), .thick(Util.pixel(1))])
                 .size(.fill, .wrap)
                 .visibility(self.selectors.count > 0 ? .visible : .gone)
                 .onEvent(emitter)
@@ -54,8 +55,8 @@ class DemoView<T: Equatable>: VBox, Eventable, Stateful {
         .animator(Animators.default)
         .size(.fill, .wrap)
         .backgroundColor(Theme.card)
-        .style(ShadowStyle())
-//        .cornerRadius(4)
+//        .style(ShadowStyle())
+        .cornerRadius(8)
     }
     
     @available(*, unavailable)

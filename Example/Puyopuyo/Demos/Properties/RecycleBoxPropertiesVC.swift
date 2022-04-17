@@ -9,7 +9,7 @@
 import Foundation
 import Puyopuyo
 
-class RecycleBoxPropertiesVC: BaseVC {
+class RecycleBoxPropertiesVC: BaseViewController {
     let sections = State<[IRecycleSection]>([])
 
     struct MenuItem {
@@ -17,7 +17,18 @@ class RecycleBoxPropertiesVC: BaseVC {
         var action: () -> Void
     }
 
-    override func configView() {
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isTranslucent = false
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.navigationBar.isTranslucent = true
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
         let this = WeakableObject(value: self)
 
         let actions = [
@@ -29,7 +40,7 @@ class RecycleBoxPropertiesVC: BaseVC {
             MenuItem(name: "mix", action: { this.value?.mixedDataDemo() })
         ]
 
-        vRoot.attach {
+        VBox().attach(view) {
             UISegmentedControl(items: actions.map(\.name)).attach($0)
                 .set(\.selectedSegmentIndex, 0)
                 .onControlEvent(.valueChanged, Inputs {
@@ -47,6 +58,7 @@ class RecycleBoxPropertiesVC: BaseVC {
             .size(.fill, .fill)
         }
         .space(10)
+        .size(.fill, .fill)
 
         actions.first?.action()
     }
@@ -306,7 +318,7 @@ class RecycleBoxPropertiesVC: BaseVC {
                             .size(width, width)
                             .text(o.data.map { $0 + 1 }.binder.description)
                             .textAlignment(.center)
-                            .textColor(selected.map { $0 ? UIColor.white : .black })
+                            .textColor(selected.map { $0 ? UIColor.white : .label })
                             .cornerRadius(width / 2)
                             .backgroundColor(selected.map { $0 ? UIColor.systemPink : .clear })
                             .clipToBounds(true)

@@ -9,21 +9,26 @@
 import Puyopuyo
 import UIKit
 
-class DemoScroll: UIScrollView {
+class DemoScroll: ZBox {
     init(builder: (UIView) -> Void) {
         super.init(frame: .zero)
 
         attach {
-            VBox().attach($0)
-                .padding(all: 16)
-                .animator(Animators.default)
-                .space(20)
-                .size(.fill, .wrap)
-                .autoJudgeScroll(true)
-                .attach {
-                    builder($0)
-                }
+            UIScrollView().attach($0) {
+                VBox().attach($0)
+                    .padding(all: 16)
+                    .animator(Animators.default)
+                    .space(20)
+                    .size(.fill, .wrap)
+                    .autoJudgeScroll(true)
+                    .attach {
+                        builder($0)
+                    }
+                    .size(.fill, .wrap)
+            }
+            .size(.fill, .fill)
         }
+        .size(.fill, .fill)
     }
 
     @available(*, unavailable)

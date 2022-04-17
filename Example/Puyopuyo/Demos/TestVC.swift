@@ -23,69 +23,51 @@ extension Bool {
     var visibleOrNot: Visibility { self ? .visible : .invisible }
 }
 
-class TestVC: BaseVC {
+class TestVC: BaseViewController {
     let text = State("")
-    override func configView() {
-        vRoot.attach {
-            UIView().attach($0).activated(false)
-            
-            
-            
-            UIView().attach($0) {
-                
-                let v = $0
-                v.configureLayout { l in
-                    l.isEnabled = true
-                    l.flexDirection = .row
-                    l.width = 100
-                    l.flexWrap = .wrap
-                }
-                
-                Label("Label").attach($0)
-                    .set(\.yoga.isEnabled, true)
-                Label("Label").attach($0)
-                    .set(\.yoga.isEnabled, true)
-                Label("Label").attach($0)
-                    .set(\.yoga.isEnabled, true)
-                Label("Label").attach($0)
-                    .set(\.yoga.isEnabled, true)
-                    
-                
-                
-//                createYogaRecursiveView().attach($0)
-                $0.yoga.applyLayout(preservingOrigin: false, dimensionFlexibility: .flexibleHeight)
-                
-                YogaFlowView().attach($0)
-            }
-//            .size(.fill, .fill)
-            .activated(false)
-//            .view.sizeToFit()
-//            .size(.fill, .fill)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = .systemBackground
+        
+        ZBox().attach(view) {
+            UIScrollView().attach($0) {
+                VBox().attach($0) {
+                    UIView().attach($0).activated(false)
 
-//            tgTestView().attach($0)
-            
-//            demo1().attach($0)
-//            demo2().attach($0)
-//            demo3().attach($0)
-//            demo4().attach($0)
-//            demo5().attach($0)
-//            demo6().attach($0)
-//            shrinkDeadLoopTest().attach($0)
-//            flowCompactTest().attach($0)
-//
-//            zboxFillAndWrapTest().attach($0)
-//
-//            flowRatioWrapTest().attach($0)
-//
-//            zboxAspectRatioTest().attach($0)
-//
-//            zboxRatioTest().attach($0)
-            
-//            crossConflictView().attach($0)
-//
-//            jkProblem1().attach($0)
-            formatTest().attach($0)
+                    //            tgTestView().attach($0)
+                    
+                    //            demo1().attach($0)
+                    //            demo2().attach($0)
+                    //            demo3().attach($0)
+                    //            demo4().attach($0)
+                    //            demo5().attach($0)
+                    //            demo6().attach($0)
+                    //            shrinkDeadLoopTest().attach($0)
+                    //            flowCompactTest().attach($0)
+                    //
+                    //            zboxFillAndWrapTest().attach($0)
+                    //
+                    //            flowRatioWrapTest().attach($0)
+                    //
+                    //            zboxAspectRatioTest().attach($0)
+                    //
+                    //            zboxRatioTest().attach($0)
+                    
+                    //            crossConflictView().attach($0)
+                    //
+                    //            jkProblem1().attach($0)
+                    formatTest().attach($0)
+                }
+                .autoJudgeScroll(true)
+                .width(.fill)
+                .animator(Animators.default)
+            }
+            .size(.fill, .fill)
         }
+        .size(.fill, .fill)
+        
+        Util.randomViewColor(view: view)
     }
     
     func formatTest() -> UIView {
@@ -573,10 +555,6 @@ class TestVC: BaseVC {
         }
         .size(.fill, .wrap)
         .view
-    }
-    
-    override func shouldRandomColor() -> Bool {
-        true
     }
 }
 

@@ -9,11 +9,12 @@
 /* Begin PBXBuildFile section */
 		090C8DB826F3A1D700FEF026 /* SizePropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090C8DB726F3A1D700FEF026 /* SizePropertiesVC.swift */; };
 		0910C08D26E45A350048D5C8 /* FeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0910C08C26E45A350048D5C8 /* FeedVC.swift */; };
-		0915661326F46D3F007EBB05 /* ShowCaseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0915661226F46D3F007EBB05 /* ShowCaseVC.swift */; };
 		0915661526F46DCE007EBB05 /* ControlPad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0915661426F46DCE007EBB05 /* ControlPad.swift */; };
 		09418BDE2703057B00129A15 /* ScrollVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09418BDD2703057B00129A15 /* ScrollVC.swift */; };
 		0953131226FB4FA9007F2881 /* ExpandAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0953131126FB4FA9007F2881 /* ExpandAnimator.swift */; };
 		095E422326F50B0000D6B88C /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095E422226F50B0000D6B88C /* ChatVC.swift */; };
+		096CE4F2280C55F80014903A /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096CE4F1280C55F80014903A /* MenuViewController.swift */; };
+		096CE4F4280C589F0014903A /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096CE4F3280C589F0014903A /* BaseViewController.swift */; };
 		0972D40526C576D200210D1C /* ShadowStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0972D40426C576D200210D1C /* ShadowStyle.swift */; };
 		0982C1A02469AF730070F104 /* RecycleBoxPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */; };
 		0986B15A27F47C8000907B3A /* LinkListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0986B15927F47C8000907B3A /* LinkListTests.swift */; };
@@ -43,8 +44,6 @@
 		A8BEC492239CDB6B001FD6BF /* FlowPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BEC491239CDB6B001FD6BF /* FlowPropertiesVC.swift */; };
 		A8BEC495239CDF5D001FD6BF /* AdvanceVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BEC494239CDF5D001FD6BF /* AdvanceVC.swift */; };
 		A8D9430922FF3694002E487F /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8D9430822FF3694002E487F /* Label.swift */; };
-		A8E53FB322C8E679000B2B6D /* BaseVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E53FB222C8E679000B2B6D /* BaseVC.swift */; };
-		A8E53FB522C8E6BB000B2B6D /* MenuVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8E53FB422C8E6BB000B2B6D /* MenuVC.swift */; };
 		F57CB0F700D14D2257E5BC98 /* Pods_Puyopuyo_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB7C29DBAEAF1D476E633CC8 /* Pods_Puyopuyo_Tests.framework */; };
 		FCB331E1A7EC2D12730F60EE /* Pods_Puyopuyo_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0DA172BC8E94B2D60DDFC77 /* Pods_Puyopuyo_Example.framework */; };
 /* End PBXBuildFile section */
@@ -63,12 +62,13 @@
 		029D039CF2FB7AD03311F02E /* Pods-Puyopuyo_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Puyopuyo_Tests.debug.xcconfig"; path = "Target Support Files/Pods-Puyopuyo_Tests/Pods-Puyopuyo_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		090C8DB726F3A1D700FEF026 /* SizePropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizePropertiesVC.swift; sourceTree = "<group>"; };
 		0910C08C26E45A350048D5C8 /* FeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedVC.swift; sourceTree = "<group>"; };
-		0915661226F46D3F007EBB05 /* ShowCaseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowCaseVC.swift; sourceTree = "<group>"; };
 		0915661426F46DCE007EBB05 /* ControlPad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlPad.swift; sourceTree = "<group>"; };
 		093B861024012B64002AC9C6 /* Puyopuyo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Puyopuyo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		09418BDD2703057B00129A15 /* ScrollVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollVC.swift; sourceTree = "<group>"; };
 		0953131126FB4FA9007F2881 /* ExpandAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandAnimator.swift; sourceTree = "<group>"; };
 		095E422226F50B0000D6B88C /* ChatVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatVC.swift; sourceTree = "<group>"; };
+		096CE4F1280C55F80014903A /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
+		096CE4F3280C589F0014903A /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		0972D40426C576D200210D1C /* ShadowStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowStyle.swift; sourceTree = "<group>"; };
 		097B22AE2441F6290043B0A5 /* Puyopuyo_Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Puyopuyo_Example.entitlements; sourceTree = "<group>"; };
 		0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecycleBoxPropertiesVC.swift; sourceTree = "<group>"; };
@@ -105,8 +105,6 @@
 		A8BEC491239CDB6B001FD6BF /* FlowPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowPropertiesVC.swift; sourceTree = "<group>"; };
 		A8BEC494239CDF5D001FD6BF /* AdvanceVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvanceVC.swift; sourceTree = "<group>"; };
 		A8D9430822FF3694002E487F /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
-		A8E53FB222C8E679000B2B6D /* BaseVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseVC.swift; sourceTree = "<group>"; };
-		A8E53FB422C8E6BB000B2B6D /* MenuVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuVC.swift; sourceTree = "<group>"; };
 		B80C4BDF60E8E994E6351B56 /* Pods-Puyopuyo_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Puyopuyo_Example.debug.xcconfig"; path = "Target Support Files/Pods-Puyopuyo_Example/Pods-Puyopuyo_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		BB7C29DBAEAF1D476E633CC8 /* Pods_Puyopuyo_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Puyopuyo_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0DA172BC8E94B2D60DDFC77 /* Pods_Puyopuyo_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Puyopuyo_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -141,14 +139,6 @@
 				0910C08C26E45A350048D5C8 /* FeedVC.swift */,
 			);
 			path = Feed;
-			sourceTree = "<group>";
-		};
-		0915661126F46D37007EBB05 /* ShowCase */ = {
-			isa = PBXGroup;
-			children = (
-				0915661226F46D3F007EBB05 /* ShowCaseVC.swift */,
-			);
-			path = ShowCase;
 			sourceTree = "<group>";
 		};
 		09418BDC2703057000129A15 /* ScrollView */ = {
@@ -299,7 +289,6 @@
 				09418BDC2703057000129A15 /* ScrollView */,
 				098AA9EF26FB6F0400C53AA2 /* Animation */,
 				095E422126F50AF900D6B88C /* Chat */,
-				0915661126F46D37007EBB05 /* ShowCase */,
 				0910C08B26E45A2D0048D5C8 /* Feed */,
 				A8BEC493239CDF50001FD6BF /* Advance */,
 				A8BCEEB4239961F6002DB739 /* Properties */,
@@ -314,7 +303,7 @@
 		A8D9430322FF3614002E487F /* Menu */ = {
 			isa = PBXGroup;
 			children = (
-				A8E53FB422C8E6BB000B2B6D /* MenuVC.swift */,
+				096CE4F1280C55F80014903A /* MenuViewController.swift */,
 			);
 			path = Menu;
 			sourceTree = "<group>";
@@ -322,7 +311,6 @@
 		A8D9430422FF3623002E487F /* Base */ = {
 			isa = PBXGroup;
 			children = (
-				A8E53FB222C8E679000B2B6D /* BaseVC.swift */,
 				A8D9430822FF3694002E487F /* Label.swift */,
 				A897FCDD230AFBD80061029E /* Util.swift */,
 				A81CE1482312EE6900E19E6B /* OptionView.swift */,
@@ -333,6 +321,7 @@
 				0972D40426C576D200210D1C /* ShadowStyle.swift */,
 				0915661426F46DCE007EBB05 /* ControlPad.swift */,
 				0953131126FB4FA9007F2881 /* ExpandAnimator.swift */,
+				096CE4F3280C589F0014903A /* BaseViewController.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -531,25 +520,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0915661326F46D3F007EBB05 /* ShowCaseVC.swift in Sources */,
 				09418BDE2703057B00129A15 /* ScrollVC.swift in Sources */,
 				09E58F0527EAEC9C007CE7BF /* CompareViews.swift in Sources */,
 				09AD0CBD26DD064E008231F1 /* TestVC.swift in Sources */,
 				A8BEC495239CDF5D001FD6BF /* AdvanceVC.swift in Sources */,
+				096CE4F4280C589F0014903A /* BaseViewController.swift in Sources */,
 				0972D40526C576D200210D1C /* ShadowStyle.swift in Sources */,
 				A8698302239CF98E00B3D514 /* _Scaffold.swift in Sources */,
 				A8BEC490239CD656001FD6BF /* LinearPropertiesVC.swift in Sources */,
 				A81CE1492312EE6900E19E6B /* OptionView.swift in Sources */,
+				096CE4F2280C55F80014903A /* MenuViewController.swift in Sources */,
 				A86F4381233F9C100008606F /* StyleVC.swift in Sources */,
 				0953131226FB4FA9007F2881 /* ExpandAnimator.swift in Sources */,
 				A8BEC48E239CD3E6001FD6BF /* DemoScroll.swift in Sources */,
 				095E422326F50B0000D6B88C /* ChatVC.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				A84E5CC1239EB5AC0091D39B /* ZPropertiesVC.swift in Sources */,
-				A8E53FB322C8E679000B2B6D /* BaseVC.swift in Sources */,
 				0982C1A02469AF730070F104 /* RecycleBoxPropertiesVC.swift in Sources */,
 				098AA9F126FB6F0F00C53AA2 /* AnimationVC.swift in Sources */,
-				A8E53FB522C8E6BB000B2B6D /* MenuVC.swift in Sources */,
 				A897FCDE230AFBD80061029E /* Util.swift in Sources */,
 				A8D9430922FF3694002E487F /* Label.swift in Sources */,
 				0915661526F46DCE007EBB05 /* ControlPad.swift in Sources */,

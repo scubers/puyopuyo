@@ -23,6 +23,7 @@ class Label: UILabel {
         numberOfLines = 0
         textAlignment = .center
         isUserInteractionEnabled = true
+        textColor = UIColor.label
     }
 
     static func title(_ title: String) -> Label {

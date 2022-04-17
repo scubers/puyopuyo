@@ -172,15 +172,15 @@ enum Theme {
     static let accentColor = UIColor(hexString: "237cff")
     static let antiAccentColor = UIColor.white
 
-    static let background = UIColor(hexString: "eeeeee")
-    static let card = UIColor(hexString: "ffffff")
+    static let background = UIColor.secondarySystemBackground
+    static let card = UIColor.systemBackground
 
-    static let dividerColor = UIColor.black.withAlphaComponent(0.2)
+    static let dividerColor = UIColor.separator
 
     static let demoBoxBorder: [BorderOptions] = [
-        .color(.lightGray),
-        .thick(Util.pixel(1)),
-        .dash(2, 2)
+        .color(UIColor.separator),
+        .thick(Util.pixel(2)),
+        .dash(5, 2)
     ]
 }
 

@@ -9,8 +9,9 @@
 import Puyopuyo
 import UIKit
 
-class UIViewProertiesVC: BaseVC {
-    override func configView() {
+class UIViewProertiesVC: BaseViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
         DemoScroll(
             builder: {
                 alignment().attach($0)
@@ -20,7 +21,7 @@ class UIViewProertiesVC: BaseVC {
                 margin().attach($0)
             }
         )
-        .attach(vRoot)
+        .attach(view)
         .size(.fill, .fill)
     }
 
@@ -222,9 +223,5 @@ class UIViewProertiesVC: BaseVC {
         .attach()
         .onEvent(margin)
         .view
-    }
-
-    override func shouldRandomColor() -> Bool {
-        return false
     }
 }

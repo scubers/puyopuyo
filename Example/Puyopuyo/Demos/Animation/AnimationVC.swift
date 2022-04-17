@@ -10,8 +10,9 @@ import Foundation
 import Puyopuyo
 import UIKit
 
-class AnimationVC: BaseVC {
-    override func configView() {
+class AnimationVC: BaseViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
         DemoScroll {
             UILabel().attach($0)
                 .fontSize(20, weight: .bold)
@@ -44,7 +45,7 @@ class AnimationVC: BaseVC {
 
             buildInAnimation().attach($0)
         }
-        .attach(vRoot)
+        .attach(view)
         .size(.fill, .fill)
     }
 
@@ -127,7 +128,7 @@ class AnimationVC: BaseVC {
     }
 
     func sizeInsensitiveAnimation() -> UIView {
-        let color = State(UIColor.black)
+        let color = State(UIColor.systemGreen)
         return DemoView<UIColor>(
             title: "Size insensitive animation",
             builder: {
@@ -149,7 +150,7 @@ class AnimationVC: BaseVC {
             selectors: [
                 Selector(desc: "pink", value: UIColor.systemPink),
                 Selector(desc: "blue", value: UIColor.systemBlue),
-                Selector(desc: "black", value: UIColor.black),
+                Selector(desc: "green", value: UIColor.systemGreen),
             ],
             selected: color.value
         )

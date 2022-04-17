@@ -9,19 +9,19 @@
 import Foundation
 import Puyopuyo
 
-class ScrollVC: BaseVC {
-    override func configView() {
-        vRoot.attach {
-            UILabel().attach($0)
-                .width(.fill)
-                .numberOfLines(0)
-                .text("""
-                If BoxView is the Subview of a UIScrollView, set boxview autoJudgeScroll, size = .wrap.
-                The BoxView will control then UIScrollView's contentSize after calculate
-                """)
-            
+class ScrollVC: BaseViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        VBox().attach(view) {
             UIScrollView().attach($0) {
                 VBox().attach($0) {
+                    UILabel().attach($0)
+                        .width(.fill)
+                        .numberOfLines(0)
+                        .text("""
+                        If BoxView is the Subview of a UIScrollView, set boxview autoJudgeScroll, size = .wrap.
+                        The BoxView will control then UIScrollView's contentSize after calculate
+                        """)
                     for i in 0 ..< 40 {
                         Label.demo(i.description).attach($0)
                             .size(50, 50)
@@ -34,6 +34,7 @@ class ScrollVC: BaseVC {
             }
             .size(.fill, .fill)
         }
+        .size(.fill, .fill)
         .padding(all: 10)
     }
 }

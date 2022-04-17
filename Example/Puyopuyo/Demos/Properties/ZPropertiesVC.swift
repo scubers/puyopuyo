@@ -9,13 +9,23 @@
 import Puyopuyo
 import UIKit
 
-class ZPropertiesVC: BaseVC {
-    override func configView() {
-        HBox().attach(vRoot) {
+class ZPropertiesVC: BaseViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        HBox().attach(view) {
             getMenu().attach($0).size(.fill, .fill)
             getZBox().attach($0).size(.fill, .fill)
         }
         .size(.fill, .fill)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isTranslucent = false
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.navigationBar.isTranslucent = true
     }
 
     let text = State("demo")
@@ -152,7 +162,6 @@ class ZPropertiesVC: BaseVC {
             .padding(all: 4)
         }
         .attach()
-        .setDelegate(self)
         .view
     }
 

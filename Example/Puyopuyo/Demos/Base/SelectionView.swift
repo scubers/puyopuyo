@@ -55,7 +55,7 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
                     .borderWidth(Util.pixel(1))
                     .borderColor(Theme.accentColor)
                     .cornerRadius(4)
-                    .textColor(UIColor.black, state: .normal)
+                    .textColor(UIColor.label, state: .normal)
                     .textColor(Theme.antiAccentColor, state: .selected)
                     .width(.wrap(add: 6))
                     .text(x.desc, state: .normal)
@@ -65,6 +65,7 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
         .padding(all: 10)
         .space(5)
         .animator(Animators.default)
+        .backgroundColor(.tertiarySystemBackground)
     }
 }
 
@@ -114,7 +115,7 @@ class PlainSelectionView<T: Equatable>: ZBox, Eventable, Stateful {
                         .borderWidth(Util.pixel(1))
                         .borderColor(Theme.accentColor)
                         .cornerRadius(4)
-                        .textColor(UIColor.black, state: .normal)
+                        .textColor(UIColor.label, state: .normal)
                         .width(.wrap(add: 6))
                         .text(x.desc, state: .normal)
                 }

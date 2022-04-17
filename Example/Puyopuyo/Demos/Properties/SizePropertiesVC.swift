@@ -9,8 +9,10 @@
 import Foundation
 import Puyopuyo
 
-class SizePropertiesVC: BaseVC {
-    override func configView() {
+class SizePropertiesVC: BaseViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
         DemoScroll(
             builder: {
                 UILabel().attach($0)
@@ -37,7 +39,7 @@ class SizePropertiesVC: BaseVC {
                 complexSize().attach($0)
             }
         )
-        .attach(vRoot)
+        .attach(view)
         .size(.fill, .fill)
     }
 
@@ -345,7 +347,6 @@ class SizePropertiesVC: BaseVC {
                         .width(.fill)
                 }
                 .width(.fill)
-                .padding(all: 10)
 
             },
             selectors: [],
@@ -408,6 +409,7 @@ class SizePropertiesVC: BaseVC {
                 .width(.fill)
                 .height(80)
                 .space(8)
+                .margin(all: 12)
 
             },
             selectors: [],
@@ -436,7 +438,7 @@ class SizePropertiesVC: BaseVC {
                 .demo()
                 .width(.fill)
                 .space(8)
-
+                .margin(all: 12)
             },
             selectors: [],
             desc: ".ratio(value) size will fill up the residual size, if there are multiple ratio size, will separate by the ratio value. .fill == .ratio(1)"

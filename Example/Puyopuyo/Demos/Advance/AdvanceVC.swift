@@ -9,18 +9,17 @@
 import Puyopuyo
 import UIKit
 
-class AdvanceVC: BaseVC {
-    override func configView() {
+class AdvanceVC: BaseViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    
         DemoScroll(
             builder: {
                 numberPad().attach($0)
                 superviewRatio().attach($0)
             }
         )
-        .attach(vRoot)
-        .attach {
-            $0.delegate = self
-        }
+        .attach(view)
         .size(.fill, .fill)
     }
 
@@ -114,9 +113,5 @@ class AdvanceVC: BaseVC {
         )
         .attach()
         .view
-    }
-
-    override func shouldRandomColor() -> Bool {
-        return false
     }
 }

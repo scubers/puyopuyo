@@ -9,29 +9,16 @@
 import Foundation
 import Puyopuyo
 
-class ChatVC: BaseVC, UICollectionViewDelegateFlowLayout {
+class ChatVC: BaseViewController, UICollectionViewDelegateFlowLayout {
     let messages = State<[Message]>((0 ..< 5).map { _ in Message() })
     var box: RecycleBox!
+    let additionalSafeAreaPadding = State(UIEdgeInsets.zero)
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        DispatchQueue.main.async {
-            self.showLast()
-        }
 
-        Outputs.listen(to: UIResponder.keyboardWillShowNotification).safeBind(to: self) { this, notice in
-            let rect = notice.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
-            this.additionalSafeAreaPadding.value.bottom = rect.height - this.view.safeAreaInsets.bottom
-        }
-
-        Outputs.listen(to: UIResponder.keyboardWillHideNotification).safeBind(to: self) { this, _ in
-            this.additionalSafeAreaPadding.value.bottom = 0
-        }
-    }
-
-    override func configView() {
         let this = WeakableObject(value: self)
-        vRoot.attach {
+        VBox().attach(view) {
             box = RecycleBox(
                 diffable: true,
                 sections: [
@@ -57,7 +44,9 @@ class ChatVC: BaseVC, UICollectionViewDelegateFlowLayout {
             .view
 
             MessageInputView().attach($0)
-                .size(.fill, 60)
+                .width(.fill)
+                .height($0.py_safeArea().binder.bottom.map { $0 + 60 })
+                .padding(bottom: $0.py_safeArea().binder.bottom)
                 .onEvent(to: self) { this, v in
                     switch v {
                     case .send(let text):
@@ -72,6 +61,20 @@ class ChatVC: BaseVC, UICollectionViewDelegateFlowLayout {
                 }
         }
         .animator(Animators.default)
+        .size(.fill, .fill)
+
+        DispatchQueue.main.async {
+            self.showLast()
+        }
+
+        Outputs.listen(to: UIResponder.keyboardWillShowNotification).safeBind(to: self) { this, notice in
+            let rect = notice.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as! CGRect
+            this.additionalSafeAreaPadding.value.bottom = rect.height - this.view.safeAreaInsets.bottom
+        }
+
+        Outputs.listen(to: UIResponder.keyboardWillHideNotification).safeBind(to: self) { this, _ in
+            this.additionalSafeAreaPadding.value.bottom = 0
+        }
     }
 
     private func addMessage(message: String? = nil, isSelf: Bool = Util.random(array: [true, false])) {
@@ -87,8 +90,6 @@ class ChatVC: BaseVC, UICollectionViewDelegateFlowLayout {
     }
 
     override var canBecomeFirstResponder: Bool { true }
-
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {}
 
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         becomeFirstResponder()
@@ -135,12 +136,12 @@ class MessageView: HBox, Stateful, Eventable {
                     UILabel().attach($0)
                         .numberOfLines(0)
                         .text(binder.content)
-                        .textColor(isSelf.map { $0 ? UIColor.white : .black })
+                        .textColor(isSelf.map { $0 ? Theme.antiAccentColor : .label })
                 }
                 .width(.wrap(max: 250))
-            
+
                 .padding(all: 12)
-                .backgroundColor(isSelf.map { $0 ? Theme.accentColor : .white })
+                .backgroundColor(isSelf.map { $0 ? Theme.accentColor : .systemBackground })
                 .cornerRadius(8)
             }
             .justifyContent(isSelf.map { $0 ? .right : .left })
@@ -172,8 +173,8 @@ class MessageInputView: HBox, Eventable, UITextViewDelegate {
             UITextView().attach($0)
                 .size(.fill, .wrap(min: 40))
                 .cornerRadius(8)
-                .backgroundColor(.lightGray.withAlphaComponent(0.2))
-                .textColor(UIColor.black)
+//                .backgroundColor(.lightGray.withAlphaComponent(0.2))
+                .backgroundColor(UIColor.systemGray6)
                 .fontSize(20)
                 .onText(text)
                 .view
@@ -198,7 +199,7 @@ class MessageInputView: HBox, Eventable, UITextViewDelegate {
             .animator(Animators.default)
         }
         .space(8)
-        .backgroundColor(.white)
+        .backgroundColor(UIColor.systemBackground)
         .justifyContent(.center)
         .padding(all: 8)
         .animator(Animators.default)

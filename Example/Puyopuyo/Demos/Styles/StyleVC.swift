@@ -9,7 +9,7 @@
 import Puyopuyo
 import UIKit
 
-class StyleVC: BaseVC {
+class StyleVC: BaseViewController {
     var styleSheet: StyleSheet {
         return StyleSheet(styles: [
             (\UIView.layer.cornerRadius).getStyle(with: 10),
@@ -35,8 +35,10 @@ class StyleVC: BaseVC {
         ])
     }
     
-    override func configView() {
-        vRoot.attach {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    
+        VBox().attach(view) {
             DemoScroll {
                 UILabel().attach($0)
                     .fontSize(20, weight: .bold)
@@ -94,22 +96,9 @@ class StyleVC: BaseVC {
         .styles([
             TapRippleStyle()
         ])
+        .size(.fill, .fill)
         .space(4)
         .padding(all: 10)
         .justifyContent(.center)
-    }
-    
-    /*
-     // MARK: - Navigation
-
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-         // Get the new view controller using segue.destination.
-         // Pass the selected object to the new view controller.
-     }
-     */
-
-    override func shouldRandomColor() -> Bool {
-        return false
     }
 }

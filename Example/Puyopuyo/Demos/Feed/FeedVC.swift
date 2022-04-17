@@ -10,13 +10,18 @@ import Foundation
 import Puyopuyo
 import UIKit
 
-class FeedVC: BaseVC, UITableViewDelegate {
+class FeedVC: BaseViewController, UITableViewDelegate {
     let dataSource = State<[Feed]>([])
 
-    override func configView() {
-        vRoot.attach {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        VBox().attach(view) {
             recycleBox().attach($0)
         }
+        .size(.fill, .fill)
+
+        reload()
     }
 
     func recycleBox() -> UIView {
@@ -60,14 +65,8 @@ class FeedVC: BaseVC, UITableViewDelegate {
             ].asOutput()
         )
         .attach()
-        .backgroundColor(UIColor.white)
         .size(.fill, .fill)
         .view
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        reload()
     }
 
     private func reload() {
@@ -77,8 +76,6 @@ class FeedVC: BaseVC, UITableViewDelegate {
             }
         }
     }
-
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {}
 }
 
 struct Feed {
@@ -139,6 +136,7 @@ private class Header: VBox, Eventable {
         }
         .justifyContent(.right)
         .width(.fill)
+        .backgroundColor(.systemBackground)
     }
 }
 
@@ -261,7 +259,8 @@ class ItemView: HBox, Stateful {
                     .width(.fill)
                     .visibility(commentVisible)
                 }
-                .backgroundColor(UIColor(hexString: "#F6F6F6"))
+//                .backgroundColor(UIColor(hexString: "#F6F6F6"))
+                .backgroundColor(UIColor.quaternarySystemFill)
                 .width(.fill)
                 .visibility(binder.map { f in
                     (!(f.comments.isEmpty && (f.likes ?? []).isEmpty)).py_visibleOrGone()
@@ -272,6 +271,7 @@ class ItemView: HBox, Stateful {
         }
         .padding(all: 16)
         .space(16)
+        .backgroundColor(UIColor.systemBackground)
         .width(.fill)
     }
 }

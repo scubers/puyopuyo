@@ -10,8 +10,6 @@ import Puyopuyo
 import RxSwift
 import UIKit
 
-class NavController: UINavigationController {}
-
 class Person {
     var name: String?
     var cat = Cat()
@@ -39,7 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIImageView.appearance().tintColor = Theme.accentColor
 
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = NavController(rootViewController: MenuVC())
+        window?.rootViewController = UINavigationController(rootViewController: MenuViewController())
 //        window?.rootViewController = NavController(rootViewController: UIViewController())
         window?.makeKeyAndVisible()
 
