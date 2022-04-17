@@ -16,6 +16,8 @@ class FeedVC: BaseViewController, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Refresh", style: .plain, target: self, action: #selector(reload))
+
         VBox().attach(view) {
             recycleBox().attach($0)
         }
@@ -26,6 +28,7 @@ class FeedVC: BaseViewController, UITableViewDelegate {
 
     func recycleBox() -> UIView {
         let this = WeakableObject(value: self)
+
         return RecycleBox(
             estimatedSize: CGSize(width: 100, height: 20),
             sections: [
@@ -69,7 +72,7 @@ class FeedVC: BaseViewController, UITableViewDelegate {
         .view
     }
 
-    private func reload() {
+    @objc private func reload() {
         DispatchQueue.main.async {
             self.dataSource.value = (0 ..< 20).map { _ in
                 Feed(icon: Images().get(), name: Names().get(), content: Contents().get(), images: Images().random(9), createdAt: Int(Date().timeIntervalSince1970), likes: Names().random(10), comments: Contents().random(10).map { "\(Names().get()): \($0)" })
@@ -118,21 +121,6 @@ private class Header: VBox, Eventable {
             .margin(top: -70, right: 20)
             .justifyContent(.center)
             .space(8)
-
-            ZBox().attach($0) {
-                UILabel().attach($0)
-                    .text("Refresh")
-                    .textColor(UIColor.white)
-            }
-            .padding(all: 8)
-            .cornerRadius(8)
-            .backgroundColor(UIColor.black.withAlphaComponent(0.7))
-            .width(.wrap(add: 20))
-            .alignment(.center)
-            .style(TapRippleStyle())
-            .onTap(to: self) { this, _ in
-                this.emit(.reload)
-            }
         }
         .justifyContent(.right)
         .width(.fill)

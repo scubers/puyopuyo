@@ -34,23 +34,34 @@ class DemoView<T: Equatable>: VBox, Eventable, Stateful {
                 builder($0)
             }
             .topBorder([.color(UIColor.separator), .thick(Util.pixel(1))])
+            .bottomBorder([.color(UIColor.separator), .thick(Util.pixel(1))])
             .backgroundColor(UIColor.systemBackground)
             .width(.fill)
             
-            SelectionView(self.selectors, selected: selected).attach($0)
-                .topBorder([.color(UIColor.separator), .thick(Util.pixel(1))])
-                .size(.fill, .wrap)
-                .visibility(self.selectors.count > 0 ? .visible : .gone)
-                .onEvent(emitter)
-            
-            UIView().attach($0).size(.fill, Util.pixel(1))
-                .backgroundColor(Theme.dividerColor)
-            
-            Label(self.desc).attach($0)
-                .textAlignment(.left)
-                .margin(all: 4)
-                .size(.fill, .wrap)
-                .visibility(self.desc.count > 0 ? .visible : .gone)
+            VBox().attach($0) {
+                
+                let selectionVisible = !selectors.isEmpty
+                let labelVisible = !desc.isEmpty
+                
+                SelectionView(selectors, selected: selected).attach($0)
+                    .size(.fill, .wrap)
+                    .visibility(selectionVisible.visibleOrGone)
+                    .onEvent(emitter)
+                
+                UIView().attach($0).size(.fill, Util.pixel(1))
+                    .backgroundColor(Theme.dividerColor)
+                    .visibility((selectionVisible && labelVisible).visibleOrGone)
+                
+                Label(self.desc).attach($0)
+                    .textAlignment(.left)
+                    .margin(all: 4)
+                    .size(.fill, .wrap)
+                    .visibility(labelVisible.visibleOrGone)
+            }
+            .cornerRadius(8)
+            .margin(all: 8)
+            .backgroundColor(.quaternarySystemFill)
+            .width(.fill)
         }
         .animator(Animators.default)
         .size(.fill, .wrap)

@@ -28,7 +28,7 @@ class MenuViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "MENU"
+        title = "Menu"
 
         let this = WeakableObject(value: self)
         ZBox().attach(view) {
@@ -44,7 +44,7 @@ class MenuViewController: BaseViewController {
                                     .textAlignment(.left)
                                     .text(o.data.0)
                             }
-                            .cornerRadius(4)
+                            .cornerRadius(8)
                             .width(o.contentSize.width)
                             .padding(all: 16)
                             .styles([TapTransformStyle()])

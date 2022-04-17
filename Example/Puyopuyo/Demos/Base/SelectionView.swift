@@ -65,7 +65,6 @@ class SelectionView<T: Equatable>: VFlow, Stateful, Eventable {
         .padding(all: 10)
         .space(5)
         .animator(Animators.default)
-        .backgroundColor(.tertiarySystemBackground)
     }
 }
 
