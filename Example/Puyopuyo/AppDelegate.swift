@@ -156,10 +156,10 @@ extension UIView: Viewable {
     var selfView: UIView? { self }
 }
 
-class RegView<ParentData>: UIView, ParentDataAsuming {}
+class RegView<R: Puyopuyo.Regulator, ParentData>: BoxView<R>, ParentDataAsuming {}
 
-class StringView: RegView<String> {}
-class IntView: RegView<Int> {}
+class StringView: RegView<LinearRegulator, String> {}
+class IntView: RegView<LinearRegulator, Int> {}
 
 func test() {
     let abc = UIView().bind {
