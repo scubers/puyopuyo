@@ -17,15 +17,6 @@ class RecycleBoxPropertiesVC: BaseViewController {
         var action: () -> Void
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.navigationBar.isTranslucent = false
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        navigationController?.navigationBar.isTranslucent = true
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -58,6 +49,7 @@ class RecycleBoxPropertiesVC: BaseViewController {
             .size(.fill, .fill)
         }
         .space(10)
+        .padding(top: view.py_safeArea().binder.top)
         .size(.fill, .fill)
 
         actions.first?.action()

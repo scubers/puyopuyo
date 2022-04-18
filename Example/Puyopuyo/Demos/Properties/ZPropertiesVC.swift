@@ -16,16 +16,8 @@ class ZPropertiesVC: BaseViewController {
             getMenu().attach($0).size(.fill, .fill)
             getZBox().attach($0).size(.fill, .fill)
         }
+        .padding(top: view.py_safeArea().binder.top)
         .size(.fill, .fill)
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.navigationBar.isTranslucent = false
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        navigationController?.navigationBar.isTranslucent = true
     }
 
     let text = State("demo")

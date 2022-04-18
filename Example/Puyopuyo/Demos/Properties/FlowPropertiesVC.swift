@@ -19,20 +19,12 @@ class FlowPropertiesVC: BaseViewController {
             getDemoFlow().attach($0)
                 .size(.fill, .fill)
         }
+        .padding(top: view.py_safeArea().binder.top)
         .size(.fill, .fill)
 
         step.safeBind(to: self) { this, _ in
             this.reset()
         }
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.navigationBar.isTranslucent = false
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        navigationController?.navigationBar.isTranslucent = true
     }
 
     func reset() {

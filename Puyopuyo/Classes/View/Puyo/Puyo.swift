@@ -90,18 +90,9 @@ public extension Puyo where T: UIView {
 
 public extension Puyo where T: ViewDisplayable {
     @discardableResult
-    func attach(_ parent: UIView? = nil, _ block: (T) -> Void = { _ in }) -> Puyo<T> {
-        block(view)
-        parent?.addSubview(view.dislplayView)
-        return self
+    func attach(_ parent: ViewDisplayable? = nil, _ block: (T) -> Void = { _ in }) -> Puyo<T> {
+        view.attach(parent, block)
     }
-}
-
-public typealias PuyoBuilder = (UIView) -> Void
-
-public protocol PuyoAttacher {
-    associatedtype Holder: ViewDisplayable
-    func attach(_ parent: ViewDisplayable?, _ block: PuyoBuilder) -> Puyo<Holder>
 }
 
 public protocol ViewDisplayable: AnyObject {
@@ -116,16 +107,12 @@ extension UIViewController: ViewDisplayable {
     public var dislplayView: UIView { view }
 }
 
-public extension PuyoAttacher where Self: ViewDisplayable {
+public extension ViewDisplayable {
     @discardableResult
-    func attach(_ parent: ViewDisplayable? = nil, _ block: PuyoBuilder = { _ in }) -> Puyo<Self> {
+    func attach(_ parent: ViewDisplayable? = nil, _ block: (Self) -> Void = { _ in }) -> Puyo<Self> {
         let link = Puyo(self)
-        block(dislplayView)
+        block(self)
         parent?.dislplayView.addSubview(dislplayView)
         return link
     }
 }
-
-extension UIViewController: PuyoAttacher {}
-
-extension UIView: PuyoAttacher {}
