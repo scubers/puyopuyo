@@ -15,8 +15,12 @@ class DemoScroll: ZBox {
 
         attach {
             UIScrollView().attach($0) {
+                let padding = $0.py_safeArea().binder.map { area -> UIEdgeInsets in
+                    print(area)
+                    return UIEdgeInsets(top: 16, left: area.left + 16, bottom: area.bottom, right: area.right + 16)
+                }
                 VBox().attach($0)
-                    .padding(all: 16)
+                    .padding(padding)
                     .animator(Animators.default)
                     .space(20)
                     .size(.fill, .wrap)

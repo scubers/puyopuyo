@@ -364,11 +364,23 @@ class SizePropertiesVC: BaseViewController {
             builder: {
                 VBox().attach($0) {
                     HBox().attach($0) {
-                        for _ in 0 ..< 10 {
+                        for _ in 0 ..< 6 {
                             Label.demo(Names().get()).attach($0)
                                 .width(.wrap(add: 10))
                                 .height(.wrap(add: 10))
                         }
+                        
+                        HBox().attach($0) {
+                            for i in 0..<3 {
+                                Label("Inner \(i + 1)").attach($0)
+                                    .width(.wrap(shrink: 1))
+                                    .textColor(UIColor.white)
+                                    .backgroundColor(UIColor.systemPink)
+                            }
+                        }
+                        .backgroundColor(Theme.accentColor)
+                        .space(4)
+                        .padding(all: 8)
                     }
                     .demo()
                     .width(Outputs.combine($0.py_boundsState().debounce(), progress).map { r, v -> SizeDescription in
