@@ -16,7 +16,7 @@ class ZPropertiesVC: BaseViewController {
             getMenu().attach($0).size(.fill, .fill)
             getZBox().attach($0).size(.fill, .fill)
         }
-        .padding(top: view.py_safeArea().binder.top)
+        .padding(view.py_safeArea())
         .size(.fill, .fill)
     }
 

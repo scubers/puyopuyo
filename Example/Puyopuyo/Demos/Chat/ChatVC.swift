@@ -45,8 +45,7 @@ class ChatVC: BaseViewController, UICollectionViewDelegateFlowLayout {
 
             MessageInputView().attach($0)
                 .width(.fill)
-                .height($0.py_safeArea().binder.bottom.map { $0 + 60 })
-                .padding(bottom: $0.py_safeArea().binder.bottom)
+                .padding(bottom: $0.py_safeArea().binder.bottom.map { $0 + 12 })
                 .onEvent(to: self) { this, v in
                     switch v {
                     case .send(let text):
@@ -61,6 +60,7 @@ class ChatVC: BaseViewController, UICollectionViewDelegateFlowLayout {
                 }
         }
         .animator(Animators.default)
+        .padding(bottom: additionalSafeAreaPadding.binder.bottom)
         .size(.fill, .fill)
 
         DispatchQueue.main.async {
@@ -183,7 +183,6 @@ class MessageInputView: HBox, Eventable, UITextViewDelegate {
             ZBox().attach($0) {
                 UIButton(type: .contactAdd).attach($0)
                     .onControlEvent(.touchUpInside, emitter.asInput { _ in .add })
-//                    .visibility(hasText.map { (!$0).py_visibleOrGone() })
                     .alpha(hasText.map { !$0 ? 1 : 0 })
                     .size(hasText.map { $0 ? Size.fixed(1) : Size(width: .wrap, height: .wrap) })
 
@@ -192,7 +191,6 @@ class MessageInputView: HBox, Eventable, UITextViewDelegate {
                         this.send()
                     }
                     .size(hasText.map { !$0 ? Size.fixed(1) : Size(width: .wrap(min: 60), height: .wrap(min: 40)) })
-//                    .visibility(hasText.map { $0.py_visibleOrGone() })
                     .alpha(hasText.map { $0 ? 1 : 0 })
             }
             .justifyContent(.center)
@@ -201,7 +199,11 @@ class MessageInputView: HBox, Eventable, UITextViewDelegate {
         .space(8)
         .backgroundColor(UIColor.systemBackground)
         .justifyContent(.center)
-        .padding(all: 8)
+        .padding(
+            vert: 12.asOutput(),
+            left: py_safeArea().binder.left.map { $0 + 8 },
+            right: py_safeArea().binder.right.map { $0 + 8 }
+        )
         .animator(Animators.default)
     }
 
