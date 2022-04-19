@@ -42,7 +42,7 @@ public class RecyclerTrigger<T> {
     }
 }
 
-public typealias RecyclerBuilder<T> = (OutputBinder<RecyclerInfo<T>>, RecyclerTrigger<T>) -> UIView
+public typealias RecyclerBuilder<T> = (OutputBinder<RecyclerInfo<T>>, RecyclerTrigger<T>) -> ViewDisplayable
 
 private class Context<T> {
     let id = UUID()
@@ -153,7 +153,7 @@ extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Dat
                     return nil
                 }
                 for context in self.container.usingMap {
-                    if context.view == view {
+                    if context.view == view.dislplayView {
                         return context
                     }
                 }
@@ -166,7 +166,7 @@ extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Dat
                 return nil
             }
             trigger.isBuilding = false
-            c.view = view
+            c.view = view.dislplayView
             return c
         } else {
             return container.freeMap.removeLast()

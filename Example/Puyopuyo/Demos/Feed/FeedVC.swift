@@ -306,8 +306,8 @@ func downloadImage(url: String?) -> Outputs<UIImage?> {
         var task: URLSessionDownloadTask?
         if let URL = URL(string: url) {
             task = URLSession.shared.downloadTask(with: URL) { u, _, _ in
-                if let u = u, let data = try? Data(contentsOf: u) {
-                    let image = UIImage(data: data)
+                if let u = u, let data = try? Data(contentsOf: u), let image = UIImage(data: data) {
+                    let data = image.jpegData(compressionQuality: 0.3)!
                     i.input(value: image)
                     saveImage(url: url, data: data)
                 } else {

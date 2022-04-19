@@ -105,7 +105,7 @@ open class BasicRecycleItem<Data>: IRecycleItem, AutoDisposable {
                 }
                 return nil
             }
-            cell.root = cellGen(cell.state.binder, holder)
+            cell.root = cellGen(cell.state.binder, holder)?.dislplayView
             holder.isBuilding = false
         }
         cell.selfSizingResidual = section.getLayoutableContentSize()
@@ -120,7 +120,7 @@ open class BasicRecycleItem<Data>: IRecycleItem, AutoDisposable {
         var cell = (box.calculateItems[getCellId()] as? RecycleBoxCell<Data>)
         if cell == nil {
             cell = RecycleBoxCell<Data>()
-            cell?.root = cellGen(cell!.state.binder, RecyclerTrigger())
+            cell?.root = cellGen(cell!.state.binder, RecyclerTrigger())?.dislplayView
             box.calculateItems[getCellId()] = cell!
         }
         

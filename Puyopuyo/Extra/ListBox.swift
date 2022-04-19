@@ -38,8 +38,8 @@ public class ListBox: UITableView,
     public init(style: UITableView.Style = .plain,
                 separatorStyle: UITableViewCell.SeparatorStyle = .singleLine,
                 sections: [ListBoxSection] = [],
-                header: BoxGenerator<UIView>? = nil,
-                footer: BoxGenerator<UIView>? = nil)
+                header: BoxGenerator<ViewDisplayable>? = nil,
+                footer: BoxGenerator<ViewDisplayable>? = nil)
     {
         super.init(frame: .zero, style: style)
 
@@ -47,14 +47,14 @@ public class ListBox: UITableView,
         dataSourceProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
 
         headerView = ZBox().attach {
-            header?().attach($0)
+            header?().dislplayView.attach($0)
         }
         .size(.fill, .wrap)
         .isCenterControl(false)
         .view
 
         footerView = ZBox().attach {
-            footer?().attach($0)
+            footer?().dislplayView.attach($0)
         }
         .isCenterControl(false)
         .size(.fill, .wrap)
@@ -123,6 +123,10 @@ public class ListBox: UITableView,
         footerView.layoutIfNeeded()
 
         reloadData()
+    }
+    
+    public func clearHeightCache() {
+        heightCache.removeAll(keepingCapacity: true)
     }
 
     // MARK: - Delegatable, DataSourceable
@@ -199,7 +203,7 @@ public class ListBox: UITableView,
     }
 }
 
-public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
+public class ListSection<Data, Cell: ViewDisplayable, CellEvent>: ListBoxSection {
     public weak var listBox: ListBox?
 
     public let dataSource = State<[Data]>([])
@@ -275,7 +279,7 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
             let state = State((indexPath.row, data))
             let event = SimpleIO<CellEvent>()
             cell = ListBoxCell<Data, CellEvent>(id: id,
-                                                root: cellGenerator(state.asOutput(), event.asInput()),
+                                                root: cellGenerator(state.asOutput(), event.asInput()).dislplayView,
                                                 state: state,
                                                 event: event)
         } else {
@@ -450,10 +454,6 @@ public class ListSection<Data, Cell: UIView, CellEvent>: ListBoxSection {
         override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority _: UILayoutPriority, verticalFittingPriority _: UILayoutPriority) -> CGSize {
             return root.sizeThatFits(targetSize)
         }
-    }
-
-    deinit {
-        print("ListSection deinit!!!")
     }
 }
 

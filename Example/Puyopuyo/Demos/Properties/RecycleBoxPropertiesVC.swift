@@ -69,7 +69,6 @@ class RecycleBoxPropertiesVC: BaseViewController {
                         }
                         .width(.fill)
                         .padding(all: 10)
-                        .view
                     }
                 )
             }
@@ -85,7 +84,6 @@ class RecycleBoxPropertiesVC: BaseViewController {
                         return HBox().attach()
                             .size(w, w.map { $0 / 2 })
                             .backgroundColor(o.data)
-                            .view
                     }
                 )
             }
@@ -136,7 +134,6 @@ class RecycleBoxPropertiesVC: BaseViewController {
                         })
                 }
                 .width(.fill)
-                .view
             },
             BasicRecycleSection(
                 data: (),
@@ -162,7 +159,6 @@ class RecycleBoxPropertiesVC: BaseViewController {
                             .size(w, w)
                             .backgroundColor(color)
                     }
-                    .view
                 }
             )
         ]
@@ -179,7 +175,6 @@ class RecycleBoxPropertiesVC: BaseViewController {
                 cell: { o, _ in
                     HorzFillCell().attach()
                         .state(o.data)
-                        .view
                 },
                 header: { _, _ in
                     HBox().attach {
@@ -190,7 +185,6 @@ class RecycleBoxPropertiesVC: BaseViewController {
                             })
                     }
                     .padding(all: 10)
-                    .view
                 }
             )
         ]
@@ -220,7 +214,6 @@ class RecycleBoxPropertiesVC: BaseViewController {
                             cell: { o, _ in
                                 SquareCell().attach()
                                     .state(o.data.description)
-                                    .view
                             }
                         )
 
@@ -228,7 +221,6 @@ class RecycleBoxPropertiesVC: BaseViewController {
                     header: { _, _ in
                         Header().attach()
                             .state("Header")
-                            .view
                     }
                 )
             }
@@ -262,12 +254,11 @@ class RecycleBoxPropertiesVC: BaseViewController {
                 cell: { o, _ in
                     SquareCell().attach()
                         .state(o.data.description)
-                        .view
+
                 },
                 header: { _, _ in
                     Header().attach()
                         .state("Header 1")
-                        .view
                 }
             ),
             ListRecycleSection(
@@ -276,12 +267,11 @@ class RecycleBoxPropertiesVC: BaseViewController {
                 cell: { o, _ in
                     SquareCell().attach()
                         .state(o.data.description)
-                        .view
+
                 },
                 header: { _, _ in
                     Header().attach()
                         .state("Header 2")
-                        .view
                 }
             )
         ]
@@ -321,7 +311,6 @@ class RecycleBoxPropertiesVC: BaseViewController {
                                 .backgroundColor(.systemBlue)
                                 .size(4, 4)
                                 .cornerRadius(2)
-                                .view
                         }
                         .attach($0)
                         .space(4)
@@ -333,7 +322,7 @@ class RecycleBoxPropertiesVC: BaseViewController {
 //                    .attach {
 //                        selected.safeBind(to: $0) { if $1 { $0.setNeedsLayout() }}
 //                    }
-                    .view
+
                 },
                 didSelect: { o in
                     UIView.animate(withDuration: 0.2) {
@@ -353,7 +342,6 @@ class RecycleBoxPropertiesVC: BaseViewController {
                     }
                     .padding(all: 10)
                     .width(.fill)
-                    .view
                 }
             )
         ]
@@ -369,7 +357,6 @@ private func getDescSection(title: String) -> IRecycleSection {
                 .numberOfLines(0)
         }
         .width(.fill)
-        .view
     }
 }
 
@@ -437,7 +424,6 @@ class ColorSection: BasicRecycleItem<UIColor> {
                 return HBox().attach()
                     .size(w, w.map { $0 / 2 })
                     .backgroundColor(o.data)
-                    .view
             }
         )
     }

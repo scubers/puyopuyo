@@ -56,7 +56,6 @@ class MenuViewController: BaseViewController {
                                     this.value?.push(vc: vc)
                                 }
                             }
-                            .view
                         }
                     ),
                 ].asOutput()

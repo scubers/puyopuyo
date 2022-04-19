@@ -7,7 +7,7 @@
 
 import Foundation
 
-public typealias RecycleViewGenerator<D> = (OutputBinder<RecyclerInfo<D>>, RecyclerTrigger<D>) -> UIView?
+public typealias RecycleViewGenerator<D> = (OutputBinder<RecyclerInfo<D>>, RecyclerTrigger<D>) -> ViewDisplayable?
 
 open class BasicRecycleSection<Data>: IRecycleSection, AutoDisposable {
     public func addDisposer(_ disposer: Disposer, for key: String?) {
@@ -126,9 +126,9 @@ open class BasicRecycleSection<Data>: IRecycleSection, AutoDisposable {
             }
             switch kind {
             case UICollectionView.elementKindSectionHeader where headerGen != nil:
-                root = headerGen!(state.binder, holder)
+                root = headerGen!(state.binder, holder)?.dislplayView
             case UICollectionView.elementKindSectionFooter where footerGen != nil:
-                root = footerGen!(state.binder, holder)
+                root = footerGen!(state.binder, holder)?.dislplayView
             default: break
             }
             view.root = root
@@ -150,9 +150,9 @@ open class BasicRecycleSection<Data>: IRecycleSection, AutoDisposable {
             view?.root = {
                 switch kind {
                 case UICollectionView.elementKindSectionHeader:
-                    return headerGen == nil ? nil : headerGen!(view!.state.binder, RecyclerTrigger())
+                    return headerGen == nil ? nil : headerGen!(view!.state.binder, RecyclerTrigger())?.dislplayView
                 case UICollectionView.elementKindSectionFooter:
-                    return footerGen == nil ? nil : footerGen!(view!.state.binder, RecyclerTrigger())
+                    return footerGen == nil ? nil : footerGen!(view!.state.binder, RecyclerTrigger())?.dislplayView
                 default: return nil
                 }
             }()

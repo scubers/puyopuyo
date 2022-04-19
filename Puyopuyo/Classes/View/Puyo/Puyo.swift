@@ -41,6 +41,12 @@ public extension Puyo where T: AutoDisposable {
     }
 }
 
+extension Puyo: ViewDisplayable where T: ViewDisplayable {
+    public var dislplayView: UIView {
+        view.dislplayView
+    }
+}
+
 public extension Puyo where T: UIView {
     static func ensureInactivate(_ view: UIView, _ msg: String = "") {
         assert(!view.py_measure.activated, msg)

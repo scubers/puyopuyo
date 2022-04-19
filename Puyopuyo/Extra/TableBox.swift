@@ -38,8 +38,8 @@ public class TableBox: UITableView,
     public init(style: UITableView.Style = .plain,
                 separatorStyle: UITableViewCell.SeparatorStyle = .singleLine,
                 sections: [TableBoxSection] = [],
-                header: BoxGenerator<UIView>? = nil,
-                footer: BoxGenerator<UIView>? = nil)
+                header: BoxGenerator<ViewDisplayable>? = nil,
+                footer: BoxGenerator<ViewDisplayable>? = nil)
     {
         super.init(frame: .zero, style: style)
 
@@ -47,14 +47,14 @@ public class TableBox: UITableView,
         dataSourceProxy = DelegateProxy(original: RetainWrapper(value: self, retained: false), backup: nil)
 
         headerView = ZBox().attach {
-            header?().attach($0)
+            header?().dislplayView.attach($0)
         }
         .size(.fill, .wrap)
         .isCenterControl(false)
         .view
 
         footerView = ZBox().attach {
-            footer?().attach($0)
+            footer?().dislplayView.attach($0)
         }
         .isCenterControl(false)
         .size(.fill, .wrap)
@@ -123,6 +123,10 @@ public class TableBox: UITableView,
         footerView.layoutIfNeeded()
 
         reloadData()
+    }
+
+    public func clearHeightCache() {
+        heightCache.removeAll(keepingCapacity: true)
     }
 
     // MARK: - Delegatable, DataSourceable
@@ -199,7 +203,7 @@ public class TableBox: UITableView,
 //    }
 }
 
-public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
+public class TableSection<Data, Cell: ViewDisplayable, CellEvent>: TableBoxSection {
     public weak var tableBox: TableBox?
 
     public let dataSource = State<[Data]>([])
@@ -318,7 +322,7 @@ public class TableSection<Data, Cell: UIView, CellEvent>: TableBoxSection {
             let state = State(ctx)
             let event = SimpleIO<CellEvent>()
             cell = TableBoxCell<Data, CellEvent>(id: id,
-                                                 root: cellGenerator(state.asOutput(), event.asInput()),
+                                                 root: cellGenerator(state.asOutput(), event.asInput()).dislplayView,
                                                  state: state,
                                                  event: event)
         } else {
