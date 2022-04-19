@@ -28,7 +28,7 @@ class DataTests: XCTestCase {
         var yogaTime = [(Int, TimeInterval)]()
         var stackTime = [(Int, TimeInterval)]()
 
-        [3, 5, 10, 50, 80, 100, 120, 150, 180, 200].forEach { count in
+        [5, 10, 30, 50, 80, 100, 120, 150, 180, 200].forEach { count in
             var v: UIView = PuyoLinearLayoutView(count: count)
             puyoTime.append((count, profileTime { _ in
                 _ = v.sizeThatFits(.zero)

@@ -32,6 +32,36 @@ swift 5.1
 pod 'Puyopuyo'
 ```
 
+## Layout cost
+
+*LinearLayout*
+| - |5|10|30|50|80|100|120|150|180|200
+|--|--|--|--|--|--|--|--|--|--|--|
+Puyopuyo|0.133|0.2081|0.5259|0.7739|1.141|1.3921|1.6517|2.0799|2.4759|2.7499
+Yoga|0.1549|0.272|0.678|1.0211|1.4729|1.8479|2.202|2.7499|3.2939|3.664
+TangramKit|0.1859|0.3151|0.7939|1.1901|1.7089|2.1331|2.5599|3.201|3.8499|4.2488
+UIStackView|0.5679|0.699|1.7571|2.7871|5.0063|6.901|9.392|13.741|19.3428|23.3399
+
+![LinearLayoutImage](https://raw.githubusercontent.com/scubers/my-images/main/linear_layout_cost.png)
+
+*FlowLayout*
+|-|3|5|10|50|80|100|120|150|180|200
+|--|--|--|--|--|--|--|--|--|--|--|
+Puyopuyo|0.1299|0.1292|0.2298|0.9217|1.398|1.7228|2.0749|2.5968|3.1189|3.4549
+Yoga|0.1039|0.1449|0.262|1.132|1.8072|2.2501|2.7101|3.39|4.0788|4.549
+TangramKit|0.1339|0.123|0.209|0.9109|1.4457|1.7881|2.1469|2.675|3.2138|3.5629
+
+![FlowLayoutImage](https://raw.githubusercontent.com/scubers/my-images/main/flow_layout_cost.png)
+
+*View depth*
+| - |4|8|12|16|20|24|28|32|36|40
+|--|--|--|--|--|--|--|--|--|--|--|
+Puyopuyo|1.0719|1.5108|1.7547|1.6169|1.4448|1.739|2.0349|2.2962|2.671|2.8882
+Yoga|2.3851|4.7698|6.6361|8.4819|11.2879|16.4551|23.0069|31.568|42.9677|55.4869
+TangramKit|1.7189|2.711|2.932|3.117|3.7751|4.508|5.2759|6.1821|6.8421|7.6298
+
+![ViewDepthLayoutImage](https://raw.githubusercontent.com/scubers/my-images/main/view_depth_cost.png)
+
 ## Usage
 
 A simple cell can be implemented like below. The subviews will be layout by specific rules. The buildin box follow the FlexBox rules.
@@ -99,9 +129,9 @@ The core of the layout is the description of View nodes. `Measure` `Regulator`
 |--|--|--|
 |*margin*|Current view's margin| `UIEdgeInset`, default: .zero|
 |*alignment*|The alignment in superview|`.none, .left, .top, .bottom, .vertCenter, .horzCenter`, default: .none|
-|*size*|Size description| `SizeDescription`, `.fixed` `.wrap`, `.ratio` fill up the residual space ratio；default: `.wrap`, Demo：Size Properties|
+|*size*|Size description| `SizeDescription`<br/> `.fixed`: fixed size<br/> `.wrap`: wrap contents<br/> `.ratio` fill up the residual space ratio, `.aspectRatio`: width / height<br/> default: `.wrap`, Demo：Size Properties|
 |*flowEnding*|Only works in `FlowBox`, and the `arranceCount = 0`, it means that current view is the last view in the row| `Bool`, default: false |
-|*activated*|If will be calculate by parent box| `Bool`, default: false|
+|*activated*|If will be calculate by parent box| `Bool`, default: true|
 
 ### Regulator & ZBox properties
 
@@ -182,29 +212,29 @@ After BoxView layout, each subview's `center`, `bounds` will be assigned, The bo
 
 ```swift
 
-struct ExpandAnimator: Animator {
-    var duration: TimeInterval { 0.3 }
-    func animate(_ delegate: MeasureDelegate, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
-        let realSize = delegate.py_size
-        let realCenter = delegate.py_center
-        let view = delegate as? UIView
+public struct ExpandAnimator: Animator {
+    public init(duration: TimeInterval = 0.3) {
+        self.duration = duration
+    }
+
+    public var duration: TimeInterval
+    public func animate(_ view: UIView, size: CGSize, center: CGPoint, animations: @escaping () -> Void) {
+        let realSize = view.bounds.size
+        let realCenter = view.center
         if realSize != size || realCenter != center {
-            // if the first time assgining
             if realSize == .zero, realCenter == .zero {
-                // move to the right position without animation
                 runAsNoneAnimation {
-                    delegate.py_center = center
+                    view.center = center
                     let scale: CGFloat = 0.5
-                    delegate.py_size = CGSize(width: size.width * scale, height: size.height * scale)
-                    view?.layer.transform = CATransform3DMakeRotation(.pi / 8 + .pi, 0, 0, 1)
+                    view.bounds.size = CGSize(width: size.width * scale, height: size.height * scale)
+                    view.layer.transform = CATransform3DMakeRotation(.pi / 8 + .pi, 0, 0, 1)
                 }
             }
 
             UIView.animate(withDuration: duration, delay: 0, usingSpringWithDamping: 2, initialSpringVelocity: 5, options: [.curveEaseOut, .overrideInheritedOptions, .overrideInheritedDuration], animations: {
-                // call animations finally to set the right size and position
                 animations()
                 if realSize == .zero, realCenter == .zero {
-                    view?.layer.transform = CATransform3DIdentity
+                    view.layer.transform = CATransform3DIdentity
                 }
             }, completion: nil)
         } else {
@@ -297,19 +327,6 @@ UILabel().attach()
 ## Extension
 
 See `Puyo+xxx.swift`
-
-```swift
-public extension Puyo where T: Eventable {
-    @discardableResult
-    func onEvent<I: Inputing>(_ input: I) -> Self where I.InputType == T.EmitterType.OutputType {
-        let disposer = view.emmiter.send(to: input)
-        if let v = view as? AutoDisposable {
-            disposer.dispose(by: v)
-        }
-        return self
-    }
-}
-```
 
 You can extension more depende on your needs, expect your contribution
 
