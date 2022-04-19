@@ -30,6 +30,7 @@ class DemoScroll: ZBox {
                     }
                     .size(.fill, .wrap)
             }
+            .backgroundColor(.systemGroupedBackground)
             .size(.fill, .fill)
         }
         .size(.fill, .fill)

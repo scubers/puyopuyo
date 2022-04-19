@@ -28,46 +28,73 @@ class TestVC: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .black
         
-        ZBox().attach(view) {
-            UIScrollView().attach($0) {
-                VBox().attach($0) {
-                    UIView().attach($0).activated(false)
-
-                    //            tgTestView().attach($0)
-                    
-                    //            demo1().attach($0)
-                    //            demo2().attach($0)
-                    //            demo3().attach($0)
-                    //            demo4().attach($0)
-                    //            demo5().attach($0)
-                    //            demo6().attach($0)
-                    //            shrinkDeadLoopTest().attach($0)
-                    //            flowCompactTest().attach($0)
-                    //
-                    //            zboxFillAndWrapTest().attach($0)
-                    //
-                    //            flowRatioWrapTest().attach($0)
-                    //
-                    //            zboxAspectRatioTest().attach($0)
-                    //
-                    //            zboxRatioTest().attach($0)
-                    
-                    //            crossConflictView().attach($0)
-                    //
-                    //            jkProblem1().attach($0)
-                    formatTest().attach($0)
-                }
-                .autoJudgeScroll(true)
-                .width(.fill)
-                .animator(Animators.default)
+//        Util.randomViewColor(view: view)
+    }
+    
+    func systemColorTest() -> UIView {
+        view.backgroundColor = .black
+        return VBox().attach(view) {
+            HBox().attach($0) {
+                UILabel().attach($0)
+                    .backgroundColor(UIColor.systemBackground)
+                    .text("systemBackground")
+                    .size(.fill, 50)
+                UILabel().attach($0)
+                    .backgroundColor(UIColor.secondarySystemBackground)
+                    .text("secondarySystemBackground")
+                    .size(.fill, 50)
+                
+                UILabel().attach($0)
+                    .backgroundColor(UIColor.tertiarySystemBackground)
+                    .text("tertiarySystemBackground")
+                    .size(.fill, 50)
             }
-            .size(.fill, .fill)
+            .width(.fill)
+            
+            HBox().attach($0) {
+                UILabel().attach($0)
+                    .backgroundColor(UIColor.systemGroupedBackground)
+                    .text("systemGroupedBackground")
+                    .size(.fill, 50)
+                UILabel().attach($0)
+                    .backgroundColor(UIColor.secondarySystemGroupedBackground)
+                    .text("secondarySystemGroupedBackground")
+                    .size(.fill, 50)
+                
+                UILabel().attach($0)
+                    .backgroundColor(UIColor.tertiarySystemGroupedBackground)
+                    .text("tertiarySystemGroupedBackground")
+                    .size(.fill, 50)
+            }
+            .width(.fill)
+            
+            HBox().attach($0) {
+                UILabel().attach($0)
+                    .backgroundColor(UIColor.systemFill)
+                    .text("systemFill")
+                    .size(.fill, 50)
+                UILabel().attach($0)
+                    .backgroundColor(UIColor.secondarySystemFill)
+                    .text("secondarySystemFill")
+                    .size(.fill, 50)
+                
+                UILabel().attach($0)
+                    .backgroundColor(UIColor.tertiarySystemFill)
+                    .text("tertiarySystemFill")
+                    .size(.fill, 50)
+                
+                UILabel().attach($0)
+                    .backgroundColor(UIColor.quaternarySystemFill)
+                    .text("quaternarySystemFill")
+                    .size(.fill, 50)
+            }
+            .width(.fill)
         }
+        .padding(view.py_safeArea())
         .size(.fill, .fill)
-        
-        Util.randomViewColor(view: view)
+        .view
     }
     
     func formatTest() -> UIView {

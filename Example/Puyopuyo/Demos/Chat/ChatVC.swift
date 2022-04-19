@@ -41,6 +41,7 @@ class ChatVC: BaseViewController, UICollectionViewDelegateFlowLayout {
             .set(\.showsVerticalScrollIndicator, false)
             .size(.fill, .fill)
             .setDelegate(self)
+            .backgroundColor(.systemGroupedBackground)
             .view
 
             MessageInputView().attach($0)
@@ -141,7 +142,7 @@ class MessageView: HBox, Stateful, Eventable {
                 .width(.wrap(max: 250))
 
                 .padding(all: 12)
-                .backgroundColor(isSelf.map { $0 ? Theme.accentColor : .systemBackground })
+                .backgroundColor(isSelf.map { $0 ? Theme.accentColor : .secondarySystemGroupedBackground })
                 .cornerRadius(8)
             }
             .justifyContent(isSelf.map { $0 ? .right : .left })
@@ -173,7 +174,6 @@ class MessageInputView: HBox, Eventable, UITextViewDelegate {
             UITextView().attach($0)
                 .size(.fill, .wrap(min: 40))
                 .cornerRadius(8)
-//                .backgroundColor(.lightGray.withAlphaComponent(0.2))
                 .backgroundColor(UIColor.systemGray6)
                 .fontSize(20)
                 .onText(text)

@@ -48,7 +48,7 @@ class MenuViewController: BaseViewController {
                             .width(o.contentSize.width)
                             .padding(all: 16)
                             .styles([TapTransformStyle()])
-                            .backgroundColor(.systemBackground)
+                            .backgroundColor(.secondarySystemGroupedBackground)
                             .onTap {
                                 i.inContext { c in
                                     let vc = c.data.1()
@@ -61,6 +61,7 @@ class MenuViewController: BaseViewController {
                 ].asOutput()
             )
             .attach($0)
+            .backgroundColor(.systemGroupedBackground)
             .size(.fill, .fill)
         }
         .size(.fill, .fill)

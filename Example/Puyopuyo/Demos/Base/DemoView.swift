@@ -28,14 +28,12 @@ class DemoView<T: Equatable>: VBox, Eventable, Stateful {
             Label(self.title).attach($0)
                 .size(.fill, 40)
                 .textAlignment(.center)
-                .backgroundColor(UIColor.tertiarySystemBackground)
             
             ZBox().attach($0) {
                 builder($0)
             }
             .topBorder([.color(UIColor.separator), .thick(Util.pixel(1))])
             .bottomBorder([.color(UIColor.separator), .thick(Util.pixel(1))])
-            .backgroundColor(UIColor.systemBackground)
             .width(.fill)
             
             VBox().attach($0) {
@@ -60,13 +58,14 @@ class DemoView<T: Equatable>: VBox, Eventable, Stateful {
             }
             .cornerRadius(8)
             .margin(all: 8)
+            .space(Util.pixel(1))
             .backgroundColor(.quaternarySystemFill)
             .width(.fill)
         }
         .animator(Animators.default)
         .size(.fill, .wrap)
-        .backgroundColor(Theme.card)
-//        .style(ShadowStyle())
+        .backgroundColor(.secondarySystemGroupedBackground)
+        .space(Util.pixel(1))
         .cornerRadius(8)
     }
     
