@@ -31,10 +31,10 @@ class CalculateUtil {
             height: getInitialContentResidual(for: measure.size.height)
         )
 
-        return getLayoutResidual(for: measure, fromContentResidual: contentResidual)
+        return getSelfLayoutResidual(for: measure, fromContentResidual: contentResidual)
     }
 
-    static func getLayoutResidual(for measure: Measure, fromContentResidual contentResidual: CGSize) -> CGSize {
+    static func getSelfLayoutResidual(for measure: Measure, fromContentResidual contentResidual: CGSize) -> CGSize {
         return CGSize.ensureNotNegative(
             width: contentResidual.width + measure.margin.getHorzTotal(),
             height: contentResidual.height + measure.margin.getVertTotal()

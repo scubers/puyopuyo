@@ -58,7 +58,7 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
         case ratio
         /// Depende on content
         case wrap
-
+        /// Depende on the other dimension size
         case aspectRatio
     }
 

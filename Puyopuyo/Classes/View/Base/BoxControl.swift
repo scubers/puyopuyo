@@ -28,7 +28,7 @@ public class BoxControl<R: Regulator> {
              2. 若非包裹，则上层视图时只是用了估算尺寸，需要再次计算子节点
              */
             if regulator.size.bothNotWrap() {
-                let layoutResidual = CalculateUtil.getLayoutResidual(for: regulator, fromContentResidual: view.bounds.size)
+                let layoutResidual = CalculateUtil.getSelfLayoutResidual(for: regulator, fromContentResidual: view.bounds.size)
                 _ = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: layoutResidual, strategy: .positive)
             }
         } else {
@@ -55,7 +55,7 @@ public class BoxControl<R: Regulator> {
                     regulator.size = .init(width: .fill, height: .fill)
                 }
 
-                layoutResidual = CalculateUtil.getLayoutResidual(for: regulator, fromContentResidual: view.bounds.size)
+                layoutResidual = CalculateUtil.getSelfLayoutResidual(for: regulator, fromContentResidual: view.bounds.size)
                 regulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: layoutResidual, strategy: .lazy)
             }
 
