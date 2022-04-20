@@ -194,8 +194,7 @@ public extension Boxable {
 
 enum BoxUtil {
     static func isBox(_ view: UIView?) -> Bool {
-        guard let v = view else { return false }
-        return v.py_measure is Regulator
+        view is RegulatorView
     }
 }
 
