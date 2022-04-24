@@ -8,18 +8,26 @@
 import UIKit
 
 public protocol MeasureDelegate: AnyObject {
-    func children(for measure: Measure) -> [Measure]
-
-    func measure(_ measure: Measure, sizeThatFits size: CGSize) -> CGSize
-
     func needsRelayout(for measure: Measure)
+}
+
+public protocol MeasureChildrenDelegate: AnyObject {
+    func children(for measure: Measure) -> [Measure]
+}
+
+public protocol MeasureSizeFittingDelegate: AnyObject {
+    func measure(_ measure: Measure, sizeThatFits size: CGSize) -> CGSize
 }
 
 public class Measure {
     public weak var delegate: MeasureDelegate?
+    public weak var sizeDelegate: MeasureSizeFittingDelegate?
+    public weak var childrenDelegate: MeasureChildrenDelegate?
 
-    public init(delegate: MeasureDelegate?) {
+    public init(delegate: MeasureDelegate?, sizeDelegate: MeasureSizeFittingDelegate?, childrenDelegate: MeasureChildrenDelegate?) {
         self.delegate = delegate
+        self.sizeDelegate = sizeDelegate
+        self.childrenDelegate = childrenDelegate
     }
 
     public var margin = UIEdgeInsets.zero {
@@ -101,11 +109,11 @@ public class Measure {
     }
 
     public func enumerateChildren(_ block: (Measure) -> Void) {
-        delegate?.children(for: self).forEach(block)
+        children.forEach(block)
     }
 
     public func sizeThatFits(_ size: CGSize) -> CGSize {
-        delegate?.measure(self, sizeThatFits: size) ?? .zero
+        sizeDelegate?.measure(self, sizeThatFits: size) ?? .zero
     }
 
     public func py_setNeedsRelayout() {
@@ -115,15 +123,18 @@ public class Measure {
     public func calculate(by layoutResidual: CGSize) -> CGSize {
         calculator.calculate(self, layoutResidual: layoutResidual)
     }
-    
+
     private lazy var calculator = createCalculator()
 
     /// subclass should override
     public func createCalculator() -> Calculator {
-        MeasureCalculator()
+        if type(of: self) === Measure.self {
+            return MeasureCalculator()
+        }
+        fatalError("subclass impl")
     }
-    
+
     public var children: [Measure] {
-        delegate?.children(for: self) ?? []
+        childrenDelegate?.children(for: self) ?? []
     }
 }

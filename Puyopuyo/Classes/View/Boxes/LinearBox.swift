@@ -10,7 +10,7 @@ import Foundation
 
 open class LinearBox: BoxView<LinearRegulator> {
     override public func createRegulator() -> Regulator {
-        LinearRegulator(delegate: self)
+        LinearRegulator(delegate: self, sizeDelegate: self, childrenDelegate: self)
     }
 }
 

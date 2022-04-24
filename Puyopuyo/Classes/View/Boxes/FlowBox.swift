@@ -14,7 +14,7 @@ open class FlowBox: BoxView<FlowRegulator> {
     }
 
     override public func createRegulator() -> Regulator {
-        FlowRegulator(delegate: self)
+        FlowRegulator(delegate: self, sizeDelegate: self, childrenDelegate: self)
     }
 }
 

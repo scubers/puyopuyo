@@ -116,7 +116,7 @@ class _FlowCalculator {
 
 private extension _FlowCalculator {
     func getVirtualRegulator(children: [Measure]) -> VirtualLinearRegulator {
-        let outside = VirtualLinearRegulator(delegate: VirtualDelegate(children: children))
+        let outside = VirtualLinearRegulator(children: children)
         outside.justifyContent = regulator.justifyContent
         outside.alignment = regulator.alignment
         outside.direction = regDirection
@@ -130,7 +130,7 @@ private extension _FlowCalculator {
     }
 
     func getVirtualLine(children: [Measure], index: Int) -> VirtualLinearRegulator {
-        let line = VirtualLinearRegulator(delegate: VirtualDelegate(children: children))
+        let line = VirtualLinearRegulator(children: children)
         line.justifyContent = regulator.justifyContent
         line.direction = getOppsiteDirection()
         line.space = regulator.itemSpace
@@ -161,12 +161,14 @@ private extension _FlowCalculator {
     }
 }
 
-private class VirtualLinearRegulator: LinearRegulator {
-    private var virtualDelegate: MeasureDelegate?
+private class VirtualLinearRegulator: LinearRegulator, MeasureChildrenDelegate {
+    /// make sure delegate alive
+    private let virtualChildren: [Measure]
 
-    override init(delegate: MeasureDelegate?) {
-        super.init(delegate: delegate)
-        virtualDelegate = delegate
+    init(children: [Measure]) {
+        self.virtualChildren = children
+        super.init(delegate: nil, sizeDelegate: nil, childrenDelegate: nil)
+        childrenDelegate = self
     }
 
     func justifyChildrenWithCenter() {
@@ -176,7 +178,7 @@ private class VirtualLinearRegulator: LinearRegulator {
         // 计算虚拟位置的偏移量
         let delta = CGPoint(x: center.x - size.width / 2, y: center.y - size.height / 2)
 
-        delegate?.children(for: self).forEach { m in
+        enumerateChildren { m in
             m.calculatedCenter.x += delta.x
             m.calculatedCenter.y += delta.y
         }
@@ -185,9 +187,13 @@ private class VirtualLinearRegulator: LinearRegulator {
     override func createCalculator() -> Calculator {
         LinearCalculator(estimateChildren: false)
     }
+
+    func children(for measure: Measure) -> [Measure] {
+        virtualChildren
+    }
 }
 
-private class VirtualDelegate: MeasureDelegate {
+private class VirtualDelegate: MeasureDelegate, MeasureChildrenDelegate {
     func children(for measure: Measure) -> [Measure] {
         children
     }

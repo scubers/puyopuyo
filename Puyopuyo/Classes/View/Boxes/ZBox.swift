@@ -9,6 +9,6 @@ import Foundation
 
 open class ZBox: BoxView<ZRegulator> {
     override public func createRegulator() -> Regulator {
-        ZRegulator(delegate: self)
+        ZRegulator(delegate: self, sizeDelegate: self, childrenDelegate: self)
     }
 }

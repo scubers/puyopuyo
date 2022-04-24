@@ -85,7 +85,7 @@ class LinkListTests: XCTestCase {
         print("list / array = \(lt / at)")
     }
 
-    private let times = 1000
+    private let times = 10000
 
     func testListPerformance() throws {
         self.measure {

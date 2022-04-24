@@ -11,7 +11,7 @@ public protocol RegulatorView {
     func createRegulator() -> Regulator
 }
 
-open class BoxView<RegulatorType: Regulator>: UIView, Boxable, RegulatorView {
+open class BoxView<RegulatorType: Regulator>: UIView, Boxable, RegulatorView, MeasureChildrenDelegate {
     public var control = BoxControl<RegulatorType>()
 
     public var regulator: RegulatorType { py_measure as! RegulatorType }
@@ -120,6 +120,12 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable, RegulatorView {
             return CGSize(width: width, height: height)
         }
         return .zero
+    }
+
+    // MARK: - MeasureChildrenDelegate
+
+    public func children(for _: Measure) -> [Measure] {
+        subviews.map(\.py_measure)
     }
 }
 

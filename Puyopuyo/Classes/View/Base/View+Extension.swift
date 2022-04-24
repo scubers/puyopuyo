@@ -15,7 +15,7 @@ public extension UIView {
             if let regulatable = self as? RegulatorView {
                 measure = regulatable.createRegulator()
             } else {
-                measure = Measure(delegate: self)
+                measure = Measure(delegate: self, sizeDelegate: self, childrenDelegate: nil)
             }
             objc_setAssociatedObject(self, &UIView.measureHoldingKey, measure, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
@@ -25,11 +25,7 @@ public extension UIView {
 
 // MARK: - MeasureTargetable impl
 
-extension UIView: MeasureDelegate {
-    public func children(for measure: Measure) -> [Measure] {
-        subviews.map { $0.py_measure }
-    }
-
+extension UIView: MeasureDelegate, MeasureSizeFittingDelegate {
     public func measure(_ measure: Measure, sizeThatFits size: CGSize) -> CGSize {
         sizeThatFits(size)
     }
