@@ -306,7 +306,7 @@ public protocol ViewParasitable: AnyObject {
 
 ///
 /// 具备布局能力
-public protocol BoxLayoutContainer: BoxLayoutNode {
+public protocol BoxLayoutContainer: BoxLayoutNode, ViewParasitable {
     /// 被子节点寄生的view -> parasiticView.addSubview()
     var hostView: ViewParasitable? { get }
 
@@ -357,10 +357,6 @@ public class VirtualGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureD
 
     public var presentingView: UIView? { nil }
 
-    public func children(for _: Measure) -> [Measure] {
-        layoutChildren.map(\.layoutMeasure)
-    }
-
     public func fixChildrenCenterByHostView() {
         let center = layoutRegulator.calculatedCenter
         let size = layoutRegulator.calculatedSize
@@ -380,19 +376,38 @@ public class VirtualGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureD
         }
     }
 
+    public func addParasite(_ parasite: UIView) {
+        hostView?.addParasite(parasite)
+    }
+
+    public func setNeedsLayout() {
+        hostView?.setNeedsLayout()
+    }
+
+    public func children(for _: Measure) -> [Measure] {
+        layoutChildren.filter { node in
+            if let presentingView = node.presentingView {
+                return presentingView.superview === hostView
+            }
+            return true
+        }.map(\.layoutMeasure)
+    }
+
     public func needsRelayout(for _: Measure) {
         hostView?.setNeedsLayout()
     }
 }
 
 public class HBoxGroup: VirtualGroup {
-    class Regulator: LinearRegulator {
+    class Regulator: FlowRegulator {
         override func createCalculator() -> Calculator {
-            LinearCalculator(estimateChildren: false)
+            FlowCalculator()
         }
     }
 
     public init() {
-        super.init(regulator: Regulator(delegate: nil, sizeDelegate: nil, childrenDelegate: nil))
+        let reg = Regulator(delegate: nil, sizeDelegate: nil, childrenDelegate: nil)
+        reg.direction = .y
+        super.init(regulator: reg)
     }
 }

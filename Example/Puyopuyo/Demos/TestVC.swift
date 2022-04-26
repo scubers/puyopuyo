@@ -37,23 +37,28 @@ class TestVC: BaseViewController {
                 
                 let group = HBoxGroup()
                 group.hostView = $0
-                group.layoutRegulator.padding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
                 
-                for i in 0 ..< 3 {
-                    group.addLayoutNode(Label("\(i)"))
+                for i in 0 ..< 100 {
+                    let label = Label("\(i)")
+                    group.addLayoutNode(label)
+                    
+                    if i == 0 {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            label.removeFromSuperview()
+                        }
+                    }
                 }
                 
                 $0.addLayoutNode(group)
                 
-                let group1 = HBoxGroup()
-                group1.hostView = $0
-                group1.layoutRegulator.padding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-                
-                for i in 0 ..< 3 {
-                    group1.addLayoutNode(Label("\(i)"))
-                }
-                
-                group.addLayoutNode(group1)
+//                let group1 = HBoxGroup()
+//                group1.hostView = $0
+//                
+//                for i in 5 ..< 10  {
+//                    group1.addLayoutNode(Label("\(i)"))
+//                }
+//                
+//                group.addLayoutNode(group1)
                 
                 Label("footer").attach($0)
                     .size(.fill, 50)
