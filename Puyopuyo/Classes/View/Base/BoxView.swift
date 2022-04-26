@@ -259,7 +259,10 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable, RegulatorView, Me
 
     // MARK: - BoxLayoutContainer
 
-    public var hostView: ViewParasitable? { self }
+    public var hostView: ViewParasitable? {
+        get { self }
+        set {}
+    }
 
     public var layoutRegulator: Regulator { regulator }
 
@@ -293,8 +296,17 @@ open class BoxView<RegulatorType: Regulator>: UIView, Boxable, RegulatorView, Me
     }
 }
 
+public protocol BoxLayoutable: AnyObject {
+    associatedtype RegulatorType: Regulator
+    var boxRegulator: RegulatorType { get }
+}
+
+extension BoxView: BoxLayoutable {
+    public var boxRegulator: RegulatorType { regulator }
+}
+
 /// 布局节点
-public protocol BoxLayoutNode {
+public protocol BoxLayoutNode: AnyObject {
     var layoutMeasure: Measure { get }
     var presentingView: UIView? { get }
 }
@@ -308,7 +320,7 @@ public protocol ViewParasitable: AnyObject {
 /// 具备布局能力
 public protocol BoxLayoutContainer: BoxLayoutNode, ViewParasitable {
     /// 被子节点寄生的view -> parasiticView.addSubview()
-    var hostView: ViewParasitable? { get }
+    var hostView: ViewParasitable? { get set }
 
     var layoutRegulator: Regulator { get }
 
@@ -328,17 +340,18 @@ extension UIView: BoxLayoutNode {
     public var presentingView: UIView? { self }
 }
 
-public class VirtualGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureDelegate {
-    public init(host: ViewParasitable? = nil, regulator: Regulator) {
-        self.hostView = host
-        self.layoutRegulator = regulator
-        regulator.delegate = self
-        regulator.childrenDelegate = self
+public class VirtualGroup<R: Regulator>: BoxLayoutContainer, MeasureChildrenDelegate, MeasureDelegate, BoxLayoutable, AutoDisposable {
+    public init() {}
+    private let bag = NSObject()
+    public func addDisposer(_ disposer: Disposer, for key: String?) {
+        bag.addDisposer(disposer, for: key)
     }
+
+    public var boxRegulator: R { layoutRegulator as! R }
 
     public weak var hostView: ViewParasitable?
 
-    public var layoutRegulator: Regulator
+    public lazy var layoutRegulator: Regulator = createRegulator()
 
     public func addLayoutNode(_ node: BoxLayoutNode) {
         guard let hostView = hostView else {
@@ -396,18 +409,26 @@ public class VirtualGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureD
     public func needsRelayout(for _: Measure) {
         hostView?.setNeedsLayout()
     }
+
+    public func createRegulator() -> RegulatorType {
+        fatalError()
+    }
 }
 
-public class HBoxGroup: VirtualGroup {
-    class Regulator: FlowRegulator {
+public class LinearGroup: VirtualGroup<LinearRegulator> {
+    class Regulator: LinearRegulator {
         override func createCalculator() -> Calculator {
-            FlowCalculator()
+            LinearCalculator(estimateChildren: false)
         }
     }
 
-    public init() {
-        let reg = Regulator(delegate: nil, sizeDelegate: nil, childrenDelegate: nil)
-        reg.direction = .y
-        super.init(regulator: reg)
+    override public func createRegulator() -> VirtualGroup<LinearRegulator>.RegulatorType {
+        Regulator(delegate: self, sizeDelegate: nil, childrenDelegate: self)
+    }
+}
+
+public class FlowGroup: VirtualGroup<FlowRegulator> {
+    override public func createRegulator() -> VirtualGroup<FlowRegulator>.RegulatorType {
+        FlowRegulator(delegate: self, sizeDelegate: nil, childrenDelegate: self)
     }
 }

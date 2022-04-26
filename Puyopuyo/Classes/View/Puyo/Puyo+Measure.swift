@@ -9,27 +9,27 @@ import Foundation
 
 // MARK: - Size ext
 
-public extension Puyo where T: UIView {
+public extension Puyo where T: BoxLayoutNode & AutoDisposable {
     // MARK: - Width Height
 
     @discardableResult
     func width(_ width: SizeDescription) -> Self {
-        set(\T.py_measure.size.width, width)
+        set(\T.layoutMeasure.size.width, width)
     }
 
     @discardableResult
     func height(_ height: SizeDescription) -> Self {
-        set(\T.py_measure.size.height, height)
+        set(\T.layoutMeasure.size.height, height)
     }
 
     @discardableResult
     func width<O: Outputing>(_ w: O) -> Self where O.OutputType: SizeDescriptible {
-        set(\T.py_measure.size.width, w.asOutput().map(\.sizeDescription))
+        set(\T.layoutMeasure.size.width, w.asOutput().map(\.sizeDescription))
     }
 
     @discardableResult
     func height<O: Outputing>(_ h: O) -> Self where O.OutputType: SizeDescriptible {
-        set(\T.py_measure.size.height, h.asOutput().map(\.sizeDescription))
+        set(\T.layoutMeasure.size.height, h.asOutput().map(\.sizeDescription))
     }
 
     // MARK: - Size
@@ -56,25 +56,13 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func size(_ size: Size) -> Self {
-        set(\T.py_measure.size, size)
+        set(\T.layoutMeasure.size, size)
     }
 
     @discardableResult
     func size<O: Outputing>(_ size: O) -> Self where O.OutputType == Size {
-        set(\T.py_measure.size, size)
+        set(\T.layoutMeasure.size, size)
     }
-
-    // MARK: - AspectRatio
-
-//    @discardableResult
-//    func aspectRatio(_ ratio: CGFloat?) -> Self {
-//        set(\T.py_measure.size.aspectRatio, ratio)
-//    }
-//
-//    @discardableResult
-//    func aspectRatio<O: Outputing>(_ ratio: O) -> Self where O.OutputType: OptionalableValueType, O.OutputType.Wrap == CGFloat {
-//        set(\T.py_measure.size.aspectRatio, ratio.mapWrappedValue())
-//    }
 
     // MARK: - Second layoutable methods
 
@@ -99,41 +87,11 @@ public extension Puyo where T: UIView {
         }
         return self
     }
-
-    /// Observe the self's size to config view
-    /// Due to use kvo, the size will not effect in one layout cycle.
-    /// So it will take two layout cycle to get correct frame
-    @discardableResult
-    func widthEqualToHeight(add: CGFloat = 0, multiply: CGFloat = 1) -> Self {
-        width(
-            view.py_sizeState().map(\.height).map { v in
-                multiply * v + add
-            }
-            .distinct()
-            .map { SizeDescription.wrap(min: $0, max: $0) }
-            .debounce()
-        )
-    }
-
-    /// Observe the self's size to config view
-    /// Due to use kvo, the size will not effect in one layout cycle.
-    /// So it will take two layout cycle to get correct frame
-    @discardableResult
-    func heightEqualToWidth(add: CGFloat = 0, multiply: CGFloat = 1) -> Self {
-        height(
-            view.py_sizeState().map(\.width).map { v in
-                multiply * v + add
-            }
-            .distinct()
-            .map { SizeDescription.wrap(min: $0, max: $0) }
-            .debounce()
-        )
-    }
 }
 
 // MARK: - Margin ext
 
-public extension Puyo where T: UIView {
+public extension Puyo where T: BoxLayoutNode & AutoDisposable {
     @discardableResult
     func margin(all: CGFloatable? = nil,
                 horz: CGFloatable? = nil,
@@ -143,39 +101,39 @@ public extension Puyo where T: UIView {
                 bottom: CGFloatable? = nil,
                 right: CGFloatable? = nil) -> Self
     {
-        PuyoHelper.margin(for: view, all: all?.cgFloatValue, horz: horz?.cgFloatValue, vert: vert?.cgFloatValue, top: top?.cgFloatValue, left: left?.cgFloatValue, bottom: bottom?.cgFloatValue, right: right?.cgFloatValue)
+        PuyoHelper.margin(for: view.layoutMeasure, all: all?.cgFloatValue, horz: horz?.cgFloatValue, vert: vert?.cgFloatValue, top: top?.cgFloatValue, left: left?.cgFloatValue, bottom: bottom?.cgFloatValue, right: right?.cgFloatValue)
         return self
     }
 
     @discardableResult
     func margin<S: Outputing>(all: S? = nil, horz: S? = nil, vert: S? = nil, top: S? = nil, left: S? = nil, bottom: S? = nil, right: S? = nil) -> Self where S.OutputType: CGFloatable {
         if let s = all {
-            doOn(s) { PuyoHelper.margin(for: $0, all: $1.cgFloatValue) }
+            doOn(s) { PuyoHelper.margin(for: $0.layoutMeasure, all: $1.cgFloatValue) }
         }
         if let s = top {
-            doOn(s) { PuyoHelper.margin(for: $0, top: $1.cgFloatValue) }
+            doOn(s) { PuyoHelper.margin(for: $0.layoutMeasure, top: $1.cgFloatValue) }
         }
         if let s = horz {
-            doOn(s) { PuyoHelper.margin(for: $0, horz: $1.cgFloatValue) }
+            doOn(s) { PuyoHelper.margin(for: $0.layoutMeasure, horz: $1.cgFloatValue) }
         }
         if let s = vert {
-            doOn(s) { PuyoHelper.margin(for: $0, vert: $1.cgFloatValue) }
+            doOn(s) { PuyoHelper.margin(for: $0.layoutMeasure, vert: $1.cgFloatValue) }
         }
         if let s = left {
-            doOn(s) { PuyoHelper.margin(for: $0, left: $1.cgFloatValue) }
+            doOn(s) { PuyoHelper.margin(for: $0.layoutMeasure, left: $1.cgFloatValue) }
         }
         if let s = bottom {
-            doOn(s) { PuyoHelper.margin(for: $0, bottom: $1.cgFloatValue) }
+            doOn(s) { PuyoHelper.margin(for: $0.layoutMeasure, bottom: $1.cgFloatValue) }
         }
         if let s = right {
-            doOn(s) { PuyoHelper.margin(for: $0, right: $1.cgFloatValue) }
+            doOn(s) { PuyoHelper.margin(for: $0.layoutMeasure, right: $1.cgFloatValue) }
         }
         return self
     }
 
     @discardableResult
     func margin<S: Outputing>(_ margin: S) -> Self where S.OutputType == UIEdgeInsets {
-        set(\T.py_measure.margin, margin)
+        set(\T.layoutMeasure.margin, margin)
     }
 }
 

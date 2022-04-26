@@ -11,60 +11,6 @@ import Foundation
 
 public extension Puyo where T: Boxable & UIView {
     @discardableResult
-    func padding(all: CGFloatable? = nil,
-                 horz: CGFloatable? = nil,
-                 vert: CGFloatable? = nil,
-                 top: CGFloatable? = nil,
-                 left: CGFloatable? = nil,
-                 bottom: CGFloatable? = nil,
-                 right: CGFloatable? = nil) -> Self
-    {
-        PuyoHelper.padding(for: view, all: all?.cgFloatValue, horz: horz?.cgFloatValue, vert: vert?.cgFloatValue, top: top?.cgFloatValue, left: left?.cgFloatValue, bottom: bottom?.cgFloatValue, right: right?.cgFloatValue)
-        return self
-    }
-
-    @discardableResult
-    func padding<S: Outputing>(all: S? = nil, horz: S? = nil, vert: S? = nil, top: S? = nil, left: S? = nil, bottom: S? = nil, right: S? = nil) -> Self where S.OutputType: CGFloatable {
-        if let s = all {
-            doOn(s) { PuyoHelper.padding(for: $0, all: $1.cgFloatValue) }
-        }
-        if let s = top {
-            doOn(s) { PuyoHelper.padding(for: $0, top: $1.cgFloatValue) }
-        }
-        if let s = horz {
-            doOn(s) { PuyoHelper.padding(for: $0, horz: $1.cgFloatValue) }
-        }
-        if let s = vert {
-            doOn(s) { PuyoHelper.padding(for: $0, vert: $1.cgFloatValue) }
-        }
-        if let s = left {
-            doOn(s) { PuyoHelper.padding(for: $0, left: $1.cgFloatValue) }
-        }
-        if let s = bottom {
-            doOn(s) { PuyoHelper.padding(for: $0, bottom: $1.cgFloatValue) }
-        }
-        if let s = right {
-            doOn(s) { PuyoHelper.padding(for: $0, right: $1.cgFloatValue) }
-        }
-        return self
-    }
-
-    @discardableResult
-    func padding<O: Outputing>(_ padding: O) -> Self where O.OutputType == UIEdgeInsets {
-        set(\T.regulator.padding, padding)
-    }
-
-    @discardableResult
-    func justifyContent(_ alignment: Alignment) -> Self {
-        set(\T.regulator.justifyContent, alignment)
-    }
-
-    @discardableResult
-    func justifyContent<O: Outputing>(_ alignment: O) -> Self where O.OutputType == Alignment {
-        set(\T.regulator.justifyContent, alignment)
-    }
-
-    @discardableResult
     func autoJudgeScroll(_ judge: Bool) -> Self {
         set(\T.control.isScrollViewControl, judge)
     }
@@ -102,6 +48,62 @@ public extension Puyo where T: Boxable & UIView {
     @discardableResult
     func rightBorder(_ options: [BorderOptions]) -> Self {
         set(\T.control.borders.right, Border(options: options))
+    }
+}
+
+public extension Puyo where T: BoxLayoutable & AutoDisposable {
+    @discardableResult
+    func padding(all: CGFloatable? = nil,
+                 horz: CGFloatable? = nil,
+                 vert: CGFloatable? = nil,
+                 top: CGFloatable? = nil,
+                 left: CGFloatable? = nil,
+                 bottom: CGFloatable? = nil,
+                 right: CGFloatable? = nil) -> Self
+    {
+        PuyoHelper.padding(for: view.boxRegulator, all: all?.cgFloatValue, horz: horz?.cgFloatValue, vert: vert?.cgFloatValue, top: top?.cgFloatValue, left: left?.cgFloatValue, bottom: bottom?.cgFloatValue, right: right?.cgFloatValue)
+        return self
+    }
+
+    @discardableResult
+    func padding<S: Outputing>(all: S? = nil, horz: S? = nil, vert: S? = nil, top: S? = nil, left: S? = nil, bottom: S? = nil, right: S? = nil) -> Self where S.OutputType: CGFloatable {
+        if let s = all {
+            doOn(s) { PuyoHelper.padding(for: $0.boxRegulator, all: $1.cgFloatValue) }
+        }
+        if let s = top {
+            doOn(s) { PuyoHelper.padding(for: $0.boxRegulator, top: $1.cgFloatValue) }
+        }
+        if let s = horz {
+            doOn(s) { PuyoHelper.padding(for: $0.boxRegulator, horz: $1.cgFloatValue) }
+        }
+        if let s = vert {
+            doOn(s) { PuyoHelper.padding(for: $0.boxRegulator, vert: $1.cgFloatValue) }
+        }
+        if let s = left {
+            doOn(s) { PuyoHelper.padding(for: $0.boxRegulator, left: $1.cgFloatValue) }
+        }
+        if let s = bottom {
+            doOn(s) { PuyoHelper.padding(for: $0.boxRegulator, bottom: $1.cgFloatValue) }
+        }
+        if let s = right {
+            doOn(s) { PuyoHelper.padding(for: $0.boxRegulator, right: $1.cgFloatValue) }
+        }
+        return self
+    }
+
+    @discardableResult
+    func padding<O: Outputing>(_ padding: O) -> Self where O.OutputType == UIEdgeInsets {
+        set(\T.boxRegulator.padding, padding)
+    }
+
+    @discardableResult
+    func justifyContent(_ alignment: Alignment) -> Self {
+        set(\T.boxRegulator.justifyContent, alignment)
+    }
+
+    @discardableResult
+    func justifyContent<O: Outputing>(_ alignment: O) -> Self where O.OutputType == Alignment {
+        set(\T.boxRegulator.justifyContent, alignment)
     }
 }
 

@@ -122,3 +122,33 @@ public extension ViewDisplayable {
         return link
     }
 }
+
+public extension BoxLayoutNode {
+    @discardableResult
+    func bind(_ parent: BoxLayoutContainer? = nil, _ block: (Self) -> Void = { _ in }) -> Puyo<Self> {
+        parent?.addLayoutNode(self)
+        block(self)
+        return Puyo(self)
+    }
+
+    @discardableResult
+    func bind(_ parent: ViewParasitable? = nil, _ block: (Self) -> Void = { _ in }) -> Puyo<Self> {
+        if let view = presentingView {
+            parent?.addParasite(view)
+        }
+        block(self)
+        return Puyo(self)
+    }
+}
+
+public extension BoxLayoutContainer {
+    @discardableResult
+    func bind(_ parent: BoxLayoutContainer? = nil, _ block: (Self) -> Void = { _ in }) -> Puyo<Self> {
+        parent?.addLayoutNode(self)
+        if !isSelfCoordinate {
+            hostView = parent?.hostView
+        }
+        block(self)
+        return Puyo(self)
+    }
+}

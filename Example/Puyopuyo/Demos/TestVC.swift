@@ -35,29 +35,57 @@ class TestVC: BaseViewController {
                 Label("header").attach($0)
                     .size(.fill, 50)
                 
-                let group = HBoxGroup()
-                group.hostView = $0
-                
-                for i in 0 ..< 100 {
-                    let label = Label("\(i)")
-                    group.addLayoutNode(label)
-                    
-                    if i == 0 {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            label.removeFromSuperview()
+                LinearGroup().bind($0) {
+                    LinearGroup().bind($0) {
+                        for i in 0 ..< 10 {
+                            Label("\(i)\(i)").bind($0)
                         }
                     }
+                    .direction(.x)
+                    
+                    FlowGroup().bind($0) {
+                        for i in 0 ..< 10 {
+                            Label("\(i)").bind($0)
+                        }
+                    }
+                    .direction(.y)
+                    .space(5)
+                    .reverse(true)
+                    .padding(all: 10)
                 }
+                .direction(.y)
+                .size(.fill, .wrap)
                 
-                $0.addLayoutNode(group)
-                
+//                let group = HBoxGroup()
+//                group.hostView = $0
+//
+//                for i in 0 ..< 100 {
+//                    let label = Label("\(i)")
+//                    group.addLayoutNode(label)
+//
+//                    if i == 0 {
+//                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//                            label.removeFromSuperview()
+//                        }
+//                    }
+//                }
+//
+//                $0.addLayoutNode(group)
+//
 //                let group1 = HBoxGroup()
 //                group1.hostView = $0
-//                
+//
 //                for i in 5 ..< 10  {
-//                    group1.addLayoutNode(Label("\(i)"))
+//                    let label = Label("\(i)")
+//                    group1.addLayoutNode(label)
+//
+//                    if i == 7 {
+//                        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+//                            label.removeFromSuperview()
+//                        }
+//                    }
 //                }
-//                
+//
 //                group.addLayoutNode(group1)
                 
                 Label("footer").attach($0)
