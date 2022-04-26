@@ -28,9 +28,42 @@ class TestVC: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .black
+//        view.backgroundColor = .black
         
-//        Util.randomViewColor(view: view)
+        view.attach {
+            VBox().attach($0) {
+                Label("header").attach($0)
+                    .size(.fill, 50)
+                
+                let group = HBoxGroup()
+                group.hostView = $0
+                group.layoutRegulator.padding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+                
+                for i in 0 ..< 3 {
+                    group.addLayoutNode(Label("\(i)"))
+                }
+                
+                $0.addLayoutNode(group)
+                
+                let group1 = HBoxGroup()
+                group1.hostView = $0
+                group1.layoutRegulator.padding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+                
+                for i in 0 ..< 3 {
+                    group1.addLayoutNode(Label("\(i)"))
+                }
+                
+                group.addLayoutNode(group1)
+                
+                Label("footer").attach($0)
+                    .size(.fill, 50)
+            }
+            .size(.fill, .fill)
+            .padding(all: 10)
+            .margin(view.py_safeArea())
+        }
+        
+        Util.randomViewColor(view: view)
     }
     
     func systemColorTest() -> UIView {
