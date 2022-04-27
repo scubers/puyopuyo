@@ -144,10 +144,13 @@ public extension BoxLayoutNode {
 public extension BoxLayoutContainer {
     @discardableResult
     func bind(_ parent: BoxLayoutContainer? = nil, _ block: (Self) -> Void = { _ in }) -> Puyo<Self> {
-        parent?.addLayoutNode(self)
+        if !isSelfCoordinate {
+            assert(parent != nil, "Virtual group should not be the root container!!!")
+        }
         if !isSelfCoordinate {
             hostView = parent?.hostView
         }
+        parent?.addLayoutNode(self)
         block(self)
         return Puyo(self)
     }

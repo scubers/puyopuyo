@@ -31,8 +31,8 @@ extension UIView: MeasureDelegate, MeasureSizeFittingDelegate {
     }
 
     public func needsRelayout(for measure: Measure) {
-        if BoxUtil.isBox(superview) {
-            superview?.setNeedsLayout()
+        if let superview = superview, superview.isBoxView {
+            superview.setNeedsLayout()
         }
         setNeedsLayout()
     }

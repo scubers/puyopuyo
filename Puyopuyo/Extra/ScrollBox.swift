@@ -8,7 +8,7 @@
 import UIKit
 
 @available(*, deprecated, message: "use ScrollingBox")
-public class ScrollBox<T: Boxable & UIView>: ZBox, Delegatable where T.RegulatorType: LinearRegulator {
+public class ScrollBox<T: IBoxView & UIView>: ZBox, Delegatable where T.RegulatorType: LinearRegulator {
     public typealias DelegateType = UIScrollViewDelegate
 
     public private(set) var scrollView: UIScrollView!
@@ -55,7 +55,7 @@ public protocol ScrollDirectionable {
     func setScrollDirection(_ direction: ScrollDirection)
 }
 
-public class ScrollingBox<Linear: Boxable & UIView>:
+public class ScrollingBox<Linear: IBoxView & UIView>:
     UIScrollView,
     ScrollDirectionable,
     Delegatable,

@@ -64,7 +64,7 @@ private class Container<T> {
     var freeMap = [Context<T>]()
 }
 
-extension BoxRecycler where Self: Boxable & UIView, StateType.OutputType == [Data] {
+extension BoxRecycler where Self: IBoxView & UIView, StateType.OutputType == [Data] {
     func getLayoutableSize() -> CGSize {
         var width: CGFloat = bounds.width
         var height: CGFloat = bounds.height

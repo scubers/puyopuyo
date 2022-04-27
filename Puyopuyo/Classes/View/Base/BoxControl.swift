@@ -7,38 +7,40 @@
 
 import UIKit
 
-public class BoxControl<R: Regulator> {
-    ///
-    /// Control `contentSize` when superview is UIScrollView
-    public var isScrollViewControl = false
-
-    ///
-    /// Control `center` when superview is not BoxView
-    public var isCenterControl = true
-
-    ///
-    /// Control `size` when superview is not BoxView
-    public var isSizeControl = true
-    
-    public var borders = Borders()
+/// Describe an object that can be add view to it
+public protocol ViewParasitable: AnyObject {
+    func addParasite(_ parasite: UIView)
+    func setNeedsLayout()
 }
 
-public protocol Boxable {
-    associatedtype RegulatorType: Regulator
-    var control: BoxControl<RegulatorType> { get }
-    var regulator: RegulatorType { get }
+/// Describe a node that can be layout
+public protocol BoxLayoutNode: AnyObject {
+    var layoutMeasure: Measure { get }
+    var presentingView: UIView? { get }
 }
 
-public extension Boxable {
-    @available(*, deprecated, message: "Use [control]")
-    var boxHelper: BoxControl<RegulatorType> { control }
+///
+/// Describe a container that can manage the layout node
+public protocol BoxLayoutContainer: BoxLayoutNode, ViewParasitable {
+    /// 被子节点寄生的view -> parasiticView.addSubview()
+    var hostView: ViewParasitable? { get set }
+
+    var layoutRegulator: Regulator { get }
+
+    var layoutChildren: [BoxLayoutNode] { get }
+
+    func addLayoutNode(_ node: BoxLayoutNode)
+
+    func fixChildrenCenterByHostView()
 }
 
-enum BoxUtil {
-    static func isBox(_ view: UIView?) -> Bool {
-        view is RegulatorView
-    }
+// MARK: - Default impl
+
+public extension BoxLayoutNode {
+    var isSelfCoordinate: Bool { presentingView != nil }
 }
 
-public typealias BoxBuilder<T> = (T) -> Void
-public typealias BoxGenerator<T> = () -> T
+extension UIView: BoxLayoutNode {
+    public var layoutMeasure: Measure { py_measure }
+    public var presentingView: UIView? { self }
+}
