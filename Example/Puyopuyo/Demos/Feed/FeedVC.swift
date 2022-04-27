@@ -141,7 +141,7 @@ class ItemView: HBox, Stateful {
             }
             .style(ShadowStyle())
 
-            VBox().attach($0) {
+            VGroup().attach($0) {
                 UILabel().attach($0)
                     .text(binder.name.distinct())
                     .fontSize(20, weight: .heavy)
@@ -184,7 +184,7 @@ class ItemView: HBox, Stateful {
                 .margin(top: 8)
                 .visibility(images.map { $0.isEmpty ? .gone : .visible })
 
-                HBox().attach($0) {
+                HGroup().attach($0) {
                     UILabel().attach($0)
                         .text(binder.createdAt.map { Date(timeIntervalSince1970: Double($0 ?? 0)).description })
 
