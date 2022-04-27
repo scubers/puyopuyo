@@ -7,9 +7,10 @@
 
 import Foundation
 
-class ZCalculator: Calculator {
+struct ZCalculator: Calculator {
+    let calculateChildrenImmediately: Bool
     func calculate(_ measure: Measure, layoutResidual: CGSize) -> CGSize {
-        _ZCalculator(measure as! ZRegulator, layoutResidual: layoutResidual).calculate()
+        _ZCalculator(measure as! ZRegulator, layoutResidual: layoutResidual, calculateChildrenImmediately: calculateChildrenImmediately).calculate()
     }
 }
 
@@ -18,7 +19,9 @@ private class _ZCalculator {
     let layoutResidual: CGSize
     let contentResidual: CGSize
     let childrenLayoutResidual: CGSize
-    init(_ regulator: ZRegulator, layoutResidual: CGSize) {
+    let calculateChildrenImmediately: Bool
+    init(_ regulator: ZRegulator, layoutResidual: CGSize, calculateChildrenImmediately: Bool) {
+        self.calculateChildrenImmediately = calculateChildrenImmediately
         self.regulator = regulator
         self.layoutResidual = layoutResidual
         self.contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: regulator.margin, size: regulator.size)
@@ -47,7 +50,7 @@ private class _ZCalculator {
 
     private func prepareData() {
         calculateChildren.reserveCapacity(regulator.children.count)
-        
+
         regulator.enumerateChildren { m in
             if !m.activated { return }
 

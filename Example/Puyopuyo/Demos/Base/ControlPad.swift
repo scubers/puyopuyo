@@ -24,36 +24,35 @@ class ControlPad: UIView, Stateful, Eventable {
 
         attach {
             let w: CGFloat = 30
-            UIView().attach($0)
-                .style(ShadowStyle())
-                .activated(false)
-                .backgroundColor(UIColor.black)
-                .cornerRadius(w / 2)
-                .frame(
-                    Outputs.combine(py_boundsState(), binder)
-                        .map { rect, point -> CGRect in
-                            let x = (rect.width - w) * point.x
-                            let y = (rect.height - w) * point.y
-                            return CGRect(x: x, y: y, width: w, height: w)
-                        }
-                        .distinct()
-                )
-                .attach {
-                    let pan = UIPanGestureRecognizer()
-                    pan.py_addAction { [weak self] g in
-                        guard let self = self else { return }
-                        let pan = g as! UIPanGestureRecognizer
-                        let point = pan.translation(in: self)
-                        let deltaX = point.x / self.frame.width
-                        let deltaY = point.y / self.frame.height
-                        pan.setTranslation(.zero, in: self)
-                        let p = CGPoint(x: self.state.value.x + deltaX, y: self.state.value.y + deltaY)
-                        self.state.value = .init(x: max(0, min(1, p.x)), y: max(0, min(1, p.y)))
+            UIView().attach($0) {
+                let pan = UIPanGestureRecognizer()
+                pan.py_addAction { [weak self] g in
+                    guard let self = self else { return }
+                    let pan = g as! UIPanGestureRecognizer
+                    let point = pan.translation(in: self)
+                    let deltaX = point.x / self.frame.width
+                    let deltaY = point.y / self.frame.height
+                    pan.setTranslation(.zero, in: self)
+                    let p = CGPoint(x: self.state.value.x + deltaX, y: self.state.value.y + deltaY)
+                    self.state.value = .init(x: max(0, min(1, p.x)), y: max(0, min(1, p.y)))
 
-                        self.emit(self.state.value)
-                    }
-                    $0.addGestureRecognizer(pan)
+                    self.emit(self.state.value)
                 }
+                $0.addGestureRecognizer(pan)
+            }
+            .style(ShadowStyle())
+            .activated(false)
+            .backgroundColor(UIColor.black)
+            .cornerRadius(w / 2)
+            .frame(
+                Outputs.combine(py_boundsState(), binder)
+                    .map { rect, point -> CGRect in
+                        let x = (rect.width - w) * point.x
+                        let y = (rect.height - w) * point.y
+                        return CGRect(x: x, y: y, width: w, height: w)
+                    }
+                    .distinct()
+            )
         }
         .cornerRadius(8)
         .backgroundColor(UIColor.lightGray.withAlphaComponent(0.7))

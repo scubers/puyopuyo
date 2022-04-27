@@ -19,15 +19,12 @@ class DemoScroll: ZBox {
                     print(area)
                     return UIEdgeInsets(top: 16, left: area.left + 16, bottom: area.bottom, right: area.right + 16)
                 }
-                VBox().attach($0)
+                VBox().attach($0, builder)
                     .padding(padding)
                     .animator(Animators.default)
                     .space(20)
                     .size(.fill, .wrap)
                     .autoJudgeScroll(true)
-                    .attach {
-                        builder($0)
-                    }
                     .size(.fill, .wrap)
             }
             .backgroundColor(.systemGroupedBackground)

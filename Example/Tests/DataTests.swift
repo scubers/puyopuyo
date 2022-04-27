@@ -103,7 +103,7 @@ class DataTests: XCTestCase {
                 _ = v.sizeThatFits(CGSize(width: width, height: 0))
             }))
 
-            v = YogaFlowView(count: count).attach().attach {
+            v = YogaFlowView(count: count).attach {
                 $0.yoga.flexDirection = .row
                 $0.yoga.flexWrap = .wrap
             }
@@ -112,7 +112,7 @@ class DataTests: XCTestCase {
                 v.yoga.calculateLayout(with: CGSize(width: width, height: CGFloat.nan))
             }))
 
-            v = TKFlowLayoutView(count: count).attach().attach {
+            v = TKFlowLayoutView(count: count).attach {
                 $0.tg_orientation = .vert
                 $0.tg_arrangedCount = 0
             }

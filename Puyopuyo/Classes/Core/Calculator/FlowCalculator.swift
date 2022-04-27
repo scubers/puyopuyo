@@ -8,19 +8,22 @@
 import Foundation
 
 struct FlowCalculator: Calculator {
+    let calculateChildrenImmediately: Bool
     func calculate(_ measure: Measure, layoutResidual: CGSize) -> CGSize {
-        _FlowCalculator(measure as! FlowRegulator, layoutResidual: layoutResidual).calculate()
+        _FlowCalculator(measure as! FlowRegulator, layoutResidual: layoutResidual, calculateChildrenImmediately: calculateChildrenImmediately).calculate()
     }
 }
 
 class _FlowCalculator {
-    init(_ regulator: FlowRegulator, layoutResidual: CGSize) {
+    init(_ regulator: FlowRegulator, layoutResidual: CGSize, calculateChildrenImmediately: Bool) {
         self.regulator = regulator
         self.layoutResidual = layoutResidual
+        self.calculateChildrenImmediately = calculateChildrenImmediately
     }
 
     let regulator: FlowRegulator
     let layoutResidual: CGSize
+    let calculateChildrenImmediately: Bool
     var arrange: Int { regulator.arrange }
 
     var regDirection: Direction { regulator.direction }
@@ -57,7 +60,7 @@ class _FlowCalculator {
         children.forEach { m in
             let subCalSize = m.size.getCalSize(by: regDirection)
 
-            let subCalFixedSize = CalHelper.calculateIntrinsicSize(for: m, layoutResidual: regChildrenResidualCalSize.getSize(), strategy: .lazy, diagnosisMsg: "FlowCalculator content test calculating").getCalFixedSize(by: regDirection)
+            let subCalFixedSize = CalHelper.calculateIntrinsicSize(for: m, layoutResidual: regChildrenResidualCalSize.getSize(), strategy: calculateChildrenImmediately ? .positive : .lazy, diagnosisMsg: "FlowCalculator content test calculating").getCalFixedSize(by: regDirection)
             let subCalMargin = CalEdges(insets: m.margin, direction: regDirection)
 
             let space = CGFloat(min(1, currentLine.count)) * regulator.itemSpace
@@ -185,7 +188,7 @@ private class VirtualLinearRegulator: LinearRegulator, MeasureChildrenDelegate {
     }
 
     override func createCalculator() -> Calculator {
-        LinearCalculator(estimateChildren: false)
+        LinearCalculator(calculateChildrenImmediately: true)
     }
 
     func children(for measure: Measure) -> [Measure] {

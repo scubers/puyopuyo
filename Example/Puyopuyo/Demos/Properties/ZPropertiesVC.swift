@@ -173,8 +173,9 @@ class ZPropertiesVC: BaseViewController {
                 .borders([.color(UIColor.lightGray), .thick(Util.pixel(1))])
                 .animator(Animators.default)
                 .size(.fill, .fill)
+
+                Util.randomViewColor(view: $0)
             }
-            .attach { Util.randomViewColor(view: $0) }
             .padding(all: 16)
             .animator(Animators.default)
             .view

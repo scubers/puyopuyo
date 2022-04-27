@@ -7,9 +7,6 @@
 
 import UIKit
 
-public typealias BoxBuilder<T> = (T) -> Void
-public typealias BoxGenerator<T> = () -> T
-
 // MARK: - BoxControl
 
 public class BoxControl {

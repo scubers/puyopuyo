@@ -35,17 +35,17 @@ class TestVC: BaseViewController {
                 Label("header").attach($0)
                     .size(.fill, 50)
                 
-                LinearGroup().bind($0) {
-                    LinearGroup().bind($0) {
+                LinearGroup().attach($0) {
+                    LinearGroup().attach($0) {
                         for i in 0 ..< 10 {
-                            Label("\(i)\(i)").bind($0)
+                            Label("\(i)\(i)").attach($0)
                         }
                     }
                     .direction(.x)
                     
-                    FlowGroup().bind($0) {
+                    FlowGroup().attach($0) {
                         for i in 0 ..< 10 {
-                            Label("\(i)").bind($0)
+                            Label("\(i)").attach($0)
                         }
                     }
                     .direction(.y)
@@ -260,30 +260,21 @@ class TestVC: BaseViewController {
     
     func tgTestView() -> UIView {
         UIView().attach {
-            TGLinearLayout(.vert).attach($0)
-                .attach {
-                    $0.tg_size(width: .fill, height: .fill)
-                    $0.tg_padding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+            TGLinearLayout(.vert).attach($0) {
+                $0.tg_size(width: .fill, height: .fill)
+                $0.tg_padding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
                     
-                    TGLinearLayout(.horz).attach($0)
-                        .attach {
-                            $0.tg_size(width: .fill, height: 70)
-                            $0.tg_padding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+                TGLinearLayout(.horz).attach($0) {
+                    $0.tg_size(width: .fill, height: 70)
+                    $0.tg_padding = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
                             
-//                            UILabel().attach($0)
-//                                .text("def")
-//                                .attach {
-//                                    $0.tg_size(width: .fill, height: .wrap)
-//                                }
-                            
-                            UILabel().attach($0)
-                                .text("abc")
-                                .attach {
-                                    $0.tg_size(width: .wrap, height: .fill)
-                                    $0.tg_width.equal($0.tg_height)
-                                }
-                        }
+                    UILabel().attach($0) {
+                        $0.tg_size(width: .wrap, height: .fill)
+                        $0.tg_width.equal($0.tg_height)
+                    }
+                    .text("abc")
                 }
+            }
         }
         .size(.fill, .fill)
         .view
@@ -656,7 +647,6 @@ class MySwitch: ZBox {
         let state = State(false)
         attach {
             UIView().attach($0)
-                .attach($0)
                 .size(30, 30)
                 .cornerRadius(15)
                 .backgroundColor(.black)

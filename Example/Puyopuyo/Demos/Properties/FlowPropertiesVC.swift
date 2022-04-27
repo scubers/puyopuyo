@@ -228,45 +228,44 @@ class FlowPropertiesVC: BaseViewController {
                 return blockFixed ? SizeDescription.fix(size) : .wrap(add: size)
             }
 
-            return Label.demo("").attach()
-                .text(o.data.description)
-                .backgroundColor(Util.randomColor())
-                .width(width)
-                .height(width)
-                .set(\.py_measure.flowEnding, self.endings.combine(o.data).map { v, idx in
-                    v.contains(idx)
-                })
-                .onTap {
-                    print("----")
+            return Label.demo("").attach { v in
+                let doubleTap = UITapGestureRecognizer()
+                doubleTap.numberOfTapsRequired = 2
+                doubleTap.py_addAction { _ in
+                    i.inContext { c in
+                        this.value?.elements.value.remove(at: c.indexPath.row)
+                    }
                 }
-                .animator(o.data.map { v -> Animator? in
-                    switch v % 3 {
-                    case 0: return ExpandAnimator() as Animator
-                    case 1: return SpinAnimator() as Animator
-                    case 2: return nil
-                    default: return nil
-                    }
-                })
-                .attach { v in
-                    let doubleTap = UITapGestureRecognizer()
-                    doubleTap.numberOfTapsRequired = 2
-                    doubleTap.py_addAction { _ in
-                        i.inContext { c in
-                            this.value?.elements.value.remove(at: c.indexPath.row)
-                        }
-                    }
-                    v.addGestureRecognizer(doubleTap)
+                v.addGestureRecognizer(doubleTap)
 
-                    let tap = UITapGestureRecognizer()
-                    tap.require(toFail: doubleTap)
-                    tap.py_addAction { _ in
-                        i.inContext { c in
-                            this.value?.toggleEndings(c.indexPath.row)
-                        }
+                let tap = UITapGestureRecognizer()
+                tap.require(toFail: doubleTap)
+                tap.py_addAction { _ in
+                    i.inContext { c in
+                        this.value?.toggleEndings(c.indexPath.row)
                     }
-                    v.addGestureRecognizer(tap)
                 }
-                .view
+                v.addGestureRecognizer(tap)
+            }
+            .text(o.data.description)
+            .backgroundColor(Util.randomColor())
+            .width(width)
+            .height(width)
+            .set(\.py_measure.flowEnding, self.endings.combine(o.data).map { v, idx in
+                v.contains(idx)
+            })
+            .onTap {
+                print("----")
+            }
+            .animator(o.data.map { v -> Animator? in
+                switch v % 3 {
+                case 0: return ExpandAnimator() as Animator
+                case 1: return SpinAnimator() as Animator
+                case 2: return nil
+                default: return nil
+                }
+            })
+            .view
         }
         .attach()
         .view

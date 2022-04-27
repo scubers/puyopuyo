@@ -86,13 +86,13 @@ class CompareTests: XCTestCase {
             .arrangeCount(arrange)
             .direction(.y)
             .view
-        let tv = TKFlowLayoutView(count: count).attach().attach {
+        let tv = TKFlowLayoutView(count: count).attach {
             $0.tg_arrangedCount = 0
             $0.tg_orientation = .vert
         }
         .view
 
-        let yv = YogaFlowView(count: count).attach().attach {
+        let yv = YogaFlowView(count: count).attach {
             $0.yoga.flexDirection = .row
             $0.yoga.flexWrap = .wrap
         }

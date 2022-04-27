@@ -77,7 +77,7 @@ public class FlowRegulator: LinearRegulator {
     }
 
     override public func createCalculator() -> Calculator {
-        FlowCalculator()
+        FlowCalculator(calculateChildrenImmediately: false)
     }
 
     override public var diagnosisMessage: String {

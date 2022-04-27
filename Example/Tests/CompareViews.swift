@@ -212,7 +212,10 @@ func createTGRecursiveView(times: Int = 3) -> UIView {
         view.attach {
             $0.tg_size(width: .wrap, height: .wrap)
             for _ in 0 ..< 5 {
-                UILabel().attach($0).text("Label").attach { $0.tg_size(width: .wrap, height: .wrap) }
+                UILabel().attach($0) {
+                    $0.tg_size(width: .wrap, height: .wrap)
+                }
+                .text("Label")
             }
 
             generate(view: TGLinearLayout(frame: .zero, orientation: .horz), times: times - 1).attach($0)

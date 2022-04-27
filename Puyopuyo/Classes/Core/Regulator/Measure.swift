@@ -121,10 +121,13 @@ public class Measure {
     }
 
     public func calculate(by layoutResidual: CGSize) -> CGSize {
-        calculator.calculate(self, layoutResidual: layoutResidual)
+        if calculator == nil {
+            calculator = createCalculator()
+        }
+        return calculator!.calculate(self, layoutResidual: layoutResidual)
     }
 
-    private lazy var calculator = createCalculator()
+    private var calculator: Calculator?
 
     /// subclass should override
     public func createCalculator() -> Calculator {
