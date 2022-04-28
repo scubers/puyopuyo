@@ -105,12 +105,25 @@ public extension ViewDisplayable where Self: UIView {
 }
 
 extension Puyo: BoxLayoutNode where T: BoxLayoutNode {
+    public func getParasitableView() -> ViewParasitable? {
+        view.getParasitableView()
+    }
+
+    public var parentContainer: BoxLayoutContainer? {
+        set { view.parentContainer = newValue }
+        get { view.parentContainer }
+    }
+
+    public func removeFromContainer() {
+        view.removeFromContainer()
+    }
+
     public var layoutMeasure: Measure {
         view.layoutMeasure
     }
 
-    public var presentingView: UIView? {
-        view.presentingView
+    public var layoutNodeType: BoxLayoutNodeType {
+        view.layoutNodeType
     }
 }
 
@@ -158,7 +171,7 @@ public extension BoxLayoutNode {
 
     @discardableResult
     func attach(_ parent: ViewParasitable? = nil, _ block: (Self) -> Void = { _ in }) -> Puyo<Self> {
-        if let view = presentingView {
+        if let view = getPresentingView() {
             parent?.addParasite(view)
         }
         block(self)
@@ -169,11 +182,8 @@ public extension BoxLayoutNode {
 public extension BoxLayoutContainer {
     @discardableResult
     func attach(_ parent: BoxLayoutContainer? = nil, _ block: (Self) -> Void = { _ in }) -> Puyo<Self> {
-        if !isSelfCoordinate {
+        if layoutNodeType.isVirtual {
             assert(parent != nil, "Virtual group should not be the root container!!!")
-        }
-        if !isSelfCoordinate {
-            hostView = parent?.hostView
         }
         parent?.addLayoutNode(self)
         block(self)

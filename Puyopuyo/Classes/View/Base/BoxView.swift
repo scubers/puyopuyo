@@ -149,7 +149,7 @@ open class BoxView<RegulatorType: Regulator>:
 
     override open func willRemoveSubview(_ subview: UIView) {
         super.willRemoveSubview(subview)
-        layoutChildren.removeAll(where: { $0.presentingView === subview })
+        layoutChildren.removeAll(where: { $0.getPresentingView() === subview })
     }
 
     override open var intrinsicContentSize: CGSize {
@@ -294,7 +294,7 @@ open class BoxView<RegulatorType: Regulator>:
 
     private func fixVirtualGroupCenter() {
         layoutChildren.forEach { node in
-            if let node = node as? BoxLayoutContainer, !node.isSelfCoordinate {
+            if let node = node as? BoxLayoutContainer, node.layoutNodeType.isVirtual {
                 node.fixChildrenCenterByHostView()
             }
         }
@@ -306,35 +306,22 @@ open class BoxView<RegulatorType: Regulator>:
         super.addSubview(parasite)
     }
 
-    // MARK: - BoxLayoutContainer
-
-    public var hostView: ViewParasitable? {
-        get { self }
-        set {}
+    public func removeParasite(_ parasite: UIView) {
+        subviews.first(where: { $0 === parasite })?.removeFromSuperview()
     }
+
+    // MARK: - BoxLayoutContainer
 
     public var layoutRegulator: Regulator { regulator }
 
     public var layoutChildren: [BoxLayoutNode] = []
 
-    public func addLayoutNode(_ node: BoxLayoutNode) {
-        layoutChildren.append(node)
-        if let view = node.presentingView {
-            // 只能调用父类方法，避免和 addSubview冲突
-            super.addSubview(view)
-        }
-    }
-
-    public func fixChildrenCenterByHostView() {
-        // Empty impl
-    }
-
     // MARK: - MeasureChildrenDelegate
 
     public func children(for _: Measure) -> [Measure] {
         layoutChildren.filter {
-            if $0.isSelfCoordinate {
-                return $0.presentingView?.superview == self
+            if !$0.layoutNodeType.isVirtual {
+                return $0.getPresentingView()?.superview == self
             }
             return true
         }.map(\.layoutMeasure)

@@ -9,73 +9,73 @@ import Foundation
 
 public class VirtualGroup<R: Regulator>: BoxLayoutContainer, RegulatorSpecifier, MeasureChildrenDelegate, MeasureDelegate, AutoDisposable {
     public init() {}
+
+    // MARK: - AutoDisposable
+
     private let bag = NSObject()
     public func addDisposer(_ disposer: Disposer, for key: String?) {
         bag.addDisposer(disposer, for: key)
     }
 
+    // MARK: - RegulatorSpecifier
+
     public var regulator: R { layoutRegulator as! R }
 
-    public weak var hostView: ViewParasitable?
+    // MARK: - BoxLayoutContainer
+
+    public weak var parentContainer: BoxLayoutContainer?
 
     public lazy var layoutRegulator: Regulator = createRegulator()
-
-    public func addLayoutNode(_ node: BoxLayoutNode) {
-        guard let hostView = hostView else {
-            fatalError()
-        }
-
-        layoutChildren.append(node)
-        if let view = node.presentingView {
-            hostView.addParasite(view)
-        }
-    }
 
     public var layoutChildren: [BoxLayoutNode] = []
 
     public var layoutMeasure: Measure { layoutRegulator }
 
-    public var presentingView: UIView? { nil }
+    public var layoutNodeType: BoxLayoutNodeType { .virtual }
 
-    public func fixChildrenCenterByHostView() {
-        let center = layoutRegulator.calculatedCenter
-        let size = layoutRegulator.calculatedSize
-
-        // 计算虚拟位置的偏移量
-        let delta = CGPoint(x: center.x - size.width / 2, y: center.y - size.height / 2)
-
+    public func removeFromContainer() {
         layoutChildren.forEach { node in
-            var center = node.layoutMeasure.calculatedCenter
-            center.x += delta.x
-            center.y += delta.y
-            node.layoutMeasure.calculatedCenter = center
-
-            if let node = node as? BoxLayoutContainer, !node.isSelfCoordinate {
-                node.fixChildrenCenterByHostView()
-            }
+            node.removeFromContainer()
         }
+        parentContainer?.layoutChildren.removeAll(where: { $0 === self })
     }
 
+    public func getParasitableView() -> ViewParasitable? {
+        parentContainer?.getParasitableView()
+    }
+
+    // MARK: - ViewParasitable
+
     public func addParasite(_ parasite: UIView) {
-        hostView?.addParasite(parasite)
+        getParasitableView()?.addParasite(parasite)
+    }
+
+    public func removeParasite(_ parasite: UIView) {
+        getParasitableView()?.removeParasite(parasite)
     }
 
     public func setNeedsLayout() {
-        hostView?.setNeedsLayout()
+        getParasitableView()?.setNeedsLayout()
     }
+
+    // MARK: - MeasureChildrenDelegate
 
     public func children(for _: Measure) -> [Measure] {
         layoutChildren.filter { node in
-            if let presentingView = node.presentingView {
-                return presentingView.superview === hostView
+            if let superview = node.getPresentingView()?.superview {
+                return superview === getParasitableView()
             }
             return true
         }.map(\.layoutMeasure)
     }
 
+    // MARK: - MeasureDelegate
+
     public func needsRelayout(for _: Measure) {
-        hostView?.setNeedsLayout()
+        getParasitableView()?.setNeedsLayout()
     }
+
+    // MARK: - Public
 
     public func createRegulator() -> R {
         fatalError()

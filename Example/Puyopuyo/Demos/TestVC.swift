@@ -27,11 +27,12 @@ class TestVC: BaseViewController {
     let text = State("")
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        view.backgroundColor = .black
-        
+    
         view.attach {
             VBox().attach($0) {
+                let state = State(true)
+                UISwitch().attach($0)
+                    .isOn(state)
                 Label("header").attach($0)
                     .size(.fill, 50)
                 
@@ -39,12 +40,14 @@ class TestVC: BaseViewController {
                     LinearGroup().attach($0) {
                         for i in 0 ..< 10 {
                             Label("\(i)\(i)").attach($0)
+                                .visibility(state.map { (!$0 || i != 1).visibleOrGone })
                         }
                     }
+                    .padding(all: 10)
                     .direction(.x)
                     
                     FlowGroup().attach($0) {
-                        for i in 0 ..< 10 {
+                        for i in 0 ..< 2 {
                             Label("\(i)").attach($0)
                         }
                     }

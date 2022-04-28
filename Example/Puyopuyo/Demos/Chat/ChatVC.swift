@@ -127,7 +127,7 @@ class MessageView: HBox, Stateful, Eventable {
             .style(ShadowStyle())
             .onTap(emitter.asInput { _ in .tapIcon })
 
-            VBox().attach($0) {
+            VGroup().attach($0) {
                 UILabel().attach($0)
                     .text(binder.name)
                     .margin(bottom: 4)
@@ -140,7 +140,6 @@ class MessageView: HBox, Stateful, Eventable {
                         .textColor(isSelf.map { $0 ? Theme.antiAccentColor : .label })
                 }
                 .width(.wrap(max: 250))
-
                 .padding(all: 12)
                 .backgroundColor(isSelf.map { $0 ? Theme.accentColor : .secondarySystemGroupedBackground })
                 .cornerRadius(8)

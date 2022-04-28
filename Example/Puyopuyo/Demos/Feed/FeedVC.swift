@@ -106,7 +106,7 @@ private class Header: VBox, Eventable {
                 .contentMode(.scaleAspectFill)
                 .clipToBounds(true)
 
-            HBox().attach($0) {
+            HGroup().attach($0) {
                 UILabel().attach($0)
                     .text("Jrwong")
                     .textColor(UIColor.white)
