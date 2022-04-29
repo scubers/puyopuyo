@@ -8,18 +8,8 @@
 import Foundation
 
 public extension UIView {
-    private static var measureHoldingKey = "measureHoldingKey"
     var py_measure: Measure {
-        var measure = objc_getAssociatedObject(self, &UIView.measureHoldingKey) as? Measure
-        if measure == nil {
-            if let regulatable = self as? RegulatorView {
-                measure = regulatable.createRegulator()
-            } else {
-                measure = Measure(delegate: self, sizeDelegate: self, childrenDelegate: nil)
-            }
-            objc_setAssociatedObject(self, &UIView.measureHoldingKey, measure, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-        return measure!
+        layoutMeasure
     }
 }
 

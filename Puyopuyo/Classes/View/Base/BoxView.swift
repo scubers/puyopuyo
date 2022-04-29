@@ -294,7 +294,7 @@ open class BoxView<RegulatorType: Regulator>:
 
     private func fixVirtualGroupCenter() {
         layoutChildren.forEach { node in
-            if let node = node as? BoxLayoutContainer, node.layoutNodeType.isVirtual {
+            if let node = node as? BoxLayoutContainer {
                 node.fixChildrenCenterByHostView()
             }
         }

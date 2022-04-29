@@ -25,7 +25,7 @@ public class VirtualGroup<R: Regulator>: BoxLayoutContainer, RegulatorSpecifier,
 
     public weak var parentContainer: BoxLayoutContainer?
 
-    public lazy var layoutRegulator: Regulator = createRegulator()
+    public lazy var layoutRegulator: Regulator = _generateRegulator()
 
     public var layoutChildren: [BoxLayoutNode] = []
 
@@ -37,7 +37,9 @@ public class VirtualGroup<R: Regulator>: BoxLayoutContainer, RegulatorSpecifier,
         layoutChildren.forEach { node in
             node.removeFromContainer()
         }
-        parentContainer?.layoutChildren.removeAll(where: { $0 === self })
+        if let index = parentContainer?.layoutChildren.firstIndex(where: { $0 === self }) {
+            parentContainer?.layoutChildren.remove(at: index)
+        }
     }
 
     public func getParasitableView() -> ViewParasitable? {
@@ -79,6 +81,15 @@ public class VirtualGroup<R: Regulator>: BoxLayoutContainer, RegulatorSpecifier,
 
     public func createRegulator() -> R {
         fatalError()
+    }
+
+    // MARK: - Priate
+
+    private func _generateRegulator() -> R {
+        let r = createRegulator()
+        r.delegate = self
+        r.childrenDelegate = self
+        return r
     }
 }
 

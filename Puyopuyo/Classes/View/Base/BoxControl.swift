@@ -83,13 +83,12 @@ public extension BoxLayoutContainer {
         // 计算虚拟位置的偏移量
         let delta = CGPoint(x: center.x - size.width / 2, y: center.y - size.height / 2)
 
-        layoutChildren.forEach { node in
-            var center = node.layoutMeasure.calculatedCenter
+        layoutChildren.forEach { child in
+            var center = child.layoutMeasure.calculatedCenter
             center.x += delta.x
             center.y += delta.y
-            node.layoutMeasure.calculatedCenter = center
-
-            if let node = node as? BoxLayoutContainer, node.layoutNodeType.isVirtual {
+            child.layoutMeasure.calculatedCenter = center
+            if let node = child as? BoxLayoutContainer {
                 node.fixChildrenCenterByHostView()
             }
         }
@@ -115,14 +114,27 @@ extension UIView: BoxLayoutNode {
         }
     }
 
-    public var layoutMeasure: Measure { py_measure }
-
-    public var layoutNodeType: BoxLayoutNodeType {
-        .concrete(self)
+    private static var measureHoldingKey = "measureHoldingKey"
+    public var layoutMeasure: Measure {
+        var measure = objc_getAssociatedObject(self, &UIView.measureHoldingKey) as? Measure
+        if measure == nil {
+            if let regulatable = self as? RegulatorView {
+                measure = regulatable.createRegulator()
+            } else {
+                measure = Measure(delegate: self, sizeDelegate: self, childrenDelegate: nil)
+            }
+            objc_setAssociatedObject(self, &UIView.measureHoldingKey, measure, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+        return measure!
     }
+
+    public var layoutNodeType: BoxLayoutNodeType { .concrete(self) }
 
     public func removeFromContainer() {
         removeFromSuperview()
+        if let index = parentContainer?.layoutChildren.firstIndex(where: { $0 === self }) {
+            parentContainer?.layoutChildren.remove(at: index)
+        }
     }
 
     public func getParasitableView() -> ViewParasitable? {

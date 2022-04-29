@@ -47,13 +47,22 @@ class TestVC: BaseViewController {
                     .direction(.x)
                     
                     FlowGroup().attach($0) {
-                        for i in 0 ..< 2 {
+                        
+                        FlowGroup().attach($0) {
+                            for i in 0 ..< 9 {
+                                Label("\(i)").attach($0)
+                            }
+                        }
+                        .arrangeCount(3)
+                        .direction(.y)
+                        .space(5)
+                        
+                        for i in 10..<50 {
                             Label("\(i)").attach($0)
                         }
                     }
                     .direction(.y)
                     .space(5)
-                    .reverse(true)
                     .padding(all: 10)
                 }
                 .direction(.y)
