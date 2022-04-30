@@ -47,7 +47,7 @@ class TestVC: BaseViewController {
                     
                     FlowGroup().attach($0) {
                         FlowGroup().attach($0) {
-                            for i in 0 ..< 9 {
+                            for i in 11 ..< 20 {
                                 Label("\(i)").attach($0)
                             }
                         }
@@ -55,8 +55,14 @@ class TestVC: BaseViewController {
                         .direction(.y)
                         .space(5)
                         
-                        for i in 10 ..< 50 {
+                        for i in 30 ..< 40 {
                             Label("\(i)").attach($0)
+                        }
+                        
+                        HBox().attach($0) {
+                            for i in 100 ..< 110 {
+                                Label(i.description).attach($0)
+                            }
                         }
                     }
                     .direction(.y)
@@ -65,13 +71,20 @@ class TestVC: BaseViewController {
                     
                     ZGroup().attach($0) {
                         UIView().attach($0)
-                            .size(.ratio(1.2), .ratio(1.2))
-                        UIView().attach($0)
                             .size(.ratio(1), .ratio(1))
                         UIView().attach($0)
                             .size(.ratio(0.5), .ratio(0.5))
+                        UIView().attach($0)
+                            .size(.ratio(0.2), .ratio(0.2))
                     }
+                    
                     .size(100, 100)
+                    
+                    let v = $0
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        v.removeFromContainer()
+                    }
+                    
                 }
                 .size(.fill, .fill)
                 

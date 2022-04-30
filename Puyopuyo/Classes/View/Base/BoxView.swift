@@ -302,7 +302,9 @@ open class BoxView<RegulatorType: Regulator>:
     }
 
     public func removeParasite(_ parasite: UIView) {
-        subviews.first(where: { $0 === parasite })?.removeFromSuperview()
+        if parasite.superview == self {
+            parasite.removeFromSuperview()
+        }
     }
 
     // MARK: - BoxLayoutContainer

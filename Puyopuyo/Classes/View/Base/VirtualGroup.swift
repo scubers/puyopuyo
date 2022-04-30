@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class VirtualGroup<R: Regulator>: BoxLayoutContainer, RegulatorSpecifier, MeasureChildrenDelegate, MeasureDelegate, AutoDisposable {
+public class VirtualGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureDelegate, AutoDisposable {
     public init() {}
 
     // MARK: - AutoDisposable
@@ -16,10 +16,6 @@ public class VirtualGroup<R: Regulator>: BoxLayoutContainer, RegulatorSpecifier,
     public func addDisposer(_ disposer: Disposer, for key: String?) {
         bag.addDisposer(disposer, for: key)
     }
-
-    // MARK: - RegulatorSpecifier
-
-    public var regulator: R { layoutRegulator as! R }
 
     // MARK: - BoxLayoutContainer
 
@@ -34,9 +30,7 @@ public class VirtualGroup<R: Regulator>: BoxLayoutContainer, RegulatorSpecifier,
     public var layoutNodeType: BoxLayoutNodeType { .virtual }
 
     public func removeFromContainer() {
-        layoutChildren.forEach { node in
-            node.removeFromContainer()
-        }
+        _unparasiteChildren()
         if let index = parentContainer?.layoutChildren.firstIndex(where: { $0 === self }) {
             parentContainer?.layoutChildren.remove(at: index)
         }
@@ -79,24 +73,52 @@ public class VirtualGroup<R: Regulator>: BoxLayoutContainer, RegulatorSpecifier,
 
     // MARK: - Public
 
-    public func createRegulator() -> R {
+    public func createRegulator() -> Regulator {
         fatalError()
     }
 
-    // MARK: - Priate
+    // MARK: - Private
 
-    private func _generateRegulator() -> R {
+    private func _generateRegulator() -> Regulator {
         let r = createRegulator().setIsLayoutEntryPoint(false)
         r.delegate = self
         r.childrenDelegate = self
         return r
     }
+
+    private func _unparasiteChildren() {
+        layoutChildren.forEach { child in
+            if case .concrete(let view) = child.layoutNodeType {
+                getParasitableView()?.removeParasite(view)
+            } else if let virtualGroup = child as? VirtualGroup {
+                virtualGroup._unparasiteChildren()
+            }
+        }
+    }
+
+    private func _parasiteChildren() {
+        layoutChildren.forEach { node in
+            if case .concrete(let view) = layoutNodeType {
+                getParasitableView()?.addParasite(view)
+            } else if let virtualGroup = node as? VirtualGroup {
+                virtualGroup._parasiteChildren()
+            }
+        }
+    }
+}
+
+// MARK: - Generic group
+
+public class GenericVirtualGroup<R: Regulator>: VirtualGroup, RegulatorSpecifier {
+    // MARK: - RegulatorSpecifier
+
+    public var regulator: R { layoutRegulator as! R }
 }
 
 // MARK: - LinearGroup
 
-public class LinearGroup: VirtualGroup<LinearRegulator> {
-    override public func createRegulator() -> VirtualGroup<LinearRegulator>.RegulatorType {
+public class LinearGroup: GenericVirtualGroup<LinearRegulator> {
+    override public func createRegulator() -> LinearRegulator {
         LinearRegulator(delegate: self, sizeDelegate: nil, childrenDelegate: self)
     }
 }
@@ -117,7 +139,7 @@ public class VGroup: LinearGroup {
 
 // MARK: - FlowGroup
 
-public class FlowGroup: VirtualGroup<FlowRegulator> {
+public class FlowGroup: GenericVirtualGroup<FlowRegulator> {
     override public func createRegulator() -> FlowRegulator {
         FlowRegulator(delegate: self, sizeDelegate: nil, childrenDelegate: self)
     }
@@ -139,7 +161,7 @@ public class VFlowGroup: FlowGroup {
 
 // MARK: - ZGroup
 
-public class ZGroup: VirtualGroup<ZRegulator> {
+public class ZGroup: GenericVirtualGroup<ZRegulator> {
     override public func createRegulator() -> ZRegulator {
         ZRegulator(delegate: self, sizeDelegate: nil, childrenDelegate: self)
     }
