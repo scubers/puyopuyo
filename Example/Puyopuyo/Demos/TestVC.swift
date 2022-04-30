@@ -45,6 +45,23 @@ class TestVC: BaseViewController {
                     }
                     .padding(all: 10)
                     
+                    HGroup().attach($0) {
+                        HGroup().attach($0) {
+                            Label("1").attach($0)
+                            Label("2").attach($0)
+                        }
+                        .format(.between)
+                        .width(.fill)
+                        
+                        HGroup().attach($0) {
+                            Label("3").attach($0)
+                            Label("4").attach($0)
+                        }
+                        .format(.between)
+                        .width(.fill)
+                    }
+                    .width(.fill)
+                    
                     FlowGroup().attach($0) {
                         FlowGroup().attach($0) {
                             for i in 11 ..< 20 {
@@ -79,12 +96,6 @@ class TestVC: BaseViewController {
                     }
                     
                     .size(100, 100)
-                    
-                    let v = $0
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        v.removeFromContainer()
-                    }
-                    
                 }
                 .size(.fill, .fill)
                 
