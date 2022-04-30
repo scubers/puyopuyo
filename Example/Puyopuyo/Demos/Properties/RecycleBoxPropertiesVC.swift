@@ -81,9 +81,11 @@ class RecycleBoxPropertiesVC: BaseViewController {
                     diffableKey: { $0.description },
                     cell: { o, _ in
                         let w = o.contentSize.width.map { floor(($0 / 3) * 100) / 100 }
-                        return HBox().attach()
-                            .size(w, w.map { $0 / 2 })
-                            .backgroundColor(o.data)
+                        return HBox().attach {
+                            UIView().attach($0)
+                        }
+                        .size(w, w.map { $0 / 2 })
+                        .backgroundColor(o.data)
                     }
                 )
             }

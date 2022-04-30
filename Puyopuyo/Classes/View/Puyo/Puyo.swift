@@ -43,6 +43,8 @@ public extension Puyo where T: AutoDisposable {
     }
 }
 
+// MARK: - UIView
+
 public extension Puyo where T: UIView {
     static func ensureInactivate(_ view: UIView, _ msg: String = "") {
         assert(!view.py_measure.activated, msg)
@@ -90,19 +92,31 @@ public extension Puyo where T: UIView {
     }
 }
 
-public protocol ViewDisplayable: BoxLayoutNode {
-    var dislplayView: UIView { get }
-}
+// MARK: - ViewDisplayable
 
-public extension ViewDisplayable where Self: UIView {
-    var dislplayView: UIView { self }
-    @discardableResult
-    func attach(_ parent: ViewDisplayable, _ block: (Self) -> Void = { _ in }) -> Puyo<Self> {
-        parent.dislplayView.addSubview(dislplayView)
-        block(self)
-        return Puyo(self)
+extension Puyo: ViewDisplayable where T: ViewDisplayable {
+    public var dislplayView: UIView {
+        view.dislplayView
     }
 }
+
+// MARK: - ViewParasitable
+
+extension Puyo: ViewParasitable where T: ViewParasitable {
+    public func addParasite(_ parasite: UIView) {
+        view.addParasite(parasite)
+    }
+
+    public func removeParasite(_ parasite: UIView) {
+        view.removeParasite(parasite)
+    }
+
+    public func setNeedsLayout() {
+        view.setNeedsLayout()
+    }
+}
+
+// MARK: - BoxLayoutNode
 
 extension Puyo: BoxLayoutNode where T: BoxLayoutNode {
     public func getParasitableView() -> ViewParasitable? {
@@ -127,66 +141,22 @@ extension Puyo: BoxLayoutNode where T: BoxLayoutNode {
     }
 }
 
-extension Puyo: ViewDisplayable where T: ViewDisplayable {
-    public var dislplayView: UIView {
-        view.dislplayView
-    }
-}
+// MARK: - BoxLayoutContainer
 
-extension UIView: ViewDisplayable {}
-//
-// extension UIView: ViewDisplayable {
-//    public var dislplayView: UIView { self }
-// }
-//
-// extension UIViewController: ViewDisplayable {
-//    public var dislplayView: UIView { view }
-// }
-//
-// public extension ViewDisplayable {
-//    @discardableResult
-//    func attach(_ parent: ViewDisplayable? = nil, _ block: (Self) -> Void = { _ in }) -> Puyo<Self> {
-//        let link = Puyo(self)
-//        block(self)
-//        parent?.dislplayView.addSubview(dislplayView)
-//        return link
-//    }
-// }
-//
-// extension Puyo: ViewDisplayable where T: ViewDisplayable {
-//    public var dislplayView: UIView {
-//        view.dislplayView
-//    }
-// }
+extension Puyo: BoxLayoutContainer where T: BoxLayoutContainer {
+    public var layoutRegulator: Regulator { view.layoutRegulator }
 
-// MARK: - BoxLayoutNode attaching
-
-public extension BoxLayoutNode {
-    @discardableResult
-    func attach(_ parent: BoxLayoutContainer? = nil, _ block: (Self) -> Void = { _ in }) -> Puyo<Self> {
-        parent?.addLayoutNode(self)
-        block(self)
-        return Puyo(self)
+    /// Do not call setter by your self
+    public var layoutChildren: [BoxLayoutNode] {
+        get { view.layoutChildren }
+        set { view.layoutChildren = newValue }
     }
 
-    @discardableResult
-    func attach(_ parent: ViewParasitable? = nil, _ block: (Self) -> Void = { _ in }) -> Puyo<Self> {
-        if let view = getPresentingView() {
-            parent?.addParasite(view)
-        }
-        block(self)
-        return Puyo(self)
+    public func addLayoutNode(_ node: BoxLayoutNode) {
+        view.addLayoutNode(node)
     }
-}
 
-public extension BoxLayoutContainer {
-    @discardableResult
-    func attach(_ parent: BoxLayoutContainer? = nil, _ block: (Self) -> Void = { _ in }) -> Puyo<Self> {
-        if layoutNodeType.isVirtual {
-            assert(parent != nil, "Virtual group should not be the root container!!!")
-        }
-        parent?.addLayoutNode(self)
-        block(self)
-        return Puyo(self)
+    public func fixChildrenCenterByHostView() {
+        view.fixChildrenCenterByHostView()
     }
 }

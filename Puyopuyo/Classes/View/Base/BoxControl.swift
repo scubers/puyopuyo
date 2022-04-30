@@ -7,6 +7,10 @@
 
 import UIKit
 
+public protocol ViewDisplayable: AnyObject {
+    var dislplayView: UIView { get }
+}
+
 /// Describe an object that can be add view to it
 public protocol ViewParasitable: AnyObject {
     func addParasite(_ parasite: UIView)
@@ -143,4 +147,8 @@ extension UIView: BoxLayoutNode {
         }
         return parentContainer?.getParasitableView()
     }
+}
+
+extension UIView: ViewDisplayable {
+    public var dislplayView: UIView { self }
 }
