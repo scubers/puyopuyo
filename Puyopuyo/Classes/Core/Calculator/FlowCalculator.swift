@@ -8,22 +8,19 @@
 import Foundation
 
 struct FlowCalculator: Calculator {
-    let calculateChildrenImmediately: Bool
     func calculate(_ measure: Measure, layoutResidual: CGSize) -> CGSize {
-        _FlowCalculator(measure as! FlowRegulator, layoutResidual: layoutResidual, calculateChildrenImmediately: calculateChildrenImmediately).calculate()
+        _FlowCalculator(measure as! FlowRegulator, layoutResidual: layoutResidual).calculate()
     }
 }
 
 class _FlowCalculator {
-    init(_ regulator: FlowRegulator, layoutResidual: CGSize, calculateChildrenImmediately: Bool) {
+    init(_ regulator: FlowRegulator, layoutResidual: CGSize) {
         self.regulator = regulator
         self.layoutResidual = layoutResidual
-        self.calculateChildrenImmediately = calculateChildrenImmediately
     }
 
     let regulator: FlowRegulator
     let layoutResidual: CGSize
-    let calculateChildrenImmediately: Bool
     var arrange: Int { regulator.arrange }
 
     var regDirection: Direction { regulator.direction }
@@ -60,7 +57,7 @@ class _FlowCalculator {
         children.forEach { m in
             let subCalSize = m.size.getCalSize(by: regDirection)
 
-            let subCalFixedSize = CalHelper.calculateIntrinsicSize(for: m, layoutResidual: regChildrenResidualCalSize.getSize(), strategy: calculateChildrenImmediately ? .positive : .lazy, diagnosisMsg: "FlowCalculator content test calculating").getCalFixedSize(by: regDirection)
+            let subCalFixedSize = CalHelper.calculateIntrinsicSize(for: m, layoutResidual: regChildrenResidualCalSize.getSize(), strategy: m.isLayoutEntryPoint ? .estimate : .calculate, diagnosisMsg: "FlowCalculator content test calculating").getCalFixedSize(by: regDirection)
             let subCalMargin = CalEdges(insets: m.margin, direction: regDirection)
 
             let space = CGFloat(min(1, currentLine.count)) * regulator.itemSpace
@@ -172,6 +169,7 @@ private class VirtualLinearRegulator: LinearRegulator, MeasureChildrenDelegate {
         self.virtualChildren = children
         super.init(delegate: nil, sizeDelegate: nil, childrenDelegate: nil)
         childrenDelegate = self
+        setIsLayoutEntryPoint(false)
     }
 
     func justifyChildrenWithCenter() {
@@ -188,7 +186,7 @@ private class VirtualLinearRegulator: LinearRegulator, MeasureChildrenDelegate {
     }
 
     override func createCalculator() -> Calculator {
-        LinearCalculator(calculateChildrenImmediately: true)
+        LinearCalculator()
     }
 
     func children(for measure: Measure) -> [Measure] {

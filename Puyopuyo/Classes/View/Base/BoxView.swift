@@ -176,7 +176,7 @@ open class BoxView<RegulatorType: Regulator>:
              */
             if regulator.size.bothNotWrap() {
                 let layoutResidual = CalculateUtil.getSelfLayoutResidual(for: regulator, fromContentResidual: bounds.size)
-                _ = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: layoutResidual, strategy: .positive)
+                _ = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: layoutResidual, strategy: .calculate)
             }
         } else {
             var layoutResidual: CGSize
@@ -190,7 +190,7 @@ open class BoxView<RegulatorType: Regulator>:
                     if regulator.size.height.isRatio { layoutResidual.height = spvBounds.height }
                 }
 
-                regulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: layoutResidual, strategy: .lazy)
+                regulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: layoutResidual, strategy: .calculate)
             } else {
                 /**
                  1. 当不需要布局控制自身大小时，意味着外部已经给本布局设置好了尺寸，即可以反推出当前布局可用的剩余空间
@@ -203,7 +203,7 @@ open class BoxView<RegulatorType: Regulator>:
                 }
 
                 layoutResidual = CalculateUtil.getSelfLayoutResidual(for: regulator, fromContentResidual: bounds.size)
-                regulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: layoutResidual, strategy: .lazy)
+                regulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: layoutResidual, strategy: .calculate)
             }
 
             if control.isCenterControl {
@@ -224,11 +224,6 @@ open class BoxView<RegulatorType: Regulator>:
                 if self.control.isCenterControl {
                     self.center = self.regulator.calculatedCenter
                 }
-            }
-
-            if regulator.size.bothNotWrap() {
-                // 非包裹，必须获取当前尺寸后再次布局子系统
-                _ = CalHelper.calculateIntrinsicSize(for: regulator, layoutResidual: layoutResidual, strategy: .positive)
             }
         }
 

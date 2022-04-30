@@ -74,6 +74,14 @@ public class Measure {
         }
     }
 
+    public private(set) var isLayoutEntryPoint = true
+
+    @discardableResult
+    public func setIsLayoutEntryPoint(_ isLayoutEntryPoint: Bool) -> Self {
+        self.isLayoutEntryPoint = isLayoutEntryPoint
+        return self
+    }
+
     public var diagnosisId: String?
 
     public var extraDiagnosisMessage: String?
@@ -83,6 +91,7 @@ public class Measure {
         [\(type(of: self)), delegate: \(String(describing: delegate))]
         - id: [\(diagnosisId ?? "")]
         - extra: [\(extraDiagnosisMessage ?? "")]
+        - isLayoutEntryPoint: [\(isLayoutEntryPoint)]
         - size: [width: \(size.width), height: \(size.height)]
         - alignment: [\(alignment)]
         - margin: [top: \(margin.top), left: \(margin.left), bottom: \(margin.bottom), right: \(margin.right)]

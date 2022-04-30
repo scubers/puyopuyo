@@ -177,8 +177,8 @@ class CalculateUtil {
 
 enum CalHelper {
     enum CalculateStrategy {
-        case lazy
-        case positive
+        case estimate
+        case calculate
     }
 
     /// Measure 节点计算的统一入口
@@ -191,7 +191,7 @@ enum CalHelper {
     /// - Returns: Content size
     static func calculateIntrinsicSize(for measure: Measure, layoutResidual: CGSize, strategy: CalculateStrategy, diagnosisMsg: String? = nil) -> CGSize {
         var size: CGSize
-        if measure.size.maybeWrap() || strategy == .positive {
+        if measure.size.maybeWrap() || strategy == .calculate {
             size = measure.calculate(by: layoutResidual)
         } else {
             let contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: measure.margin, size: measure.size)
@@ -205,7 +205,7 @@ enum CalHelper {
         var layoutResidual = size
         if layoutResidual.width == 0 { layoutResidual.width = .greatestFiniteMagnitude }
         if layoutResidual.height == 0 { layoutResidual.height = .greatestFiniteMagnitude }
-        return calculateIntrinsicSize(for: measure, layoutResidual: layoutResidual, strategy: .lazy)
+        return calculateIntrinsicSize(for: measure, layoutResidual: layoutResidual, strategy: .estimate)
     }
 }
 

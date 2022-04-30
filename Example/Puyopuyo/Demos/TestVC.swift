@@ -36,18 +36,16 @@ class TestVC: BaseViewController {
                 Label("header").attach($0)
                     .size(.fill, 50)
                 
-                LinearGroup().attach($0) {
-                    LinearGroup().attach($0) {
+                VGroup().attach($0) {
+                    HGroup().attach($0) {
                         for i in 0 ..< 10 {
                             Label("\(i)\(i)").attach($0)
                                 .visibility(state.map { (!$0 || i != 1).visibleOrGone })
                         }
                     }
                     .padding(all: 10)
-                    .direction(.x)
                     
                     FlowGroup().attach($0) {
-                        
                         FlowGroup().attach($0) {
                             for i in 0 ..< 9 {
                                 Label("\(i)").attach($0)
@@ -57,16 +55,25 @@ class TestVC: BaseViewController {
                         .direction(.y)
                         .space(5)
                         
-                        for i in 10..<50 {
+                        for i in 10 ..< 50 {
                             Label("\(i)").attach($0)
                         }
                     }
                     .direction(.y)
                     .space(5)
                     .padding(all: 10)
+                    
+                    ZGroup().attach($0) {
+                        UIView().attach($0)
+                            .size(.ratio(1.2), .ratio(1.2))
+                        UIView().attach($0)
+                            .size(.ratio(1), .ratio(1))
+                        UIView().attach($0)
+                            .size(.ratio(0.5), .ratio(0.5))
+                    }
+                    .size(100, 100)
                 }
-                .direction(.y)
-                .size(.fill, .wrap)
+                .size(.fill, .fill)
                 
 //                let group = HBoxGroup()
 //                group.hostView = $0

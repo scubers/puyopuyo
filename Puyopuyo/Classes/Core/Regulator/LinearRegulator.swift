@@ -58,7 +58,7 @@ public class LinearRegulator: Regulator {
     }
 
     override public func createCalculator() -> Calculator {
-        LinearCalculator(calculateChildrenImmediately: false)
+        LinearCalculator()
     }
 
     override public var diagnosisMessage: String {

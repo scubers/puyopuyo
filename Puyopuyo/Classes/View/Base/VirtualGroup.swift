@@ -86,7 +86,7 @@ public class VirtualGroup<R: Regulator>: BoxLayoutContainer, RegulatorSpecifier,
     // MARK: - Priate
 
     private func _generateRegulator() -> R {
-        let r = createRegulator()
+        let r = createRegulator().setIsLayoutEntryPoint(false)
         r.delegate = self
         r.childrenDelegate = self
         return r
@@ -96,14 +96,8 @@ public class VirtualGroup<R: Regulator>: BoxLayoutContainer, RegulatorSpecifier,
 // MARK: - LinearGroup
 
 public class LinearGroup: VirtualGroup<LinearRegulator> {
-    class Regulator: LinearRegulator {
-        override func createCalculator() -> Calculator {
-            LinearCalculator(calculateChildrenImmediately: true)
-        }
-    }
-
     override public func createRegulator() -> VirtualGroup<LinearRegulator>.RegulatorType {
-        Regulator(delegate: self, sizeDelegate: nil, childrenDelegate: self)
+        LinearRegulator(delegate: self, sizeDelegate: nil, childrenDelegate: self)
     }
 }
 
@@ -124,14 +118,8 @@ public class VGroup: LinearGroup {
 // MARK: - FlowGroup
 
 public class FlowGroup: VirtualGroup<FlowRegulator> {
-    class Regulator: FlowRegulator {
-        override func createCalculator() -> Calculator {
-            FlowCalculator(calculateChildrenImmediately: true)
-        }
-    }
-
     override public func createRegulator() -> FlowRegulator {
-        Regulator(delegate: self, sizeDelegate: nil, childrenDelegate: self)
+        FlowRegulator(delegate: self, sizeDelegate: nil, childrenDelegate: self)
     }
 }
 
@@ -152,13 +140,7 @@ public class VFlowGroup: FlowGroup {
 // MARK: - ZGroup
 
 public class ZGroup: VirtualGroup<ZRegulator> {
-    class Regulator: ZRegulator {
-        override func createCalculator() -> Calculator {
-            ZCalculator(calculateChildrenImmediately: true)
-        }
-    }
-
     override public func createRegulator() -> ZRegulator {
-        Regulator(delegate: self, sizeDelegate: nil, childrenDelegate: self)
+        ZRegulator(delegate: self, sizeDelegate: nil, childrenDelegate: self)
     }
 }

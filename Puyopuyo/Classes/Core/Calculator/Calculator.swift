@@ -8,6 +8,5 @@
 import Foundation
 
 public protocol Calculator {
-    var calculateChildrenImmediately: Bool { get }
     func calculate(_ measure: Measure, layoutResidual: CGSize) -> CGSize
 }
