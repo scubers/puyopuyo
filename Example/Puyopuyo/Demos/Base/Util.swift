@@ -184,7 +184,7 @@ enum Theme {
     ]
 }
 
-extension Puyo where T: RegulatorSpecifier & UIView & IBoxView {
+extension Puyo where T: RegulatorSpecifier & BoxView {
     @discardableResult
     func demo() -> Self {
         borders(Theme.demoBoxBorder)

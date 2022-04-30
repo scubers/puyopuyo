@@ -7,7 +7,7 @@
 
 import Foundation
 
-open class ZBox: BoxView<ZRegulator> {
+open class ZBox: GenericBoxView<ZRegulator> {
     override public func createRegulator() -> Regulator {
         ZRegulator(delegate: self, sizeDelegate: self, childrenDelegate: self)
     }

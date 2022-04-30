@@ -8,7 +8,7 @@
 import UIKit
 
 @available(*, deprecated, message: "use ScrollingBox")
-public class ScrollBox<T: IBoxView & UIView>: ZBox, Delegatable where T.RegulatorType: LinearRegulator {
+public class ScrollBox<T: RegulatorSpecifier & BoxView>: ZBox, Delegatable where T.RegulatorType: LinearRegulator {
     public typealias DelegateType = UIScrollViewDelegate
 
     public private(set) var scrollView: UIScrollView!
@@ -55,7 +55,7 @@ public protocol ScrollDirectionable {
     func setScrollDirection(_ direction: ScrollDirection)
 }
 
-public class ScrollingBox<Linear: IBoxView & UIView>:
+public class ScrollingBox<Linear: BoxView & RegulatorSpecifier>:
     UIScrollView,
     ScrollDirectionable,
     Delegatable,
@@ -92,10 +92,7 @@ public class ScrollingBox<Linear: IBoxView & UIView>:
         super.init(frame: .zero)
 
         attach {
-            self.flat.attach($0) {
-                guard let v = $0 as? Linear else { return }
-                builder(v)
-            }
+            self.flat.attach($0, builder)
             .autoJudgeScroll(true)
         }
         // 绑定方向

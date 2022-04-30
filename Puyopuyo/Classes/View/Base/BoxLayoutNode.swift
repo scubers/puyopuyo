@@ -122,7 +122,7 @@ extension UIView: BoxLayoutNode {
     public var layoutMeasure: Measure {
         var measure = objc_getAssociatedObject(self, &UIView.measureHoldingKey) as? Measure
         if measure == nil {
-            if let regulatable = self as? RegulatorView {
+            if let regulatable = self as? BoxView {
                 measure = regulatable.createRegulator()
             } else {
                 measure = Measure(delegate: self, sizeDelegate: self, childrenDelegate: nil)

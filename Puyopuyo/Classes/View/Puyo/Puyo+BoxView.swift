@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - BoxView
 
-public extension Puyo where T: IBoxView & UIView {
+public extension Puyo where T: BoxView {
     @discardableResult
     func autoJudgeScroll(_ judge: Bool) -> Self {
         set(\T.control.isScrollViewControl, judge)

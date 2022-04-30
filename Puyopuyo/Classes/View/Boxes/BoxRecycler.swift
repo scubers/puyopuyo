@@ -64,18 +64,18 @@ private class Container<T> {
     var freeMap = [Context<T>]()
 }
 
-extension BoxRecycler where Self: IBoxView & UIView, StateType.OutputType == [Data] {
+extension BoxRecycler where Self: BoxView, StateType.OutputType == [Data] {
     func getLayoutableSize() -> CGSize {
         var width: CGFloat = bounds.width
         var height: CGFloat = bounds.height
-        let size = regulator.size
+        let size = boxRegulator.size
         if size.width.isWrap {
             width = size.width.max
         }
         if size.height.isWrap {
             height = size.height.max
         }
-        return CGSize(width: width - regulator.padding.getHorzTotal(), height: height - regulator.padding.getVertTotal())
+        return CGSize(width: width - boxRegulator.padding.getHorzTotal(), height: height - boxRegulator.padding.getVertTotal())
     }
 
     private func getInfo(index: Int) -> RecyclerInfo<Data> {

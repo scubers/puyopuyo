@@ -8,7 +8,7 @@
 
 import Foundation
 
-open class LinearBox: BoxView<LinearRegulator> {
+open class LinearBox: GenericBoxView<LinearRegulator> {
     override public func createRegulator() -> Regulator {
         LinearRegulator(delegate: self, sizeDelegate: self, childrenDelegate: self)
     }
