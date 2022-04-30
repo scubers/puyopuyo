@@ -47,7 +47,7 @@ public extension Puyo where T: AutoDisposable {
 
 public extension Puyo where T: UIView {
     static func ensureInactivate(_ view: UIView, _ msg: String = "") {
-        assert(!view.py_measure.activated, msg)
+        assert(!view.layoutMeasure.activated, msg)
     }
 
     enum UpdateStrategy {
@@ -156,7 +156,7 @@ extension Puyo: BoxLayoutContainer where T: BoxLayoutContainer {
         view.addLayoutNode(node)
     }
 
-    public func fixChildrenCenterByHostView() {
-        view.fixChildrenCenterByHostView()
+    public func fixChildrenCenterByHostPosition() {
+        view.fixChildrenCenterByHostPosition()
     }
 }

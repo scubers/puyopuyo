@@ -11,13 +11,13 @@ public extension Puyo where T: UIView {
     /// Set diagnosis id, system will print the view's info in every calculate cycle
     @discardableResult
     func diagnosis(_ id: String? = "") -> Self {
-        set(\T.py_measure.diagnosisId, id)
+        set(\T.layoutMeasure.diagnosisId, id)
     }
 
     /// Set extra diagnosis message
     @discardableResult
     func diagnosisMessage(_ msg: String?) -> Self {
-        set(\T.py_measure.extraDiagnosisMessage, msg)
+        set(\T.layoutMeasure.extraDiagnosisMessage, msg)
     }
 
     @discardableResult

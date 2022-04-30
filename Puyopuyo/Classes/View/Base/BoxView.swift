@@ -39,8 +39,6 @@ public extension UIView {
 open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
     public private(set) var control = BoxControl()
 
-    public var boxRegulator: Regulator { py_measure as! Regulator }
-
     public func createRegulator() -> Regulator {
         fatalError("subclass impl")
     }
@@ -70,13 +68,13 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
     override open func setNeedsLayout() {
         if !initializing {
             // 若自身可能为包裹，则需要通知上层重新布局
-            if boxRegulator.size.maybeWrap(), let superview = superview, superview.isBoxView {
+            if layoutRegulator.size.maybeWrap(), let superview = superview, superview.isBoxView {
                 superview.setNeedsLayout()
             }
 
             super.setNeedsLayout()
 
-            if boxRegulator.size.maybeWrap() {
+            if layoutRegulator.size.maybeWrap() {
                 invalidateIntrinsicContentSize()
             }
         }
@@ -98,9 +96,9 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
     override open func layoutIfNeeded() {
         if let spv = superview,
            spv.isBoxView,
-           spv.py_measure.activated,
-           boxRegulator.activated,
-           boxRegulator.size.maybeWrap()
+           spv.layoutMeasure.activated,
+           layoutRegulator.activated,
+           layoutRegulator.size.maybeWrap()
         {
             // 需要父布局进行计算
             superview?.layoutIfNeeded()
@@ -110,7 +108,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
     }
 
     override open func sizeThatFits(_ size: CGSize) -> CGSize {
-        return CalHelper.sizeThatFit(size: size, to: boxRegulator)
+        return CalHelper.sizeThatFit(size: size, to: layoutRegulator)
     }
 
     override open func didMoveToSuperview() {
@@ -122,7 +120,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
 
             positionControlDisposable = boundsSize.distinct().outputing { [weak self] _ in
                 guard let self = self else { return }
-                if self.boxRegulator.size.maybeRatio() {
+                if self.layoutRegulator.size.maybeRatio() {
                     self.setNeedsLayout()
                 }
             }
@@ -139,11 +137,11 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
     }
 
     override open var intrinsicContentSize: CGSize {
-        if boxRegulator.size.isRatio() { return .zero }
-        if !boxRegulator.size.isRatio() { return sizeThatFits(.zero) }
-        if boxRegulator.size.maybeFixed() {
-            let height: CGFloat = boxRegulator.size.height.isFixed ? boxRegulator.size.height.fixedValue : 0
-            let width: CGFloat = boxRegulator.size.width.isFixed ? boxRegulator.size.width.fixedValue : 0
+        if layoutRegulator.size.isRatio() { return .zero }
+        if !layoutRegulator.size.isRatio() { return sizeThatFits(.zero) }
+        if layoutRegulator.size.maybeFixed() {
+            let height: CGFloat = layoutRegulator.size.height.isFixed ? layoutRegulator.size.height.fixedValue : 0
+            let width: CGFloat = layoutRegulator.size.width.isFixed ? layoutRegulator.size.width.fixedValue : 0
             return CGSize(width: width, height: height)
         }
         return .zero
@@ -160,41 +158,41 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
              1. 当父布局为Box视图，并且当前布局可能是包裹，则视为被上层计算时优先计算过了。当前视图可不用重复计算
              2. 若非包裹，则上层视图时只是用了估算尺寸，需要再次计算子节点
              */
-            if boxRegulator.size.bothNotWrap() {
-                let layoutResidual = CalculateUtil.getSelfLayoutResidual(for: boxRegulator, fromContentResidual: bounds.size)
-                _ = CalHelper.calculateIntrinsicSize(for: boxRegulator, layoutResidual: layoutResidual, strategy: .calculate)
+            if layoutRegulator.size.bothNotWrap() {
+                let layoutResidual = CalculateUtil.getSelfLayoutResidual(for: layoutRegulator, fromContentResidual: bounds.size)
+                _ = CalHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
             }
         } else {
             var layoutResidual: CGSize
             // 父视图为普通视图
             if control.isSizeControl {
-                layoutResidual = CalculateUtil.getInitialLayoutResidual(for: boxRegulator)
+                layoutResidual = CalculateUtil.getInitialLayoutResidual(for: layoutRegulator)
 
                 if let spv = superview {
                     let spvBounds = spv.bounds.size
-                    if boxRegulator.size.width.isRatio { layoutResidual.width = spvBounds.width }
-                    if boxRegulator.size.height.isRatio { layoutResidual.height = spvBounds.height }
+                    if layoutRegulator.size.width.isRatio { layoutResidual.width = spvBounds.width }
+                    if layoutRegulator.size.height.isRatio { layoutResidual.height = spvBounds.height }
                 }
 
-                boxRegulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: boxRegulator, layoutResidual: layoutResidual, strategy: .calculate)
+                layoutRegulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
             } else {
                 /**
                  1. 当不需要布局控制自身大小时，意味着外部已经给本布局设置好了尺寸，即可以反推出当前布局可用的剩余空间
                  2. 因为布局自身已经被限定尺寸大小，所以布局尺寸只能是撑满剩余空间
                  */
 
-                if !boxRegulator.size.isRatio() {
+                if !layoutRegulator.size.isRatio() {
                     DiagnosisUitl.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
-                    boxRegulator.size = .init(width: .fill, height: .fill)
+                    layoutRegulator.size = .init(width: .fill, height: .fill)
                 }
 
-                layoutResidual = CalculateUtil.getSelfLayoutResidual(for: boxRegulator, fromContentResidual: bounds.size)
-                boxRegulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: boxRegulator, layoutResidual: layoutResidual, strategy: .calculate)
+                layoutResidual = CalculateUtil.getSelfLayoutResidual(for: layoutRegulator, fromContentResidual: bounds.size)
+                layoutRegulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
             }
 
             if control.isCenterControl {
-                let b = CGRect(origin: .zero, size: boxRegulator.calculatedSize)
-                boxRegulator.calculatedCenter = CGPoint(x: b.midX + boxRegulator.margin.left, y: b.midY + boxRegulator.margin.top)
+                let b = CGRect(origin: .zero, size: layoutRegulator.calculatedSize)
+                layoutRegulator.calculatedCenter = CGPoint(x: b.midX + layoutRegulator.margin.left, y: b.midY + layoutRegulator.margin.top)
             }
 
             if control.isScrollViewControl, let superview = superview as? UIScrollView {
@@ -203,12 +201,12 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
 
             let animator = py_animator ?? Animators.inherited
 
-            animator.animate(self, size: boxRegulator.calculatedSize, center: boxRegulator.calculatedCenter) {
+            animator.animate(self, size: layoutRegulator.calculatedSize, center: layoutRegulator.calculatedCenter) {
                 if self.control.isSizeControl {
-                    self.bounds.size = self.boxRegulator.calculatedSize
+                    self.bounds.size = self.layoutRegulator.calculatedSize
                 }
                 if self.control.isCenterControl {
-                    self.center = self.boxRegulator.calculatedCenter
+                    self.center = self.layoutRegulator.calculatedCenter
                 }
             }
         }
@@ -222,7 +220,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
 
         // 实际赋值位置大小
         subviews.forEach { v in
-            if v.py_measure.activated {
+            if v.layoutMeasure.activated {
                 self.applyViewPosition(v, inheritedAnimator: animator)
             }
         }
@@ -240,13 +238,13 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
 
     public func control(scrollView: UIScrollView?) {
         guard let scrollView = scrollView else { return }
-        let newSize = boxRegulator.calculatedSize
+        let newSize = layoutRegulator.calculatedSize
         // 控制父视图的scroll
-        if boxRegulator.size.width.isWrap {
-            scrollView.contentSize.width = newSize.width + boxRegulator.margin.left + boxRegulator.margin.right
+        if layoutRegulator.size.width.isWrap {
+            scrollView.contentSize.width = newSize.width + layoutRegulator.margin.left + layoutRegulator.margin.right
         }
-        if boxRegulator.size.height.isWrap {
-            scrollView.contentSize.height = newSize.height + boxRegulator.margin.bottom + boxRegulator.margin.top
+        if layoutRegulator.size.height.isWrap {
+            scrollView.contentSize.height = newSize.height + layoutRegulator.margin.bottom + layoutRegulator.margin.top
         }
     }
 
@@ -276,7 +274,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
     private func fixVirtualGroupCenter() {
         layoutChildren.forEach { node in
             if let node = node as? BoxLayoutContainer {
-                node.fixChildrenCenterByHostView()
+                node.fixChildrenCenterByHostPosition()
             }
         }
     }
@@ -284,6 +282,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
     // MARK: - ViewParasitable
 
     public func addParasite(_ parasite: UIView) {
+        // Must call super
         super.addSubview(parasite)
     }
 
@@ -295,7 +294,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
 
     // MARK: - BoxLayoutContainer
 
-    public var layoutRegulator: Regulator { boxRegulator }
+    public var layoutRegulator: Regulator { py_measure as! Regulator }
 
     public var layoutChildren: [BoxLayoutNode] = []
 
@@ -312,5 +311,5 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
 }
 
 open class GenericBoxView<R: Regulator>: BoxView, RegulatorSpecifier {
-    public var regulator: R { boxRegulator as! R }
+    public var regulator: R { layoutRegulator as! R }
 }

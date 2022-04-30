@@ -410,8 +410,8 @@ public class CollectionSection<Data, Cell: UIView, CellEvent>: CollectionBoxSect
         }
         dummyItemState.value = RecycleContext(index: indexPath.row, size: getLayoutableContentSize(collectionView), data: dataSource.value[indexPath.row], view: collectionView)
         var size = dummyItem.sizeThatFits(layoutContentSize)
-        size.width += dummyItem.py_measure.margin.getHorzTotal()
-        size.height += dummyItem.py_measure.margin.getVertTotal()
+        size.width += dummyItem.layoutMeasure.margin.getHorzTotal()
+        size.height += dummyItem.layoutMeasure.margin.getVertTotal()
         return CGSize(width: max(0, size.width), height: max(0, size.height))
     }
 

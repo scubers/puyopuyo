@@ -8,6 +8,7 @@
 import Foundation
 
 public extension UIView {
+    @available(*, deprecated, message: "Use [UIView.layoutMeasure]")
     var py_measure: Measure {
         layoutMeasure
     }
@@ -28,11 +29,11 @@ extension UIView: MeasureDelegate, MeasureSizeFittingDelegate {
     }
 
     func py_setNeedsRelayout() {
-        needsRelayout(for: py_measure)
+        needsRelayout(for: layoutMeasure)
     }
 
     func py_setNeedsLayoutIfMayBeWrap() {
-        if py_measure.size.maybeWrap() {
+        if layoutMeasure.size.maybeWrap() {
             py_setNeedsRelayout()
         }
     }
@@ -63,12 +64,12 @@ public extension UIView {
             }
             // activated
             switch newValue {
-            case .visible, .invisible: py_measure.activated = true
-            default: py_measure.activated = false
+            case .visible, .invisible: layoutMeasure.activated = true
+            default: layoutMeasure.activated = false
             }
         }
         get {
-            switch (py_measure.activated, isHidden) {
+            switch (layoutMeasure.activated, isHidden) {
             case (true, false): return .visible
             case (true, true): return .invisible
             case (false, true): return .gone

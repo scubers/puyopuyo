@@ -50,7 +50,7 @@ public protocol BoxLayoutContainer: BoxLayoutNode, ViewParasitable {
 
     func addLayoutNode(_ node: BoxLayoutNode)
 
-    func fixChildrenCenterByHostView()
+    func fixChildrenCenterByHostPosition()
 }
 
 // MARK: - Default impl
@@ -76,7 +76,7 @@ public extension BoxLayoutContainer {
         }
     }
 
-    func fixChildrenCenterByHostView() {
+    func fixChildrenCenterByHostPosition() {
         guard layoutNodeType.isVirtual else {
             return
         }
@@ -93,7 +93,7 @@ public extension BoxLayoutContainer {
             center.y += delta.y
             child.layoutMeasure.calculatedCenter = center
             if let node = child as? BoxLayoutContainer {
-                node.fixChildrenCenterByHostView()
+                node.fixChildrenCenterByHostPosition()
             }
         }
     }

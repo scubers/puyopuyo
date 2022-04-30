@@ -68,14 +68,14 @@ extension BoxRecycler where Self: BoxView, StateType.OutputType == [Data] {
     func getLayoutableSize() -> CGSize {
         var width: CGFloat = bounds.width
         var height: CGFloat = bounds.height
-        let size = boxRegulator.size
+        let size = layoutRegulator.size
         if size.width.isWrap {
             width = size.width.max
         }
         if size.height.isWrap {
             height = size.height.max
         }
-        return CGSize(width: width - boxRegulator.padding.getHorzTotal(), height: height - boxRegulator.padding.getVertTotal())
+        return CGSize(width: width - layoutRegulator.padding.getHorzTotal(), height: height - layoutRegulator.padding.getVertTotal())
     }
 
     private func getInfo(index: Int) -> RecyclerInfo<Data> {

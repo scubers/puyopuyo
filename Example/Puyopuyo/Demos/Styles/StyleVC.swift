@@ -16,7 +16,7 @@ class StyleVC: BaseViewController {
             (\UIView.clipsToBounds).getStyle(with: true),
             (\UIView.backgroundColor).getStyle(with: Theme.accentColor),
             (\UIView.layer.borderWidth).getStyle(with: 1),
-            (\UIView.py_measure.size).getStyle(with: Size(width: .fix(200), height: .fix(50))),
+            (\UIView.layoutMeasure.size).getStyle(with: Size(width: .fix(200), height: .fix(50))),
             UIFont.systemFont(ofSize: 16),
             TextColorStyle(value: .black, state: .normal),
             TextColorStyle(value: .white, state: .highlighted)

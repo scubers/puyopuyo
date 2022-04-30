@@ -142,17 +142,17 @@ public extension Puyo where T: BoxLayoutNode & AutoDisposable {
 public extension Puyo where T: UIView {
     @discardableResult
     func alignment(_ alignment: Alignment) -> Self {
-        set(\T.py_measure.alignment, alignment)
+        set(\T.layoutMeasure.alignment, alignment)
     }
 
     @discardableResult
     func alignment<S: Outputing>(_ alignment: S) -> Self where S.OutputType == Alignment {
-        set(\T.py_measure.alignment, alignment)
+        set(\T.layoutMeasure.alignment, alignment)
     }
 
     @discardableResult
     func flowEnding(_ flowEnding: Bool) -> Self {
-        set(\T.py_measure.flowEnding, flowEnding)
+        set(\T.layoutMeasure.flowEnding, flowEnding)
     }
 }
 
@@ -175,7 +175,7 @@ public extension Puyo where T: UIView {
 public extension Puyo where T: UIView {
     @discardableResult
     func activated<S: Outputing>(_ activated: S) -> Self where S.OutputType == Bool {
-        set(\T.py_measure.activated, activated)
+        set(\T.layoutMeasure.activated, activated)
     }
 }
 

@@ -413,7 +413,7 @@ public class ListSection<Data, Cell: ViewDisplayable, CellEvent>: ListBoxSection
 
         override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority _: UILayoutPriority, verticalFittingPriority _: UILayoutPriority) -> CGSize {
             var size = root.sizeThatFits(targetSize)
-            size.height += (root.py_measure.margin.top + root.py_measure.margin.bottom)
+            size.height += (root.layoutMeasure.margin.top + root.layoutMeasure.margin.bottom)
             return size
         }
     }

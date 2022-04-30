@@ -251,7 +251,7 @@ class FlowPropertiesVC: BaseViewController {
             .backgroundColor(Util.randomColor())
             .width(width)
             .height(width)
-            .set(\.py_measure.flowEnding, self.endings.combine(o.data).map { v, idx in
+            .set(\.layoutMeasure.flowEnding, self.endings.combine(o.data).map { v, idx in
                 v.contains(idx)
             })
             .onTap {

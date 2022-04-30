@@ -178,7 +178,7 @@ open class BasicRecycleSection<Data>: IRecycleSection, AutoDisposable {
         
         var residual = getLayoutableContentSize()
         
-        let measureSize = root.py_measure.size
+        let measureSize = root.layoutMeasure.size
         if measureSize.width.isWrap {
             residual.width = .greatestFiniteMagnitude
         }
@@ -188,8 +188,8 @@ open class BasicRecycleSection<Data>: IRecycleSection, AutoDisposable {
         
         var size = root.sizeThatFits(residual)
         
-        size.width += root.py_measure.margin.getHorzTotal()
-        size.height += root.py_measure.margin.getVertTotal()
+        size.width += root.layoutMeasure.margin.getHorzTotal()
+        size.height += root.layoutMeasure.margin.getVertTotal()
         let final = CGSize(width: max(0, size.width), height: max(0, size.height))
         setCachedSize(for: kind, cachedSize: final)
         return final
@@ -285,7 +285,7 @@ private class RecycleBoxSupplementaryView<D>: UICollectionReusableView {
             return .zero
         }
         var size = selfSizingResidual ?? targetSize
-        let measureSize = root.py_measure.size
+        let measureSize = root.layoutMeasure.size
         if measureSize.width.isWrap {
             size.width = .greatestFiniteMagnitude
         }
