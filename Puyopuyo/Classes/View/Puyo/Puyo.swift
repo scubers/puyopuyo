@@ -119,6 +119,11 @@ extension Puyo: ViewParasitizing where T: ViewParasitizing {
 // MARK: - BoxLayoutNode
 
 extension Puyo: BoxLayoutNode where T: BoxLayoutNode {
+    public var layoutVisibility: Visibility {
+        get { view.layoutVisibility }
+        set { view.layoutVisibility = newValue }
+    }
+
     public var parasitizingHost: ViewParasitizing? {
         view.parasitizingHost
     }

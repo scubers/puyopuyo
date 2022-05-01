@@ -31,6 +31,8 @@ public protocol BoxLayoutNode: AnyObject {
     /// Concrete view's superview
     var parasitizingHost: ViewParasitizing? { get }
 
+    var layoutVisibility: Visibility { get set }
+
     func removeFromContainer()
 }
 
@@ -66,6 +68,8 @@ public extension BoxLayoutContainer {
         if let view = node.layoutNodeView {
             addParasite(view)
         }
+        
+        parasitizingHost?.setNeedsLayout()
     }
 
     func fixChildrenCenterByHostPosition() {
@@ -127,7 +131,32 @@ extension UIView: BoxLayoutNode {
         return measure!
     }
 
-    public var layoutNodeType: BoxLayoutNodeType { .concrete(self) }
+    public var layoutNodeType: BoxLayoutNodeType {
+        .concrete(self)
+    }
+
+    public var layoutVisibility: Visibility {
+        set {
+            // hidden
+            switch newValue {
+            case .visible, .free: isHidden = false
+            default: isHidden = true
+            }
+            // activated
+            switch newValue {
+            case .visible, .invisible: layoutMeasure.activated = true
+            default: layoutMeasure.activated = false
+            }
+        }
+        get {
+            switch (layoutMeasure.activated, isHidden) {
+            case (true, false): return .visible
+            case (true, true): return .invisible
+            case (false, true): return .gone
+            case (false, false): return .free
+            }
+        }
+    }
 
     public func removeFromContainer() {
         removeFromSuperview()

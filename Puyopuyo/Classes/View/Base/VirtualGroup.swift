@@ -40,10 +40,33 @@ public class VirtualGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureD
         parentContainer?.parasitizingHost
     }
 
+    public var layoutVisibility: Visibility = .visible {
+        didSet {
+            guard oldValue != layoutVisibility else { return }
+            switch layoutVisibility {
+            case .visible:
+                _parasiteChildren()
+                layoutMeasure.activated = true
+            case .invisible:
+                _unparasiteChildren()
+                layoutMeasure.activated = true
+            case .free:
+                _parasiteChildren()
+                layoutMeasure.activated = false
+            case .gone:
+                _unparasiteChildren()
+                layoutMeasure.activated = false
+            }
+            parasitizingHost?.setNeedsLayout()
+        }
+    }
+
     // MARK: - ViewParasitable
 
     public func addParasite(_ parasite: ViewDisplayable) {
-        parasitizingHost?.addParasite(parasite)
+        if [Visibility.visible, .free].contains(layoutVisibility) {
+            parasitizingHost?.addParasite(parasite)
+        }
     }
 
     public func removeParasite(_ parasite: ViewDisplayable) {

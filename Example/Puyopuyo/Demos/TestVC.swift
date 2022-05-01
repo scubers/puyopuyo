@@ -33,12 +33,18 @@ class TestVC: BaseViewController {
                 .size(50, 50)
             
             VBox().attach($0) {
-                UIView().attach($0)
-                    .size(50, 50)
-                
                 let state = State(true)
-                UISwitch().attach($0)
-                    .isOn(state)
+                let trigger = State(0)
+                
+                VFlowGroup().attach($0) {
+                    UISwitch().attach($0).isOn(state)
+                    UIButton().attach($0)
+                        .text("Increase")
+                        .onControlEvent(.touchUpInside, Inputs { _ in
+                            trigger.value += 1
+                        })
+                }
+                
                 Label("header").attach($0)
                     .size(.fill, 50)
                 
@@ -50,6 +56,7 @@ class TestVC: BaseViewController {
                         }
                     }
                     .padding(all: 10)
+                    .visibility(state.binder.visibleOrGone)
                     
                     HGroup().attach($0) {
                         HGroup().attach($0) {
@@ -67,6 +74,15 @@ class TestVC: BaseViewController {
                         .width(.fill)
                     }
                     .width(.fill)
+                    
+                    VGroup().attach($0) { v in
+                        trigger.skip(1).safeBind(to: v) { v, _ in
+                            UIView().attach(v)
+                                .size(50, 50)
+                                .backgroundColor(Util.randomColor())
+                        }
+                    }
+                    .visibility(state.binder.visibleOrNot)
                     
                     FlowGroup().attach($0) {
                         FlowGroup().attach($0) {

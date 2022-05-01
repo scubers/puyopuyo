@@ -55,27 +55,10 @@ public extension UIView {
         }
     }
 
+    @available(*, deprecated, message: "Use [BoxLayoutNode.layoutVisibility]")
     var py_visibility: Visibility {
-        set {
-            // hidden
-            switch newValue {
-            case .visible, .free: isHidden = false
-            default: isHidden = true
-            }
-            // activated
-            switch newValue {
-            case .visible, .invisible: layoutMeasure.activated = true
-            default: layoutMeasure.activated = false
-            }
-        }
-        get {
-            switch (layoutMeasure.activated, isHidden) {
-            case (true, false): return .visible
-            case (true, true): return .invisible
-            case (false, true): return .gone
-            case (false, false): return .free
-            }
-        }
+        get { layoutVisibility }
+        set { layoutVisibility = newValue }
     }
 
     func py_originState() -> Outputs<CGPoint> {

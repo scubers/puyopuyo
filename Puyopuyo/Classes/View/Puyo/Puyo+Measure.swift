@@ -139,7 +139,7 @@ public extension Puyo where T: BoxLayoutNode & AutoDisposable {
 
 // MARK: - Alignment ext
 
-public extension Puyo where T: UIView {
+public extension Puyo where T: BoxLayoutNode & AutoDisposable {
     @discardableResult
     func alignment(_ alignment: Alignment) -> Self {
         set(\T.layoutMeasure.alignment, alignment)
@@ -158,21 +158,21 @@ public extension Puyo where T: UIView {
 
 // MARK: - Visibility
 
-public extension Puyo where T: UIView {
+public extension Puyo where T: BoxLayoutNode & AutoDisposable {
     @discardableResult
     func visibility(_ visibility: Visibility) -> Self {
-        set(\T.py_visibility, visibility)
+        set(\T.layoutVisibility, visibility)
     }
 
     @discardableResult
     func visibility<S: Outputing>(_ visibility: S) -> Self where S.OutputType == Visibility {
-        set(\T.py_visibility, visibility)
+        set(\T.layoutVisibility, visibility)
     }
 }
 
 // MARK: - Activated
 
-public extension Puyo where T: UIView {
+public extension Puyo where T: BoxLayoutNode & AutoDisposable {
     @discardableResult
     func activated<S: Outputing>(_ activated: S) -> Self where S.OutputType == Bool {
         set(\T.layoutMeasure.activated, activated)
