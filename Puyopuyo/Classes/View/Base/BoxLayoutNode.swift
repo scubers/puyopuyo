@@ -7,17 +7,6 @@
 
 import UIKit
 
-public protocol ViewDisplayable: AnyObject {
-    var dislplayView: UIView { get }
-}
-
-/// Describe an object that can be add view to it
-public protocol ViewParasitizing: AnyObject {
-    func addParasite(_ parasite: UIView)
-    func removeParasite(_ parasite: UIView)
-    func setNeedsLayout()
-}
-
 public enum BoxLayoutNodeType {
     case virtual
     case concrete(UIView)
@@ -54,7 +43,7 @@ public protocol BoxLayoutContainer: BoxLayoutNode, ViewParasitizing {
     var layoutChildren: [BoxLayoutNode] { get set }
 }
 
-// MARK: - Default impl
+// MARK: - BoxLayoutNode extension
 
 public extension BoxLayoutNode {
     var layoutNodeView: UIView? {
@@ -64,6 +53,8 @@ public extension BoxLayoutNode {
         return nil
     }
 }
+
+// MARK: - BoxLayoutContainer extension
 
 public extension BoxLayoutContainer {
     func addLayoutNode(_ node: BoxLayoutNode) {
@@ -100,35 +91,38 @@ public extension BoxLayoutContainer {
     }
 }
 
+// MARK: - Implementation
+
 extension UIView: BoxLayoutNode {
-    private static var parentContainerKey = "parentContainerKey"
     private class Weak {
         init(_ value: AnyObject?) {
             self.value = value
         }
 
         weak var value: AnyObject?
+
+        static var parentContainerKey = "parentContainerKey"
+        static var measureHoldingKey = "measureHoldingKey"
     }
 
     public var parentContainer: BoxLayoutContainer? {
         get {
-            (objc_getAssociatedObject(self, &UIView.parentContainerKey) as? Weak)?.value as? BoxLayoutContainer
+            (objc_getAssociatedObject(self, &Weak.parentContainerKey) as? Weak)?.value as? BoxLayoutContainer
         }
         set {
-            objc_setAssociatedObject(self, &UIView.parentContainerKey, Weak(newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &Weak.parentContainerKey, Weak(newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
-    private static var measureHoldingKey = "measureHoldingKey"
     public var layoutMeasure: Measure {
-        var measure = objc_getAssociatedObject(self, &UIView.measureHoldingKey) as? Measure
+        var measure = objc_getAssociatedObject(self, &Weak.measureHoldingKey) as? Measure
         if measure == nil {
             if let regulatable = self as? BoxView {
                 measure = regulatable.createRegulator()
             } else {
                 measure = Measure(delegate: self, sizeDelegate: self, childrenDelegate: nil)
             }
-            objc_setAssociatedObject(self, &UIView.measureHoldingKey, measure, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &Weak.measureHoldingKey, measure, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
         return measure!
     }
@@ -142,18 +136,5 @@ extension UIView: BoxLayoutNode {
         }
     }
 
-    public var parasitizingHost: ViewParasitizing? {
-        if let container = self as? BoxLayoutContainer {
-            return container
-        }
-        return parentContainer?.parasitizingHost
-    }
-}
-
-extension UIView: ViewDisplayable {
-    public var dislplayView: UIView { self }
-}
-
-extension UIViewController: ViewDisplayable {
-    public var dislplayView: UIView { view }
+    public var parasitizingHost: ViewParasitizing? { self as? ViewParasitizing }
 }

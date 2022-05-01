@@ -103,11 +103,11 @@ extension Puyo: ViewDisplayable where T: ViewDisplayable {
 // MARK: - ViewParasitable
 
 extension Puyo: ViewParasitizing where T: ViewParasitizing {
-    public func addParasite(_ parasite: UIView) {
+    public func addParasite(_ parasite: ViewDisplayable) {
         view.addParasite(parasite)
     }
 
-    public func removeParasite(_ parasite: UIView) {
+    public func removeParasite(_ parasite: ViewDisplayable) {
         view.removeParasite(parasite)
     }
 

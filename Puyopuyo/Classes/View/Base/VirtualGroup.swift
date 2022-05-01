@@ -42,11 +42,11 @@ public class VirtualGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureD
 
     // MARK: - ViewParasitable
 
-    public func addParasite(_ parasite: UIView) {
+    public func addParasite(_ parasite: ViewDisplayable) {
         parasitizingHost?.addParasite(parasite)
     }
 
-    public func removeParasite(_ parasite: UIView) {
+    public func removeParasite(_ parasite: ViewDisplayable) {
         parasitizingHost?.removeParasite(parasite)
     }
 

@@ -39,10 +39,6 @@ public extension UIView {
 open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
     public private(set) var control = BoxControl()
 
-    public func createRegulator() -> Regulator {
-        fatalError("subclass impl")
-    }
-
     // MARK: - init
 
     override public init(frame: CGRect) {
@@ -55,10 +51,14 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
         buildBody()
     }
 
-    // MARK: - custom method
+    // MARK: - Open method
 
     /// override this method to build custom view in subclass
     open func buildBody() {}
+
+    open func createRegulator() -> Regulator {
+        fatalError("subclass impl")
+    }
 
     // MARK: - Overrides
 
@@ -279,16 +279,15 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
         }
     }
 
-    // MARK: - ViewParasitable
+    // MARK: - ViewParasitizing
 
-    public func addParasite(_ parasite: UIView) {
-        // Must call super
-        super.addSubview(parasite)
+    public func addParasite(_ parasite: ViewDisplayable) {
+        super.addSubview(parasite.dislplayView)
     }
 
-    public func removeParasite(_ parasite: UIView) {
-        if parasite.superview == self {
-            parasite.removeFromSuperview()
+    public func removeParasite(_ parasite: ViewDisplayable) {
+        if parasite.dislplayView.superview == self {
+            parasite.dislplayView.removeFromSuperview()
         }
     }
 
