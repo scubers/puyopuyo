@@ -12,11 +12,11 @@ extension UIView {
     var maxX: CGFloat { frame.width + frame.origin.x }
     var maxY: CGFloat { frame.height + frame.origin.y }
 
-    var calFrame: CGRect { py_measure.calculatedFrame }
+    var calFrame: CGRect { layoutMeasure.calculatedFrame }
 
     var calSize: CGSize { calFrame.size }
 
-    var celCenter: CGPoint { py_measure.calculatedCenter }
+    var celCenter: CGPoint { layoutMeasure.calculatedCenter }
 }
 
 class WrapSizeView: UIView {
@@ -63,14 +63,14 @@ class LinearBoxTests: XCTestCase {
 
         box.layoutIfNeeded()
 
-        XCTAssertTrue(v1.py_measure.activated == false)
+        XCTAssertTrue(v1.layoutMeasure.activated == false)
         XCTAssertTrue(box.frame == .zero)
 
         state.value = true
 
         box.layoutIfNeeded()
 
-        XCTAssertTrue(v1.py_measure.activated == true)
+        XCTAssertTrue(v1.layoutMeasure.activated == true)
         XCTAssertTrue(box.frame != .zero)
     }
 

@@ -1,0 +1,1 @@
+xcodebuild -workspace Example/Puyopuyo.xcworkspace -scheme Puyopuyo clean build |grep \[0-9].\[0-9]\[0-9]ms | sort -nr > ./compile_time.txt
