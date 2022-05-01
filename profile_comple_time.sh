@@ -1,7 +1,9 @@
 
 START_TIME=`date +%s`
 
-xcodebuild -workspace Example/Puyopuyo.xcworkspace -scheme Puyopuyo clean build |grep \[0-9].\[0-9]\[0-9]ms | sort -nr > ./compile_time.txt
+scheme='Puyopuyo'
+
+xcodebuild -workspace Example/Puyopuyo.xcworkspace -scheme $scheme clean build |grep \[0-9].\[0-9]\[0-9]ms | sort -nr > ./compile_time.txt
 
 END_TIME=`date +%s`
 
