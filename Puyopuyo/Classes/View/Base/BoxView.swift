@@ -68,13 +68,13 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
     override open func setNeedsLayout() {
         if !initializing {
             // 若自身可能为包裹，则需要通知上层重新布局
-            if layoutRegulator.size.maybeWrap(), let superview = superview, superview.isBoxView {
+            if layoutRegulator.size.maybeWrap, let superview = superview, superview.isBoxView {
                 superview.setNeedsLayout()
             }
 
             super.setNeedsLayout()
 
-            if layoutRegulator.size.maybeWrap() {
+            if layoutRegulator.size.maybeWrap {
                 invalidateIntrinsicContentSize()
             }
         }
@@ -98,7 +98,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
            spv.isBoxView,
            spv.layoutMeasure.activated,
            layoutRegulator.activated,
-           layoutRegulator.size.maybeWrap()
+           layoutRegulator.size.maybeWrap
         {
             // 需要父布局进行计算
             superview?.layoutIfNeeded()
@@ -120,7 +120,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
 
             positionControlDisposable = boundsSize.distinct().outputing { [weak self] _ in
                 guard let self = self else { return }
-                if self.layoutRegulator.size.maybeRatio() {
+                if self.layoutRegulator.size.maybeRatio {
                     self.setNeedsLayout()
                 }
             }
@@ -137,9 +137,9 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
     }
 
     override open var intrinsicContentSize: CGSize {
-        if layoutRegulator.size.isRatio() { return .zero }
-        if !layoutRegulator.size.isRatio() { return sizeThatFits(.zero) }
-        if layoutRegulator.size.maybeFixed() {
+        if layoutRegulator.size.isRatio { return .zero }
+        if !layoutRegulator.size.isRatio { return sizeThatFits(.zero) }
+        if layoutRegulator.size.maybeFixed {
             let height: CGFloat = layoutRegulator.size.height.isFixed ? layoutRegulator.size.height.fixedValue : 0
             let width: CGFloat = layoutRegulator.size.width.isFixed ? layoutRegulator.size.width.fixedValue : 0
             return CGSize(width: width, height: height)
@@ -158,7 +158,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
              1. 当父布局为Box视图，并且当前布局可能是包裹，则视为被上层计算时优先计算过了。当前视图可不用重复计算
              2. 若非包裹，则上层视图时只是用了估算尺寸，需要再次计算子节点
              */
-            if layoutRegulator.size.bothNotWrap() {
+            if layoutRegulator.size.bothNotWrap {
                 let layoutResidual = CalculateUtil.getSelfLayoutResidual(for: layoutRegulator, fromContentResidual: bounds.size)
                 _ = CalHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
             }
@@ -181,7 +181,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
                  2. 因为布局自身已经被限定尺寸大小，所以布局尺寸只能是撑满剩余空间
                  */
 
-                if !layoutRegulator.size.isRatio() {
+                if !layoutRegulator.size.isRatio {
                     DiagnosisUitl.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
                     layoutRegulator.size = .init(width: .fill, height: .fill)
                 }

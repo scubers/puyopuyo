@@ -9,7 +9,11 @@ import Foundation
 
 public enum Direction: CaseIterable, Outputing {
     public typealias OutputType = Direction
-    case x, y
+//    case x, y
+    case horizontal, vertical
+
+    public static var x: Direction { .horizontal }
+    public static var y: Direction { .vertical }
 }
 
 public enum Format: CaseIterable, Outputing {
@@ -83,52 +87,50 @@ public extension Alignment {
         .init(rawValue: vertCenter.rawValue, ratio: .init(x: 0, y: ratio))
     }
 
-    static func horzAlignments() -> [Alignment] {
-        return [.left, .right, .horzCenter]
+    static var horzAlignments: [Alignment] {
+        [.left, .right, .horzCenter]
     }
 
-    static func vertAlignments() -> [Alignment] {
-        return [.top, .bottom, .vertCenter]
+    static var vertAlignments: [Alignment] {
+        [.top, .bottom, .vertCenter]
     }
 
-    func hasHorzAlignment() -> Bool {
-        return
-            contains(.left)
-                || contains(.right)
-                || contains(.horzCenter)
+    var hasHorzAlignment: Bool {
+        contains(.left)
+            || contains(.right)
+            || contains(.horzCenter)
     }
 
-    func hasVertAlignment() -> Bool {
-        return
-            contains(.top)
-                || contains(.bottom)
-                || contains(.vertCenter)
+    var hasVertAlignment: Bool {
+        contains(.top)
+            || contains(.bottom)
+            || contains(.vertCenter)
     }
 
     func hasMainAligment(for direction: Direction) -> Bool {
-        direction == .y ? hasVertAlignment() : hasHorzAlignment()
+        direction == .vertical ? hasVertAlignment : hasHorzAlignment
     }
 
     func hasCrossAligment(for direction: Direction) -> Bool {
-        direction == .x ? hasVertAlignment() : hasHorzAlignment()
+        direction == .horizontal ? hasVertAlignment : hasHorzAlignment
     }
 
     func isCenter(for direction: Direction) -> Bool {
-        if case .x = direction {
+        if case .horizontal = direction {
             return contains(.vertCenter)
         }
         return contains(.horzCenter)
     }
 
     func isForward(for direction: Direction) -> Bool {
-        if case .x = direction {
+        if case .horizontal = direction {
             return contains(.top)
         }
         return contains(.left)
     }
 
     func isBackward(for direction: Direction) -> Bool {
-        if case .x = direction {
+        if case .horizontal = direction {
             return contains(.bottom)
         }
         return contains(.right)

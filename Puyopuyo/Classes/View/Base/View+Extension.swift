@@ -33,7 +33,7 @@ extension UIView: MeasureDelegate, MeasureSizeFittingDelegate {
     }
 
     func py_setNeedsLayoutIfMayBeWrap() {
-        if layoutMeasure.size.maybeWrap() {
+        if layoutMeasure.size.maybeWrap {
             py_setNeedsRelayout()
         }
     }

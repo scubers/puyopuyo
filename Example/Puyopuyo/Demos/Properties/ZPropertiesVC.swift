@@ -89,14 +89,14 @@ class ZPropertiesVC: BaseViewController {
 
                 getSelectionView(title: "H alignment",
                                  input: alignmentHorz,
-                                 values: Alignment.horzAlignments().map {
+                                 values: Alignment.horzAlignments.map {
                                      Selector(desc: "\($0)", value: $0)
                                  },
                                  selected: alignmentHorz.value).attach($0)
 
                 getSelectionView(title: "V alignment",
                                  input: alignmentVert,
-                                 values: Alignment.vertAlignments().map {
+                                 values: Alignment.vertAlignments.map {
                                      Selector(desc: "\($0)", value: $0)
                                  },
                                  selected: alignmentVert.value).attach($0)

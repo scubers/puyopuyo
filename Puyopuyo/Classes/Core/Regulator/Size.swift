@@ -88,11 +88,11 @@ public struct SizeDescription: SizeDescriptible, CustomStringConvertible, Output
     }
 
     public static var wrap: SizeDescription {
-        return .wrap()
+        .wrap()
     }
 
     public static var fill: SizeDescription {
-        return .ratio(1)
+        .ratio(1)
     }
 
     public static func aspectRatio(_ value: CGFloat) -> SizeDescription {
@@ -140,7 +140,7 @@ extension SizeDescription {
     }
 
     func getWrapSize(by wrappedValue: CGFloat) -> CGFloat {
-        return Swift.min(Swift.max(wrappedValue + add, min), max)
+        Swift.min(Swift.max(wrappedValue + add, min), max)
     }
 }
 
@@ -152,7 +152,7 @@ public struct Size: Equatable, Outputing {
     public var height: SizeDescription
 
     public static func == (lhs: Self, rhs: Self) -> Bool {
-        return lhs.width == rhs.width && lhs.height == rhs.height
+        lhs.width == rhs.width && lhs.height == rhs.height
     }
 
     public init(width: SizeDescription = .fix(0), height: SizeDescription = .fix(0)) {
@@ -177,32 +177,32 @@ public struct Size: Equatable, Outputing {
 }
 
 extension Size {
-    func isFixed() -> Bool {
-        return width.isFixed && height.isFixed
+    var isFixed: Bool {
+        width.isFixed && height.isFixed
     }
 
-    func isRatio() -> Bool {
-        return width.isRatio && height.isRatio
+    var isRatio: Bool {
+        width.isRatio && height.isRatio
     }
 
-    func isWrap() -> Bool {
-        return width.isWrap && height.isWrap
+    var isWrap: Bool {
+        width.isWrap && height.isWrap
     }
 
-    func bothNotWrap() -> Bool {
-        return !maybeWrap()
+    var bothNotWrap: Bool {
+        !maybeWrap
     }
 
-    func maybeWrap() -> Bool {
-        return width.isWrap || height.isWrap
+    var maybeWrap: Bool {
+        width.isWrap || height.isWrap
     }
 
-    func maybeRatio() -> Bool {
-        return width.isRatio || height.isRatio
+    var maybeRatio: Bool {
+        width.isRatio || height.isRatio
     }
 
-    func maybeFixed() -> Bool {
-        return width.isFixed || height.isFixed
+    var maybeFixed: Bool {
+        width.isFixed || height.isFixed
     }
 
     func getMain(direction: Direction) -> SizeDescription {
@@ -228,9 +228,9 @@ extension Size {
         }
         if let value = value {
             switch direction {
-            case .x:
+            case .horizontal:
                 return value
-            case .y:
+            case .vertical:
                 return 1 / value
             }
         }

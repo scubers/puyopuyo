@@ -62,7 +62,7 @@ class CalculateUtil {
     }
 
     static func getIntrinsicSize(fromCalculableSize calculableSize: Size, contentResidual: CGSize) -> CGSize {
-        assert(calculableSize.bothNotWrap(), "Ensure size is calculable!!!")
+        assert(calculableSize.bothNotWrap, "Ensure size is calculable!!!")
 
         if contentResidual.width == 0 || contentResidual.height == 0 {
             return .zero
@@ -191,7 +191,7 @@ enum CalHelper {
     /// - Returns: Content size
     static func calculateIntrinsicSize(for measure: Measure, layoutResidual: CGSize, strategy: CalculateStrategy, diagnosisMsg: String? = nil) -> CGSize {
         var size: CGSize
-        if measure.size.maybeWrap() || strategy == .calculate {
+        if measure.size.maybeWrap || strategy == .calculate {
             size = measure.calculate(by: layoutResidual)
         } else {
             let contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: measure.margin, size: measure.size)

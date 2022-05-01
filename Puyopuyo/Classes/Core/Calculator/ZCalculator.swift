@@ -56,7 +56,7 @@ private class _ZCalculator {
 
             calculateChildren.append(m)
 
-            if m.size.maybeRatio() {
+            if m.size.maybeRatio {
                 maybeRatioChildren.append(m)
             }
 
@@ -79,7 +79,7 @@ private class _ZCalculator {
 
     private func handleRatioChildrenIfNeeded() {
         // 当布局包裹时，需要最后拉伸子填充节点
-        if regulator.size.maybeWrap() {
+        if regulator.size.maybeWrap {
             maybeRatioChildren.forEach { m in
                 _calculateChild(m, msg: "ZCalculator ratio fill up calculating")
             }

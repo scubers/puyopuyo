@@ -205,7 +205,7 @@ class FlowPropertiesVC: BaseViewController {
 
                 getSelectionView(title: "justifyContent",
                                  input: justifyContent,
-                                 values: (Alignment.vertAlignments() + Alignment.horzAlignments()).map {
+                                 values: (Alignment.vertAlignments + Alignment.horzAlignments).map {
                                      Selector<Alignment>(desc: "\($0)", value: $0)
                                  },
                                  selected: justifyContent.value).attach($0)
