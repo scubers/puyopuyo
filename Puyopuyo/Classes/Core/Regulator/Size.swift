@@ -132,7 +132,7 @@ extension SizeDescription {
     }
 
     var isFlex: Bool {
-        sizeType == .wrap && (grow > 0 || shrink > 0)
+        isWrap && (grow > 0 || shrink > 0)
     }
 
     var isAspectRatio: Bool {

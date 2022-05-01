@@ -8,7 +8,6 @@
 import Foundation
 
 class MeasureCalculator: Calculator {
-    let calculateChildrenImmediately: Bool = false
     func calculate(_ measure: Measure, layoutResidual: CGSize) -> CGSize {
         if !measure.activated || !measure.size.isCalculable {
             return .zero

@@ -75,10 +75,19 @@ public struct CalEdges {
     }
 
     public func getInsets() -> UIEdgeInsets {
+        var insets = UIEdgeInsets.zero
         if case .x = direction {
-            return UIEdgeInsets(top: forward, left: start, bottom: backward, right: end)
+            insets.top = forward
+            insets.left = start
+            insets.bottom = backward
+            insets.right = end
+        } else {
+            insets.top = start
+            insets.left = forward
+            insets.bottom = end
+            insets.right = backward
         }
-        return UIEdgeInsets(top: start, left: forward, bottom: end, right: backward)
+        return insets
     }
 
     public var mainFixed: CGFloat {
