@@ -36,30 +36,30 @@ public class VirtualGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureD
         }
     }
 
-    public func getParasitableView() -> ViewParasitable? {
-        parentContainer?.getParasitableView()
+    public var parasitizingHost: ViewParasitizing? {
+        parentContainer?.parasitizingHost
     }
 
     // MARK: - ViewParasitable
 
     public func addParasite(_ parasite: UIView) {
-        getParasitableView()?.addParasite(parasite)
+        parasitizingHost?.addParasite(parasite)
     }
 
     public func removeParasite(_ parasite: UIView) {
-        getParasitableView()?.removeParasite(parasite)
+        parasitizingHost?.removeParasite(parasite)
     }
 
     public func setNeedsLayout() {
-        getParasitableView()?.setNeedsLayout()
+        parasitizingHost?.setNeedsLayout()
     }
 
     // MARK: - MeasureChildrenDelegate
 
     public func children(for _: Measure) -> [Measure] {
         layoutChildren.filter { node in
-            if let superview = node.getPresentingView()?.superview {
-                return superview === getParasitableView()
+            if let superview = node.layoutNodeView?.superview {
+                return superview === parasitizingHost
             }
             return true
         }.map(\.layoutMeasure)
@@ -68,7 +68,7 @@ public class VirtualGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureD
     // MARK: - MeasureDelegate
 
     public func needsRelayout(for _: Measure) {
-        getParasitableView()?.setNeedsLayout()
+        parasitizingHost?.setNeedsLayout()
     }
 
     // MARK: - Public
@@ -89,7 +89,7 @@ public class VirtualGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureD
     private func _unparasiteChildren() {
         layoutChildren.forEach { child in
             if case .concrete(let view) = child.layoutNodeType {
-                getParasitableView()?.removeParasite(view)
+                parasitizingHost?.removeParasite(view)
             } else if let virtualGroup = child as? VirtualGroup {
                 virtualGroup._unparasiteChildren()
             }
@@ -97,10 +97,10 @@ public class VirtualGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureD
     }
 
     private func _parasiteChildren() {
-        layoutChildren.forEach { node in
-            if case .concrete(let view) = layoutNodeType {
-                getParasitableView()?.addParasite(view)
-            } else if let virtualGroup = node as? VirtualGroup {
+        layoutChildren.forEach { child in
+            if case .concrete(let view) = child.layoutNodeType {
+                parasitizingHost?.addParasite(view)
+            } else if let virtualGroup = child as? VirtualGroup {
                 virtualGroup._parasiteChildren()
             }
         }

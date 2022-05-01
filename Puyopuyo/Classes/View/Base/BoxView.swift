@@ -133,7 +133,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
 
     override open func willRemoveSubview(_ subview: UIView) {
         super.willRemoveSubview(subview)
-        layoutChildren.removeAll(where: { $0.getPresentingView() === subview })
+        layoutChildren.removeAll(where: { $0.layoutNodeView === subview })
     }
 
     override open var intrinsicContentSize: CGSize {
@@ -259,7 +259,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
     }
 
     private func applyViewPosition(_ subView: UIView, inheritedAnimator: Animator? = nil) {
-        let measure = subView.py_measure
+        let measure = subView.layoutMeasure
 
         let animator = subView.py_animator
             ?? inheritedAnimator
@@ -294,7 +294,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
 
     // MARK: - BoxLayoutContainer
 
-    public var layoutRegulator: Regulator { py_measure as! Regulator }
+    public var layoutRegulator: Regulator { layoutMeasure as! Regulator }
 
     public var layoutChildren: [BoxLayoutNode] = []
 
@@ -303,7 +303,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
     public func children(for _: Measure) -> [Measure] {
         layoutChildren.filter {
             if !$0.layoutNodeType.isVirtual {
-                return $0.getPresentingView()?.superview == self
+                return $0.layoutNodeView?.superview == self
             }
             return true
         }.map(\.layoutMeasure)

@@ -12,7 +12,7 @@ public protocol ViewDisplayable: AnyObject {
 }
 
 /// Describe an object that can be add view to it
-public protocol ViewParasitable: AnyObject {
+public protocol ViewParasitizing: AnyObject {
     func addParasite(_ parasite: UIView)
     func removeParasite(_ parasite: UIView)
     func setNeedsLayout()
@@ -33,34 +33,35 @@ public enum BoxLayoutNodeType {
 
 /// Describe a node that can be layout
 public protocol BoxLayoutNode: AnyObject {
+    /// Layout metrics
     var layoutMeasure: Measure { get }
+    /// Node type
     var layoutNodeType: BoxLayoutNodeType { get }
+    /// Ref to node's container
     var parentContainer: BoxLayoutContainer? { get set }
+    /// Concrete view's superview
+    var parasitizingHost: ViewParasitizing? { get }
+
     func removeFromContainer()
-    func getParasitableView() -> ViewParasitable?
 }
 
 ///
 /// Describe a container that can manage the layout node
-public protocol BoxLayoutContainer: BoxLayoutNode, ViewParasitable {
+public protocol BoxLayoutContainer: BoxLayoutNode, ViewParasitizing {
     var layoutRegulator: Regulator { get }
 
     /// Do not call setter by your self
     var layoutChildren: [BoxLayoutNode] { get set }
-
-    func addLayoutNode(_ node: BoxLayoutNode)
-
-    func fixChildrenCenterByHostPosition()
 }
 
 // MARK: - Default impl
 
 public extension BoxLayoutNode {
-    func getPresentingView() -> UIView? {
-        switch layoutNodeType {
-        case .concrete(let v): return v
-        default: return nil
+    var layoutNodeView: UIView? {
+        if case .concrete(let v) = layoutNodeType {
+            return v
         }
+        return nil
     }
 }
 
@@ -71,7 +72,7 @@ public extension BoxLayoutContainer {
         // add child second
         layoutChildren.append(node)
 
-        if let view = node.getPresentingView() {
+        if let view = node.layoutNodeView {
             addParasite(view)
         }
     }
@@ -141,14 +142,18 @@ extension UIView: BoxLayoutNode {
         }
     }
 
-    public func getParasitableView() -> ViewParasitable? {
+    public var parasitizingHost: ViewParasitizing? {
         if let container = self as? BoxLayoutContainer {
             return container
         }
-        return parentContainer?.getParasitableView()
+        return parentContainer?.parasitizingHost
     }
 }
 
 extension UIView: ViewDisplayable {
     public var dislplayView: UIView { self }
+}
+
+extension UIViewController: ViewDisplayable {
+    public var dislplayView: UIView { view }
 }

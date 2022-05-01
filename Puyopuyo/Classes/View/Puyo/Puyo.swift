@@ -102,7 +102,7 @@ extension Puyo: ViewDisplayable where T: ViewDisplayable {
 
 // MARK: - ViewParasitable
 
-extension Puyo: ViewParasitable where T: ViewParasitable {
+extension Puyo: ViewParasitizing where T: ViewParasitizing {
     public func addParasite(_ parasite: UIView) {
         view.addParasite(parasite)
     }
@@ -119,8 +119,8 @@ extension Puyo: ViewParasitable where T: ViewParasitable {
 // MARK: - BoxLayoutNode
 
 extension Puyo: BoxLayoutNode where T: BoxLayoutNode {
-    public func getParasitableView() -> ViewParasitable? {
-        view.getParasitableView()
+    public var parasitizingHost: ViewParasitizing? {
+        view.parasitizingHost
     }
 
     public var parentContainer: BoxLayoutContainer? {
@@ -150,13 +150,5 @@ extension Puyo: BoxLayoutContainer where T: BoxLayoutContainer {
     public var layoutChildren: [BoxLayoutNode] {
         get { view.layoutChildren }
         set { view.layoutChildren = newValue }
-    }
-
-    public func addLayoutNode(_ node: BoxLayoutNode) {
-        view.addLayoutNode(node)
-    }
-
-    public func fixChildrenCenterByHostPosition() {
-        view.fixChildrenCenterByHostPosition()
     }
 }
