@@ -46,7 +46,7 @@ class ChatVC: BaseViewController, UICollectionViewDelegateFlowLayout {
 
             MessageInputView().attach($0)
                 .width(.fill)
-                .padding(bottom: $0.py_safeArea().binder.bottom.map { $0 + 12 })
+                .padding(bottom: view.py_safeArea().binder.bottom.map { $0 + 12 })
                 .onEvent(to: self) { this, v in
                     switch v {
                     case .send(let text):

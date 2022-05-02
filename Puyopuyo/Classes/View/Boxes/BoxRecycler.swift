@@ -25,7 +25,7 @@ public class RecyclerTrigger<T> {
     var createor: (() -> RecyclerInfo<T>?)?
 
     public var context: RecyclerInfo<T>? {
-        ensureNotBuiling()
+        ensureNotBuilding()
         return createor?()
     }
 
@@ -35,7 +35,7 @@ public class RecyclerTrigger<T> {
         }
     }
 
-    private func ensureNotBuiling() {
+    private func ensureNotBuilding() {
         if isBuilding {
             fatalError("can not call trigger when building")
         }
