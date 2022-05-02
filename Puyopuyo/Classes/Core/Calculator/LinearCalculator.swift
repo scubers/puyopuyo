@@ -41,7 +41,7 @@ class _LinearCalculator {
     }
 
     var totalMainRatioLayoutResidual: CGFloat {
-        max(regCalChildrenLayoutResidual.main - totalMainChildrenContent, 0)
+        Swift.max(regCalChildrenLayoutResidual.main - totalMainChildrenContent, 0)
     }
 
     var regCalFormat: Format { formattable ? regulator.format : .leading }
@@ -135,7 +135,7 @@ class _LinearCalculator {
     // MARK: - Private funcs
 
     private func crossConfictCalculate() {
-        // 具备条件进行复算尺寸: 存在次轴父子依赖，并且当前为非固有尺寸模式
+        // 具备条件进行复算尺寸: 存在次轴父子依赖
         if !crossRatioChildren.isEmpty, regCalSize.cross.isWrap {
             var compareCross = maxCrossChildrenContent
 
@@ -180,7 +180,7 @@ class _LinearCalculator {
 
             // 记录次轴最大值: 固定次轴尺寸 + 次轴margin
             if subCalSize.cross.isFixed {
-                maxCrossChildrenContent = max(maxCrossChildrenContent, subCalSize.cross.fixedValue + subCalMargin.crossFixed)
+                maxCrossChildrenContent = Swift.max(maxCrossChildrenContent, subCalSize.cross.fixedValue + subCalMargin.crossFixed)
             }
 
             // 累加主轴margin
@@ -230,7 +230,7 @@ class _LinearCalculator {
         }
 
         if crossReplacableCalSize(subCalSize) {
-            maxCrossChildrenContent = max(maxCrossChildrenContent, subFixedSize.cross + subCalMargin.crossFixed)
+            maxCrossChildrenContent = Swift.max(maxCrossChildrenContent, subFixedSize.cross + subCalMargin.crossFixed)
         }
     }
 
@@ -357,7 +357,7 @@ class _LinearCalculator {
                 // 需要压缩的主轴长度
                 let delta = overflowSize * (calSize.main.shrink / totalShrink)
 
-                let newMainResidual = max(0, calFixedSize.main - delta) + calMargin.mainFixed
+                let newMainResidual = Swift.max(0, calFixedSize.main - delta) + calMargin.mainFixed
 
                 var calLayoutResidual = getCurrentChildLayoutResidualCalFixedSize($0, estimateCross: estimateCross)
                 calLayoutResidual.main = newMainResidual

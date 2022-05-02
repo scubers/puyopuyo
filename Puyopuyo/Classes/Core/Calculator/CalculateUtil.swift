@@ -85,9 +85,9 @@ struct CalculateUtil {
         func getIntrinsicLength(_ sizeDesc: SizeDescription, contentResidual: CGFloat) -> CGFloat? {
             switch sizeDesc.sizeType {
             case .fixed:
-                return max(0, sizeDesc.fixedValue)
+                return Swift.max(0, sizeDesc.fixedValue)
             case .ratio:
-                return max(0, contentResidual)
+                return Swift.max(0, contentResidual)
             case .wrap:
                 fatalError("SizeType error: \(sizeDesc.sizeType)")
             case .aspectRatio:
@@ -126,7 +126,7 @@ struct CalculateUtil {
         case .ratio:
             contentSize.width = contentResidual.width
         case .wrap:
-            contentSize.width = min(measure.size.width.getWrapSize(by: contentSize.width), contentResidual.width)
+            contentSize.width = Swift.min(measure.size.width.getWrapSize(by: contentSize.width), contentResidual.width)
         case .aspectRatio:
             break
         }
@@ -138,7 +138,7 @@ struct CalculateUtil {
         case .ratio:
             contentSize.height = contentResidual.height
         case .wrap:
-            contentSize.height = min(measure.size.height.getWrapSize(by: contentSize.height), contentResidual.height)
+            contentSize.height = Swift.min(measure.size.height.getWrapSize(by: contentSize.height), contentResidual.height)
         case .aspectRatio:
             break
         }
@@ -235,7 +235,7 @@ extension Comparable {
 
 extension CGSize {
     static func ensureNotNegative(width: CGFloat, height: CGFloat) -> CGSize {
-        .init(width: max(0, width), height: max(0, height))
+        .init(width: Swift.max(0, width), height: Swift.max(0, height))
     }
 
     func expand(to aspectRatio: CGFloat?) -> CGSize {
@@ -247,7 +247,7 @@ extension CGSize {
     }
 
     func clip(by clipper: CGSize) -> CGSize {
-        CGSize.ensureNotNegative(width: min(width, clipper.width), height: min(height, clipper.height))
+        CGSize.ensureNotNegative(width: Swift.min(width, clipper.width), height: Swift.min(height, clipper.height))
     }
 
     enum FitAspectRatioStrategy {

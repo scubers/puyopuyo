@@ -60,7 +60,7 @@ class _FlowCalculator {
             let subCalFixedSize = CalHelper.calculateIntrinsicSize(for: m, layoutResidual: regChildrenResidualCalSize.getSize(), strategy: m.isLayoutEntryPoint ? .estimate : .calculate, diagnosisMsg: "FlowCalculator content test calculating").getCalFixedSize(by: regDirection)
             let subCalMargin = CalEdges(insets: m.margin, direction: regDirection)
 
-            let space = CGFloat(min(1, currentLine.count)) * regulator.itemSpace
+            let space = CGFloat(Swift.min(1, currentLine.count)) * regulator.itemSpace
             // 计算当前累计的最大cross
             if subCalSize.cross.isRatio, maxCross + space + subCalMargin.crossFixed < totalCross {
                 // 还有剩余空间
@@ -103,7 +103,7 @@ class _FlowCalculator {
         var fakeLines = [VirtualLinearRegulator]()
         fakeLines.reserveCapacity(line)
         for idx in 0 ..< line {
-            let lineChildren = children[idx * arrange ..< min(idx * arrange + arrange, children.count)]
+            let lineChildren = children[idx * arrange ..< Swift.min(idx * arrange + arrange, children.count)]
             fakeLines.append(getVirtualLine(children: Array(lineChildren), index: idx))
         }
 

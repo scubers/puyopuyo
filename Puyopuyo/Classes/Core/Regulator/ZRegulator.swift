@@ -9,6 +9,6 @@ import Foundation
 
 public class ZRegulator: Regulator {
     override public func createCalculator() -> Calculator {
-        ZCalculator(calculateChildrenImmediately: false)
+        ZCalculator()
     }
 }

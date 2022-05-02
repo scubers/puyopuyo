@@ -8,9 +8,8 @@
 import Foundation
 
 struct ZCalculator: Calculator {
-    let calculateChildrenImmediately: Bool
     func calculate(_ measure: Measure, layoutResidual: CGSize) -> CGSize {
-        _ZCalculator(measure as! ZRegulator, layoutResidual: layoutResidual, calculateChildrenImmediately: calculateChildrenImmediately).calculate()
+        _ZCalculator(measure as! ZRegulator, layoutResidual: layoutResidual).calculate()
     }
 }
 
@@ -19,9 +18,7 @@ private class _ZCalculator {
     let layoutResidual: CGSize
     let contentResidual: CGSize
     let childrenLayoutResidual: CGSize
-    let calculateChildrenImmediately: Bool
-    init(_ regulator: ZRegulator, layoutResidual: CGSize, calculateChildrenImmediately: Bool) {
-        self.calculateChildrenImmediately = calculateChildrenImmediately
+    init(_ regulator: ZRegulator, layoutResidual: CGSize) {
         self.regulator = regulator
         self.layoutResidual = layoutResidual
         self.contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: regulator.margin, size: regulator.size)
@@ -62,11 +59,11 @@ private class _ZCalculator {
 
             // 校验最大固有尺寸
             if m.size.width.isFixed {
-                maxChildContentSize.width = max(maxChildContentSize.width, m.size.width.fixedValue + m.margin.getHorzTotal())
+                maxChildContentSize.width = Swift.max(maxChildContentSize.width, m.size.width.fixedValue + m.margin.getHorzTotal())
             }
 
             if m.size.height.isFixed {
-                maxChildContentSize.height = max(maxChildContentSize.height, m.size.height.fixedValue + m.margin.getVertTotal())
+                maxChildContentSize.height = Swift.max(maxChildContentSize.height, m.size.height.fixedValue + m.margin.getVertTotal())
             }
         }
     }
