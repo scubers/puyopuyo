@@ -128,13 +128,13 @@ extension Puyo: BoxLayoutNode where T: BoxLayoutNode {
         view.parasitizingHost
     }
 
-    public var parentContainer: BoxLayoutContainer? {
-        set { view.parentContainer = newValue }
-        get { view.parentContainer }
+    public var superBox: BoxLayoutContainer? {
+        set { view.superBox = newValue }
+        get { view.superBox }
     }
 
-    public func removeFromContainer() {
-        view.removeFromContainer()
+    public func removeFromSuperBox() {
+        view.removeFromSuperBox()
     }
 
     public var layoutMeasure: Measure {

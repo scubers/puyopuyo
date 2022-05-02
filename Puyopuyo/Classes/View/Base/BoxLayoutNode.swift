@@ -27,13 +27,13 @@ public protocol BoxLayoutNode: AnyObject {
     /// Node type
     var layoutNodeType: BoxLayoutNodeType { get }
     /// Ref to node's container
-    var parentContainer: BoxLayoutContainer? { get set }
+    var superBox: BoxLayoutContainer? { get set }
     /// Concrete view's superview
     var parasitizingHost: ViewParasitizing? { get }
 
     var layoutVisibility: Visibility { get set }
 
-    func removeFromContainer()
+    func removeFromSuperBox()
 }
 
 ///
@@ -63,7 +63,7 @@ public extension BoxLayoutNode {
 public extension BoxLayoutContainer {
     func addLayoutNode(_ node: BoxLayoutNode) {
         // set parent first
-        node.parentContainer = self
+        node.superBox = self
         // add child second
         layoutChildren.append(node)
 
@@ -89,7 +89,7 @@ extension UIView: BoxLayoutNode {
         static var measureHoldingKey = "measureHoldingKey"
     }
 
-    public var parentContainer: BoxLayoutContainer? {
+    public var superBox: BoxLayoutContainer? {
         get {
             (objc_getAssociatedObject(self, &Weak.parentContainerKey) as? Weak)?.value as? BoxLayoutContainer
         }
@@ -138,10 +138,10 @@ extension UIView: BoxLayoutNode {
         }
     }
 
-    public func removeFromContainer() {
+    public func removeFromSuperBox() {
         removeFromSuperview()
-        if let index = parentContainer?.layoutChildren.firstIndex(where: { $0 === self }) {
-            parentContainer?.layoutChildren.remove(at: index)
+        if let index = superBox?.layoutChildren.firstIndex(where: { $0 === self }) {
+            superBox?.layoutChildren.remove(at: index)
         }
     }
 

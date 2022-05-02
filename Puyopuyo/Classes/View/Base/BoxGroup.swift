@@ -19,7 +19,7 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
 
     // MARK: - BoxLayoutContainer
 
-    public weak var parentContainer: BoxLayoutContainer?
+    public weak var superBox: BoxLayoutContainer?
 
     public lazy var layoutRegulator: Regulator = _generateRegulator()
 
@@ -29,15 +29,15 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
 
     public var layoutNodeType: BoxLayoutNodeType { .virtual }
 
-    public func removeFromContainer() {
+    public func removeFromSuperBox() {
         _unparasiteChildren()
-        if let index = parentContainer?.layoutChildren.firstIndex(where: { $0 === self }) {
-            parentContainer?.layoutChildren.remove(at: index)
+        if let index = superBox?.layoutChildren.firstIndex(where: { $0 === self }) {
+            superBox?.layoutChildren.remove(at: index)
         }
     }
 
     public var parasitizingHost: ViewParasitizing? {
-        parentContainer?.parasitizingHost
+        superBox?.parasitizingHost
     }
 
     public var layoutVisibility: Visibility = .visible {

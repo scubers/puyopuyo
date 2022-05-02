@@ -80,6 +80,10 @@ class TestVC: BaseViewController {
                             UIView().attach(v)
                                 .size(50, 50)
                                 .backgroundColor(Util.randomColor())
+                                .userInteractionEnabled(true)
+                                .onTap {
+                                    $0.view?.removeFromSuperBox()
+                                }
                         }
                     }
                     .visibility(state.binder.visibleOrNot)
@@ -124,6 +128,7 @@ class TestVC: BaseViewController {
                 Label("footer").attach($0)
                     .size(.fill, 50)
             }
+            .animator(Animators.default)
             .size(.fill, .fill)
             .padding(all: 10)
             .margin(view.py_safeArea())
