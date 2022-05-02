@@ -7,10 +7,17 @@
 
 import Foundation
 
+@available(*, deprecated)
 public extension UIView {
     @available(*, deprecated, message: "Use [UIView.layoutMeasure]")
     var py_measure: Measure {
         layoutMeasure
+    }
+
+    @available(*, deprecated, message: "Use [BoxLayoutNode.layoutVisibility]")
+    var py_visibility: Visibility {
+        get { layoutVisibility }
+        set { layoutVisibility = newValue }
     }
 }
 
@@ -39,28 +46,23 @@ extension UIView: MeasureMetricChangedDelegate, MeasureSizeFittingDelegate {
     }
 }
 
-// MARK: - UIView ext methods
+// MARK: - UIView animator
 
 public extension UIView {
     private static var py_animatorKey = "py_animatorKey"
     var py_animator: Animator? {
         set {
             objc_setAssociatedObject(self, &UIView.py_animatorKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-            if newValue != nil {
-                py_setNeedsRelayout()
-            }
         }
         get {
             objc_getAssociatedObject(self, &UIView.py_animatorKey) as? Animator
         }
     }
+}
 
-    @available(*, deprecated, message: "Use [BoxLayoutNode.layoutVisibility]")
-    var py_visibility: Visibility {
-        get { layoutVisibility }
-        set { layoutVisibility = newValue }
-    }
+// MARK: - UIView ext methods
 
+public extension UIView {
     func py_originState() -> Outputs<CGPoint> {
         py_frameState().map(\.origin).distinct()
     }
@@ -87,19 +89,20 @@ public extension UIView {
             return py_observing(\.safeAreaInsets).unwrap(or: .zero).distinct()
         } else {
             // ios 11 以下只可能存在statusbar影响的safeArea
+            let this = WeakableObject(value: self)
             return
                 Outputs.merge([
-                    py_frameState().map { _ in 1 },
-                    py_centerState().map { _ in 1 },
-                    py_boundsState().map { _ in 1 },
+                    py_frameState().distinct().map { _ in 1 },
+                    py_centerState().distinct().map { _ in 1 },
+                    py_boundsState().distinct().map { _ in 1 },
                 ])
-                .map { [weak self] _ -> UIEdgeInsets in
-                    guard let self = self else { return .zero }
-                    let newRect = self.convert(self.bounds, to: UIApplication.shared.keyWindow)
-                    var inset = UIEdgeInsets.zero
-                    let statusFrame = UIApplication.shared.statusBarFrame
-                    inset.top = min(statusFrame.height, max(0, statusFrame.height - newRect.origin.y))
-                    return inset
+                .map { _ -> UIEdgeInsets in
+                    guard let this = this.value else { return .zero }
+                    let newRect = this.convert(this.bounds, to: UIApplication.shared.keyWindow)
+                    var insets = UIEdgeInsets.zero
+                    let statusBarFrame = UIApplication.shared.statusBarFrame
+                    insets.top = Swift.min(statusBarFrame.height, Swift.max(0, statusBarFrame.height - newRect.origin.y))
+                    return insets
                 }
                 .distinct()
         }
@@ -118,6 +121,8 @@ public extension Bool {
     }
 
     func py_toggled() -> Bool { !self }
+
+    mutating func py_toggle() { self = !self }
 }
 
 public extension UIView {
