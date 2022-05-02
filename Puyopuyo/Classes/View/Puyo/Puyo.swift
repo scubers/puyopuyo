@@ -156,4 +156,8 @@ extension Puyo: BoxLayoutContainer where T: BoxLayoutContainer {
         get { view.layoutChildren }
         set { view.layoutChildren = newValue }
     }
+
+    public func fixChildrenCenterByHostPosition() {
+        view.fixChildrenCenterByHostPosition()
+    }
 }

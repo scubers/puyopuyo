@@ -46,18 +46,40 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
             switch layoutVisibility {
             case .visible:
                 _parasiteChildren()
-                layoutMeasure.activated = true
+                layoutRegulator.activated = true
             case .invisible:
                 _unparasiteChildren()
-                layoutMeasure.activated = true
+                layoutRegulator.activated = true
             case .free:
                 _parasiteChildren()
-                layoutMeasure.activated = false
+                layoutRegulator.activated = false
             case .gone:
                 _unparasiteChildren()
-                layoutMeasure.activated = false
+                layoutRegulator.activated = false
             }
             setNeedsLayout()
+        }
+    }
+
+    public func fixChildrenCenterByHostPosition() {
+        guard layoutNodeType.isVirtual else {
+            return
+        }
+
+        let center = layoutRegulator.calculatedCenter
+        let size = layoutRegulator.calculatedSize
+
+        // 计算虚拟位置的偏移量
+        let delta = CGPoint(x: center.x - size.width / 2, y: center.y - size.height / 2)
+
+        layoutChildren.forEach { child in
+            var center = child.layoutMeasure.calculatedCenter
+            center.x += delta.x
+            center.y += delta.y
+            child.layoutMeasure.calculatedCenter = center
+            if let node = child as? BoxLayoutContainer {
+                node.fixChildrenCenterByHostPosition()
+            }
         }
     }
 

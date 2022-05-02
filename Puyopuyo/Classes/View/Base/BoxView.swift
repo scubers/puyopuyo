@@ -291,6 +291,8 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
         }
     }
 
+    public func fixChildrenCenterByHostPosition() {}
+
     // MARK: - BoxLayoutContainer
 
     public var layoutRegulator: Regulator { layoutMeasure as! Regulator }
