@@ -7,8 +7,8 @@
 
 import UIKit
 
-public protocol MeasureDelegate: AnyObject {
-    func needsRelayout(for measure: Measure)
+public protocol MeasureMetricChangedDelegate: AnyObject {
+    func metricDidChanged(for mesure: Measure)
 }
 
 public protocol MeasureChildrenDelegate: AnyObject {
@@ -20,12 +20,12 @@ public protocol MeasureSizeFittingDelegate: AnyObject {
 }
 
 public class Measure {
-    public weak var delegate: MeasureDelegate?
+    public weak var changeDelegate: MeasureMetricChangedDelegate?
     public weak var sizeDelegate: MeasureSizeFittingDelegate?
     public weak var childrenDelegate: MeasureChildrenDelegate?
 
-    public init(delegate: MeasureDelegate?, sizeDelegate: MeasureSizeFittingDelegate?, childrenDelegate: MeasureChildrenDelegate?) {
-        self.delegate = delegate
+    public init(delegate: MeasureMetricChangedDelegate?, sizeDelegate: MeasureSizeFittingDelegate?, childrenDelegate: MeasureChildrenDelegate?) {
+        self.changeDelegate = delegate
         self.sizeDelegate = sizeDelegate
         self.childrenDelegate = childrenDelegate
     }
@@ -33,7 +33,7 @@ public class Measure {
     public var margin = UIEdgeInsets.zero {
         didSet {
             if oldValue != margin {
-                py_setNeedsRelayout()
+                notifyDidChange()
             }
         }
     }
@@ -41,40 +41,40 @@ public class Measure {
     public var alignment: Alignment = .none {
         didSet {
             if oldValue != alignment {
-                py_setNeedsRelayout()
+                notifyDidChange()
             }
         }
     }
 
-    public var size = Size(width: .wrap, height: .wrap) {
+    public var size: Size = .init(width: .wrap, height: .wrap) {
         didSet {
             if oldValue != size {
-                py_setNeedsRelayout()
+                notifyDidChange()
             }
         }
     }
 
     ///
     /// Only works in `FlowRegulator`
-    public var flowEnding = false {
+    public var flowEnding: Bool = false {
         didSet {
             if oldValue != flowEnding {
-                py_setNeedsRelayout()
+                notifyDidChange()
             }
         }
     }
 
     ///
     /// Join the layout's calculation
-    public var activated = true {
+    public var activated: Bool = true {
         didSet {
             if oldValue != activated {
-                py_setNeedsRelayout()
+                notifyDidChange()
             }
         }
     }
 
-    public private(set) var isLayoutEntryPoint = true
+    public private(set) var isLayoutEntryPoint: Bool = true
 
     @discardableResult
     public func setIsLayoutEntryPoint(_ isLayoutEntryPoint: Bool) -> Self {
@@ -88,7 +88,7 @@ public class Measure {
 
     public var diagnosisMessage: String {
         """
-        [\(type(of: self)), delegate: \(String(describing: delegate))]
+        [\(type(of: self)), delegate: \(String(describing: changeDelegate))]
         - id: [\(diagnosisId ?? "")]
         - extra: [\(extraDiagnosisMessage ?? "")]
         - isLayoutEntryPoint: [\(isLayoutEntryPoint)]
@@ -125,8 +125,8 @@ public class Measure {
         sizeDelegate?.measure(self, sizeThatFits: size) ?? .zero
     }
 
-    public func py_setNeedsRelayout() {
-        delegate?.needsRelayout(for: self)
+    public func notifyDidChange() {
+        changeDelegate?.metricDidChanged(for: self)
     }
 
     public func calculate(by layoutResidual: CGSize) -> CGSize {
@@ -136,7 +136,7 @@ public class Measure {
         return calculator!.calculate(self, layoutResidual: layoutResidual)
     }
 
-    private var calculator: Calculator?
+    public private(set) var calculator: Calculator?
 
     /// subclass should override
     public func createCalculator() -> Calculator {

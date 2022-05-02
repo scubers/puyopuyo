@@ -24,7 +24,7 @@ public class FlowRegulator: LinearRegulator {
     public var arrange: Int = 0 {
         didSet {
             if oldValue != arrange {
-                py_setNeedsRelayout()
+                notifyDidChange()
             }
         }
     }
@@ -34,7 +34,7 @@ public class FlowRegulator: LinearRegulator {
     public var itemSpace: CGFloat = 0 {
         didSet {
             if oldValue != itemSpace {
-                py_setNeedsRelayout()
+                notifyDidChange()
             }
         }
     }
@@ -44,7 +44,7 @@ public class FlowRegulator: LinearRegulator {
     public var runSpace: CGFloat = 0 {
         didSet {
             if oldValue != runSpace {
-                py_setNeedsRelayout()
+                notifyDidChange()
             }
         }
     }
@@ -63,7 +63,7 @@ public class FlowRegulator: LinearRegulator {
     public var runFormat: Format = .leading {
         didSet {
             if oldValue != runFormat {
-                py_setNeedsRelayout()
+                notifyDidChange()
             }
         }
     }
@@ -72,7 +72,7 @@ public class FlowRegulator: LinearRegulator {
     /// Every row's size in `run` direction
     public var runRowSize: (Int) -> SizeDescription = { _ in SizeDescription.wrap(shrink: 1) } {
         didSet {
-            py_setNeedsRelayout()
+            notifyDidChange()
         }
     }
 

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class VirtualGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureDelegate, AutoDisposable {
+public class VirtualGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetricChangedDelegate, AutoDisposable {
     public init() {}
 
     // MARK: - AutoDisposable
@@ -90,7 +90,7 @@ public class VirtualGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureD
 
     // MARK: - MeasureDelegate
 
-    public func needsRelayout(for _: Measure) {
+    public func metricDidChanged(for _: Measure) {
         parasitizingHost?.setNeedsLayout()
     }
 
@@ -104,7 +104,7 @@ public class VirtualGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureD
 
     private func _generateRegulator() -> Regulator {
         let r = createRegulator().setIsLayoutEntryPoint(false)
-        r.delegate = self
+        r.changeDelegate = self
         r.childrenDelegate = self
         return r
     }
@@ -149,14 +149,14 @@ public class LinearGroup: GenericVirtualGroup<LinearRegulator> {
 public class HGroup: LinearGroup {
     override public init() {
         super.init()
-        regulator.direction = .x
+        regulator.direction = .horizontal
     }
 }
 
 public class VGroup: LinearGroup {
     override public init() {
         super.init()
-        regulator.direction = .y
+        regulator.direction = .vertical
     }
 }
 
@@ -171,14 +171,14 @@ public class FlowGroup: GenericVirtualGroup<FlowRegulator> {
 public class HFlowGroup: FlowGroup {
     override public init() {
         super.init()
-        regulator.direction = .x
+        regulator.direction = .horizontal
     }
 }
 
 public class VFlowGroup: FlowGroup {
     override public init() {
         super.init()
-        regulator.direction = .y
+        regulator.direction = .vertical
     }
 }
 

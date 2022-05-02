@@ -14,7 +14,7 @@ public class Regulator: Measure {
     public var justifyContent: Alignment = .center {
         didSet {
             if oldValue != justifyContent {
-                py_setNeedsRelayout()
+                notifyDidChange()
             }
         }
     }
@@ -22,7 +22,7 @@ public class Regulator: Measure {
     public var padding = UIEdgeInsets.zero {
         didSet {
             if oldValue != padding {
-                py_setNeedsRelayout()
+                notifyDidChange()
             }
         }
     }

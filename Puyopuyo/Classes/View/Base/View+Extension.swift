@@ -16,12 +16,12 @@ public extension UIView {
 
 // MARK: - MeasureTargetable impl
 
-extension UIView: MeasureDelegate, MeasureSizeFittingDelegate {
+extension UIView: MeasureMetricChangedDelegate, MeasureSizeFittingDelegate {
     public func measure(_ measure: Measure, sizeThatFits size: CGSize) -> CGSize {
         sizeThatFits(size)
     }
 
-    public func needsRelayout(for measure: Measure) {
+    public func metricDidChanged(for mesure: Measure) {
         if let superview = superview, superview.isBoxView {
             superview.setNeedsLayout()
         }
@@ -29,7 +29,7 @@ extension UIView: MeasureDelegate, MeasureSizeFittingDelegate {
     }
 
     func py_setNeedsRelayout() {
-        needsRelayout(for: layoutMeasure)
+        metricDidChanged(for: layoutMeasure)
     }
 
     func py_setNeedsLayoutIfMayBeWrap() {

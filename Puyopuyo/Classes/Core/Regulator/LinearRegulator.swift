@@ -8,7 +8,7 @@
 import Foundation
 
 public class LinearRegulator: Regulator {
-    override public init(delegate: MeasureDelegate?, sizeDelegate: MeasureSizeFittingDelegate?, childrenDelegate: MeasureChildrenDelegate?) {
+    override public init(delegate: MeasureMetricChangedDelegate?, sizeDelegate: MeasureSizeFittingDelegate?, childrenDelegate: MeasureChildrenDelegate?) {
         super.init(delegate: delegate, sizeDelegate: sizeDelegate, childrenDelegate: childrenDelegate)
         justifyContent = [.left, .top]
     }
@@ -18,7 +18,7 @@ public class LinearRegulator: Regulator {
     public var direction: Direction = .x {
         didSet {
             if oldValue != direction {
-                py_setNeedsRelayout()
+                notifyDidChange()
             }
         }
     }
@@ -28,7 +28,7 @@ public class LinearRegulator: Regulator {
     public var space: CGFloat = 0 {
         didSet {
             if oldValue != space {
-                py_setNeedsRelayout()
+                notifyDidChange()
             }
         }
     }
@@ -38,7 +38,7 @@ public class LinearRegulator: Regulator {
     public var format: Format = .leading {
         didSet {
             if oldValue != format {
-                py_setNeedsRelayout()
+                notifyDidChange()
             }
         }
     }
@@ -48,7 +48,7 @@ public class LinearRegulator: Regulator {
     public var reverse = false {
         didSet {
             if oldValue != reverse {
-                py_setNeedsRelayout()
+                notifyDidChange()
             }
         }
     }

@@ -194,7 +194,7 @@ private class VirtualLinearRegulator: LinearRegulator, MeasureChildrenDelegate {
     }
 }
 
-private class VirtualDelegate: MeasureDelegate, MeasureChildrenDelegate {
+private class VirtualDelegate: MeasureMetricChangedDelegate, MeasureChildrenDelegate {
     func children(for measure: Measure) -> [Measure] {
         children
     }
@@ -203,7 +203,7 @@ private class VirtualDelegate: MeasureDelegate, MeasureChildrenDelegate {
         fatalError("should not come here")
     }
 
-    func needsRelayout(for measure: Measure) {}
+    func metricDidChanged(for mesure: Measure) {}
 
     init(children: [Measure]) {
         self.children = children
