@@ -11,7 +11,10 @@ import Foundation
 /// 相关概念：
 /// layoutResidual: 提供给 布局 参与布局的空间（包含margin）
 /// contentResidual: View 实际可用的最大空间（不包含margin），且必须满足 size.aspectRatio 的宽高比
-class CalculateUtil {
+struct CalculateUtil {
+    /// 获取布局时候的初始化LayoutResidual
+    /// - Parameter measure: measure description
+    /// - Returns: layoutResidual
     static func getInitialLayoutResidual(for measure: Measure) -> CGSize {
         func getInitialContentResidual(for sizeDesc: SizeDescription) -> CGFloat {
             switch sizeDesc.sizeType {
@@ -34,6 +37,11 @@ class CalculateUtil {
         return getSelfLayoutResidual(for: measure, fromContentResidual: contentResidual)
     }
 
+    /// 已知当前节点的内容尺寸，获取其布局时的最小剩余布局
+    /// - Parameters:
+    ///   - measure: measure
+    ///   - contentResidual: contentResidual description
+    /// - Returns: layoutResidual
     static func getSelfLayoutResidual(for measure: Measure, fromContentResidual contentResidual: CGSize) -> CGSize {
         return CGSize.ensureNotNegative(
             width: contentResidual.width + measure.margin.getHorzTotal(),
@@ -41,6 +49,12 @@ class CalculateUtil {
         )
     }
 
+    /// 根据layoutResidual和相关约束，获取当前节点的contentResidual
+    /// - Parameters:
+    ///   - layoutResidual: layoutResidual description
+    ///   - margin: margin description
+    ///   - size: size description
+    /// - Returns: contentResidual
     static func getContentResidual(layoutResidual: CGSize, margin: UIEdgeInsets, size: Size) -> CGSize {
         var residual = CGSize.ensureNotNegative(
             width: layoutResidual.width - margin.getHorzTotal(),
