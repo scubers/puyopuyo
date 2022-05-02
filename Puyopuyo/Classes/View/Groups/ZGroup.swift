@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - ZGroup
 
-public class ZGroup: GenericVirtualGroup<ZRegulator> {
+public class ZGroup: GenericBoxGroup<ZRegulator> {
     override public func createRegulator() -> ZRegulator {
         ZRegulator(delegate: self, sizeDelegate: nil, childrenDelegate: self)
     }

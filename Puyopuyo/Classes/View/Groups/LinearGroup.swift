@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - LinearGroup
 
-public class LinearGroup: GenericVirtualGroup<LinearRegulator> {
+public class LinearGroup: GenericBoxGroup<LinearRegulator> {
     override public func createRegulator() -> LinearRegulator {
         LinearRegulator(delegate: self, sizeDelegate: nil, childrenDelegate: self)
     }

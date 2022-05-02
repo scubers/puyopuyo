@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class VirtualGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetricChangedDelegate, AutoDisposable {
+public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetricChangedDelegate, AutoDisposable {
     public init() {}
 
     // MARK: - AutoDisposable
@@ -57,7 +57,7 @@ public class VirtualGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureM
                 _unparasiteChildren()
                 layoutMeasure.activated = false
             }
-            parasitizingHost?.setNeedsLayout()
+            setNeedsLayout()
         }
     }
 
@@ -113,8 +113,8 @@ public class VirtualGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureM
         layoutChildren.forEach { child in
             if case .concrete(let view) = child.layoutNodeType {
                 parasitizingHost?.removeParasite(view)
-            } else if let virtualGroup = child as? VirtualGroup {
-                virtualGroup._unparasiteChildren()
+            } else if let group = child as? BoxGroup {
+                group._unparasiteChildren()
             }
         }
     }
@@ -123,8 +123,8 @@ public class VirtualGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureM
         layoutChildren.forEach { child in
             if case .concrete(let view) = child.layoutNodeType {
                 parasitizingHost?.addParasite(view)
-            } else if let virtualGroup = child as? VirtualGroup {
-                virtualGroup._parasiteChildren()
+            } else if let group = child as? BoxGroup {
+                group._parasiteChildren()
             }
         }
     }
@@ -132,7 +132,7 @@ public class VirtualGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureM
 
 // MARK: - Generic group
 
-public class GenericVirtualGroup<R: Regulator>: VirtualGroup, RegulatorSpecifier {
+public class GenericBoxGroup<R: Regulator>: BoxGroup, RegulatorSpecifier {
     // MARK: - RegulatorSpecifier
 
     public var regulator: R { layoutRegulator as! R }

@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - FlowGroup
 
-public class FlowGroup: GenericVirtualGroup<FlowRegulator> {
+public class FlowGroup: GenericBoxGroup<FlowRegulator> {
     override public func createRegulator() -> FlowRegulator {
         FlowRegulator(delegate: self, sizeDelegate: nil, childrenDelegate: self)
     }
