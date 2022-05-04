@@ -216,7 +216,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
         // 处理子节点的位置和大小
 
         // 处理虚拟节点的center
-        fixVirtualGroupCenter()
+        fixCoordinateOffset()
 
         // 实际赋值位置大小
         subviews.forEach { v in
@@ -265,17 +265,11 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
             ?? inheritedAnimator
             ?? Animators.inherited
 
+        let parentOffset = subView.superBox?.childrenOffset ?? .zero
+
         animator.animate(subView, size: measure.calculatedSize, center: measure.calculatedCenter) {
             subView.bounds.size = measure.calculatedSize
-            subView.center = measure.calculatedCenter
-        }
-    }
-
-    private func fixVirtualGroupCenter() {
-        layoutChildren.forEach { node in
-            if let node = node as? BoxLayoutContainer {
-                node.fixChildrenCenterByHostPosition()
-            }
+            subView.center = measure.calculatedCenter.add(parentOffset)
         }
     }
 
@@ -291,7 +285,9 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
         }
     }
 
-    open func fixChildrenCenterByHostPosition() {}
+    open func fixCoordinateOffset() {
+        _fixCoordinateOffset()
+    }
 
     // MARK: - BoxLayoutContainer
 
@@ -306,6 +302,8 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
     open func addLayoutNode(_ node: BoxLayoutNode) {
         _addLayoutNode(node)
     }
+
+    public var childrenOffset: CGPoint { get { .zero } set {} }
 
     // MARK: - MeasureChildrenDelegate
 

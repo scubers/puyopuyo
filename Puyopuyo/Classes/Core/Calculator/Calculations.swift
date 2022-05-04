@@ -222,3 +222,13 @@ public extension CGSize {
         return CalFixedSize(cgSize: self, direction: direction)
     }
 }
+
+extension CGPoint {
+    func add(_ point: CGPoint) -> CGPoint {
+        CGPoint(x: x + point.x, y: y + point.y)
+    }
+
+    static func getOrigin(center: CGPoint, size: CGSize) -> CGPoint {
+        CGPoint(x: center.x - size.width / 2, y: center.y - size.height / 2)
+    }
+}

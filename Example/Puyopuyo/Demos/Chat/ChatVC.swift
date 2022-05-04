@@ -179,7 +179,7 @@ class MessageInputView: HBox, Eventable, UITextViewDelegate {
                 .view
                 .delegate = self
 
-            ZBox().attach($0) {
+            ZGroup().attach($0) {
                 UIButton(type: .contactAdd).attach($0)
                     .onControlEvent(.touchUpInside, emitter.asInput { _ in .add })
                     .alpha(hasText.map { !$0 ? 1 : 0 })
@@ -193,7 +193,6 @@ class MessageInputView: HBox, Eventable, UITextViewDelegate {
                     .alpha(hasText.map { $0 ? 1 : 0 })
             }
             .justifyContent(.center)
-            .animator(Animators.default)
         }
         .space(8)
         .backgroundColor(UIColor.systemBackground)

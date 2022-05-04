@@ -157,11 +157,15 @@ extension Puyo: BoxLayoutContainer where T: BoxLayoutContainer {
         view.parasitizingHostForChildren
     }
 
-    public func fixChildrenCenterByHostPosition() {
-        view.fixChildrenCenterByHostPosition()
-    }
-
     public func addLayoutNode(_ node: BoxLayoutNode) {
         view.addLayoutNode(node)
+    }
+
+    public var childrenOffset: CGPoint {
+        view.childrenOffset
+    }
+
+    public func fixCoordinateOffset() {
+        view.fixCoordinateOffset()
     }
 }
