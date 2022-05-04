@@ -19,6 +19,8 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
 
     // MARK: - BoxLayoutContainer
 
+    public internal(set) var childrenOffset: CGPoint = .zero
+
     public weak var superBox: BoxLayoutContainer?
 
     public lazy var layoutRegulator: Regulator = _generateRegulator()
@@ -62,28 +64,10 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
         }
     }
 
-    public func fixChildrenCenterByHostPosition() {
-        guard layoutNodeType.isVirtual else {
-            return
-        }
-
-        let center = layoutRegulator.calculatedCenter
-        let size = layoutRegulator.calculatedSize
-
-        // 计算虚拟位置的偏移量
-        let delta = CGPoint(x: center.x - size.width / 2, y: center.y - size.height / 2)
-
-        layoutChildren.forEach { child in
-            var center = child.layoutMeasure.calculatedCenter
-            center.x += delta.x
-            center.y += delta.y
-            child.layoutMeasure.calculatedCenter = center
-            if let node = child as? BoxLayoutContainer {
-                node.fixChildrenCenterByHostPosition()
-            }
-        }
+    public func fixCoordinateOffset() {
+        _fixCoordinateOffset()
     }
-    
+
     public func addLayoutNode(_ node: BoxLayoutNode) {
         _addLayoutNode(node)
     }

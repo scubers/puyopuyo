@@ -45,8 +45,10 @@ public protocol BoxLayoutContainer: BoxLayoutNode, ViewParasitizing {
     /// Do not call setter by your self
     var layoutChildren: [BoxLayoutNode] { get set }
 
-    func fixChildrenCenterByHostPosition()
-    
+    var childrenOffset: CGPoint { get }
+
+    func fixCoordinateOffset()
+
     func addLayoutNode(_ node: BoxLayoutNode)
 }
 
@@ -79,6 +81,17 @@ extension BoxLayoutContainer {
         }
 
         parasitizingHostForChildren?.setNeedsLayout()
+    }
+
+    func _fixCoordinateOffset() {
+        layoutChildren.forEach { child in
+            if let node = child as? BoxGroup {
+                let size = node.layoutRegulator.calculatedSize
+                let center = node.layoutRegulator.calculatedCenter
+                node.childrenOffset = CGPoint.getOrigin(center: center, size: size).add(childrenOffset)
+                node.fixCoordinateOffset()
+            }
+        }
     }
 }
 
