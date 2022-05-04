@@ -83,6 +83,10 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
             }
         }
     }
+    
+    public func addLayoutNode(_ node: BoxLayoutNode) {
+        _addLayoutNode(node)
+    }
 
     // MARK: - ViewParasitable
 

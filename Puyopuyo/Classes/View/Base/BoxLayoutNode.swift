@@ -46,6 +46,8 @@ public protocol BoxLayoutContainer: BoxLayoutNode, ViewParasitizing {
     var layoutChildren: [BoxLayoutNode] { get set }
 
     func fixChildrenCenterByHostPosition()
+    
+    func addLayoutNode(_ node: BoxLayoutNode)
 }
 
 // MARK: - BoxLayoutNode extension
@@ -65,8 +67,8 @@ public extension BoxLayoutNode {
 
 // MARK: - BoxLayoutContainer extension
 
-public extension BoxLayoutContainer {
-    func addLayoutNode(_ node: BoxLayoutNode) {
+extension BoxLayoutContainer {
+    func _addLayoutNode(_ node: BoxLayoutNode) {
         // set parent first
         node.superBox = self
         // add child second

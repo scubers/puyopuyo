@@ -281,17 +281,17 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
 
     // MARK: - ViewParasitizing
 
-    public func addParasite(_ parasite: ViewDisplayable) {
+    open func addParasite(_ parasite: ViewDisplayable) {
         super.addSubview(parasite.dislplayView)
     }
 
-    public func removeParasite(_ parasite: ViewDisplayable) {
+    open func removeParasite(_ parasite: ViewDisplayable) {
         if parasite.dislplayView.superview == self {
             parasite.dislplayView.removeFromSuperview()
         }
     }
 
-    public func fixChildrenCenterByHostPosition() {}
+    open func fixChildrenCenterByHostPosition() {}
 
     // MARK: - BoxLayoutContainer
 
@@ -301,6 +301,10 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
 
     public var parasitizingHostForChildren: ViewParasitizing? {
         self
+    }
+
+    open func addLayoutNode(_ node: BoxLayoutNode) {
+        _addLayoutNode(node)
     }
 
     // MARK: - MeasureChildrenDelegate

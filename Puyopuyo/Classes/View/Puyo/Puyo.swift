@@ -160,4 +160,8 @@ extension Puyo: BoxLayoutContainer where T: BoxLayoutContainer {
     public func fixChildrenCenterByHostPosition() {
         view.fixChildrenCenterByHostPosition()
     }
+
+    public func addLayoutNode(_ node: BoxLayoutNode) {
+        view.addLayoutNode(node)
+    }
 }
