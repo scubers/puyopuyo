@@ -124,10 +124,6 @@ extension Puyo: BoxLayoutNode where T: BoxLayoutNode {
         set { view.layoutVisibility = newValue }
     }
 
-    public var parasitizingHost: ViewParasitizing? {
-        view.parasitizingHost
-    }
-
     public var superBox: BoxLayoutContainer? {
         set { view.superBox = newValue }
         get { view.superBox }
@@ -155,6 +151,10 @@ extension Puyo: BoxLayoutContainer where T: BoxLayoutContainer {
     public var layoutChildren: [BoxLayoutNode] {
         get { view.layoutChildren }
         set { view.layoutChildren = newValue }
+    }
+
+    public var parasitizingHostForChildren: ViewParasitizing? {
+        view.parasitizingHostForChildren
     }
 
     public func fixChildrenCenterByHostPosition() {

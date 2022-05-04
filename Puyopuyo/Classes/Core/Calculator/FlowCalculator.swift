@@ -169,7 +169,7 @@ private class VirtualLinearRegulator: LinearRegulator, MeasureChildrenDelegate {
         self.virtualChildren = children
         super.init(delegate: nil, sizeDelegate: nil, childrenDelegate: nil)
         childrenDelegate = self
-        setIsLayoutEntryPoint(false)
+        isLayoutEntryPoint = false
     }
 
     func justifyChildrenWithCenter() {

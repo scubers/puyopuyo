@@ -36,10 +36,11 @@ class WrapSizeView: UIView {
     }
 }
 
-class LinearBoxTests: XCTestCase {
+class LinearTests: XCTestCase {
+    var box = ZBox()
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        box = ZBox()
     }
 
     override func tearDown() {
@@ -52,14 +53,13 @@ class LinearBoxTests: XCTestCase {
     func testActive() {
         let state = State(false)
         var v1: UIView!
-        let box = HBox().attach {
+        HBag().attach(box) {
             v1 = UILabel().attach($0)
                 .text("i am label 1")
                 .width(.wrap(grow: 1))
                 .activated(state)
                 .view
         }
-        .view
 
         box.layoutIfNeeded()
 
@@ -79,11 +79,10 @@ class LinearBoxTests: XCTestCase {
     func testLBWidthFixed() {
         var v1: UIView!
         var v2: UIView!
-        let box = HBox().attach {
+        HBag().attach(box) {
             v1 = UIView().attach($0).width(100).view
             v2 = UIView().attach($0).width(100).view
         }
-        .view
 
         box.layoutIfNeeded()
         XCTAssertTrue(v1.fw == 100)
@@ -93,12 +92,11 @@ class LinearBoxTests: XCTestCase {
     func testLBWidthRatio() {
         var v1: UIView!
         var v2: UIView!
-        let box = HBox().attach {
+        HBag().attach(box) {
             v1 = UILabel().attach($0).text("abc").width(.fill).view
             v2 = UILabel().attach($0).text("abc").width(.fill).view
         }
         .width(100)
-        .view
 
         box.layoutIfNeeded()
 
@@ -109,11 +107,10 @@ class LinearBoxTests: XCTestCase {
     func testLBWidthWrap() {
         var v1: UIView!
         var v2: UIView!
-        let box = HBox().attach {
+        HBag().attach(box) {
             v1 = UILabel().attach($0).text("i am label 1").view
             v2 = UILabel().attach($0).text("i am label 2").view
         }
-        .view
 
         box.layoutIfNeeded()
 
@@ -125,7 +122,7 @@ class LinearBoxTests: XCTestCase {
         var v1: UIView!
         var v2: UIView!
         var v3: UIView!
-        let box = HBox().attach {
+        HBag().attach(box) {
             v1 = UILabel().attach($0)
                 .text("i am label 1")
                 .width(.wrap(priority: 1))
@@ -140,7 +137,6 @@ class LinearBoxTests: XCTestCase {
                 .view
         }
         .width(200)
-        .view
 
         box.layoutIfNeeded()
 
@@ -153,7 +149,7 @@ class LinearBoxTests: XCTestCase {
         var v1: UIView!
         var v2: UIView!
         var v3: UIView!
-        let box = HBox().attach {
+        HBag().attach(box) {
             v1 = UILabel().attach($0)
                 .text("i am label 1")
                 .width(.wrap(shrink: 1))
@@ -168,7 +164,6 @@ class LinearBoxTests: XCTestCase {
                 .view
         }
         .width(200)
-        .view
 
         box.layoutIfNeeded()
 
@@ -181,7 +176,7 @@ class LinearBoxTests: XCTestCase {
         var v1: UIView!
         var v2: UIView!
         var v3: UIView!
-        let box = HBox().attach {
+        HBag().attach(box) {
             v1 = UILabel().attach($0)
                 .text("i am label 1")
                 .width(.wrap(grow: 1))
@@ -196,7 +191,6 @@ class LinearBoxTests: XCTestCase {
                 .view
         }
         .width(1000)
-        .view
 
         box.layoutIfNeeded()
 
@@ -209,7 +203,7 @@ class LinearBoxTests: XCTestCase {
         var v1: UIView!
         var v2: UIView!
         var v3: UIView!
-        let box = HBox().attach {
+        HBox().attach(box) {
             v1 = UILabel().attach($0)
                 .text("i am label 1")
                 .width(.wrap(max: 20))
@@ -223,7 +217,6 @@ class LinearBoxTests: XCTestCase {
                 .width(.wrap)
                 .view
         }
-        .view
 
         box.layoutIfNeeded()
 
@@ -236,7 +229,7 @@ class LinearBoxTests: XCTestCase {
         var v1: UIView!
         var v2: UIView!
         var v3: UIView!
-        let box = HBox().attach {
+        HBag().attach(box) {
             v1 = UILabel().attach($0)
                 .text("i am label 1")
 //                .aspectRatio(1 / 2)
@@ -253,7 +246,6 @@ class LinearBoxTests: XCTestCase {
                 .size(.wrap, .aspectRatio(3 / 1))
                 .view
         }
-        .view
 
         box.layoutIfNeeded()
 
@@ -268,7 +260,7 @@ class LinearBoxTests: XCTestCase {
     func testAlignmentWorks() {
         var views = [UIView]()
         let alignment = State(Alignment.top)
-        let box = HBox().attach {
+        HBag().attach(box) {
             let v = UILabel().attach($0)
                 .size(50, 50)
                 .alignment(alignment)
@@ -276,13 +268,13 @@ class LinearBoxTests: XCTestCase {
             views.append(v)
         }
         .size(1000, 100)
-        .view
 
         alignment.value = .top
         box.layoutIfNeeded()
         XCTAssertTrue(views[0].fy == 0)
 
         alignment.value = .center
+        box.setNeedsLayout()
         box.layoutIfNeeded()
         XCTAssertTrue(views[0].center.y == box.fh / 2)
 
@@ -294,14 +286,13 @@ class LinearBoxTests: XCTestCase {
     func testJustifyContentWorks() {
         let alignment = State(Alignment.top)
         var v1: UIView!
-        let box = HBox().attach {
+        HBag().attach(box) {
             v1 = UILabel().attach($0)
                 .size(50, 50)
                 .view
         }
         .justifyContent(alignment)
         .size(1000, 100)
-        .view
 
         alignment.value = .top
         box.layoutIfNeeded()
@@ -320,14 +311,13 @@ class LinearBoxTests: XCTestCase {
         let padding = State(UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
         let margin = State(UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4))
         var v1: UIView!
-        let box = HBox().attach {
+        HBag().attach(box) {
             v1 = UILabel().attach($0)
                 .size(50, 50)
                 .margin(margin)
                 .view
         }
         .padding(padding)
-        .view
 
         box.layoutIfNeeded()
         XCTAssertTrue(box.fw == v1.fw + padding.value.getHorzTotal() + margin.value.getHorzTotal())
@@ -341,7 +331,7 @@ class LinearBoxTests: XCTestCase {
         let boxHeight = State(SizeDescription.wrap)
         var views = [UIView]()
         let count = 9
-        let box = HBox().attach {
+        HBag().attach(box) {
             for _ in 0 ..< count {
                 let v = UILabel().attach($0)
                     .size(50, 50)
@@ -352,7 +342,6 @@ class LinearBoxTests: XCTestCase {
         .size(boxWidth, boxHeight)
         .reverse(reverse)
         .format(format)
-        .view
 
         format.value = .trailing
         boxWidth.value = .fix(3000)
@@ -399,7 +388,7 @@ class LinearBoxTests: XCTestCase {
 
     func testLBDirectionWorks() {
         let d = State(Direction.x)
-        let box = LinearBox().attach {
+        LinearBag().attach(box) {
             UILabel().attach($0)
                 .size(50, 50)
             UILabel().attach($0)
@@ -408,7 +397,6 @@ class LinearBoxTests: XCTestCase {
                 .size(50, 50)
         }
         .direction(d)
-        .view
 
         box.layoutIfNeeded()
 
@@ -426,7 +414,7 @@ class LinearBoxTests: XCTestCase {
         var v1: UIView!
         var v2: UIView!
         var v3: UIView!
-        let box = HBox().attach {
+        HBag().attach(box) {
             v1 = WrapSizeView(100, 100).attach($0)
                 .width(.wrap)
                 .view
@@ -438,7 +426,6 @@ class LinearBoxTests: XCTestCase {
                 .view
         }
         .space(20)
-        .view
 
         box.layoutIfNeeded()
 
@@ -454,7 +441,7 @@ class LinearBoxTests: XCTestCase {
         var v1: UIView!
         var v2: UIView!
         var v3: UIView!
-        let box = HBox().attach {
+        HBag().attach(box) {
             v1 = WrapSizeView(100, 100).attach($0)
                 .height(.fill)
                 .view
@@ -464,7 +451,6 @@ class LinearBoxTests: XCTestCase {
                 .height(.fill)
                 .view
         }
-        .view
 
         box.layoutIfNeeded()
 

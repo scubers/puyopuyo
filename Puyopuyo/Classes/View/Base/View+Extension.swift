@@ -28,9 +28,13 @@ extension UIView: MeasureMetricChangedDelegate, MeasureSizeFittingDelegate {
         sizeThatFits(size)
     }
 
-    public func metricDidChanged(for mesure: Measure) {
-        if let superview = superview, superview.isBoxView {
-            superview.setNeedsLayout()
+    public func metricDidChanged(for measure: Measure) {
+        if let superBox = superBox {
+            if superBox.layoutNodeType.isVirtual {
+                superview?.setNeedsLayout()
+            } else if let superview = superview, superview.isBoxView {
+                superview.setNeedsLayout()
+            }
         }
         setNeedsLayout()
     }

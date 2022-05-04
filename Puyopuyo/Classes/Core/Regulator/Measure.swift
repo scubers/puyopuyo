@@ -74,13 +74,7 @@ public class Measure {
         }
     }
 
-    public private(set) var isLayoutEntryPoint: Bool = true
-
-    @discardableResult
-    public func setIsLayoutEntryPoint(_ isLayoutEntryPoint: Bool) -> Self {
-        self.isLayoutEntryPoint = isLayoutEntryPoint
-        return self
-    }
+    public internal(set) var isLayoutEntryPoint: Bool = true
 
     public var diagnosisId: String?
 

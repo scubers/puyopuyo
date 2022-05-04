@@ -28,8 +28,6 @@ public protocol BoxLayoutNode: AnyObject {
     var layoutNodeType: BoxLayoutNodeType { get }
     /// Ref to node's container
     var superBox: BoxLayoutContainer? { get set }
-    /// Concrete view's superview
-    var parasitizingHost: ViewParasitizing? { get }
 
     var layoutVisibility: Visibility { get set }
 
@@ -39,6 +37,9 @@ public protocol BoxLayoutNode: AnyObject {
 ///
 /// Describe a container that can manage the layout node
 public protocol BoxLayoutContainer: BoxLayoutNode, ViewParasitizing {
+    /// Chilren and its children's superview
+    var parasitizingHostForChildren: ViewParasitizing? { get }
+
     var layoutRegulator: Regulator { get }
 
     /// Do not call setter by your self
@@ -56,6 +57,10 @@ public extension BoxLayoutNode {
         }
         return nil
     }
+
+    var parasitizingHost: ViewParasitizing? {
+        superBox?.parasitizingHostForChildren
+    }
 }
 
 // MARK: - BoxLayoutContainer extension
@@ -71,7 +76,7 @@ public extension BoxLayoutContainer {
             addParasite(view)
         }
 
-        parasitizingHost?.setNeedsLayout()
+        parasitizingHostForChildren?.setNeedsLayout()
     }
 }
 
@@ -85,8 +90,8 @@ extension UIView: BoxLayoutNode {
 
         weak var value: AnyObject?
 
-        static var parentContainerKey = "parentContainerKey"
-        static var measureHoldingKey = "measureHoldingKey"
+        static var parentContainerKey = "py_parentContainerKey"
+        static var measureHoldingKey = "py_measureHoldingKey"
     }
 
     public var superBox: BoxLayoutContainer? {
@@ -143,7 +148,6 @@ extension UIView: BoxLayoutNode {
         if let index = superBox?.layoutChildren.firstIndex(where: { $0 === self }) {
             superBox?.layoutChildren.remove(at: index)
         }
+        superBox = nil
     }
-
-    public var parasitizingHost: ViewParasitizing? { self as? ViewParasitizing }
 }

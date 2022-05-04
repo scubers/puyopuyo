@@ -34,10 +34,11 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
         if let index = superBox?.layoutChildren.firstIndex(where: { $0 === self }) {
             superBox?.layoutChildren.remove(at: index)
         }
+        superBox = nil
     }
 
-    public var parasitizingHost: ViewParasitizing? {
-        superBox?.parasitizingHost
+    public var parasitizingHostForChildren: ViewParasitizing? {
+        superBox?.parasitizingHostForChildren
     }
 
     public var layoutVisibility: Visibility = .visible {
@@ -87,16 +88,16 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
 
     public func addParasite(_ parasite: ViewDisplayable) {
         if [Visibility.visible, .free].contains(layoutVisibility) {
-            parasitizingHost?.addParasite(parasite)
+            parasitizingHostForChildren?.addParasite(parasite)
         }
     }
 
     public func removeParasite(_ parasite: ViewDisplayable) {
-        parasitizingHost?.removeParasite(parasite)
+        parasitizingHostForChildren?.removeParasite(parasite)
     }
 
     public func setNeedsLayout() {
-        parasitizingHost?.setNeedsLayout()
+        parasitizingHostForChildren?.setNeedsLayout()
     }
 
     // MARK: - MeasureChildrenDelegate
@@ -104,7 +105,7 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
     public func children(for _: Measure) -> [Measure] {
         layoutChildren.filter { node in
             if let superview = node.layoutNodeView?.superview {
-                return superview === parasitizingHost
+                return superview === parasitizingHostForChildren
             }
             return true
         }.map(\.layoutMeasure)
@@ -113,7 +114,7 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
     // MARK: - MeasureDelegate
 
     public func metricDidChanged(for _: Measure) {
-        parasitizingHost?.setNeedsLayout()
+        parasitizingHostForChildren?.setNeedsLayout()
     }
 
     // MARK: - Public
@@ -125,7 +126,8 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
     // MARK: - Private
 
     private func _generateRegulator() -> Regulator {
-        let r = createRegulator().setIsLayoutEntryPoint(false)
+        let r = createRegulator()
+        r.isLayoutEntryPoint = false
         r.changeDelegate = self
         r.childrenDelegate = self
         return r
@@ -134,7 +136,7 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
     private func _unparasiteChildren() {
         layoutChildren.forEach { child in
             if case .concrete(let view) = child.layoutNodeType {
-                parasitizingHost?.removeParasite(view)
+                parasitizingHostForChildren?.removeParasite(view)
             } else if let group = child as? BoxGroup {
                 group._unparasiteChildren()
             }
@@ -144,7 +146,7 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
     private func _parasiteChildren() {
         layoutChildren.forEach { child in
             if case .concrete(let view) = child.layoutNodeType {
-                parasitizingHost?.addParasite(view)
+                parasitizingHostForChildren?.addParasite(view)
             } else if let group = child as? BoxGroup {
                 group._parasiteChildren()
             }
