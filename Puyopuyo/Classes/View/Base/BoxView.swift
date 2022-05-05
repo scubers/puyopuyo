@@ -36,7 +36,7 @@ public extension UIView {
 
 // MARK: - BoxView
 
-open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
+open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewParasitizing {
     public private(set) var control = BoxControl()
 
     // MARK: - init
