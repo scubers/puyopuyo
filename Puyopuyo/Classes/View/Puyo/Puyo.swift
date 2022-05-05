@@ -160,12 +160,4 @@ extension Puyo: BoxLayoutContainer where T: BoxLayoutContainer {
     public func addLayoutNode(_ node: BoxLayoutNode) {
         view.addLayoutNode(node)
     }
-
-    public var childrenOffset: CGPoint {
-        view.childrenOffset
-    }
-
-    public func fixCoordinateOffset() {
-        view.fixCoordinateOffset()
-    }
 }

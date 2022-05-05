@@ -64,10 +64,6 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
         }
     }
 
-    public func fixCoordinateOffset() {
-        _fixCoordinateOffset()
-    }
-
     public func addLayoutNode(_ node: BoxLayoutNode) {
         _addLayoutNode(node)
     }

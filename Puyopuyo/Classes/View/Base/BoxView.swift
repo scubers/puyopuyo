@@ -195,9 +195,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
                 layoutRegulator.calculatedCenter = CGPoint(x: b.midX + layoutRegulator.margin.left, y: b.midY + layoutRegulator.margin.top)
             }
 
-            if control.isScrollViewControl, let superview = superview as? UIScrollView {
-                control(scrollView: superview)
-            }
+            controlScrollViewIfNeeded()
 
             let animator = py_animator ?? Animators.inherited
 
@@ -211,18 +209,10 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
             }
         }
 
-        // 获取最近的animator
-        let animator = py_animator ?? getInheritedBoxAnimator(self) ?? Animators.inherited
         // 处理子节点的位置和大小
-
-        // 处理虚拟节点的center
-        fixCoordinateOffset()
-
-        // 实际赋值位置大小
-        subviews.forEach { v in
-            if v.layoutMeasure.activated {
-                self.applyViewPosition(v, inheritedAnimator: animator)
-            }
+        let animator = py_animator ?? getInheritedBoxAnimator(self) ?? Animators.inherited
+        layoutChildren.forEach {
+            $0.applyConcreteNodePosition(with: .zero, superAnimator: animator)
         }
 
         // 更新边线
@@ -236,8 +226,12 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
         control.borders.updateRight(to: layer)
     }
 
-    public func control(scrollView: UIScrollView?) {
-        guard let scrollView = scrollView else { return }
+    /// 处理superview 是scrollView的情况，控制其 contentSize
+    private func controlScrollViewIfNeeded() {
+        guard let scrollView = superview as? UIScrollView, control.isScrollViewControl else {
+            return
+        }
+
         let newSize = layoutRegulator.calculatedSize
         // 控制父视图的scroll
         if layoutRegulator.size.width.isWrap {
@@ -258,21 +252,6 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
         }
     }
 
-    private func applyViewPosition(_ subView: UIView, inheritedAnimator: Animator? = nil) {
-        let measure = subView.layoutMeasure
-
-        let animator = subView.py_animator
-            ?? inheritedAnimator
-            ?? Animators.inherited
-
-        let parentOffset = subView.superBox?.childrenOffset ?? .zero
-
-        animator.animate(subView, size: measure.calculatedSize, center: measure.calculatedCenter) {
-            subView.bounds.size = measure.calculatedSize
-            subView.center = measure.calculatedCenter.add(parentOffset)
-        }
-    }
-
     // MARK: - ViewParasitizing
 
     open func addParasite(_ parasite: ViewDisplayable) {
@@ -283,10 +262,6 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
         if parasite.dislplayView.superview == self {
             parasite.dislplayView.removeFromSuperview()
         }
-    }
-
-    open func fixCoordinateOffset() {
-        _fixCoordinateOffset()
     }
 
     // MARK: - BoxLayoutContainer
@@ -303,8 +278,6 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
         _addLayoutNode(node)
     }
 
-    public var childrenOffset: CGPoint { get { .zero } set {} }
-
     // MARK: - MeasureChildrenDelegate
 
     public func children(for _: Measure) -> [Measure] {
@@ -319,4 +292,35 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer {
 
 open class GenericBoxView<R: Regulator>: BoxView, RegulatorSpecifier {
     public var regulator: R { layoutRegulator as! R }
+}
+
+extension BoxLayoutNode {
+    func applyConcreteNodePosition(with offset: CGPoint, superAnimator: Animator?) {
+        // 不处理未激活
+        guard layoutMeasure.activated else { return }
+
+        if case .concrete(let view) = layoutNodeType {
+            // 具体view则处理位置
+            apply(view: view, offset: offset, superAnimator: superAnimator)
+
+        } else if let group = self as? BoxGroup {
+            let nextOffset = group.layoutRegulator.calculatedOrigin.add(offset)
+            group.layoutChildren.forEach {
+                $0.applyConcreteNodePosition(with: nextOffset, superAnimator: superAnimator)
+            }
+        }
+    }
+
+    private func apply(view: UIView, offset: CGPoint, superAnimator: Animator?) {
+        let measure = view.layoutMeasure
+
+        let animator = view.py_animator
+            ?? superAnimator
+            ?? Animators.inherited
+
+        animator.animate(view, size: measure.calculatedSize, center: measure.calculatedCenter) {
+            view.bounds.size = measure.calculatedSize
+            view.center = measure.calculatedCenter.add(offset)
+        }
+    }
 }

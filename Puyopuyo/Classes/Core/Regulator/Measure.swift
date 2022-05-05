@@ -95,14 +95,12 @@ public class Measure {
 
     public var calculatedSize: CGSize = .zero
 
+    public var calculatedOrigin: CGPoint {
+        CGPoint.getOrigin(center: calculatedCenter, size: calculatedSize)
+    }
+
     public var calculatedFrame: CGRect {
-        CGRect(
-            origin: CGPoint(
-                x: calculatedCenter.x - calculatedSize.width / 2,
-                y: calculatedCenter.y - calculatedSize.height / 2
-            ),
-            size: calculatedSize
-        )
+        CGRect(origin: calculatedOrigin, size: calculatedSize)
     }
 
     public var calculatedCenter: CGPoint = .zero
