@@ -19,8 +19,6 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
 
     // MARK: - BoxLayoutContainer
 
-    public internal(set) var childrenOffset: CGPoint = .zero
-
     public weak var superBox: BoxLayoutContainer?
 
     public lazy var layoutRegulator: Regulator = _generateRegulator()
