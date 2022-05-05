@@ -102,9 +102,15 @@ class TestVC: BaseViewController {
                             Label("\(i)").attach($0)
                         }
                         
-                        HBox().attach($0) {
+                        VFlow().attach($0) {
                             for i in 100 ..< 110 {
                                 Label(i.description).attach($0)
+                            }
+                            
+                            HGroup().attach($0) {
+                                for i in 200 ..< 210 {
+                                    Label(i.description).attach($0)
+                                }
                             }
                         }
                     }
