@@ -133,7 +133,10 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
 
     override open func willRemoveSubview(_ subview: UIView) {
         super.willRemoveSubview(subview)
-        layoutChildren.removeAll(where: { $0.layoutNodeView === subview })
+        if removingParasite == nil {
+            subview.superBox?.layoutChildren.removeAll(where: { $0.layoutNodeView === subview })
+            subview.superBox = nil
+        }
     }
 
     override open var intrinsicContentSize: CGSize {
@@ -258,9 +261,13 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
         super.addSubview(parasite.dislplayView)
     }
 
+    private var removingParasite: ViewDisplayable?
     open func removeParasite(_ parasite: ViewDisplayable) {
+        assert(removingParasite == nil)
         if parasite.dislplayView.superview == self {
+            removingParasite = parasite
             parasite.dislplayView.removeFromSuperview()
+            removingParasite = nil
         }
     }
 

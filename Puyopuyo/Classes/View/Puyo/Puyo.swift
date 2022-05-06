@@ -145,8 +145,6 @@ extension Puyo: BoxLayoutNode where T: BoxLayoutNode {
 // MARK: - BoxLayoutContainer
 
 extension Puyo: BoxLayoutContainer where T: BoxLayoutContainer {
-    public var layoutRegulator: Regulator { view.layoutRegulator }
-
     /// Do not call setter by your self
     public var layoutChildren: [BoxLayoutNode] {
         get { view.layoutChildren }

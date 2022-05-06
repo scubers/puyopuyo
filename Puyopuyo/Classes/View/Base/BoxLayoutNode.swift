@@ -40,8 +40,6 @@ public protocol BoxLayoutContainer: BoxLayoutNode {
     /// Chilren and its children's superview
     var parasitizingHostForChildren: ViewParasitizing? { get }
 
-    var layoutRegulator: Regulator { get }
-
     /// Do not call setter by your self
     var layoutChildren: [BoxLayoutNode] { get set }
 
@@ -145,9 +143,5 @@ extension UIView: BoxLayoutNode {
 
     public func removeFromSuperBox() {
         removeFromSuperview()
-        if let index = superBox?.layoutChildren.firstIndex(where: { $0 === self }) {
-            superBox?.layoutChildren.remove(at: index)
-        }
-        superBox = nil
     }
 }
