@@ -182,16 +182,6 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
 
                 layoutRegulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
             } else {
-                /**
-                 1. 当不需要布局控制自身大小时，意味着外部已经给本布局设置好了尺寸，即可以反推出当前布局可用的剩余空间
-                 2. 因为布局自身已经被限定尺寸大小，所以布局尺寸只能是撑满剩余空间
-                 */
-
-                if !layoutRegulator.size.isRatio {
-                    DiagnosisUitl.constraintConflict(crash: false, "if isSelfSizeControl == false, regulator's size should be fill. regulator's size will reset to fill")
-                    layoutRegulator.size = .init(width: .fill, height: .fill)
-                }
-
                 layoutResidual = CalculateUtil.getSelfLayoutResidual(for: layoutRegulator, fromContentResidual: bounds.size)
                 layoutRegulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
             }
