@@ -30,6 +30,8 @@ public class Measure {
         self.childrenDelegate = childrenDelegate
     }
 
+    private var notifier = SimpleIO<Void>()
+
     public var margin = UIEdgeInsets.zero {
         didSet {
             if oldValue != margin {
@@ -119,6 +121,7 @@ public class Measure {
 
     public func notifyDidChange() {
         changeDelegate?.metricDidChanged(for: self)
+        notifier.input(value: ())
     }
 
     public func calculate(by layoutResidual: CGSize) -> CGSize {
@@ -140,5 +143,11 @@ public class Measure {
 
     public var children: [Measure] {
         childrenDelegate?.children(for: self) ?? []
+    }
+}
+
+extension Measure: ChangeNotifier {
+    public var changeNotifier: Outputs<Void> {
+        notifier.asOutput()
     }
 }

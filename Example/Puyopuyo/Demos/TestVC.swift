@@ -32,30 +32,44 @@ class TestVC: BaseViewController {
             UIView().attach($0)
                 .size(50, 50)
             
-            let isOn = State(false)
-            let direction = isOn.map { $0 ? Direction.vertical : .horizontal }
-                
-            VBox().attach($0) {
-                UISwitch().attach($0)
-                    .isOn(isOn)
-                    
-                LinearBox().attach($0) {
-                    for _ in 0 ..< 5 {
-                        UIView().attach($0)
-                            .size(Size.flex(main: .fill, cross: .fix(50), axis: direction))
-                    }
+            ZBox().attach($0) {
+                ZBox().attach($0) {
+                    Label("label").attach($0)
+                        .size($0.layoutMeasure.onChanged.size)
                 }
-                .space(5)
                 .padding(all: 10)
-                .direction(direction)
-                .size(.fill, .fill)
-                .animator(Animators.default)
+                .size(.fill, .wrap)
             }
             .padding($0.py_safeArea())
             .size(.fill, .fill)
         }
         
         Util.randomViewColor(view: view)
+    }
+    
+    func testFlexSize() -> UIView {
+        let isOn = State(false)
+        let direction = isOn.map { $0 ? Direction.vertical : .horizontal }
+            
+        return VBox().attach {
+            UISwitch().attach($0)
+                .isOn(isOn)
+                
+            LinearBox().attach($0) {
+                for _ in 0 ..< 5 {
+                    UIView().attach($0)
+                        .size(Size.flex(main: .fill, cross: .fix(50), axis: direction))
+                }
+            }
+            .space(5)
+            .padding(all: 10)
+            .direction(direction)
+            .size(.fill, .fill)
+            .animator(Animators.default)
+        }
+        .padding(view.py_safeArea())
+        .size(.fill, .fill)
+        .view
     }
     
     func testGroup() -> UIView {
