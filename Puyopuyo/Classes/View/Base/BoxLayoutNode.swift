@@ -81,42 +81,48 @@ extension BoxLayoutContainer {
 // MARK: - Implementation
 
 extension UIView: BoxLayoutNode {
-    private class Weak {
-        init(_ value: AnyObject?) {
-            self.value = value
+    private class LayoutMetrics {
+        weak var superbox: BoxLayoutContainer?
+        var measure: Measure!
+        static var associateObjectKey = "py_layoutMetricsKey"
+    }
+
+    private var _layoutMetrics: LayoutMetrics {
+        get {
+            var m = objc_getAssociatedObject(self, &LayoutMetrics.associateObjectKey) as? LayoutMetrics
+            if m == nil {
+                m = LayoutMetrics()
+                self._layoutMetrics = m!
+            }
+            return m!
         }
-
-        weak var value: AnyObject?
-
-        static var parentContainerKey = "py_parentContainerKey"
-        static var measureHoldingKey = "py_measureHoldingKey"
+        set {
+            objc_setAssociatedObject(self, &LayoutMetrics.associateObjectKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
 
     public var superBox: BoxLayoutContainer? {
-        get {
-            (objc_getAssociatedObject(self, &Weak.parentContainerKey) as? Weak)?.value as? BoxLayoutContainer
-        }
-        set {
-            objc_setAssociatedObject(self, &Weak.parentContainerKey, Weak(newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
+        get { _layoutMetrics.superbox }
+        set { _layoutMetrics.superbox = newValue }
     }
 
     public var layoutMeasure: Measure {
-        var measure = objc_getAssociatedObject(self, &Weak.measureHoldingKey) as? Measure
-        if measure == nil {
-            if let regulatable = self as? BoxView {
-                measure = regulatable.createRegulator()
-            } else {
-                measure = Measure(delegate: self, sizeDelegate: self, childrenDelegate: nil)
+        get {
+            var m = _layoutMetrics.measure
+            if m == nil {
+                if let regulatable = self as? BoxView {
+                    m = regulatable.createRegulator()
+                } else {
+                    m = Measure(delegate: self, sizeDelegate: self, childrenDelegate: nil)
+                }
+                _layoutMetrics.measure = m!
             }
-            objc_setAssociatedObject(self, &Weak.measureHoldingKey, measure, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            return m!
         }
-        return measure!
+        set { _layoutMetrics.measure = newValue }
     }
 
-    public var layoutNodeType: BoxLayoutNodeType {
-        .concrete(self)
-    }
+    public var layoutNodeType: BoxLayoutNodeType { .concrete(self) }
 
     public var layoutVisibility: Visibility {
         set {
