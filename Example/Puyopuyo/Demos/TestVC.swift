@@ -32,115 +32,140 @@ class TestVC: BaseViewController {
             UIView().attach($0)
                 .size(50, 50)
             
+            let isOn = State(false)
+            let direction = isOn.map { $0 ? Direction.vertical : .horizontal }
+                
             VBox().attach($0) {
-                let state = State(true)
-                let trigger = State(0)
-                
-                VFlowGroup().attach($0) {
-                    UISwitch().attach($0).isOn(state)
-                    UIButton().attach($0)
-                        .text("Increase")
-                        .onControlEvent(.touchUpInside, Inputs { _ in
-                            trigger.value += 1
-                        })
+                UISwitch().attach($0)
+                    .isOn(isOn)
+                    
+                LinearBox().attach($0) {
+                    for _ in 0 ..< 5 {
+                        UIView().attach($0)
+                            .size(Size.flex(main: .fill, cross: .fix(50), axis: direction))
+                    }
                 }
-                
-                Label("header").attach($0)
-                    .size(.fill, 50)
-                
-                VGroup().attach($0) {
-                    HGroup().attach($0) {
-                        for i in 0 ..< 10 {
-                            Label("\(i)\(i)").attach($0)
-                                .visibility(state.map { (!$0 || i != 1).visibleOrGone })
-                        }
-                    }
-                    .padding(all: 10)
-                    .visibility(state.binder.visibleOrGone)
-                    
-                    HGroup().attach($0) {
-                        HGroup().attach($0) {
-                            Label("1").attach($0)
-                            Label("2").attach($0)
-                        }
-                        .format(.between)
-                        .width(.fill)
-                        
-                        HGroup().attach($0) {
-                            Label("3").attach($0)
-                            Label("4").attach($0)
-                        }
-                        .format(.between)
-                        .width(.fill)
-                    }
-                    .width(.fill)
-                    
-                    VGroup().attach($0) { v in
-                        trigger.skip(1).safeBind(to: v) { v, _ in
-                            UIView().attach(v)
-                                .size(50, 50)
-                                .backgroundColor(Util.randomColor())
-                                .userInteractionEnabled(true)
-                                .onTap {
-                                    $0.view?.removeFromSuperBox()
-                                }
-                        }
-                    }
-                    .visibility(state.binder.visibleOrNot)
-                    
-                    FlowGroup().attach($0) {
-                        FlowGroup().attach($0) {
-                            for i in 11 ..< 20 {
-                                Label("\(i)").attach($0)
-                            }
-                        }
-                        .arrangeCount(3)
-                        .direction(.y)
-                        .space(5)
-                        
-                        for i in 30 ..< 40 {
-                            Label("\(i)").attach($0)
-                        }
-                        
-                        VFlow().attach($0) {
-                            for i in 100 ..< 110 {
-                                Label(i.description).attach($0)
-                            }
-                            
-                            HGroup().attach($0) {
-                                for i in 200 ..< 210 {
-                                    Label(i.description).attach($0)
-                                }
-                            }
-                        }
-                    }
-                    .direction(.y)
-                    .space(5)
-                    .padding(all: 10)
-                    
-                    ZGroup().attach($0) {
-                        UIView().attach($0)
-                            .size(.ratio(1), .ratio(1))
-                        UIView().attach($0)
-                            .size(.ratio(0.5), .ratio(0.5))
-                        UIView().attach($0)
-                            .size(.ratio(0.2), .ratio(0.2))
-                    }
-                    
-                    .size(100, 100)
-                }
+                .space(5)
+                .padding(all: 10)
+                .direction(direction)
                 .size(.fill, .fill)
-                
-                Label("footer").attach($0)
-                    .size(.fill, 50)
+                .animator(Animators.default)
             }
-            .animator(Animators.default)
+            .padding($0.py_safeArea())
             .size(.fill, .fill)
-            .padding(all: 10)
-            .margin(view.py_safeArea())
         }
         
         Util.randomViewColor(view: view)
+    }
+    
+    func testGroup() -> UIView {
+        VBox().attach {
+            let state = State(true)
+            let trigger = State(0)
+            
+            VFlowGroup().attach($0) {
+                UISwitch().attach($0).isOn(state)
+                UIButton().attach($0)
+                    .text("Increase")
+                    .onControlEvent(.touchUpInside, Inputs { _ in
+                        trigger.value += 1
+                    })
+            }
+            
+            Label("header").attach($0)
+                .size(.fill, 50)
+            
+            VGroup().attach($0) {
+                HGroup().attach($0) {
+                    for i in 0 ..< 10 {
+                        Label("\(i)\(i)").attach($0)
+                            .visibility(state.map { (!$0 || i != 1).visibleOrGone })
+                    }
+                }
+                .padding(all: 10)
+                .visibility(state.binder.visibleOrGone)
+                
+                HGroup().attach($0) {
+                    HGroup().attach($0) {
+                        Label("1").attach($0)
+                        Label("2").attach($0)
+                    }
+                    .format(.between)
+                    .width(.fill)
+                    
+                    HGroup().attach($0) {
+                        Label("3").attach($0)
+                        Label("4").attach($0)
+                    }
+                    .format(.between)
+                    .width(.fill)
+                }
+                .width(.fill)
+                
+                VGroup().attach($0) { v in
+                    trigger.skip(1).safeBind(to: v) { v, _ in
+                        UIView().attach(v)
+                            .size(50, 50)
+                            .backgroundColor(Util.randomColor())
+                            .userInteractionEnabled(true)
+                            .onTap {
+                                $0.view?.removeFromSuperBox()
+                            }
+                    }
+                }
+                .visibility(state.binder.visibleOrNot)
+                
+                FlowGroup().attach($0) {
+                    FlowGroup().attach($0) {
+                        for i in 11 ..< 20 {
+                            Label("\(i)").attach($0)
+                        }
+                    }
+                    .arrangeCount(3)
+                    .direction(.y)
+                    .space(5)
+                    
+                    for i in 30 ..< 40 {
+                        Label("\(i)").attach($0)
+                    }
+                    
+                    VFlow().attach($0) {
+                        for i in 100 ..< 110 {
+                            Label(i.description).attach($0)
+                        }
+                        
+                        HGroup().attach($0) {
+                            for i in 200 ..< 210 {
+                                Label(i.description).attach($0)
+                            }
+                        }
+                    }
+                }
+                .direction(.y)
+                .space(5)
+                .padding(all: 10)
+                
+                ZGroup().attach($0) {
+                    UIView().attach($0)
+                        .size(.ratio(1), .ratio(1))
+                    UIView().attach($0)
+                        .size(.ratio(0.5), .ratio(0.5))
+                    UIView().attach($0)
+                        .size(.ratio(0.2), .ratio(0.2))
+                }
+                
+                .size(100, 100)
+            }
+            .size(.fill, .fill)
+            
+            Label("footer").attach($0)
+                .size(.fill, 50)
+        }
+        .animator(Animators.default)
+        .size(.fill, .fill)
+        .padding(all: 10)
+        .margin(view.py_safeArea())
+        .view
     }
     
     func systemColorTest() -> UIView {

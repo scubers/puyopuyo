@@ -164,6 +164,15 @@ public struct Size: Equatable, Outputing {
         Size(width: .fix(value), height: .fix(value))
     }
 
+    public static func flex<O: Outputing>(main: SizeDescription, cross: SizeDescription, axis: O) -> Outputs<Size> where O.OutputType == Direction {
+        axis.asOutput().distinct().map {
+            switch $0 {
+            case .horizontal: return Size(width: main, height: cross)
+            case .vertical: return Size(width: cross, height: main)
+            }
+        }
+    }
+
     public var isCalculable: Bool {
         !(width.sizeType == .aspectRatio && height.sizeType == .aspectRatio)
     }
