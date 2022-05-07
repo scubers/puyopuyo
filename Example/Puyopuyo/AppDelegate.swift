@@ -27,6 +27,12 @@ class Dog {
 
 // class MySection: BasicRecycleSection<Void> {}
 
+class NavController: UINavigationController {
+    override var shouldAutorotate: Bool {
+        viewControllers.last?.shouldAutorotate ?? true
+    }
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
@@ -37,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIImageView.appearance().tintColor = Theme.accentColor
 
         window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = UINavigationController(rootViewController: MenuViewController())
+        window?.rootViewController = NavController(rootViewController: MenuViewController())
 //        window?.rootViewController = NavController(rootViewController: UIViewController())
         window?.makeKeyAndVisible()
 

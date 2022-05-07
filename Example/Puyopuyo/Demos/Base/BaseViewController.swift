@@ -14,4 +14,8 @@ class BaseViewController: UIViewController {
 
         view.backgroundColor = .systemBackground
     }
+
+    override var shouldAutorotate: Bool {
+        presentedViewController?.shouldAutorotate ?? true
+    }
 }

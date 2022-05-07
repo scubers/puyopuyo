@@ -16,6 +16,8 @@
 		096CE4F2280C55F80014903A /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096CE4F1280C55F80014903A /* MenuViewController.swift */; };
 		096CE4F4280C589F0014903A /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096CE4F3280C589F0014903A /* BaseViewController.swift */; };
 		0972D40526C576D200210D1C /* ShadowStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0972D40426C576D200210D1C /* ShadowStyle.swift */; };
+		09798A6C2826D114007A3737 /* ScenesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09798A6B2826D114007A3737 /* ScenesVC.swift */; };
+		09798A6E2826D1B8007A3737 /* NewsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09798A6D2826D1B8007A3737 /* NewsVC.swift */; };
 		0982C1A02469AF730070F104 /* RecycleBoxPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */; };
 		0986B15A27F47C8000907B3A /* LinkListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0986B15927F47C8000907B3A /* LinkListTests.swift */; };
 		098AA9F126FB6F0F00C53AA2 /* AnimationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 098AA9F026FB6F0F00C53AA2 /* AnimationVC.swift */; };
@@ -72,6 +74,8 @@
 		096CE4F1280C55F80014903A /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		096CE4F3280C589F0014903A /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		0972D40426C576D200210D1C /* ShadowStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowStyle.swift; sourceTree = "<group>"; };
+		09798A6B2826D114007A3737 /* ScenesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScenesVC.swift; sourceTree = "<group>"; };
+		09798A6D2826D1B8007A3737 /* NewsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewsVC.swift; sourceTree = "<group>"; };
 		097B22AE2441F6290043B0A5 /* Puyopuyo_Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Puyopuyo_Example.entitlements; sourceTree = "<group>"; };
 		0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecycleBoxPropertiesVC.swift; sourceTree = "<group>"; };
 		0986B15927F47C8000907B3A /* LinkListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkListTests.swift; sourceTree = "<group>"; };
@@ -159,6 +163,15 @@
 				095E422226F50B0000D6B88C /* ChatVC.swift */,
 			);
 			path = Chat;
+			sourceTree = "<group>";
+		};
+		09798A6A2826D0F8007A3737 /* SceneDemos */ = {
+			isa = PBXGroup;
+			children = (
+				09798A6B2826D114007A3737 /* ScenesVC.swift */,
+				09798A6D2826D1B8007A3737 /* NewsVC.swift */,
+			);
+			path = SceneDemos;
 			sourceTree = "<group>";
 		};
 		098AA9EF26FB6F0400C53AA2 /* Animation */ = {
@@ -292,6 +305,7 @@
 		A8D9430222FF360B002E487F /* Demos */ = {
 			isa = PBXGroup;
 			children = (
+				09798A6A2826D0F8007A3737 /* SceneDemos */,
 				09418BDC2703057000129A15 /* ScrollView */,
 				098AA9EF26FB6F0400C53AA2 /* Animation */,
 				095E422126F50AF900D6B88C /* Chat */,
@@ -533,6 +547,7 @@
 				096CE4F4280C589F0014903A /* BaseViewController.swift in Sources */,
 				0972D40526C576D200210D1C /* ShadowStyle.swift in Sources */,
 				A8698302239CF98E00B3D514 /* _Scaffold.swift in Sources */,
+				09798A6C2826D114007A3737 /* ScenesVC.swift in Sources */,
 				A8BEC490239CD656001FD6BF /* LinearPropertiesVC.swift in Sources */,
 				A81CE1492312EE6900E19E6B /* OptionView.swift in Sources */,
 				096CE4F2280C55F80014903A /* MenuViewController.swift in Sources */,
@@ -547,6 +562,7 @@
 				A897FCDE230AFBD80061029E /* Util.swift in Sources */,
 				A8D9430922FF3694002E487F /* Label.swift in Sources */,
 				0915661526F46DCE007EBB05 /* ControlPad.swift in Sources */,
+				09798A6E2826D1B8007A3737 /* NewsVC.swift in Sources */,
 				A8BCEEB62399620F002DB739 /* UIViewProertiesVC.swift in Sources */,
 				A8BEC492239CDB6B001FD6BF /* FlowPropertiesVC.swift in Sources */,
 				0910C08D26E45A350048D5C8 /* FeedVC.swift in Sources */,

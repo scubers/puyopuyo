@@ -1,35 +1,36 @@
 //
-//  MenuViewController.swift
+//  ScenesVC.swift
 //  Puyopuyo_Example
 //
-//  Created by J on 2022/4/17.
+//  Created by J on 2022/5/8.
 //  Copyright © 2022 CocoaPods. All rights reserved.
 //
 
+import Foundation
 import Puyopuyo
-import UIKit
 
-class MenuViewController: BaseViewController {
+class ScenesVC: BaseViewController {
     let dataSrouce: [(String, () -> UIViewController)] = [
-        ("Test", { TestVC() }),
-        ("Scenes", { ScenesVC() }),
-        ("UIView Properties", { UIViewProertiesVC() }),
-        ("LinearBox Properties", { LinearPropertiesVC() }),
-        ("Size Properties", { SizePropertiesVC() }),
-        ("FlowBox Properties", { FlowPropertiesVC() }),
-        ("ZBox Properties", { ZPropertiesVC() }),
-        ("Scroll view", { ScrollVC() }),
-        ("Animation", { AnimationVC() }),
-        ("Style", { StyleVC() }),
-        ("Chat", { ChatVC() }),
-        ("Feed", { FeedVC() }),
-        ("RecycleBox Properties", { RecycleBoxPropertiesVC() }),
-        ("Advance Usage", { AdvanceVC() }),
+        ("News", { NewsVC() }),
     ]
+
+    let isOn = State(false)
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Menu"
+        title = "Scenes"
+
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: HBox().attach {
+            UILabel().attach($0)
+                .text("Present")
+            UISwitch().attach($0)
+                .isOn(isOn)
+        }
+        .justifyContent(.center)
+        .space(4)
+        .isSizeControl(false)
+        .isCenterControl(false)
+        .view)
 
         let this = WeakableObject(value: self)
         ZBox().attach(view) {
@@ -69,6 +70,10 @@ class MenuViewController: BaseViewController {
     }
 
     func push(vc: UIViewController) {
-        navigationController?.pushViewController(vc, animated: true)
+        if isOn.value {
+            present(vc, animated: true)
+        } else {
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }

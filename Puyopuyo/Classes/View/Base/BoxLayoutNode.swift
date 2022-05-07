@@ -65,6 +65,7 @@ public extension BoxLayoutNode {
 
 extension BoxLayoutContainer {
     func _addLayoutNode(_ node: BoxLayoutNode) {
+        node.removeFromSuperBox()
         // set parent first
         node.superBox = self
         // add child second
