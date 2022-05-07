@@ -89,12 +89,12 @@ extension UIView: BoxLayoutNode {
 
     private var _layoutMetrics: LayoutMetrics {
         get {
-            var m = objc_getAssociatedObject(self, &LayoutMetrics.associateObjectKey) as? LayoutMetrics
-            if m == nil {
-                m = LayoutMetrics()
-                self._layoutMetrics = m!
+            if let m = objc_getAssociatedObject(self, &LayoutMetrics.associateObjectKey) as? LayoutMetrics {
+                return m
             }
-            return m!
+            let m = LayoutMetrics()
+            self._layoutMetrics = m
+            return m
         }
         set {
             objc_setAssociatedObject(self, &LayoutMetrics.associateObjectKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
@@ -108,16 +108,17 @@ extension UIView: BoxLayoutNode {
 
     public var layoutMeasure: Measure {
         get {
-            var m = _layoutMetrics.measure
-            if m == nil {
-                if let regulatable = self as? BoxView {
-                    m = regulatable.createRegulator()
-                } else {
-                    m = Measure(delegate: self, sizeDelegate: self, childrenDelegate: nil)
-                }
-                _layoutMetrics.measure = m!
+            if let m = _layoutMetrics.measure {
+                return m
             }
-            return m!
+            var measure: Measure
+            if let regulatable = self as? BoxView {
+                measure = regulatable.createRegulator()
+            } else {
+                measure = Measure(delegate: self, sizeDelegate: self, childrenDelegate: nil)
+            }
+            _layoutMetrics.measure = measure
+            return measure
         }
         set { _layoutMetrics.measure = newValue }
     }
