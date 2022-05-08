@@ -12,42 +12,42 @@ import Foundation
 public extension Puyo where T: BoxView {
     @discardableResult
     func autoJudgeScroll(_ judge: Bool) -> Self {
-        set(\T.control.isScrollViewControl, judge)
+        set(\T.rootBoxConfig.isScrollViewControl, judge)
     }
 
     @discardableResult
-    func centerControl(_ control: BoxControl.ControlType) -> Self {
-        set(\T.control.centerControl, control)
+    func centerControl(_ control: BoxView.RootBoxConfig.ControlType) -> Self {
+        set(\T.rootBoxConfig.centerControl, control)
     }
 
     @discardableResult
-    func sizeControl(_ control: BoxControl.ControlType) -> Self {
-        set(\T.control.sizeControl, control)
+    func sizeControl(_ control: BoxView.RootBoxConfig.ControlType) -> Self {
+        set(\T.rootBoxConfig.sizeControl, control)
     }
 
     @discardableResult
     func borders(_ options: [BorderOptions]) -> Self {
-        set(\T.control.borders, Borders.all(Border(options: options)))
+        set(\T.borders, Borders.all(Border(options: options)))
     }
 
     @discardableResult
     func topBorder(_ options: [BorderOptions]) -> Self {
-        set(\T.control.borders.top, Border(options: options))
+        set(\T.borders.top, Border(options: options))
     }
 
     @discardableResult
     func leftBorder(_ options: [BorderOptions]) -> Self {
-        set(\T.control.borders.left, Border(options: options))
+        set(\T.borders.left, Border(options: options))
     }
 
     @discardableResult
     func bottomBorder(_ options: [BorderOptions]) -> Self {
-        set(\T.control.borders.bottom, Border(options: options))
+        set(\T.borders.bottom, Border(options: options))
     }
 
     @discardableResult
     func rightBorder(_ options: [BorderOptions]) -> Self {
-        set(\T.control.borders.right, Border(options: options))
+        set(\T.borders.right, Border(options: options))
     }
 }
 

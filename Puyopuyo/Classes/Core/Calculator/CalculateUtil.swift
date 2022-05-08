@@ -16,7 +16,7 @@ struct CalculateUtil {
     /// - Parameter measure: measure description
     /// - Parameter constraint: constraint description
     /// - Returns: layoutResidual
-    static func getInitialLayoutResidual(for measure: Measure, constraint: CGSize = .init(width: -1, height: -1)) -> CGSize {
+    static func getInitialLayoutResidual(for measure: Measure, contentConstraint: CGSize = .init(width: -1, height: -1)) -> CGSize {
         func getInitialContentResidual(for sizeDesc: SizeDescription, constraint: CGFloat) -> CGFloat {
             switch sizeDesc.sizeType {
             case .fixed:
@@ -31,8 +31,8 @@ struct CalculateUtil {
         }
 
         let contentResidual = CGSize.ensureNotNegative(
-            width: getInitialContentResidual(for: measure.size.width, constraint: constraint.width),
-            height: getInitialContentResidual(for: measure.size.height, constraint: constraint.height)
+            width: getInitialContentResidual(for: measure.size.width, constraint: contentConstraint.width),
+            height: getInitialContentResidual(for: measure.size.height, constraint: contentConstraint.height)
         )
 
         return getSelfLayoutResidual(for: measure, fromContentResidual: contentResidual)

@@ -9,24 +9,7 @@ import UIKit
 
 // MARK: - BoxControl
 
-public class BoxControl {
-    public enum ControlType {
-        case bySet
-        case byCalculate
-
-        var isCalculate: Bool { self == .byCalculate }
-    }
-
-    ///
-    /// Control `contentSize` when superview is UIScrollView
-    public var isScrollViewControl = false
-
-    public var sizeControl = ControlType.byCalculate
-
-    public var centerControl = ControlType.byCalculate
-
-    public var borders = Borders()
-}
+public class BoxControl {}
 
 public protocol RegulatorSpecifier: AnyObject {
     associatedtype RegulatorType: Regulator
@@ -40,7 +23,21 @@ public extension UIView {
 // MARK: - BoxView
 
 open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewParasitizing {
-    public private(set) var control = BoxControl()
+    public struct RootBoxConfig {
+        public enum ControlType {
+            case bySet
+            case byCalculate
+
+            var isCalculate: Bool { self == .byCalculate }
+        }
+
+        public var sizeControl = ControlType.byCalculate
+
+        public var centerControl = ControlType.byCalculate
+        ///
+        /// Control `contentSize` when superview is UIScrollView
+        public var isScrollViewControl = false
+    }
 
     // MARK: - init
 
@@ -56,11 +53,21 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
 
     // MARK: - Open method
 
+    public var borders = Borders()
+
+    public var rootBoxConfig = RootBoxConfig()
+
     /// override this method to build custom view in subclass
     open func buildBody() {}
 
     open func createRegulator() -> Regulator {
         fatalError("subclass impl")
+    }
+
+    // MARK: - Public method
+
+    public var isRootBox: Bool {
+        !layoutRegulator.activated || (superview == nil) || !(superview is BoxView)
     }
 
     // MARK: - Overrides
@@ -83,26 +90,14 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
         }
     }
 
-    /// indicate if view is calling method layoutSubviews()
-    private var layouting = false
-
     override open func layoutSubviews() {
-        if layouting { return }
-        layouting = true
-
+        super.layoutSubviews()
         _layoutSubviews()
-
         initializing = false
-        layouting = false
     }
 
     override open func layoutIfNeeded() {
-        if let spv = superview,
-           spv.isBoxView,
-           spv.layoutMeasure.activated,
-           layoutRegulator.activated,
-           layoutRegulator.size.maybeWrap
-        {
+        if !isRootBox, layoutRegulator.size.maybeWrap {
             // 需要父布局进行计算
             superview?.layoutIfNeeded()
         } else {
@@ -116,7 +111,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
 
     override open func didMoveToSuperview() {
         positionControlDisposable?.dispose()
-        if control.sizeControl.isCalculate, let spv = superview, !spv.isBoxView {
+        if rootBoxConfig.sizeControl.isCalculate, let spv = superview, !spv.isBoxView {
             let boundsSize = spv
                 .py_observing(\.bounds)
                 .map(\.size, .zero)
@@ -165,9 +160,8 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
             // gone 不用计算
             return
         }
-        // 父视图为布局
 
-        if superview?.isBoxView ?? false, layoutRegulator.activated {
+        if !isRootBox {
             /**
              1. 当父布局为Box视图，并且当前布局可能是包裹，则视为被上层计算时优先计算过了。当前视图可不用重复计算
              2. 若非包裹，则上层视图时只是用了估算尺寸，需要再次计算子节点
@@ -179,9 +173,9 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
         } else {
             var layoutResidual: CGSize
 
-            switch control.sizeControl {
+            switch rootBoxConfig.sizeControl {
             case .bySet:
-                layoutResidual = CalculateUtil.getInitialLayoutResidual(for: layoutRegulator, constraint: bounds.size)
+                layoutResidual = CalculateUtil.getInitialLayoutResidual(for: layoutRegulator, contentConstraint: bounds.size)
             case .byCalculate:
                 layoutResidual = CalculateUtil.getInitialLayoutResidual(for: layoutRegulator)
                 let superviewSize = superview?.bounds.size ?? .zero
@@ -189,12 +183,12 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
                 if layoutRegulator.size.height.isRatio { layoutResidual.height = superviewSize.height }
             }
 
-            layoutRegulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
+            let size = CalHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
+            layoutRegulator.calculatedSize = size
 
-            let rect = CGRect(origin: .zero, size: layoutRegulator.calculatedSize)
             layoutRegulator.calculatedCenter = CGPoint(
-                x: rect.midX + layoutRegulator.margin.left,
-                y: rect.midY + layoutRegulator.margin.top
+                x: size.width / 2 + layoutRegulator.margin.left,
+                y: size.height / 2 + layoutRegulator.margin.top
             )
 
             controlScrollViewIfNeeded()
@@ -215,21 +209,21 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
     private func updatingBorders() {
         CATransaction.begin()
         CATransaction.setDisableActions(true)
-        control.borders.updateTop(to: layer)
-        control.borders.updateLeft(to: layer)
-        control.borders.updateBottom(to: layer)
-        control.borders.updateRight(to: layer)
+        borders.updateTop(to: layer)
+        borders.updateLeft(to: layer)
+        borders.updateBottom(to: layer)
+        borders.updateRight(to: layer)
         CATransaction.commit()
     }
 
     private func controlPositionAndSizeIfNeeded() {
-        if control.sizeControl.isCalculate || control.centerControl.isCalculate {
+        if rootBoxConfig.sizeControl.isCalculate || rootBoxConfig.centerControl.isCalculate {
             let animator = py_animator ?? Animators.inherited
             animator.animate(self, size: layoutRegulator.calculatedSize, center: layoutRegulator.calculatedCenter) {
-                if self.control.sizeControl.isCalculate {
+                if self.rootBoxConfig.sizeControl.isCalculate {
                     self.bounds.size = self.layoutRegulator.calculatedSize
                 }
-                if self.control.centerControl.isCalculate {
+                if self.rootBoxConfig.centerControl.isCalculate {
                     self.center = self.layoutRegulator.calculatedCenter
                 }
             }
@@ -238,7 +232,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
 
     /// 处理superview 是scrollView的情况，控制其 contentSize
     private func controlScrollViewIfNeeded() {
-        guard let scrollView = superview as? UIScrollView, control.isScrollViewControl else {
+        guard let scrollView = superview as? UIScrollView, rootBoxConfig.isScrollViewControl else {
             return
         }
 
