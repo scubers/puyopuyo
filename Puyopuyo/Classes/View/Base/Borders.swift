@@ -7,9 +7,9 @@
 
 import Foundation
 
-public struct Borders {
+public class Borders {
     public static func all(_ border: Border?) -> Borders {
-        var b = Borders()
+        let b = Borders()
         b.top = border
         b.left = border
         b.bottom = border
@@ -29,10 +29,12 @@ public struct Borders {
     public var right: Border?
     private weak var rightLayer: CAShapeLayer?
 
-    mutating func updateTop(to superLayer: CALayer) {
-        topLayer?.removeFromSuperlayer()
-        guard let border = top else { return }
-        let layer = generate(border: border)
+    func updateTop(to superLayer: CALayer) {
+        guard let border = top else {
+            topLayer?.removeFromSuperlayer()
+            return
+        }
+        let layer = generateLayerIfNeeded(originlayer: topLayer, border: border)
         topLayer = layer
         let frame = superLayer.frame
         var layerFrame = CGRect.zero
@@ -42,13 +44,17 @@ public struct Borders {
         layerFrame.size.height = border.thick
         layer.frame = layerFrame
         layer.path = getHorzPath(layerFrame).cgPath
-        superLayer.addSublayer(layer)
+        if layer.superlayer != layer {
+            superLayer.addSublayer(layer)
+        }
     }
 
-    mutating func updateLeft(to superLayer: CALayer) {
-        leftLayer?.removeFromSuperlayer()
-        guard let border = left else { return }
-        let layer = generate(border: border)
+    func updateLeft(to superLayer: CALayer) {
+        guard let border = left else {
+            leftLayer?.removeFromSuperlayer()
+            return
+        }
+        let layer = generateLayerIfNeeded(originlayer: leftLayer, border: border)
         leftLayer = layer
         let frame = superLayer.frame
         var layerFrame = CGRect.zero
@@ -58,13 +64,17 @@ public struct Borders {
         layerFrame.size.height = frame.size.height - (border.leadInset + border.trailInset)
         layer.frame = layerFrame
         layer.path = getVertPath(layerFrame).cgPath
-        superLayer.addSublayer(layer)
+        if layer.superlayer != layer {
+            superLayer.addSublayer(layer)
+        }
     }
 
-    mutating func updateBottom(to superLayer: CALayer) {
-        bottomLayer?.removeFromSuperlayer()
-        guard let border = bottom else { return }
-        let layer = generate(border: border)
+    func updateBottom(to superLayer: CALayer) {
+        guard let border = bottom else {
+            bottomLayer?.removeFromSuperlayer()
+            return
+        }
+        let layer = generateLayerIfNeeded(originlayer: bottomLayer, border: border)
         bottomLayer = layer
         let frame = superLayer.frame
         var layerFrame = CGRect.zero
@@ -74,13 +84,17 @@ public struct Borders {
         layerFrame.size.height = border.thick
         layer.frame = layerFrame
         layer.path = getHorzPath(layerFrame).cgPath
-        superLayer.addSublayer(layer)
+        if layer.superlayer != layer {
+            superLayer.addSublayer(layer)
+        }
     }
 
-    mutating func updateRight(to superLayer: CALayer) {
-        rightLayer?.removeFromSuperlayer()
-        guard let border = right else { return }
-        let layer = generate(border: border)
+    func updateRight(to superLayer: CALayer) {
+        guard let border = right else {
+            rightLayer?.removeFromSuperlayer()
+            return
+        }
+        let layer = generateLayerIfNeeded(originlayer: rightLayer, border: border)
         rightLayer = layer
         let frame = superLayer.frame
         var layerFrame = CGRect.zero
@@ -90,11 +104,13 @@ public struct Borders {
         layerFrame.size.height = frame.size.height - (border.leadInset + border.trailInset)
         layer.frame = layerFrame
         layer.path = getVertPath(layerFrame).cgPath
-        superLayer.addSublayer(layer)
+        if layer.superlayer != layer {
+            superLayer.addSublayer(layer)
+        }
     }
 
-    private func generate(border: Border) -> CAShapeLayer {
-        let layer = CAShapeLayer()
+    private func generateLayerIfNeeded(originlayer: CAShapeLayer?, border: Border) -> CAShapeLayer {
+        let layer = originlayer ?? CAShapeLayer()
         layer.strokeColor = border.color?.cgColor
         layer.lineWidth = border.thick
         layer.strokeStart = 0

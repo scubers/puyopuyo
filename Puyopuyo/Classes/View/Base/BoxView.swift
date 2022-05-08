@@ -169,40 +169,16 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
                 _ = CalHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
             }
         } else {
-            var layoutResidual: CGSize
-            // 父视图为普通视图
-            if control.isSizeControl {
-                layoutResidual = CalculateUtil.getInitialLayoutResidual(for: layoutRegulator)
+            let constraint = superview?.bounds.size ?? CGSize(width: -1, height: -1)
+            let layoutResidual = CalculateUtil.getInitialLayoutResidual(for: layoutRegulator, constraint: constraint)
 
-                if let spv = superview {
-                    let spvBounds = spv.bounds.size
-                    if layoutRegulator.size.width.isRatio { layoutResidual.width = spvBounds.width }
-                    if layoutRegulator.size.height.isRatio { layoutResidual.height = spvBounds.height }
-                }
-
-                layoutRegulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
-            } else {
-                layoutResidual = CalculateUtil.getSelfLayoutResidual(for: layoutRegulator, fromContentResidual: bounds.size)
-                layoutRegulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
-            }
-
-            if control.isCenterControl {
-                let b = CGRect(origin: .zero, size: layoutRegulator.calculatedSize)
-                layoutRegulator.calculatedCenter = CGPoint(x: b.midX + layoutRegulator.margin.left, y: b.midY + layoutRegulator.margin.top)
-            }
+            layoutRegulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
 
             controlScrollViewIfNeeded()
 
-            let animator = py_animator ?? Animators.inherited
+            controlCenterIfNeeded()
 
-            animator.animate(self, size: layoutRegulator.calculatedSize, center: layoutRegulator.calculatedCenter) {
-                if self.control.isSizeControl {
-                    self.bounds.size = self.layoutRegulator.calculatedSize
-                }
-                if self.control.isCenterControl {
-                    self.center = self.layoutRegulator.calculatedCenter
-                }
-            }
+            controlSelfSizeIfNeeded()
         }
 
         // 处理子节点的位置和大小
@@ -216,10 +192,34 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
     }
 
     private func updatingBorders() {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
         control.borders.updateTop(to: layer)
         control.borders.updateLeft(to: layer)
         control.borders.updateBottom(to: layer)
         control.borders.updateRight(to: layer)
+        CATransaction.commit()
+    }
+
+    private func controlSelfSizeIfNeeded() {
+        if control.isSizeControl {
+            let animator = py_animator ?? Animators.inherited
+            animator.animate(self, size: layoutRegulator.calculatedSize, center: layoutRegulator.calculatedCenter) {
+                if self.control.isSizeControl {
+                    self.bounds.size = self.layoutRegulator.calculatedSize
+                }
+                if self.control.isCenterControl {
+                    self.center = self.layoutRegulator.calculatedCenter
+                }
+            }
+        }
+    }
+
+    private func controlCenterIfNeeded() {
+        if control.isCenterControl {
+            let b = CGRect(origin: .zero, size: layoutRegulator.calculatedSize)
+            layoutRegulator.calculatedCenter = CGPoint(x: b.midX + layoutRegulator.margin.left, y: b.midY + layoutRegulator.margin.top)
+        }
     }
 
     /// 处理superview 是scrollView的情况，控制其 contentSize

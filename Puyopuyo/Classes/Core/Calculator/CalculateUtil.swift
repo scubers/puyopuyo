@@ -14,24 +14,25 @@ import Foundation
 struct CalculateUtil {
     /// 获取布局时候的初始化LayoutResidual
     /// - Parameter measure: measure description
+    /// - Parameter constraint: constraint description
     /// - Returns: layoutResidual
-    static func getInitialLayoutResidual(for measure: Measure) -> CGSize {
-        func getInitialContentResidual(for sizeDesc: SizeDescription) -> CGFloat {
+    static func getInitialLayoutResidual(for measure: Measure, constraint: CGSize = .init(width: -1, height: -1)) -> CGSize {
+        func getInitialContentResidual(for sizeDesc: SizeDescription, constraint: CGFloat) -> CGFloat {
             switch sizeDesc.sizeType {
             case .fixed:
                 return sizeDesc.fixedValue
             case .ratio:
-                return 0
+                return constraint < 0 ? 0 : constraint
             case .wrap:
                 return sizeDesc.max
             case .aspectRatio:
-                return .greatestFiniteMagnitude
+                return constraint < 0 ? .greatestFiniteMagnitude : constraint
             }
         }
 
         let contentResidual = CGSize.ensureNotNegative(
-            width: getInitialContentResidual(for: measure.size.width),
-            height: getInitialContentResidual(for: measure.size.height)
+            width: getInitialContentResidual(for: measure.size.width, constraint: constraint.width),
+            height: getInitialContentResidual(for: measure.size.height, constraint: constraint.height)
         )
 
         return getSelfLayoutResidual(for: measure, fromContentResidual: contentResidual)
