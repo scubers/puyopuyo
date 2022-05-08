@@ -83,13 +83,12 @@ class BoxLayoutNodeTests: XCTestCase {
     
     func testRemoveFromSuperBox() throws {
         var v: UIView!
-        let group = HGroup().attach(box) {
+        HGroup().attach(box) {
             v = UIView().attach($0)
                 .size(50, 50)
                 .view
         }
         .activated(false)
-        .view
         
         v.removeFromSuperBox()
         
