@@ -16,13 +16,13 @@ public extension Puyo where T: BoxView {
     }
 
     @discardableResult
-    func isCenterControl(_ control: Bool) -> Self {
-        set(\T.control.isCenterControl, control)
+    func centerControl(_ control: BoxControl.ControlType) -> Self {
+        set(\T.control.centerControl, control)
     }
 
     @discardableResult
-    func isSizeControl(_ control: Bool) -> Self {
-        set(\T.control.isSizeControl, control)
+    func sizeControl(_ control: BoxControl.ControlType) -> Self {
+        set(\T.control.sizeControl, control)
     }
 
     @discardableResult

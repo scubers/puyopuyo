@@ -13,17 +13,80 @@ import UIKit
 class FeedVC: BaseViewController, UITableViewDelegate {
     let dataSource = State<[Feed]>([])
 
+    let isTableBox = State(false)
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Refresh", style: .plain, target: self, action: #selector(reload))
 
-        VBox().attach(view) {
+        navigationItem.titleView = ZBox().attach {
+            UISegmentedControl(items: ["Recycle", "Table"]).attach($0)
+                .set(\.selectedSegmentIndex, 0)
+                .onControlEvent(.valueChanged, Inputs { [weak self] in
+                    self?.isTableBox.value = $0.selectedSegmentIndex == 1
+                })
+        }
+        .sizeControl(.bySet)
+        .view
+
+        ZBox().attach(view) {
             recycleBox().attach($0)
+                .visibility(isTableBox.map { (!$0).visibleOrGone })
+            tableBox().attach($0)
+                .visibility(isTableBox.map { $0.visibleOrGone })
         }
         .size(.fill, .fill)
 
         reload()
+    }
+
+    func tableBox() -> UIView {
+        let this = WeakableObject(value: self)
+
+        return TableBox(
+            style: .grouped,
+            separatorStyle: .none,
+            sections: [
+                TableSection<Feed, UIView, Void>(
+                    identifier: "1",
+                    dataSource: dataSource.asOutput(),
+                    _cell: { o, _ in
+                        ItemView().attach()
+                            .state(o.binder.data)
+                            .width(.fill)
+                            .bottomBorder([.color(UIColor.lightGray.withAlphaComponent(0.3)), .lead(20)])
+                            .view
+                    },
+                    _header: { _, _ in
+                        Header().attach()
+                            .onEvent { e in
+                                switch e {
+                                case .reload:
+                                    this.value?.reload()
+                                case .change:
+                                    break
+                                }
+                            }
+                            .view
+                    },
+                    _footer: { _, _ in
+                        VBox().attach {
+                            UILabel().attach($0)
+                                .text("It's ending")
+                        }
+                        .backgroundColor(UIColor.systemPink)
+                        .padding(all: 16)
+                        .width(.fill)
+                        .justifyContent(.center)
+                        .view
+                    }
+                )
+            ]
+        )
+        .attach()
+        .size(.fill, .fill)
+        .view
     }
 
     func recycleBox() -> UIView {
@@ -39,7 +102,6 @@ class FeedVC: BaseViewController, UITableViewDelegate {
                             .state(o.data)
                             .width(.fill)
                             .bottomBorder([.color(UIColor.lightGray.withAlphaComponent(0.3)), .lead(20)])
-                            .view
                     },
                     header: { _, _ in
                         Header().attach()
@@ -51,7 +113,6 @@ class FeedVC: BaseViewController, UITableViewDelegate {
                                     break
                                 }
                             }
-                            .view
                     },
                     footer: { _, _ in
                         VBox().attach {
@@ -62,7 +123,6 @@ class FeedVC: BaseViewController, UITableViewDelegate {
                         .padding(all: 16)
                         .width(.fill)
                         .justifyContent(.center)
-                        .view
                     }
                 )
             ].asOutput()

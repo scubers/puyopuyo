@@ -28,8 +28,7 @@ class ScenesVC: BaseViewController {
         }
         .justifyContent(.center)
         .space(4)
-        .isSizeControl(false)
-        .isCenterControl(false)
+        .sizeControl(.bySet)
         .view)
 
         let this = WeakableObject(value: self)

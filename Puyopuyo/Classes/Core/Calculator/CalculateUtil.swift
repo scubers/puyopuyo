@@ -24,7 +24,7 @@ struct CalculateUtil {
             case .ratio:
                 return constraint < 0 ? 0 : constraint
             case .wrap:
-                return sizeDesc.max
+                return constraint < 0 ? sizeDesc.max : constraint
             case .aspectRatio:
                 return constraint < 0 ? .greatestFiniteMagnitude : constraint
             }

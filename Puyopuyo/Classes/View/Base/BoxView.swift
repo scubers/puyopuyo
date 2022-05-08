@@ -10,17 +10,20 @@ import UIKit
 // MARK: - BoxControl
 
 public class BoxControl {
+    public enum ControlType {
+        case bySet
+        case byCalculate
+
+        var isCalculate: Bool { self == .byCalculate }
+    }
+
     ///
     /// Control `contentSize` when superview is UIScrollView
     public var isScrollViewControl = false
 
-    ///
-    /// Control `center` when superview is not BoxView
-    public var isCenterControl = true
+    public var sizeControl = ControlType.byCalculate
 
-    ///
-    /// Control `size` when superview is not BoxView
-    public var isSizeControl = true
+    public var centerControl = ControlType.byCalculate
 
     public var borders = Borders()
 }
@@ -113,7 +116,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
 
     override open func didMoveToSuperview() {
         positionControlDisposable?.dispose()
-        if control.isCenterControl, let spv = superview, !spv.isBoxView {
+        if control.sizeControl.isCalculate, let spv = superview, !spv.isBoxView {
             let boundsSize = spv
                 .py_observing(\.bounds)
                 .map(\.size, .zero)
@@ -158,27 +161,45 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
     private var positionControlDisposable: Disposer?
 
     private func _layoutSubviews() {
+        guard layoutVisibility != .gone else {
+            // gone 不用计算
+            return
+        }
         // 父视图为布局
-        if superview?.isBoxView ?? false {
+
+        if superview?.isBoxView ?? false, layoutRegulator.activated {
             /**
              1. 当父布局为Box视图，并且当前布局可能是包裹，则视为被上层计算时优先计算过了。当前视图可不用重复计算
              2. 若非包裹，则上层视图时只是用了估算尺寸，需要再次计算子节点
              */
-            if layoutRegulator.size.bothNotWrap {
+            if layoutRegulator.size.bothNotWrap, layoutVisibility == .visible {
                 let layoutResidual = CalculateUtil.getSelfLayoutResidual(for: layoutRegulator, fromContentResidual: bounds.size)
                 _ = CalHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
             }
         } else {
-            let constraint = superview?.bounds.size ?? CGSize(width: -1, height: -1)
-            let layoutResidual = CalculateUtil.getInitialLayoutResidual(for: layoutRegulator, constraint: constraint)
+            var layoutResidual: CGSize
+
+            switch control.sizeControl {
+            case .bySet:
+                layoutResidual = CalculateUtil.getInitialLayoutResidual(for: layoutRegulator, constraint: bounds.size)
+            case .byCalculate:
+                layoutResidual = CalculateUtil.getInitialLayoutResidual(for: layoutRegulator)
+                let superviewSize = superview?.bounds.size ?? .zero
+                if layoutRegulator.size.width.isRatio { layoutResidual.width = superviewSize.width }
+                if layoutRegulator.size.height.isRatio { layoutResidual.height = superviewSize.height }
+            }
 
             layoutRegulator.calculatedSize = CalHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
 
+            let rect = CGRect(origin: .zero, size: layoutRegulator.calculatedSize)
+            layoutRegulator.calculatedCenter = CGPoint(
+                x: rect.midX + layoutRegulator.margin.left,
+                y: rect.midY + layoutRegulator.margin.top
+            )
+
             controlScrollViewIfNeeded()
 
-            controlCenterIfNeeded()
-
-            controlSelfSizeIfNeeded()
+            controlPositionAndSizeIfNeeded()
         }
 
         // 处理子节点的位置和大小
@@ -201,24 +222,17 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
         CATransaction.commit()
     }
 
-    private func controlSelfSizeIfNeeded() {
-        if control.isSizeControl {
+    private func controlPositionAndSizeIfNeeded() {
+        if control.sizeControl.isCalculate || control.centerControl.isCalculate {
             let animator = py_animator ?? Animators.inherited
             animator.animate(self, size: layoutRegulator.calculatedSize, center: layoutRegulator.calculatedCenter) {
-                if self.control.isSizeControl {
+                if self.control.sizeControl.isCalculate {
                     self.bounds.size = self.layoutRegulator.calculatedSize
                 }
-                if self.control.isCenterControl {
+                if self.control.centerControl.isCalculate {
                     self.center = self.layoutRegulator.calculatedCenter
                 }
             }
-        }
-    }
-
-    private func controlCenterIfNeeded() {
-        if control.isCenterControl {
-            let b = CGRect(origin: .zero, size: layoutRegulator.calculatedSize)
-            layoutRegulator.calculatedCenter = CGPoint(x: b.midX + layoutRegulator.margin.left, y: b.midY + layoutRegulator.margin.top)
         }
     }
 
