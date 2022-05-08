@@ -32,50 +32,7 @@ class TestVC: BaseViewController {
             UIView().attach($0)
                 .size(50, 50)
             
-            VBox().attach($0) {
-                let isOn = State(false)
-                
-                UISwitch().attach($0)
-                    .isOn(isOn)
-                Label("header").attach($0)
-                    .size(.fill, .fill)
-                
-                Label("footer").attach($0)
-                    .size(.fill, .fill)
-                
-                HBox().attach($0) {
-                    Label("section1").attach($0)
-                    Label("section2").attach($0)
-                    
-                    let pan = UIPanGestureRecognizer()
-                    pan.py_addAction { g in
-                        let gesture = g as! UIPanGestureRecognizer
-                        if g.state == .began {
-                            g.view?.layer.zPosition = 1000
-                        }
-                        if g.state == .changed {
-                            let p = gesture.translation(in: gesture.view)
-                            g.view?.center.x += p.x
-                            g.view?.center.y += p.y
-                            gesture.setTranslation(.zero, in: gesture.view)
-                        }
-                    }
-                    $0.addGestureRecognizer(pan)
-                }
-                .space(10)
-                .padding(all: 10)
-                .visibility(isOn.map({
-                    if $0 {
-                        return Visibility.visible
-                    } else {
-                        return Visibility.free
-                    }
-                }))
-                .centerControl(.bySet)
-                .frame(x: 100, y: 100, w: 0, h: 0)
-            }
-            .padding($0.py_safeArea())
-            .size(.fill, .fill)
+            testGroup().attach($0)
         }
         
         Util.randomViewColor(view: view)

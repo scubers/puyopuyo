@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetricChangedDelegate, AutoDisposable {
+public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetricChangedDelegate, AutoDisposable, ViewParasitizing {
     public init() {}
 
     // MARK: - AutoDisposable
@@ -38,7 +38,7 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
     }
 
     public var parasitizingHostForChildren: ViewParasitizing? {
-        superBox?.parasitizingHostForChildren
+        self
     }
 
     public var layoutVisibility: Visibility = .visible {
@@ -70,27 +70,22 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
 
     public func addParasite(_ parasite: ViewDisplayable) {
         if [Visibility.visible, .free].contains(layoutVisibility) {
-            parasitizingHostForChildren?.addParasite(parasite)
+            superBox?.parasitizingHostForChildren?.addParasite(parasite)
         }
     }
 
     public func removeParasite(_ parasite: ViewDisplayable) {
-        parasitizingHostForChildren?.removeParasite(parasite)
+        superBox?.parasitizingHostForChildren?.removeParasite(parasite)
     }
 
     public func setNeedsLayout() {
-        parasitizingHostForChildren?.setNeedsLayout()
+        superBox?.parasitizingHostForChildren?.setNeedsLayout()
     }
 
     // MARK: - MeasureChildrenDelegate
 
     public func children(for _: Measure) -> [Measure] {
-        layoutChildren.filter { node in
-            if let superview = node.layoutNodeView?.superview {
-                return superview === parasitizingHostForChildren
-            }
-            return true
-        }.map(\.layoutMeasure)
+        layoutChildren.map(\.layoutMeasure)
     }
 
     // MARK: - MeasureDelegate
