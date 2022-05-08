@@ -132,7 +132,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
     override public func willRemoveSubview(_ subview: UIView) {
         super.willRemoveSubview(subview)
         willRemoveParasite(subview)
-        if removingParasite == nil {
+        if !isRemovingParasite {
             subview.superBox?.layoutChildren.removeAll(where: { $0.layoutNodeView === subview })
             subview.superBox = nil
         }
@@ -236,19 +236,19 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
             return
         }
 
-        let newSize = layoutRegulator.calculatedSize
+        let size = layoutRegulator.calculatedSize
         // 控制父视图的scroll
         if layoutRegulator.size.width.isWrap {
-            scrollView.contentSize.width = newSize.width + layoutRegulator.margin.left + layoutRegulator.margin.right
+            scrollView.contentSize.width = size.width + layoutRegulator.margin.getHorzTotal()
         }
         if layoutRegulator.size.height.isWrap {
-            scrollView.contentSize.height = newSize.height + layoutRegulator.margin.bottom + layoutRegulator.margin.top
+            scrollView.contentSize.height = size.height + layoutRegulator.margin.getVertTotal()
         }
     }
 
     private func getInheritedBoxAnimator(_ view: UIView?) -> Animator? {
-        if let ani = view?.py_animator {
-            return ani
+        if let animator = view?.py_animator {
+            return animator
         } else if view?.superview?.isBoxView ?? false {
             return getInheritedBoxAnimator(view?.superview)
         } else {
@@ -262,13 +262,13 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
         super.addSubview(parasite.dislplayView)
     }
 
-    private var removingParasite: ViewDisplayable?
+    private var isRemovingParasite = false
     open func removeParasite(_ parasite: ViewDisplayable) {
-        assert(removingParasite == nil)
+        assert(!isRemovingParasite)
         if parasite.dislplayView.superview == self {
-            removingParasite = parasite
+            isRemovingParasite = true
             parasite.dislplayView.removeFromSuperview()
-            removingParasite = nil
+            isRemovingParasite = false
         }
     }
 
