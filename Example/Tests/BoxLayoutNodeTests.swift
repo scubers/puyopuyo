@@ -53,19 +53,15 @@ class BoxLayoutNodeTests: XCTestCase {
         .view
         
         XCTAssert(v.superview == box)
-        XCTAssert(v.parasitizingHost === box)
         
         group.layoutVisibility = .gone
         XCTAssert(v.superview == nil)
-        XCTAssert(v.parasitizingHost === box)
         
         group.layoutVisibility = .free
         XCTAssert(v.superview == box)
-        XCTAssert(v.parasitizingHost === box)
         
         group.layoutVisibility = .gone
         XCTAssert(v.superview == nil)
-        XCTAssert(v.parasitizingHost === box)
     }
     
     func testSuperBox() throws {
@@ -105,12 +101,11 @@ class BoxLayoutNodeTests: XCTestCase {
         }
         .view
         
-        XCTAssert(group.parasitizingHostForChildren === box)
-        XCTAssert(v.parasitizingHost === box)
+        XCTAssert(group.superBox === box)
         
         v.removeFromSuperBox()
         
-        XCTAssert(v.parasitizingHost == nil)
+        XCTAssert(v.superBox == nil)
     }
     
     func testLayoutChildren() throws {

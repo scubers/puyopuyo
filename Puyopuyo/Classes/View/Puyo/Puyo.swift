@@ -151,10 +151,6 @@ extension Puyo: BoxLayoutContainer where T: BoxLayoutContainer {
         set { view.layoutChildren = newValue }
     }
 
-    public var parasitizingHostForChildren: ViewParasitizing? {
-        view.parasitizingHostForChildren
-    }
-
     public func addLayoutNode(_ node: BoxLayoutNode) {
         view.addLayoutNode(node)
     }

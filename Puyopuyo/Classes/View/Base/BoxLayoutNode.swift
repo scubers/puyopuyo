@@ -36,10 +36,7 @@ public protocol BoxLayoutNode: AnyObject {
 
 ///
 /// Describe a container that can manage the layout node
-public protocol BoxLayoutContainer: BoxLayoutNode {
-    /// Chilren and its children's superview
-    var parasitizingHostForChildren: ViewParasitizing? { get }
-
+public protocol BoxLayoutContainer: BoxLayoutNode, ViewParasitizing {
     /// Do not call setter by your self
     var layoutChildren: [BoxLayoutNode] { get set }
 
@@ -55,10 +52,6 @@ public extension BoxLayoutNode {
         }
         return nil
     }
-
-    var parasitizingHost: ViewParasitizing? {
-        superBox?.parasitizingHostForChildren
-    }
 }
 
 // MARK: - BoxLayoutContainer extension
@@ -72,10 +65,10 @@ extension BoxLayoutContainer {
         layoutChildren.append(node)
 
         if let view = node.layoutNodeView {
-            parasitizingHostForChildren?.addParasite(view)
+            addParasite(view)
         }
 
-        parasitizingHostForChildren?.setNeedsLayout()
+        setNeedsLayout()
     }
 }
 

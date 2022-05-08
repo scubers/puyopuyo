@@ -278,10 +278,6 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
 
     public var layoutChildren: [BoxLayoutNode] = []
 
-    public var parasitizingHostForChildren: ViewParasitizing? {
-        self
-    }
-
     open func addLayoutNode(_ node: BoxLayoutNode) {
         _addLayoutNode(node)
     }
