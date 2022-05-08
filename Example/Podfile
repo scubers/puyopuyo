@@ -3,16 +3,16 @@
 use_frameworks!
 use_modular_headers!
 
-platform :ios, '9.0'
+platform :ios, '13.0'
 
 target 'Puyopuyo_Example' do
 # pod 'Puyopuyo/TangramKit', :path => '../'
   pod 'Puyopuyo/Extra', :path => '../'
 # pod 'Puyopuyo', :path => '../'
-  pod 'TangramKit'
-  pod 'RxSwift'
+  pod 'TangramKit', :inhibit_warnings => true
+  pod 'RxSwift', :inhibit_warnings => true
   pod 'SnapKit', :inhibit_warnings => true
-  pod 'YogaKit'
+  pod 'YogaKit', :inhibit_warnings => true
 
   target 'Puyopuyo_Tests' do
     inherit! :search_paths
@@ -27,6 +27,7 @@ post_install do |installer|
     project.targets.each do |target|
       target.build_configurations.each do |config|
         config.build_settings['OTHER_SWIFT_FLAGS'] = '$(inherited) -Xfrontend -debug-time-function-bodies'
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
       end
     end
   end

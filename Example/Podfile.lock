@@ -2,9 +2,9 @@ PODS:
   - Puyopuyo/Core (2.3.1)
   - Puyopuyo/Extra (2.3.1):
     - Puyopuyo/Core
-  - RxSwift (5.0.0)
-  - SnapKit (4.2.0)
-  - TangramKit (1.4.0)
+  - RxSwift (6.5.0)
+  - SnapKit (5.6.0)
+  - TangramKit (1.4.2)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -30,12 +30,12 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Puyopuyo: d690e48fa234cabccce6662e53c5edde97c8efd8
-  RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
-  SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
-  TangramKit: 15ccb6480f0e32c284f0a076542a607226e158dd
+  RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
+  SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
+  TangramKit: aad3ab8f9617418c9da96d59cddd71134ae8af83
   Yoga: cff67a400f6b74dc38eb0bad4f156673d9aa980c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 6d4755d6a7218b18b9185406911626237cd685b5
+PODFILE CHECKSUM: 8dd20a3016a907bddf351e3063b67b750835db5a
 
 COCOAPODS: 1.11.2
