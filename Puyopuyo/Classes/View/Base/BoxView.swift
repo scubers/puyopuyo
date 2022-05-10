@@ -94,6 +94,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
         super.layoutSubviews()
         _layoutSubviews()
         initializing = false
+        didFinishLayout()
     }
 
     override open func layoutIfNeeded() {
@@ -263,6 +264,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
     }
 
     private var isRemovingParasite = false
+
     open func removeParasite(_ parasite: ViewDisplayable) {
         assert(!isRemovingParasite)
         if parasite.dislplayView.superview == self {
@@ -281,6 +283,8 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
     open func addLayoutNode(_ node: BoxLayoutNode) {
         _addLayoutNode(node)
     }
+
+    open func didFinishLayout() {}
 
     // MARK: - MeasureChildrenDelegate
 

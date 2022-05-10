@@ -150,4 +150,8 @@ extension Puyo: BoxLayoutContainer where T: BoxLayoutContainer {
     public func addLayoutNode(_ node: BoxLayoutNode) {
         view.addLayoutNode(node)
     }
+
+    public func didFinishLayout() {
+        view.didFinishLayout()
+    }
 }
