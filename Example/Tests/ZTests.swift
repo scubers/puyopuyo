@@ -112,11 +112,11 @@ class ZTests: XCTestCase {
         box.layoutIfNeeded()
         XCTAssertTrue(v1.celCenter == CGPoint(x: box.fw / 2, y: box.fh / 2))
 
-        alignment.value = .left.union(.top)
+        alignment.value = [.left, .top]
         box.layoutIfNeeded()
         XCTAssertTrue(v1.fx == 0 && v1.fy == 0)
 
-        alignment.value = .bottom.union(.right)
+        alignment.value = [.bottom, .right]
         box.layoutIfNeeded()
         XCTAssertTrue(v1.maxX == box.calSize.width && v1.maxY == box.calSize.height)
     }
@@ -134,11 +134,11 @@ class ZTests: XCTestCase {
         box.layoutIfNeeded()
         XCTAssertTrue(v1.celCenter == CGPoint(x: box.fw / 2, y: box.fh / 2))
 
-        justifyContent.value = .left.union(.top)
+        justifyContent.value = [.left, .top]
         box.layoutIfNeeded()
         XCTAssertTrue(v1.fx == 0 && v1.fy == 0)
 
-        justifyContent.value = .bottom.union(.right)
+        justifyContent.value = [.bottom, .right]
         box.layoutIfNeeded()
         XCTAssertTrue(v1.maxX == box.calSize.width && v1.maxY == box.calSize.height)
     }

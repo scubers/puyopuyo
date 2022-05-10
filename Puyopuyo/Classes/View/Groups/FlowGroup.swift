@@ -2,7 +2,7 @@
 //  FlowGroup.swift
 //  Puyopuyo
 //
-//  Created by ByteDance on 2022/5/2.
+//  Created by J on 2022/5/2.
 //
 
 import Foundation
@@ -16,15 +16,17 @@ public class FlowGroup: GenericBoxGroup<FlowRegulator> {
 }
 
 public class HFlowGroup: FlowGroup {
-    override public init() {
-        super.init()
-        regulator.direction = .horizontal
+    override public func createRegulator() -> FlowRegulator {
+        let reg = super.createRegulator()
+        reg.direction = .horizontal
+        return reg
     }
 }
 
 public class VFlowGroup: FlowGroup {
-    override public init() {
-        super.init()
-        regulator.direction = .vertical
+    override public func createRegulator() -> FlowRegulator {
+        let reg = super.createRegulator()
+        reg.direction = .vertical
+        return reg
     }
 }

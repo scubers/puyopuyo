@@ -2,7 +2,7 @@
 //  LinearGroup.swift
 //  Puyopuyo
 //
-//  Created by ByteDance on 2022/5/2.
+//  Created by J on 2022/5/2.
 //
 
 import Foundation
@@ -16,15 +16,17 @@ public class LinearGroup: GenericBoxGroup<LinearRegulator> {
 }
 
 public class HGroup: LinearGroup {
-    override public init() {
-        super.init()
-        regulator.direction = .horizontal
+    override public func createRegulator() -> LinearRegulator {
+        let reg = super.createRegulator()
+        reg.direction = .horizontal
+        return reg
     }
 }
 
 public class VGroup: LinearGroup {
-    override public init() {
-        super.init()
-        regulator.direction = .vertical
+    override public func createRegulator() -> LinearRegulator {
+        let reg = super.createRegulator()
+        reg.direction = .vertical
+        return reg
     }
 }

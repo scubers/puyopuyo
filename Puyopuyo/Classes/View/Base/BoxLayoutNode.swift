@@ -52,6 +52,13 @@ public extension BoxLayoutNode {
         }
         return nil
     }
+
+    var parasitingHostView: (ViewParasitizing & UIView)? {
+        if let view = superBox?.layoutNodeView as? (ViewParasitizing & UIView) {
+            return view
+        }
+        return superBox?.parasitingHostView
+    }
 }
 
 // MARK: - BoxLayoutContainer extension
@@ -67,31 +74,29 @@ extension BoxLayoutContainer {
         if let view = node.layoutNodeView {
             addParasite(view)
         }
-
-        setNeedsLayout()
     }
 }
 
 // MARK: - Implementation
 
 extension UIView: BoxLayoutNode {
-    private class LayoutMetrics {
+    private class BoxLayoutMetrics {
         weak var superbox: BoxLayoutContainer?
         var measure: Measure!
-        static var associateObjectKey = "py_layoutMetricsKey"
+        static var associateObjectKey = "py_boxLayoutMetricsKey"
     }
 
-    private var _layoutMetrics: LayoutMetrics {
+    private var _layoutMetrics: BoxLayoutMetrics {
         get {
-            if let m = objc_getAssociatedObject(self, &LayoutMetrics.associateObjectKey) as? LayoutMetrics {
+            if let m = objc_getAssociatedObject(self, &BoxLayoutMetrics.associateObjectKey) as? BoxLayoutMetrics {
                 return m
             }
-            let m = LayoutMetrics()
+            let m = BoxLayoutMetrics()
             self._layoutMetrics = m
             return m
         }
         set {
-            objc_setAssociatedObject(self, &LayoutMetrics.associateObjectKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &BoxLayoutMetrics.associateObjectKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 

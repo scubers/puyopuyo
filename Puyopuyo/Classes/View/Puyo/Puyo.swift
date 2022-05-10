@@ -110,10 +110,6 @@ extension Puyo: ViewParasitizing where T: ViewParasitizing {
     public func removeParasite(_ parasite: ViewDisplayable) {
         view.removeParasite(parasite)
     }
-
-    public func setNeedsLayout() {
-        view.setNeedsLayout()
-    }
 }
 
 // MARK: - BoxLayoutNode

@@ -116,6 +116,9 @@ class TestVC: BaseViewController {
                             .onTap {
                                 $0.view?.removeFromSuperBox()
                             }
+                            .attach {
+                                print($0.parasitingHostView)
+                            }
                     }
                 }
                 .visibility(state.binder.visibleOrNot)

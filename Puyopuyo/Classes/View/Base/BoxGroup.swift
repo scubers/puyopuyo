@@ -54,7 +54,6 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
                 _unparasiteChildren()
                 layoutRegulator.activated = false
             }
-            setNeedsLayout()
         }
     }
 
@@ -74,9 +73,9 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
         superBox?.removeParasite(parasite)
     }
 
-    public func setNeedsLayout() {
-        superBox?.setNeedsLayout()
-    }
+//    public func setNeedsLayout() {
+//        superBox?.setNeedsLayout()
+//    }
 
     // MARK: - MeasureChildrenDelegate
 
@@ -87,7 +86,7 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
     // MARK: - MeasureDelegate
 
     public func metricDidChanged(for _: Measure) {
-        setNeedsLayout()
+        parasitingHostView?.setNeedsLayout()
     }
 
     // MARK: - Public

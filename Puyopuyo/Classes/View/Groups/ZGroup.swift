@@ -2,7 +2,7 @@
 //  ZGroup.swift
 //  Puyopuyo
 //
-//  Created by ByteDance on 2022/5/2.
+//  Created by J on 2022/5/2.
 //
 
 import Foundation

@@ -2,7 +2,7 @@
 //  ViewParasitizing.swift
 //  Puyopuyo
 //
-//  Created by ByteDance on 2022/5/1.
+//  Created by J on 2022/5/1.
 //
 
 import Foundation
@@ -15,7 +15,7 @@ public protocol ViewDisplayable: AnyObject {
 public protocol ViewParasitizing: AnyObject {
     func addParasite(_ parasite: ViewDisplayable)
     func removeParasite(_ parasite: ViewDisplayable)
-    func setNeedsLayout()
+//    func setNeedsLayout()
 }
 
 // MARK: - ViewParasitizing extension

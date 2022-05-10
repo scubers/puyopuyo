@@ -11,7 +11,7 @@ public extension _KeyValueCodingAndObserving where Self: AutoDisposable {
     /// Create a KVO listening, auto dispose when Self is deinit
     func py_observing<R>(_ keyPath: KeyPath<Self, R>) -> Outputs<R?> {
         return Outputs { i in
-            let observer = self.observe(keyPath, options: .initial.union(.new)) { _, v in
+            let observer = self.observe(keyPath, options: [.initial, .new]) { _, v in
                 i.input(value: v.newValue)
             }
             let disposer = Disposers.create {

@@ -13,21 +13,23 @@ open class FlowBox: GenericBoxView<FlowRegulator> {
         attach().arrangeCount(count)
     }
 
-    override public func createRegulator() -> Regulator {
+    override public func createRegulator() -> FlowRegulator {
         FlowRegulator(delegate: self, sizeDelegate: self, childrenDelegate: self)
     }
 }
 
-open class HFlow: FlowBox {}
+open class HFlow: FlowBox {
+    override public func createRegulator() -> FlowRegulator {
+        let reg = super.createRegulator()
+        reg.direction = .horizontal
+        return reg
+    }
+}
 
 open class VFlow: FlowBox {
-    override public init(frame: CGRect) {
-        super.init(frame: frame)
-        attach().direction(.y)
-    }
-
-    @available(*, unavailable)
-    public required init?(coder _: NSCoder) {
-        fatalError()
+    override public func createRegulator() -> FlowRegulator {
+        let reg = super.createRegulator()
+        reg.direction = .vertical
+        return reg
     }
 }

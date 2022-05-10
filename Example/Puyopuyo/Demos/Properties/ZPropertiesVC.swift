@@ -158,7 +158,9 @@ class ZPropertiesVC: BaseViewController {
     }
 
     func getZBox() -> UIView {
-        let alignment = Outputs.combine(alignmentVert, alignmentHorz).map { $0.0.union($0.1) }
+        let alignment = Outputs.combine(alignmentVert, alignmentHorz).map {
+            Alignment([$0.0, $0.1])
+        }
 
         return
             ZBox().attach {

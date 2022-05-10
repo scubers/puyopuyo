@@ -9,21 +9,23 @@
 import Foundation
 
 open class LinearBox: GenericBoxView<LinearRegulator> {
-    override public func createRegulator() -> Regulator {
+    override public func createRegulator() -> LinearRegulator {
         LinearRegulator(delegate: self, sizeDelegate: self, childrenDelegate: self)
     }
 }
 
-open class HBox: LinearBox {}
+open class HBox: LinearBox {
+    override public func createRegulator() -> LinearRegulator {
+        let reg = super.createRegulator()
+        reg.direction = .horizontal
+        return reg
+    }
+}
 
 open class VBox: LinearBox {
-    override public init(frame: CGRect) {
-        super.init(frame: frame)
-        attach().direction(.y)
-    }
-
-    @available(*, unavailable)
-    public required init?(coder _: NSCoder) {
-        fatalError()
+    override public func createRegulator() -> LinearRegulator {
+        let reg = super.createRegulator()
+        reg.direction = .vertical
+        return reg
     }
 }

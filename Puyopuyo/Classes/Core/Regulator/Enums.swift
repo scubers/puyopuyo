@@ -73,7 +73,7 @@ public struct Alignment: OptionSet, Equatable, CustomStringConvertible, Outputin
 }
 
 public extension Alignment {
-    static let center = Alignment.vertCenter.union(.horzCenter)
+    static let center = Alignment([.vertCenter, horzCenter])
 
     static func center(_ xRatio: CGFloat = 0, _ yRatio: CGFloat = 0) -> Alignment {
         .init(rawValue: center.rawValue, ratio: .init(x: xRatio, y: yRatio))
@@ -96,15 +96,11 @@ public extension Alignment {
     }
 
     var hasHorzAlignment: Bool {
-        contains(.left)
-            || contains(.right)
-            || contains(.horzCenter)
+        contains(Alignment(Alignment.horzAlignments))
     }
 
     var hasVertAlignment: Bool {
-        contains(.top)
-            || contains(.bottom)
-            || contains(.vertCenter)
+        contains(Alignment(Alignment.vertAlignments))
     }
 
     func hasMainAligment(for direction: Direction) -> Bool {

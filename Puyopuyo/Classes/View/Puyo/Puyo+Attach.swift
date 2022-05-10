@@ -2,7 +2,7 @@
 //  Puyo+Attach.swift
 //  Puyopuyo
 //
-//  Created by ByteDance on 2022/4/30.
+//  Created by J on 2022/4/30.
 //
 
 import Foundation
