@@ -215,6 +215,11 @@ enum CalHelper {
         return size
     }
 
+    /// 不通过计算子节点获取估算尺寸，当size maybeWrap时不可用
+    /// - Parameters:
+    ///   - measure: measure description
+    ///   - layoutResidual: layoutResidual description
+    /// - Returns: description
     static func getEstimateIntrinsic(for measure: Measure, layoutResidual: CGSize) -> CGSize {
         assert(measure.size.bothNotWrap)
         let contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: measure.margin, size: measure.size)
