@@ -104,6 +104,9 @@ class _LinearCalculator {
     }
 
     func calculateRegulatorSize() -> CGSize {
+        if regulator.size.bothNotWrap() {
+            return CalHelper.getEstimateIntrinsic(for: regulator, layoutResidual: layoutResidual)
+        }
         let contentSize = CalFixedSize(main: totalMainChildrenContent, cross: maxCrossChildrenContent, direction: regDirection)
         return CalculateUtil.getWrappedContentSize(for: regulator, padding: regulator.padding, contentResidual: contentResidual, childrenContentSize: contentSize.getSize())
     }
@@ -138,11 +141,16 @@ class _LinearCalculator {
         // 具备条件进行复算尺寸: 存在次轴父子依赖
         if !crossRatioChildren.isEmpty, regCalSize.cross.isWrap {
             var compareCross = maxCrossChildrenContent
-
             while true {
                 calculateChildrenSize(estimateCross: compareCross)
 
+                if maxCrossChildrenContent == 0 {
+                    print("Cross conficting, avoid parent child conflicting settings!!!!")
+                    return
+                }
+
                 let delta = maxCrossChildrenContent - compareCross
+
                 if abs(delta) < 1 {
                     // 推算误差小于1像素
                     compareCross = Swift.max(maxCrossChildrenContent, compareCross)

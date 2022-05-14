@@ -209,11 +209,16 @@ enum CalHelper {
         if measure.size.maybeWrap || strategy == .calculate {
             size = measure.calculate(by: layoutResidual)
         } else {
-            let contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: measure.margin, size: measure.size)
-            size = CalculateUtil.getIntrinsicSize(fromCalculableSize: measure.size, contentResidual: contentResidual)
+            size = getEstimateIntrinsic(for: measure, layoutResidual: layoutResidual)
         }
         DiagnosisUitl.startDiagnosis(measure: measure, residual: layoutResidual, intrinsic: size, msg: diagnosisMsg)
         return size
+    }
+
+    static func getEstimateIntrinsic(for measure: Measure, layoutResidual: CGSize) -> CGSize {
+        assert(measure.size.bothNotWrap())
+        let contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: measure.margin, size: measure.size)
+        return CalculateUtil.getIntrinsicSize(fromCalculableSize: measure.size, contentResidual: contentResidual)
     }
 
     static func sizeThatFit(size: CGSize, to measure: Measure) -> CGSize {
@@ -268,7 +273,22 @@ extension CGSize {
             return self
         }
 
-        if width == 0 || height == 0 { return self }
+        guard self != .zero else {
+            return .zero
+        }
+
+        guard width != 0, height != 0 else {
+            // 任意一个为0，则单一规则
+            switch strategy {
+            case .collapse: return .zero
+            case .expand:
+                if width == 0 {
+                    return CGSize(width: height * aspectRatio, height: height)
+                } else {
+                    return CGSize(width: width, height: width / aspectRatio)
+                }
+            }
+        }
 
         let currentAspectRatio = width / height
 
