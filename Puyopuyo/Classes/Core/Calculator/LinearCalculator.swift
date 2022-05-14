@@ -137,19 +137,34 @@ class _LinearCalculator {
 
     // MARK: - Private funcs
 
+    
+    /// 具备条件进行复算尺寸: 存在次轴父子依赖
+    /// 复算可能存在无法满足期望的情况，推演最多不超过 20 次
     private func crossConfictCalculate() {
-        // 具备条件进行复算尺寸: 存在次轴父子依赖
         if !crossRatioChildren.isEmpty, regCalSize.cross.isWrap {
             var compareCross = maxCrossChildrenContent
+
+            let initCross = compareCross
+            var results = Set<CGFloat>()
+            var count = 0
+            let maxLoopTestCount = 20
+
             while true {
+                count += 1
                 calculateChildrenSize(estimateCross: compareCross)
 
-                if maxCrossChildrenContent == 0 {
+                if results.contains(maxCrossChildrenContent) || count > maxLoopTestCount {
                     print("Cross conficting, avoid parent child conflicting settings!!!!")
-                    return
+                    calculateChildrenSize(estimateCross: initCross)
+                    maxCrossChildrenContent = initCross
+                    break
                 }
 
+                results.insert(maxCrossChildrenContent)
+
                 let delta = maxCrossChildrenContent - compareCross
+
+//                print(">>>> [\(count)] delta: \(delta), current: \(maxCrossChildrenContent), last: \(compareCross)")
 
                 if abs(delta) < 1 {
                     // 推算误差小于1像素
@@ -243,7 +258,6 @@ class _LinearCalculator {
     }
 
     private func mainAppendableCalSize(_ calSize: CalSize) -> Bool {
-//        LinearItemLevel.create(calSize).level != .mainRatio
         calSize.main.sizeType != .ratio
     }
 
@@ -433,8 +447,8 @@ class _LinearCalculator {
 
 /**
  子节点计算优先级
- 主轴：能确定大小 > 包裹大小 > 比重
- F, A_F > W, A_W > A_R > R
+ 主轴：能确定大小 > 比例 > 包裹大小 > 比重
+ F > A > W > R
 
  A depend on cross
  */
@@ -455,40 +469,22 @@ struct LinearItemLevel: Comparable {
             lhs.rawValue < rhs.rawValue
         }
 
-        case mainFixOrDependsOnFix = 0
-        case mainWrapOrDependsOnWrap = 1
-        case mainDependsOnRatio = 2
-        case mainRatio = 3
+        case fixed = 0
+        case aspectRatio = 1
+        case wrap = 2
+        case ratio = 3
+
+        static func level(with sizeDesc: SizeDescription) -> Level {
+            switch sizeDesc.sizeType {
+            case .fixed: return .fixed
+            case .ratio: return .ratio
+            case .wrap: return .wrap
+            case .aspectRatio: return .aspectRatio
+            }
+        }
     }
 
     static func create(_ calSize: CalSize) -> LinearItemLevel {
-        if calSize.isMainAspectRatioDependsOnRatio {
-            return LinearItemLevel(level: .mainDependsOnRatio, priority: 0)
-        }
-
-        if calSize.main.sizeType == .aspectRatio {
-            if calSize.cross.isWrap {
-                return getLevel(.wrap)
-            } else {
-                return getLevel(calSize.cross)
-            }
-        } else {
-            return getLevel(calSize.main)
-        }
-    }
-
-    private static func getLevel(_ sizeDesc: SizeDescription) -> LinearItemLevel {
-        switch sizeDesc.sizeType {
-        case .fixed: return LinearItemLevel(level: .mainFixOrDependsOnFix, priority: 0)
-        case .wrap: return LinearItemLevel(level: .mainWrapOrDependsOnWrap, priority: sizeDesc.priority)
-        case .ratio: return LinearItemLevel(level: .mainRatio, priority: 0)
-        case .aspectRatio: fatalError()
-        }
-    }
-}
-
-private extension CalSize {
-    var isMainAspectRatioDependsOnRatio: Bool {
-        main.sizeType == .aspectRatio && cross.sizeType == .ratio
+        return LinearItemLevel(level: .level(with: calSize.main), priority: calSize.main.priority)
     }
 }

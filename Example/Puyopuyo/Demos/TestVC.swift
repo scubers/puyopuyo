@@ -32,7 +32,37 @@ class TestVC: BaseViewController {
             UIView().attach($0)
                 .size(50, 50)
             
-            testGroup().attach($0)
+            VBox().attach($0) {
+                let state = State<Float>(0)
+                let content = state.map { Int(100 * $0) }.map { (0 ..< $0).map(\.description).joined() }
+                UISlider().attach($0)
+                    .width(.fill)
+                    .set(\.value, state.value)
+                    .onControlEvent(.valueChanged, Inputs { state.value = $0.value })
+                
+                HBox().attach($0) {
+                    UILabel().attach($0)
+//                        .size(.wrap(shrink: 1), .wrap)
+                        .width(.fill)
+                        .text(content)
+                        .numberOfLines(0)
+                    UIView().attach($0)
+                        .size(.aspectRatio(1), .fill)
+                    UILabel().attach($0)
+                        .width(.fill)
+//                        .size(.wrap(shrink: 1), .wrap)
+                        .text(content)
+                        .numberOfLines(0)
+                    
+                    UIView().attach($0)
+                        .size(50, 50)
+                }
+                .justifyContent(.center)
+                .size(.fill, .wrap)
+            }
+            .animator(Animators.default)
+            .format(.center)
+            .size(.fill, .fill)
         }
         
         Util.randomViewColor(view: view)
@@ -115,9 +145,6 @@ class TestVC: BaseViewController {
                             .userInteractionEnabled(true)
                             .onTap {
                                 $0.view?.removeFromSuperBox()
-                            }
-                            .attach {
-                                print($0.parasitingHostView)
                             }
                     }
                 }
