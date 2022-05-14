@@ -96,11 +96,15 @@ public extension Alignment {
     }
 
     var hasHorzAlignment: Bool {
-        contains(Alignment(Alignment.horzAlignments))
+        contains(.left)
+            || contains(.right)
+            || contains(.horzCenter)
     }
 
     var hasVertAlignment: Bool {
-        contains(Alignment(Alignment.vertAlignments))
+        contains(.top)
+            || contains(.bottom)
+            || contains(.vertCenter)
     }
 
     func hasMainAligment(for direction: Direction) -> Bool {
