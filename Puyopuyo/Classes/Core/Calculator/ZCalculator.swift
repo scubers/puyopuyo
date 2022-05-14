@@ -38,16 +38,23 @@ private class _ZCalculator {
 
         handleRatioChildrenIfNeeded()
 
-        let intrinsicSize = CalculateUtil.getWrappedContentSize(for: regulator, padding: regulator.padding, contentResidual: contentResidual, childrenContentSize: maxChildContentSize)
+        let intrinsicSize = getIntrinsicSize()
 
         calculateChildrenCenter(intrinsic: intrinsicSize)
 
         return intrinsicSize
     }
 
+    private func getIntrinsicSize() -> CGSize {
+        if regulator.size.bothNotWrap() {
+            return CalHelper.getEstimateIntrinsic(for: regulator, layoutResidual: layoutResidual)
+        }
+        return CalculateUtil.getWrappedContentSize(for: regulator, padding: regulator.padding, contentResidual: contentResidual, childrenContentSize: maxChildContentSize)
+    }
+
     private func prepareData() {
         calculateChildren.reserveCapacity(regulator.children.count)
-        
+
         regulator.enumerateChildren { m in
             if !m.activated { return }
 

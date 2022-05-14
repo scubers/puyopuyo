@@ -95,5 +95,29 @@ class CalculatorTests: XCTestCase {
         // inf
         size = CalculateUtil.fit(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude), aspectRatio: 1 / 2, strategy: .collapse)
         XCTAssertTrue(size.width / size.height == 1 / 2)
+        
+        // for zero collapse
+        size = CalculateUtil.fit(CGSize(width: 0, height: 0), aspectRatio: 2 / 1, strategy: .collapse)
+        XCTAssertTrue(size == .zero)
+        
+        size = CalculateUtil.fit(CGSize(width: 100, height: 0), aspectRatio: 2 / 1, strategy: .collapse)
+        XCTAssertTrue(size == .zero)
+        
+        size = CalculateUtil.fit(CGSize(width: 0, height: 100), aspectRatio: 2 / 1, strategy: .collapse)
+        XCTAssertTrue(size == .zero)
+        
+        // for zero expand
+        
+        size = CalculateUtil.fit(CGSize(width: 0, height: 0), aspectRatio: 2 / 1, strategy: .expand)
+        XCTAssertTrue(size == .zero)
+        
+        size = CalculateUtil.fit(CGSize(width: 100, height: 0), aspectRatio: 2 / 1, strategy: .expand)
+        XCTAssertTrue(size == CGSize(width: 100, height: 50))
+        
+        size = CalculateUtil.fit(CGSize(width: 0, height: 100), aspectRatio: 2 / 1, strategy: .expand)
+        XCTAssertTrue(size == CGSize(width: 200, height: 100))
+        
+        
+        
     }
 }

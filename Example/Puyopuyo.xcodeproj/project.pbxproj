@@ -15,6 +15,7 @@
 		095E422326F50B0000D6B88C /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 095E422226F50B0000D6B88C /* ChatVC.swift */; };
 		096CE4F2280C55F80014903A /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096CE4F1280C55F80014903A /* MenuViewController.swift */; };
 		096CE4F4280C589F0014903A /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096CE4F3280C589F0014903A /* BaseViewController.swift */; };
+		0971F1D6282FE9DF0022E71D /* ComplexSceenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0971F1D5282FE9DF0022E71D /* ComplexSceenTests.swift */; };
 		0972D40526C576D200210D1C /* ShadowStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0972D40426C576D200210D1C /* ShadowStyle.swift */; };
 		0982C1A02469AF730070F104 /* RecycleBoxPropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */; };
 		0986B15A27F47C8000907B3A /* LinkListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0986B15927F47C8000907B3A /* LinkListTests.swift */; };
@@ -69,6 +70,7 @@
 		095E422226F50B0000D6B88C /* ChatVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatVC.swift; sourceTree = "<group>"; };
 		096CE4F1280C55F80014903A /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		096CE4F3280C589F0014903A /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		0971F1D5282FE9DF0022E71D /* ComplexSceenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplexSceenTests.swift; sourceTree = "<group>"; };
 		0972D40426C576D200210D1C /* ShadowStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShadowStyle.swift; sourceTree = "<group>"; };
 		097B22AE2441F6290043B0A5 /* Puyopuyo_Example.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Puyopuyo_Example.entitlements; sourceTree = "<group>"; };
 		0982C19F2469AF730070F104 /* RecycleBoxPropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecycleBoxPropertiesVC.swift; sourceTree = "<group>"; };
@@ -232,6 +234,7 @@
 				0986B15927F47C8000907B3A /* LinkListTests.swift */,
 				09EF91892809AA30007BCCF5 /* ZBoxTests.swift */,
 				09EF918B2809AE16007BCCF5 /* DataTests.swift */,
+				0971F1D5282FE9DF0022E71D /* ComplexSceenTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -557,6 +560,7 @@
 				607FACEC1AFB9204008FA782 /* LinearBoxTests.swift in Sources */,
 				0986B15A27F47C8000907B3A /* LinkListTests.swift in Sources */,
 				09EF918C2809AE16007BCCF5 /* DataTests.swift in Sources */,
+				0971F1D6282FE9DF0022E71D /* ComplexSceenTests.swift in Sources */,
 				09F8BD8027EB633900402D96 /* CalculatorTests.swift in Sources */,
 				09A4726127D2645C00FD9813 /* CompareViews.swift in Sources */,
 				09EF918A2809AA30007BCCF5 /* ZBoxTests.swift in Sources */,
