@@ -104,7 +104,7 @@ class _LinearCalculator {
     }
 
     func calculateRegulatorSize() -> CGSize {
-        if regulator.size.bothNotWrap() {
+        if regulator.size.bothNotWrap {
             return CalHelper.getEstimateIntrinsic(for: regulator, layoutResidual: layoutResidual)
         }
         let contentSize = CalFixedSize(main: totalMainChildrenContent, cross: maxCrossChildrenContent, direction: regDirection)

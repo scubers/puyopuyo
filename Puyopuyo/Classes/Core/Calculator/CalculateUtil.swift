@@ -216,7 +216,7 @@ enum CalHelper {
     }
 
     static func getEstimateIntrinsic(for measure: Measure, layoutResidual: CGSize) -> CGSize {
-        assert(measure.size.bothNotWrap())
+        assert(measure.size.bothNotWrap)
         let contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: measure.margin, size: measure.size)
         return CalculateUtil.getIntrinsicSize(fromCalculableSize: measure.size, contentResidual: contentResidual)
     }
