@@ -41,8 +41,6 @@ public protocol BoxLayoutContainer: BoxLayoutNode, ViewParasitizing {
     var layoutChildren: [BoxLayoutNode] { get set }
 
     func addLayoutNode(_ node: BoxLayoutNode)
-
-    func didFinishLayout()
 }
 
 // MARK: - BoxLayoutNode extension

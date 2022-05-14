@@ -61,12 +61,6 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
         _addLayoutNode(node)
     }
 
-    private var dirty = false
-
-    public func didFinishLayout() {
-        dirty = false
-    }
-
     // MARK: - ViewParasitable
 
     public func addParasite(_ parasite: ViewDisplayable) {
@@ -79,6 +73,10 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
         superBox?.removeParasite(parasite)
     }
 
+//    public func setNeedsLayout() {
+//        superBox?.setNeedsLayout()
+//    }
+
     // MARK: - MeasureChildrenDelegate
 
     public func children(for _: Measure) -> [Measure] {
@@ -88,10 +86,7 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
     // MARK: - MeasureDelegate
 
     public func metricDidChanged(for _: Measure) {
-        if !dirty, let view = parasitingHostView {
-            view.setNeedsLayout()
-            dirty = true
-        }
+        parasitingHostView?.setNeedsLayout()
     }
 
     // MARK: - Public
