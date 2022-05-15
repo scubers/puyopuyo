@@ -18,8 +18,10 @@ enum IntrinsicSizeHelper {
         case .ratio:
             return Swift.max(0, contentResidual)
         case .wrap:
-            assert(wrappedContent != nil)
-            return Swift.min(sizeDesc.getWrapSize(by: wrappedContent!), contentResidual)
+            guard let wrappedContent = wrappedContent else {
+                fatalError()
+            }
+            return Swift.min(sizeDesc.getWrapSize(by: wrappedContent), contentResidual)
         case .aspectRatio:
             return 0
         }
