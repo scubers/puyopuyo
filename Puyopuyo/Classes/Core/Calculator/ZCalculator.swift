@@ -46,10 +46,8 @@ private class _ZCalculator {
     }
 
     private func getIntrinsicSize() -> CGSize {
-        if regulator.size.bothNotWrap {
-            return CalHelper.getEstimateIntrinsic(for: regulator, layoutResidual: layoutResidual)
-        }
-        return CalculateUtil.getWrappedContentSize(for: regulator, padding: regulator.padding, contentResidual: contentResidual, childrenContentSize: maxChildContentSize)
+//        return CalculateUtil.getWrappedContentSize(for: regulator, padding: regulator.padding, contentResidual: contentResidual, childrenContentSize: maxChildContentSize)
+        return CalculateUtil.getIntrinsicSize(from: regulator.size, contentResidual: contentResidual, wrappedContent: maxChildContentSize.expand(edge: regulator.padding))
     }
 
     private func prepareData() {

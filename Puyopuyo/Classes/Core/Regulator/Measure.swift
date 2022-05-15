@@ -108,7 +108,7 @@ public class Measure {
     public var calculatedCenter: CGPoint = .zero
 
     public var calculatedSizeWithMargin: CGSize {
-        CGSize.ensureNotNegative(width: calculatedSize.width + margin.getHorzTotal(), height: calculatedSize.height + margin.getVertTotal())
+        calculatedSize.expand(edge: margin).ensureNotNegative()
     }
 
     public func enumerateChildren(_ block: (Measure) -> Void) {

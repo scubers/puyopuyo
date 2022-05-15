@@ -104,11 +104,10 @@ class _LinearCalculator {
     }
 
     func calculateRegulatorSize() -> CGSize {
-        if regulator.size.bothNotWrap {
-            return CalHelper.getEstimateIntrinsic(for: regulator, layoutResidual: layoutResidual)
-        }
         let contentSize = CalFixedSize(main: totalMainChildrenContent, cross: maxCrossChildrenContent, direction: regDirection)
-        return CalculateUtil.getWrappedContentSize(for: regulator, padding: regulator.padding, contentResidual: contentResidual, childrenContentSize: contentSize.getSize())
+            .getSize()
+            .expand(edge: regulator.padding)
+        return CalculateUtil.getIntrinsicSize(from: regulator.size, contentResidual: contentResidual, wrappedContent: contentSize)
     }
 
     func calculateChildrenSize(estimateCross: CGFloat?) {
@@ -137,7 +136,6 @@ class _LinearCalculator {
 
     // MARK: - Private funcs
 
-    
     /// 具备条件进行复算尺寸: 存在次轴父子依赖
     /// 复算可能存在无法满足期望的情况，推演最多不超过 20 次
     private func crossConfictCalculate() {
@@ -153,12 +151,12 @@ class _LinearCalculator {
                 count += 1
                 calculateChildrenSize(estimateCross: compareCross)
 
-                if results.contains(maxCrossChildrenContent) || count > maxLoopTestCount {
-                    print("Cross conficting, avoid parent child conflicting settings!!!!")
-                    calculateChildrenSize(estimateCross: initCross)
-                    maxCrossChildrenContent = initCross
-                    break
-                }
+//                if results.contains(maxCrossChildrenContent) || count > maxLoopTestCount {
+//                    print("Cross conficting, avoid parent child conflicting settings!!!!")
+//                    calculateChildrenSize(estimateCross: initCross)
+//                    maxCrossChildrenContent = initCross
+//                    break
+//                }
 
                 results.insert(maxCrossChildrenContent)
 

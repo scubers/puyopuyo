@@ -30,10 +30,11 @@ struct CalculateUtil {
             }
         }
 
-        let contentResidual = CGSize.ensureNotNegative(
+        let contentResidual = CGSize(
             width: getInitialContentResidual(for: measure.size.width, constraint: contentConstraint.width),
             height: getInitialContentResidual(for: measure.size.height, constraint: contentConstraint.height)
         )
+        .ensureNotNegative()
 
         return getSelfLayoutResidual(for: measure, fromContentResidual: contentResidual)
     }
@@ -44,10 +45,9 @@ struct CalculateUtil {
     ///   - contentResidual: contentResidual description
     /// - Returns: layoutResidual
     static func getSelfLayoutResidual(for measure: Measure, fromContentResidual contentResidual: CGSize) -> CGSize {
-        return CGSize.ensureNotNegative(
-            width: contentResidual.width + measure.margin.getHorzTotal(),
-            height: contentResidual.height + measure.margin.getVertTotal()
-        )
+        return contentResidual
+            .expand(edge: measure.margin)
+            .ensureNotNegative()
     }
 
     /// 根据layoutResidual和相关约束，获取当前节点的contentResidual
@@ -57,10 +57,9 @@ struct CalculateUtil {
     ///   - size: size description
     /// - Returns: contentResidual
     static func getContentResidual(layoutResidual: CGSize, margin: UIEdgeInsets, size: Size) -> CGSize {
-        var residual = CGSize.ensureNotNegative(
-            width: layoutResidual.width - margin.getHorzTotal(),
-            height: layoutResidual.height - margin.getVertTotal()
-        )
+        var residual = layoutResidual
+            .collapse(edge: margin)
+            .ensureNotNegative()
         if size.width.isFixed { residual.width = size.width.fixedValue }
         if size.height.isFixed { residual.height = size.height.fixedValue }
         // 可能被最大值约束
@@ -70,82 +69,40 @@ struct CalculateUtil {
 
     static func getChildrenLayoutResidual(for regulator: Regulator, regulatorLayoutResidual: CGSize) -> CGSize {
         let regulatorContentResidual = getContentResidual(layoutResidual: regulatorLayoutResidual, margin: regulator.margin, size: regulator.size)
-        return CGSize.ensureNotNegative(
-            width: regulatorContentResidual.width - regulator.padding.getHorzTotal(),
-            height: regulatorContentResidual.height - regulator.padding.getVertTotal()
-        )
+        return regulatorContentResidual
+            .collapse(edge: regulator.padding)
+            .ensureNotNegative()
     }
 
-    static func getIntrinsicSize(fromCalculableSize calculableSize: Size, contentResidual: CGSize) -> CGSize {
-        assert(calculableSize.bothNotWrap, "Ensure size is calculable!!!")
-
-        if contentResidual.width == 0 || contentResidual.height == 0 {
-            return .zero
+    static func getIntrinsic(from sizeDesc: SizeDescription, contentResidual: CGFloat, wrappedContent: CGFloat?) -> CGFloat {
+        guard contentResidual > 0 else {
+            return 0
         }
-
-        func getIntrinsicLength(_ sizeDesc: SizeDescription, contentResidual: CGFloat) -> CGFloat? {
-            switch sizeDesc.sizeType {
-            case .fixed:
-                return Swift.max(0, sizeDesc.fixedValue)
-            case .ratio:
-                return Swift.max(0, contentResidual)
-            case .wrap:
-                fatalError("SizeType error: \(sizeDesc.sizeType)")
-            case .aspectRatio:
-                return nil
-            }
+        switch sizeDesc.sizeType {
+        case .fixed:
+            return Swift.max(0, sizeDesc.fixedValue)
+        case .ratio:
+            return Swift.max(0, contentResidual)
+        case .wrap:
+            assert(wrappedContent != nil)
+            return Swift.min(sizeDesc.getWrapSize(by: wrappedContent!), contentResidual)
+        case .aspectRatio:
+            return 0
         }
-
-        var intrinsicWidth = getIntrinsicLength(calculableSize.width, contentResidual: contentResidual.width)
-        var intrinsicHeight = getIntrinsicLength(calculableSize.height, contentResidual: contentResidual.height)
-
-        if intrinsicWidth == nil, intrinsicHeight == nil {
-            fatalError("Cannot get intrinsic size !!")
-        }
-
-        if let aspectRatio = calculableSize.aspectRatio {
-            if intrinsicWidth == nil {
-                intrinsicWidth = intrinsicHeight! * aspectRatio
-            } else if intrinsicHeight == nil {
-                intrinsicHeight = intrinsicWidth! / aspectRatio
-            }
-        }
-        let finalSize = CGSize(width: intrinsicWidth!, height: intrinsicHeight!)
-        return finalSize
     }
 
-    static func getWrappedContentSize(for measure: Measure, padding: UIEdgeInsets, contentResidual: CGSize, childrenContentSize: CGSize) -> CGSize {
-        var contentSize = CGSize(width: childrenContentSize.width + padding.getHorzTotal(), height: childrenContentSize.height + padding.getVertTotal())
-
-        // 内容不能超过 内容剩余空间
-        contentSize = contentSize.clip(by: contentResidual)
-
-        // handl width
-        switch measure.size.width.sizeType {
-        case .fixed:
-            contentSize.width = measure.size.width.fixedValue
-        case .ratio:
-            contentSize.width = contentResidual.width
-        case .wrap:
-            contentSize.width = Swift.min(measure.size.width.getWrapSize(by: contentSize.width), contentResidual.width)
-        case .aspectRatio:
-            break
+    static func getIntrinsicSize(from size: Size, contentResidual: CGSize, wrappedContent: CGSize? = nil) -> CGSize {
+        if size.maybeWrap {
+            assert(wrappedContent != nil)
         }
+        // 约束包裹内容
+        let content = wrappedContent?.clip(by: contentResidual)
 
-        // handle height
-        switch measure.size.height.sizeType {
-        case .fixed:
-            contentSize.height = measure.size.height.fixedValue
-        case .ratio:
-            contentSize.height = contentResidual.height
-        case .wrap:
-            contentSize.height = Swift.min(measure.size.height.getWrapSize(by: contentSize.height), contentResidual.height)
-        case .aspectRatio:
-            break
-        }
+        let width = getIntrinsic(from: size.width, contentResidual: contentResidual.width, wrappedContent: content?.width)
+        let height = getIntrinsic(from: size.height, contentResidual: contentResidual.height, wrappedContent: content?.height)
 
-        let finalSize = contentSize.expand(to: measure.size.aspectRatio)
-        return finalSize
+        let intrinsic = CGSize(width: width, height: height)
+        return intrinsic.expand(to: size.aspectRatio)
     }
 
     static func getCalculatedChildCrossAlignmentOffset(_ measure: Measure,
@@ -223,7 +180,7 @@ enum CalHelper {
     static func getEstimateIntrinsic(for measure: Measure, layoutResidual: CGSize) -> CGSize {
         assert(measure.size.bothNotWrap)
         let contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: measure.margin, size: measure.size)
-        return CalculateUtil.getIntrinsicSize(fromCalculableSize: measure.size, contentResidual: contentResidual)
+        return CalculateUtil.getIntrinsicSize(from: measure.size, contentResidual: contentResidual)
     }
 
     static func sizeThatFit(size: CGSize, to measure: Measure) -> CGSize {
@@ -245,8 +202,8 @@ extension Comparable {
 }
 
 extension CGSize {
-    static func ensureNotNegative(width: CGFloat, height: CGFloat) -> CGSize {
-        .init(width: Swift.max(0, width), height: Swift.max(0, height))
+    func ensureNotNegative() -> CGSize {
+        return CGSize(width: Swift.max(0, width), height: Swift.max(0, height))
     }
 
     func expand(to aspectRatio: CGFloat?) -> CGSize {
@@ -258,7 +215,16 @@ extension CGSize {
     }
 
     func clip(by clipper: CGSize) -> CGSize {
-        CGSize.ensureNotNegative(width: Swift.min(width, clipper.width), height: Swift.min(height, clipper.height))
+        CGSize(width: Swift.min(width, clipper.width), height: Swift.min(height, clipper.height))
+            .ensureNotNegative()
+    }
+
+    func expand(edge: UIEdgeInsets) -> CGSize {
+        return CGSize(width: width + edge.getHorzTotal(), height: height + edge.getVertTotal())
+    }
+
+    func collapse(edge: UIEdgeInsets) -> CGSize {
+        return CGSize(width: width - edge.getHorzTotal(), height: height - edge.getVertTotal())
     }
 
     enum FitAspectRatioStrategy {
