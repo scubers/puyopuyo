@@ -288,6 +288,17 @@ extension CGSize {
     }
 }
 
+extension CGFloat {
+    func clipDecimal(_ value: Int) -> CGFloat {
+        let sign: CGFloat = value > 0 ? 1 : -1
+        let intValue = Int(Swift.abs(self))
+        let decimalValue = Swift.abs(self) - CGFloat(intValue)
+        let factor = pow(10, CGFloat(value))
+        let decimal = CGFloat(Int(decimalValue * factor)) / factor
+        return (CGFloat(intValue) + decimal) * sign
+    }
+}
+
 enum DiagnosisUitl {
     static func startDiagnosis(measure: Measure, residual: CGSize, intrinsic: CGSize, msg: String?) {
         #if DEBUG

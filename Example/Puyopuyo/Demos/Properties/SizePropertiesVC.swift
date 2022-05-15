@@ -172,9 +172,9 @@ class SizePropertiesVC: BaseViewController {
                         1 : 3
                         height(.fix(150))
                         """).attach($0)
-                            .height(90)
+                            .width(30)
                             .backgroundColor(.systemPink)
-                            .width(.aspectRatio(1 / 3))
+                            .height(.aspectRatio(1 / 3))
                     }
                     .demo()
                     .height(height.map { SizeDescription.fix($0) })

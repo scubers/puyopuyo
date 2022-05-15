@@ -140,41 +140,57 @@ class _LinearCalculator {
     /// 复算可能存在无法满足期望的情况，推演最多不超过 20 次
     private func crossConfictCalculate() {
         if !crossRatioChildren.isEmpty, regCalSize.cross.isWrap {
-            var compareCross = maxCrossChildrenContent
+            var estimateCross = maxCrossChildrenContent
 
-            let initCross = compareCross
-            var results = Set<CGFloat>()
+            // 预估值复算记录
+            var estimates = [CGFloat: Int]()
+            // 复算次数
             var count = 0
+            // 最大复算次数
             let maxLoopTestCount = 20
+            // 最小误差值
+            var minDelta: CGFloat?
+            // 最小误差值对应的预估值
+            var minDeltaEstimateCross: CGFloat?
 
             while true {
-                count += 1
-                calculateChildrenSize(estimateCross: compareCross)
+                // 存在重复计算 或者 超过计算次数阈值，则跳出循环
+                if (estimates[estimateCross] ?? 0) > 1 || count > maxLoopTestCount {
+                    print("Cross conficting, avoid parent child conflicting settings!!!!")
+                    // 使用误差值最小的预估值为最终值
+                    calculateChildrenSize(estimateCross: minDeltaEstimateCross!)
+                    maxCrossChildrenContent = minDeltaEstimateCross!
+                    break
+                }
 
-//                if results.contains(maxCrossChildrenContent) || count > maxLoopTestCount {
-//                    print("Cross conficting, avoid parent child conflicting settings!!!!")
-//                    calculateChildrenSize(estimateCross: initCross)
-//                    maxCrossChildrenContent = initCross
-//                    break
-//                }
+                calculateChildrenSize(estimateCross: estimateCross)
+                // 计算后记录复算记录
+                estimates[estimateCross] = (estimates[estimateCross] ?? 0) + 1
 
-                results.insert(maxCrossChildrenContent)
+                let delta = maxCrossChildrenContent - estimateCross
 
-                let delta = maxCrossChildrenContent - compareCross
+                // 计算复算过程中的最小误差和对应预估值
+                if minDelta == nil || Swift.abs(delta) < Swift.abs(minDelta!) {
+                    minDelta = delta
+                    minDeltaEstimateCross = estimateCross
+                }
 
-//                print(">>>> [\(count)] delta: \(delta), current: \(maxCrossChildrenContent), last: \(compareCross)")
+//                print(">>>> [\(count)] delta: \(delta), current: \(maxCrossChildrenContent), last: \(estimateCross)")
 
-                if abs(delta) < 1 {
+                if abs(delta) < 0.5 {
                     // 推算误差小于1像素
-                    compareCross = Swift.max(maxCrossChildrenContent, compareCross)
-                    calculateChildrenSize(estimateCross: compareCross)
-                    maxCrossChildrenContent = compareCross
+                    estimateCross = Swift.max(maxCrossChildrenContent, estimateCross)
+                    calculateChildrenSize(estimateCross: estimateCross)
+                    maxCrossChildrenContent = estimateCross
                     break
                 } else {
                     // 推算有差距，二分法缩小差距
-                    compareCross += (delta / 2)
+                    estimateCross = ((delta / 2) + estimateCross).clipDecimal(3)
                 }
+                count += 1
             }
+//            print(">>>>> loop count: \(count), minDelta: \(minDelta!), cross: \(minDeltaEstimateCross!)")
+//            print(results.filter { $1 > 1 })
         }
     }
 
