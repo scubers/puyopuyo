@@ -292,6 +292,10 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
             return true
         }.map(\.layoutMeasure)
     }
+
+    public func measureIsLayoutEntry(_: Measure) -> Bool {
+        true
+    }
 }
 
 open class GenericBoxView<R: Regulator>: BoxView, RegulatorSpecifier {

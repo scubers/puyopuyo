@@ -9,6 +9,7 @@
 import Foundation
 import Puyopuyo
 
+//#if false
 #if true
 typealias LinearBag = LinearBox
 typealias HBag = HBox

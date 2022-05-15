@@ -169,7 +169,6 @@ private class VirtualLinearRegulator: LinearRegulator, MeasureChildrenDelegate {
         self.virtualChildren = children
         super.init(delegate: nil, sizeDelegate: nil, childrenDelegate: nil)
         childrenDelegate = self
-        isLayoutEntryPoint = false
     }
 
     func justifyChildrenWithCenter() {
@@ -192,22 +191,8 @@ private class VirtualLinearRegulator: LinearRegulator, MeasureChildrenDelegate {
     func children(for measure: Measure) -> [Measure] {
         virtualChildren
     }
-}
 
-private class VirtualDelegate: MeasureMetricChangedDelegate, MeasureChildrenDelegate {
-    func children(for measure: Measure) -> [Measure] {
-        children
+    func measureIsLayoutEntry(_ measure: Measure) -> Bool {
+        false
     }
-
-    func measure(_ measure: Measure, sizeThatFits size: CGSize) -> CGSize {
-        fatalError("should not come here")
-    }
-
-    func metricDidChanged(for mesure: Measure) {}
-
-    init(children: [Measure]) {
-        self.children = children
-    }
-
-    let children: [Measure]
 }

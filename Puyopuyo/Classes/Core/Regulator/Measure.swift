@@ -13,6 +13,7 @@ public protocol MeasureMetricChangedDelegate: AnyObject {
 
 public protocol MeasureChildrenDelegate: AnyObject {
     func children(for measure: Measure) -> [Measure]
+    func measureIsLayoutEntry(_ measure: Measure) -> Bool
 }
 
 public protocol MeasureSizeFittingDelegate: AnyObject {
@@ -76,7 +77,9 @@ public class Measure {
         }
     }
 
-    public internal(set) var isLayoutEntryPoint: Bool = true
+    public var isLayoutEntryPoint: Bool {
+        childrenDelegate?.measureIsLayoutEntry(self) ?? false
+    }
 
     public var diagnosisId: String?
 

@@ -83,6 +83,10 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
         layoutChildren.map(\.layoutMeasure)
     }
 
+    public func measureIsLayoutEntry(_: Measure) -> Bool {
+        false
+    }
+
     // MARK: - MeasureDelegate
 
     public func metricDidChanged(for _: Measure) {
@@ -99,7 +103,6 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
 
     private func _generateRegulator() -> Regulator {
         let r = createRegulator()
-        r.isLayoutEntryPoint = false
         r.changeDelegate = self
         r.childrenDelegate = self
         return r
