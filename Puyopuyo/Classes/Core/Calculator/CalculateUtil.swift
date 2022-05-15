@@ -60,13 +60,21 @@ struct CalculateUtil {
         var residual = layoutResidual
             .collapse(edge: margin)
             .ensureNotNegative()
+
         if size.width.isFixed { residual.width = size.width.fixedValue }
         if size.height.isFixed { residual.height = size.height.fixedValue }
+
         // 可能被最大值约束
         residual = residual.clip(by: CGSize(width: size.width.max, height: size.height.max))
+
         return residual.collapse(to: size.aspectRatio)
     }
 
+    /// 布局节点吱声layoutResidual 获取子节点总共可用 layoutResidual
+    /// - Parameters:
+    ///   - regulator: regulator description
+    ///   - regulatorLayoutResidual: regulatorLayoutResidual description
+    /// - Returns: description
     static func getChildrenLayoutResidual(for regulator: Regulator, regulatorLayoutResidual: CGSize) -> CGSize {
         let regulatorContentResidual = getContentResidual(layoutResidual: regulatorLayoutResidual, margin: regulator.margin, size: regulator.size)
         return regulatorContentResidual
@@ -131,20 +139,6 @@ struct CalculateUtil {
 
         return position
     }
-
-    enum FitAspectRatioStrategy {
-        case expand
-        case collapse
-    }
-
-    static func fit(_ size: CGSize, aspectRatio: CGFloat?, strategy: FitAspectRatioStrategy) -> CGSize {
-        switch strategy {
-        case .expand:
-            return size.expand(to: aspectRatio)
-        case .collapse:
-            return size.collapse(to: aspectRatio)
-        }
-    }
 }
 
 enum CalHelper {
@@ -202,16 +196,62 @@ extension Comparable {
 }
 
 extension CGSize {
+    static func sizeByWidth(_ width: CGFloat, aspectRatio: CGFloat) -> CGSize {
+        assert(aspectRatio > 0)
+        return CGSize(width: width, height: width / aspectRatio)
+    }
+
+    static func sizeByHeight(_ height: CGFloat, aspectRatio: CGFloat) -> CGSize {
+        assert(aspectRatio > 0)
+        return CGSize(width: height * aspectRatio, height: height)
+    }
+
     func ensureNotNegative() -> CGSize {
         return CGSize(width: Swift.max(0, width), height: Swift.max(0, height))
     }
 
     func expand(to aspectRatio: CGFloat?) -> CGSize {
-        fit(aspectRatio: aspectRatio, strategy: .expand)
+        guard let aspectRatio = aspectRatio, aspectRatio > 0, self != .zero else {
+            return self
+        }
+
+        guard width != 0, height != 0 else {
+            if width == 0 {
+                return CGSize.sizeByHeight(height, aspectRatio: aspectRatio)
+            } else {
+                return CGSize.sizeByWidth(width, aspectRatio: aspectRatio)
+            }
+        }
+
+        let currentAspectRatio = width / height
+
+        if currentAspectRatio > aspectRatio {
+            return CGSize.sizeByWidth(width, aspectRatio: aspectRatio)
+        } else if currentAspectRatio < aspectRatio {
+            return CGSize.sizeByHeight(height, aspectRatio: aspectRatio)
+        } else {
+            return self
+        }
     }
 
     func collapse(to aspectRatio: CGFloat?) -> CGSize {
-        fit(aspectRatio: aspectRatio, strategy: .collapse)
+        guard let aspectRatio = aspectRatio, aspectRatio > 0 else {
+            return self
+        }
+
+        guard width != 0, height != 0 else {
+            return .zero
+        }
+
+        let currentAspectRatio = width / height
+
+        if currentAspectRatio > aspectRatio {
+            return CGSize.sizeByHeight(height, aspectRatio: aspectRatio)
+        } else if currentAspectRatio < aspectRatio {
+            return CGSize.sizeByWidth(width, aspectRatio: aspectRatio)
+        } else {
+            return self
+        }
     }
 
     func clip(by clipper: CGSize) -> CGSize {
@@ -225,66 +265,6 @@ extension CGSize {
 
     func collapse(edge: UIEdgeInsets) -> CGSize {
         return CGSize(width: width - edge.getHorzTotal(), height: height - edge.getVertTotal())
-    }
-
-    enum FitAspectRatioStrategy {
-        case expand
-        case collapse
-    }
-
-    /// 根据提供的尺寸和宽高比，获取合理的尺寸
-    ///
-    /// - Parameters:
-    ///   - size: Original size
-    ///   - aspectRatio: aspectRatio
-    ///   - expand: if true, return the max size, otherwise the min size
-    /// - Returns: The result size
-    func fit(aspectRatio: CGFloat?, strategy: FitAspectRatioStrategy) -> CGSize {
-        guard let aspectRatio = aspectRatio, aspectRatio > 0 else {
-            return self
-        }
-
-        guard self != .zero else {
-            return .zero
-        }
-
-        guard width != 0, height != 0 else {
-            // 任意一个为0，则单一规则
-            switch strategy {
-            case .collapse: return .zero
-            case .expand:
-                if width == 0 {
-                    return CGSize(width: height * aspectRatio, height: height)
-                } else {
-                    return CGSize(width: width, height: width / aspectRatio)
-                }
-            }
-        }
-
-        let currentAspectRatio = width / height
-
-        if currentAspectRatio == aspectRatio { return self }
-
-        var finalResidual = self
-
-        if currentAspectRatio > aspectRatio {
-            switch strategy {
-            case .expand:
-                finalResidual.height = width / aspectRatio
-            case .collapse:
-                finalResidual.width = height * aspectRatio
-            }
-
-        } else if currentAspectRatio < aspectRatio {
-            switch strategy {
-            case .expand:
-                finalResidual.width = height * aspectRatio
-            case .collapse:
-                finalResidual.height = width / aspectRatio
-            }
-        }
-
-        return finalResidual
     }
 }
 
