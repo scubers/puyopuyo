@@ -106,7 +106,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
     }
 
     override open func sizeThatFits(_ size: CGSize) -> CGSize {
-        return CalHelper.sizeThatFit(size: size, to: layoutRegulator)
+        return IntrinsicSizeHelper.sizeThatFit(size: size, to: layoutRegulator)
     }
 
     override open func didMoveToSuperview() {
@@ -167,23 +167,23 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
              2. 若非包裹，则上层视图时只是用了估算尺寸，需要再次计算子节点
              */
             if layoutRegulator.size.bothNotWrap, layoutVisibility == .visible {
-                let layoutResidual = CalculateUtil.getSelfLayoutResidual(for: layoutRegulator, fromContentResidual: bounds.size)
-                _ = CalHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
+                let layoutResidual = ResidualHelper.getSelfLayoutResidual(for: layoutRegulator, fromContentResidual: bounds.size)
+                _ = IntrinsicSizeHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
             }
         } else {
             var layoutResidual: CGSize
 
             switch rootBoxConfig.sizeControl {
             case .bySet:
-                layoutResidual = CalculateUtil.getInitialLayoutResidual(for: layoutRegulator, contentConstraint: bounds.size)
+                layoutResidual = ResidualHelper.getInitialLayoutResidual(for: layoutRegulator, contentConstraint: bounds.size)
             case .byCalculate:
-                layoutResidual = CalculateUtil.getInitialLayoutResidual(for: layoutRegulator)
+                layoutResidual = ResidualHelper.getInitialLayoutResidual(for: layoutRegulator)
                 let superviewSize = superview?.bounds.size ?? .zero
                 if layoutRegulator.size.width.isRatio { layoutResidual.width = superviewSize.width }
                 if layoutRegulator.size.height.isRatio { layoutResidual.height = superviewSize.height }
             }
 
-            let size = CalHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
+            let size = IntrinsicSizeHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
             layoutRegulator.calculatedSize = size
 
             layoutRegulator.calculatedCenter = CGPoint(

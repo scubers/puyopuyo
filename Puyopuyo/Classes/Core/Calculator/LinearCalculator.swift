@@ -23,8 +23,8 @@ class _LinearCalculator {
     init(_ regulator: LinearRegulator, layoutResidual: CGSize) {
         self.regulator = regulator
         self.layoutResidual = layoutResidual
-        self.contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: regulator.margin, size: regulator.size)
-        self.childrenLayoutResidual = CalculateUtil.getChildrenLayoutResidual(for: regulator, regulatorLayoutResidual: layoutResidual)
+        self.contentResidual = ResidualHelper.getContentResidual(layoutResidual: layoutResidual, margin: regulator.margin, size: regulator.size)
+        self.childrenLayoutResidual = ResidualHelper.getChildrenLayoutResidual(for: regulator, regulatorLayoutResidual: layoutResidual)
     }
 
     // MARK: Getter
@@ -107,7 +107,7 @@ class _LinearCalculator {
         let contentSize = CalFixedSize(main: totalMainChildrenContent, cross: maxCrossChildrenContent, direction: regDirection)
             .getSize()
             .expand(edge: regulator.padding)
-        return CalculateUtil.getIntrinsicSize(from: regulator.size, contentResidual: contentResidual, wrappedContent: contentSize)
+        return IntrinsicSizeHelper.getIntrinsicSize(from: regulator.size, contentResidual: contentResidual, wrappedContent: contentSize)
     }
 
     func calculateChildrenSize(estimateCross: CGFloat?) {
@@ -342,7 +342,7 @@ class _LinearCalculator {
     }
 
     private func calculateChild(_ measure: Measure, subResidual: CalFixedSize, msg: String) {
-        measure.calculatedSize = CalHelper.calculateIntrinsicSize(for: measure, layoutResidual: subResidual.getSize(), strategy: measure.isLayoutEntryPoint ? .estimate : .calculate, diagnosisMsg: msg)
+        measure.calculatedSize = IntrinsicSizeHelper.calculateIntrinsicSize(for: measure, layoutResidual: subResidual.getSize(), strategy: measure.isLayoutEntryPoint ? .estimate : .calculate, diagnosisMsg: msg)
     }
 
     private func hendleMainGrowIfNeeded(estimateCross: CGFloat?) -> Bool {
@@ -427,7 +427,7 @@ class _LinearCalculator {
             // 获取计算对象，根据是否反转获取
             let m: Measure = regulator.reverse ? measures[measures.count - index - 1] : measures[index]
             // 计算cross偏移
-            let cross: CGFloat = CalculateUtil.getCalculatedChildCrossAlignmentOffset(m, direction: regDirection, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: intrinsic)
+            let cross: CGFloat = AlignmentHelper.getCrossAlignmentOffset(m, direction: regDirection, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: intrinsic)
 
             let calMargin = CalEdges(insets: m.margin, direction: regulator.direction)
             let calFixedSize = CalFixedSize(cgSize: m.calculatedSize, direction: regulator.direction)

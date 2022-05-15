@@ -26,7 +26,7 @@ class _FlowCalculator {
     var regDirection: Direction { regulator.direction }
 
     lazy var regChildrenResidualCalSize: CalFixedSize = {
-        let size = CalculateUtil.getChildrenLayoutResidual(for: regulator, regulatorLayoutResidual: layoutResidual)
+        let size = ResidualHelper.getChildrenLayoutResidual(for: regulator, regulatorLayoutResidual: layoutResidual)
         return CalFixedSize(cgSize: size, direction: regDirection)
     }()
 
@@ -57,7 +57,7 @@ class _FlowCalculator {
         children.forEach { m in
             let subCalSize = m.size.getCalSize(by: regDirection)
 
-            let subCalFixedSize = CalHelper.calculateIntrinsicSize(for: m, layoutResidual: regChildrenResidualCalSize.getSize(), strategy: m.isLayoutEntryPoint ? .estimate : .calculate, diagnosisMsg: "FlowCalculator content test calculating").getCalFixedSize(by: regDirection)
+            let subCalFixedSize = IntrinsicSizeHelper.calculateIntrinsicSize(for: m, layoutResidual: regChildrenResidualCalSize.getSize(), strategy: m.isLayoutEntryPoint ? .estimate : .calculate, diagnosisMsg: "FlowCalculator content test calculating").getCalFixedSize(by: regDirection)
             let subCalMargin = CalEdges(insets: m.margin, direction: regDirection)
 
             let space = CGFloat(Swift.min(1, currentLine.count)) * regulator.itemSpace

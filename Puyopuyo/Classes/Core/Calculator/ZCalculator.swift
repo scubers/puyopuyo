@@ -21,8 +21,8 @@ private class _ZCalculator {
     init(_ regulator: ZRegulator, layoutResidual: CGSize) {
         self.regulator = regulator
         self.layoutResidual = layoutResidual
-        self.contentResidual = CalculateUtil.getContentResidual(layoutResidual: layoutResidual, margin: regulator.margin, size: regulator.size)
-        self.childrenLayoutResidual = CalculateUtil.getChildrenLayoutResidual(for: regulator, regulatorLayoutResidual: layoutResidual)
+        self.contentResidual = ResidualHelper.getContentResidual(layoutResidual: layoutResidual, margin: regulator.margin, size: regulator.size)
+        self.childrenLayoutResidual = ResidualHelper.getChildrenLayoutResidual(for: regulator, regulatorLayoutResidual: layoutResidual)
     }
 
     var maxChildContentSize: CGSize = .zero
@@ -47,7 +47,7 @@ private class _ZCalculator {
 
     private func getIntrinsicSize() -> CGSize {
 //        return CalculateUtil.getWrappedContentSize(for: regulator, padding: regulator.padding, contentResidual: contentResidual, childrenContentSize: maxChildContentSize)
-        return CalculateUtil.getIntrinsicSize(from: regulator.size, contentResidual: contentResidual, wrappedContent: maxChildContentSize.expand(edge: regulator.padding))
+        return IntrinsicSizeHelper.getIntrinsicSize(from: regulator.size, contentResidual: contentResidual, wrappedContent: maxChildContentSize.expand(edge: regulator.padding))
     }
 
     private func prepareData() {
@@ -91,7 +91,7 @@ private class _ZCalculator {
     private func _calculateChild(_ measure: Measure, msg: String) {
         let childLayoutResidual = getLayoutResidual(forChild: measure)
 
-        measure.calculatedSize = CalHelper.calculateIntrinsicSize(for: measure, layoutResidual: childLayoutResidual, strategy: measure.isLayoutEntryPoint ? .estimate : .calculate)
+        measure.calculatedSize = IntrinsicSizeHelper.calculateIntrinsicSize(for: measure, layoutResidual: childLayoutResidual, strategy: measure.isLayoutEntryPoint ? .estimate : .calculate)
 
         // 记录当前最大宽高
         appendMaxWidthIfNeeded(measure)
@@ -118,8 +118,8 @@ private class _ZCalculator {
     }
 
     private func _calculateCenter(_ measure: Measure, containerSize: CGSize) -> CGPoint {
-        let x = CalculateUtil.getCalculatedChildCrossAlignmentOffset(measure, direction: .y, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: containerSize)
-        let y = CalculateUtil.getCalculatedChildCrossAlignmentOffset(measure, direction: .x, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: containerSize)
+        let x = AlignmentHelper.getCrossAlignmentOffset(measure, direction: .y, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: containerSize)
+        let y = AlignmentHelper.getCrossAlignmentOffset(measure, direction: .x, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: containerSize)
         return CGPoint(x: x, y: y)
     }
 
