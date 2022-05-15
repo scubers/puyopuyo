@@ -31,6 +31,18 @@ class TestVC: BaseViewController {
         view.attach {
             UIView().attach($0)
                 .size(50, 50)
+            
+            VBox().attach($0) {
+                ZBox().attach($0) {
+                    UIView().attach($0)
+                        .size(.fill, .aspectRatio(1))
+                    
+                    UILabel().attach($0)
+                        .text("lakjsdflkjsdlfj")
+                }
+            }
+            .format(.center)
+            .size(.fill, .fill)
         }
         
         Util.randomViewColor(view: view)

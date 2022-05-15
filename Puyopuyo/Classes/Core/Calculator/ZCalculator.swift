@@ -46,7 +46,6 @@ private class _ZCalculator {
     }
 
     private func getIntrinsicSize() -> CGSize {
-//        return CalculateUtil.getWrappedContentSize(for: regulator, padding: regulator.padding, contentResidual: contentResidual, childrenContentSize: maxChildContentSize)
         return IntrinsicSizeHelper.getIntrinsicSize(from: regulator.size, contentResidual: contentResidual, wrappedContent: maxChildContentSize.expand(edge: regulator.padding))
     }
 
@@ -60,15 +59,6 @@ private class _ZCalculator {
 
             if m.size.maybeRatio {
                 maybeRatioChildren.append(m)
-            }
-
-            // 校验最大固有尺寸
-            if m.size.width.isFixed {
-                maxChildContentSize.width = Swift.max(maxChildContentSize.width, m.size.width.fixedValue + m.margin.getHorzTotal())
-            }
-
-            if m.size.height.isFixed {
-                maxChildContentSize.height = Swift.max(maxChildContentSize.height, m.size.height.fixedValue + m.margin.getVertTotal())
             }
         }
     }

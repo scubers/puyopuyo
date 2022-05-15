@@ -87,7 +87,7 @@ class _LinearCalculator {
     /// 主轴需要成长的子节点
     private lazy var mainGrowChildren = [Measure]()
 
-    /// 计算本身布局属性，可能返回的size 为 .fixed, .ratio, 不可能返回wrap
+    /// 计算本身布局属性
     func calculate() -> CGSize {
         // 准备初始化计算数据
         prepareData()
@@ -103,14 +103,14 @@ class _LinearCalculator {
         return finalSize
     }
 
-    func calculateRegulatorSize() -> CGSize {
+    private func calculateRegulatorSize() -> CGSize {
         let contentSize = CalFixedSize(main: totalMainChildrenContent, cross: maxCrossChildrenContent, direction: regDirection)
             .getSize()
             .expand(edge: regulator.padding)
         return IntrinsicSizeHelper.getIntrinsicSize(from: regulator.size, contentResidual: contentResidual, wrappedContent: contentSize)
     }
 
-    func calculateChildrenSize(estimateCross: CGFloat?) {
+    private func calculateChildrenSize(estimateCross: CGFloat?) {
         // 清空计算值
         totalMainCalculatedSize = 0
         maxCrossChildrenContent = 0
@@ -137,7 +137,7 @@ class _LinearCalculator {
     // MARK: - Private funcs
 
     /// 具备条件进行复算尺寸: 存在次轴父子依赖
-    /// 复算可能存在无法满足期望的情况，推演最多不超过 20 次
+    /// 复算可能存在无法满足期望的情况，推演最多不超过 n 次
     private func crossConfictCalculate() {
         if !crossRatioChildren.isEmpty, regCalSize.cross.isWrap {
             var estimateCross = maxCrossChildrenContent
@@ -147,7 +147,7 @@ class _LinearCalculator {
             // 复算次数
             var count = 0
             // 最大复算次数
-            let maxLoopTestCount = 20
+            let maxLoopTestCount = 30
             // 最小误差值
             var minDelta: CGFloat?
             // 最小误差值对应的预估值

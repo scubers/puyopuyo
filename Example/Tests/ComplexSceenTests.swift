@@ -10,8 +10,9 @@ import Puyopuyo
 import XCTest
 
 class ComplexSceenTests: XCTestCase {
+    var box = ZBox()
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        box = ZBox()
     }
 
     override func tearDownWithError() throws {
@@ -33,7 +34,24 @@ class ComplexSceenTests: XCTestCase {
         .size(100, 100)
 
         v.view.layoutIfNeeded()
-        
+
+        XCTAssertTrue(v1.calSize == v2.calSize)
+    }
+
+    func testCase2() throws {
+        var v1: UIView!
+        var v2: UIView!
+        v1 = ZBox().attach(box) {
+            v2 = UIView().attach($0)
+                .size(.fill, .aspectRatio(1))
+                .view
+            UILabel().attach($0)
+                .text("abcabc")
+        }
+        .view
+
+        box.layoutIfNeeded()
+
         XCTAssertTrue(v1.calSize == v2.calSize)
     }
 }
