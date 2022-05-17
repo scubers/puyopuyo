@@ -62,13 +62,8 @@ public extension Puyo where T: UIView {
     }
 
     @discardableResult
-    func alpha<O: Outputing>(_ alpha: O) -> Self where O.OutputType == CGFloat {
-        set(\T.alpha, alpha)
-    }
-
-    @discardableResult
-    func alpha(_ alpha: CGFloat) -> Self {
-        set(\T.alpha, alpha)
+    func alpha<O: Outputing>(_ alpha: O) -> Self where O.OutputType: CGFloatable {
+        set(\T.alpha, alpha.asOutput().map(\.cgFloatValue))
     }
 
     @discardableResult
