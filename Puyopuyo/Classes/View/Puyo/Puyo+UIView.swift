@@ -67,6 +67,11 @@ public extension Puyo where T: UIView {
     }
 
     @discardableResult
+    func alpha(_ alpha: CGFloat) -> Self {
+        set(\T.alpha, alpha)
+    }
+
+    @discardableResult
     func userInteractionEnabled<O: Outputing>(_ enabled: O) -> Self where O.OutputType == Bool {
         set(\T.isUserInteractionEnabled, enabled)
     }
