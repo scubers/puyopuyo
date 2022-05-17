@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
                         A reactive layout library for UIKit written in swift.
                        DESC
 
-  s.homepage         = 'https://github.com/Jrwong/Puyopuyo'
+  s.homepage         = 'https://github.com/scubers/Puyopuyo'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Jrwong' => 'jr-wong@qq.com' }
