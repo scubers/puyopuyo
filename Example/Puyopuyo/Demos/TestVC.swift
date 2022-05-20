@@ -32,17 +32,21 @@ class TestVC: BaseViewController {
             UIView().attach($0)
                 .size(50, 50)
             
-            VBox().attach($0) {
-                ZBox().attach($0) {
-                    UIView().attach($0)
-                        .size(.fill, .aspectRatio(1))
-                    
-                    UILabel().attach($0)
-                        .text("lakjsdflkjsdlfj")
-                }
-            }
-            .format(.center)
-            .size(.fill, .fill)
+//            createYogaCompress(times: 2).attach($0) {
+//                $0.yoga.applyLayout(preservingOrigin: false)
+//            }
+            
+//            VBox().attach($0) {
+//                ZBox().attach($0) {
+//                    UIView().attach($0)
+//                        .size(.fill, .aspectRatio(1))
+//
+//                    UILabel().attach($0)
+//                        .text("lakjsdflkjsdlfj")
+//                }
+//            }
+//            .format(.center)
+//            .size(.fill, .fill)
         }
         
         Util.randomViewColor(view: view)

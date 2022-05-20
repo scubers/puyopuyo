@@ -19,23 +19,6 @@ extension UIView {
     var celCenter: CGPoint { layoutMeasure.calculatedCenter }
 }
 
-class WrapSizeView: UIView {
-    var contentSize: CGSize = .zero
-    init(_ width: CGFloat = 0, _ height: CGFloat = 0) {
-        contentSize = .init(width: width, height: height)
-        super.init(frame: .zero)
-    }
-
-    @available(*, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError()
-    }
-
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        return contentSize
-    }
-}
-
 class LinearTests: XCTestCase {
     var box = ZBox()
     override func setUp() {

@@ -11,6 +11,23 @@ import Puyopuyo
 import TangramKit
 import YogaKit
 
+class WrapSizeView: UIView {
+    var contentSize: CGSize = .zero
+    init(_ width: CGFloat = 0, _ height: CGFloat = 0) {
+        contentSize = .init(width: width, height: height)
+        super.init(frame: .zero)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError()
+    }
+
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        return contentSize
+    }
+}
+
 protocol CountedTestView {
     var count: Int { get }
     init(count: Int)
@@ -247,4 +264,40 @@ func createYogaRecursiveView(times: Int = 3) -> UIView {
     }
 
     return generate(view: UIView(), times: times)
+}
+
+func createPuyopuyoCompress(times: Int = 10) -> UIView {
+    let width: CGFloat = 100
+    let count = CGFloat(times)
+    return HBox().attach {
+        for _ in 0 ..< Int(count) {
+            WrapSizeView(width, width).attach($0)
+                .width(.wrap(shrink: 1))
+        }
+    }
+    .width(count * (width - 10)) // 每个view需要压缩10
+    .justifyContent(.center)
+    .view
+}
+
+func createYogaCompress(times: Int = 10) -> UIView {
+    let width: CGFloat = 100
+    let count = CGFloat(times)
+    return UIView().attach {
+        $0.yoga.isEnabled = true
+        $0.yoga.width = YGValue(count * (width - 10))
+        $0.yoga.flexDirection = .row
+        $0.yoga.alignItems = .center
+        
+        for _ in 0 ..< Int(count) {
+            WrapSizeView(width, width).attach($0) {
+                $0.yoga.isEnabled = true
+                $0.yoga.flexShrink = 1
+                $0.yoga.height = YGValue(width)
+                $0.yoga.width = YGValue(width)
+                
+            }
+        }
+    }
+    .view
 }

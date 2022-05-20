@@ -56,6 +56,9 @@ class DataTests: XCTestCase {
         print("Yoga\t\(yogaTime.map { $1 }.map(\.description).joined(separator: "\t"))")
         print("TangramKit\t\(tgTime.map { $1 }.map(\.description).joined(separator: "\t"))")
         print("UIStackView\t\(stackTime.map { $1 }.map(\.description).joined(separator: "\t"))")
+        print("puyo / yoga : \(puyoTime.last!.1 / yogaTime.last!.1)")
+        print("puyo / tg : \(puyoTime.last!.1 / tgTime.last!.1)")
+        print("puyo / stack : \(puyoTime.last!.1 / stackTime.last!.1)")
         print("\n>>>>>>> LinearLayout data <<<<<<<\n")
     }
 
@@ -86,6 +89,8 @@ class DataTests: XCTestCase {
         print("Puyopuyo\t\(puyoTime.map { $1 }.map(\.description).joined(separator: "\t"))")
         print("Yoga\t\(yogaTime.map { $1 }.map(\.description).joined(separator: "\t"))")
         print("TangramKit\t\(tgTime.map { $1 }.map(\.description).joined(separator: "\t"))")
+        print("puyo / yoga : \(puyoTime.last!.1 / yogaTime.last!.1)")
+        print("puyo / tg : \(puyoTime.last!.1 / tgTime.last!.1)")
         print("\n>>>>>>> Recursive data <<<<<<<\n")
     }
 
@@ -127,6 +132,33 @@ class DataTests: XCTestCase {
         print("Puyopuyo\t\(puyoTime.map { $1 }.map(\.description).joined(separator: "\t"))")
         print("Yoga\t\(yogaTime.map { $1 }.map(\.description).joined(separator: "\t"))")
         print("TangramKit\t\(tgTime.map { $1 }.map(\.description).joined(separator: "\t"))")
+        print("puyo / yoga : \(puyoTime.last!.1 / yogaTime.last!.1)")
+        print("puyo / tg : \(puyoTime.last!.1 / tgTime.last!.1)")
         print("\n>>>>>>> FlowLayout data <<<<<<<\n")
+    }
+    
+    func testCompressLayoutData() throws {
+        var puyoTime = [(Int, TimeInterval)]()
+        var yogaTime = [(Int, TimeInterval)]()
+
+        [3, 5, 10, 50, 80, 100, 120, 150, 180, 200].forEach { count in
+            var v: UIView = createPuyopuyoCompress(times: count)
+            puyoTime.append((count, profileTime { _ in
+                _ = v.sizeThatFits(CGSize(width: 0, height: 0))
+            }))
+
+            v = createYogaCompress(times: count)
+            yogaTime.append((count, profileTime { _ in
+                v.yoga.calculateLayout(with: CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
+            }))
+        }
+        
+
+        print("\n>>>>>>> Shrink data <<<<<<<\n")
+        print(puyoTime.map { c, _ in c }.map(\.description).joined(separator: "\t"))
+        print("Puyopuyo\t\(puyoTime.map { $1 }.map(\.description).joined(separator: "\t"))")
+        print("Yoga\t\(yogaTime.map { $1 }.map(\.description).joined(separator: "\t"))")
+        print("puyo / yoga : \(puyoTime.last!.1 / yogaTime.last!.1)")
+        print("\n>>>>>>> Shrink data <<<<<<<\n")
     }
 }
