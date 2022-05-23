@@ -118,7 +118,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
 
             positionControlDisposable = boundsSize.distinct().outputing { [weak self] _ in
                 guard let self = self else { return }
-                if self.layoutRegulator.size.maybeRatio {
+                if !self.layoutRegulator.size.isFixed {
                     self.setNeedsLayout()
                 }
             }
