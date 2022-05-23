@@ -113,7 +113,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
         positionControlDisposable?.dispose()
         if rootBoxConfig.sizeControl.isCalculate, let spv = superview, !spv.isBoxView {
             let boundsSize = spv
-                .py_observing(\.bounds)
+                .py_observing(\.frame)
                 .map(\.size, .zero)
 
             positionControlDisposable = boundsSize.distinct().outputing { [weak self] _ in
