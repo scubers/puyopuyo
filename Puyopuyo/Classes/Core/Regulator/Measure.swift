@@ -131,7 +131,9 @@ public class Measure {
         if calculator == nil {
             calculator = createCalculator()
         }
-        return calculator!.calculate(self, layoutResidual: layoutResidual)
+        return doRunLoopCostMonitor {
+            calculator!.calculate(self, layoutResidual: layoutResidual)
+        }
     }
 
     public private(set) var calculator: Calculator?

@@ -130,3 +130,59 @@ enum DiagnosisUitl {
         #endif
     }
 }
+
+public class RunLoopMonitor {
+    var interval: TimeInterval = 0
+    public static let shared = RunLoopMonitor()
+    fileprivate var started = false
+    public func start() {
+        monitorByRunloop()
+        started = true
+    }
+
+    public func stop() {
+        started = false
+        if let runloopObserver = runloopObserver {
+            CFRunLoopRemoveObserver(CFRunLoopGetMain(), runloopObserver, .commonModes)
+        }
+    }
+
+    private func monitorByDisplayLink() {
+        let displayLink = CADisplayLink(target: self, selector: #selector(action))
+        displayLink.add(to: RunLoop.main, forMode: .common)
+    }
+
+    private var runloopObserver: CFRunLoopObserver?
+    private func monitorByRunloop() {
+        let ob = CFRunLoopObserverCreateWithHandler(kCFAllocatorDefault, CFRunLoopActivity.allActivities.rawValue, true, 0) { _, activity in
+            if activity == .beforeWaiting {
+                if RunLoopMonitor.shared.interval != 0 {
+                    print(">>> layout cost: \(RunLoopMonitor.shared.interval * 1000)ms")
+                }
+                RunLoopMonitor.shared.interval = 0
+            }
+        }
+        CFRunLoopAddObserver(CFRunLoopGetMain(), ob, .commonModes)
+        if let runloopObserver = runloopObserver {
+            CFRunLoopRemoveObserver(CFRunLoopGetMain(), runloopObserver, .commonModes)
+        }
+    }
+
+    @objc func action() {
+        if interval != 0 {
+            print(">>> layout cost: \(RunLoopMonitor.shared.interval * 1000)ms")
+            interval = 0
+        }
+    }
+}
+
+func doRunLoopCostMonitor<T>(_ action: () -> T) -> T {
+    guard RunLoopMonitor.shared.started else {
+        return action()
+    }
+    let start = Date().timeIntervalSince1970
+    let v = action()
+    let interval = Date().timeIntervalSince1970 - start
+    RunLoopMonitor.shared.interval += interval
+    return v
+}

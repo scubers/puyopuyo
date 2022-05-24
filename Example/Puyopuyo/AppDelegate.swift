@@ -47,6 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        window?.rootViewController = NavController(rootViewController: UIViewController())
         window?.makeKeyAndVisible()
 
+        RunLoopMonitor.shared.start()
         return true
     }
 
