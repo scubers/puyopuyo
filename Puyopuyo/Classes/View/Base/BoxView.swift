@@ -259,6 +259,9 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
     // MARK: - ViewParasitizing
 
     open func addParasite(_ parasite: ViewDisplayable) {
+        guard parasite.dislplayView.superview != self else {
+            return
+        }
         super.addSubview(parasite.dislplayView)
     }
 

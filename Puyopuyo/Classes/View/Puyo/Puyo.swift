@@ -136,6 +136,10 @@ extension Puyo: BoxLayoutNode where T: BoxLayoutNode {
     public var layoutNodeType: BoxLayoutNodeType {
         view.layoutNodeType
     }
+
+    public func didMoveToSuperBox(_ superBox: BoxLayoutContainer) {
+        view.didMoveToSuperBox(superBox)
+    }
 }
 
 // MARK: - BoxLayoutContainer

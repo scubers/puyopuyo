@@ -61,10 +61,14 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
         _addLayoutNode(node)
     }
 
+    public func didMoveToSuperBox(_: BoxLayoutContainer) {
+        _parasiteChildren()
+    }
+
     // MARK: - ViewParasitable
 
     public func addParasite(_ parasite: ViewDisplayable) {
-        if [Visibility.visible, .free].contains(layoutVisibility) {
+        if layoutVisibility == .visible || layoutVisibility == .free {
             superBox?.addParasite(parasite)
         }
     }
@@ -72,10 +76,6 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
     public func removeParasite(_ parasite: ViewDisplayable) {
         superBox?.removeParasite(parasite)
     }
-
-//    public func setNeedsLayout() {
-//        superBox?.setNeedsLayout()
-//    }
 
     // MARK: - MeasureChildrenDelegate
 
