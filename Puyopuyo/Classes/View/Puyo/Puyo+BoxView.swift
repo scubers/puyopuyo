@@ -107,54 +107,6 @@ public extension Puyo where T: RegulatorSpecifier & AutoDisposable {
     }
 }
 
-// MARK: - Eventable
-
-/// When `T` is Eventable, call when emitter emit some events
-public extension Puyo where T: Eventable {
-    @discardableResult
-    func onEvent<I: Inputing>(_ input: I) -> Self where I.InputType == T.EmitterType.OutputType {
-        let disposer = view.emitter.send(to: input)
-        if let v = view as? AutoDisposable {
-            disposer.dispose(by: v)
-        }
-        return self
-    }
-
-    @discardableResult
-    func onEvent(_ event: @escaping (T.EmitterType.OutputType) -> Void) -> Self {
-        onEvent(Inputs(event))
-    }
-
-    @discardableResult
-    func onEvent<O: AnyObject>(to: O?, _ event: @escaping (O, T.EmitterType.OutputType) -> Void) -> Self {
-        onEvent(Inputs { [weak to] v in
-            if let to = to {
-                event(to, v)
-            }
-        })
-    }
-}
-
-public extension Puyo where T: Eventable, T.EmitterType.OutputType: Equatable {
-    @discardableResult
-    func onEvent(_ eventType: T.EmitterType.OutputType, _ event: @escaping () -> Void) -> Self {
-        onEvent(Inputs {
-            if eventType == $0 {
-                event()
-            }
-        })
-    }
-}
-
-// MARK: - Stateful
-
-public extension Puyo where T: Stateful & AutoDisposable {
-    @discardableResult
-    func state<O: Outputing>(_ output: O) -> Self where O.OutputType == T.StateType.OutputType {
-        doOn(output) { $0.state.input(value: $1) }
-    }
-}
-
 // MARK: - Delegatable & DataSourceable
 
 public extension Puyo where T: Delegatable {

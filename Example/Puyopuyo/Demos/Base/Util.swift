@@ -23,8 +23,8 @@ struct Util {
     }
 
     static func randomViewColor(view: UIView) {
+        view.backgroundColor = self.randomColor()
         view.subviews.forEach { v in
-            v.backgroundColor = self.randomColor()
             self.randomViewColor(view: v)
         }
     }

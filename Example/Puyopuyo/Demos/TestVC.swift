@@ -18,6 +18,41 @@ class MyView: UIView {
     }
 }
 
+class MyCell: HBox, Stateful {
+    struct ViewState {
+        var title: String?
+        var desc: String?
+        var image: String?
+    }
+    
+    let state = State(ViewState())
+    
+    override func buildBody() {
+        attach {
+            UIImageView().attach($0)
+                .size(80, 80)
+                .image(binder.image.then { downloadImage(url: $0) })
+                .clipToBounds(true)
+                .cornerRadius(6)
+            
+            VGroup().attach($0) {
+                UILabel().attach($0)
+                    .text(binder.title)
+                
+                UILabel().attach($0)
+                    .text(binder.desc)
+            }
+            .space(4)
+        }
+        .padding(all: 8)
+        .space(8)
+        .borders([.color(.gray), .thick(1)])
+        .justifyContent(.vertCenter(-0.5))
+        .backgroundColor(.white)
+        .style(ShadowStyle())
+    }
+}
+
 extension Bool {
     var visibleOrGone: Visibility { self ? .visible : .gone }
     var visibleOrNot: Visibility { self ? .visible : .invisible }
@@ -31,6 +66,16 @@ class TestVC: BaseViewController {
         view.attach {
             UIView().attach($0)
                 .size(50, 50)
+            
+            ZBox().attach($0) {
+                MyCell().attach($0)
+                    .setState(\.title, "Jrwong")
+                    .setState(\.desc, "Description".optionalValue)
+                    .setState(\.image, Images().get().optionalValue)
+                    .width(300)
+            }
+            .justifyContent(.center)
+            .size(.fill, .fill)
             
 //            createYogaCompress(times: 2).attach($0) {
 //                $0.yoga.applyLayout(preservingOrigin: false)
@@ -49,7 +94,7 @@ class TestVC: BaseViewController {
 //            .size(.fill, .fill)
         }
         
-        Util.randomViewColor(view: view)
+//        Util.randomViewColor(view: view)
     }
     
     func testCrossConflictingExtreme() -> UIView {
