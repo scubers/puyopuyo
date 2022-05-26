@@ -66,11 +66,28 @@ class TestVC: BaseViewController {
         view.attach {
             UIView().attach($0)
                 .size(50, 50)
+            
+            let name = State<String?>("")
+            let name1 = State<String>("")
             ZBox().attach($0) {
                 MyCell().attach($0)
-                    .assign(\.state.value.title, "")
-                    .assign(\.state.value.title, nil)
-                    .assign(\.state.value.desc, "")
+                
+                    .setState(\.title, "")
+                    .setState(\.title, nil)
+                    .setState(\.title, name)
+                    .setState(\.title, name1)
+                
+                    .setState(\.desc, "")
+                    .setState(\.desc, name1)
+                
+                    .set(\.state.value.title, "")
+                    .set(\.state.value.title, nil)
+                    .set(\.state.value.title, name)
+                    .set(\.state.value.title, name1)
+                
+                    .set(\.state.value.desc, "")
+                    .set(\.state.value.desc, name1)
+                
                     .width(300)
             }
             .justifyContent(.center)
@@ -103,7 +120,7 @@ class TestVC: BaseViewController {
             let content1 = state.map { Int(50 * $0) }.map { (0 ..< $0).map(\.description).joined() }
             UISlider().attach($0)
                 .width(.fill)
-                .assign(\.value, state.value)
+                .set(\.value, state.value)
                 .onControlEvent(.valueChanged, Inputs { state.value = $0.value })
             
             HBox().attach($0) {
@@ -586,7 +603,7 @@ class TestVC: BaseViewController {
                     .width(.wrap(shrink: 1))
                     .observe(\.bounds, input: label1Rect)
                     .margin(left: 10)
-                    .assign(\.lineBreakMode, .byClipping)
+                    .set(\.lineBreakMode, .byClipping)
 
                 UILabel().attach($0)
                     .numberOfLines(0)
@@ -594,7 +611,7 @@ class TestVC: BaseViewController {
                     .width(.wrap(max: 200, shrink: 1))
                     .observe(\.bounds, input: label2Rect)
                     .margin(left: 10)
-                    .assign(\.lineBreakMode, .byClipping)
+                    .set(\.lineBreakMode, .byClipping)
                     .height(.wrap(max: 100))
 //                    .aspectRatio(1)
                     .width(.aspectRatio(1 / 1))

@@ -255,7 +255,7 @@ func createYogaRecursiveView(times: Int = 3) -> UIView {
             }
             for _ in 0 ..< 5 {
                 UILabel().attach($0).text("Label")
-                    .assign(\.yoga.isEnabled, true)
+                    .set(\.yoga.isEnabled, true)
             }
 
             generate(view: UIView(), times: times - 1).attach($0)

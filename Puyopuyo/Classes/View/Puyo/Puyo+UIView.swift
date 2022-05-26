@@ -11,69 +11,69 @@ public extension Puyo where T: UIView {
     /// Set diagnosis id, system will print the view's info in every calculate cycle
     @discardableResult
     func diagnosis(_ id: String? = "") -> Self {
-        bind(\T.layoutMeasure.diagnosisId, id)
+        set(\T.layoutMeasure.diagnosisId, id)
     }
 
     /// Set extra diagnosis message
     @discardableResult
     func diagnosisMessage(_ msg: String?) -> Self {
-        bind(\T.layoutMeasure.extraDiagnosisMessage, msg)
+        set(\T.layoutMeasure.extraDiagnosisMessage, msg)
     }
 
     @discardableResult
     func backgroundColor<O: Outputing>(_ color: O) -> Self where O.OutputType: OptionalableValueType, O.OutputType.Wrap == UIColor {
-        bind(\.backgroundColor, color.asOutput().map(\.optionalValue))
+        set(\.backgroundColor, color.asOutput().map(\.optionalValue))
     }
 
     @discardableResult
     func backgroundColor(_ color: UIColor?) -> Self {
-        bind(\.backgroundColor, color)
+        set(\.backgroundColor, color)
     }
 
     @discardableResult
     func contentMode<O: Outputing>(_ mode: O) -> Self where O.OutputType == UIView.ContentMode {
-        bind(\.contentMode, mode)
+        set(\.contentMode, mode)
     }
 
     @discardableResult
     func contentMode(_ mode: UIView.ContentMode) -> Self {
-        bind(\.contentMode, mode)
+        set(\.contentMode, mode)
     }
 
     @discardableResult
     func clipToBounds<O: Outputing>(_ clip: O) -> Self where O.OutputType == Bool {
-        bind(\T.clipsToBounds, clip)
+        set(\T.clipsToBounds, clip)
     }
 
     @discardableResult
     func cornerRadius<O: Outputing>(_ radius: O) -> Self where O.OutputType: CGFloatable {
-        bind(\T.layer.cornerRadius, radius.asOutput().map(\.cgFloatValue))
+        set(\T.layer.cornerRadius, radius.asOutput().map(\.cgFloatValue))
             .clipToBounds(true)
     }
 
     @discardableResult
     func borderWidth<O: Outputing>(_ width: O) -> Self where O.OutputType: CGFloatable {
-        bind(\T.layer.borderWidth, width.asOutput().map(\.cgFloatValue))
+        set(\T.layer.borderWidth, width.asOutput().map(\.cgFloatValue))
     }
 
     @discardableResult
     func borderColor<O: Outputing>(_ color: O) -> Self where O.OutputType: OptionalableValueType, O.OutputType.Wrap == UIColor {
-        bind(\T.layer.borderColor, color.asOutput().map(\.optionalValue).map(\.?.cgColor))
+        set(\T.layer.borderColor, color.asOutput().map(\.optionalValue).map(\.?.cgColor))
     }
 
     @discardableResult
     func alpha<O: Outputing>(_ alpha: O) -> Self where O.OutputType: CGFloatable {
-        bind(\T.alpha, alpha.asOutput().map(\.cgFloatValue))
+        set(\T.alpha, alpha.asOutput().map(\.cgFloatValue))
     }
 
     @discardableResult
     func userInteractionEnabled<O: Outputing>(_ enabled: O) -> Self where O.OutputType == Bool {
-        bind(\T.isUserInteractionEnabled, enabled)
+        set(\T.isUserInteractionEnabled, enabled)
     }
 
     @discardableResult
     func frame<O: Outputing>(_ frame: O) -> Self where O.OutputType == CGRect {
-        bind(\T.frame, frame)
+        set(\T.frame, frame)
     }
 
     @discardableResult

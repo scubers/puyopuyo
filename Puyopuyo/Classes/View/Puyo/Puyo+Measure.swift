@@ -14,22 +14,22 @@ public extension Puyo where T: BoxLayoutNode & AutoDisposable {
 
     @discardableResult
     func width(_ width: SizeDescription) -> Self {
-        assign(\T.layoutMeasure.size.width, width)
+        set(\T.layoutMeasure.size.width, width)
     }
 
     @discardableResult
     func height(_ height: SizeDescription) -> Self {
-        assign(\T.layoutMeasure.size.height, height)
+        set(\T.layoutMeasure.size.height, height)
     }
 
     @discardableResult
     func width<O: Outputing>(_ w: O) -> Self where O.OutputType: SizeDescriptible {
-        bind(\T.layoutMeasure.size.width, w.asOutput().map(\.sizeDescription))
+        set(\T.layoutMeasure.size.width, w.asOutput().map(\.sizeDescription))
     }
 
     @discardableResult
     func height<O: Outputing>(_ h: O) -> Self where O.OutputType: SizeDescriptible {
-        bind(\T.layoutMeasure.size.height, h.asOutput().map(\.sizeDescription))
+        set(\T.layoutMeasure.size.height, h.asOutput().map(\.sizeDescription))
     }
 
     // MARK: - Size
@@ -56,12 +56,12 @@ public extension Puyo where T: BoxLayoutNode & AutoDisposable {
 
     @discardableResult
     func size(_ size: Size) -> Self {
-        assign(\T.layoutMeasure.size, size)
+        set(\T.layoutMeasure.size, size)
     }
 
     @discardableResult
     func size<O: Outputing>(_ size: O) -> Self where O.OutputType == Size {
-        bind(\T.layoutMeasure.size, size)
+        set(\T.layoutMeasure.size, size)
     }
 
     // MARK: - Second layoutable methods
@@ -133,7 +133,7 @@ public extension Puyo where T: BoxLayoutNode & AutoDisposable {
 
     @discardableResult
     func margin<S: Outputing>(_ margin: S) -> Self where S.OutputType == UIEdgeInsets {
-        bind(\T.layoutMeasure.margin, margin)
+        set(\T.layoutMeasure.margin, margin)
     }
 }
 
@@ -142,17 +142,17 @@ public extension Puyo where T: BoxLayoutNode & AutoDisposable {
 public extension Puyo where T: BoxLayoutNode & AutoDisposable {
     @discardableResult
     func alignment(_ alignment: Alignment) -> Self {
-        assign(\T.layoutMeasure.alignment, alignment)
+        set(\T.layoutMeasure.alignment, alignment)
     }
 
     @discardableResult
     func alignment<S: Outputing>(_ alignment: S) -> Self where S.OutputType == Alignment {
-        bind(\T.layoutMeasure.alignment, alignment)
+        set(\T.layoutMeasure.alignment, alignment)
     }
 
     @discardableResult
     func flowEnding(_ flowEnding: Bool) -> Self {
-        assign(\T.layoutMeasure.flowEnding, flowEnding)
+        set(\T.layoutMeasure.flowEnding, flowEnding)
     }
 }
 
@@ -161,12 +161,12 @@ public extension Puyo where T: BoxLayoutNode & AutoDisposable {
 public extension Puyo where T: BoxLayoutNode & AutoDisposable {
     @discardableResult
     func visibility(_ visibility: Visibility) -> Self {
-        assign(\T.layoutVisibility, visibility)
+        set(\T.layoutVisibility, visibility)
     }
 
     @discardableResult
     func visibility<S: Outputing>(_ visibility: S) -> Self where S.OutputType == Visibility {
-        bind(\T.layoutVisibility, visibility)
+        set(\T.layoutVisibility, visibility)
     }
 }
 
@@ -175,7 +175,7 @@ public extension Puyo where T: BoxLayoutNode & AutoDisposable {
 public extension Puyo where T: BoxLayoutNode & AutoDisposable {
     @discardableResult
     func activated<S: Outputing>(_ activated: S) -> Self where S.OutputType == Bool {
-        bind(\T.layoutMeasure.activated, activated)
+        set(\T.layoutMeasure.activated, activated)
     }
 }
 
@@ -184,11 +184,11 @@ public extension Puyo where T: BoxLayoutNode & AutoDisposable {
 public extension Puyo where T: UIView {
     @discardableResult
     func animator(_ animator: Animator?) -> Self {
-        assign(\T.py_animator, animator)
+        set(\T.py_animator, animator)
     }
 
     @discardableResult
     func animator<O: Outputing>(_ animator: O) -> Self where O.OutputType: OptionalableValueType, O.OutputType.Wrap == Animator {
-        bind(\T.py_animator, animator.mapWrappedValue())
+        set(\T.py_animator, animator.mapWrappedValue())
     }
 }

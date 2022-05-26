@@ -50,7 +50,7 @@ public extension Puyo where T: Eventable, T.EmitterType.OutputType: Equatable {
 
 public extension Puyo where T: Stateful {
     @discardableResult
-    func state(value: T.StateType.OutputType) -> Self {
+    func state(_ value: T.StateType.OutputType) -> Self {
         view.state.input(value: value)
         return self
     }
@@ -79,20 +79,20 @@ public extension Puyo where T: Stateful & AutoDisposable {
     }
 
     @discardableResult
-    func bindState<O: Outputing, V>(_ keyPath: WritableKeyPath<T.StateType.OutputType, V>, _ output: O) -> Self where O.OutputType == V {
-        doOn(output) { this, v in
-            var value = this.state.specificValue
-            value[keyPath: keyPath] = v
-            this.state.input(value: value)
+    func setState<O: Outputing>(_ keyPath: WritableKeyPath<T.StateType.OutputType, O.OutputType>, _ output: O) -> Self {
+        doOn(output) {
+            var state = $0.state.specificValue
+            state[keyPath: keyPath] = $1
+            $0.state.input(value: state)
         }
     }
 
     @discardableResult
-    func bindState<O: Outputing, V>(_ keyPath: WritableKeyPath<T.StateType.OutputType, V?>, _ output: O) -> Self where O.OutputType == V {
-        doOn(output) { this, v in
-            var value = this.state.specificValue
-            value[keyPath: keyPath] = v
-            this.state.input(value: value)
+    func setState<O: Outputing>(_ keyPath: WritableKeyPath<T.StateType.OutputType, O.OutputType?>, _ output: O) -> Self {
+        doOn(output) {
+            var state = $0.state.specificValue
+            state[keyPath: keyPath] = $1
+            $0.state.input(value: state)
         }
     }
 }
