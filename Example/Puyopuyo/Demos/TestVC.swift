@@ -23,7 +23,6 @@ class MyCell: HBox, Stateful {
         var title: String?
         var desc: String
         var image: String?
-        var dog: Dog?
     }
     
     let state = State(ViewState(desc: ""))
@@ -67,24 +66,11 @@ class TestVC: BaseViewController {
         view.attach {
             UIView().attach($0)
                 .size(50, 50)
-            let dog = State(Dog())
-            let name = State("")
             ZBox().attach($0) {
                 MyCell().attach($0)
                     .assign(\.state.value.title, "")
                     .assign(\.state.value.title, nil)
                     .assign(\.state.value.desc, "")
-                
-                    .bind(\.state.value.title, "".optionalValue)
-                    .bind(\.state.value.desc, name)
-                    .bind(\.state.value.title, name.some())
-                
-                    .setState(\.title, "")
-                    .setState(\.title, nil)
-                    .setState(\.desc, "")
-                
-                    .bindState(\.title, name)
-                    .bindState(\.dog, dog)
                     .width(300)
             }
             .justifyContent(.center)

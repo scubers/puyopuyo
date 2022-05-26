@@ -22,22 +22,22 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func backgroundColor<O: Outputing>(_ color: O) -> Self where O.OutputType: OptionalableValueType, O.OutputType.Wrap == UIColor {
-        set(\.backgroundColor, color.asOutput().map(\.optionalValue))
+        bind(\.backgroundColor, color.asOutput().map(\.optionalValue))
     }
 
     @discardableResult
     func backgroundColor(_ color: UIColor?) -> Self {
-        set(\.backgroundColor, color)
+        bind(\.backgroundColor, color)
     }
 
     @discardableResult
     func contentMode<O: Outputing>(_ mode: O) -> Self where O.OutputType == UIView.ContentMode {
-        set(\.contentMode, mode)
+        bind(\.contentMode, mode)
     }
 
     @discardableResult
     func contentMode(_ mode: UIView.ContentMode) -> Self {
-        set(\.contentMode, mode)
+        bind(\.contentMode, mode)
     }
 
     @discardableResult
