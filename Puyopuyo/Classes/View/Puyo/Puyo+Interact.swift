@@ -48,6 +48,30 @@ public extension Puyo where T: Eventable, T.EmitterType.OutputType: Equatable {
 
 // MARK: - Stateful
 
+public extension Puyo where T: Stateful {
+    @discardableResult
+    func state(value: T.StateType.OutputType) -> Self {
+        view.state.input(value: value)
+        return self
+    }
+
+    @discardableResult
+    func setState<V>(_ keyPath: WritableKeyPath<T.StateType.OutputType, V>, _ value: V) -> Self {
+        var state = view.state.specificValue
+        state[keyPath: keyPath] = value
+        view.state.input(value: state)
+        return self
+    }
+
+    @discardableResult
+    func setState<V>(_ keyPath: WritableKeyPath<T.StateType.OutputType, V?>, _ value: V) -> Self {
+        var state = view.state.specificValue
+        state[keyPath: keyPath] = value
+        view.state.input(value: state)
+        return self
+    }
+}
+
 public extension Puyo where T: Stateful & AutoDisposable {
     @discardableResult
     func state<O: Outputing>(_ output: O) -> Self where O.OutputType == T.StateType.OutputType {
@@ -55,16 +79,16 @@ public extension Puyo where T: Stateful & AutoDisposable {
     }
 
     @discardableResult
-    func setState<O: Outputing, V>(_ keyPath: WritableKeyPath<T.StateType.OutputType, V>, _ output: O) -> Self where O.OutputType == V {
+    func bindState<O: Outputing, V>(_ keyPath: WritableKeyPath<T.StateType.OutputType, V>, _ output: O) -> Self where O.OutputType == V {
         doOn(output) { this, v in
             var value = this.state.specificValue
             value[keyPath: keyPath] = v
             this.state.input(value: value)
         }
     }
-    
+
     @discardableResult
-    func setState<O: Outputing, V>(_ keyPath: WritableKeyPath<T.StateType.OutputType, Optional<V>>, _ output: O) -> Self where O.OutputType == V {
+    func bindState<O: Outputing, V>(_ keyPath: WritableKeyPath<T.StateType.OutputType, V?>, _ output: O) -> Self where O.OutputType == V {
         doOn(output) { this, v in
             var value = this.state.specificValue
             value[keyPath: keyPath] = v

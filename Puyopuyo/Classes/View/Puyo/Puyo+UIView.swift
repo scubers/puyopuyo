@@ -11,13 +11,13 @@ public extension Puyo where T: UIView {
     /// Set diagnosis id, system will print the view's info in every calculate cycle
     @discardableResult
     func diagnosis(_ id: String? = "") -> Self {
-        set(\T.layoutMeasure.diagnosisId, id)
+        bind(\T.layoutMeasure.diagnosisId, id)
     }
 
     /// Set extra diagnosis message
     @discardableResult
     func diagnosisMessage(_ msg: String?) -> Self {
-        set(\T.layoutMeasure.extraDiagnosisMessage, msg)
+        bind(\T.layoutMeasure.extraDiagnosisMessage, msg)
     }
 
     @discardableResult
@@ -42,38 +42,38 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func clipToBounds<O: Outputing>(_ clip: O) -> Self where O.OutputType == Bool {
-        set(\T.clipsToBounds, clip)
+        bind(\T.clipsToBounds, clip)
     }
 
     @discardableResult
     func cornerRadius<O: Outputing>(_ radius: O) -> Self where O.OutputType: CGFloatable {
-        set(\T.layer.cornerRadius, radius.asOutput().map(\.cgFloatValue))
+        bind(\T.layer.cornerRadius, radius.asOutput().map(\.cgFloatValue))
             .clipToBounds(true)
     }
 
     @discardableResult
     func borderWidth<O: Outputing>(_ width: O) -> Self where O.OutputType: CGFloatable {
-        set(\T.layer.borderWidth, width.asOutput().map(\.cgFloatValue))
+        bind(\T.layer.borderWidth, width.asOutput().map(\.cgFloatValue))
     }
 
     @discardableResult
     func borderColor<O: Outputing>(_ color: O) -> Self where O.OutputType: OptionalableValueType, O.OutputType.Wrap == UIColor {
-        set(\T.layer.borderColor, color.asOutput().map(\.optionalValue).map(\.?.cgColor))
+        bind(\T.layer.borderColor, color.asOutput().map(\.optionalValue).map(\.?.cgColor))
     }
 
     @discardableResult
     func alpha<O: Outputing>(_ alpha: O) -> Self where O.OutputType: CGFloatable {
-        set(\T.alpha, alpha.asOutput().map(\.cgFloatValue))
+        bind(\T.alpha, alpha.asOutput().map(\.cgFloatValue))
     }
 
     @discardableResult
     func userInteractionEnabled<O: Outputing>(_ enabled: O) -> Self where O.OutputType == Bool {
-        set(\T.isUserInteractionEnabled, enabled)
+        bind(\T.isUserInteractionEnabled, enabled)
     }
 
     @discardableResult
     func frame<O: Outputing>(_ frame: O) -> Self where O.OutputType == CGRect {
-        set(\T.frame, frame)
+        bind(\T.frame, frame)
     }
 
     @discardableResult

@@ -38,7 +38,7 @@ class ChatVC: BaseViewController, UICollectionViewDelegateFlowLayout {
                 ].asOutput()
             )
             .attach($0)
-            .set(\.showsVerticalScrollIndicator, false)
+            .assign(\.showsVerticalScrollIndicator, false)
             .size(.fill, .fill)
             .setDelegate(self)
             .backgroundColor(.systemGroupedBackground)

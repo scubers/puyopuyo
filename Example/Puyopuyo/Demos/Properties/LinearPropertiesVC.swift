@@ -107,8 +107,8 @@ class LinearPropertiesVC: BaseViewController {
                     UIView().attach($0)
                         .activated(false)
                         .backgroundColor(UIColor.label)
-                        .set(\.center, $0.py_boundsState().map { CGPoint(x: $0.width / 2, y: $0.height / 2) })
-                        .set(\.frame.size.height, $0.py_boundsState().map { $0.height })
+                        .bind(\.center, $0.py_boundsState().map { CGPoint(x: $0.width / 2, y: $0.height / 2) })
+                        .bind(\.frame.size.height, $0.py_boundsState().map { $0.height })
                         .frame(w: 1)
                 }
                 .space(10)

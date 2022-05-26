@@ -12,14 +12,14 @@ public extension Puyo where T: UIScrollView {
     @discardableResult
     func flatBox(_ direction: Direction) -> Puyo<LinearBox> {
         if direction == .y {
-            view.attach().set(\T.alwaysBounceVertical, true)
+            view.attach().bind(\T.alwaysBounceVertical, true)
             return
                 LinearBox().attach(view)
                     .direction(direction)
                     .autoJudgeScroll(true)
                     .size(.fill, .wrap)
         } else {
-            view.attach().set(\T.alwaysBounceHorizontal, true)
+            view.attach().bind(\T.alwaysBounceHorizontal, true)
             return
                 LinearBox().attach(view)
                     .direction(direction)

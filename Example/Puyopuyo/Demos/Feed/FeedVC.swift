@@ -22,7 +22,7 @@ class FeedVC: BaseViewController, UITableViewDelegate {
 
         navigationItem.titleView = ZBox().attach {
             UISegmentedControl(items: ["Recycle", "Table"]).attach($0)
-                .set(\.selectedSegmentIndex, 0)
+                .assign(\.selectedSegmentIndex, 0)
                 .onControlEvent(.valueChanged, Inputs { [weak self] in
                     self?.isTableBox.value = $0.selectedSegmentIndex == 1
                 })

@@ -35,6 +35,6 @@ public extension Puyo where T: UITextField {
 
     @discardableResult
     func placeholder<S: Outputing>(_ text: S) -> Self where S.OutputType: OptionalableValueType, S.OutputType.Wrap == String {
-        set(\T.placeholder, text.asOutput().map(\.optionalValue))
+        bind(\T.placeholder, text.asOutput().map(\.optionalValue))
     }
 }

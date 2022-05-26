@@ -74,7 +74,7 @@ class SizePropertiesVC: BaseViewController {
                     .space(8)
 
                     UISlider().attach($0)
-                        .set(\.value, progress.map(Float.init))
+                        .bind(\.value, progress.map(Float.init))
                         .onControlEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
                         .width(.fill)
                 }
@@ -120,7 +120,7 @@ class SizePropertiesVC: BaseViewController {
                     .space(8)
 
                     UISlider().attach($0)
-                        .set(\.value, progress.map(Float.init))
+                        .bind(\.value, progress.map(Float.init))
                         .onControlEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
                         .width(.fill)
                 }
@@ -187,7 +187,7 @@ class SizePropertiesVC: BaseViewController {
                         })
 
                     UISlider().attach($0)
-                        .set(\.value, progress.map(Float.init))
+                        .bind(\.value, progress.map(Float.init))
                         .onControlEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
                         .width(.fill)
                 }
@@ -240,7 +240,7 @@ class SizePropertiesVC: BaseViewController {
                     .space(8)
 
                     UISlider().attach($0)
-                        .set(\.value, progress.map(Float.init))
+                        .bind(\.value, progress.map(Float.init))
                         .onControlEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
                         .width(.fill)
                 }
@@ -288,7 +288,7 @@ class SizePropertiesVC: BaseViewController {
                     .space(8)
 
                     UISlider().attach($0)
-                        .set(\.value, progress.map(Float.init))
+                        .bind(\.value, progress.map(Float.init))
                         .onControlEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
                         .width(.fill)
                 }
@@ -342,7 +342,7 @@ class SizePropertiesVC: BaseViewController {
                     .space(8)
 
                     UISlider().attach($0)
-                        .set(\.value, progress.map(Float.init))
+                        .bind(\.value, progress.map(Float.init))
                         .onControlEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
                         .width(.fill)
                 }
@@ -389,7 +389,7 @@ class SizePropertiesVC: BaseViewController {
                     .space(8)
 
                     UISlider().attach($0)
-                        .set(\.value, progress.map(Float.init))
+                        .bind(\.value, progress.map(Float.init))
                         .onControlEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
                         .width(.fill)
                 }
@@ -479,7 +479,7 @@ class SizePropertiesVC: BaseViewController {
                     .space(8)
 
                     UISlider().attach($0)
-                        .set(\.value, progress.map(Float.init))
+                        .bind(\.value, progress.map(Float.init))
                         .onControlEvent(.valueChanged, progress.asInput { CGFloat($0.value) })
                         .width(.fill)
                 }

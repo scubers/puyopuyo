@@ -18,7 +18,7 @@ public extension Puyo where T: UIView {
 
     @discardableResult
     func styleSheet(_ sheet: StyleSheet) -> Self {
-        set(\T.py_styleSheet, sheet)
+        bind(\T.py_styleSheet, sheet)
     }
 
     @discardableResult

@@ -12,42 +12,42 @@ import Foundation
 public extension Puyo where T: BoxView {
     @discardableResult
     func autoJudgeScroll(_ judge: Bool) -> Self {
-        set(\T.rootBoxConfig.isScrollViewControl, judge)
+        assign(\T.rootBoxConfig.isScrollViewControl, judge)
     }
 
     @discardableResult
     func centerControl(_ control: BoxView.RootBoxConfig.ControlType) -> Self {
-        set(\T.rootBoxConfig.centerControl, control)
+        assign(\T.rootBoxConfig.centerControl, control)
     }
 
     @discardableResult
     func sizeControl(_ control: BoxView.RootBoxConfig.ControlType) -> Self {
-        set(\T.rootBoxConfig.sizeControl, control)
+        assign(\T.rootBoxConfig.sizeControl, control)
     }
 
     @discardableResult
     func borders(_ options: [BorderOptions]) -> Self {
-        set(\T.borders, Borders.all(Border(options: options)))
+        assign(\T.borders, Borders.all(Border(options: options)))
     }
 
     @discardableResult
     func topBorder(_ options: [BorderOptions]) -> Self {
-        set(\T.borders.top, Border(options: options))
+        assign(\T.borders.top, Border(options: options))
     }
 
     @discardableResult
     func leftBorder(_ options: [BorderOptions]) -> Self {
-        set(\T.borders.left, Border(options: options))
+        assign(\T.borders.left, Border(options: options))
     }
 
     @discardableResult
     func bottomBorder(_ options: [BorderOptions]) -> Self {
-        set(\T.borders.bottom, Border(options: options))
+        assign(\T.borders.bottom, Border(options: options))
     }
 
     @discardableResult
     func rightBorder(_ options: [BorderOptions]) -> Self {
-        set(\T.borders.right, Border(options: options))
+        assign(\T.borders.right, Border(options: options))
     }
 }
 
@@ -93,17 +93,17 @@ public extension Puyo where T: RegulatorSpecifier & AutoDisposable {
 
     @discardableResult
     func padding<O: Outputing>(_ padding: O) -> Self where O.OutputType == UIEdgeInsets {
-        set(\T.regulator.padding, padding)
+        bind(\T.regulator.padding, padding)
     }
 
     @discardableResult
     func justifyContent(_ alignment: Alignment) -> Self {
-        set(\T.regulator.justifyContent, alignment)
+        bind(\T.regulator.justifyContent, alignment)
     }
 
     @discardableResult
     func justifyContent<O: Outputing>(_ alignment: O) -> Self where O.OutputType == Alignment {
-        set(\T.regulator.justifyContent, alignment)
+        bind(\T.regulator.justifyContent, alignment)
     }
 }
 

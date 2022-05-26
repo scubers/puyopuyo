@@ -21,11 +21,12 @@ class MyView: UIView {
 class MyCell: HBox, Stateful {
     struct ViewState {
         var title: String?
-        var desc: String?
+        var desc: String
         var image: String?
+        var dog: Dog?
     }
     
-    let state = State(ViewState())
+    let state = State(ViewState(desc: ""))
     
     override func buildBody() {
         attach {
@@ -66,12 +67,24 @@ class TestVC: BaseViewController {
         view.attach {
             UIView().attach($0)
                 .size(50, 50)
-            
+            let dog = State(Dog())
+            let name = State("")
             ZBox().attach($0) {
                 MyCell().attach($0)
-                    .setState(\.title, "Jrwong")
-                    .setState(\.desc, "Description".optionalValue)
-                    .setState(\.image, Images().get().optionalValue)
+                    .assign(\.state.value.title, "")
+                    .assign(\.state.value.title, nil)
+                    .assign(\.state.value.desc, "")
+                
+                    .bind(\.state.value.title, "".optionalValue)
+                    .bind(\.state.value.desc, name)
+                    .bind(\.state.value.title, name.some())
+                
+                    .setState(\.title, "")
+                    .setState(\.title, nil)
+                    .setState(\.desc, "")
+                
+                    .bindState(\.title, name)
+                    .bindState(\.dog, dog)
                     .width(300)
             }
             .justifyContent(.center)
@@ -104,7 +117,7 @@ class TestVC: BaseViewController {
             let content1 = state.map { Int(50 * $0) }.map { (0 ..< $0).map(\.description).joined() }
             UISlider().attach($0)
                 .width(.fill)
-                .set(\.value, state.value)
+                .assign(\.value, state.value)
                 .onControlEvent(.valueChanged, Inputs { state.value = $0.value })
             
             HBox().attach($0) {
@@ -587,7 +600,7 @@ class TestVC: BaseViewController {
                     .width(.wrap(shrink: 1))
                     .observe(\.bounds, input: label1Rect)
                     .margin(left: 10)
-                    .set(\.lineBreakMode, .byClipping)
+                    .assign(\.lineBreakMode, .byClipping)
 
                 UILabel().attach($0)
                     .numberOfLines(0)
@@ -595,7 +608,7 @@ class TestVC: BaseViewController {
                     .width(.wrap(max: 200, shrink: 1))
                     .observe(\.bounds, input: label2Rect)
                     .margin(left: 10)
-                    .set(\.lineBreakMode, .byClipping)
+                    .assign(\.lineBreakMode, .byClipping)
                     .height(.wrap(max: 100))
 //                    .aspectRatio(1)
                     .width(.aspectRatio(1 / 1))

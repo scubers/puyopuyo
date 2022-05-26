@@ -12,38 +12,38 @@ import Foundation
 public extension Puyo where T: RegulatorSpecifier & AutoDisposable, T.RegulatorType: FlowRegulator {
     @discardableResult
     func arrangeCount<O: Outputing>(_ count: O) -> Self where O.OutputType == Int {
-        set(\T.regulator.arrange, count)
+        bind(\T.regulator.arrange, count)
     }
 
     @discardableResult
     func itemSpace<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
-        set(\T.regulator.itemSpace, space.mapCGFloat())
+        bind(\T.regulator.itemSpace, space.mapCGFloat())
     }
 
     @discardableResult
     func runSpace<O: Outputing>(_ space: O) -> Self where O.OutputType: CGFloatable {
-        set(\T.regulator.runSpace, space.mapCGFloat())
+        bind(\T.regulator.runSpace, space.mapCGFloat())
         return self
     }
 
     @discardableResult
     func runFormat(_ format: Format) -> Self {
-        set(\T.regulator.runFormat, format)
+        bind(\T.regulator.runFormat, format)
     }
 
     @discardableResult
     func runFormat<O: Outputing>(_ formation: O) -> Self where O.OutputType == Format {
-        set(\T.regulator.runFormat, formation)
+        bind(\T.regulator.runFormat, formation)
     }
 
     @discardableResult
     func runRowSize(each: @escaping (Int) -> SizeDescription) -> Self {
-        set(\T.regulator.runRowSize, each)
+        assign(\T.regulator.runRowSize, each)
     }
 
     @discardableResult
     func runRowSize<O: Outputing>(_ size: O) -> Self where O.OutputType: SizeDescriptible {
-        set(\T.regulator.runRowSize, size.asOutput().map(\.sizeDescription).map { s in { _ in s }})
+        bind(\T.regulator.runRowSize, size.asOutput().map(\.sizeDescription).map { s in { _ in s }})
     }
 
     @discardableResult

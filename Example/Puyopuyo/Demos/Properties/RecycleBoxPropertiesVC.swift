@@ -33,7 +33,7 @@ class RecycleBoxPropertiesVC: BaseViewController {
 
         VBox().attach(view) {
             UISegmentedControl(items: actions.map(\.name)).attach($0)
-                .set(\.selectedSegmentIndex, 0)
+                .assign(\.selectedSegmentIndex, 0)
                 .onControlEvent(.valueChanged, Inputs {
                     actions[$0.selectedSegmentIndex].action()
                 })
@@ -130,7 +130,7 @@ class RecycleBoxPropertiesVC: BaseViewController {
                 HBox().attach {
                     UISegmentedControl(items: actions.map(\.name)).attach($0)
                         .size(.fill, 40)
-                        .set(\.selectedSegmentIndex, 0)
+                        .assign(\.selectedSegmentIndex, 0)
                         .onControlEvent(.valueChanged, Inputs {
                             actions[$0.selectedSegmentIndex].action()
                         })
