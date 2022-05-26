@@ -132,7 +132,7 @@ enum DiagnosisUitl {
 }
 
 public class RunLoopMonitor {
-    var interval: TimeInterval = 0
+    var interval: CFTimeInterval = 0
     public static let shared = RunLoopMonitor()
     fileprivate var started = false
     public func start() {
@@ -170,19 +170,24 @@ public class RunLoopMonitor {
 
     @objc func action() {
         if interval != 0 {
-            print(">>> layout cost: \(RunLoopMonitor.shared.interval * 1000)ms")
+            print(">>> layout cost: \(RunLoopMonitor.shared.interval * 1000 * 1000)ms")
             interval = 0
         }
     }
 }
 
+private var indicator = false
 func doRunLoopCostMonitor<T>(_ action: () -> T) -> T {
-    guard RunLoopMonitor.shared.started else {
+    guard RunLoopMonitor.shared.started, !indicator else {
         return action()
     }
-    let start = Date().timeIntervalSince1970
+    indicator = true
+    defer { indicator = false }
+
+    let start = CFAbsoluteTimeGetCurrent()
     let v = action()
-    let interval = Date().timeIntervalSince1970 - start
+    let interval = CFAbsoluteTimeGetCurrent() - start
     RunLoopMonitor.shared.interval += interval
+
     return v
 }
