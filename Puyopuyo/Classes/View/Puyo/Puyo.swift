@@ -120,10 +120,7 @@ extension Puyo: BoxLayoutNode where T: BoxLayoutNode {
         set { view.layoutVisibility = newValue }
     }
 
-    public var superBox: BoxLayoutContainer? {
-        set { view.superBox = newValue }
-        get { view.superBox }
-    }
+    public var superBox: BoxLayoutContainer? { view.superBox }
 
     public func removeFromSuperBox() {
         view.removeFromSuperBox()

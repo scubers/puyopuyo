@@ -61,7 +61,8 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
         _addLayoutNode(node)
     }
 
-    public func didMoveToSuperBox(_: BoxLayoutContainer) {
+    public func didMoveToSuperBox(_ superBox: BoxLayoutContainer) {
+        self.superBox = superBox
         _parasiteChildren()
     }
 

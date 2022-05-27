@@ -27,7 +27,7 @@ public protocol BoxLayoutNode: AnyObject {
     /// Node type
     var layoutNodeType: BoxLayoutNodeType { get }
     /// Ref to node's container
-    var superBox: BoxLayoutContainer? { get set }
+    var superBox: BoxLayoutContainer? { get }
 
     var layoutVisibility: Visibility { get set }
 
@@ -68,14 +68,8 @@ public extension BoxLayoutNode {
 extension BoxLayoutContainer {
     func _addLayoutNode(_ node: BoxLayoutNode) {
         node.removeFromSuperBox()
-        // set parent first
-        node.superBox = self
         // add child second
         layoutChildren.append(node)
-
-//        if let view = node.layoutNodeView {
-//            addParasite(view)
-//        }
 
         node.didMoveToSuperBox(self)
     }
@@ -156,6 +150,7 @@ extension UIView: BoxLayoutNode {
     }
 
     public func didMoveToSuperBox(_ superBox: BoxLayoutContainer) {
+        self.superBox = superBox
         superBox.addParasite(self)
     }
 }
