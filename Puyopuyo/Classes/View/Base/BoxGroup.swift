@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetricChangedDelegate, AutoDisposable, ViewParasitizing {
+public class BoxGroup: InternalBoxLayoutContainer, MeasureChildrenDelegate, MeasureMetricChangedDelegate, AutoDisposable, ViewParasitizing {
     public init() {}
 
     // MARK: - AutoDisposable
@@ -30,11 +30,12 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
     public var layoutNodeType: BoxLayoutNodeType { .virtual }
 
     public func removeFromSuperBox() {
-        superBox?.removeParasiteNode(self)
-        if let index = superBox?.layoutChildren.firstIndex(where: { $0 === self }) {
-            superBox?.layoutChildren.remove(at: index)
-        }
+        superBox?.willRemoveLayoutNode(self)
         superBox = nil
+    }
+
+    public func willRemoveLayoutNode(_ node: BoxLayoutNode) {
+        _willRemoveLayoutNode(node)
     }
 
     public var layoutVisibility: Visibility = .visible {

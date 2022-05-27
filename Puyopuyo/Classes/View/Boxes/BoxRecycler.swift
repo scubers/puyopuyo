@@ -126,7 +126,7 @@ extension BoxRecycler where Self: BoxView, StateType.OutputType == [Data] {
 
         dataSource.enumerated().forEach { idx, _ in
             let context = container.usingMap[idx]
-            context.view.removeFromSuperview()
+            context.view.removeFromSuperBox()
             addSubview(context.view)
             context.state.input(value: getInfo(index: idx))
         }
@@ -137,7 +137,7 @@ extension BoxRecycler where Self: BoxView, StateType.OutputType == [Data] {
     }
 
     private func recycleContext(_ context: Context<Data>) {
-        context.view.removeFromSuperview()
+        context.view.removeFromSuperBox()
         context.view.frame = .zero
         container.freeMap.append(context)
     }
@@ -192,7 +192,7 @@ extension BoxRecycler where Self: BoxView, StateType.OutputType == [Data] {
         if delta > 0 {
             for idx in (total - delta ..< total).reversed() {
                 let c = container.usingMap.remove(at: idx)
-                c.view.removeFromSuperview()
+                c.view.removeFromSuperBox()
                 container.freeMap.append(c)
             }
         }

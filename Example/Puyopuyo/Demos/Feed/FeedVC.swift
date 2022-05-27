@@ -196,7 +196,7 @@ class ItemView: HBox, Stateful {
             ZBox().attach($0) {
                 UIButton().attach($0)
                     .size(40, 40)
-                    .image(binder.icon.distinct().then { downloadImage(url: $0) })
+                    .image(binder.icon.distinct().then(downloadImage(url:)))
                     .cornerRadius(4)
             }
             .style(ShadowStyle())

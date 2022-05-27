@@ -67,14 +67,30 @@ class TestVC: BaseViewController {
             UIView().attach($0)
                 .size(50, 50)
             
-            ZBox().attach($0) {
+            VBox().attach($0) {
                 MyCell().attach($0)
                     .setState(\.title, "Jrwong")
                     .setState(\.desc, "Description")
                     .setState(\.image, Images().get())
                     .width(300)
+                
+                VFlow().attach($0) {
+                    for i in 0 ..< 9 {
+                        UILabel().attach($0) { v in
+                            if i == 0 {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                    v.removeFromSuperview()
+                                }
+                            }
+                        }
+                        .text(i.description)
+                        .size(50, 50)
+                        .textAlignment(.center)
+                    }
+                }
             }
             .justifyContent(.center)
+            .format(.center)
             .size(.fill, .fill)
             
 //            createYogaCompress(times: 2).attach($0) {

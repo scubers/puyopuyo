@@ -22,7 +22,7 @@ public extension UIView {
 
 // MARK: - BoxView
 
-open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewParasitizing {
+open class BoxView: UIView, MeasureChildrenDelegate, InternalBoxLayoutContainer, ViewParasitizing {
     public struct RootBoxConfig {
         public enum ControlType {
             case bySet
@@ -113,10 +113,14 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
         positionControlDisposable?.dispose()
         if rootBoxConfig.sizeControl.isCalculate, let spv = superview, !spv.isBoxView {
             let boundsSize = spv
+                .py_observing(\.bounds)
+                .map(\.size, .zero)
+
+            let frameSize = spv
                 .py_observing(\.frame)
                 .map(\.size, .zero)
 
-            positionControlDisposable = boundsSize.distinct().outputing { [weak self] _ in
+            positionControlDisposable = Outputs.merge([boundsSize, frameSize]).distinct().outputing { [weak self] _ in
                 guard let self = self else { return }
                 if !self.layoutRegulator.size.isFixed {
                     self.setNeedsLayout()
@@ -133,8 +137,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
         super.willRemoveSubview(subview)
         willRemoveParasite(subview)
         if !isRemovingParasite {
-            subview.superBox?.layoutChildren.removeAll(where: { $0.layoutNodeView === subview })
-            subview.superBox = nil
+            subview.removeFromSuperBox()
         }
     }
 
@@ -272,6 +275,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
             isRemovingParasite = true
             parasite.dislplayView.removeFromSuperview()
             isRemovingParasite = false
+            setNeedsLayout()
         }
     }
 
@@ -283,6 +287,10 @@ open class BoxView: UIView, MeasureChildrenDelegate, BoxLayoutContainer, ViewPar
 
     open func addLayoutNode(_ node: BoxLayoutNode) {
         _addLayoutNode(node)
+    }
+
+    public func willRemoveLayoutNode(_ node: BoxLayoutNode) {
+        _willRemoveLayoutNode(node)
     }
 
     // MARK: - MeasureChildrenDelegate

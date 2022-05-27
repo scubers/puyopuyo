@@ -143,12 +143,13 @@ extension Puyo: BoxLayoutNode where T: BoxLayoutNode {
 
 extension Puyo: BoxLayoutContainer where T: BoxLayoutContainer {
     /// Do not call setter by your self
-    public var layoutChildren: [BoxLayoutNode] {
-        get { view.layoutChildren }
-        set { view.layoutChildren = newValue }
-    }
+    public var layoutChildren: [BoxLayoutNode] { view.layoutChildren }
 
     public func addLayoutNode(_ node: BoxLayoutNode) {
         view.addLayoutNode(node)
+    }
+
+    public func willRemoveLayoutNode(_ node: BoxLayoutNode) {
+        view.willRemoveLayoutNode(node)
     }
 }

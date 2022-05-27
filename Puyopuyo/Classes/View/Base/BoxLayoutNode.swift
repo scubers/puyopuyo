@@ -40,9 +40,11 @@ public protocol BoxLayoutNode: AnyObject {
 /// Describe a container that can manage the layout node
 public protocol BoxLayoutContainer: BoxLayoutNode, ViewParasitizing {
     /// Do not call setter by your self
-    var layoutChildren: [BoxLayoutNode] { get set }
+    var layoutChildren: [BoxLayoutNode] { get }
 
     func addLayoutNode(_ node: BoxLayoutNode)
+
+    func willRemoveLayoutNode(_ node: BoxLayoutNode)
 }
 
 // MARK: - BoxLayoutNode extension
@@ -65,12 +67,23 @@ public extension BoxLayoutNode {
 
 // MARK: - BoxLayoutContainer extension
 
-extension BoxLayoutContainer {
+internal protocol InternalBoxLayoutContainer: BoxLayoutContainer {
+    var layoutChildren: [BoxLayoutNode] { get set }
+}
+
+extension InternalBoxLayoutContainer {
     func _addLayoutNode(_ node: BoxLayoutNode) {
         node.removeFromSuperBox()
         layoutChildren.append(node)
         addParasiteNode(node)
         node.didMoveToSuperBox(self)
+    }
+
+    func _willRemoveLayoutNode(_ node: BoxLayoutNode) {
+        if let index = layoutChildren.firstIndex(where: { $0 === node }) {
+            layoutChildren.remove(at: index)
+            removeParasiteNode(node)
+        }
     }
 }
 
@@ -145,7 +158,8 @@ extension UIView: BoxLayoutNode {
     }
 
     public func removeFromSuperBox() {
-        removeFromSuperview()
+        superBox?.willRemoveLayoutNode(self)
+        superBox = nil
     }
 
     public func didMoveToSuperBox(_ superBox: BoxLayoutContainer) {

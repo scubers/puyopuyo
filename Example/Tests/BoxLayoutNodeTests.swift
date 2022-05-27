@@ -79,8 +79,13 @@ class BoxLayoutNodeTests: XCTestCase {
     
     func testRemoveFromSuperBox() throws {
         var v: UIView!
-        HGroup().attach(box) {
+        var v1: UIView!
+        let g = HGroup().attach(box) {
             v = UIView().attach($0)
+                .size(50, 50)
+                .view
+            
+            v1 = UIView().attach($0)
                 .size(50, 50)
                 .view
         }
@@ -90,6 +95,13 @@ class BoxLayoutNodeTests: XCTestCase {
         
         XCTAssert(v.superview == nil)
         XCTAssert(v.superBox == nil)
+        XCTAssert(g.layoutChildren.count == 1)
+        
+        v1.removeFromSuperview()
+        
+        XCTAssert(v1.superview == nil)
+        XCTAssert(v1.superBox == nil)
+        XCTAssert(g.layoutChildren.count == 0)
     }
     
     func testParasitizingHostForChildren() throws {
