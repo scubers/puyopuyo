@@ -30,7 +30,7 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
     public var layoutNodeType: BoxLayoutNodeType { .virtual }
 
     public func removeFromSuperBox() {
-        _unparasiteChildren()
+        superBox?.removeParasiteNode(self)
         if let index = superBox?.layoutChildren.firstIndex(where: { $0 === self }) {
             superBox?.layoutChildren.remove(at: index)
         }
@@ -42,16 +42,16 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
             guard oldValue != layoutVisibility else { return }
             switch layoutVisibility {
             case .visible:
-                _parasiteChildren()
+                superBox?.addParasiteNode(self)
                 layoutRegulator.activated = true
             case .invisible:
-                _unparasiteChildren()
+                superBox?.removeParasiteNode(self)
                 layoutRegulator.activated = true
             case .free:
-                _parasiteChildren()
+                superBox?.addParasiteNode(self)
                 layoutRegulator.activated = false
             case .gone:
-                _unparasiteChildren()
+                superBox?.removeParasiteNode(self)
                 layoutRegulator.activated = false
             }
         }
@@ -63,7 +63,6 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
 
     public func didMoveToSuperBox(_ superBox: BoxLayoutContainer) {
         self.superBox = superBox
-        _parasiteChildren()
     }
 
     // MARK: - ViewParasitable
@@ -107,26 +106,6 @@ public class BoxGroup: BoxLayoutContainer, MeasureChildrenDelegate, MeasureMetri
         r.changeDelegate = self
         r.childrenDelegate = self
         return r
-    }
-
-    private func _unparasiteChildren() {
-        layoutChildren.forEach { child in
-            if case .concrete(let view) = child.layoutNodeType {
-                removeParasite(view)
-            } else if let group = child as? BoxGroup {
-                group._unparasiteChildren()
-            }
-        }
-    }
-
-    private func _parasiteChildren() {
-        layoutChildren.forEach { child in
-            if case .concrete(let view) = child.layoutNodeType {
-                addParasite(view)
-            } else if let group = child as? BoxGroup {
-                group._parasiteChildren()
-            }
-        }
     }
 }
 

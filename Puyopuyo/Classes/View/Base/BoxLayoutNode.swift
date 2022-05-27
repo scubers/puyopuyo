@@ -68,9 +68,8 @@ public extension BoxLayoutNode {
 extension BoxLayoutContainer {
     func _addLayoutNode(_ node: BoxLayoutNode) {
         node.removeFromSuperBox()
-        // add child second
         layoutChildren.append(node)
-
+        addParasiteNode(node)
         node.didMoveToSuperBox(self)
     }
 }
@@ -151,6 +150,23 @@ extension UIView: BoxLayoutNode {
 
     public func didMoveToSuperBox(_ superBox: BoxLayoutContainer) {
         self.superBox = superBox
-        superBox.addParasite(self)
+    }
+}
+
+extension ViewParasitizing {
+    func addParasiteNode(_ node: BoxLayoutNode) {
+        if let view = node.layoutNodeView {
+            addParasite(view)
+        } else if let container = node as? BoxLayoutContainer {
+            container.layoutChildren.forEach(addParasiteNode(_:))
+        }
+    }
+
+    func removeParasiteNode(_ node: BoxLayoutNode) {
+        if let view = node.layoutNodeView {
+            removeParasite(view)
+        } else if let container = node as? BoxLayoutContainer {
+            container.layoutChildren.forEach(removeParasiteNode(_:))
+        }
     }
 }
