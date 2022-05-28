@@ -38,16 +38,19 @@ class MyCell: HBox, Stateful {
             VGroup().attach($0) {
                 UILabel().attach($0)
                     .text(binder.title)
+                    .fontSize(18, weight: .bold)
                 
                 UILabel().attach($0)
                     .text(binder.desc)
+                    .textColor(UIColor.secondaryLabel)
+                    .fontSize(14)
             }
+            .alignment(.vertCenter(-0.5))
             .space(4)
         }
         .padding(all: 8)
         .space(8)
         .borders([.color(.gray), .thick(1)])
-        .justifyContent(.vertCenter(-0.5))
         .backgroundColor(.white)
         .style(ShadowStyle())
     }

@@ -119,8 +119,8 @@ class MessageView: HBox, Stateful, Eventable {
         let isSelf = binder.isSelf
         attach {
             ZBox().attach($0) {
-                UIImageView().attach($0)
-                    .image(binder.icon.then { downloadImage(url: $0) })
+                NetImageView().attach($0)
+                    .state(binder.icon.distinct())
                     .size(40, 40)
                     .cornerRadius(8)
             }

@@ -42,8 +42,6 @@ class FeedVC: BaseViewController, UITableViewDelegate {
     }
 
     func tableBox() -> UIView {
-        let this = WeakableObject(value: self)
-
         return TableBox(
             style: .grouped,
             separatorStyle: .none,
@@ -59,16 +57,7 @@ class FeedVC: BaseViewController, UITableViewDelegate {
                             .view
                     },
                     _header: { _, _ in
-                        Header().attach()
-                            .onEvent { e in
-                                switch e {
-                                case .reload:
-                                    this.value?.reload()
-                                case .change:
-                                    break
-                                }
-                            }
-                            .view
+                        Header()
                     },
                     _footer: { _, _ in
                         VBox().attach {
@@ -90,8 +79,6 @@ class FeedVC: BaseViewController, UITableViewDelegate {
     }
 
     func recycleBox() -> UIView {
-        let this = WeakableObject(value: self)
-
         return RecycleBox(
             estimatedSize: CGSize(width: 100, height: 20),
             sections: [
@@ -105,14 +92,6 @@ class FeedVC: BaseViewController, UITableViewDelegate {
                     },
                     header: { _, _ in
                         Header().attach()
-                            .onEvent { e in
-                                switch e {
-                                case .reload:
-                                    this.value?.reload()
-                                case .change:
-                                    break
-                                }
-                            }
                     },
                     footer: { _, _ in
                         VBox().attach {
@@ -151,17 +130,11 @@ struct Feed {
     var comments: [String]
 }
 
-private class Header: VBox, Eventable {
-    enum Event {
-        case reload
-        case change
-    }
-
-    var emitter = SimpleIO<Event>()
+private class Header: VBox {
     override func buildBody() {
         attach {
-            UIImageView().attach($0)
-                .image(Images().download())
+            NetImageView().attach($0)
+                .state(Images().get().optionalValue)
                 .size(.fill, 300)
                 .contentMode(.scaleAspectFill)
                 .clipToBounds(true)
@@ -194,9 +167,9 @@ class ItemView: HBox, Stateful {
     override func buildBody() {
         attach {
             ZBox().attach($0) {
-                UIButton().attach($0)
+                NetImageView().attach($0)
                     .size(40, 40)
-                    .image(binder.icon.distinct().then(downloadImage(url:)))
+                    .state(binder.icon.distinct())
                     .cornerRadius(4)
             }
             .style(ShadowStyle())
@@ -226,8 +199,8 @@ class ItemView: HBox, Stateful {
                 VFlowBuilder<String>(
                     items: images,
                     builder: { o, i in
-                        UIImageView().attach()
-                            .image(o.data.then { downloadImage(url: $0) })
+                        NetImageView().attach()
+                            .state(o.data.asOutput().some())
                             .size(imageWidth, imageWidth)
                             .userInteractionEnabled(true)
                             .onTap {
@@ -321,6 +294,75 @@ class ItemView: HBox, Stateful {
         .space(16)
         .backgroundColor(UIColor.systemBackground)
         .width(.fill)
+    }
+}
+
+class NetImageView: ZBox, Stateful {
+    struct ViewState {
+        var url: String?
+    }
+
+    enum LoadingState {
+        case loading
+        case finished(UIImage)
+
+        var isLoading: Bool {
+            if case .loading = self {
+                return true
+            }
+            return false
+        }
+
+        var isFinished: Bool {
+            if case .finished = self {
+                return true
+            }
+            return false
+        }
+
+        var image: UIImage? {
+            if case .finished(let image) = self {
+                return image
+            }
+            return nil
+        }
+    }
+
+    let state = State<String?>(nil)
+
+    private let loadingState = State(LoadingState.loading)
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        binder.distinct().then(downloadImage(url:))
+            .filter { $0 != nil }
+            .send(to: loadingState.asInput { .finished($0!) })
+            .dispose(by: self)
+    }
+
+    @available(*, unavailable)
+    required init?(coder argument: NSCoder) {
+        fatalError()
+    }
+
+    override func buildBody() {
+        attach {
+            UIImageView().attach($0)
+                .visibility(loadingState.map { $0.isFinished.py_visibleOrGone() })
+                .image(loadingState.binder.image)
+                .size(.fill, .fill)
+
+            UIActivityIndicatorView().attach($0)
+                .doOn(loadingState) { indicator, state in
+                    if state.isLoading {
+                        indicator.startAnimating()
+                    } else {
+                        indicator.stopAnimating()
+                    }
+                }
+                .visibility(loadingState.map { $0.isLoading.py_visibleOrGone() })
+        }
+        .justifyContent(.center)
     }
 }
 
