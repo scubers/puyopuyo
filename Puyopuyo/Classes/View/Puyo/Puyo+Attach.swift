@@ -23,9 +23,6 @@ public extension ViewDisplayable {
 public extension BoxLayoutNode {
     @discardableResult
     func attach(_ parent: BoxLayoutContainer? = nil, _ block: (Self) -> Void = { _ in }) -> Puyo<Self> {
-        if layoutNodeType.isVirtual {
-            assert(parent != nil, "Virtual group cannnot be the root!!!")
-        }
         parent?.addLayoutNode(self)
         block(self)
         return Puyo(self)

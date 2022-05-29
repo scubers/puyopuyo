@@ -154,6 +154,11 @@ public extension Puyo where T: BoxLayoutNode & AutoDisposable {
     func flowEnding(_ flowEnding: Bool) -> Self {
         set(\T.layoutMeasure.flowEnding, flowEnding)
     }
+    
+    @discardableResult
+    func flowEnding<O: Outputing>(_ flowEnding: O) -> Self where O.OutputType == Bool {
+        set(\T.layoutMeasure.flowEnding, flowEnding)
+    }
 }
 
 // MARK: - Visibility
