@@ -12,6 +12,7 @@ import UIKit
 class MenuViewController: BaseViewController {
     let dataSrouce: [(String, () -> UIViewController)] = [
         ("Test", { TestVC() }),
+        ("Inspector", { InspectorFactory.createInsepectViewController() }),
         ("Scenes", { ScenesVC() }),
         ("UIView Properties", { UIViewProertiesVC() }),
         ("LinearBox Properties", { LinearPropertiesVC() }),

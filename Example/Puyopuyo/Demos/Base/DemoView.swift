@@ -37,7 +37,6 @@ class DemoView<T: Equatable>: VBox, Eventable, Stateful {
             .width(.fill)
             
             VBox().attach($0) {
-                
                 let selectionVisible = !selectors.isEmpty
                 let labelVisible = !desc.isEmpty
                 
@@ -67,6 +66,16 @@ class DemoView<T: Equatable>: VBox, Eventable, Stateful {
         .backgroundColor(.secondarySystemGroupedBackground)
         .space(Util.pixel(1))
         .cornerRadius(8)
+//        .attach {
+//            let press = UILongPressGestureRecognizer()
+//            press.py_addAction { [weak self] g in
+//                if let self = self, g.state == .ended {
+//                    findTopViewController(for: self)?.present(InspectorFactory.createInsepectViewController(self), animated: true)
+//                }
+//            }
+//            $0.view.addGestureRecognizer(press)
+//        }
+        .longPressInspectable()
     }
     
     @available(*, unavailable)

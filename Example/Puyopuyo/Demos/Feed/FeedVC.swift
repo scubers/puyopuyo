@@ -294,6 +294,7 @@ class ItemView: HBox, Stateful {
         .space(16)
         .backgroundColor(UIColor.systemBackground)
         .width(.fill)
+        .longPressInspectable()
     }
 }
 

@@ -1,6 +1,10 @@
 PODS:
+  - HandyJSON (5.0.2)
   - Puyopuyo/Core (3.0.0-beta-2)
   - Puyopuyo/Extra (3.0.0-beta-2):
+    - Puyopuyo/Core
+  - Puyopuyo/Inspect (3.0.0-beta-2):
+    - HandyJSON
     - Puyopuyo/Core
   - RxSwift (6.5.0)
   - SnapKit (5.6.0)
@@ -11,6 +15,7 @@ PODS:
 
 DEPENDENCIES:
   - Puyopuyo/Extra (from `../`)
+  - Puyopuyo/Inspect (from `../`)
   - RxSwift
   - SnapKit
   - TangramKit
@@ -18,6 +23,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - HandyJSON
     - RxSwift
     - SnapKit
     - TangramKit
@@ -29,13 +35,14 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Puyopuyo: 1255278c70f41920e8610d8c08efb2d7b553367c
+  HandyJSON: 9e4e236f5d2dbefad5155a77417bbea438201c03
+  Puyopuyo: 498a23e073c8fd7020a62d5785852fbc436c6903
   RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
   TangramKit: aad3ab8f9617418c9da96d59cddd71134ae8af83
   Yoga: cff67a400f6b74dc38eb0bad4f156673d9aa980c
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 8dd20a3016a907bddf351e3063b67b750835db5a
+PODFILE CHECKSUM: 573c2d1ed9cde26f010d86c0958758441c3a9f14
 
 COCOAPODS: 1.11.2
