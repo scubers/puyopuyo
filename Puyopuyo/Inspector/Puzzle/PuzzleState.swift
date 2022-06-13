@@ -9,8 +9,8 @@
 import Foundation
 import HandyJSON
 
-
 final class PuzzleState<T>: IPuzzleState, Outputing, Inputing, SpecificValueable, OutputingModifier {
+    typealias OutputType = T
     init(title: String, value: T) {
         self.title = title
         state.value = value
@@ -19,8 +19,8 @@ final class PuzzleState<T>: IPuzzleState, Outputing, Inputing, SpecificValueable
     let title: String
     let state = State<T>.unstable()
 
-    func outputing(_ block: @escaping (T) -> Void) -> Disposer {
-        state.outputing(block)
+    func subscribe<Subscriber>(_ subscriber: Subscriber) -> Disposer where Subscriber: Inputing, OutputType == Subscriber.InputType {
+        state.subscribe(subscriber)
     }
 
     func input(value: T) {
@@ -169,7 +169,7 @@ class BoxPuzzleStateProvider: BasePuzzleStateProvider {
         puzzle._bind(padding, action: { $0.getReg()?.padding = $1 })
         puzzle._bind(justifyContent, action: { $0.getReg()?.justifyContent = $1 })
     }
-    
+
     override func stateFromPuzzle(_ puzzle: PuzzlePiece) {
         super.stateFromPuzzle(puzzle)
         if let reg = puzzle.getReg() {

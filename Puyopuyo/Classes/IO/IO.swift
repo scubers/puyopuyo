@@ -24,10 +24,14 @@ public protocol Inputing {
 /// 输出接口
 public protocol Outputing {
     associatedtype OutputType
-    func outputing(_ block: @escaping (OutputType) -> Void) -> Disposer
+    func subscribe<Subscriber>(_ subscriber: Subscriber) -> Disposer where Subscriber: Inputing, Subscriber.InputType == OutputType
 }
 
 public extension Outputing {
+    func outputing(_ block: @escaping (OutputType) -> Void) -> Disposer {
+        subscribe(Inputs(block))
+    }
+
     func asOutput() -> Outputs<OutputType> {
         Outputs { i -> Disposer in
             self.outputing { v in
@@ -63,8 +67,8 @@ public extension Outputing {
 }
 
 public extension Outputing where OutputType == Self {
-    func outputing(_ block: @escaping (OutputType) -> Void) -> Disposer {
-        block(self)
+    func subscribe<Subscriber>(_ subscriber: Subscriber) -> Disposer where Subscriber: Inputing, Subscriber.InputType == OutputType {
+        subscriber.input(value: self)
         return Disposers.create()
     }
 }
@@ -100,9 +104,33 @@ extension CGPoint: Outputing { public typealias OutputType = CGPoint }
 extension CGSize: Outputing { public typealias OutputType = CGSize }
 
 extension UIEdgeInsets: Outputing { public typealias OutputType = UIEdgeInsets }
-extension UIImage: Outputing { public typealias OutputType = UIImage }
-extension UIColor: Outputing { public typealias OutputType = UIColor }
-extension UIFont: Outputing { public typealias OutputType = UIFont }
+extension UIImage: Outputing {
+    public func subscribe<Subscriber>(_ subscriber: Subscriber) -> Disposer where Subscriber: Inputing, UIImage == Subscriber.InputType {
+        subscriber.input(value: self)
+        return Disposers.create()
+    }
+
+    public typealias OutputType = UIImage
+}
+
+extension UIColor: Outputing {
+    public func subscribe<Subscriber>(_ subscriber: Subscriber) -> Disposer where Subscriber: Inputing, UIColor == Subscriber.InputType {
+        subscriber.input(value: self)
+        return Disposers.create()
+    }
+
+    public typealias OutputType = UIColor
+}
+
+extension UIFont: Outputing {
+    public func subscribe<Subscriber>(_ subscriber: Subscriber) -> Disposer where Subscriber: Inputing, UIFont == Subscriber.InputType {
+        subscriber.input(value: self)
+        return Disposers.create()
+    }
+
+    public typealias OutputType = UIFont
+}
+
 extension UIControl.State: Outputing { public typealias OutputType = UIControl.State }
 extension UIControl.Event: Outputing { public typealias OutputType = UIControl.Event }
 extension UIView.ContentMode: Outputing { public typealias OutputType = UIView.ContentMode }

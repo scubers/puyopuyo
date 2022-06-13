@@ -25,10 +25,8 @@ public struct Outputs<Value>: Outputing, OutputingModifier {
         }
     }
 
-    public func outputing(_ block: @escaping (Value) -> Void) -> Disposer {
-        let input = Inputs<Value> { x in
-            block(x)
-        }
+    public func subscribe<Subscriber>(_ subscriber: Subscriber) -> Disposer where Subscriber: Inputing, Value == Subscriber.InputType {
+        let input = Inputs<Value> { subscriber.input(value: $0) }
         return action(input)
     }
 }

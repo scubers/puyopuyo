@@ -36,7 +36,7 @@ public class State<Value>: Outputing, Inputing, UniqueOutputable, OutputingModif
         didSet { inputers.forEach { $0.input.input(value: _value) } }
     }
 
-    private var inputers = LinkList<Listener<Value>>()// [Listener<Value>]()
+    private var inputers = LinkList<Listener<Value>>() // [Listener<Value>]()
 
     /// Create a state without initial value, you can not use the value before set.
     /// Neither use keyPath to access value before set
@@ -46,11 +46,11 @@ public class State<Value>: Outputing, Inputing, UniqueOutputable, OutputingModif
 
     public func input(value: InputType) { _value = value }
 
-    public func outputing(_ block: @escaping (OutputType) -> Void) -> Disposer {
+    public func subscribe<Subscriber>(_ subscriber: Subscriber) -> Disposer where Subscriber: Inputing, Value == Subscriber.InputType {
         if let value = _value {
-            block(value)
+            subscriber.input(value: value)
         }
-        let listener = Listener<Value>(input: Inputs(block))
+        let listener = Listener<Value>(input: Inputs { subscriber.input(value: $0) })
         inputers.append(listener)
         let id = listener.uuid.description
         return Disposers.create { [weak self] in

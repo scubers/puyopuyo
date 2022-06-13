@@ -13,8 +13,7 @@ import Foundation
 
 // MARK: - Conveniences
 
-open class StyleSheet: Outputing {
-    public typealias OutputType = StyleSheet
+open class StyleSheet {
     public var styles: [Style]
     public init(styles: [Style]) {
         self.styles = styles
@@ -29,12 +28,12 @@ open class StyleSheet: Outputing {
     }
 }
 
-extension Decorable {
-    public func applyStyles(_ styles: [Style]) {
-        styles.forEach({ $0.apply(to: self) })
+public extension Decorable {
+    func applyStyles(_ styles: [Style]) {
+        styles.forEach { $0.apply(to: self) }
     }
 
-    public func applyStyleSheet(_ sheet: StyleSheet) {
+    func applyStyleSheet(_ sheet: StyleSheet) {
         applyStyles(sheet.styles)
     }
 }
@@ -52,7 +51,7 @@ extension UIView {
         }
     }
 
-    private struct Key {
+    private enum Key {
         static var py_styleSheetKey = "py_styleSheetKey"
     }
 }
@@ -61,7 +60,7 @@ extension UIView: Decorable {}
 
 // MARK: - Util
 
-struct StyleUtil {
+enum StyleUtil {
     static func convert<T>(_ value: Any, _: T.Type) -> T? {
         if let v = value as? T {
             return v

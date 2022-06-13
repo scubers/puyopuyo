@@ -27,8 +27,9 @@ public class SimpleIO<Value>: Inputing, Outputing, UniqueOutputable, OutputingMo
         }
     }
 
-    public func outputing(_ block: @escaping (Value) -> Void) -> Disposer {
-        let listener = Listener<Value>(input: Inputs(block))
+//    public func outputing(_ block: @escaping (Value) -> Void) -> Disposer {
+    public func subscribe<Subscriber>(_ subscriber: Subscriber) -> Disposer where Subscriber: Inputing, Value == Subscriber.InputType {
+        let listener = Listener<Value>(input: Inputs { subscriber.input(value: $0) })
         inputers.append(listener)
         let id = listener.uuid.description
         return Disposers.create { [weak self] in
