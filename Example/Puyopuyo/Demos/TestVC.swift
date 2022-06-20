@@ -71,46 +71,40 @@ class TestVC: BaseViewController {
                 .size(50, 50)
             
             VBox().attach($0) {
-                MyCell().attach($0)
-                    .setState(\.title, "Jrwong")
-                    .setState(\.desc, "Description")
-                    .setState(\.image, Images().get())
-                    .width(300)
-                
-                VFlow().attach($0) {
-                    for i in 0 ..< 9 {
-                        UILabel().attach($0) { v in
-                            if i == 0 {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                                    v.removeFromSuperview()
+                TableBox(
+                    style: .grouped,
+                    separatorStyle: .singleLine,
+                    sections: [
+                        TableSection<Int, UIView, Void>(
+                            identifier: "1",
+                            dataSource: [1, 2, 3].asOutput(),
+                            _cell: { o, _ in
+                                ZBox().attach {
+                                    UILabel().attach($0)
+//                                        .text(o.binder.0.description)
+                                        .text(o.binder.data.description)
+                                        .textColor(UIColor.black)
+                                        .size(50, 50)
                                 }
+                                .view
                             }
-                        }
-                        .text(i.description)
-                        .size(50, 50)
-                        .textAlignment(.center)
+                        )
+                    ], header: {
+                        UIView().attach()
+                            .size(.fill, 50)
+                            .margin(all: 10)
+                    }, footer: {
+                        UIView().attach()
+                            .size(.fill, 50)
+                            .margin(all: 10)
                     }
-                }
+                )
+                .attach($0)
+                .size(.fill, .fill)
             }
             .justifyContent(.center)
             .format(.center)
             .size(.fill, .fill)
-            
-//            createYogaCompress(times: 2).attach($0) {
-//                $0.yoga.applyLayout(preservingOrigin: false)
-//            }
-            
-//            VBox().attach($0) {
-//                ZBox().attach($0) {
-//                    UIView().attach($0)
-//                        .size(.fill, .aspectRatio(1))
-//
-//                    UILabel().attach($0)
-//                        .text("lakjsdflkjsdlfj")
-//                }
-//            }
-//            .format(.center)
-//            .size(.fill, .fill)
         }
         
 //        Util.randomViewColor(view: view)

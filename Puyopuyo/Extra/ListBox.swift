@@ -16,6 +16,16 @@ public protocol ListBoxSection: AnyObject {
     func footer(for tableView: UITableView, at section: Int) -> UIView?
 }
 
+extension UITableViewHeaderFooterView {
+    func setBackgroundColor(_ color: UIColor?) {
+        if #available(iOS 14.0, *) {
+            backgroundConfiguration?.backgroundColor = color
+        } else {
+            backgroundColor = color
+        }
+    }
+}
+
 /**
  封装TableView的重用机制。
  ListBox的大小不能为包裹，因为内部UITableView需要一个明确的大小。
@@ -124,7 +134,7 @@ public class ListBox: UITableView,
 
         reloadData()
     }
-    
+
     public func clearHeightCache() {
         heightCache.removeAll(keepingCapacity: true)
     }
@@ -190,16 +200,6 @@ public class ListBox: UITableView,
     public func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         heightCache[indexPath] = cell.bounds.height
         delegateProxy.backup?.value?.tableView?(tableView, willDisplay: cell, forRowAt: indexPath)
-    }
-
-    public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        (view as? UITableViewHeaderFooterView)?.contentView.backgroundColor = backgroundColor
-        delegateProxy.backup?.value?.tableView?(tableView, willDisplayHeaderView: view, forSection: section)
-    }
-
-    public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-        (view as? UITableViewHeaderFooterView)?.contentView.backgroundColor = backgroundColor
-        delegateProxy.backup?.value?.tableView?(tableView, willDisplayFooterView: view, forSection: section)
     }
 }
 
@@ -313,7 +313,7 @@ public class ListSection<Data, Cell: ViewDisplayable, CellEvent>: ListBoxSection
             view?.state.value = (section, dataSource.value)
         }
 
-        view?.backgroundView?.backgroundColor = tableView.backgroundColor
+//        view?.backgroundView?.backgroundColor = tableView.backgroundColor
         view?.onEvent = { [weak self, weak view] e in
             guard let self = self, let header = view else { return }
             self.onCellEvent(.headerEvent(header.state.value.0, header.state.value.1, e))
@@ -339,7 +339,7 @@ public class ListSection<Data, Cell: ViewDisplayable, CellEvent>: ListBoxSection
         } else {
             view?.state.value = (section, dataSource.value)
         }
-        view?.backgroundView?.backgroundColor = tableView.backgroundColor
+//        view?.backgroundView?.backgroundColor = tableView.backgroundColor
         view?.onEvent = { [weak self, weak view] e in
             guard let self = self, let header = view else { return }
             self.onCellEvent(.footerEvent(header.state.value.0, header.state.value.1, e))
@@ -436,7 +436,7 @@ public class ListSection<Data, Cell: ViewDisplayable, CellEvent>: ListBoxSection
             self.event = event
             super.init(reuseIdentifier: id)
             contentView.addSubview(root)
-            backgroundColor = .clear
+            setBackgroundColor(.clear)
             contentView.backgroundColor = .clear
             let v = UIView()
             v.backgroundColor = .clear

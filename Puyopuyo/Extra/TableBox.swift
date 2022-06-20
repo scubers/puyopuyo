@@ -191,16 +191,6 @@ public class TableBox: UITableView,
         heightCache[indexPath] = cell.bounds.height
         delegateProxy.backup?.value?.tableView?(tableView, willDisplay: cell, forRowAt: indexPath)
     }
-
-//    public func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-//        (view as? UITableViewHeaderFooterView)?.contentView.backgroundColor = backgroundColor
-//        delegateProxy.backup?.value?.tableView?(tableView, willDisplayHeaderView: view, forSection: section)
-//    }
-//
-//    public func tableView(_ tableView: UITableView, willDisplayFooterView view: UIView, forSection section: Int) {
-//        (view as? UITableViewHeaderFooterView)?.contentView.backgroundColor = backgroundColor
-//        delegateProxy.backup?.value?.tableView?(tableView, willDisplayFooterView: view, forSection: section)
-//    }
 }
 
 public class TableSection<Data, Cell: ViewDisplayable, CellEvent>: TableBoxSection {
@@ -365,7 +355,6 @@ public class TableSection<Data, Cell: ViewDisplayable, CellEvent>: TableBoxSecti
             view?.state.value = RecycleContext(index: section, size: getLayoutableContentSize(tableView), data: dataSource.value, view: tableView)
         }
 
-        view?.backgroundView?.backgroundColor = tableView.backgroundColor
         view?.onEvent = { [weak self, weak view] e in
             guard let self = self, let header = view else { return }
             self.trigger(event: .headerEvent, idx: header.state.value.index)
@@ -392,7 +381,7 @@ public class TableSection<Data, Cell: ViewDisplayable, CellEvent>: TableBoxSecti
         } else {
             view?.state.value = RecycleContext(index: section, size: getLayoutableContentSize(tableView), data: dataSource.value, view: tableView)
         }
-        view?.backgroundView?.backgroundColor = tableView.backgroundColor
+        
         view?.onEvent = { [weak self, weak view] e in
             guard let self = self, let header = view else { return }
             self.trigger(event: .footerEvent, idx: header.state.value.index)
@@ -508,7 +497,7 @@ public class TableSection<Data, Cell: ViewDisplayable, CellEvent>: TableBoxSecti
             self.event = event
             super.init(reuseIdentifier: id)
             contentView.addSubview(root)
-            backgroundColor = .clear
+            setBackgroundColor(.clear)
             contentView.backgroundColor = .clear
             let v = UIView()
             v.backgroundColor = .clear
