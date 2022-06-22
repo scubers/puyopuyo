@@ -122,14 +122,14 @@ public extension Alignment {
         return contains(.horzCenter)
     }
 
-    func isForward(for direction: Direction) -> Bool {
+    func isStart(for direction: Direction) -> Bool {
         if case .horizontal = direction {
             return contains(.top)
         }
         return contains(.left)
     }
 
-    func isBackward(for direction: Direction) -> Bool {
+    func isEnd(for direction: Direction) -> Bool {
         if case .horizontal = direction {
             return contains(.bottom)
         }

@@ -71,43 +71,15 @@ class TestVC: BaseViewController {
                 .size(50, 50)
             
             VBox().attach($0) {
-                TableBox(
-                    style: .grouped,
-                    separatorStyle: .singleLine,
-                    sections: [
-                        TableSection<Int, UIView, Void>(
-                            identifier: "1",
-                            dataSource: [1, 2, 3].asOutput(),
-                            _cell: { o, _ in
-                                ZBox().attach {
-                                    UILabel().attach($0)
-//                                        .text(o.binder.0.description)
-                                        .text(o.binder.data.description)
-                                        .textColor(UIColor.black)
-                                        .size(50, 50)
-                                }
-                                .view
-                            }
-                        )
-                    ], header: {
-                        UIView().attach()
-                            .size(.fill, 50)
-                            .margin(all: 10)
-                    }, footer: {
-                        UIView().attach()
-                            .size(.fill, 50)
-                            .margin(all: 10)
-                    }
-                )
-                .attach($0)
-                .size(.fill, .fill)
+                UILabel().attach($0)
             }
             .justifyContent(.center)
             .format(.center)
-            .size(.fill, .fill)
+            .alignment(.center)
+            .size(50, 50)
         }
         
-//        Util.randomViewColor(view: view)
+        Util.randomViewColor(view: view)
     }
     
     func testCrossConflictingExtreme() -> UIView {

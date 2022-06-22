@@ -431,14 +431,14 @@ class _LinearCalculator {
 
             let calMargin = CalEdges(insets: m.margin, direction: regulator.direction)
             let calFixedSize = CalFixedSize(cgSize: m.calculatedSize, direction: regulator.direction)
-            let standardMain: CGFloat = standardLastEnd + calMargin.start + (calFixedSize.main / 2)
-            standardLastEnd = standardMain + (calFixedSize.main / 2) + calMargin.end
+            let standardMain: CGFloat = standardLastEnd + calMargin.leading + (calFixedSize.main / 2)
+            standardLastEnd = standardMain + (calFixedSize.main / 2) + calMargin.trailing
 
             // 通过标准位置叠加padding和space来计算具体位置
             let calIndex = CGFloat(index)
             let itemSpaceDelta: CGFloat = spaceDelta * calIndex
 
-            var main = standardMain + regCalPadding.start
+            var main = standardMain + regCalPadding.leading
             switch regCalFormat {
             case .leading:
                 main += itemSpaceDelta

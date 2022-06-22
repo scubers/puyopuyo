@@ -18,84 +18,71 @@ import Foundation
 
  ------------------------
  direction = x
-      forward
- start        end
-      backward
+         start
+ leading        traling
+          end
 
  ------------------------
  direction = y
-        start
- forward     backward
-         end
+      leading
+ start       end
+      traling
  ------------------------
 
  */
 
-public struct CalAlignment: OptionSet {
-    public init(rawValue: Int) {
-        self.rawValue = rawValue
-    }
-
-    public typealias RawValue = Int
-    public let rawValue: Int
-
-    public static let center = CalAlignment(rawValue: 1)
-    public static let forward = CalAlignment(rawValue: 2)
-    public static let backward = CalAlignment(rawValue: 4)
-}
-
 public struct CalEdges {
     public private(set) var direction: Direction = .x
+    public var leading: CGFloat = 0
     public var start: CGFloat = 0
-    public var forward: CGFloat = 0
-    public var backward: CGFloat = 0
     public var end: CGFloat = 0
+    public var trailing: CGFloat = 0
 
-    public init(start: CGFloat = 0, forward: CGFloat = 0, end: CGFloat = 0, backward: CGFloat = 0, direction: Direction = .x) {
+    public init(leading: CGFloat = 0, start: CGFloat = 0, trailing: CGFloat = 0, end: CGFloat = 0, direction: Direction = .x) {
+        self.leading = leading
         self.start = start
-        self.forward = forward
+        self.trailing = trailing
         self.end = end
-        self.backward = backward
         self.direction = direction
     }
 
     public init(insets: UIEdgeInsets = .zero, direction: Direction) {
         self.direction = direction
         if case .x = direction {
-            start = insets.left
-            forward = insets.top
-            end = insets.right
-            backward = insets.bottom
-        } else {
+            leading = insets.left
             start = insets.top
-            forward = insets.left
+            trailing = insets.right
             end = insets.bottom
-            backward = insets.right
+        } else {
+            leading = insets.top
+            start = insets.left
+            trailing = insets.bottom
+            end = insets.right
         }
     }
 
     public func getInsets() -> UIEdgeInsets {
         var insets = UIEdgeInsets.zero
         if case .x = direction {
-            insets.top = forward
-            insets.left = start
-            insets.bottom = backward
-            insets.right = end
-        } else {
             insets.top = start
-            insets.left = forward
+            insets.left = leading
             insets.bottom = end
-            insets.right = backward
+            insets.right = trailing
+        } else {
+            insets.top = leading
+            insets.left = start
+            insets.bottom = trailing
+            insets.right = end
         }
         return insets
     }
 
     public var mainFixed: CGFloat {
-        return start + end
+        return leading + trailing
     }
 
     public var crossFixed: CGFloat {
-        return forward + backward
+        return start + end
     }
 }
 

@@ -15,18 +15,91 @@ enum AlignmentHelper {
         let subCalMargin = measure.margin.getCalEdges(by: direction)
         let subFixedSize = measure.calculatedSize.getCalFixedSize(by: direction)
 
-        let subCrossAligment: Alignment = measure.alignment.hasCrossAligment(for: direction) ? measure.alignment : justifyContent
+        let targetAlignment: Alignment = measure.alignment.hasCrossAligment(for: direction) ? measure.alignment : justifyContent
 
-        let crossAligmentRatio = direction == .x ? subCrossAligment.centerRatio.y : subCrossAligment.centerRatio.x
+        let method = direction == .horizontal ? CalAlignment.fetchVert : CalAlignment.fetchHorz
 
-        var position = ((parentCalSize.cross - parentCalPadding.crossFixed - subFixedSize.cross - subCalMargin.crossFixed) / 2) * (crossAligmentRatio + 1) + parentCalPadding.forward + subFixedSize.cross / 2 + subCalMargin.forward
+        let calAlignment = method(targetAlignment)
 
-        if subCrossAligment.isForward(for: direction) {
-            position = parentCalPadding.forward + subCalMargin.forward + subFixedSize.cross / 2
-        } else if subCrossAligment.isBackward(for: direction) {
-            position = parentCalSize.cross - (parentCalPadding.backward + subCalMargin.backward + subFixedSize.cross / 2)
+        return getAlignmentPosition(
+            containerSize: parentCalSize.cross,
+            startPadding: parentCalPadding.start,
+            endPadding: parentCalPadding.end,
+
+            contentSize: subFixedSize.cross,
+
+            startMargin: subCalMargin.start,
+            endMargin: subCalMargin.end,
+
+            alignment: calAlignment
+        ) ?? 0
+    }
+
+    enum CalAlignment {
+        case none
+        case start
+        case center(CGFloat)
+        case end
+
+        static func fetchHorz(_ alignment: Alignment) -> CalAlignment {
+            guard alignment.hasHorzAlignment else {
+                return .none
+            }
+
+            if alignment.contains(.left) {
+                return .start
+            }
+            if alignment.contains(.right) {
+                return .end
+            }
+            if alignment.contains(.horzCenter) {
+                return .center(alignment.centerRatio.x)
+            }
+
+            fatalError()
         }
 
-        return position
+        static func fetchVert(_ alignment: Alignment) -> CalAlignment {
+            guard alignment.hasVertAlignment else {
+                return .none
+            }
+
+            if alignment.contains(.top) {
+                return .start
+            }
+            if alignment.contains(.bottom) {
+                return .end
+            }
+            if alignment.contains(.vertCenter) {
+                return .center(alignment.centerRatio.y)
+            }
+
+            fatalError()
+        }
+    }
+
+    static func getAlignmentPosition(
+        containerSize: CGFloat,
+        startPadding: CGFloat,
+        endPadding: CGFloat,
+        contentSize: CGFloat,
+        startMargin: CGFloat,
+        endMargin: CGFloat,
+        alignment: CalAlignment
+    ) -> CGFloat? {
+        switch alignment {
+        case .none:
+            return nil
+        case .start:
+            return startPadding + startMargin + contentSize / 2
+        case .end:
+            return containerSize - endPadding - endMargin - contentSize / 2
+        case .center(let v):
+            let ratio = Swift.min(Swift.max(-1, v), 1) + 1
+            let residualSpace = containerSize - startPadding - endPadding - contentSize - startMargin - endMargin
+            let delta = residualSpace / 2 * ratio
+            let value = startPadding + startMargin + contentSize / 2 + delta
+            return value
+        }
     }
 }
