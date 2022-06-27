@@ -41,7 +41,7 @@ public class Measure {
         }
     }
 
-    public var alignment: Alignment = .none {
+    public var alignment: Alignment = .idle {
         didSet {
             if oldValue != alignment {
                 notifyDidChange()

@@ -56,6 +56,7 @@ public struct Alignment: OptionSet, Equatable, CustomStringConvertible, Outputin
     public typealias RawValue = Int
     public let rawValue: Int
 
+    internal static let idle = Alignment([])
     public static let none = Alignment(rawValue: 1)
     public static let top = Alignment(rawValue: 2)
     public static let bottom = Alignment(rawValue: 4)

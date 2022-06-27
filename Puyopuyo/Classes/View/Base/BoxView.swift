@@ -7,10 +7,6 @@
 
 import UIKit
 
-// MARK: - BoxControl
-
-public class BoxControl {}
-
 public protocol RegulatorSpecifier: AnyObject {
     associatedtype RegulatorType: Regulator
     var regulator: RegulatorType { get }
@@ -23,22 +19,6 @@ public extension UIView {
 // MARK: - BoxView
 
 open class BoxView: UIView, MeasureChildrenDelegate, InternalBoxLayoutContainer, ViewParasitizing {
-    public struct RootBoxConfig {
-        public enum ControlType {
-            case bySet
-            case byCalculate
-
-            var isCalculate: Bool { self == .byCalculate }
-        }
-
-        public var sizeControl = ControlType.byCalculate
-
-        public var centerControl = ControlType.byCalculate
-        ///
-        /// Control `contentSize` when superview is UIScrollView
-        public var isScrollViewControl = false
-    }
-
     // MARK: - init
 
     override public init(frame: CGRect) {
@@ -55,7 +35,9 @@ open class BoxView: UIView, MeasureChildrenDelegate, InternalBoxLayoutContainer,
 
     public var borders = Borders()
 
-    public var rootBoxConfig = RootBoxConfig()
+//    public var rootBoxConfig = RootBoxConfig()
+
+    public var isScrollViewControl = false
 
     /// override this method to build custom view in subclass
     open func buildBody() {}
@@ -111,7 +93,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, InternalBoxLayoutContainer,
 
     override open func didMoveToSuperview() {
         positionControlDisposable?.dispose()
-        if rootBoxConfig.sizeControl.isCalculate, let spv = superview, !spv.isBoxView {
+        if let spv = superview, !spv.isBoxView {
             let boundsSize = spv
                 .py_observing(\.bounds)
                 .map(\.size, .zero)
@@ -174,25 +156,29 @@ open class BoxView: UIView, MeasureChildrenDelegate, InternalBoxLayoutContainer,
                 _ = IntrinsicSizeHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
             }
         } else {
+            if layoutRegulator.alignment == .idle {
+                layoutRegulator.alignment = [.top, .left]
+            }
+
             var layoutResidual: CGSize
 
-            switch rootBoxConfig.sizeControl {
-            case .bySet:
-                layoutResidual = ResidualHelper.getInitialLayoutResidual(for: layoutRegulator, contentConstraint: bounds.size)
-            case .byCalculate:
-                layoutResidual = ResidualHelper.getInitialLayoutResidual(for: layoutRegulator)
-                let superviewSize = superview?.bounds.size ?? .zero
-                if layoutRegulator.size.width.isRatio { layoutResidual.width = superviewSize.width }
-                if layoutRegulator.size.height.isRatio { layoutResidual.height = superviewSize.height }
-            }
+//            switch rootBoxConfig.sizeControl {
+//            case .bySet:
+//                layoutResidual = ResidualHelper.getInitialLayoutResidual(for: layoutRegulator, contentConstraint: bounds.size)
+//            case .byCalculate:
+            layoutResidual = ResidualHelper.getInitialLayoutResidual(for: layoutRegulator)
+            let superviewSize = superview?.bounds.size ?? .zero
+            if layoutRegulator.size.width.isRatio { layoutResidual.width = superviewSize.width }
+            if layoutRegulator.size.height.isRatio { layoutResidual.height = superviewSize.height }
+//            }
 
             let size = IntrinsicSizeHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
             layoutRegulator.calculatedSize = size
 
-            layoutRegulator.calculatedCenter = CGPoint(
-                x: size.width / 2 + layoutRegulator.margin.left,
-                y: size.height / 2 + layoutRegulator.margin.top
-            )
+            let centerX = AlignmentHelper.getCrossAlignmentOffset(layoutRegulator, direction: .vertical, justifyContent: .none, parentPadding: .zero, parentSize: superviewSize)
+            let centerY = AlignmentHelper.getCrossAlignmentOffset(layoutRegulator, direction: .horizontal, justifyContent: .none, parentPadding: .zero, parentSize: superviewSize)
+
+            layoutRegulator.calculatedCenter = .init(x: centerX, y: centerY)
 
             controlScrollViewIfNeeded()
 
@@ -220,22 +206,25 @@ open class BoxView: UIView, MeasureChildrenDelegate, InternalBoxLayoutContainer,
     }
 
     private func controlPositionAndSizeIfNeeded() {
-        if rootBoxConfig.sizeControl.isCalculate || rootBoxConfig.centerControl.isCalculate {
-            let animator = py_animator ?? Animators.inherited
-            animator.animate(self, size: layoutRegulator.calculatedSize, center: layoutRegulator.calculatedCenter) {
-                if self.rootBoxConfig.sizeControl.isCalculate {
-                    self.bounds.size = self.layoutRegulator.calculatedSize
-                }
-                if self.rootBoxConfig.centerControl.isCalculate {
-                    self.center = self.layoutRegulator.calculatedCenter
-                }
+//        if rootBoxConfig.sizeControl.isCalculate || rootBoxConfig.centerControl.isCalculate {
+        let animator = py_animator ?? Animators.inherited
+        animator.animate(self, size: layoutRegulator.calculatedSize, center: layoutRegulator.calculatedCenter) {
+//            if self.rootBoxConfig.sizeControl.isCalculate {
+            self.bounds.size = self.layoutRegulator.calculatedSize
+//            }
+//            if self.rootBoxConfig.centerControl.isCalculate {
+            if self.layoutRegulator.alignment.rawValue > 1 {
+                // 需要控制位置
+                self.center = self.layoutRegulator.calculatedCenter
             }
+//            }
         }
+//        }
     }
 
     /// 处理superview 是scrollView的情况，控制其 contentSize
     private func controlScrollViewIfNeeded() {
-        guard let scrollView = superview as? UIScrollView, rootBoxConfig.isScrollViewControl else {
+        guard let scrollView = superview as? UIScrollView, isScrollViewControl else {
             return
         }
 

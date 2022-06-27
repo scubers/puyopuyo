@@ -20,16 +20,16 @@ class ScenesVC: BaseViewController {
         super.viewDidLoad()
         title = "Scenes"
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: HBox().attach {
-            UILabel().attach($0)
-                .text("Present")
-            UISwitch().attach($0)
-                .isOn(isOn)
-        }
-        .justifyContent(.center)
-        .space(4)
-        .sizeControl(.bySet)
-        .view)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: IntrinsicSizeDelegateView {
+            HBox().attach {
+                UILabel().attach($0)
+                    .text("Present")
+                UISwitch().attach($0)
+                    .isOn(isOn)
+            }
+            .justifyContent(.center)
+            .space(4)
+        })
 
         let this = WeakableObject(value: self)
         ZBox().attach(view) {

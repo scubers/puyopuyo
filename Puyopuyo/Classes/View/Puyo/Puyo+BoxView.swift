@@ -12,18 +12,18 @@ import Foundation
 public extension Puyo where T: BoxView {
     @discardableResult
     func autoJudgeScroll(_ judge: Bool) -> Self {
-        set(\T.rootBoxConfig.isScrollViewControl, judge)
+        set(\T.isScrollViewControl, judge)
     }
 
-    @discardableResult
-    func centerControl(_ control: BoxView.RootBoxConfig.ControlType) -> Self {
-        set(\T.rootBoxConfig.centerControl, control)
-    }
+//    @discardableResult
+//    func centerControl(_ control: BoxView.RootBoxConfig.ControlType) -> Self {
+//        set(\T.rootBoxConfig.centerControl, control)
+//    }
 
-    @discardableResult
-    func sizeControl(_ control: BoxView.RootBoxConfig.ControlType) -> Self {
-        set(\T.rootBoxConfig.sizeControl, control)
-    }
+//    @discardableResult
+//    func sizeControl(_ control: BoxView.RootBoxConfig.ControlType) -> Self {
+//        set(\T.rootBoxConfig.sizeControl, control)
+//    }
 
     @discardableResult
     func borders(_ options: [BorderOptions]) -> Self {

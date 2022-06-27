@@ -263,6 +263,7 @@ public class FlowBoxBuilder<T>: FlowBox, BoxRecycler {
     public required init(arrange: Int, items: Outputs<[T]>, builder: @escaping RecyclerBuilder<T>) {
         self.builder = builder
         super.init(frame: .zero)
+        attach().arrangeCount(arrange)
         items.send(to: state).dispose(by: self)
         setup()
     }
@@ -284,6 +285,10 @@ public class VFlowBuilder<T>: FlowBoxBuilder<T> {
     public required init(arrange: Int = 0, items: Outputs<[T]>, builder: @escaping RecyclerBuilder<T>) {
         super.init(arrange: arrange, items: items, builder: builder)
         attach().direction(.y)
+    }
+
+    override public func layoutSubviews() {
+        super.layoutSubviews()
     }
 }
 

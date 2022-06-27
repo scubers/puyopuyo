@@ -13,22 +13,22 @@ import UIKit
 class FeedVC: BaseViewController, UITableViewDelegate {
     let dataSource = State<[Feed]>([])
 
-    let isTableBox = State(false)
+    let isTableBox = State(true)
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Refresh", style: .plain, target: self, action: #selector(reload))
 
-        navigationItem.titleView = ZBox().attach {
-            UISegmentedControl(items: ["Recycle", "Table"]).attach($0)
-                .set(\.selectedSegmentIndex, 0)
-                .onControlEvent(.valueChanged, Inputs { [weak self] in
-                    self?.isTableBox.value = $0.selectedSegmentIndex == 1
-                })
+        navigationItem.titleView = IntrinsicSizeDelegateView {
+            ZBox().attach {
+                UISegmentedControl(items: ["Recycle", "Table"]).attach($0)
+                    .set(\.selectedSegmentIndex, isTableBox.value ? 1 : 0)
+                    .onControlEvent(.valueChanged, Inputs { [weak self] in
+                        self?.isTableBox.value = $0.selectedSegmentIndex == 1
+                    })
+            }
         }
-        .sizeControl(.bySet)
-        .view
 
         ZBox().attach(view) {
             recycleBox().attach($0)
@@ -71,7 +71,17 @@ class FeedVC: BaseViewController, UITableViewDelegate {
                         .view
                     }
                 )
-            ]
+            ],
+            header: {
+                UILabel().attach()
+                    .text("Table Header View")
+                    .backgroundColor(Util.randomColor())
+            },
+            footer: {
+                UILabel().attach()
+                    .text("Table Footer View")
+                    .backgroundColor(Util.randomColor())
+            }
         )
         .attach()
         .size(.fill, .fill)

@@ -50,18 +50,21 @@ public class TableBox: UITableView,
             header?().dislplayView.attach($0)
         }
         .size(.fill, .wrap)
-        .centerControl(.bySet)
+        .alignment(.none)
         .view
 
         footerView = ZBox().attach {
             footer?().dislplayView.attach($0)
         }
-        .centerControl(.bySet)
         .size(.fill, .wrap)
+        .alignment(.none)
         .view
 
         tableHeaderView = headerView
         tableFooterView = footerView
+        
+        headerView.layoutIfNeeded()
+        footerView.layoutIfNeeded()
 
         self.separatorStyle = separatorStyle
 
