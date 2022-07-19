@@ -50,7 +50,7 @@ class DemoView<T: Equatable>: VBox, Eventable, Stateful {
                     .visibility((selectionVisible && labelVisible).visibleOrGone)
                 
                 Label(self.desc).attach($0)
-                    .textAlignment(.left)
+                    .textAlignment(.natural)
                     .margin(all: 4)
                     .size(.fill, .wrap)
                     .visibility(labelVisible.visibleOrGone)

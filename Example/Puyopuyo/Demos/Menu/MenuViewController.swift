@@ -33,6 +33,26 @@ class MenuViewController: BaseViewController {
         title = "Menu"
 
         let this = WeakableObject(value: self)
+
+        let isOn = State(PuyoAppearence.isRTL)
+
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: IntrinsicSizeDelegateView {
+            HBox().attach {
+                UILabel().attach($0)
+                    .text("RTL")
+                UISwitch().attach($0)
+                    .isOn(isOn)
+            }
+            .justifyContent(.center)
+            .space(4)
+        })
+
+        isOn.skip(1).distinct().debounce().safeBind(to: self) { this, value in
+            UIView.appearance().semanticContentAttribute = value ? .forceRightToLeft : .forceLeftToRight
+            PuyoAppearence.isRTL = value
+            this.navigationController?.setViewControllers([MenuViewController()], animated: true)
+        }
+
         ZBox().attach(view) {
             RecycleBox(
                 sections: [

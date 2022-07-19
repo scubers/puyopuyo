@@ -36,12 +36,16 @@ class _LinearCalculator {
     var regCalSize: CalSize { CalSize(size: regulator.size, direction: regulator.direction) }
     var regDirection: Direction { regulator.direction }
 
-    var totalMainChildrenContent: CGFloat {
-        totalMargin + totalSpace + totalMainCalculatedSize
+    var totalChildrenMainContent: CGFloat {
+        totalMargin + totalSpace + totalTightChildrenMainContent + totalRatioChildrenMainContent
+    }
+
+    var totalChildrenTightContentWithMarginAndSpace: CGFloat {
+        totalMargin + totalSpace + totalTightChildrenMainContent
     }
 
     var totalMainRatioLayoutResidual: CGFloat {
-        Swift.max(regCalChildrenLayoutResidual.main - totalMainChildrenContent, 0)
+        Swift.max(regCalChildrenLayoutResidual.main - totalChildrenTightContentWithMarginAndSpace, 0)
     }
 
     var regCalFormat: Format { formattable ? regulator.format : .leading }
@@ -54,7 +58,9 @@ class _LinearCalculator {
     var totalMargin: CGFloat = 0
 
     /// 总主轴 子节点计算后占用尺寸
-    var totalMainCalculatedSize: CGFloat = 0
+    var totalTightChildrenMainContent: CGFloat = 0
+
+    var totalRatioChildrenMainContent: CGFloat = 0
 
     /// 记录计算好的最大次轴
     var maxCrossChildrenContent: CGFloat = 0
@@ -104,7 +110,7 @@ class _LinearCalculator {
     }
 
     private func calculateRegulatorSize() -> CGSize {
-        let contentSize = CalFixedSize(main: totalMainChildrenContent, cross: maxCrossChildrenContent, direction: regDirection)
+        let contentSize = CalFixedSize(main: totalChildrenTightContentWithMarginAndSpace, cross: maxCrossChildrenContent, direction: regDirection)
             .getSize()
             .expand(edge: regulator.padding)
         return IntrinsicSizeHelper.getIntrinsicSize(from: regulator.size, contentResidual: contentResidual, wrappedContent: contentSize)
@@ -112,7 +118,7 @@ class _LinearCalculator {
 
     private func calculateChildrenSize(estimateCross: CGFloat?) {
         // 清空计算值
-        totalMainCalculatedSize = 0
+        totalTightChildrenMainContent = 0
         maxCrossChildrenContent = 0
 
         // 根据优先级计算
@@ -128,7 +134,8 @@ class _LinearCalculator {
 
         if shinkHandled || growHandled {
             // 重新获取最新计算值
-            totalMainCalculatedSize = 0
+            totalTightChildrenMainContent = 0
+            totalRatioChildrenMainContent = 0
             maxCrossChildrenContent = 0
             calculateChildren.forEach(appendChildrenToCalculatedSize(_:))
         }
@@ -211,7 +218,7 @@ class _LinearCalculator {
             let subCalMargin = m.margin.getCalEdges(by: regDirection)
 
             // 校验是否可format: 主轴包裹, 或者存在子主轴比重，则不可以被format
-            if formattable, regCalSize.main.isWrap || subCalSize.main.isRatio, regulator.format != .leading {
+            if formattable, regCalSize.main.isWrap || subCalSize.main.isRatio {
                 formattable = false
             }
 
@@ -262,8 +269,10 @@ class _LinearCalculator {
         let subFixedSize = CalFixedSize(cgSize: measure.calculatedSize, direction: regDirection)
         let subCalMargin = measure.margin.getCalEdges(by: regDirection)
         let subCalSize = measure.size.getCalSize(by: regDirection)
-        if mainAppendableCalSize(subCalSize) {
-            totalMainCalculatedSize += subFixedSize.main
+        if subCalSize.main.isRatio {
+            totalRatioChildrenMainContent += subFixedSize.main
+        } else {
+            totalTightChildrenMainContent += subFixedSize.main
         }
 
         if crossReplacableCalSize(subCalSize) {
@@ -347,7 +356,7 @@ class _LinearCalculator {
 
     private func hendleMainGrowIfNeeded(estimateCross: CGFloat?) -> Bool {
         // 子节点有剩余空间，并且没有ratio节点时，处理成长
-        guard totalGrow > 0, totalMainRatio == 0, totalMainCalculatedSize < regCalChildrenLayoutResidual.main else {
+        guard totalGrow > 0, totalMainRatio == 0, totalTightChildrenMainContent < regCalChildrenLayoutResidual.main else {
             return false
         }
         let residualSize = totalMainRatioLayoutResidual
@@ -364,7 +373,7 @@ class _LinearCalculator {
             calLayoutResidual.main = newMainResidual
 
             // 当前节点需要重新计算，所以先把累计值减去
-            totalMainCalculatedSize -= calFixedSize.main
+            totalTightChildrenMainContent -= calFixedSize.main
             // 重新计算
             calculateChild(m, subResidual: calLayoutResidual, msg: "LinearCalculator grow calculating")
             // 成长计算时，最后计算值可能小于成长值，需要手动赋值
@@ -379,7 +388,7 @@ class _LinearCalculator {
 
     private func handleMainShrinkIfNeeded(estimateCross: CGFloat?) -> Bool {
         // 子节点超出剩余空间并且存在可压缩节点时，处理主轴压缩
-        let overflowSize = totalMainChildrenContent - regCalChildrenLayoutResidual.main
+        let overflowSize = totalChildrenTightContentWithMarginAndSpace - regCalChildrenLayoutResidual.main
 
         guard totalShrink > 0, overflowSize > 0 else {
             return false
@@ -399,7 +408,7 @@ class _LinearCalculator {
                 calLayoutResidual.main = newMainResidual
 
                 // 当前节点需要重新计算，所以先把累计值减去
-                totalMainCalculatedSize -= calFixedSize.main
+                totalTightChildrenMainContent -= calFixedSize.main
                 // 重新计算
                 calculateChild($0, subResidual: calLayoutResidual, msg: "LinearCalculator shrink calculating")
                 // 重新累计
@@ -416,18 +425,20 @@ class _LinearCalculator {
     /// - Returns: 返回最后节点的end(包括最后一个节点的margin.end)
     private func calculateChildrenCenter(intrinsic: CGSize) {
         let measures: [Measure] = calculateChildren
-        let trailingDelta: CGFloat = regCalChildrenLayoutResidual.main - totalMainChildrenContent
+        let trailingDelta: CGFloat = regCalChildrenLayoutResidual.main - totalChildrenMainContent
         let centerDelta: CGFloat = trailingDelta / 2
-        let betweenDelta: CGFloat = (regCalChildrenLayoutResidual.main - totalMainChildrenContent + totalSpace) / CGFloat(measures.count - 1)
-        let roundDelta: CGFloat = (regCalChildrenLayoutResidual.main - totalMainChildrenContent + totalSpace) / CGFloat(measures.count + 1)
+        let betweenDelta: CGFloat = (regCalChildrenLayoutResidual.main - totalChildrenMainContent + totalSpace) / CGFloat(measures.count - 1)
+        let roundDelta: CGFloat = (regCalChildrenLayoutResidual.main - totalChildrenMainContent + totalSpace) / CGFloat(measures.count + 1)
         let spaceDelta: CGFloat = regulator.space
 
         var standardLastEnd: CGFloat = 0
+
+        let reverse = transformReverseByRTLConfig(regulator.reverse)
         for index in 0 ..< measures.count {
             // 获取计算对象，根据是否反转获取
-            let m: Measure = regulator.reverse ? measures[measures.count - index - 1] : measures[index]
+            let m: Measure = reverse ? measures[measures.count - index - 1] : measures[index]
             // 计算cross偏移
-            let cross: CGFloat = AlignmentHelper.getCrossAlignmentOffset(m, direction: regDirection, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: intrinsic)
+            let cross: CGFloat = AlignmentHelper.getCrossAlignmentOffset(m, direction: regDirection, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: intrinsic, horzReverse: shouldCrossCheckRTL)
 
             let calMargin = CalEdges(insets: m.margin, direction: regulator.direction)
             let calFixedSize = CalFixedSize(cgSize: m.calculatedSize, direction: regulator.direction)
@@ -439,7 +450,7 @@ class _LinearCalculator {
             let itemSpaceDelta: CGFloat = spaceDelta * calIndex
 
             var main = standardMain + regCalPadding.leading
-            switch regCalFormat {
+            switch transformFormatByRTLConfig(regCalFormat) {
             case .leading:
                 main += itemSpaceDelta
             case .trailing:
@@ -456,6 +467,32 @@ class _LinearCalculator {
 
             m.calculatedCenter = CalPoint(main: main, cross: cross, direction: regDirection).getPoint()
         }
+    }
+
+//    private var shouldCheckRTL: Bool {
+//        regDirection == .horizontal && PuyoAppearence.isRTL
+//    }
+    
+    private var shouldCrossCheckRTL: Bool {
+        regDirection == .vertical && PuyoAppearence.isRTL
+    }
+
+    private func transformReverseByRTLConfig(_ reverse: Bool) -> Bool {
+        if regDirection == .horizontal, PuyoAppearence.isRTL {
+            return !reverse
+        }
+        return reverse
+    }
+
+    private func transformFormatByRTLConfig(_ format: Format) -> Format {
+        if regDirection == .horizontal, PuyoAppearence.isRTL, formattable {
+            switch format {
+            case .leading: return .trailing
+            case .trailing: return .leading
+            default: return format
+            }
+        }
+        return format
     }
 }
 

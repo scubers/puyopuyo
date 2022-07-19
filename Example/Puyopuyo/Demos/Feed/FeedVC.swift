@@ -161,7 +161,7 @@ private class Header: VBox {
                     .size(100, 100)
                     .cornerRadius(8)
             }
-            .margin(top: -70, right: 20)
+            .margin(horz: 20, top: -70)
             .justifyContent(.center)
             .space(8)
         }

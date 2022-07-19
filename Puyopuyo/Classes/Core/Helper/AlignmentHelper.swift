@@ -8,7 +8,7 @@
 import Foundation
 
 enum AlignmentHelper {
-    static func getCrossAlignmentOffset(_ measure: Measure, direction: Direction, justifyContent: Alignment, parentPadding: UIEdgeInsets, parentSize: CGSize) -> CGFloat {
+    static func getCrossAlignmentOffset(_ measure: Measure, direction: Direction, justifyContent: Alignment, parentPadding: UIEdgeInsets, parentSize: CGSize, horzReverse: Bool = false) -> CGFloat {
         let parentCalSize = parentSize.getCalFixedSize(by: direction)
         let parentCalPadding = parentPadding.getCalEdges(by: direction)
 
@@ -19,7 +19,21 @@ enum AlignmentHelper {
 
         let method = direction == .horizontal ? CalAlignment.fetchVert : CalAlignment.fetchHorz
 
-        let calAlignment = method(targetAlignment)
+        var calAlignment = method(targetAlignment)
+        
+        if direction == .vertical, horzReverse {
+            // 处理RTL
+            switch calAlignment {
+            case .none:
+                break
+            case .start:
+                calAlignment = .end
+            case .center(let value):
+                calAlignment = .center(-value)
+            case .end:
+                calAlignment = .start
+            }
+        }
 
         return getAlignmentPosition(
             containerSize: parentCalSize.cross,
