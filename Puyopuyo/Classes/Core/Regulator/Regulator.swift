@@ -8,6 +8,14 @@
 import Foundation
 
 public class Regulator: Measure {
+    public var semanticDirection: SemanticDirectionAttribute? {
+        didSet {
+            if oldValue != semanticDirection {
+                notifyDidChange()
+            }
+        }
+    }
+
     ///
     /// Justify children's alignment.
     /// Will be override by child's `alignment`
@@ -30,6 +38,7 @@ public class Regulator: Measure {
     override public var diagnosisMessage: String {
         """
         \(super.diagnosisMessage)
+        - semanticDirection: [\(semanticDirection.debugDescription)]
         - padding: [top: \(padding.top), left: \(padding.left), bottom: \(padding.bottom), right: \(padding.right)]
         - justifyContent: [\(justifyContent)]
         """

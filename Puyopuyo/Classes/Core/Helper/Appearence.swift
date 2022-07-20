@@ -8,5 +8,5 @@
 import Foundation
 
 public enum PuyoAppearence {
-    public static var isRTL = false
+    public static var semanticDirection: SemanticDirectionAttribute = .leftToRight
 }

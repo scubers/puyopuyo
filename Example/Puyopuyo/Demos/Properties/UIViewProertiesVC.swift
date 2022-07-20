@@ -73,32 +73,68 @@ class UIViewProertiesVC: BaseViewController {
         return DemoView<Alignment>(
             title: "Aligment",
             builder: {
-                HBox().attach($0) {
-                    Label.demo("top").attach($0)
-                        .alignment(.top)
-                    Label.demo("center").attach($0)
-                        .alignment(.center)
-                    Label.demo("bottom").attach($0)
-                        .alignment(.bottom)
+                VBox().attach($0) {
+                    HBox().attach($0) {
+                        Label.demo("top").attach($0)
+                            .alignment(.top)
+                        Label.demo("center").attach($0)
+                            .alignment(.center)
+                        Label.demo("bottom").attach($0)
+                            .alignment(.bottom)
 
-                    Label.demo("change").attach($0)
-                        .alignment(a)
-                        .backgroundColor(UIColor.systemPink)
-                        .text(a.map(\.description))
+                        Label.demo("change").attach($0)
+                            .alignment(a)
+                            .backgroundColor(UIColor.systemPink)
+                            .text(a.map(\.description))
+                    }
+                    .space(2)
+                    .padding(all: 10)
+                    .justifyContent(.center)
+                    .size(.fill, 100)
+                    .animator(Animators.default)
+                    .demo()
+                    
+                    VBox().attach($0) {
+                        Label.demo("left").attach($0)
+                            .alignment(.left)
+                        Label.demo("center").attach($0)
+                            .alignment(.center)
+                        Label.demo("right").attach($0)
+                            .alignment(.right)
+                        Label.demo("change").attach($0)
+                            .alignment(a)
+                            .backgroundColor(UIColor.systemPink)
+                            .text(a.map(\.description))
+                    }
+                    .space(2)
+                    .padding(all: 10)
+                    .justifyContent(.center)
+                    .size(.fill, .wrap)
+                    .animator(Animators.default)
+                    .demo()
+                    
+                    
                 }
-                .space(2)
-                .padding(all: 10)
+//                .space(2)
+//                .padding(all: 10)
                 .justifyContent(.center)
-                .size(.fill, 100)
+                .size(.fill, .wrap)
                 .animator(Animators.default)
+                
 
             },
             selectors: [
                 Selector(desc: "top", value: .top),
+                Selector(desc: "left", value: .left),
                 Selector(desc: "bottom", value: .bottom),
+                Selector(desc: "right", value: .right),
                 Selector(desc: "center", value: .center),
-                Selector(desc: "vertCenter(0.5)", value: .vertCenter(0.5)),
-                Selector(desc: "vertCenter(-0.5)", value: .vertCenter(-0.5)),
+                Selector(desc: "leading", value: .leading),
+                Selector(desc: "trailing", value: .trailing),
+                Selector(desc: "vertCenter(0.2)", value: .vertCenter(0.2)),
+                Selector(desc: "vertCenter(-0.8)", value: .vertCenter(-0.8)),
+                Selector(desc: "horzCenter(0.2)", value: .horzCenter(0.2)),
+                Selector(desc: "horzCenter(-0.8)", value: .horzCenter(-0.8)),
             ],
             selected: a.value,
             desc: """

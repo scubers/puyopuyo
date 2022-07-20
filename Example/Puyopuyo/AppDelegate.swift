@@ -46,6 +46,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = NavController(rootViewController: MenuViewController())
 //        window?.rootViewController = NavController(rootViewController: UIViewController())
         window?.makeKeyAndVisible()
+        
+        let alignment: Alignment = [.left, .right, .top]
+        print(alignment.contains([.left, .bottom]))
 
         RunLoopMonitor.shared.start()
         return true

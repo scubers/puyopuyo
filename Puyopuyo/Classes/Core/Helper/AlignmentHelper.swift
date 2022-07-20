@@ -8,7 +8,7 @@
 import Foundation
 
 enum AlignmentHelper {
-    static func getCrossAlignmentOffset(_ measure: Measure, direction: Direction, justifyContent: Alignment, parentPadding: UIEdgeInsets, parentSize: CGSize) -> CGFloat {
+    static func getCrossAlignmentOffset(_ measure: Measure, direction: Direction, justifyContent: Alignment, parentPadding: UIEdgeInsets, parentSize: CGSize, semanticAttribute: SemanticDirectionAttribute = .leftToRight) -> CGFloat {
         let parentCalSize = parentSize.getCalFixedSize(by: direction)
         let parentCalPadding = parentPadding.getCalEdges(by: direction)
 
@@ -17,23 +17,12 @@ enum AlignmentHelper {
 
         let targetAlignment: Alignment = measure.alignment.hasCrossAligment(for: direction) ? measure.alignment : justifyContent
 
-        let method = direction == .horizontal ? CalAlignment.fetchVert : CalAlignment.fetchHorz
-
-        var calAlignment = method(targetAlignment)
-        
-//        if direction == .vertical, horzReverse {
-//            // 处理RTL
-//            switch calAlignment {
-//            case .none:
-//                break
-//            case .start:
-//                calAlignment = .end
-//            case .center(let value):
-//                calAlignment = .center(-value)
-//            case .end:
-//                calAlignment = .start
-//            }
-//        }
+        var calAlignment: CalAlignment
+        if direction == .horizontal {
+            calAlignment = CalAlignment.fetchVert(targetAlignment)
+        } else {
+            calAlignment = CalAlignment.fetchHorz(targetAlignment, attribute: semanticAttribute)
+        }
 
         return getAlignmentPosition(
             containerSize: parentCalSize.cross,
@@ -55,19 +44,21 @@ enum AlignmentHelper {
         case center(CGFloat)
         case end
 
-        static func fetchHorz(_ alignment: Alignment) -> CalAlignment {
-            guard alignment.hasHorzAlignment else {
+        static func fetchHorz(_ alignment: Alignment, attribute: SemanticDirectionAttribute) -> CalAlignment {
+            guard alignment.hasHorzAlignment || alignment.hasSemanticAlignment else {
                 return .none
             }
 
-            if alignment.contains(.left) {
+            let align = SemanticDirectionHelper(attribute: attribute).transform(alignment: alignment)
+
+            if align.contains(.left) {
                 return .start
             }
-            if alignment.contains(.right) {
+            if align.contains(.right) {
                 return .end
             }
-            if alignment.contains(.horzCenter) {
-                return .center(alignment.centerRatio.x)
+            if align.contains(.horzCenter) {
+                return .center(align.centerRatio.x)
             }
 
             fatalError()

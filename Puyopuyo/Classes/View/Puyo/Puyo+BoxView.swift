@@ -105,6 +105,11 @@ public extension Puyo where T: RegulatorSpecifier & AutoDisposable {
     func justifyContent<O: Outputing>(_ alignment: O) -> Self where O.OutputType == Alignment {
         set(\T.regulator.justifyContent, alignment)
     }
+    
+    @discardableResult
+    func semanticDirection(_ attribute: SemanticDirectionAttribute?) -> Self {
+        set(\T.regulator.semanticDirection, attribute)
+    }
 }
 
 // MARK: - Delegatable & DataSourceable

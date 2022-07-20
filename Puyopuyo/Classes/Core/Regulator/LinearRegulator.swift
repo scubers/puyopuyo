@@ -10,7 +10,7 @@ import Foundation
 public class LinearRegulator: Regulator {
     override public init(delegate: MeasureMetricChangedDelegate?, sizeDelegate: MeasureSizeFittingDelegate?, childrenDelegate: MeasureChildrenDelegate?) {
         super.init(delegate: delegate, sizeDelegate: sizeDelegate, childrenDelegate: childrenDelegate)
-        justifyContent = [.left, .top]
+        justifyContent = [.leading, .top]
     }
 
     ///

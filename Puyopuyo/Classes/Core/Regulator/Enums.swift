@@ -7,14 +7,42 @@
 
 import Foundation
 
+// MARK: - SemanticDirectionAttribute
+
+public enum SemanticDirectionAttribute: Outputing {
+    public typealias OutputType = SemanticDirectionAttribute
+    case leftToRight
+    case rightToLeft
+}
+
+extension SemanticDirectionAttribute {
+    func getLeadingAlignment() -> Alignment {
+        switch self {
+        case .leftToRight: return .left
+        case .rightToLeft: return .right
+        }
+    }
+
+    func getTrailingAlignment() -> Alignment {
+        switch self {
+        case .leftToRight: return .right
+        case .rightToLeft: return .left
+        }
+    }
+}
+
+// MARK: - Direction
+
 public enum Direction: CaseIterable, Outputing {
     public typealias OutputType = Direction
-//    case x, y
+
     case horizontal, vertical
 
     public static var x: Direction { .horizontal }
     public static var y: Direction { .vertical }
 }
+
+// MARK: - Format
 
 public enum Format: CaseIterable, Outputing {
     public typealias OutputType = Format
@@ -25,10 +53,12 @@ public enum Format: CaseIterable, Outputing {
     case trailing
 }
 
+// MARK: - Alignment
+
 public struct Alignment: OptionSet, Equatable, CustomStringConvertible, Outputing {
     public typealias OutputType = Alignment
     public var description: String {
-        let all = [Alignment.top, .left, .bottom, .right, .horzCenter, .vertCenter]
+        let all = [Alignment.top, .left, .bottom, .right, .horzCenter, .vertCenter, .leading, .trailing]
         let contain = all.filter { self.contains($0) }
         return
             contain.map { x -> String in
@@ -37,8 +67,10 @@ public struct Alignment: OptionSet, Equatable, CustomStringConvertible, Outputin
                 case .left: return "left"
                 case .bottom: return "bottom"
                 case .right: return "right"
-                case .vertCenter: return "vertCenter(\(centerRatio.y))"
-                case .horzCenter: return "horzCenter(\(centerRatio.x))"
+                case .leading: return "leading"
+                case .trailing: return "trailing"
+                case .vertCenter: return "vc(\(centerRatio.y))"
+                case .horzCenter: return "hc(\(centerRatio.x))"
                 default: return ""
                 }
             }.joined(separator: ",")
@@ -57,13 +89,15 @@ public struct Alignment: OptionSet, Equatable, CustomStringConvertible, Outputin
     public let rawValue: Int
 
     internal static let idle = Alignment([])
-    public static let none = Alignment(rawValue: 1)
-    public static let top = Alignment(rawValue: 2)
-    public static let bottom = Alignment(rawValue: 4)
-    public static let left = Alignment(rawValue: 8)
-    public static let right = Alignment(rawValue: 16)
-    public static let horzCenter = Alignment(rawValue: 32)
-    public static let vertCenter = Alignment(rawValue: 64)
+    public static let none = Alignment(rawValue: 1 << 0)
+    public static let top = Alignment(rawValue: 1 << 1)
+    public static let bottom = Alignment(rawValue: 1 << 2)
+    public static let left = Alignment(rawValue: 1 << 3)
+    public static let right = Alignment(rawValue: 1 << 4)
+    public static let horzCenter = Alignment(rawValue: 1 << 5)
+    public static let vertCenter = Alignment(rawValue: 1 << 6)
+    public static let leading = Alignment(rawValue: 1 << 7)
+    public static let trailing = Alignment(rawValue: 1 << 8)
 
     /// (-1, -1) < point < (1, 1)
     public let centerRatio: CGPoint
@@ -108,12 +142,17 @@ public extension Alignment {
             || contains(.vertCenter)
     }
 
-    func hasMainAligment(for direction: Direction) -> Bool {
-        direction == .vertical ? hasVertAlignment : hasHorzAlignment
+    var hasSemanticAlignment: Bool {
+        contains(.leading) || contains(.trailing)
     }
 
     func hasCrossAligment(for direction: Direction) -> Bool {
-        direction == .horizontal ? hasVertAlignment : hasHorzAlignment
+        switch direction {
+        case .horizontal:
+            return hasVertAlignment
+        case .vertical:
+            return hasHorzAlignment || hasSemanticAlignment
+        }
     }
 
     func isCenter(for direction: Direction) -> Bool {

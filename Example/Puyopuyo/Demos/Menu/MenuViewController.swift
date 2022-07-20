@@ -34,7 +34,7 @@ class MenuViewController: BaseViewController {
 
         let this = WeakableObject(value: self)
 
-        let isOn = State(PuyoAppearence.isRTL)
+        let isOn = State(PuyoAppearence.semanticDirection == .rightToLeft)
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: IntrinsicSizeDelegateView {
             HBox().attach {
@@ -49,7 +49,7 @@ class MenuViewController: BaseViewController {
 
         isOn.skip(1).distinct().debounce().safeBind(to: self) { this, value in
             UIView.appearance().semanticContentAttribute = value ? .forceRightToLeft : .forceLeftToRight
-            PuyoAppearence.isRTL = value
+            PuyoAppearence.semanticDirection = value ? .rightToLeft : .leftToRight
             this.navigationController?.setViewControllers([MenuViewController()], animated: true)
         }
 
