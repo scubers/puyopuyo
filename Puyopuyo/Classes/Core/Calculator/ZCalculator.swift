@@ -108,7 +108,9 @@ private class _ZCalculator {
     }
 
     private func _calculateCenter(_ measure: Measure, containerSize: CGSize) -> CGPoint {
-        let x = AlignmentHelper.getCrossAlignmentOffset(measure, direction: .y, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: containerSize)
+        let semanticDirection = regulator.semanticDirection ?? PuyoAppearence.semanticDirection
+
+        let x = AlignmentHelper.getCrossAlignmentOffset(measure, direction: .y, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: containerSize, semanticAttribute: semanticDirection)
         let y = AlignmentHelper.getCrossAlignmentOffset(measure, direction: .x, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: containerSize)
         return CGPoint(x: x, y: y)
     }

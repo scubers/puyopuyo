@@ -71,12 +71,21 @@ class TestVC: BaseViewController {
                 .size(50, 50)
             
             VBox().attach($0) {
-                UILabel().attach($0)
+                for i in 0 ..< 2 {
+                    HBox().attach($0) {
+                        for j in 0 ..< 2 {
+                            UILabel().attach($0)
+                                .text("\(i):\(j)")
+                                .textAlignment(.center)
+                                .size(50, 50)
+                        }
+                    }
+                }
             }
-            .justifyContent(.center)
-            .format(.center)
-            .alignment(.center)
-            .size(50, 50)
+            .justifyContent([.center])
+            .alignment([.leading, .vertCenter])
+            .size(400, 400)
+            .diagnosis("99")
         }
         
         Util.randomViewColor(view: view)

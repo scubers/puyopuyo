@@ -175,7 +175,8 @@ open class BoxView: UIView, MeasureChildrenDelegate, InternalBoxLayoutContainer,
             let size = IntrinsicSizeHelper.calculateIntrinsicSize(for: layoutRegulator, layoutResidual: layoutResidual, strategy: .calculate)
             layoutRegulator.calculatedSize = size
 
-            let centerX = AlignmentHelper.getCrossAlignmentOffset(layoutRegulator, direction: .vertical, justifyContent: .none, parentPadding: .zero, parentSize: superviewSize)
+            let semanticDirection = layoutRegulator.semanticDirection ?? PuyoAppearence.semanticDirection
+            let centerX = AlignmentHelper.getCrossAlignmentOffset(layoutRegulator, direction: .vertical, justifyContent: .none, parentPadding: .zero, parentSize: superviewSize, semanticAttribute: semanticDirection)
             let centerY = AlignmentHelper.getCrossAlignmentOffset(layoutRegulator, direction: .horizontal, justifyContent: .none, parentPadding: .zero, parentSize: superviewSize)
 
             layoutRegulator.calculatedCenter = .init(x: centerX, y: centerY)
