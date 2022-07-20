@@ -7,15 +7,15 @@
 
 import Foundation
 
-// MARK: - SemanticDirectionAttribute
+// MARK: - SemanticDirection
 
-public enum SemanticDirectionAttribute: Outputing {
-    public typealias OutputType = SemanticDirectionAttribute
+public enum SemanticDirection: Outputing {
+    public typealias OutputType = SemanticDirection
     case leftToRight
     case rightToLeft
 }
 
-extension SemanticDirectionAttribute {
+extension SemanticDirection {
     func getLeadingAlignment() -> Alignment {
         switch self {
         case .leftToRight: return .left

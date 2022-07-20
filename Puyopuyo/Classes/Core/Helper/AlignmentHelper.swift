@@ -8,7 +8,7 @@
 import Foundation
 
 enum AlignmentHelper {
-    static func getCrossAlignmentOffset(_ measure: Measure, direction: Direction, justifyContent: Alignment, parentPadding: UIEdgeInsets, parentSize: CGSize, semanticAttribute: SemanticDirectionAttribute = .leftToRight) -> CGFloat {
+    static func getCrossAlignmentOffset(_ measure: Measure, direction: Direction, justifyContent: Alignment, parentPadding: UIEdgeInsets, parentSize: CGSize, semanticDirection: SemanticDirection = .leftToRight) -> CGFloat {
         let parentCalSize = parentSize.getCalFixedSize(by: direction)
         let parentCalPadding = parentPadding.getCalEdges(by: direction)
 
@@ -21,7 +21,7 @@ enum AlignmentHelper {
         if direction == .horizontal {
             calAlignment = CalAlignment.fetchVert(targetAlignment)
         } else {
-            calAlignment = CalAlignment.fetchHorz(targetAlignment, attribute: semanticAttribute)
+            calAlignment = CalAlignment.fetchHorz(targetAlignment, direction: semanticDirection)
         }
 
         return getAlignmentPosition(
@@ -44,12 +44,12 @@ enum AlignmentHelper {
         case center(CGFloat)
         case end
 
-        static func fetchHorz(_ alignment: Alignment, attribute: SemanticDirectionAttribute) -> CalAlignment {
+        static func fetchHorz(_ alignment: Alignment, direction: SemanticDirection) -> CalAlignment {
             guard alignment.hasHorzAlignment || alignment.hasSemanticAlignment else {
                 return .none
             }
 
-            let align = SemanticDirectionHelper(attribute: attribute).transform(alignment: alignment)
+            let align = SemanticDirectionHelper(semanticDirection: direction).transform(alignment: alignment)
 
             if align.contains(.left) {
                 return .start

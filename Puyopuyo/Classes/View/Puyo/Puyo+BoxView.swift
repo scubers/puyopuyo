@@ -107,7 +107,7 @@ public extension Puyo where T: RegulatorSpecifier & AutoDisposable {
     }
     
     @discardableResult
-    func semanticDirection(_ attribute: SemanticDirectionAttribute?) -> Self {
+    func semanticDirection(_ attribute: SemanticDirection?) -> Self {
         set(\T.regulator.semanticDirection, attribute)
     }
 }

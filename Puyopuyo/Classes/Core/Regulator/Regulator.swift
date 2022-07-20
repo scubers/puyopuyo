@@ -8,7 +8,7 @@
 import Foundation
 
 public class Regulator: Measure {
-    public var semanticDirection: SemanticDirectionAttribute? {
+    public var semanticDirection: SemanticDirection? {
         didSet {
             if oldValue != semanticDirection {
                 notifyDidChange()

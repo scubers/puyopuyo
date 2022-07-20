@@ -8,10 +8,10 @@
 import Foundation
 
 struct SemanticDirectionHelper {
-    let attribute: SemanticDirectionAttribute
+    let semanticDirection: SemanticDirection
 
     func transform(format: Format, formattable: Bool, in direction: Direction) -> Format {
-        guard attribute == .rightToLeft, formattable, direction == .horizontal else {
+        guard semanticDirection == .rightToLeft, formattable, direction == .horizontal else {
             return format
         }
         switch format {
@@ -22,7 +22,7 @@ struct SemanticDirectionHelper {
     }
 
     func transform(reverse: Bool, in direction: Direction) -> Bool {
-        guard attribute == .rightToLeft else {
+        guard semanticDirection == .rightToLeft else {
             return reverse
         }
         if direction == .horizontal {
@@ -37,16 +37,16 @@ struct SemanticDirectionHelper {
             // 处理左右
             if new.contains(.leading) || new.contains(.trailing) {
                 if new.contains(.leading) {
-                    new = new.union(attribute.getLeadingAlignment())
+                    new = new.union(semanticDirection.getLeadingAlignment())
                     new.remove(.leading)
                 } else {
-                    new = new.union(attribute.getTrailingAlignment())
+                    new = new.union(semanticDirection.getTrailingAlignment())
                     new.remove(.trailing)
                 }
             }
         }
         var centerRatio = new.centerRatio
-        if new.contains(.horzCenter), attribute == .rightToLeft {
+        if new.contains(.horzCenter), semanticDirection == .rightToLeft {
             centerRatio.x = -centerRatio.x
         }
         return Alignment(rawValue: new.rawValue, ratio: centerRatio)

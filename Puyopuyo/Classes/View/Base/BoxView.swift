@@ -176,7 +176,7 @@ open class BoxView: UIView, MeasureChildrenDelegate, InternalBoxLayoutContainer,
             layoutRegulator.calculatedSize = size
 
             let semanticDirection = layoutRegulator.semanticDirection ?? PuyoAppearence.semanticDirection
-            let centerX = AlignmentHelper.getCrossAlignmentOffset(layoutRegulator, direction: .vertical, justifyContent: .none, parentPadding: .zero, parentSize: superviewSize, semanticAttribute: semanticDirection)
+            let centerX = AlignmentHelper.getCrossAlignmentOffset(layoutRegulator, direction: .vertical, justifyContent: .none, parentPadding: .zero, parentSize: superviewSize, semanticDirection: semanticDirection)
             let centerY = AlignmentHelper.getCrossAlignmentOffset(layoutRegulator, direction: .horizontal, justifyContent: .none, parentPadding: .zero, parentSize: superviewSize)
 
             layoutRegulator.calculatedCenter = .init(x: centerX, y: centerY)
