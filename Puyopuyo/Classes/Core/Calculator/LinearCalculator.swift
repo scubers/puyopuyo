@@ -434,11 +434,12 @@ class _LinearCalculator {
         var standardLastEnd: CGFloat = 0
 
         let reverse = transformReverseByRTLConfig(regulator.reverse)
+        let format = transformFormatByRTLConfig(regCalFormat)
         for index in 0 ..< measures.count {
             // 获取计算对象，根据是否反转获取
             let m: Measure = reverse ? measures[measures.count - index - 1] : measures[index]
             // 计算cross偏移
-            let cross: CGFloat = AlignmentHelper.getCrossAlignmentOffset(m, direction: regDirection, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: intrinsic, horzReverse: shouldCrossCheckRTL)
+            let cross: CGFloat = AlignmentHelper.getCrossAlignmentOffset(m, direction: regDirection, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: intrinsic)
 
             let calMargin = CalEdges(insets: m.margin, direction: regulator.direction)
             let calFixedSize = CalFixedSize(cgSize: m.calculatedSize, direction: regulator.direction)
@@ -450,7 +451,7 @@ class _LinearCalculator {
             let itemSpaceDelta: CGFloat = spaceDelta * calIndex
 
             var main = standardMain + regCalPadding.leading
-            switch transformFormatByRTLConfig(regCalFormat) {
+            switch format {
             case .leading:
                 main += itemSpaceDelta
             case .trailing:
@@ -469,10 +470,6 @@ class _LinearCalculator {
         }
     }
 
-//    private var shouldCheckRTL: Bool {
-//        regDirection == .horizontal && PuyoAppearence.isRTL
-//    }
-    
     private var shouldCrossCheckRTL: Bool {
         regDirection == .vertical && PuyoAppearence.isRTL
     }
