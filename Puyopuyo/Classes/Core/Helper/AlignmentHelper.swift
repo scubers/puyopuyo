@@ -15,7 +15,12 @@ enum AlignmentHelper {
         let subCalMargin = measure.margin.getCalEdges(by: direction)
         let subFixedSize = measure.calculatedSize.getCalFixedSize(by: direction)
 
-        let targetAlignment: Alignment = measure.alignment.hasCrossAligment(for: direction) ? measure.alignment : justifyContent
+        let targetAlignment: Alignment = {
+            if measure.alignment == .none || measure.alignment.hasCrossAligment(for: direction) {
+                return measure.alignment
+            }
+            return justifyContent
+        }()
 
         var calAlignment: CalAlignment
         if direction == .horizontal {

@@ -438,11 +438,12 @@ class _LinearCalculator {
 
         let reverse = helper.transform(reverse: regulator.reverse, in: regDirection)
         let format = helper.transform(format: regCalFormat, formattable: formattable, in: regDirection)
+        let justifyContent = regulator.justifyContent.hasCrossAligment(for: regDirection) ? regulator.justifyContent : .center
         for index in 0 ..< measures.count {
             // 获取计算对象，根据是否反转获取
             let m: Measure = reverse ? measures[measures.count - index - 1] : measures[index]
             // 计算cross偏移
-            let cross: CGFloat = AlignmentHelper.getCrossAlignmentOffset(m, direction: regDirection, justifyContent: regulator.justifyContent, parentPadding: regulator.padding, parentSize: intrinsic, semanticDirection: semanticDirection)
+            let cross: CGFloat = AlignmentHelper.getCrossAlignmentOffset(m, direction: regDirection, justifyContent: justifyContent, parentPadding: regulator.padding, parentSize: intrinsic, semanticDirection: semanticDirection)
 
             let calMargin = CalEdges(insets: m.margin, direction: regulator.direction)
             let calFixedSize = CalFixedSize(cgSize: m.calculatedSize, direction: regulator.direction)
