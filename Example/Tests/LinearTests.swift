@@ -1,4 +1,4 @@
-import Puyopuyo
+@testable import Puyopuyo
 import SnapKit
 import TangramKit
 import XCTest

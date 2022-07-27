@@ -13,80 +13,80 @@ import Foundation
 
  Size -> CalSize
  CGSize -> CalFixedSize
- CGPoint -> CalCenter
+ CGPoint -> CalPoint
  UIEdgeInset -> CalEdges
 
  ------------------------
  direction = x
          start
- leading        traling
+ forward       backward
           end
 
  ------------------------
  direction = y
-      leading
- start       end
-      traling
+      forward
+ start        end
+      backward
  ------------------------
 
  */
 
-public struct CalEdges {
-    public private(set) var direction: Direction = .x
-    public var leading: CGFloat = 0
-    public var start: CGFloat = 0
-    public var end: CGFloat = 0
-    public var trailing: CGFloat = 0
+struct CalEdges {
+    private(set) var direction: Direction = .x
+    var forward: CGFloat = 0
+    var start: CGFloat = 0
+    var end: CGFloat = 0
+    var backward: CGFloat = 0
 
-    public init(leading: CGFloat = 0, start: CGFloat = 0, trailing: CGFloat = 0, end: CGFloat = 0, direction: Direction = .x) {
-        self.leading = leading
+    init(leading: CGFloat = 0, start: CGFloat = 0, trailing: CGFloat = 0, end: CGFloat = 0, direction: Direction = .x) {
+        self.forward = leading
         self.start = start
-        self.trailing = trailing
+        self.backward = trailing
         self.end = end
         self.direction = direction
     }
 
-    public init(insets: UIEdgeInsets = .zero, direction: Direction) {
+    init(insets: UIEdgeInsets = .zero, direction: Direction) {
         self.direction = direction
         if case .x = direction {
-            leading = insets.left
+            forward = insets.left
             start = insets.top
-            trailing = insets.right
+            backward = insets.right
             end = insets.bottom
         } else {
-            leading = insets.top
+            forward = insets.top
             start = insets.left
-            trailing = insets.bottom
+            backward = insets.bottom
             end = insets.right
         }
     }
 
-    public func getInsets() -> UIEdgeInsets {
+    func getInsets() -> UIEdgeInsets {
         var insets = UIEdgeInsets.zero
         if case .x = direction {
             insets.top = start
-            insets.left = leading
+            insets.left = forward
             insets.bottom = end
-            insets.right = trailing
+            insets.right = backward
         } else {
-            insets.top = leading
+            insets.top = forward
             insets.left = start
-            insets.bottom = trailing
+            insets.bottom = backward
             insets.right = end
         }
         return insets
     }
 
-    public var mainFixed: CGFloat {
-        return leading + trailing
+    var mainFixed: CGFloat {
+        return forward + backward
     }
 
-    public var crossFixed: CGFloat {
+    var crossFixed: CGFloat {
         return start + end
     }
 }
 
-public extension UIEdgeInsets {
+extension UIEdgeInsets {
     func getCalEdges(by direction: Direction) -> CalEdges {
         return CalEdges(insets: self, direction: direction)
     }
@@ -100,18 +100,18 @@ public extension UIEdgeInsets {
     }
 }
 
-public struct CalPoint {
-    public var direction: Direction
-    public var main: CGFloat = 0
-    public var cross: CGFloat = 0
+struct CalPoint {
+    var direction: Direction
+    var main: CGFloat = 0
+    var cross: CGFloat = 0
 
-    public init(main: CGFloat = 0, cross: CGFloat = 0, direction: Direction) {
+    init(main: CGFloat = 0, cross: CGFloat = 0, direction: Direction) {
         self.main = main
         self.cross = cross
         self.direction = direction
     }
 
-    public init(point: CGPoint, direction: Direction) {
+    init(point: CGPoint, direction: Direction) {
         self.direction = direction
         if direction == .x {
             main = point.x
@@ -122,7 +122,7 @@ public struct CalPoint {
         }
     }
 
-    public func getPoint() -> CGPoint {
+    func getPoint() -> CGPoint {
         if direction == .x {
             return CGPoint(x: main, y: cross)
         }
@@ -136,18 +136,18 @@ extension CGPoint {
     }
 }
 
-public struct CalSize {
-    public private(set) var direction: Direction = .x
+struct CalSize {
+    private(set) var direction: Direction = .x
 
-    public var main: SizeDescription
-    public var cross: SizeDescription
-    public init(main: SizeDescription, cross: SizeDescription, direction: Direction) {
+    var main: SizeDescription
+    var cross: SizeDescription
+    init(main: SizeDescription, cross: SizeDescription, direction: Direction) {
         self.main = main
         self.cross = cross
         self.direction = direction
     }
 
-    public init(size: Size, direction: Direction) {
+    init(size: Size, direction: Direction) {
         self.direction = direction
         if case .x = direction {
             main = size.width
@@ -158,7 +158,7 @@ public struct CalSize {
         }
     }
 
-    public func getSize() -> Size {
+    func getSize() -> Size {
         if case .x = direction {
             return Size(width: main, height: cross)
         } else {
@@ -167,24 +167,24 @@ public struct CalSize {
     }
 }
 
-public extension Size {
+extension Size {
     func getCalSize(by direction: Direction) -> CalSize {
         return CalSize(size: self, direction: direction)
     }
 }
 
-public struct CalFixedSize {
-    public private(set) var direction: Direction = .x
+struct CalFixedSize {
+    private(set) var direction: Direction = .x
 
-    public var main: CGFloat
-    public var cross: CGFloat
-    public init(main: CGFloat, cross: CGFloat, direction: Direction) {
+    var main: CGFloat
+    var cross: CGFloat
+    init(main: CGFloat, cross: CGFloat, direction: Direction) {
         self.main = main
         self.cross = cross
         self.direction = direction
     }
 
-    public init(cgSize: CGSize, direction: Direction) {
+    init(cgSize: CGSize, direction: Direction) {
         self.direction = direction
         if case .x = direction {
             main = cgSize.width
@@ -195,7 +195,7 @@ public struct CalFixedSize {
         }
     }
 
-    public func getSize() -> CGSize {
+    func getSize() -> CGSize {
         if case .x = direction {
             return CGSize(width: main, height: cross)
         } else {
@@ -204,7 +204,7 @@ public struct CalFixedSize {
     }
 }
 
-public extension CGSize {
+extension CGSize {
     func getCalFixedSize(by direction: Direction) -> CalFixedSize {
         return CalFixedSize(cgSize: self, direction: direction)
     }
