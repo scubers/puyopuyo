@@ -37,6 +37,44 @@ public struct CalEdges {
     public var end: CGFloat = 0
     public var backward: CGFloat = 0
 
+    public init(insets: BorderInsets, direction: Direction, in semanticDirection: SemanticDirection) {
+        switch direction {
+        case .horizontal:
+            forward = insets.top
+            backward = insets.bottom
+            if insets.isHorzSemantic {
+                switch semanticDirection {
+                case .leftToRight:
+                    start = insets.leading
+                    end = insets.trailing
+                case .rightToLeft:
+                    start = insets.trailing
+                    end = insets.leading
+                }
+            } else {
+                start = insets.left ?? 0
+                end = insets.right ?? 0
+            }
+
+        case .vertical:
+            start = insets.top
+            end = insets.bottom
+            if insets.isHorzSemantic {
+                switch semanticDirection {
+                case .leftToRight:
+                    forward = insets.leading
+                    backward = insets.trailing
+                case .rightToLeft:
+                    forward = insets.trailing
+                    backward = insets.leading
+                }
+            } else {
+                forward = insets.left ?? 0
+                backward = insets.right ?? 0
+            }
+        }
+    }
+
     public init(insets: UIEdgeInsets = .zero, direction: Direction) {
         if case .x = direction {
             start = insets.left
