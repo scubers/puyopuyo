@@ -31,13 +31,13 @@ enum AlignmentHelper {
 
         return getAlignmentPosition(
             containerSize: parentCalSize.cross,
-            startPadding: parentCalPadding.start,
-            endPadding: parentCalPadding.end,
+            startPadding: parentCalPadding.forward,
+            endPadding: parentCalPadding.backward,
 
             contentSize: subFixedSize.cross,
 
-            startMargin: subCalMargin.start,
-            endMargin: subCalMargin.end,
+            startMargin: subCalMargin.forward,
+            endMargin: subCalMargin.backward,
 
             alignment: calAlignment
         ) ?? 0

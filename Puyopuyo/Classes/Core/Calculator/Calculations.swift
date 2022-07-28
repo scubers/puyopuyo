@@ -18,71 +18,45 @@ import Foundation
 
  ------------------------
  direction = x
-         start
- leading        traling
-          end
+      forward
+ start        end
+      backward
 
  ------------------------
  direction = y
-      leading
- start       end
-      traling
+        start
+ forward     backward
+         end
  ------------------------
 
  */
 
 public struct CalEdges {
-    public private(set) var direction: Direction = .x
-    public var leading: CGFloat = 0
     public var start: CGFloat = 0
+    public var forward: CGFloat = 0
     public var end: CGFloat = 0
-    public var trailing: CGFloat = 0
-
-    public init(leading: CGFloat = 0, start: CGFloat = 0, trailing: CGFloat = 0, end: CGFloat = 0, direction: Direction = .x) {
-        self.leading = leading
-        self.start = start
-        self.trailing = trailing
-        self.end = end
-        self.direction = direction
-    }
+    public var backward: CGFloat = 0
 
     public init(insets: UIEdgeInsets = .zero, direction: Direction) {
-        self.direction = direction
         if case .x = direction {
-            leading = insets.left
-            start = insets.top
-            trailing = insets.right
-            end = insets.bottom
-        } else {
-            leading = insets.top
             start = insets.left
-            trailing = insets.bottom
+            forward = insets.top
             end = insets.right
-        }
-    }
-
-    public func getInsets() -> UIEdgeInsets {
-        var insets = UIEdgeInsets.zero
-        if case .x = direction {
-            insets.top = start
-            insets.left = leading
-            insets.bottom = end
-            insets.right = trailing
+            backward = insets.bottom
         } else {
-            insets.top = leading
-            insets.left = start
-            insets.bottom = trailing
-            insets.right = end
+            start = insets.top
+            forward = insets.left
+            end = insets.bottom
+            backward = insets.right
         }
-        return insets
     }
 
     public var mainFixed: CGFloat {
-        return leading + trailing
+        return start + end
     }
 
     public var crossFixed: CGFloat {
-        return start + end
+        return forward + backward
     }
 }
 

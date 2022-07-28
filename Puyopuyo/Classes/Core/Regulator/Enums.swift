@@ -176,3 +176,45 @@ public extension Alignment {
         return contains(.right)
     }
 }
+
+public struct BorderInsets: Equatable {
+    public var top: CGFloat = 0
+    public var left: CGFloat?
+    public var bottom: CGFloat = 0
+    public var right: CGFloat?
+    public var leading: CGFloat = 0
+    public var trailing: CGFloat = 0
+
+    public static var zero: BorderInsets { .init() }
+
+    public var isHorzSemantic: Bool {
+        left == nil && right == nil
+    }
+
+    public func getVertTotal() -> CGFloat { top + bottom }
+
+    public func getHorzTotal(in direction: SemanticDirection) -> CGFloat {
+        if isHorzSemantic {
+            return leading + trailing
+        }
+        return (left ?? 0) + (right ?? 0)
+    }
+
+    public func getMainTotal(_ direction: Direction, semanticDirection: SemanticDirection) -> CGFloat {
+        switch direction {
+        case .horizontal:
+            return getHorzTotal(in: semanticDirection)
+        case .vertical:
+            return getVertTotal()
+        }
+    }
+
+    public func getCrossTotal(_ direction: Direction, semanticDirection: SemanticDirection) -> CGFloat {
+        switch direction {
+        case .horizontal:
+            return getVertTotal()
+        case .vertical:
+            return getHorzTotal(in: semanticDirection)
+        }
+    }
+}
