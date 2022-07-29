@@ -144,7 +144,7 @@ class MessageView: HBox, Stateful, Eventable {
                 .backgroundColor(isSelf.map { $0 ? Theme.accentColor : .secondarySystemGroupedBackground })
                 .cornerRadius(8)
             }
-            .justifyContent(isSelf.map { $0 ? .right : .left })
+            .justifyContent(isSelf.map { $0 ? .trailing : .leading })
         }
         .space(8)
         .format(isSelf.map { $0 ? .trailing : .leading })

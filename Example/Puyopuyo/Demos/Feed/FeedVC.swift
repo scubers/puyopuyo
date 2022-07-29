@@ -165,7 +165,7 @@ private class Header: VBox {
             .justifyContent(.center)
             .space(8)
         }
-        .justifyContent(.right)
+        .justifyContent(.trailing)
         .width(.fill)
         .backgroundColor(.systemBackground)
     }
