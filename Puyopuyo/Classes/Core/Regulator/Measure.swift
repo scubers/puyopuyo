@@ -33,7 +33,7 @@ public class Measure {
 
     private var notifier = SimpleIO<Void>()
 
-    public var margin = UIEdgeInsets.zero {
+    public var margin = BorderInsets.zero {
         didSet {
             if oldValue != margin {
                 notifyDidChange()
@@ -111,7 +111,7 @@ public class Measure {
     public var calculatedCenter: CGPoint = .zero
 
     public var calculatedSizeWithMargin: CGSize {
-        calculatedSize.expand(edge: margin).ensureNotNegative()
+        calculatedSize.expand(edge: margin.getFixedSize()).ensureNotNegative()
     }
 
     public func enumerateChildren(_ block: (Measure) -> Void) {

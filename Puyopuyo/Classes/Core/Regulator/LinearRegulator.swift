@@ -53,10 +53,6 @@ public class LinearRegulator: Regulator {
         }
     }
 
-    public func getCalPadding() -> CalEdges {
-        return CalEdges(insets: padding, direction: direction)
-    }
-
     override public func createCalculator() -> Calculator {
         LinearCalculator()
     }

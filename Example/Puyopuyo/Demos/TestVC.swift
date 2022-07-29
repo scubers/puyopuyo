@@ -70,15 +70,27 @@ class TestVC: BaseViewController {
             UIView().attach($0)
                 .size(50, 50)
             
-            VBox().attach($0) {
+            HBox().attach($0) {
                 UILabel().attach($0)
                     .text("1")
                     .textAlignment(.center)
                     .size(50, 50)
+                
+                UILabel().attach($0)
+                    .text("2")
+                    .textAlignment(.center)
+                    .margin(leading: 20, trailing: 15)
+                    .size(50, 50)
+                
+                UILabel().attach($0)
+                    .text("3")
+                    .textAlignment(.center)
+                    .size(50, 50)
             }
-            .justifyContent(.top)
+            .format(.leading)
             .alignment(.center)
-            .size(400, 400)
+            .size(400, 200)
+            .padding(leading: 10)
             .diagnosis("99")
         }
         

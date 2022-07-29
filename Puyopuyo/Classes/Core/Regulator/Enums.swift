@@ -177,7 +177,18 @@ public extension Alignment {
     }
 }
 
-public struct BorderInsets: Equatable {
+public struct BorderInsets: Equatable, Outputing {
+    public init(top: CGFloat = 0, left: CGFloat? = nil, bottom: CGFloat = 0, right: CGFloat? = nil, leading: CGFloat = 0, trailing: CGFloat = 0) {
+        self.top = top
+        self.left = left
+        self.bottom = bottom
+        self.right = right
+        self.leading = leading
+        self.trailing = trailing
+    }
+
+    public typealias OutputType = BorderInsets
+
     public var top: CGFloat = 0
     public var left: CGFloat?
     public var bottom: CGFloat = 0
@@ -187,34 +198,46 @@ public struct BorderInsets: Equatable {
 
     public static var zero: BorderInsets { .init() }
 
+    public static func from(_ insets: UIEdgeInsets) -> BorderInsets {
+        .init(top: insets.top, left: insets.left, bottom: insets.bottom, right: insets.right)
+    }
+
     public var isHorzSemantic: Bool {
         left == nil && right == nil
     }
 
+    public func getFixedSize() -> CGSize {
+        .init(width: getHorzTotal(), height: getVertTotal())
+    }
+
+    public func getCalFixedSize(in direction: Direction) -> CalFixedSize {
+        .init(main: getMainTotal(direction), cross: getCrossTotal(direction), direction: direction)
+    }
+
     public func getVertTotal() -> CGFloat { top + bottom }
 
-    public func getHorzTotal(in direction: SemanticDirection) -> CGFloat {
+    public func getHorzTotal() -> CGFloat {
         if isHorzSemantic {
             return leading + trailing
         }
         return (left ?? 0) + (right ?? 0)
     }
 
-    public func getMainTotal(_ direction: Direction, semanticDirection: SemanticDirection) -> CGFloat {
+    public func getMainTotal(_ direction: Direction) -> CGFloat {
         switch direction {
         case .horizontal:
-            return getHorzTotal(in: semanticDirection)
+            return getHorzTotal()
         case .vertical:
             return getVertTotal()
         }
     }
 
-    public func getCrossTotal(_ direction: Direction, semanticDirection: SemanticDirection) -> CGFloat {
+    public func getCrossTotal(_ direction: Direction) -> CGFloat {
         switch direction {
         case .horizontal:
             return getVertTotal()
         case .vertical:
-            return getHorzTotal(in: semanticDirection)
+            return getHorzTotal()
         }
     }
 }

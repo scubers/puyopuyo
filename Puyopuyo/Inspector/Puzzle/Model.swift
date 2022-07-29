@@ -19,12 +19,12 @@ struct PuzzleInsets: CodableType {
     var bottom: CGFloat?
     var right: CGFloat?
 
-    func getInsets() -> UIEdgeInsets {
+    func getInsets() -> BorderInsets {
         return .init(top: top ?? 0, left: left ?? 0, bottom: bottom ?? 0, right: right ?? 0)
     }
 
-    static func from(_ insets: UIEdgeInsets) -> PuzzleInsets {
-        return .init(top: insets.top, left: insets.left, bottom: insets.bottom, right: insets.right)
+    static func from(_ insets: BorderInsets) -> PuzzleInsets {
+        return .init(top: insets.top, left: insets.left ?? 0, bottom: insets.bottom, right: insets.right ?? 0)
     }
 }
 

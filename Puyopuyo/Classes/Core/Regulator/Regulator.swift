@@ -27,7 +27,7 @@ public class Regulator: Measure {
         }
     }
 
-    public var padding = UIEdgeInsets.zero {
+    public var padding = BorderInsets.zero {
         didSet {
             if oldValue != padding {
                 notifyDidChange()

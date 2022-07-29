@@ -15,16 +15,6 @@ public extension Puyo where T: BoxView {
         set(\T.isScrollViewControl, judge)
     }
 
-//    @discardableResult
-//    func centerControl(_ control: BoxView.RootBoxConfig.ControlType) -> Self {
-//        set(\T.rootBoxConfig.centerControl, control)
-//    }
-
-//    @discardableResult
-//    func sizeControl(_ control: BoxView.RootBoxConfig.ControlType) -> Self {
-//        set(\T.rootBoxConfig.sizeControl, control)
-//    }
-
     @discardableResult
     func borders(_ options: [BorderOptions]) -> Self {
         set(\T.borders, Borders.all(Border(options: options)))
@@ -56,17 +46,19 @@ public extension Puyo where T: RegulatorSpecifier & AutoDisposable {
     func padding(all: CGFloatable? = nil,
                  horz: CGFloatable? = nil,
                  vert: CGFloatable? = nil,
+                 leading: CGFloatable? = nil,
+                 trailing: CGFloatable? = nil,
                  top: CGFloatable? = nil,
                  left: CGFloatable? = nil,
                  bottom: CGFloatable? = nil,
                  right: CGFloatable? = nil) -> Self
     {
-        PuyoHelper.padding(for: view.regulator, all: all?.cgFloatValue, horz: horz?.cgFloatValue, vert: vert?.cgFloatValue, top: top?.cgFloatValue, left: left?.cgFloatValue, bottom: bottom?.cgFloatValue, right: right?.cgFloatValue)
+        PuyoHelper.padding(for: view.regulator, all: all?.cgFloatValue, horz: horz?.cgFloatValue, vert: vert?.cgFloatValue, top: top?.cgFloatValue, left: left?.cgFloatValue, bottom: bottom?.cgFloatValue, right: right?.cgFloatValue, leading: leading?.cgFloatValue, trailing: trailing?.cgFloatValue)
         return self
     }
 
     @discardableResult
-    func padding<S: Outputing>(all: S? = nil, horz: S? = nil, vert: S? = nil, top: S? = nil, left: S? = nil, bottom: S? = nil, right: S? = nil) -> Self where S.OutputType: CGFloatable {
+    func padding<S: Outputing>(all: S? = nil, horz: S? = nil, vert: S? = nil, leading: S? = nil, trailing: S? = nil, top: S? = nil, left: S? = nil, bottom: S? = nil, right: S? = nil) -> Self where S.OutputType: CGFloatable {
         if let s = all {
             doOn(s) { PuyoHelper.padding(for: $0.regulator, all: $1.cgFloatValue) }
         }
@@ -88,12 +80,23 @@ public extension Puyo where T: RegulatorSpecifier & AutoDisposable {
         if let s = right {
             doOn(s) { PuyoHelper.padding(for: $0.regulator, right: $1.cgFloatValue) }
         }
+        if let s = leading {
+            doOn(s) { PuyoHelper.padding(for: $0.regulator, leading: $1.cgFloatValue) }
+        }
+        if let s = trailing {
+            doOn(s) { PuyoHelper.padding(for: $0.regulator, trailing: $1.cgFloatValue) }
+        }
         return self
     }
 
     @discardableResult
-    func padding<O: Outputing>(_ padding: O) -> Self where O.OutputType == UIEdgeInsets {
+    func padding<O: Outputing>(_ padding: O) -> Self where O.OutputType == BorderInsets {
         set(\T.regulator.padding, padding)
+    }
+
+    @discardableResult
+    func padding<O: Outputing>(_ padding: O) -> Self where O.OutputType == UIEdgeInsets {
+        set(\T.regulator.padding, padding.asOutput().map(BorderInsets.from(_:)))
     }
 
     @discardableResult
@@ -105,7 +108,7 @@ public extension Puyo where T: RegulatorSpecifier & AutoDisposable {
     func justifyContent<O: Outputing>(_ alignment: O) -> Self where O.OutputType == Alignment {
         set(\T.regulator.justifyContent, alignment)
     }
-    
+
     @discardableResult
     func semanticDirection(_ attribute: SemanticDirection?) -> Self {
         set(\T.regulator.semanticDirection, attribute)

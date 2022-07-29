@@ -81,12 +81,12 @@ extension CGSize {
             .ensureNotNegative()
     }
 
-    func expand(edge: UIEdgeInsets) -> CGSize {
-        return CGSize(width: width + edge.getHorzTotal(), height: height + edge.getVertTotal())
+    func expand(edge: CGSize) -> CGSize {
+        return CGSize(width: width + edge.width, height: height + edge.height)
     }
 
-    func collapse(edge: UIEdgeInsets) -> CGSize {
-        return CGSize(width: width - edge.getHorzTotal(), height: height - edge.getVertTotal())
+    func collapse(edge: CGSize) -> CGSize {
+        return CGSize(width: width - edge.width, height: height - edge.height)
     }
 }
 

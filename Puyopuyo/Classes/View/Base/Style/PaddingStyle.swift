@@ -7,7 +7,7 @@
 
 import Foundation
 
-public class PaddingStyle: CommonValueStyle<UIEdgeInsets, PaddingDecorable> {
+public class PaddingStyle: CommonValueStyle<BorderInsets, PaddingDecorable> {
     public override func applyDecorable(_ v: PaddingDecorable) {
         v.applyPadding(value)
     }

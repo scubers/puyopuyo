@@ -8,9 +8,9 @@
 import Foundation
 
 class PuyoHelper {
-    static func margin(for measure: Measure, all: CGFloat? = nil, horz: CGFloat? = nil, vert: CGFloat? = nil, top: CGFloat? = nil, left: CGFloat? = nil, bottom: CGFloat? = nil, right: CGFloat? = nil) {
+    static func margin(for measure: Measure, all: CGFloat? = nil, horz: CGFloat? = nil, vert: CGFloat? = nil, top: CGFloat? = nil, left: CGFloat? = nil, bottom: CGFloat? = nil, right: CGFloat? = nil, leading: CGFloat? = nil, trailing: CGFloat? = nil) {
         if let all = all {
-            measure.margin = UIEdgeInsets(top: all, left: all, bottom: all, right: all)
+            measure.margin = BorderInsets(top: all, left: all, bottom: all, right: all, leading: all, trailing: all)
         }
         if let horz = horz {
             measure.margin.left = horz
@@ -24,11 +24,13 @@ class PuyoHelper {
         if let left = left { measure.margin.left = left }
         if let bottom = bottom { measure.margin.bottom = bottom }
         if let right = right { measure.margin.right = right }
+        if let v = leading { measure.margin.leading = v }
+        if let v = trailing { measure.margin.trailing = v }
     }
 
-    static func padding(for regulator: Regulator, all: CGFloat? = nil, horz: CGFloat? = nil, vert: CGFloat? = nil, top: CGFloat? = nil, left: CGFloat? = nil, bottom: CGFloat? = nil, right: CGFloat? = nil) {
+    static func padding(for regulator: Regulator, all: CGFloat? = nil, horz: CGFloat? = nil, vert: CGFloat? = nil, top: CGFloat? = nil, left: CGFloat? = nil, bottom: CGFloat? = nil, right: CGFloat? = nil, leading: CGFloat? = nil, trailing: CGFloat? = nil) {
         if let all = all {
-            regulator.padding = UIEdgeInsets(top: all, left: all, bottom: all, right: all)
+            regulator.padding = BorderInsets(top: all, left: all, bottom: all, right: all, leading: all, trailing: all)
         }
         if let horz = horz {
             regulator.padding.left = horz
@@ -42,5 +44,7 @@ class PuyoHelper {
         if let left = left { regulator.padding.left = left }
         if let bottom = bottom { regulator.padding.bottom = bottom }
         if let right = right { regulator.padding.right = right }
+        if let v = leading { regulator.padding.leading = v }
+        if let v = trailing { regulator.padding.trailing = v }
     }
 }

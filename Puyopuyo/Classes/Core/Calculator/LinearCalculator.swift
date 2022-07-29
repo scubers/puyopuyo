@@ -28,11 +28,11 @@ class _LinearCalculator {
     }
 
     // MARK: Getter
-
+    var regSemanticDirection: SemanticDirection { regulator.semanticDirection ?? PuyoAppearence.semanticDirection }
     /// 当前剩余尺寸，需要根据属性进行计算，由于当前计算即所有剩余尺寸，所以ratio为比例相同
     var regCalChildrenLayoutResidual: CalFixedSize { CalFixedSize(cgSize: childrenLayoutResidual, direction: regulator.direction) }
-    var regCalMargin: CalEdges { CalEdges(insets: regulator.margin, direction: regulator.direction) }
-    var regCalPadding: CalEdges { CalEdges(insets: regulator.padding, direction: regulator.direction) }
+//    var regCalMargin: CalEdges { CalEdges(insets: regulator.margin, direction: regulator.direction) }
+    var regCalPadding: CalEdges { CalEdges(insets: regulator.padding, direction: regulator.direction, in: regSemanticDirection) }
     var regCalSize: CalSize { CalSize(size: regulator.size, direction: regulator.direction) }
     var regDirection: Direction { regulator.direction }
 
@@ -112,7 +112,7 @@ class _LinearCalculator {
     private func calculateRegulatorSize() -> CGSize {
         let contentSize = CalFixedSize(main: totalChildrenTightContentWithMarginAndSpace, cross: maxCrossChildrenContent, direction: regDirection)
             .getSize()
-            .expand(edge: regulator.padding)
+            .expand(edge: regulator.padding.getFixedSize())
         return IntrinsicSizeHelper.getIntrinsicSize(from: regulator.size, contentResidual: contentResidual, wrappedContent: contentSize)
     }
 
@@ -215,7 +215,7 @@ class _LinearCalculator {
                 return
             }
 
-            let subCalMargin = m.margin.getCalEdges(by: regDirection)
+            let subCalMargin = CalEdges(insets: m.margin, direction: regDirection, in: regSemanticDirection)// m.margin.getCalEdges(by: regDirection)
 
             // 校验是否可format: 主轴包裹, 或者存在子主轴比重，则不可以被format
             if formattable, regCalSize.main.isWrap || subCalSize.main.isRatio {
@@ -267,7 +267,7 @@ class _LinearCalculator {
     private func appendChildrenToCalculatedSize(_ measure: Measure) {
         // 计算后把包裹的大小进行累加
         let subFixedSize = CalFixedSize(cgSize: measure.calculatedSize, direction: regDirection)
-        let subCalMargin = measure.margin.getCalEdges(by: regDirection)
+        let subCalMargin = CalEdges(insets: measure.margin, direction: regDirection, in: regSemanticDirection)
         let subCalSize = measure.size.getCalSize(by: regDirection)
         if subCalSize.main.isRatio {
             totalRatioChildrenMainContent += subFixedSize.main
@@ -290,7 +290,7 @@ class _LinearCalculator {
 
     private func getCurrentChildLayoutResidualCalFixedSize(_ measure: Measure, estimateCross: CGFloat?) -> CalFixedSize {
         let subCalSize = measure.size.getCalSize(by: regDirection)
-        let subCalMargin = measure.margin.getCalEdges(by: regDirection)
+        let subCalMargin = CalEdges(insets: measure.margin, direction: regDirection, in: regSemanticDirection)
 
         // 总剩余空间 - 主轴固定长度 + 当前节点主轴margin
         var mainLayoutResidual: CGFloat?
@@ -362,7 +362,7 @@ class _LinearCalculator {
         let residualSize = totalMainRatioLayoutResidual
         mainGrowChildren.forEach { m in
             let calSize = m.size.getCalSize(by: regDirection)
-            let calMargin = m.margin.getCalEdges(by: regDirection)
+            let calMargin = CalEdges(insets: m.margin, direction: regDirection, in: regSemanticDirection)
             let calFixedSize = m.calculatedSize.getCalFixedSize(by: regDirection)
 
             // 被分配的扩展长度
@@ -398,7 +398,7 @@ class _LinearCalculator {
             if calSize.main.isWrap, calSize.main.shrink > 0 {
                 let calFixedSize = $0.calculatedSize.getCalFixedSize(by: regDirection)
 
-                let calMargin = $0.margin.getCalEdges(by: regDirection)
+                let calMargin = CalEdges(insets: $0.margin, direction: regDirection, in: regSemanticDirection)
                 // 需要压缩的主轴长度
                 let delta = overflowSize * (calSize.main.shrink / totalShrink)
 
@@ -445,7 +445,7 @@ class _LinearCalculator {
             // 计算cross偏移
             let cross: CGFloat = AlignmentHelper.getCrossAlignmentOffset(m, direction: regDirection, justifyContent: justifyContent, parentPadding: regulator.padding, parentSize: intrinsic, semanticDirection: semanticDirection)
 
-            let calMargin = CalEdges(insets: m.margin, direction: regulator.direction)
+            let calMargin = CalEdges(insets: m.margin, direction: regulator.direction, in: regSemanticDirection)
             let calFixedSize = CalFixedSize(cgSize: m.calculatedSize, direction: regulator.direction)
             let standardMain: CGFloat = standardLastEnd + calMargin.start + (calFixedSize.main / 2)
             standardLastEnd = standardMain + (calFixedSize.main / 2) + calMargin.end

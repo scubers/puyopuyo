@@ -30,7 +30,8 @@ class _FlowCalculator {
         return CalFixedSize(cgSize: size, direction: regDirection)
     }()
 
-    var regCalPadding: CalEdges { CalEdges(insets: regulator.padding, direction: regDirection) }
+//    var regCalPadding: CalEdges { CalEdges(insets: regulator.padding, direction: regDirection) }
+    var regSemanticDirection: SemanticDirection { regulator.semanticDirection ?? PuyoAppearence.semanticDirection }
     var regCalSize: CalSize { CalSize(size: regulator.size, direction: regDirection) }
 
     func calculate() -> CGSize {
@@ -58,7 +59,7 @@ class _FlowCalculator {
             let subCalSize = m.size.getCalSize(by: regDirection)
 
             let subCalFixedSize = IntrinsicSizeHelper.calculateIntrinsicSize(for: m, layoutResidual: regChildrenResidualCalSize.getSize(), strategy: m.isLayoutEntryPoint ? .estimate : .calculate, diagnosisMsg: "FlowCalculator content test calculating").getCalFixedSize(by: regDirection)
-            let subCalMargin = CalEdges(insets: m.margin, direction: regDirection)
+            let subCalMargin = CalEdges(insets: m.margin, direction: regDirection, in: regSemanticDirection)
 
             let space = CGFloat(Swift.min(1, currentLine.count)) * regulator.itemSpace
             // 计算当前累计的最大cross

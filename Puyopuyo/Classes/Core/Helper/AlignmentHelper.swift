@@ -8,11 +8,11 @@
 import Foundation
 
 enum AlignmentHelper {
-    static func getCrossAlignmentOffset(_ measure: Measure, direction: Direction, justifyContent: Alignment, parentPadding: UIEdgeInsets, parentSize: CGSize, semanticDirection: SemanticDirection = .leftToRight) -> CGFloat {
+    static func getCrossAlignmentOffset(_ measure: Measure, direction: Direction, justifyContent: Alignment, parentPadding: BorderInsets, parentSize: CGSize, semanticDirection: SemanticDirection = .leftToRight) -> CGFloat {
         let parentCalSize = parentSize.getCalFixedSize(by: direction)
-        let parentCalPadding = parentPadding.getCalEdges(by: direction)
+        let parentCalPadding = CalEdges(insets: parentPadding, direction: direction, in: semanticDirection)
 
-        let subCalMargin = measure.margin.getCalEdges(by: direction)
+        let subCalMargin = CalEdges(insets: measure.margin, direction: direction, in: semanticDirection)
         let subFixedSize = measure.calculatedSize.getCalFixedSize(by: direction)
 
         let targetAlignment: Alignment = {

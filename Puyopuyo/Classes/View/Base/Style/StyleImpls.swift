@@ -238,7 +238,7 @@ extension UISwitch: TintColorDecorable {
 }
 
 extension BoxView: PaddingDecorable {
-    public func applyPadding(_ padding: UIEdgeInsets) {
+    public func applyPadding(_ padding: BorderInsets) {
         layoutRegulator.padding = padding
     }
 }

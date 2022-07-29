@@ -55,5 +55,5 @@ public protocol BgImageDecorable {
 }
 
 public protocol PaddingDecorable {
-    func applyPadding(_ padding: UIEdgeInsets)
+    func applyPadding(_ padding: BorderInsets)
 }

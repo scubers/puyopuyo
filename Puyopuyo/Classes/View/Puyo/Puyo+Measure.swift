@@ -96,12 +96,14 @@ public extension Puyo where T: BoxLayoutNode & AutoDisposable {
     func margin(all: CGFloatable? = nil,
                 horz: CGFloatable? = nil,
                 vert: CGFloatable? = nil,
+                leading: CGFloatable? = nil,
+                trailing: CGFloatable? = nil,
                 top: CGFloatable? = nil,
                 left: CGFloatable? = nil,
                 bottom: CGFloatable? = nil,
                 right: CGFloatable? = nil) -> Self
     {
-        PuyoHelper.margin(for: view.layoutMeasure, all: all?.cgFloatValue, horz: horz?.cgFloatValue, vert: vert?.cgFloatValue, top: top?.cgFloatValue, left: left?.cgFloatValue, bottom: bottom?.cgFloatValue, right: right?.cgFloatValue)
+        PuyoHelper.margin(for: view.layoutMeasure, all: all?.cgFloatValue, horz: horz?.cgFloatValue, vert: vert?.cgFloatValue, top: top?.cgFloatValue, left: left?.cgFloatValue, bottom: bottom?.cgFloatValue, right: right?.cgFloatValue, leading: leading?.cgFloatValue, trailing: trailing?.cgFloatValue)
         return self
     }
 
@@ -133,6 +135,11 @@ public extension Puyo where T: BoxLayoutNode & AutoDisposable {
 
     @discardableResult
     func margin<S: Outputing>(_ margin: S) -> Self where S.OutputType == UIEdgeInsets {
+        set(\T.layoutMeasure.margin, margin.asOutput().map(BorderInsets.from(_:)))
+    }
+
+    @discardableResult
+    func margin<S: Outputing>(_ margin: S) -> Self where S.OutputType == BorderInsets {
         set(\T.layoutMeasure.margin, margin)
     }
 }
@@ -154,7 +161,7 @@ public extension Puyo where T: BoxLayoutNode & AutoDisposable {
     func flowEnding(_ flowEnding: Bool) -> Self {
         set(\T.layoutMeasure.flowEnding, flowEnding)
     }
-    
+
     @discardableResult
     func flowEnding<O: Outputing>(_ flowEnding: O) -> Self where O.OutputType == Bool {
         set(\T.layoutMeasure.flowEnding, flowEnding)

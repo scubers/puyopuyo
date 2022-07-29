@@ -46,7 +46,7 @@ enum ResidualHelper {
     /// - Returns: layoutResidual
     static func getSelfLayoutResidual(for measure: Measure, fromContentResidual contentResidual: CGSize) -> CGSize {
         return contentResidual
-            .expand(edge: measure.margin)
+            .expand(edge: measure.margin.getFixedSize())
             .ensureNotNegative()
     }
 
@@ -56,9 +56,9 @@ enum ResidualHelper {
     ///   - margin: margin description
     ///   - size: size description
     /// - Returns: contentResidual
-    static func getContentResidual(layoutResidual: CGSize, margin: UIEdgeInsets, size: Size) -> CGSize {
+    static func getContentResidual(layoutResidual: CGSize, margin: BorderInsets, size: Size) -> CGSize {
         var residual = layoutResidual
-            .collapse(edge: margin)
+            .collapse(edge: margin.getFixedSize())
             .ensureNotNegative()
 
         if size.width.isFixed { residual.width = size.width.fixedValue }
@@ -78,7 +78,7 @@ enum ResidualHelper {
     static func getChildrenLayoutResidual(for regulator: Regulator, regulatorLayoutResidual: CGSize) -> CGSize {
         let regulatorContentResidual = getContentResidual(layoutResidual: regulatorLayoutResidual, margin: regulator.margin, size: regulator.size)
         return regulatorContentResidual
-            .collapse(edge: regulator.padding)
+            .collapse(edge: regulator.padding.getFixedSize())
             .ensureNotNegative()
     }
 }
