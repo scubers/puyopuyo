@@ -7,12 +7,13 @@ platform :ios, '13.0'
 
 target 'Puyopuyo_Example' do
 # pod 'Puyopuyo/TangramKit', :path => '../'
-  pod 'Puyopuyo', :path => '../', :subspecs => ['Extra', 'Inspect']
+  pod 'Puyopuyo', :path => '../', :subspecs => ['Extra']
 # pod 'Puyopuyo', :path => '../'
   pod 'TangramKit', :inhibit_warnings => true
   pod 'RxSwift', :inhibit_warnings => true
   pod 'SnapKit', :inhibit_warnings => true
   pod 'YogaKit', :inhibit_warnings => true
+  pod 'HandyJSON', :inhibit_warnings => true
 
   target 'Puyopuyo_Tests' do
     inherit! :search_paths

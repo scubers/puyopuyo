@@ -9,6 +9,7 @@
 import Puyopuyo
 import RxSwift
 import UIKit
+@_exported import Puyopuyo
 
 class Person {
     var name: String?

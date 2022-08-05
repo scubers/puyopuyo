@@ -39,7 +39,7 @@ public class Regulator: Measure {
         """
         \(super.diagnosisMessage)
         - semanticDirection: [\(semanticDirection.debugDescription)]
-        - padding: [top: \(padding.top), left: \(padding.left), bottom: \(padding.bottom), right: \(padding.right)]
+        - padding: [top: \(padding.top), left: \(String(describing: padding.left)), bottom: \(padding.bottom), right: \(String(describing: padding.right)), leading: \(padding.leading), trailing: \(padding.trailing)]
         - justifyContent: [\(justifyContent)]
         """
     }

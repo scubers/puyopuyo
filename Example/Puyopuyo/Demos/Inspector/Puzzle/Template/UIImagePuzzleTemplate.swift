@@ -75,36 +75,3 @@ class UIImagePuzzleStateProvider: BasePuzzleStateProvider {
         return node.toJSON()
     }
 }
-
-func downloadImage(url: String?) -> Outputs<UIImage?> {
-    return Outputs { i in
-
-        guard let url = url else {
-            i.input(value: nil)
-            return Disposers.create()
-        }
-
-        var task: URLSessionDownloadTask?
-        if let URL = URL(string: url) {
-            task = URLSession.shared.downloadTask(with: URL) { u, _, _ in
-                if let u = u, let data = try? Data(contentsOf: u), let image = UIImage(data: data) {
-                    i.input(value: image)
-                } else {
-                    i.input(value: nil)
-                }
-            }
-            task?.resume()
-        } else {
-            i.input(value: nil)
-        }
-
-        return Disposers.create {
-            task?.cancel()
-        }
-    }
-    .concat { o, i in
-        DispatchQueue.main.async {
-            i.input(value: o)
-        }
-    }
-}

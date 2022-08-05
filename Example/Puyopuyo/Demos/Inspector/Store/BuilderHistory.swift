@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+import Puyopuyo
 
 class BuilderHistory<T>: ChangeNotifier {
     let maxCount: Int

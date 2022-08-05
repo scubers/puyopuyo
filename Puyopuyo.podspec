@@ -42,13 +42,6 @@ Pod::Spec.new do |s|
     c.dependency 'Puyopuyo/Core'
   end
   
-  s.subspec 'Inspect' do |c|
-    c.public_header_files = 'Puyopuyo/Inspector/**/*.h'
-    c.source_files = 'Puyopuyo/Inspector/**/*.{h,m,swift}'
-    c.dependency 'Puyopuyo/Core'
-    c.dependency 'HandyJSON'
-  end
-  
   s.default_subspec = 'Core'
 
 end

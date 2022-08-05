@@ -27,6 +27,46 @@
 		09AD0CBD26DD064E008231F1 /* TestVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AD0CBC26DD064E008231F1 /* TestVC.swift */; };
 		09CAF0A92822C9A50068B84E /* BoxLayoutNodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CAF0A82822C9A50068B84E /* BoxLayoutNodeTests.swift */; };
 		09CAF0AB2822DAB80068B84E /* TestDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CAF0AA2822DAB80068B84E /* TestDefine.swift */; };
+		09D7BA03289D7BD600DEF3F4 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9D1289D7BD600DEF3F4 /* Model.swift */; };
+		09D7BA04289D7BD600DEF3F4 /* PuzzleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9D2289D7BD600DEF3F4 /* PuzzleManager.swift */; };
+		09D7BA05289D7BD600DEF3F4 /* UIViewPuzzleTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9D4289D7BD600DEF3F4 /* UIViewPuzzleTemplate.swift */; };
+		09D7BA06289D7BD600DEF3F4 /* ZPuzzleTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9D5289D7BD600DEF3F4 /* ZPuzzleTemplate.swift */; };
+		09D7BA07289D7BD600DEF3F4 /* UIImagePuzzleTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9D6289D7BD600DEF3F4 /* UIImagePuzzleTemplate.swift */; };
+		09D7BA08289D7BD600DEF3F4 /* LinearPuzzleTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9D7289D7BD600DEF3F4 /* LinearPuzzleTemplate.swift */; };
+		09D7BA09289D7BD600DEF3F4 /* UILabelPuzzleTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9D8289D7BD600DEF3F4 /* UILabelPuzzleTemplate.swift */; };
+		09D7BA0A289D7BD600DEF3F4 /* FlowPuzzleTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9D9289D7BD600DEF3F4 /* FlowPuzzleTemplate.swift */; };
+		09D7BA0B289D7BD600DEF3F4 /* PuzzleState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9DA289D7BD600DEF3F4 /* PuzzleState.swift */; };
+		09D7BA0C289D7BD600DEF3F4 /* PuzzleTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9DB289D7BD600DEF3F4 /* PuzzleTemplate.swift */; };
+		09D7BA0D289D7BD600DEF3F4 /* PropsPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9DE289D7BD600DEF3F4 /* PropsPanel.swift */; };
+		09D7BA0E289D7BD600DEF3F4 /* CGFloatInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9E0289D7BD600DEF3F4 /* CGFloatInputView.swift */; };
+		09D7BA0F289D7BD600DEF3F4 /* PropsSectionTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9E1289D7BD600DEF3F4 /* PropsSectionTitleView.swift */; };
+		09D7BA10289D7BD600DEF3F4 /* SingleSelectVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9E2289D7BD600DEF3F4 /* SingleSelectVC.swift */; };
+		09D7BA11289D7BD600DEF3F4 /* DropDownableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9E3289D7BD600DEF3F4 /* DropDownableView.swift */; };
+		09D7BA12289D7BD600DEF3F4 /* SelectorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9E4289D7BD600DEF3F4 /* SelectorButton.swift */; };
+		09D7BA13289D7BD600DEF3F4 /* AlignmentInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9E6289D7BD600DEF3F4 /* AlignmentInspector.swift */; };
+		09D7BA14289D7BD600DEF3F4 /* SizeDescriptionInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9E7289D7BD600DEF3F4 /* SizeDescriptionInspector.swift */; };
+		09D7BA15289D7BD600DEF3F4 /* BoolInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9E8289D7BD600DEF3F4 /* BoolInspector.swift */; };
+		09D7BA16289D7BD600DEF3F4 /* InsetsInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9E9289D7BD600DEF3F4 /* InsetsInspector.swift */; };
+		09D7BA17289D7BD600DEF3F4 /* PropsInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9EA289D7BD600DEF3F4 /* PropsInputView.swift */; };
+		09D7BA18289D7BD600DEF3F4 /* InspectorViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9EB289D7BD600DEF3F4 /* InspectorViewFactory.swift */; };
+		09D7BA19289D7BD600DEF3F4 /* SelectionInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9EC289D7BD600DEF3F4 /* SelectionInspector.swift */; };
+		09D7BA1A289D7BD600DEF3F4 /* StringInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9ED289D7BD600DEF3F4 /* StringInspector.swift */; };
+		09D7BA1B289D7BD600DEF3F4 /* CGFloatInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9EE289D7BD600DEF3F4 /* CGFloatInspector.swift */; };
+		09D7BA1C289D7BD600DEF3F4 /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9F0289D7BD600DEF3F4 /* CanvasView.swift */; };
+		09D7BA1D289D7BD600DEF3F4 /* CanvasPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9F1289D7BD600DEF3F4 /* CanvasPanel.swift */; };
+		09D7BA1E289D7BD600DEF3F4 /* LayerPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9F3289D7BD600DEF3F4 /* LayerPanel.swift */; };
+		09D7BA1F289D7BD600DEF3F4 /* SettingPannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9F4289D7BD600DEF3F4 /* SettingPannel.swift */; };
+		09D7BA20289D7BD600DEF3F4 /* PadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9F6289D7BD600DEF3F4 /* PadViewController.swift */; };
+		09D7BA21289D7BD600DEF3F4 /* JsonViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9F7289D7BD600DEF3F4 /* JsonViewVC.swift */; };
+		09D7BA22289D7BD600DEF3F4 /* NodeSelectVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9F8289D7BD600DEF3F4 /* NodeSelectVC.swift */; };
+		09D7BA23289D7BD600DEF3F4 /* PhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9F9289D7BD600DEF3F4 /* PhoneViewController.swift */; };
+		09D7BA24289D7BD600DEF3F4 /* InspectorFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9FA289D7BD600DEF3F4 /* InspectorFactory.swift */; };
+		09D7BA25289D7BD600DEF3F4 /* VerticalExpandAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9FC289D7BD600DEF3F4 /* VerticalExpandAnimator.swift */; };
+		09D7BA26289D7BD600DEF3F4 /* CanvasAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9FD289D7BD600DEF3F4 /* CanvasAnimator.swift */; };
+		09D7BA27289D7BD600DEF3F4 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7B9FE289D7BD600DEF3F4 /* Helper.swift */; };
+		09D7BA28289D7BD600DEF3F4 /* BuilderStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7BA00289D7BD600DEF3F4 /* BuilderStore.swift */; };
+		09D7BA29289D7BD600DEF3F4 /* BuilderPuzzleItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7BA01289D7BD600DEF3F4 /* BuilderPuzzleItem.swift */; };
+		09D7BA2A289D7BD600DEF3F4 /* BuilderHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D7BA02289D7BD600DEF3F4 /* BuilderHistory.swift */; };
 		09E58F0527EAEC9C007CE7BF /* CompareViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A4726027D2645C00FD9813 /* CompareViews.swift */; };
 		09EF918A2809AA30007BCCF5 /* ZTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EF91892809AA30007BCCF5 /* ZTests.swift */; };
 		09EF918C2809AE16007BCCF5 /* DataTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EF918B2809AE16007BCCF5 /* DataTests.swift */; };
@@ -86,6 +126,46 @@
 		09AD0CBC26DD064E008231F1 /* TestVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestVC.swift; sourceTree = "<group>"; };
 		09CAF0A82822C9A50068B84E /* BoxLayoutNodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxLayoutNodeTests.swift; sourceTree = "<group>"; };
 		09CAF0AA2822DAB80068B84E /* TestDefine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestDefine.swift; sourceTree = "<group>"; };
+		09D7B9D1289D7BD600DEF3F4 /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		09D7B9D2289D7BD600DEF3F4 /* PuzzleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PuzzleManager.swift; sourceTree = "<group>"; };
+		09D7B9D4289D7BD600DEF3F4 /* UIViewPuzzleTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewPuzzleTemplate.swift; sourceTree = "<group>"; };
+		09D7B9D5289D7BD600DEF3F4 /* ZPuzzleTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZPuzzleTemplate.swift; sourceTree = "<group>"; };
+		09D7B9D6289D7BD600DEF3F4 /* UIImagePuzzleTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImagePuzzleTemplate.swift; sourceTree = "<group>"; };
+		09D7B9D7289D7BD600DEF3F4 /* LinearPuzzleTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinearPuzzleTemplate.swift; sourceTree = "<group>"; };
+		09D7B9D8289D7BD600DEF3F4 /* UILabelPuzzleTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UILabelPuzzleTemplate.swift; sourceTree = "<group>"; };
+		09D7B9D9289D7BD600DEF3F4 /* FlowPuzzleTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlowPuzzleTemplate.swift; sourceTree = "<group>"; };
+		09D7B9DA289D7BD600DEF3F4 /* PuzzleState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PuzzleState.swift; sourceTree = "<group>"; };
+		09D7B9DB289D7BD600DEF3F4 /* PuzzleTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PuzzleTemplate.swift; sourceTree = "<group>"; };
+		09D7B9DE289D7BD600DEF3F4 /* PropsPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropsPanel.swift; sourceTree = "<group>"; };
+		09D7B9E0289D7BD600DEF3F4 /* CGFloatInputView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGFloatInputView.swift; sourceTree = "<group>"; };
+		09D7B9E1289D7BD600DEF3F4 /* PropsSectionTitleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropsSectionTitleView.swift; sourceTree = "<group>"; };
+		09D7B9E2289D7BD600DEF3F4 /* SingleSelectVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleSelectVC.swift; sourceTree = "<group>"; };
+		09D7B9E3289D7BD600DEF3F4 /* DropDownableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropDownableView.swift; sourceTree = "<group>"; };
+		09D7B9E4289D7BD600DEF3F4 /* SelectorButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectorButton.swift; sourceTree = "<group>"; };
+		09D7B9E6289D7BD600DEF3F4 /* AlignmentInspector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlignmentInspector.swift; sourceTree = "<group>"; };
+		09D7B9E7289D7BD600DEF3F4 /* SizeDescriptionInspector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SizeDescriptionInspector.swift; sourceTree = "<group>"; };
+		09D7B9E8289D7BD600DEF3F4 /* BoolInspector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoolInspector.swift; sourceTree = "<group>"; };
+		09D7B9E9289D7BD600DEF3F4 /* InsetsInspector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InsetsInspector.swift; sourceTree = "<group>"; };
+		09D7B9EA289D7BD600DEF3F4 /* PropsInputView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropsInputView.swift; sourceTree = "<group>"; };
+		09D7B9EB289D7BD600DEF3F4 /* InspectorViewFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InspectorViewFactory.swift; sourceTree = "<group>"; };
+		09D7B9EC289D7BD600DEF3F4 /* SelectionInspector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectionInspector.swift; sourceTree = "<group>"; };
+		09D7B9ED289D7BD600DEF3F4 /* StringInspector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringInspector.swift; sourceTree = "<group>"; };
+		09D7B9EE289D7BD600DEF3F4 /* CGFloatInspector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGFloatInspector.swift; sourceTree = "<group>"; };
+		09D7B9F0289D7BD600DEF3F4 /* CanvasView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasView.swift; sourceTree = "<group>"; };
+		09D7B9F1289D7BD600DEF3F4 /* CanvasPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasPanel.swift; sourceTree = "<group>"; };
+		09D7B9F3289D7BD600DEF3F4 /* LayerPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerPanel.swift; sourceTree = "<group>"; };
+		09D7B9F4289D7BD600DEF3F4 /* SettingPannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingPannel.swift; sourceTree = "<group>"; };
+		09D7B9F6289D7BD600DEF3F4 /* PadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PadViewController.swift; sourceTree = "<group>"; };
+		09D7B9F7289D7BD600DEF3F4 /* JsonViewVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsonViewVC.swift; sourceTree = "<group>"; };
+		09D7B9F8289D7BD600DEF3F4 /* NodeSelectVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NodeSelectVC.swift; sourceTree = "<group>"; };
+		09D7B9F9289D7BD600DEF3F4 /* PhoneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneViewController.swift; sourceTree = "<group>"; };
+		09D7B9FA289D7BD600DEF3F4 /* InspectorFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InspectorFactory.swift; sourceTree = "<group>"; };
+		09D7B9FC289D7BD600DEF3F4 /* VerticalExpandAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VerticalExpandAnimator.swift; sourceTree = "<group>"; };
+		09D7B9FD289D7BD600DEF3F4 /* CanvasAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasAnimator.swift; sourceTree = "<group>"; };
+		09D7B9FE289D7BD600DEF3F4 /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
+		09D7BA00289D7BD600DEF3F4 /* BuilderStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuilderStore.swift; sourceTree = "<group>"; };
+		09D7BA01289D7BD600DEF3F4 /* BuilderPuzzleItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuilderPuzzleItem.swift; sourceTree = "<group>"; };
+		09D7BA02289D7BD600DEF3F4 /* BuilderHistory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuilderHistory.swift; sourceTree = "<group>"; };
 		09EF91892809AA30007BCCF5 /* ZTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZTests.swift; sourceTree = "<group>"; };
 		09EF918B2809AE16007BCCF5 /* DataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTests.swift; sourceTree = "<group>"; };
 		09F8BD7F27EB633900402D96 /* CalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorTests.swift; sourceTree = "<group>"; };
@@ -182,6 +262,141 @@
 				098AA9F026FB6F0F00C53AA2 /* AnimationVC.swift */,
 			);
 			path = Animation;
+			sourceTree = "<group>";
+		};
+		09D7B9CF289D7BD600DEF3F4 /* Inspector */ = {
+			isa = PBXGroup;
+			children = (
+				09D7B9D0289D7BD600DEF3F4 /* Puzzle */,
+				09D7B9DC289D7BD600DEF3F4 /* View */,
+				09D7B9F5289D7BD600DEF3F4 /* ViewController */,
+				09D7B9FB289D7BD600DEF3F4 /* Helper */,
+				09D7B9FF289D7BD600DEF3F4 /* Store */,
+			);
+			path = Inspector;
+			sourceTree = "<group>";
+		};
+		09D7B9D0289D7BD600DEF3F4 /* Puzzle */ = {
+			isa = PBXGroup;
+			children = (
+				09D7B9D1289D7BD600DEF3F4 /* Model.swift */,
+				09D7B9D2289D7BD600DEF3F4 /* PuzzleManager.swift */,
+				09D7B9D3289D7BD600DEF3F4 /* Template */,
+				09D7B9DA289D7BD600DEF3F4 /* PuzzleState.swift */,
+				09D7B9DB289D7BD600DEF3F4 /* PuzzleTemplate.swift */,
+			);
+			path = Puzzle;
+			sourceTree = "<group>";
+		};
+		09D7B9D3289D7BD600DEF3F4 /* Template */ = {
+			isa = PBXGroup;
+			children = (
+				09D7B9D4289D7BD600DEF3F4 /* UIViewPuzzleTemplate.swift */,
+				09D7B9D5289D7BD600DEF3F4 /* ZPuzzleTemplate.swift */,
+				09D7B9D6289D7BD600DEF3F4 /* UIImagePuzzleTemplate.swift */,
+				09D7B9D7289D7BD600DEF3F4 /* LinearPuzzleTemplate.swift */,
+				09D7B9D8289D7BD600DEF3F4 /* UILabelPuzzleTemplate.swift */,
+				09D7B9D9289D7BD600DEF3F4 /* FlowPuzzleTemplate.swift */,
+			);
+			path = Template;
+			sourceTree = "<group>";
+		};
+		09D7B9DC289D7BD600DEF3F4 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				09D7B9DD289D7BD600DEF3F4 /* PropsPanel */,
+				09D7B9DF289D7BD600DEF3F4 /* CommonView */,
+				09D7B9E5289D7BD600DEF3F4 /* InspectorView */,
+				09D7B9EF289D7BD600DEF3F4 /* CanvasPanel */,
+				09D7B9F2289D7BD600DEF3F4 /* LayerPanel */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		09D7B9DD289D7BD600DEF3F4 /* PropsPanel */ = {
+			isa = PBXGroup;
+			children = (
+				09D7B9DE289D7BD600DEF3F4 /* PropsPanel.swift */,
+			);
+			path = PropsPanel;
+			sourceTree = "<group>";
+		};
+		09D7B9DF289D7BD600DEF3F4 /* CommonView */ = {
+			isa = PBXGroup;
+			children = (
+				09D7B9E0289D7BD600DEF3F4 /* CGFloatInputView.swift */,
+				09D7B9E1289D7BD600DEF3F4 /* PropsSectionTitleView.swift */,
+				09D7B9E2289D7BD600DEF3F4 /* SingleSelectVC.swift */,
+				09D7B9E3289D7BD600DEF3F4 /* DropDownableView.swift */,
+				09D7B9E4289D7BD600DEF3F4 /* SelectorButton.swift */,
+			);
+			path = CommonView;
+			sourceTree = "<group>";
+		};
+		09D7B9E5289D7BD600DEF3F4 /* InspectorView */ = {
+			isa = PBXGroup;
+			children = (
+				09D7B9E6289D7BD600DEF3F4 /* AlignmentInspector.swift */,
+				09D7B9E7289D7BD600DEF3F4 /* SizeDescriptionInspector.swift */,
+				09D7B9E8289D7BD600DEF3F4 /* BoolInspector.swift */,
+				09D7B9E9289D7BD600DEF3F4 /* InsetsInspector.swift */,
+				09D7B9EA289D7BD600DEF3F4 /* PropsInputView.swift */,
+				09D7B9EB289D7BD600DEF3F4 /* InspectorViewFactory.swift */,
+				09D7B9EC289D7BD600DEF3F4 /* SelectionInspector.swift */,
+				09D7B9ED289D7BD600DEF3F4 /* StringInspector.swift */,
+				09D7B9EE289D7BD600DEF3F4 /* CGFloatInspector.swift */,
+			);
+			path = InspectorView;
+			sourceTree = "<group>";
+		};
+		09D7B9EF289D7BD600DEF3F4 /* CanvasPanel */ = {
+			isa = PBXGroup;
+			children = (
+				09D7B9F0289D7BD600DEF3F4 /* CanvasView.swift */,
+				09D7B9F1289D7BD600DEF3F4 /* CanvasPanel.swift */,
+			);
+			path = CanvasPanel;
+			sourceTree = "<group>";
+		};
+		09D7B9F2289D7BD600DEF3F4 /* LayerPanel */ = {
+			isa = PBXGroup;
+			children = (
+				09D7B9F3289D7BD600DEF3F4 /* LayerPanel.swift */,
+				09D7B9F4289D7BD600DEF3F4 /* SettingPannel.swift */,
+			);
+			path = LayerPanel;
+			sourceTree = "<group>";
+		};
+		09D7B9F5289D7BD600DEF3F4 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				09D7B9F6289D7BD600DEF3F4 /* PadViewController.swift */,
+				09D7B9F7289D7BD600DEF3F4 /* JsonViewVC.swift */,
+				09D7B9F8289D7BD600DEF3F4 /* NodeSelectVC.swift */,
+				09D7B9F9289D7BD600DEF3F4 /* PhoneViewController.swift */,
+				09D7B9FA289D7BD600DEF3F4 /* InspectorFactory.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		09D7B9FB289D7BD600DEF3F4 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				09D7B9FC289D7BD600DEF3F4 /* VerticalExpandAnimator.swift */,
+				09D7B9FD289D7BD600DEF3F4 /* CanvasAnimator.swift */,
+				09D7B9FE289D7BD600DEF3F4 /* Helper.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		09D7B9FF289D7BD600DEF3F4 /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				09D7BA00289D7BD600DEF3F4 /* BuilderStore.swift */,
+				09D7BA01289D7BD600DEF3F4 /* BuilderPuzzleItem.swift */,
+				09D7BA02289D7BD600DEF3F4 /* BuilderHistory.swift */,
+			);
+			path = Store;
 			sourceTree = "<group>";
 		};
 		0C5282B985C6C1A8396298C0 /* Pods */ = {
@@ -308,6 +523,7 @@
 		A8D9430222FF360B002E487F /* Demos */ = {
 			isa = PBXGroup;
 			children = (
+				09D7B9CF289D7BD600DEF3F4 /* Inspector */,
 				09798A6A2826D0F8007A3737 /* SceneDemos */,
 				09418BDC2703057000129A15 /* ScrollView */,
 				098AA9EF26FB6F0400C53AA2 /* Animation */,
@@ -546,33 +762,73 @@
 			buildActionMask = 2147483647;
 			files = (
 				09418BDE2703057B00129A15 /* ScrollVC.swift in Sources */,
+				09D7BA2A289D7BD600DEF3F4 /* BuilderHistory.swift in Sources */,
+				09D7BA15289D7BD600DEF3F4 /* BoolInspector.swift in Sources */,
 				09E58F0527EAEC9C007CE7BF /* CompareViews.swift in Sources */,
+				09D7BA06289D7BD600DEF3F4 /* ZPuzzleTemplate.swift in Sources */,
 				09AD0CBD26DD064E008231F1 /* TestVC.swift in Sources */,
 				A8BEC495239CDF5D001FD6BF /* AdvanceVC.swift in Sources */,
+				09D7BA1A289D7BD600DEF3F4 /* StringInspector.swift in Sources */,
+				09D7BA24289D7BD600DEF3F4 /* InspectorFactory.swift in Sources */,
+				09D7BA20289D7BD600DEF3F4 /* PadViewController.swift in Sources */,
+				09D7BA11289D7BD600DEF3F4 /* DropDownableView.swift in Sources */,
 				096CE4F4280C589F0014903A /* BaseViewController.swift in Sources */,
+				09D7BA27289D7BD600DEF3F4 /* Helper.swift in Sources */,
 				0972D40526C576D200210D1C /* ShadowStyle.swift in Sources */,
+				09D7BA25289D7BD600DEF3F4 /* VerticalExpandAnimator.swift in Sources */,
+				09D7BA0B289D7BD600DEF3F4 /* PuzzleState.swift in Sources */,
 				A8698302239CF98E00B3D514 /* _Scaffold.swift in Sources */,
 				09798A6C2826D114007A3737 /* ScenesVC.swift in Sources */,
+				09D7BA08289D7BD600DEF3F4 /* LinearPuzzleTemplate.swift in Sources */,
 				A8BEC490239CD656001FD6BF /* LinearPropertiesVC.swift in Sources */,
 				A81CE1492312EE6900E19E6B /* OptionView.swift in Sources */,
+				09D7BA1B289D7BD600DEF3F4 /* CGFloatInspector.swift in Sources */,
+				09D7BA0E289D7BD600DEF3F4 /* CGFloatInputView.swift in Sources */,
 				096CE4F2280C55F80014903A /* MenuViewController.swift in Sources */,
 				A86F4381233F9C100008606F /* StyleVC.swift in Sources */,
 				0953131226FB4FA9007F2881 /* ExpandAnimator.swift in Sources */,
 				A8BEC48E239CD3E6001FD6BF /* DemoScroll.swift in Sources */,
 				095E422326F50B0000D6B88C /* ChatVC.swift in Sources */,
+				09D7BA03289D7BD600DEF3F4 /* Model.swift in Sources */,
+				09D7BA09289D7BD600DEF3F4 /* UILabelPuzzleTemplate.swift in Sources */,
+				09D7BA14289D7BD600DEF3F4 /* SizeDescriptionInspector.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				09D7BA13289D7BD600DEF3F4 /* AlignmentInspector.swift in Sources */,
 				A84E5CC1239EB5AC0091D39B /* ZPropertiesVC.swift in Sources */,
 				0982C1A02469AF730070F104 /* RecycleBoxPropertiesVC.swift in Sources */,
+				09D7BA19289D7BD600DEF3F4 /* SelectionInspector.swift in Sources */,
+				09D7BA0D289D7BD600DEF3F4 /* PropsPanel.swift in Sources */,
+				09D7BA21289D7BD600DEF3F4 /* JsonViewVC.swift in Sources */,
 				098AA9F126FB6F0F00C53AA2 /* AnimationVC.swift in Sources */,
+				09D7BA05289D7BD600DEF3F4 /* UIViewPuzzleTemplate.swift in Sources */,
+				09D7BA26289D7BD600DEF3F4 /* CanvasAnimator.swift in Sources */,
+				09D7BA16289D7BD600DEF3F4 /* InsetsInspector.swift in Sources */,
+				09D7BA12289D7BD600DEF3F4 /* SelectorButton.swift in Sources */,
+				09D7BA0C289D7BD600DEF3F4 /* PuzzleTemplate.swift in Sources */,
 				A897FCDE230AFBD80061029E /* Util.swift in Sources */,
+				09D7BA07289D7BD600DEF3F4 /* UIImagePuzzleTemplate.swift in Sources */,
+				09D7BA04289D7BD600DEF3F4 /* PuzzleManager.swift in Sources */,
+				09D7BA29289D7BD600DEF3F4 /* BuilderPuzzleItem.swift in Sources */,
 				A8D9430922FF3694002E487F /* Label.swift in Sources */,
 				0915661526F46DCE007EBB05 /* ControlPad.swift in Sources */,
 				09798A6E2826D1B8007A3737 /* NewsVC.swift in Sources */,
+				09D7BA10289D7BD600DEF3F4 /* SingleSelectVC.swift in Sources */,
 				A8BCEEB62399620F002DB739 /* UIViewProertiesVC.swift in Sources */,
+				09D7BA23289D7BD600DEF3F4 /* PhoneViewController.swift in Sources */,
+				09D7BA0A289D7BD600DEF3F4 /* FlowPuzzleTemplate.swift in Sources */,
+				09D7BA1E289D7BD600DEF3F4 /* LayerPanel.swift in Sources */,
+				09D7BA18289D7BD600DEF3F4 /* InspectorViewFactory.swift in Sources */,
 				A8BEC492239CDB6B001FD6BF /* FlowPropertiesVC.swift in Sources */,
+				09D7BA1D289D7BD600DEF3F4 /* CanvasPanel.swift in Sources */,
 				0910C08D26E45A350048D5C8 /* FeedVC.swift in Sources */,
 				A8BCEEB823996424002DB739 /* SelectionView.swift in Sources */,
+				09D7BA22289D7BD600DEF3F4 /* NodeSelectVC.swift in Sources */,
+				09D7BA1F289D7BD600DEF3F4 /* SettingPannel.swift in Sources */,
+				09D7BA28289D7BD600DEF3F4 /* BuilderStore.swift in Sources */,
+				09D7BA17289D7BD600DEF3F4 /* PropsInputView.swift in Sources */,
 				090C8DB826F3A1D700FEF026 /* SizePropertiesVC.swift in Sources */,
+				09D7BA1C289D7BD600DEF3F4 /* CanvasView.swift in Sources */,
+				09D7BA0F289D7BD600DEF3F4 /* PropsSectionTitleView.swift in Sources */,
 				A8BEC48C239C9EB4001FD6BF /* DemoView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

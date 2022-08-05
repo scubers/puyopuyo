@@ -93,7 +93,7 @@ public class Measure {
         - isLayoutEntryPoint: [\(isLayoutEntryPoint)]
         - size: [width: \(size.width), height: \(size.height)]
         - alignment: [\(alignment)]
-        - margin: [top: \(margin.top), left: \(margin.left), bottom: \(margin.bottom), right: \(margin.right)]
+        - margin: [top: \(margin.top), left: \(String(describing: margin.left)), bottom: \(margin.bottom), right: \(String(describing: margin.right)), leading: \(margin.leading), trailing: \(margin.trailing)]
         - flowEnding: [\(flowEnding)]
         """
     }
